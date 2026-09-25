@@ -6,8 +6,9 @@ import { Reference } from "@/Core/Domain";
  * whole `value` is replaced: one `core::Replace` mutator in front of seven
  * reference nodes three levels deep, with an `mjson` argument keyed `$[0..2]`.
  * `environment*` is the common case: a secret in one nested attribute filled by
- * a single `std::Environment`. The `template` literal is trimmed for readability;
- * it still classifies as multiline `Code`.
+ * a single `std::Environment`. `referenceAttributes` combines both into one
+ * attribute set. The `template` literal is trimmed for readability; it still
+ * classifies as multiline `Code`.
  */
 
 export const complianceMutators: Reference.RawMutator[] = [
@@ -152,3 +153,12 @@ export const environmentMutators: Reference.RawMutator[] = [
     ],
   },
 ];
+
+export const referenceAttributes: Record<string, unknown> = {
+  value: null,
+  api: { base_url: "https://api.cloudsmith.io/", api_token: null },
+  url: "/v1/entitlements/inmanta/proximus-iso9/",
+  send_event: true,
+  mutators: [...complianceMutators, ...environmentMutators],
+  references: [...complianceReferences, ...environmentReferences],
+};

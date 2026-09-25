@@ -40,6 +40,7 @@ export * from "./References";
 export * from "./RequiresTable";
 export * from "./ResizeHandle";
 export * from "./ResourceActions";
+export * from "./ResourceAttributes";
 export * from "./ResourceLink";
 export * from "./ResourceStatus";
 export * from "./ResourceTable";
