@@ -48,6 +48,7 @@ const dict = {
   copy: "Copy",
   "copy.raw": "Copy raw value",
   "copy.clipboard": "Copy to clipboard",
+  resize: (name: string) => `Resize ${name}`,
   noData: "There is no data available to display.",
   success: "Success",
   "success.title": "Success",
