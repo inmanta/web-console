@@ -8,6 +8,15 @@ import { TextListFormInput } from "./TextListFormInput";
 describe("TextListInputField", () => {
   const handleClick = vi.fn();
 
+  // jsdom reports no document focus while focus moves between elements, which reads as a window blur.
+  beforeEach(() => {
+    vi.spyOn(document, "hasFocus").mockReturnValue(true);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("Should render an inputfield with chips when values are preset.", () => {
     render(
       <TextListFormInput
@@ -141,6 +150,55 @@ describe("TextListInputField", () => {
     await userEvent.click(screen.getByRole("button", { name: "outside" }));
 
     expect(handleInputChange).toHaveBeenCalledWith(["value1", "test"], null);
+  });
+
+  it("Should not commit pending text when the window loses focus.", async () => {
+    const handleInputChange = vi.fn();
+    vi.spyOn(document, "hasFocus").mockReturnValue(false);
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={[]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+      />
+    );
+
+    const input = screen.getByRole("textbox");
+
+    await userEvent.type(input, "10.0.");
+    fireEvent.blur(input, { relatedTarget: null });
+
+    expect(handleInputChange).not.toHaveBeenCalled();
+    expect(input).toHaveValue("10.0.");
+  });
+
+  it("Should not add a duplicate chip when the value is already present.", async () => {
+    const handleInputChange = vi.fn();
+    const attributeValue = ["value1"];
+
+    render(
+      <>
+        <TextListFormInput
+          attributeName="text_list"
+          type={TextInputTypes.text}
+          attributeValue={attributeValue}
+          description="a text list input field"
+          handleInputChange={handleInputChange}
+        />
+        <button>outside</button>
+      </>
+    );
+
+    const input = screen.getByRole("textbox");
+
+    await userEvent.type(input, attributeValue[0]);
+    await userEvent.click(screen.getByRole("button", { name: "outside" }));
+
+    expect(handleInputChange).not.toHaveBeenCalled();
+    expect(input).toHaveValue("");
   });
 
   it("Should not commit the typed filter when a suggestion is clicked.", async () => {

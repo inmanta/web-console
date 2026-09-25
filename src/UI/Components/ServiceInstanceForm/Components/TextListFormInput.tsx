@@ -108,7 +108,7 @@ export const TextListFormInput: React.FC<Props> = ({
   /**
    * Adds a new chip. When the input text matches a suggestion label (whether
    * picked from the list or typed), that suggestion's value is stored; otherwise
-   * the typed text is stored as-is.
+   * the typed text is stored as-is. A value that is already a chip is not added again.
    *
    * @returns {void}
    */
@@ -119,7 +119,15 @@ export const TextListFormInput: React.FC<Props> = ({
       return;
     }
 
-    const newChips = [...currentChips, resolveValue(suggestions, trimmed)];
+    const value = resolveValue(suggestions, trimmed);
+
+    if (currentChips.includes(value)) {
+      setInputValue("");
+
+      return;
+    }
+
+    const newChips = [...currentChips, value];
 
     setCurrentChips(newChips);
     handleInputChange(newChips, null);
@@ -140,10 +148,17 @@ export const TextListFormInput: React.FC<Props> = ({
     }
   };
 
+  /** Commits pending text when focus leaves the field, unless it moves into the suggestions menu. */
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     // Arrowing into the suggestions is still editing this field: the picked suggestion replaces
     // the typed filter, so committing that filter as a chip would be wrong.
     if (menuRef.current?.contains(event.relatedTarget)) {
+      return;
+    }
+
+    // Switching windows (e.g. to copy the rest of a value) blurs the input too. It regains focus
+    // when the window does, so a real blur still commits later.
+    if (!document.hasFocus()) {
       return;
     }
 

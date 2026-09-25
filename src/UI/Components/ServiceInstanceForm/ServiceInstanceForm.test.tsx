@@ -779,6 +779,9 @@ test("GIVEN ServiceInstanceForm WHEN list text is typed and submit is clicked wi
   const submitCb = vi.fn();
   const { component } = setup([listField], submitCb);
 
+  // jsdom reports no document focus while focus moves between elements.
+  const hasFocus = vi.spyOn(document, "hasFocus").mockReturnValue(true);
+
   render(component);
 
   const group = screen.getByRole("generic", { name: `TextFieldInput-${listField.name}` });
@@ -787,6 +790,8 @@ test("GIVEN ServiceInstanceForm WHEN list text is typed and submit is clicked wi
   await userEvent.click(screen.getByText(words("confirm")));
 
   expect(submitCb).toHaveBeenCalledWith({ [listField.name]: [value] }, expect.any(Function));
+
+  hasFocus.mockRestore();
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed a UnitField THEN shows that field and submits the value converted to API units", async () => {
