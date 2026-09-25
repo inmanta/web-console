@@ -1,5 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { DictField } from "@/Core";
+import { KEYBOARD_STEP } from "@/UI/Components/ResizeHandle";
+import { words } from "@/UI/words";
 import { DictFieldInput } from "./DictFieldInput";
 
 const field: DictField = {
@@ -115,6 +117,19 @@ describe("DictFieldInput", () => {
     );
 
     expect(screen.getByTestId("DictInput-dict")).not.toHaveAttribute("aria-disabled");
+  });
+
+  test("resize handle changes the editor height", () => {
+    render(<DictFieldInput field={field} value={defaultValue} onChange={vi.fn()} />);
+
+    const editor = screen.getByTestId("DictInput-dict");
+    const initialHeight = parseInt(editor.style.height);
+
+    fireEvent.keyDown(screen.getByRole("separator", { name: words("resize")(field.name) }), {
+      key: "ArrowDown",
+    });
+
+    expect(editor).toHaveStyle({ height: `${initialHeight + KEYBOARD_STEP}px` });
   });
 
   test("renders the required asterisk when isOptional is false", () => {
