@@ -763,9 +763,9 @@ const dict = {
   "resources.resourceActions.repair.tooltip.resources":
     "(Re-)enforce the intent of every resource in the chosen scope. Fixes any drift from the desired state, even for resources marked as compliant.",
   "resources.resourceActions.deploy.tooltip.instance":
-    "Enforce the compliance of the resources of this service instance. Resources that are already compliant are skipped.",
+    "Enforce the compliance of the resources in the chosen scope of this service instance. Resources that are already compliant are skipped.",
   "resources.resourceActions.repair.tooltip.instance":
-    "(Re-)enforce the intent of every resource of this service instance. Fixes any drift from the desired state, even for resources marked as compliant.",
+    "(Re-)enforce the intent of every resource in the chosen scope of this service instance. Fixes any drift from the desired state, even for resources marked as compliant.",
   "resources.resourceActions.orphaned.disabled":
     "Orphaned resources are no longer part of the latest desired state, so they cannot be deployed or repaired.",
   "resources.resourceActions.success": (action: string) => `${action} triggered`,

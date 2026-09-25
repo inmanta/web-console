@@ -36,8 +36,8 @@ const filteredScopes: NonEmptyArray<ResourceActionScope> = [
 ];
 
 const tooltips = {
-  deploy: words("resources.resourceActions.deploy.tooltip.resources"),
-  repair: words("resources.resourceActions.repair.tooltip.resources"),
+  deploy: "deploy tooltip from page",
+  repair: "repair tooltip from page",
 };
 
 function setup(props: React.ComponentProps<typeof ResourceActions> = { filter, tooltips }) {

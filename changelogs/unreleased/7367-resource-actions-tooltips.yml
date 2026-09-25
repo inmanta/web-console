@@ -1,4 +1,4 @@
-description: The Deploy and Repair tooltips now explain what each action does on the page you're on (Resources, Resource details, Service instance details), instead of showing the same text everywhere.
+description: Make the Deploy and Repair tooltips specific to the page they are on.
 issue-nr: 7367
 change-type: patch
 destination-branches: [master, iso9]
