@@ -63,6 +63,10 @@ export const View: React.FC<Props> = ({ id }) => {
         actions={
           <ResourceActions
             filter={resourceFilter}
+            tooltips={{
+              deploy: words("resources.resourceActions.deploy.tooltip.resource"),
+              repair: words("resources.resourceActions.repair.tooltip.resource"),
+            }}
             disabledReason={
               Resource.isOrphanedStatus(data.status)
                 ? words("resources.resourceActions.orphaned.disabled")
