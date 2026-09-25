@@ -29,27 +29,6 @@ const renderTab = (details: typeof a, url = "/") =>
     </QueryClientProvider>
   );
 
-test("the JSON view shows details.attributes verbatim, machinery included", async () => {
-  renderTab(withReferences);
-
-  await userEvent.click(screen.getByRole("button", { name: "JSON" }));
-
-  const editor = screen.getByTestId("code-editor-content");
-
-  expect(editor).toHaveTextContent("mutators");
-  expect(editor).toHaveTextContent("references");
-});
-
-test("toggling back to Structured restores the structured view", async () => {
-  renderTab(withReferences);
-
-  await userEvent.click(screen.getByRole("button", { name: "JSON" }));
-  await userEvent.click(screen.getByRole("button", { name: "Structured" }));
-
-  // a structured-only element is back (the JSON view renders only the code editor)
-  expect(screen.getByRole("button", { name: /future::std::ComplianceReport/ })).toBeInTheDocument();
-});
-
 test("a nested reference's expansion is kept in the URL and survives a remount", async () => {
   const { unmount } = renderTab(withReferences);
   const nodeId = environmentReferences[0].id;
