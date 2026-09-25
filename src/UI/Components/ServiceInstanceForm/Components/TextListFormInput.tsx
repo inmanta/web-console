@@ -47,6 +47,8 @@ interface Props {
  * When suggestions are provided, the field behaves as a typeahead: each chip
  * displays the suggestion's `label` while the stored/submitted value is its
  * `value`. Free typing still works (the typed text is both shown and stored).
+ * Typed text is committed as a chip on Enter, Tab, "Add" or when the field
+ * loses focus, so it can't be left behind unsaved when the form is submitted.
  *
  * @props {Props} props - The props for the TextListFormInput component.
  *  @prop {string} attributeName - The name of the attribute.
@@ -78,6 +80,7 @@ export const TextListFormInput: React.FC<Props> = ({
   const [currentChips, setCurrentChips] = React.useState<string[]>([]);
   const [isOpen, setIsOpen] = React.useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const hasSuggestions = !!(suggestions && suggestions.length > 0);
 
   /**
@@ -137,6 +140,16 @@ export const TextListFormInput: React.FC<Props> = ({
     }
   };
 
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    // Arrowing into the suggestions is still editing this field: the picked suggestion replaces
+    // the typed filter, so committing that filter as a chip would be wrong.
+    if (menuRef.current?.contains(event.relatedTarget)) {
+      return;
+    }
+
+    addChip();
+  };
+
   const clearChipsAndInput = () => {
     setCurrentChips([]);
     handleInputChange([], null);
@@ -191,6 +204,7 @@ export const TextListFormInput: React.FC<Props> = ({
               setInputValue(resolveLabel(suggestions, value));
             }}
             ref={inputRef}
+            menuRef={menuRef}
             isOpen={isOpen}
             close={() => setIsOpen(false)}
           />
@@ -202,6 +216,7 @@ export const TextListFormInput: React.FC<Props> = ({
           onChange={handleChangeInput}
           onFocus={() => hasSuggestions && setIsOpen(true)}
           onKeyDown={handleKeyDown}
+          onBlur={handleBlur}
           // With suggestions this is a custom typeahead, so suppress the browser's own autofill
           // dropdown - it overlaps and competes with the suggestions popover. `inputProps` targets
           // the real <input>; a bare `autoComplete` would land on the wrapping element instead.

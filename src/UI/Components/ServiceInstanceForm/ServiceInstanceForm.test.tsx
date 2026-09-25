@@ -773,6 +773,22 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   );
 });
 
+test("GIVEN ServiceInstanceForm WHEN list text is typed and submit is clicked without adding it THEN the text is submitted", async () => {
+  const listField = { ...Test.Field.text, kind: "TextList" as const, type: "string[]" };
+  const value = "pending value";
+  const submitCb = vi.fn();
+  const { component } = setup([listField], submitCb);
+
+  render(component);
+
+  const group = screen.getByRole("generic", { name: `TextFieldInput-${listField.name}` });
+
+  await userEvent.type(within(group).getByRole("textbox"), value);
+  await userEvent.click(screen.getByText(words("confirm")));
+
+  expect(submitCb).toHaveBeenCalledWith({ [listField.name]: [value] }, expect.any(Function));
+});
+
 test("GIVEN ServiceInstanceForm WHEN passed a UnitField THEN shows that field and submits the value converted to API units", async () => {
   const submitCb = vi.fn();
   const { component } = setup([Test.Field.unit], submitCb);

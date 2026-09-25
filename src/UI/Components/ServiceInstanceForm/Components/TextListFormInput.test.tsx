@@ -121,6 +121,74 @@ describe("TextListInputField", () => {
     expect(handleInputChange).toHaveBeenCalledWith(["value1", "test"], null);
   });
 
+  it("Should commit pending text when the field loses focus.", async () => {
+    const handleInputChange = vi.fn();
+
+    render(
+      <>
+        <TextListFormInput
+          attributeName="text_list"
+          type={TextInputTypes.text}
+          attributeValue={["value1"]}
+          description="a text list input field"
+          handleInputChange={handleInputChange}
+        />
+        <button>outside</button>
+      </>
+    );
+
+    await userEvent.type(screen.getByRole("textbox"), "test");
+    await userEvent.click(screen.getByRole("button", { name: "outside" }));
+
+    expect(handleInputChange).toHaveBeenCalledWith(["value1", "test"], null);
+  });
+
+  it("Should not commit the typed filter when a suggestion is clicked.", async () => {
+    const handleInputChange = vi.fn();
+    const suggestions: SuggestionValue[] = [{ label: "Production network", value: "9f3c1b2a" }];
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={[]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+        suggestions={suggestions}
+      />
+    );
+
+    const input = screen.getByRole("textbox");
+
+    await userEvent.type(input, "Prod");
+    await userEvent.click(screen.getByRole("menuitem", { name: suggestions[0].label }));
+
+    expect(handleInputChange).not.toHaveBeenCalled();
+    expect(input).toHaveValue(suggestions[0].label);
+  });
+
+  it("Should not commit the typed filter when arrowing into the suggestions.", async () => {
+    const handleInputChange = vi.fn();
+    const suggestions: SuggestionValue[] = [{ label: "Production network", value: "9f3c1b2a" }];
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={[]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+        suggestions={suggestions}
+      />
+    );
+
+    await userEvent.type(screen.getByRole("textbox"), "Prod");
+    await userEvent.keyboard("{ArrowDown}");
+
+    expect(screen.getByRole("menuitem", { name: suggestions[0].label })).toHaveFocus();
+    expect(handleInputChange).not.toHaveBeenCalled();
+  });
+
   it("Should remove one chip from the input on delete.", async () => {
     render(
       <TextListFormInput
