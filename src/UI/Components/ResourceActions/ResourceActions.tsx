@@ -26,6 +26,11 @@ const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 
 type ActionKey = keyof typeof DeployAgentsAction;
 
+/**
+ * The tooltip text per action, so each page can describe what the action does in its own context.
+ */
+type ResourceActionTooltips = Record<ActionKey, string>;
+
 interface ActionConfig {
   icon: React.ReactNode;
   label: string;
@@ -34,6 +39,7 @@ interface ActionConfig {
 }
 
 interface BaseProps {
+  tooltips: ResourceActionTooltips;
   disabledReason?: string;
 }
 
@@ -51,12 +57,13 @@ type Props =
  * @Props {Props} - The props of the component
  *  @prop {ResourceActionFilter} filter - Runs immediately against this filter (mutually exclusive with scopes)
  *  @prop {NonEmptyArray<ResourceActionScope>} scopes - Opens a confirm dialog offering these scopes (first is the default)
+ *  @prop {ResourceActionTooltips} tooltips - The tooltip text for Deploy and Repair on this page
  *  @prop {string} [disabledReason] - When set, disables the control and shows this as its tooltip
  *
  * @returns {React.FC<Props>} The rendered split button
  */
 export const ResourceActions: React.FC<Props> = (props) => {
-  const { disabledReason } = props;
+  const { disabledReason, tooltips } = props;
   const [isOpen, setIsOpen] = useState(false);
   const { environmentHandler } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
@@ -77,7 +84,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
       ),
       label: words("resources.compoundStateSummary.deploy"),
       hint: words("resources.resourceActions.deploy.hint"),
-      tooltip: words("resources.resourceActions.deploy.tooltip"),
+      tooltip: tooltips.deploy,
     },
     repair: {
       icon: (
@@ -87,7 +94,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
       ),
       label: words("resources.compoundStateSummary.repair"),
       hint: words("resources.resourceActions.repair.hint"),
-      tooltip: words("resources.resourceActions.repair.tooltip"),
+      tooltip: tooltips.repair,
     },
   };
 
