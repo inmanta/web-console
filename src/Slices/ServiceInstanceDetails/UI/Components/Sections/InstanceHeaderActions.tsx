@@ -64,7 +64,14 @@ export const InstanceHeaderActions: React.FC = () => {
   return (
     <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapMd" }}>
       <FlexItem>
-        <ResourceActions scopes={scopes} disabledReason={disabledReason} />
+        <ResourceActions
+          scopes={scopes}
+          tooltips={{
+            deploy: words("resources.resourceActions.deploy.tooltip.instance"),
+            repair: words("resources.resourceActions.repair.tooltip.instance"),
+          }}
+          disabledReason={disabledReason}
+        />
       </FlexItem>
       <FlexItem>
         <InstanceActions />
