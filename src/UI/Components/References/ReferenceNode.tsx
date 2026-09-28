@@ -13,6 +13,8 @@ import {
 import styled from "styled-components";
 import { Reference } from "@/Core/Domain";
 import { summarize } from "@/Data/Common/References";
+import { TabKey } from "@/Slices/ResourceDetails/UI/Tabs/TabKey";
+import { ResourceLink } from "@/UI/Components/ResourceLink";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { words } from "@/UI/words";
 import { ArgumentValue } from "./ArgumentValue";
@@ -32,14 +34,30 @@ interface Props {
   path?: string;
 }
 
-// The implicit self `resource` argument always points at the resource on screen,
-// so it is dropped; genuine resource arguments (a different name) still render.
+// The `resource` argument is the resource on screen, so it is dropped. Other resource
+// arguments still render as a link.
 const isSelfResourceArg = (arg: Reference.Argument): boolean =>
   arg.kind === "resource" && arg.name === "resource";
 
 /**
+ * The resource a `std::FactReference` reads its fact from, or `undefined` for any
+ * other argument. The type stores it as a plain string `resource_id`, so it arrives
+ * as a literal rather than a resource argument.
+ *
+ * @example factResourceId(factNode, { kind: "literal", name: "resource_id", value: "std::File[a,path=/tmp]" }) -> "std::File[a,path=/tmp]"
+ */
+const factResourceId = (node: Reference.Reference, arg: Reference.Argument): string | undefined =>
+  node.type === Reference.FACT_REFERENCE_TYPE &&
+  arg.kind === "literal" &&
+  arg.name === "resource_id" &&
+  typeof arg.value === "string"
+    ? arg.value
+    : undefined;
+
+/**
  * One reference at any depth: a chip with a chevron, and when expanded a card with
- * its copyable id and one row per argument. A missing id, an ancestor cycle, or the
+ * its copyable id and one row per argument. A fact reference's `resource_id` links to
+ * that resource's Facts tab. A missing id, an ancestor cycle, or the
  * depth cap each render a terminal chip or notice instead of recursing. Expansion is
  * keyed by `path` (its position in the tree, defaulting to the id at the top level), so
  * a node shown in two places opens independently.
@@ -117,22 +135,30 @@ export const ReferenceNode: React.FC<Props> = ({
               </TextWithCopy>
             </Uuid>
             <DescriptionList>
-              {visibleArgs.map((arg) => (
-                <DescriptionListGroup key={arg.name}>
-                  <DescriptionListTerm>{arg.name}</DescriptionListTerm>
-                  <DescriptionListDescription>
-                    <ArgumentValue
-                      argument={arg}
-                      index={index}
-                      isExpanded={isExpanded}
-                      onToggle={onToggle}
-                      depth={depth}
-                      ancestors={childAncestors}
-                      path={nodePath}
-                    />
-                  </DescriptionListDescription>
-                </DescriptionListGroup>
-              ))}
+              {visibleArgs.map((arg) => {
+                const factResource = factResourceId(node, arg);
+
+                return (
+                  <DescriptionListGroup key={arg.name}>
+                    <DescriptionListTerm>{arg.name}</DescriptionListTerm>
+                    <DescriptionListDescription>
+                      {factResource !== undefined ? (
+                        <ResourceLink resourceId={factResource} tab={TabKey.Facts} />
+                      ) : (
+                        <ArgumentValue
+                          argument={arg}
+                          index={index}
+                          isExpanded={isExpanded}
+                          onToggle={onToggle}
+                          depth={depth}
+                          ancestors={childAncestors}
+                          path={nodePath}
+                        />
+                      )}
+                    </DescriptionListDescription>
+                  </DescriptionListGroup>
+                );
+              })}
             </DescriptionList>
           </CardBody>
         </Card>

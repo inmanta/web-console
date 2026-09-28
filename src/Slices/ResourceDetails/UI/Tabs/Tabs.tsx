@@ -9,14 +9,9 @@ import { FactsTab } from "./FactsTab";
 import { ResourceHistoryView } from "./HistoryTab/ResourceHistoryView";
 import { ResourceLogView } from "./LogTab";
 import { RequiresTab } from "./RequiresTab";
+import { TabKey } from "./TabKey";
 
-export enum TabKey {
-  Requires = "Requires",
-  Attributes = "Attributes",
-  History = "History",
-  Logs = "Logs",
-  Facts = "Facts",
-}
+export { TabKey };
 
 interface Props {
   id: string;

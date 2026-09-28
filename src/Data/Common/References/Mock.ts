@@ -6,7 +6,8 @@ import { Reference } from "@/Core/Domain";
  * whole `value` is replaced: one `core::Replace` mutator in front of seven
  * reference nodes three levels deep, with an `mjson` argument keyed `$[0..2]`.
  * `environment*` is the common case: a secret in one nested attribute filled by
- * a single `std::Environment`. `referenceAttributes` combines both into one
+ * a single `std::Environment`. `fact*` is a `std::FactReference` that reads a fact
+ * of another resource at deploy time. `referenceAttributes` combines the first two into one
  * attribute set. The `template` literal is trimmed for readability; it still
  * classifies as multiline `Code`.
  */
@@ -150,6 +151,24 @@ export const environmentMutators: Reference.RawMutator[] = [
       },
       { name: "value", type: "reference", id: "342e665e-1ff9-3037-adf1-9c1cbc154fed" },
       { name: "destination", type: "literal", value: "api.'api_token'" },
+    ],
+  },
+];
+
+export const factReferences: Reference.RawReference[] = [
+  {
+    id: "62df3abb-eca8-3383-a20b-a7cf261f2179",
+    type: Reference.FACT_REFERENCE_TYPE,
+    args: [
+      { name: "environment", type: "literal", value: "ba41ca55-23e0-4331-8c3a-e5751c84d290" },
+      {
+        name: "resource_id",
+        type: "literal",
+        value:
+          "frontend_model::references_showcase::FactSourceResource[internal,name=references-showcase-fact-source-test]",
+      },
+      { name: "fact_name", type: "literal", value: "ip_address" },
+      { name: "mocked_facts", type: "literal", value: null },
     ],
   },
 ];

@@ -4,8 +4,13 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Reference } from "@/Core/Domain";
 import { indexReferences } from "@/Data/Common/References";
-import { complianceReferences, environmentReferences } from "@/Data/Common/References/Mock";
+import {
+  complianceReferences,
+  environmentReferences,
+  factReferences,
+} from "@/Data/Common/References/Mock";
 import { useExpansion } from "@/Data/Common/useExpansion";
+import { TabKey } from "@/Slices/ResourceDetails/UI/Tabs/TabKey";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -28,10 +33,10 @@ const Harness: React.FC<{ referenceId: string; index: Reference.ReferenceIndex }
   );
 };
 
-const renderNode = (ui: React.ReactNode) =>
+const renderNode = (ui: React.ReactNode, initialEntry = "/") =>
   render(
     <QueryClientProvider client={testClient}>
-      <TestMemoryRouter initialEntries={["/"]}>
+      <TestMemoryRouter initialEntries={[initialEntry]}>
         <MockedDependencyProvider>{ui}</MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
@@ -168,6 +173,27 @@ test("renders each argument kind, links genuine resources and drops the self res
 
   // an unknown kind shows its type name plus the raw payload, no crash
   expect(screen.getByText("brand_new_kind")).toBeVisible();
+});
+
+test("links a fact reference's resource_id to that resource's Facts tab, keeping the environment", async () => {
+  const fact = factReferences[0];
+  const env = "fact-env";
+  const resourceId = String(fact.args.find((arg) => arg.name === "resource_id")?.value);
+
+  renderNode(
+    <Harness referenceId={fact.id} index={indexReferences(factReferences)} />,
+    `/?env=${env}`
+  );
+  await userEvent.click(screen.getByRole("button", { name: /std::FactReference/ }));
+
+  const url = new URL(
+    screen.getByRole("link", { name: resourceId }).getAttribute("href") ?? "",
+    "http://localhost"
+  );
+
+  expect(decodeURIComponent(url.pathname)).toContain(resourceId);
+  expect(url.searchParams.get("state.ResourceDetails.tab")).toBe(TabKey.Facts);
+  expect(url.searchParams.get("env")).toBe(env);
 });
 
 test("renders a shared node at every occurrence, each expanding independently", async () => {
