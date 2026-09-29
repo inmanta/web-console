@@ -25,7 +25,7 @@ import {
 import { AttributeValue } from "@/UI/Components/AttributeList";
 import { ReferenceNode, ReplacementList } from "@/UI/Components/References";
 import { words } from "@/UI/words";
-import { MACHINERY_KEYS, groupReplacements, partitionFramework } from "./helpers";
+import { MACHINERY_KEYS, groupReplacements, partitionOrchestrator } from "./helpers";
 
 interface Props {
   attributes: Record<string, unknown>;
@@ -37,7 +37,7 @@ interface Props {
 /**
  * The structured view of a resource's attributes. A whole-attribute reference
  * replaces the null with an expandable node; a nested one keeps the value and lists
- * its replacements below. Model and framework attributes get separate cards, and
+ * its replacements below. Model and orchestrator attributes get separate cards, and
  * the reference machinery keys are hidden.
  *
  * @prop {Record<string, unknown>} attributes - The raw attributes of the resource.
@@ -52,7 +52,7 @@ export const ResourceAttributes: React.FC<Props> = ({
   onToggle,
 }) => {
   // Derived once per payload, not on every expansion toggle or refetch render.
-  const { index, replacementsByKey, model, framework, undisplayedCount } = useMemo(() => {
+  const { index, replacementsByKey, model, orchestrator, undisplayedCount } = useMemo(() => {
     const { replacements, undisplayedCount } = collectReplacements(extractMutators(attributes));
     const shownAttributes = Object.fromEntries(
       Object.entries(attributes).filter(([key]) => !MACHINERY_KEYS.includes(key))
@@ -66,7 +66,7 @@ export const ResourceAttributes: React.FC<Props> = ({
     return {
       index: indexReferences(extractReferences(attributes)),
       replacementsByKey: groupReplacements(replacements),
-      ...partitionFramework(classified),
+      ...partitionOrchestrator(classified),
       undisplayedCount: undisplayedCount + orphanedCount,
     };
   }, [attributes, classifier]);
@@ -87,7 +87,7 @@ export const ResourceAttributes: React.FC<Props> = ({
   );
 
   // The model group is a single column, where a value can be a whole reference tree
-  // or a code block. The framework values are short, so they wrap side by side.
+  // or a code block. The orchestrator values are short, so they wrap side by side.
   return (
     <Stack hasGutter>
       <StackItem>
@@ -98,13 +98,13 @@ export const ResourceAttributes: React.FC<Props> = ({
           </CardBody>
         </Card>
       </StackItem>
-      {framework.length > 0 && (
+      {orchestrator.length > 0 && (
         <StackItem>
           <Card isCompact>
-            <CardTitle>{words("resources.attributes.frameworkGroup")}</CardTitle>
+            <CardTitle>{words("resources.attributes.orchestratorGroup")}</CardTitle>
             <CardBody>
               <Flex gap={{ default: "gap4xl" }} flexWrap={{ default: "wrap" }}>
-                {framework.map((attribute) => (
+                {orchestrator.map((attribute) => (
                   <FlexItem key={attribute.key}>
                     <DescriptionList isCompact>{renderAttribute(attribute)}</DescriptionList>
                   </FlexItem>
