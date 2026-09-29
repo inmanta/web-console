@@ -87,6 +87,40 @@ describe("AttributesTable", () => {
     expect(screen.getByText("active-name")).toBeVisible();
   });
 
+  it("restores the selected set when it is available again", async () => {
+    const bothSets = {
+      active_attributes: { name: "active-name" },
+      candidate_attributes: { name: "candidate-name" },
+    };
+    const bothOptions = ["active_attributes", "candidate_attributes"];
+    const renderTable = (
+      dropdownOptions: string[],
+      attributeSets: typeof bothSets | Partial<typeof bothSets>
+    ) => (
+      <SetupWrapper expertMode={false}>
+        <AttributesTable
+          dropdownOptions={dropdownOptions}
+          attributeSets={attributeSets}
+          serviceModel={serviceModel}
+        />
+      </SetupWrapper>
+    );
+    const { rerender } = render(renderTable(bothOptions, bothSets));
+
+    await userEvent.selectOptions(
+      screen.getByRole("combobox", { name: /select-attributeset/i }),
+      "candidate_attributes"
+    );
+
+    rerender(renderTable(["active_attributes"], { active_attributes: bothSets.active_attributes }));
+    rerender(renderTable(bothOptions, bothSets));
+
+    expect(screen.getByRole("combobox", { name: /select-attributeset/i })).toHaveValue(
+      "candidate_attributes"
+    );
+    expect(screen.getByText("candidate-name")).toBeVisible();
+  });
+
   describe("unit formatting", () => {
     const bandwidthServiceModel: ServiceModel = {
       ...serviceModel,
