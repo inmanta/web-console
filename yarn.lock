@@ -966,7 +966,7 @@ __metadata:
     highlight.js: "npm:^11.12.0"
     jest-axe: "npm:^11.0.0"
     jsdom: "npm:^29.1.1"
-    jsonpathly: "npm:^3.0.0"
+    jsonpathly: "npm:^3.0.1"
     keycloak-js: "npm:^26.2.4"
     madge: "npm:^6.1.0"
     markdown-it: "npm:^15.0.2"
@@ -8236,10 +8236,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonpathly@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "jsonpathly@npm:3.0.0"
-  checksum: 10/606729d7ea924376fcbd2d5b0a99f200cbbe350825af3cbcd549b51435b92a796d28613174c3ab87da9ad629d5cd657a8a6d8d88c94535db42b9e67f9ab7f014
+"jsonpathly@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "jsonpathly@npm:3.0.1"
+  checksum: 10/30ce20168434df57f15b706f2c7b0b77c16940e8b43047153096249c0c0a2120cda9b21bde957fedb756f3de69ab926ae4d7a0c1cca2ce2a5428a2ffcdfb966a
   languageName: node
   linkType: hard
 
