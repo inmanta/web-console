@@ -20,6 +20,7 @@ export * from "./ServiceModel";
 export * from "./LogLevel";
 export * as PageSize from "./PageSize";
 export * from "./Route";
+export * from "./ResourceDetailsTab";
 export * from "./EnvironmentDetailsModel";
 export * from "./Uuid";
 export * as Sort from "./Sort";

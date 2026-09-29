@@ -2,9 +2,14 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Reference } from "@/Core/Domain";
+import { Reference, ResourceDetailsTab } from "@/Core/Domain";
 import { indexReferences } from "@/Data/Common/References";
-import { complianceReferences, environmentReferences } from "@/Data/Common/References/Mock";
+import {
+  complianceReferences,
+  environmentReferences,
+  factReferences,
+  factSourceResourceId,
+} from "@/Data/Common/References/Mock";
 import { useExpansion } from "@/Data/Common/useExpansion";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -28,10 +33,10 @@ const Harness: React.FC<{ referenceId: string; index: Reference.ReferenceIndex }
   );
 };
 
-const renderNode = (ui: React.ReactNode) =>
+const renderNode = (ui: React.ReactNode, initialEntry = "/") =>
   render(
     <QueryClientProvider client={testClient}>
-      <TestMemoryRouter initialEntries={["/"]}>
+      <TestMemoryRouter initialEntries={[initialEntry]}>
         <MockedDependencyProvider>{ui}</MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
@@ -168,6 +173,26 @@ test("renders each argument kind, links genuine resources and drops the self res
 
   // an unknown kind shows its type name plus the raw payload, no crash
   expect(screen.getByText("brand_new_kind")).toBeVisible();
+});
+
+test("links a fact reference's resource_id to that resource's Facts tab, keeping the environment", async () => {
+  const fact = factReferences[0];
+  const env = "fact-env";
+
+  renderNode(
+    <Harness referenceId={fact.id} index={indexReferences(factReferences)} />,
+    `/?env=${env}`
+  );
+  await userEvent.click(screen.getByRole("button", { name: /std::FactReference/ }));
+
+  const url = new URL(
+    screen.getByRole("link", { name: factSourceResourceId }).getAttribute("href") ?? "",
+    "http://localhost"
+  );
+
+  expect(decodeURIComponent(url.pathname)).toContain(factSourceResourceId);
+  expect(url.searchParams.get("state.ResourceDetails.tab")).toBe(ResourceDetailsTab.Facts);
+  expect(url.searchParams.get("env")).toBe(env);
 });
 
 test("renders a shared node at every occurrence, each expanding independently", async () => {
