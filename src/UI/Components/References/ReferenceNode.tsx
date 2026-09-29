@@ -11,9 +11,8 @@ import {
   HelperTextItem,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Reference } from "@/Core/Domain";
+import { Reference, ResourceDetailsTab } from "@/Core/Domain";
 import { summarize } from "@/Data/Common/References";
-import { TabKey } from "@/Slices/ResourceDetails/UI/Tabs/TabKey";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { words } from "@/UI/words";
@@ -143,7 +142,7 @@ export const ReferenceNode: React.FC<Props> = ({
                     <DescriptionListTerm>{arg.name}</DescriptionListTerm>
                     <DescriptionListDescription>
                       {factResource !== undefined ? (
-                        <ResourceLink resourceId={factResource} tab={TabKey.Facts} />
+                        <ResourceLink resourceId={factResource} tab={ResourceDetailsTab.Facts} />
                       ) : (
                         <ArgumentValue
                           argument={arg}

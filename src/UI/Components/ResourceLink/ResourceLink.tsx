@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { useLocation } from "react-router";
 import { Button, ButtonVariant, Truncate } from "@patternfly/react-core";
 import { keepKeys } from "@/Core";
+import { ResourceDetailsTab } from "@/Core/Domain";
 import { Link } from "@/UI/Components/Link";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchHelper } from "@/UI/Routing";
@@ -13,7 +14,7 @@ interface Props {
   linkText?: string;
   variant?: ButtonVariant;
   isInline?: boolean;
-  tab?: string;
+  tab?: ResourceDetailsTab;
 }
 
 /**
@@ -23,13 +24,13 @@ interface Props {
  * A `tab` opens the details page on that tab.
  *
  * @example <ResourceLink resourceId="std::File[a,path=/tmp]" /> -> link to /resources/std::File...?env=...
- * @example <ResourceLink resourceId="std::File[a,path=/tmp]" tab="Facts" /> -> ...?env=...&state.ResourceDetails.tab=Facts
+ * @example <ResourceLink resourceId="std::File[a,path=/tmp]" tab={ResourceDetailsTab.Facts} /> -> ...?env=...&state.ResourceDetails.tab=Facts
  *
  * @prop {string} resourceId - The id of the resource to link to.
  * @prop {string} [linkText] - Text to show instead of the resource id.
  * @prop {ButtonVariant} [variant] - Button variant of the block link.
  * @prop {boolean} [isInline] - Whether the link sizes to its content instead of filling the container.
- * @prop {string} [tab] - The details page tab to open.
+ * @prop {ResourceDetailsTab} [tab] - The details page tab to open.
  */
 export const ResourceLink: React.FC<Props> = ({
   resourceId,
@@ -51,14 +52,14 @@ export const ResourceLink: React.FC<Props> = ({
 
   if (isInline) {
     return (
-      <Link pathname={pathname} search={search} envOnly={!tab} fitContent>
+      <Link pathname={pathname} search={search} envOnly fitContent>
         {linkText ? linkText : resourceId}
       </Link>
     );
   }
 
   return (
-    <Link pathname={pathname} search={search} envOnly={!tab}>
+    <Link pathname={pathname} search={search} envOnly>
       <Button variant={variant} component="span">
         <Truncate content={linkText ? linkText : resourceId} />
       </Button>

@@ -155,6 +155,10 @@ export const environmentMutators: Reference.RawMutator[] = [
   },
 ];
 
+/** The resource `factReferences` reads its fact from. */
+export const factSourceResourceId =
+  "frontend_model::references_showcase::FactSourceResource[internal,name=references-showcase-fact-source-test]";
+
 export const factReferences: Reference.RawReference[] = [
   {
     id: "62df3abb-eca8-3383-a20b-a7cf261f2179",
@@ -164,8 +168,7 @@ export const factReferences: Reference.RawReference[] = [
       {
         name: "resource_id",
         type: "literal",
-        value:
-          "frontend_model::references_showcase::FactSourceResource[internal,name=references-showcase-fact-source-test]",
+        value: factSourceResourceId,
       },
       { name: "fact_name", type: "literal", value: "ip_address" },
       { name: "mocked_facts", type: "literal", value: null },
