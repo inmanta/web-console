@@ -95,6 +95,7 @@ export interface DictListField extends BaseField {
   fields: Field[];
   min: ParsedNumber;
   max?: ParsedNumber | null;
+  keyAttributes?: string[];
 }
 
 interface RelationListField extends BaseField {

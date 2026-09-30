@@ -104,6 +104,7 @@ export class FieldCreator {
         fields: [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities, ...fieldsFromRelations],
         min: entity.lower_limit,
         max: entity.upper_limit,
+        keyAttributes: entity.key_attributes ?? [],
         isDisabled: this.shouldFieldBeDisabled(entity),
         tab,
       };

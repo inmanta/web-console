@@ -581,9 +581,31 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
     })
   );
 
-  await userEvent.click(within(group).getByRole("button", { name: "0" }));
+  await userEvent.click(within(group).getByRole("button", { name: "#1" }));
 
   expect(screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })).toBeVisible();
+});
+
+test("GIVEN ServiceInstanceForm and a DictListField with key attributes WHEN rendered THEN items are titled by their key values", async () => {
+  const originalAttributes = {
+    dict_list_field: [{ text_field: "ep-east" }, { text_field: "" }],
+  };
+
+  const { component } = setup(
+    [{ ...Test.Field.dictList([Test.Field.text]), keyAttributes: ["text_field"] }],
+    undefined,
+    true,
+    originalAttributes
+  );
+
+  render(component);
+
+  const group = screen.getByRole("group", { name: "dict_list_field" });
+
+  await userEvent.click(within(group).getByRole("button", { name: "dict_list_field" }));
+
+  expect(within(group).getByRole("button", { name: "ep-east" })).toBeVisible();
+  expect(within(group).getByRole("button", { name: "#2" })).toBeVisible();
 });
 
 test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, new items should be enabled.", async () => {
@@ -616,7 +638,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
     })
   );
 
-  await userEvent.click(within(group).getByRole("button", { name: "0" }));
+  await userEvent.click(within(group).getByRole("button", { name: "#1" }));
 
   expect(
     screen.queryByRole("textbox", {
@@ -636,7 +658,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
     })
   );
 
-  await userEvent.click(within(nestedGroup).getByRole("button", { name: "0" }));
+  await userEvent.click(within(nestedGroup).getByRole("button", { name: "#1" }));
 
   const disabledNestedTextField = within(nestedGroup).getByRole("textbox", {
     name: `TextInput-${Test.Field.textDisabled.name}`,
@@ -646,7 +668,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
 
   await userEvent.click(within(nestedGroup).getByRole("button", { name: "Add" }));
 
-  await userEvent.click(within(nestedGroup).getByRole("button", { name: "1" }));
+  await userEvent.click(within(nestedGroup).getByRole("button", { name: "#2" }));
 
   const nestedTextFields = screen.getAllByRole("textbox", {
     name: `TextInput-${Test.Field.textDisabled.name}`,
@@ -680,9 +702,9 @@ test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index,
   await userEvent.click(screen.getByRole("button", { name: dictListField.name }));
 
   // Open all the collapsible sections
-  await userEvent.click(screen.getByRole("button", { name: "0" }));
-  await userEvent.click(screen.getByRole("button", { name: "1" }));
-  await userEvent.click(screen.getByRole("button", { name: "2" }));
+  await userEvent.click(screen.getByRole("button", { name: "#1" }));
+  await userEvent.click(screen.getByRole("button", { name: "#2" }));
+  await userEvent.click(screen.getByRole("button", { name: "#3" }));
 
   const textBoxes = screen.getAllByRole("textbox");
 
@@ -751,7 +773,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
 
   await userEvent.click(screen.getByRole("button", { name: dictListField.name }));
 
-  await userEvent.click(screen.getByRole("button", { name: "0" }));
+  await userEvent.click(screen.getByRole("button", { name: "#1" }));
 
   await userEvent.type(
     screen.getByRole("textbox", {

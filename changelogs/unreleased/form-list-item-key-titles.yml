@@ -1,0 +1,5 @@
+description: Items of a list in the service instance form are now titled by their key attribute values instead of their index.
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

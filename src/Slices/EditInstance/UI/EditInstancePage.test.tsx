@@ -210,7 +210,7 @@ describe("EditInstancePage", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "circuits" }));
 
-    await userEvent.click(screen.getByRole("button", { name: "0" }));
+    await userEvent.click(screen.getByRole("button", { name: "#1" }));
 
     expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
 
@@ -247,7 +247,7 @@ describe("EditInstancePage", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "circuits" }));
 
-    await userEvent.click(screen.getByRole("button", { name: "0" }));
+    await userEvent.click(screen.getByRole("button", { name: "#1" }));
 
     expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
 
@@ -367,7 +367,7 @@ describe("EditInstancePage", () => {
     ).toBeEnabled();
 
     //check if direct attributes for embedded entities are correctly displayed
-    await userEvent.click(within(embedded_base).getByRole("button", { name: "0" }));
+    await userEvent.click(within(embedded_base).getByRole("button", { name: "#1" }));
 
     expect(within(embedded_base).queryByDisplayValue("string")).toBeDisabled();
     expect(within(embedded_base).queryByDisplayValue("editableString")).toBeEnabled();
@@ -520,7 +520,9 @@ describe("EditInstancePage", () => {
 
     await userEvent.click(within(editableOptionalEmbedded_base).getByText("Add"));
 
-    await userEvent.click(within(editableOptionalEmbedded_base).getByRole("button", { name: "1" }));
+    await userEvent.click(
+      within(editableOptionalEmbedded_base).getByRole("button", { name: "#2" })
+    );
 
     const addedOptionalEmbedded = screen.getByLabelText(
       "DictListFieldInputItem-editableOptionalEmbedded_base.1"
@@ -652,7 +654,7 @@ describe("EditInstancePage", () => {
 
     await userEvent.click(screen.getByText("Add"));
 
-    await userEvent.click(screen.getByRole("button", { name: "0" }));
+    await userEvent.click(screen.getByRole("button", { name: "#1" }));
 
     await userEvent.click(screen.getAllByText("Add")[1]);
 
@@ -666,7 +668,7 @@ describe("EditInstancePage", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "another_embedded" }));
 
-    await userEvent.click(within(another_embedded_group).getByRole("button", { name: "0" }));
+    await userEvent.click(within(another_embedded_group).getByRole("button", { name: "#1" }));
 
     const deep_nested_group = screen.getByLabelText(
       "DictListFieldInput-embedded.0.embedded_single.another_embedded.0.another_deeper_embedded"
@@ -676,7 +678,7 @@ describe("EditInstancePage", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "another_deeper_embedded" }));
 
-    await userEvent.click(within(deep_nested_group).getByRole("button", { name: "0" }));
+    await userEvent.click(within(deep_nested_group).getByRole("button", { name: "#1" }));
 
     // expect all fields in deep_nested_group to be enabled
     const deep_nested_group_fields = within(deep_nested_group).getAllByRole("textbox");

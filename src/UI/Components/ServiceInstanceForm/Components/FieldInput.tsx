@@ -588,6 +588,17 @@ interface DictListProps {
 }
 
 /**
+ * Titles a list item by its key attribute values, or by its position while those are empty.
+ */
+const getItemTitle = (item: unknown, index: number, keyAttributes: string[] = []): string => {
+  const values = keyAttributes
+    .map((key) => get<unknown>(item, key))
+    .filter((value) => value !== null && value !== undefined && value !== "");
+
+  return values.length > 0 ? values.join(" / ") : `#${index + 1}`;
+};
+
+/**
  * DictListFieldInput component with inner state to manage dictionary list field input.
  *
  * @param {DictListProps} props - Props for the DictListFieldInput component.
@@ -704,14 +715,14 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     />
   );
 
-  const items = list.map((_item, index) => (
+  const items = list.map((item, index) => (
     <FormFieldGroupExpandable
       aria-label={`DictListFieldInputItem-${makePath(path, `${field.name}.${index}`)}`}
       key={makePath(path, `${field.name}.${itemIds[index]}`)}
       header={
         <FormFieldGroupHeader
           titleText={{
-            text: index,
+            text: getItemTitle(item, index, field.keyAttributes),
             id: `DictListFieldInputItem-${makePath(path, `${field.name}.${index}`)}`,
           }}
           actions={
