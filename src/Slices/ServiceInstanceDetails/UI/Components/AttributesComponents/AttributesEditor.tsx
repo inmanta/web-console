@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
   Button,
   Flex,
@@ -46,7 +46,10 @@ export const AttributesEditor: React.FC<Props> = ({
   const isLatestVersion = String(instance.version) === selectedVersion;
 
   const [selectedSet, setSelectedSet] = useState(dropdownOptions[0]);
-  const [editorDataOriginal, setEditorDataOriginal] = useState<string>("");
+
+  // The selected set can be missing from the selected version. Show the first option then, but keep the choice for when it is available again.
+  const activeSet = dropdownOptions.includes(selectedSet) ? selectedSet : dropdownOptions[0];
+  const editorDataOriginal = JSON.stringify(attributeSets[activeSet], null, 2);
 
   const { environmentHandler } = useContext(DependencyContext);
   const [isEditorValid, setIsEditorValid] = useState<boolean>(true);
@@ -85,24 +88,12 @@ export const AttributesEditor: React.FC<Props> = ({
     [setEditorState, setIsEditorValid]
   );
 
-  useEffect(() => {
-    setEditorDataOriginal(JSON.stringify(attributeSets[selectedSet], null, 2));
-  }, [attributeSets, selectedSet]);
-
-  useEffect(() => {
-    // When the version changes, it can happen that the selectedSet isn't available in the dropdown.
-    // In that case, we want to fall back to the first option available.
-    if (!dropdownOptions.includes(selectedSet)) {
-      setSelectedSet(dropdownOptions[0]);
-    }
-  }, [dropdownOptions, selectedSet]);
-
   return (
     <>
       <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
         <FlexItem>
           <StyledSelect
-            value={selectedSet}
+            value={activeSet}
             onChange={onSetSelectionChange}
             aria-label="Select-AttributeSet"
             ouiaId="Select-AttributeSet"
@@ -128,7 +119,7 @@ export const AttributesEditor: React.FC<Props> = ({
                   content: (
                     <ModalContent
                       instance={instance}
-                      selectedSet={selectedSet}
+                      selectedSet={activeSet}
                       editorState={editorState}
                     />
                   ),
