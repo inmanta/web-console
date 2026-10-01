@@ -1,6 +1,6 @@
 import { Reference } from "@/Core/Domain";
 import { ClassifiedAttribute } from "@/Data/Common/AttributeClassifier/ClassifiedAttribute";
-import { groupReplacements, partitionFramework } from "./helpers";
+import { groupReplacements, partitionOrchestrator } from "./helpers";
 
 describe("groupReplacements", () => {
   test("groups replacements by the attribute they target", () => {
@@ -17,8 +17,8 @@ describe("groupReplacements", () => {
   });
 });
 
-describe("partitionFramework", () => {
-  test("splits framework attributes out from the model's own, keeping order", () => {
+describe("partitionOrchestrator", () => {
+  test("splits orchestrator attributes out from the model's own, keeping order", () => {
     const attributes: ClassifiedAttribute[] = [
       { kind: "SingleLine", key: "api", value: "x" },
       { kind: "SingleLine", key: "report_only", value: "false" },
@@ -26,9 +26,9 @@ describe("partitionFramework", () => {
       { kind: "SingleLine", key: "send_event", value: "true" },
     ];
 
-    const { model, framework } = partitionFramework(attributes);
+    const { model, orchestrator } = partitionOrchestrator(attributes);
 
     expect(model.map((attribute) => attribute.key)).toEqual(["api", "url"]);
-    expect(framework.map((attribute) => attribute.key)).toEqual(["report_only", "send_event"]);
+    expect(orchestrator.map((attribute) => attribute.key)).toEqual(["report_only", "send_event"]);
   });
 });

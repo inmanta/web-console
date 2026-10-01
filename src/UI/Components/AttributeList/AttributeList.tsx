@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Content,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -9,6 +10,7 @@ import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { ClassifiedAttribute } from "@/Data";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
+import { words } from "@/UI/words";
 import { CodeEditor } from "../CodeEditor";
 import { FileBlock } from "./FileBlock";
 import { languageForKind } from "./helpers";
@@ -42,8 +44,8 @@ export const AttributeList: React.FC<Props> = ({ attributes, variant = "default"
 
 /**
  * Renders a single classified attribute's value with the control appropriate to
- * its kind — copyable text for SingleLine, the code editor for JSON/XML/Code, a
- * file block for File, etc. Use this directly (instead of
+ * its kind: copyable text for SingleLine (a muted marker without copy when empty),
+ * the code editor for JSON/XML/Code, a file block for File, etc. Use this directly (instead of
  * {@link AttributeList}) when you need the value rendering without the
  * surrounding description-list term/label.
  */
@@ -63,6 +65,14 @@ export const AttributeValue: React.FC<{
       return <TextContainer $variant={variant}>{attribute.value}</TextContainer>;
 
     case "SingleLine":
+      if (attribute.value === "") {
+        return (
+          <Content component="small">
+            <em>{words("attributes.emptyString")}</em>
+          </Content>
+        );
+      }
+
       return (
         <TextWithCopy value={attribute.value} tooltipContent="Copy to clipboard">
           <TextContainer $variant={variant}>{attribute.value}</TextContainer>
