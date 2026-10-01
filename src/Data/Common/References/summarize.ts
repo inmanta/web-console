@@ -5,11 +5,16 @@ const MAX_LITERAL_ARGS = 2;
 const MAX_VALUE_LENGTH = 40;
 
 // The chip-label value: classified and blanked like the full attribute view (a
-// password shows ****, the undefined sentinel "undefined").
+// password shows ****, the undefined sentinel "undefined"). An empty string shows
+// as "" so the label does not end in a bare "=".
 const displayValue = (name: string, value: unknown): string => {
   const classified = classifyValue(name, value);
 
-  return classified.kind === "Undefined" ? "undefined" : classified.value;
+  if (classified.kind === "Undefined") {
+    return "undefined";
+  }
+
+  return classified.value === "" ? '""' : classified.value;
 };
 
 const truncate = (value: string): string => {
