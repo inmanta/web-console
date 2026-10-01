@@ -53,6 +53,18 @@ test("GIVEN State label WHEN the state has a web_description annotation THEN it 
   expect(await screen.findByRole("tooltip")).toHaveTextContent("The service is being deployed.");
 });
 
+test("GIVEN State label WHEN the state has a status color and a web_icon THEN the icon is inline so it takes the status color from the label", async () => {
+  render(
+    <InstanceStateLabel
+      name="failed"
+      label="danger"
+      annotations={{ web_icon: "FaExclamationTriangle" }}
+    />
+  );
+
+  expect(await screen.findByTestId("FaExclamationTriangle")).toHaveClass("pf-m-inline");
+});
+
 test("GIVEN State label WHEN the state has annotations but no status color THEN a badge is still rendered", async () => {
   render(<InstanceStateLabel name="creating" annotations={{ web_label: "Creating" }} />);
 
