@@ -107,13 +107,9 @@ export const GlobalStyles = createGlobalStyle`
      --pf-v6-c-label--BorderColor: var(--pf-t--color--blue--50);
   }
 
-  /** Keep label icons at the label's font size and line-height so all icon sources render the same. **/
+  /** Without this, the label icon wrapper inherits the label's line-height and pushes the icon above the text. **/
   .pf-v6-c-label__icon {
     line-height: 1;
-
-    .pf-v6-c-icon {
-      --pf-v6-c-icon__content--FontSize: var(--pf-t--global--icon--size--font--body--sm);
-    }
   }
 
   ${MarkdownStyles}
