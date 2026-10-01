@@ -44,6 +44,18 @@ const referenceToggle = (attribute, summary) =>
 const argumentValue = (attribute, name) =>
   cy.contains(`[data-testid="attribute-${attribute}"] dt`, new RegExp(`^${name}$`)).next("dd");
 
+/**
+ * Check an inline argument's exact text. Its kind label (e.g. "literal") renders right behind
+ * the value in the same cell, so the cell text is the value followed by the label.
+ *
+ * @param {string} attribute - the attribute key holding the node (e.g. "demo")
+ * @param {string} name - the argument name (e.g. "password")
+ * @param {string} value - the rendered value (e.g. "****")
+ * @param {string} kind - the kind label (e.g. "literal")
+ */
+const shouldShowArgument = (attribute, name, value, kind) =>
+  argumentValue(attribute, name).should("have.text", `${value}${kind}`);
+
 if (isIso) {
   describe("Scenario 7 : References in the desired state (references-showcase-service)", () => {
     before(() => {
@@ -76,12 +88,12 @@ if (isIso) {
       // A whole-attribute reference replaces the null with a chip that expands to its arguments
       cy.get('[data-testid="attribute-token"]').should("not.contain", "null");
       referenceToggle("token", "std::Environment(name=NETBOX_API_TOKEN)").click();
-      argumentValue("token", "name").should("have.text", "NETBOX_API_TOKEN");
+      shouldShowArgument("token", "name", "NETBOX_API_TOKEN", "literal");
 
       // The expansion is kept in the url, so it survives a reload
       cy.location("search").should("contain", "references");
       cy.reload();
-      argumentValue("token", "name").should("have.text", "NETBOX_API_TOKEN");
+      shouldShowArgument("token", "name", "NETBOX_API_TOKEN", "literal");
 
       // A nested reference keeps the stored value and lists the jsonpath it fills beneath it
       cy.get('[data-testid="attribute-api"]')
@@ -103,10 +115,10 @@ if (isIso) {
 
       // Literal, json and python type arguments, with the password masked
       referenceToggle("demo", "frontend_model::showcase::AllKinds").click();
-      argumentValue("demo", "a_literal").should("have.text", "hello world");
+      shouldShowArgument("demo", "a_literal", "hello world", "literal");
       argumentValue("demo", "a_json").find(".monaco-editor").should("exist");
-      argumentValue("demo", "a_type").should("have.text", "str");
-      argumentValue("demo", "password").should("have.text", "****");
+      shouldShowArgument("demo", "a_type", "str", "python type");
+      shouldShowArgument("demo", "password", "****", "literal");
       cy.get('[data-testid="attribute-demo"]').should("not.contain", "s3cr3t-value");
 
       // An mjson argument lists one child node per destination, and each child expands again
