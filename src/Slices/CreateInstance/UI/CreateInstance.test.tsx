@@ -236,7 +236,7 @@ describe("CreateInstance", () => {
 
     //check if direct attributes for embedded entities have correct default values
 
-    await userEvent.click(within(embedded_base).getByRole("button", { name: "0" }));
+    await userEvent.click(within(embedded_base).getByRole("button", { name: "#1" }));
 
     expect(within(embedded_base).queryByLabelText("TextInput-string")).toHaveValue(
       "default_string"
