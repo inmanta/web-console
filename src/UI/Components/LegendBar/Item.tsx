@@ -15,6 +15,12 @@ export interface Props {
   height?: string;
   isEmpty?: boolean;
 
+  /** Marks the item as part of the active filters with a bold value. Default false. */
+  isActive?: boolean;
+
+  /** Fades the item, for example when it is left out of the active filters. Default false. */
+  isDimmed?: boolean;
+
   /** Hides the in-segment value text, for bars too short to fit it legibly. Default true. */
   showValue?: boolean;
 }
@@ -30,6 +36,8 @@ export interface Props {
  * @prop {string} color - The color of the item.
  * @prop {string} height - Height of the legendItem.
  * @prop {boolean} isEmpty - Whether the item is a placeholder with no data.
+ * @prop {boolean} isActive - Whether the item is part of the active filters.
+ * @prop {boolean} isDimmed - Whether the item is faded.
  * @prop {boolean} showValue - Whether the value text is rendered inside the segment.
  * @prop {() => void} onClick - The function to call when the item is clicked.
  */
@@ -42,6 +50,8 @@ export const Item: React.FC<Props> = ({
   id,
   height = "36px",
   isEmpty = false,
+  isActive = false,
+  isDimmed = false,
   showValue = true,
 }) => {
   return (
@@ -53,6 +63,9 @@ export const Item: React.FC<Props> = ({
         $color={color}
         $height={height}
         $isEmpty={isEmpty}
+        $isActive={isActive}
+        $isDimmed={isDimmed}
+        data-active={isActive}
         onClick={onClick ? () => onClick(id) : undefined}
         aria-label={`LegendItem-${id}`}
       >
@@ -71,6 +84,8 @@ export const Item: React.FC<Props> = ({
  * @prop {string} $color - The color of the item.
  * @prop {string} $height - Height of the legendItem.
  * @prop {boolean} $isEmpty - Whether the item is a placeholder with no data.
+ * @prop {boolean} $isActive - Whether the item is part of the active filters.
+ * @prop {boolean} $isDimmed - Whether the item is faded.
  * @prop {() => void} onClick - The function to call when the item is clicked.
  */
 export const Container = styled.div<{
@@ -79,6 +94,8 @@ export const Container = styled.div<{
   $color?: string;
   $height?: string;
   $isEmpty?: boolean;
+  $isActive?: boolean;
+  $isDimmed?: boolean;
   onClick?: () => void;
 }>`
   background-color: ${(p) => p.$backgroundColor};
@@ -90,6 +107,8 @@ export const Container = styled.div<{
   text-align: center;
   line-height: ${(p) => p.$height};
   padding: 0 8px;
+  opacity: ${(p) => (p.$isDimmed ? 0.35 : 1)};
+  font-weight: ${(p) => (p.$isActive ? "bold" : "inherit")};
   cursor: ${(p) => (p.onClick ? "pointer" : "inherit")};
   user-select: none;
 `;

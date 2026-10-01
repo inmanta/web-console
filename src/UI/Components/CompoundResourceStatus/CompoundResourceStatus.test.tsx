@@ -8,6 +8,7 @@ describe("CompoundResourceStatus", () => {
     render(
       <CompoundResourceStatus
         resourceSummary={createMockResourceSummary({ totalCount: 0 })}
+        activeStatuses={[]}
         updateFilter={vi.fn()}
       />
     );
@@ -20,6 +21,7 @@ describe("CompoundResourceStatus", () => {
     const { unmount } = render(
       <CompoundResourceStatus
         resourceSummary={createMockResourceSummary()}
+        activeStatuses={[]}
         updateFilter={vi.fn()}
       />
     );
@@ -31,6 +33,7 @@ describe("CompoundResourceStatus", () => {
     render(
       <CompoundResourceStatus
         resourceSummary={createMockResourceSummary({ totalCount: 0 })}
+        activeStatuses={[]}
         updateFilter={vi.fn()}
       />
     );
@@ -45,6 +48,7 @@ describe("CompoundResourceStatus", () => {
     render(
       <CompoundResourceStatus
         resourceSummary={createMockResourceSummary()}
+        activeStatuses={[]}
         updateFilter={vi.fn()}
       />
     );
@@ -64,6 +68,7 @@ describe("CompoundResourceStatus", () => {
             temporarily_blocked: 0,
           },
         })}
+        activeStatuses={[]}
         updateFilter={vi.fn()}
       />
     );
@@ -73,27 +78,85 @@ describe("CompoundResourceStatus", () => {
     expect(bar.querySelector("[data-testid='legend-bar-items']")?.children).toHaveLength(1);
   });
 
-  it("calls updateFilter with correct status on item click", async () => {
+  it("adds the clicked status to the filter", async () => {
     const updateFilter = vi.fn();
 
     render(
       <CompoundResourceStatus
         resourceSummary={createMockResourceSummary()}
+        activeStatuses={[]}
         updateFilter={updateFilter}
       />
     );
 
-    const bar = screen.getByTestId("legend-bar-blocked");
-    const firstSegment = bar.querySelector("[aria-label^='LegendItem-']") as HTMLElement;
-
-    await userEvent.click(firstSegment);
-
-    expect(updateFilter).toHaveBeenCalled();
+    await userEvent.click(screen.getByLabelText("LegendItem-blocked"));
 
     const updater = updateFilter.mock.calls[0][0];
-    const result = updater({ status: [] });
-    expect(result.status).toHaveLength(1);
-    expect(typeof result.status[0]).toBe("string");
+    expect(updater({ status: ["!orphaned"] })).toEqual({ status: ["!orphaned", "blocked"] });
+  });
+
+  it("removes the clicked status from the filter when it is already active", async () => {
+    const updateFilter = vi.fn();
+
+    render(
+      <CompoundResourceStatus
+        resourceSummary={createMockResourceSummary()}
+        activeStatuses={["!orphaned", "blocked"]}
+        updateFilter={updateFilter}
+      />
+    );
+
+    await userEvent.click(screen.getByLabelText("LegendItem-blocked"));
+
+    const updater = updateFilter.mock.calls[0][0];
+    expect(updater({ status: ["!orphaned", "blocked"] })).toEqual({ status: ["!orphaned"] });
+  });
+
+  it("marks only the segments that are in the active filter", () => {
+    render(
+      <CompoundResourceStatus
+        resourceSummary={createMockResourceSummary()}
+        activeStatuses={["!orphaned", "blocked", "compliant"]}
+        updateFilter={vi.fn()}
+      />
+    );
+
+    const activeSegments = screen
+      .getAllByLabelText(/^LegendItem-/)
+      .filter((segment) => segment.dataset.active === "true")
+      .map((segment) => segment.getAttribute("aria-label"));
+
+    expect(activeSegments).toEqual(["LegendItem-blocked", "LegendItem-compliant"]);
+  });
+
+  it("fades every segment outside the filter, across all bars", () => {
+    render(
+      <CompoundResourceStatus
+        resourceSummary={createMockResourceSummary()}
+        activeStatuses={["!orphaned", "failed"]}
+        updateFilter={vi.fn()}
+      />
+    );
+
+    screen.getAllByLabelText(/^LegendItem-/).forEach((segment) => {
+      const isFailed = segment.getAttribute("aria-label") === "LegendItem-failed";
+
+      expect(segment).toHaveStyle({ opacity: isFailed ? "1" : "0.35" });
+    });
+  });
+
+  it("fades nothing when only statuses outside the bars are filtered", () => {
+    render(
+      <CompoundResourceStatus
+        resourceSummary={createMockResourceSummary()}
+        activeStatuses={["!orphaned", "isDeploying"]}
+        updateFilter={vi.fn()}
+      />
+    );
+
+    screen.getAllByLabelText(/^LegendItem-/).forEach((segment) => {
+      expect(segment).toHaveStyle({ opacity: "1" });
+    });
   });
 
   it("renders success statuses before danger statuses", () => {
@@ -106,6 +169,7 @@ describe("CompoundResourceStatus", () => {
             temporarily_blocked: 0,
           },
         })}
+        activeStatuses={[]}
         updateFilter={vi.fn()}
       />
     );

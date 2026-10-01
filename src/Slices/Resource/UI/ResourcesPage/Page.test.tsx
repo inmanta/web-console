@@ -5,7 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { graphql, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { PageInfo } from "@/Data/Queries";
+import { PageInfo, mapStatusToGraphQLFilter } from "@/Data/Queries";
 import { response } from "@/Slices/Agents";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
 import { createMockResourceSummary } from "@/Test/Data/Resource";
@@ -32,6 +32,7 @@ interface GqlVariables {
     resourceIdValue?: { contains?: string[] };
     isOrphan?: boolean;
     isDeploying?: boolean;
+    compliance?: { eq?: string[]; neq?: string[] };
   };
   first?: number;
   after?: string;
@@ -739,6 +740,42 @@ describe("ResourcesPage", () => {
     // Second click removes it again
     await userEvent.click(within(screen.getByTestId("deploying-label")).getByRole("button"));
     await waitFor(() => expect(lastVariables?.filter?.isDeploying).toBeUndefined());
+  });
+
+  test("clicking a summary bar segment toggles its status filter on and off", async () => {
+    let lastVariables: GqlVariables | undefined;
+
+    server.use(
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
+        lastVariables = variables;
+
+        return HttpResponse.json({ data: gqlFull });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
+
+    const getSegment = () => screen.getByRole("generic", { name: "LegendItem-compliant" });
+
+    expect(getSegment()).toHaveAttribute("data-active", "false");
+
+    // First click adds the compliant filter and marks the segment
+    await userEvent.click(getSegment());
+    await waitFor(() =>
+      expect(lastVariables?.filter?.compliance).toEqual(
+        mapStatusToGraphQLFilter(["compliant"]).compliance
+      )
+    );
+    expect(getSegment()).toHaveAttribute("data-active", "true");
+
+    // Second click removes it again
+    await userEvent.click(getSegment());
+    await waitFor(() => expect(lastVariables?.filter?.compliance).toBeUndefined());
+    expect(getSegment()).toHaveAttribute("data-active", "false");
   });
 
   test("deploying label is not clickable when nothing is deploying", async () => {
