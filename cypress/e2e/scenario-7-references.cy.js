@@ -22,8 +22,16 @@ const openShowcaseResource = () => {
     .find("a")
     .contains("Show Details")
     .click();
-  cy.get('[data-testid="attribute-token"]').should("be.visible");
+  cy.get('[data-testid="attribute-token"]').scrollIntoView().should("be.visible");
 };
+
+/**
+ * Selector for an attribute's value cell, skipping copies inside hidden tab panels. It avoids
+ * `:visible`, because a cell scrolled out of the page section counts as hidden in Cypress 15.
+ *
+ * @param {string} attribute - the attribute key (e.g. "token")
+ */
+const attributeCell = (attribute) => `[data-testid="attribute-${attribute}"]:not([hidden] *)`;
 
 /**
  * The expand toggle of a reference node inside an attribute's value cell. The toggle is labelled
@@ -33,7 +41,7 @@ const openShowcaseResource = () => {
  * @param {string} summary - the start of the node's summary (e.g. "std::Environment")
  */
 const referenceToggle = (attribute, summary) =>
-  cy.get(`[data-testid="attribute-${attribute}"]:visible`).find(`button[aria-label^="${summary}"]`);
+  cy.get(attributeCell(attribute)).find(`button[aria-label^="${summary}"]`);
 
 /**
  * The rendered value of one argument inside an expanded reference node, found by its exact name.
@@ -138,9 +146,9 @@ if (isIso) {
         });
 
       referenceToggle("value", "frontend_model::showcase::Section(label=section-SECRET_A)").click();
-      referenceToggle("value", "frontend_model::showcase::Secret(name=secret-SECRET_A)").should(
-        "be.visible"
-      );
+      referenceToggle("value", "frontend_model::showcase::Secret(name=secret-SECRET_A)")
+        .scrollIntoView()
+        .should("be.visible");
 
       // A deep chain stops at the depth cap instead of rendering forever
       for (let level = 1; level <= 10; level++) {
@@ -213,7 +221,7 @@ if (isIso) {
         .click();
 
       referenceToggle("token", "std::Environment(name=NETBOX_API_TOKEN)").click();
-      cy.get('[data-testid="attribute-token"]:visible').should("contain", "NETBOX_API_TOKEN");
+      cy.get(attributeCell("token")).should("contain", "NETBOX_API_TOKEN");
     });
 
     it("7.8 The versioned resource page shows references the same way", () => {
