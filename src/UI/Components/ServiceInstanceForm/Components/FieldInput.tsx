@@ -27,7 +27,7 @@ import {
   useSuggestedValues,
 } from "@/Data/Queries";
 import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
-import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
+import { createFormState, getItemTitle } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { UnitFormInput } from "@/UI/Components/UnitInput";
 import { words } from "@/UI/words";
 import { BooleanToggleInput } from "./BooleanToggleInput";
@@ -586,17 +586,6 @@ interface DictListProps {
   suggestionVariables?: SuggestionVariables;
   isFlat?: boolean;
 }
-
-/**
- * Titles a list item by its key attribute values, or by its position while those are empty.
- */
-const getItemTitle = (item: unknown, index: number, keyAttributes: string[] = []): string => {
-  const values = keyAttributes
-    .map((key) => get<unknown>(item, key))
-    .filter((value) => value !== null && value !== undefined && value !== "");
-
-  return values.length > 0 ? values.join(" / ") : `#${index + 1}`;
-};
 
 /**
  * DictListFieldInput component with inner state to manage dictionary list field input.

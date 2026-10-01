@@ -538,11 +538,12 @@ describe("FieldCreator: web_presentation: 'unit' (issue #7022 / #7133)", () => {
 });
 
 test("GIVEN FieldCreator WHEN an embedded list has key attributes THEN they are passed to the field", () => {
+  const keyAttributes = [embedded_base.attributes[0].name];
   const [field] = new FieldCreator(new CreateModifierHandler()).create({
     attributes: [],
-    embedded_entities: [{ ...embedded_base, key_attributes: ["attr1"] }],
+    embedded_entities: [{ ...embedded_base, key_attributes: keyAttributes }],
     inter_service_relations: [],
   });
 
-  expect((field as DictListField).keyAttributes).toEqual(["attr1"]);
+  expect((field as DictListField).keyAttributes).toEqual(keyAttributes);
 });
