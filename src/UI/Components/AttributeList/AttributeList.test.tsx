@@ -32,6 +32,6 @@ test("Given an empty single-line value When rendered Then it shows an empty mark
 
   const cell = screen.getByTestId("attribute-empty");
 
-  expect(cell).toHaveTextContent(words("attributes.emptyString"));
+  expect(within(cell).getByText(words("attributes.emptyString")).tagName).toBe("EM");
   expect(within(cell).queryByRole("button")).not.toBeInTheDocument();
 });

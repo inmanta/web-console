@@ -66,7 +66,11 @@ export const AttributeValue: React.FC<{
 
     case "SingleLine":
       if (attribute.value === "") {
-        return <Content component="small">{words("attributes.emptyString")}</Content>;
+        return (
+          <Content component="small">
+            <em>{words("attributes.emptyString")}</em>
+          </Content>
+        );
       }
 
       return (
