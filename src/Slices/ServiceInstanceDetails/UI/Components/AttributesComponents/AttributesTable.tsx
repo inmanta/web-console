@@ -64,6 +64,10 @@ export const AttributesTable: React.FC<Props> = ({
   const navigate = useNavigate();
 
   const [selectedSet, setSelectedSet] = useState(dropdownOptions[0]);
+
+  // The selected set can be missing from the selected version. Show the first option then, but keep the choice for when it is available again.
+  const activeSet = dropdownOptions.includes(selectedSet) ? selectedSet : dropdownOptions[0];
+
   const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>([""]);
 
   // Sort direction of the currently sorted column
@@ -235,7 +239,7 @@ export const AttributesTable: React.FC<Props> = ({
         collapseAll();
         break;
       case "Reset-sort":
-        setTableData(formatTreeRowData(attributeSets[selectedSet], serviceModel));
+        setTableData(formatTreeRowData(attributeSets[activeSet], serviceModel));
         setActiveSortIndex(0);
         setActiveSortDirection(undefined);
         break;
@@ -384,16 +388,8 @@ export const AttributesTable: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    setTableData(formatTreeRowData(attributeSets[selectedSet], serviceModel));
-  }, [attributeSets, selectedSet, serviceModel]);
-
-  useEffect(() => {
-    // When the version changes, it can happen that the selectedSet isn't available in the dropdown.
-    // In that case, we want to fall back to the first option available.
-    if (!dropdownOptions.includes(selectedSet)) {
-      setSelectedSet(dropdownOptions[0]);
-    }
-  }, [dropdownOptions, selectedSet]);
+    setTableData(formatTreeRowData(attributeSets[activeSet], serviceModel));
+  }, [attributeSets, activeSet, serviceModel]);
 
   useEffect(() => {
     if (activeSortDirection) {
@@ -406,7 +402,7 @@ export const AttributesTable: React.FC<Props> = ({
       <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
         <FlexItem>
           <StyledSelect
-            value={selectedSet}
+            value={activeSet}
             onChange={onSetSelectionChange}
             aria-label="Select-AttributeSet"
             ouiaId="Select-AttributeSet"
