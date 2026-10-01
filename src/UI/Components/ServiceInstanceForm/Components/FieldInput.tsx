@@ -27,7 +27,7 @@ import {
   useSuggestedValues,
 } from "@/Data/Queries";
 import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
-import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
+import { createFormState, getItemTitle } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { UnitFormInput } from "@/UI/Components/UnitInput";
 import { words } from "@/UI/words";
 import { BooleanToggleInput } from "./BooleanToggleInput";
@@ -704,14 +704,14 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     />
   );
 
-  const items = list.map((_item, index) => (
+  const items = list.map((item, index) => (
     <FormFieldGroupExpandable
       aria-label={`DictListFieldInputItem-${makePath(path, `${field.name}.${index}`)}`}
       key={makePath(path, `${field.name}.${itemIds[index]}`)}
       header={
         <FormFieldGroupHeader
           titleText={{
-            text: index,
+            text: getItemTitle(item, index, field.keyAttributes),
             id: `DictListFieldInputItem-${makePath(path, `${field.name}.${index}`)}`,
           }}
           actions={
