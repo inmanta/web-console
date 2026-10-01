@@ -54,6 +54,9 @@ export interface RawMutator {
 /** The one mutator type the console interprets. */
 export const REPLACE_MUTATOR_TYPE = "core::Replace";
 
+/** The reference type whose `resource_id` links to that resource's Facts tab. */
+export const FACT_REFERENCE_TYPE = "std::FactReference";
+
 /**
  * A single normalized argument the UI renders. The discriminant is `kind`.
  *
