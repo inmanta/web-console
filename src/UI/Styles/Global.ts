@@ -125,5 +125,10 @@ export const GlobalStyles = createGlobalStyle`
     --pf-v6-c-toggle-group__button--m-selected--BackgroundColor: var(--pf-t--color--blue--70);
   }
 
+  /** Without this, the label icon wrapper inherits the label's line-height and pushes the icon above the text. **/
+  .pf-v6-c-label__icon {
+    line-height: 1;
+  }
+
   ${MarkdownStyles}
 `;
