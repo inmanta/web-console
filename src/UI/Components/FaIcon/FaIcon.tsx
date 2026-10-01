@@ -11,6 +11,7 @@ interface Props {
   className?: string;
   style?: CSSProperties;
   attr?: SVGAttributes<SVGElement>;
+  isInline?: boolean;
 }
 
 /**
@@ -23,6 +24,7 @@ interface Props {
  *  @prop className - The class name of the icon.
  *  @prop style - The style of the icon.
  *  @prop attr - The attributes of the icon.
+ *  @prop isInline - Sizes the icon to the surrounding text and inherits its color.
  *
  * @returns A React component that renders a dynamic Font Awesome icon.
  */
@@ -40,7 +42,7 @@ export const DynamicFAIcon = ({ ...props }: Props) => {
   };
 
   return (
-    <Icon data-testid={props.icon}>
+    <Icon data-testid={props.icon} isInline={props.isInline}>
       <IconContext.Provider value={value}>
         <FAIcon />
       </IconContext.Provider>
