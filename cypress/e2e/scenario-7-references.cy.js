@@ -122,7 +122,7 @@ if (isIso) {
         .find(".view-lines")
         .invoke("text")
         .should((text) => {
-          expect(text.replace(/ /g, " ")).to.contain("# Compliance report");
+          expect(text.replace(/\u00a0/g, " ")).to.contain("# Compliance report");
         });
 
       referenceToggle("value", "frontend_model::showcase::Section(label=section-SECRET_A)").click();
@@ -177,7 +177,7 @@ if (isIso) {
       cy.get(".view-lines")
         .invoke("text")
         .should((text) => {
-          const normalized = text.replace(/ /g, " ");
+          const normalized = text.replace(/\u00a0/g, " ");
 
           expect(normalized).to.contain('"token": null');
           expect(normalized).to.contain('"mutators": [');
