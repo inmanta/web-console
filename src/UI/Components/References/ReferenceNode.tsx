@@ -117,7 +117,6 @@ export const ReferenceNode: React.FC<Props> = ({
           {toggleLabel}
         </Flex>
       }
-      toggleAriaLabel={summarize(node)}
       isExpanded={expanded}
       onToggle={onToggle(nodePath)}
     >
