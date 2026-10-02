@@ -7,30 +7,35 @@ import { colorConfig, statusGroupIcons, statusMapping, statusPriority } from "./
 /** Height of every legend bar segment, shared by the empty and filled states so they stay aligned. */
 const BAR_ITEM_HEIGHT = "20px";
 
+/** Checks whether a status filter value is one of the compound states shown in the bars. */
+const isCompoundStateKey = (status: string): status is Resource.CompoundStateKey =>
+  status in Resource.LAST_HANDLER_RUN ||
+  status in Resource.COMPLIANCE ||
+  status in Resource.BLOCKED;
+
 /** Type guard for Object.entries results on a compound state record.
  * Narrows [string, unknown] to [Resource.CompoundStateKey, number]. */
 const isCompoundStatusEntry = (
   entry: [string, unknown]
 ): entry is [Resource.CompoundStateKey, number] => {
-  return (
-    (entry[0] in Resource.LAST_HANDLER_RUN ||
-      entry[0] in Resource.COMPLIANCE ||
-      entry[0] in Resource.BLOCKED) &&
-    typeof entry[1] === "number"
-  );
+  return isCompoundStateKey(entry[0]) && typeof entry[1] === "number";
 };
 
+/** Props for CompoundResourceStatus. `activeStatuses` is the status filter that is currently applied. */
 interface CompoundResourceProps {
   resourceSummary: Resource.ResourceSummary;
+  activeStatuses: string[];
   updateFilter: (updater: (filter: Resource.Filter) => Resource.Filter) => void;
 }
 
 /**
  * Displays a color-coded legend bar for each resource compound state.
- * Clicking a segment filters resources by that status. Shows a gray bar when empty.
+ * Clicking a segment toggles that status in the filter. While any of these statuses is filtered,
+ * every segment outside the filter fades, across all bars. Shows a gray bar when empty.
  *
  * @props {CompoundResourceProps} props - The props of the component.
  *  @prop {Resource.resourceSummary} resourceSummary - Status counts grouped by state.
+ *  @prop {string[]} activeStatuses - The status filter that is currently applied.
  *  @prop {Function} updateFilter - Updates the active resource filter.
  *
  * @returns {React.FC<CompoundResourceProps>} A legend bar for each compound state.
@@ -38,9 +43,11 @@ interface CompoundResourceProps {
 
 export const CompoundResourceStatus = ({
   resourceSummary: { totalCount, blocked, compliance, lastHandlerRun },
+  activeStatuses,
   updateFilter,
 }: CompoundResourceProps) => {
   const compoundState: Resource.CompoundStateSummary = { blocked, compliance, lastHandlerRun };
+  const hasActiveState = activeStatuses.some(isCompoundStateKey);
 
   const compoundStateEntries = Object.entries(compoundState) as [
     keyof Resource.CompoundStateSummary,
@@ -52,12 +59,12 @@ export const CompoundResourceStatus = ({
       const current = filter.status ?? [];
 
       if (current.includes(state)) {
-        return filter;
+        return { ...filter, status: current.filter((status) => status !== state) };
       }
 
       return {
         ...filter,
-        status: [...current, state],
+        status: [...current.filter((status) => status !== `!${state}`), state],
       };
     });
   };
@@ -87,6 +94,8 @@ export const CompoundResourceStatus = ({
         backgroundColor: colorConfig[status],
         label: statusMapping[status.toUpperCase()],
         height: BAR_ITEM_HEIGHT,
+        isActive: activeStatuses.includes(status),
+        isDimmed: hasActiveState && !activeStatuses.includes(status),
         onClick,
       }));
 
