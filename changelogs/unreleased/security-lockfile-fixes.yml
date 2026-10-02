@@ -1,0 +1,5 @@
+change-type: patch
+description: Patch security vulnerabilities in transitive dependencies (brace-expansion, undici, markdown-it)
+destination-branches:
+- master
+sections: {}
