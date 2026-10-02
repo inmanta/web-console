@@ -1,6 +1,6 @@
 import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Reference, ResourceDetailsTab } from "@/Core/Domain";
 import { indexReferences } from "@/Data/Common/References";
@@ -14,6 +14,7 @@ import { useExpansion } from "@/Data/Common/useExpansion";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@/UI/words";
 import { ReferenceNode } from "./ReferenceNode";
 
 /** A node driven by the real expansion hook, so a click actually expands it. */
@@ -65,6 +66,7 @@ test("collapses a reference to a chip and expands it to its uuid and arguments",
   expect(screen.getByText(environmentId)).toBeVisible();
   expect(screen.getByText("name")).toBeVisible();
   expect(screen.getByText("CLOUDSMITH_API_KEY")).toBeVisible();
+  expect(screen.getByText(words("references.argumentKind.literal"))).toBeVisible();
 });
 
 test("renders an mjson value with a replacement row per destination and recurses into references", async () => {
@@ -87,11 +89,16 @@ test("renders an mjson value with a replacement row per destination and recurses
 
   expect(childToggles).toHaveLength(3);
 
-  // expanding a child reveals its own reference argument, which expands again
+  // expanding a child reveals its own reference argument, labelled in its toggle,
+  // which expands again
   await userEvent.click(childToggles[0]);
-  await userEvent.click(
-    screen.getByRole("button", { name: /future::std::ResourceComplianceStatus/ })
-  );
+  const statusToggle = screen.getByRole("button", {
+    name: /future::std::ResourceComplianceStatus/,
+  });
+
+  expect(within(statusToggle).getByText(words("references.argumentKind.reference"))).toBeVisible();
+
+  await userEvent.click(statusToggle);
 
   expect(
     screen.getByText(
@@ -152,6 +159,7 @@ test("renders each argument kind, links genuine resources and drops the self res
         { name: "resource", type: "resource", id: "self::Resource[a,name=self]" },
         { name: "resource_id", type: "resource", id: "other::Resource[b,name=target]" },
         { name: "a_type", type: "python_type", value: "str" },
+        { name: "a_json", type: "json", value: { some: "config" } },
         { name: "a_get", type: "get", dict_path_expression: "config.value" },
         { name: "future", type: "brand_new_kind", value: { some: "payload" } },
       ],
@@ -164,15 +172,25 @@ test("renders each argument kind, links genuine resources and drops the self res
   // genuine resource argument becomes a link; the implicit self resource is dropped
   expect(screen.getByText("resource_id")).toBeVisible();
   expect(screen.getByRole("link")).toBeInTheDocument();
-  expect(screen.queryByText("resource", { exact: true })).not.toBeInTheDocument();
+  expect(screen.getAllByRole("term").map((term) => term.textContent)).not.toContain("resource");
 
   // python_type and get render as text, get marked unresolved
   expect(screen.getByText("str")).toBeVisible();
   expect(screen.getByText(/config\.value/)).toBeVisible();
   expect(screen.getByText(/unresolved/)).toBeVisible();
 
-  // an unknown kind shows its type name plus the raw payload, no crash
+  // each argument is labelled with its kind; an unknown kind shows its type name
+  [
+    words("references.argumentKind.resource"),
+    words("references.argumentKind.python_type"),
+    words("references.argumentKind.get"),
+  ].forEach((label) => {
+    expect(screen.getByText(label)).toBeVisible();
+  });
   expect(screen.getByText("brand_new_kind")).toBeVisible();
+  // a value in a code editor already names its language, so it gets no label
+  expect(screen.getByText("a_json")).toBeVisible();
+  expect(screen.queryByText(words("references.argumentKind.json"))).not.toBeInTheDocument();
 });
 
 test("links a fact reference's resource_id to that resource's Facts tab, keeping the environment", async () => {
@@ -193,6 +211,8 @@ test("links a fact reference's resource_id to that resource's Facts tab, keeping
   expect(decodeURIComponent(url.pathname)).toContain(factSourceResourceId);
   expect(url.searchParams.get("state.ResourceDetails.tab")).toBe(ResourceDetailsTab.Facts);
   expect(url.searchParams.get("env")).toBe(env);
+  // the link is labelled as a resource, not as the literal it is stored as
+  expect(screen.getByText(words("references.argumentKind.resource"))).toBeVisible();
 });
 
 test("renders a shared node at every occurrence, each expanding independently", async () => {

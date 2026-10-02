@@ -51,4 +51,10 @@ describe("summarize", () => {
       "std::Environment(n=undefined)"
     );
   });
+
+  test('renders an empty string as ""', () => {
+    expect(summarize(reference([{ kind: "literal", name: "n", value: "" }]))).toBe(
+      'std::Environment(n="")'
+    );
+  });
 });

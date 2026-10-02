@@ -11,6 +11,7 @@ const textField = (name: string, suggestion: FormSuggestion | null = null): Text
 
 const dictList = (name: string, fields: Field[]): DictListField => ({
   kind: "DictList",
+  keyAttributes: [],
   name,
   description: null,
   isOptional: false,

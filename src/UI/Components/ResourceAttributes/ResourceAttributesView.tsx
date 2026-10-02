@@ -17,8 +17,8 @@ interface Props {
 
 /**
  * A resource's attributes with a Structured / JSON toggle. Structured is the
- * reference-aware view; JSON shows the attributes verbatim and fills the height
- * left in its scroll section.
+ * reference-aware view; JSON shows the attributes verbatim in an editor sized to
+ * its content, with a toggle to expand it.
  *
  * @prop {Record<string, unknown>} attributes - The raw attributes of the resource.
  * @prop {AttributeClassifier} classifier - Classifies the attributes in the structured view.
@@ -34,17 +34,13 @@ export const ResourceAttributesView: React.FC<Props> = ({
   const [mode, setMode] = useState<ViewMode>("structured");
   const json = useMemo(() => JSON.stringify(attributes, null, 2), [attributes]);
 
-  // In JSON mode the view grows to fill the scroll section. The bottom spacer keeps
-  // the last element off its edge.
+  // The bottom spacer keeps the last element off the page edge.
   return (
     <Flex
       direction={{ default: "column" }}
       flexWrap={{ default: "nowrap" }}
       gap={{ default: "gapMd" }}
-      style={{
-        paddingBottom: "var(--pf-t--global--spacer--md)",
-        ...(mode === "json" && { flex: "1 1 100vh" }),
-      }}
+      style={{ paddingBottom: "var(--pf-t--global--spacer--md)" }}
     >
       <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
         <ToggleGroup aria-label={words("resources.attributes.view.label")}>
@@ -63,7 +59,7 @@ export const ResourceAttributesView: React.FC<Props> = ({
         </ToggleGroup>
       </Flex>
       {mode === "json" ? (
-        <CodeEditor code={json} language={Language.json} height="100%" />
+        <CodeEditor code={json} language={Language.json} />
       ) : (
         <ResourceAttributes
           attributes={attributes}

@@ -34,14 +34,14 @@ const openShowcaseResource = () => {
 const attributeCell = (attribute) => `[data-testid="attribute-${attribute}"]:not([hidden] *)`;
 
 /**
- * The expand toggle of a reference node inside an attribute's value cell. The toggle is labelled
- * with the node's summary, so a prefix of it is enough to pick the node.
+ * The expand toggle of a reference node inside an attribute's value cell. The toggle shows the
+ * node's summary on its chip, so a part of it is enough to pick the node.
  *
  * @param {string} attribute - the attribute key (e.g. "token")
  * @param {string} summary - the start of the node's summary (e.g. "std::Environment")
  */
 const referenceToggle = (attribute, summary) =>
-  cy.get(attributeCell(attribute)).find(`button[aria-label^="${summary}"]`);
+  cy.get(attributeCell(attribute)).contains("button", summary);
 
 /**
  * The rendered value of one argument inside an expanded reference node, found by its exact name.

@@ -58,10 +58,10 @@ test("keeps a nested value and lists its replacement underneath", () => {
   ).toBeInTheDocument();
 });
 
-test("groups framework attributes under their own heading", () => {
+test("groups orchestrator attributes under their own heading", () => {
   renderView(referenceAttributes);
 
-  expect(screen.getByText(words("resources.attributes.frameworkGroup"))).toBeVisible();
+  expect(screen.getByText(words("resources.attributes.orchestratorGroup"))).toBeVisible();
   expect(screen.getByText("send_event")).toBeVisible();
 });
 

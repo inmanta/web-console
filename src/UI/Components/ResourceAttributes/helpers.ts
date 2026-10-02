@@ -12,7 +12,7 @@ export const MACHINERY_KEYS = ["references", "mutators"];
  * `std::PurgeableResource`), grouped apart from the model's own; a resource missing
  * some just has a smaller group.
  */
-export const FRAMEWORK_KEYS = [
+export const ORCHESTRATOR_KEYS = [
   "send_event",
   "receive_events",
   "report_only",
@@ -39,12 +39,12 @@ export const groupReplacements = (
 };
 
 /**
- * Splits classified attributes into the model's own attributes and the framework
+ * Splits classified attributes into the model's own attributes and the orchestrator
  * ones, each keeping the alphabetical order the classifier already produced.
  */
-export const partitionFramework = (
+export const partitionOrchestrator = (
   attributes: ClassifiedAttribute[]
-): { model: ClassifiedAttribute[]; framework: ClassifiedAttribute[] } => ({
-  model: attributes.filter((attribute) => !FRAMEWORK_KEYS.includes(attribute.key)),
-  framework: attributes.filter((attribute) => FRAMEWORK_KEYS.includes(attribute.key)),
+): { model: ClassifiedAttribute[]; orchestrator: ClassifiedAttribute[] } => ({
+  model: attributes.filter((attribute) => !ORCHESTRATOR_KEYS.includes(attribute.key)),
+  orchestrator: attributes.filter((attribute) => ORCHESTRATOR_KEYS.includes(attribute.key)),
 });
