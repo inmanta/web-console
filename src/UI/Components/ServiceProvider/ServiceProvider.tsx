@@ -19,9 +19,11 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
     useGetServiceModel(serviceName).useContinuous();
 
   if (isError) {
-    <Wrapper aria-label="ServiceProvider-Failed" name={serviceName}>
-      <ErrorView message={error.message} retry={refetch} ariaLabel="ServiceProvider-Failed" />
-    </Wrapper>;
+    return (
+      <Wrapper aria-label="ServiceProvider-Failed" name={serviceName}>
+        <ErrorView message={error.message} retry={refetch} ariaLabel="ServiceProvider-Failed" />
+      </Wrapper>
+    );
   }
 
   if (isSuccess) {
