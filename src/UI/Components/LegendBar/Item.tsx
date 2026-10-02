@@ -15,7 +15,7 @@ export interface Props {
   height?: string;
   isEmpty?: boolean;
 
-  /** Marks the item as part of the active filters with a bold value. Default false. */
+  /** Marks the item as a pressed toggle with a bold value. Leave unset for items that are not toggles. */
   isActive?: boolean;
 
   /** Fades the item, for example when it is left out of the active filters. Default false. */
@@ -27,6 +27,7 @@ export interface Props {
 
 /**
  * Renders a legend item with a tooltip.
+ * With an onClick it becomes a keyboard-reachable button, and `isActive` exposes it as a pressed toggle.
  *
  * @param {Props} props - The component props.
  * @prop {string} id - The id of the item.
@@ -36,7 +37,7 @@ export interface Props {
  * @prop {string} color - The color of the item.
  * @prop {string} height - Height of the legendItem.
  * @prop {boolean} isEmpty - Whether the item is a placeholder with no data.
- * @prop {boolean} isActive - Whether the item is part of the active filters.
+ * @prop {boolean} isActive - Whether the toggle is pressed, unset when the item is not a toggle.
  * @prop {boolean} isDimmed - Whether the item is faded.
  * @prop {boolean} showValue - Whether the value text is rendered inside the segment.
  * @prop {() => void} onClick - The function to call when the item is clicked.
@@ -50,10 +51,17 @@ export const Item: React.FC<Props> = ({
   id,
   height = "36px",
   isEmpty = false,
-  isActive = false,
+  isActive,
   isDimmed = false,
   showValue = true,
 }) => {
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onClick?.(id);
+    }
+  };
+
   return (
     <Tooltip content={label} position="top" distance={4} enableFlip>
       <Container
@@ -65,8 +73,11 @@ export const Item: React.FC<Props> = ({
         $isEmpty={isEmpty}
         $isActive={isActive}
         $isDimmed={isDimmed}
-        data-active={isActive}
         onClick={onClick ? () => onClick(id) : undefined}
+        onKeyDown={onClick ? onKeyDown : undefined}
+        role={onClick ? "button" : undefined}
+        tabIndex={onClick ? 0 : undefined}
+        aria-pressed={onClick ? isActive : undefined}
         aria-label={`LegendItem-${id}`}
       >
         {showValue ? value : null}

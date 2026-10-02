@@ -112,6 +112,25 @@ describe("CompoundResourceStatus", () => {
     expect(updater({ status: ["!orphaned", "blocked"] })).toEqual({ status: ["!orphaned"] });
   });
 
+  it("replaces an excluded status with the clicked status", async () => {
+    const updateFilter = vi.fn();
+
+    render(
+      <CompoundResourceStatus
+        resourceSummary={createMockResourceSummary()}
+        activeStatuses={["!orphaned", "!blocked"]}
+        updateFilter={updateFilter}
+      />
+    );
+
+    await userEvent.click(screen.getByLabelText("LegendItem-blocked"));
+
+    const updater = updateFilter.mock.calls[0][0];
+    expect(updater({ status: ["!orphaned", "!blocked"] })).toEqual({
+      status: ["!orphaned", "blocked"],
+    });
+  });
+
   it("marks only the segments that are in the active filter", () => {
     render(
       <CompoundResourceStatus
@@ -122,8 +141,7 @@ describe("CompoundResourceStatus", () => {
     );
 
     const activeSegments = screen
-      .getAllByLabelText(/^LegendItem-/)
-      .filter((segment) => segment.dataset.active === "true")
+      .getAllByRole("button", { pressed: true })
       .map((segment) => segment.getAttribute("aria-label"));
 
     expect(activeSegments).toEqual(["LegendItem-blocked", "LegendItem-compliant"]);

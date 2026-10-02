@@ -64,7 +64,7 @@ export const CompoundResourceStatus = ({
 
       return {
         ...filter,
-        status: [...current, state],
+        status: [...current.filter((status) => status !== `!${state}`), state],
       };
     });
   };

@@ -759,9 +759,9 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    const getSegment = () => screen.getByRole("generic", { name: "LegendItem-compliant" });
+    const getSegment = () => screen.getByRole("button", { name: "LegendItem-compliant" });
 
-    expect(getSegment()).toHaveAttribute("data-active", "false");
+    expect(getSegment()).toHaveAttribute("aria-pressed", "false");
 
     // First click adds the compliant filter and marks the segment
     await userEvent.click(getSegment());
@@ -770,12 +770,12 @@ describe("ResourcesPage", () => {
         mapStatusToGraphQLFilter(["compliant"]).compliance
       )
     );
-    expect(getSegment()).toHaveAttribute("data-active", "true");
+    expect(getSegment()).toHaveAttribute("aria-pressed", "true");
 
     // Second click removes it again
     await userEvent.click(getSegment());
     await waitFor(() => expect(lastVariables?.filter?.compliance).toBeUndefined());
-    expect(getSegment()).toHaveAttribute("data-active", "false");
+    expect(getSegment()).toHaveAttribute("aria-pressed", "false");
   });
 
   test("deploying label is not clickable when nothing is deploying", async () => {
@@ -826,7 +826,7 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    const compliantLegendItem = screen.getByRole("generic", { name: "LegendItem-compliant" });
+    const compliantLegendItem = screen.getByRole("button", { name: "LegendItem-compliant" });
     expect(compliantLegendItem).toHaveAttribute("data-value", "3");
 
     const nextPageButton = screen.getAllByRole("button", { name: "Go to next page" })[0];
@@ -850,7 +850,7 @@ describe("ResourcesPage", () => {
     expect(screen.getByRole("navigation", { name: "top-Pagination" })).toBeVisible();
     expect(screen.getByRole("navigation", { name: "bottom-Pagination" })).toBeInTheDocument();
 
-    const compliantLegendItemAfterActions = await screen.findByRole("generic", {
+    const compliantLegendItemAfterActions = await screen.findByRole("button", {
       name: "LegendItem-compliant",
     });
     expect(compliantLegendItemAfterActions).toHaveAttribute("data-value", "4");
@@ -879,7 +879,7 @@ describe("ResourcesPage", () => {
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
     const complianceLegendBar = screen.getByTestId("legend-bar-compliance");
-    const compliantLegendItem = within(complianceLegendBar).getByRole("generic", {
+    const compliantLegendItem = within(complianceLegendBar).getByRole("button", {
       name: "LegendItem-compliant",
     });
     expect(compliantLegendItem).toHaveAttribute("data-value", "3");
