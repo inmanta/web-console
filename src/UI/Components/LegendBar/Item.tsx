@@ -121,5 +121,10 @@ export const Container = styled.div<{
   opacity: ${(p) => (p.$isDimmed ? 0.35 : 1)};
   font-weight: ${(p) => (p.$isActive ? "bold" : "inherit")};
   cursor: ${(p) => (p.onClick ? "pointer" : "inherit")};
+
+  &:focus-visible {
+    outline: 2px solid var(--pf-t--global--border--color--clicked);
+    outline-offset: -2px;
+  }
   user-select: none;
 `;
