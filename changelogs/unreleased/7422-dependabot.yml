@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump @tanstack/react-query from 5.100.11 to 5.104.0
+destination-branches:
+- master
+sections: {}
