@@ -165,7 +165,11 @@ export const Page: React.FC = () => {
 
         <ResourceTableControls
           summaryWidget={
-            <CompoundResourceStatus updateFilter={updateFilter} resourceSummary={resourceSummary} />
+            <CompoundResourceStatus
+              updateFilter={updateFilter}
+              resourceSummary={resourceSummary}
+              activeStatuses={filterWithDefaults.status ?? []}
+            />
           }
           paginationWidget={
             <PaginationWidget
