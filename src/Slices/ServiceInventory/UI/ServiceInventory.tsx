@@ -1,50 +1,36 @@
-import React, { ReactElement, createContext } from "react";
+import React, { useMemo } from "react";
+import { Stack } from "@patternfly/react-core";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetInstances } from "@/Data/Queries";
-import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
+import {
+  EmptyView,
+  ErrorView,
+  InstanceCounts,
+  LoadingView,
+  PaginationWidget,
+  SummaryLabel,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
 import { TableControls } from "./Components";
 import { TableProvider } from "./TableProvider";
 import { Wrapper } from "./Wrapper";
-
-interface Props {
-  labelFiltering: {
-    danger: string[];
-    warning: string[];
-    success: string[];
-    info: string[];
-    no_label: string[];
-    onClick: (labels: string[]) => void;
-  };
-}
+import { getActiveLabel, getLabelStates } from "./labelFilter";
 
 /**
- * The context for the Service Inventory component that provides label filtering and refetching functionality.
- */
-export const ServiceInventoryContext = createContext<Props>({
-  labelFiltering: {
-    danger: [],
-    warning: [],
-    success: [],
-    info: [],
-    no_label: [],
-    onClick: (_label) => null,
-  },
-});
-
-/**
- * The Service Inventory component which continuously check for the service instances based on the service name.
- * @param {string} serviceName - The name of the service.
- * @param {ServiceModel} service - The service model.
- * @param {ReactElement | null} intro - The summary chart component as introduction for the inventory view.
- * @returns {React.FC} - The rendered Service Inventory component.
+ * The Service Inventory component which continuously checks for the service instances.
+ * The toolbar shows the instance counts per label, and clicking a label toggles a state filter.
+ *
+ * @props {object} props - The props of the component.
+ *  @prop {string} serviceName - The name of the service.
+ *  @prop {ServiceModel} service - The service model.
+ *
+ * @returns {React.FC} The rendered Service Inventory component.
  */
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
   service: ServiceModel;
-  intro?: ReactElement | null;
-}> = ({ serviceName, service, intro }) => {
+}> = ({ serviceName, service }) => {
   const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
     usePaginatedTable<ServiceInstanceParams.Filter>({
       route: "Inventory",
@@ -61,21 +47,20 @@ export const ServiceInventory: React.FunctionComponent<{
     { keepPreviousData: true }
   );
 
-  /**
-   * Filters the service lifecycle states based on the provided label.
-   * @param {string | null} label - The label to filter by.
-   * @returns {string[]} - An array of state names that have the specified label.
-   */
-  const filterLabels = (label: string | null): string[] => {
-    return service.lifecycle.states
-      .filter((state) => state.label === label)
-      .map((state) => state.name);
-  };
+  const activeLabel = useMemo(
+    () => getActiveLabel(service.lifecycle.states, filter.state),
+    [service, filter.state]
+  );
+
+  const onToggleLabel = (label: SummaryLabel) =>
+    setFilter({
+      ...filter,
+      state: label === activeLabel ? undefined : getLabelStates(service.lifecycle.states, label),
+    });
 
   if (isError) {
     return (
-      <Wrapper name={serviceName}>
-        {intro}
+      <Wrapper name={serviceName} service={service}>
         <ErrorView message={error.message} retry={refetch} ariaLabel="ServiceInventory-Failed" />
       </Wrapper>
     );
@@ -83,22 +68,17 @@ export const ServiceInventory: React.FunctionComponent<{
 
   if (isSuccess) {
     return (
-      <ServiceInventoryContext.Provider
-        value={{
-          labelFiltering: {
-            danger: filterLabels("danger"),
-            warning: filterLabels("warning"),
-            success: filterLabels("success"),
-            info: filterLabels("info"),
-            no_label: filterLabels(null),
-            onClick: (labels) => setFilter({ ...filter, state: labels }),
-          },
-        }}
-      >
-        <Wrapper name={serviceName}>
-          {intro}
+      <Wrapper name={serviceName} service={service}>
+        <Stack>
           <TableControls
-            serviceName={serviceName}
+            instanceSummary={
+              service.instance_summary && (
+                <InstanceCounts
+                  summary={service.instance_summary}
+                  filtering={{ activeLabel, onToggle: onToggleLabel }}
+                />
+              )
+            }
             filter={filter}
             setFilter={setFilter}
             service={service}
@@ -125,14 +105,13 @@ export const ServiceInventory: React.FunctionComponent<{
               aria-label="ServiceInventory-Empty"
             />
           )}
-        </Wrapper>
-      </ServiceInventoryContext.Provider>
+        </Stack>
+      </Wrapper>
     );
   }
 
   return (
-    <Wrapper name={serviceName}>
-      {intro}
+    <Wrapper name={serviceName} service={service}>
       <LoadingView ariaLabel="ServiceInventory-Loading" />
     </Wrapper>
   );

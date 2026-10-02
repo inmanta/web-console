@@ -60,7 +60,7 @@ export const InventoryTable: React.FC<Props> = ({
   });
 
   return (
-    <Table {...props}>
+    <Table {...props} variant="compact">
       <Thead>
         <Tr>{heads}</Tr>
       </Thead>

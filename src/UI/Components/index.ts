@@ -49,7 +49,7 @@ export * from "./ServiceProvider";
 export * from "./SettingsList";
 export * from "./SingleTextSelect";
 export * from "./Spinner";
-export * from "./SummaryChart";
+export * from "./InstanceSummaryLabels";
 export * from "./TextWithCopy";
 export * from "./DateWithTimeDiffTooltip";
 export * from "./OptionalToggleGroup";

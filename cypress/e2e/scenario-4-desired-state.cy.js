@@ -44,13 +44,13 @@ describe("Scenario 4 Desired State", () => {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
-      // Should show the chart
-      cy.get(".pf-v6-c-chart").should("be.visible");
-
       // Should show the ServiceInventory-Success Component.
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
       // Check if only one row has been added to the table.
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+
+      // Should show the instance count in the toolbar
+      cy.contains(/^1 instance$/).should("be.visible");
     }
 
     //got to desired stated page
