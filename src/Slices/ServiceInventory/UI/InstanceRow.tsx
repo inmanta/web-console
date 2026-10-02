@@ -44,7 +44,7 @@ export const InstanceRow: React.FC<Props> = ({
         {shouldUseServiceIdentity && row.serviceIdentityValue ? (
           <Td dataLabel={idDataLabel} aria-label={`IdentityCell-${row.serviceIdentityValue}`}>
             {row.serviceIdentityValue}
-            <CopyMultiOptions options={[row.serviceIdentityValue, row.id.full]} />
+            <CopyMultiOptions options={[row.serviceIdentityValue, row.id.full]} size="sm" />
           </Td>
         ) : (
           <Td dataLabel={idDataLabel} aria-label={`IdCell-${row.id.short}`}>

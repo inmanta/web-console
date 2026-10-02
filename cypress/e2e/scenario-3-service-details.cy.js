@@ -26,11 +26,8 @@ if (isIso) {
       // Expect  the current tab to be Details
       cy.get(".pf-m-current").should("contain", "Details");
 
-      // Expect 0 Instances
-      cy.get(".pf-v6-c-chart").within(() => {
-        cy.get("svg").find("title").should("contain", "Number of instances by label");
-        cy.get("svg").find("text").should("contain", "0").and("contain", "Instances");
-      });
+      // Expect 0 instances in the summary
+      cy.contains(/^0 instances$/).should("be.visible");
 
       // Go to Attributes tab
       cy.get("button").contains("Attributes").click();
@@ -152,11 +149,8 @@ if (isIso) {
       // Click on Details tab
       cy.get("button").contains("Details").click();
 
-      // Expect the number in the chart to be 1
-      cy.get(".pf-v6-c-chart").within(() => {
-        cy.get("svg").find("title").should("contain", "Number of instances by label");
-        cy.get("svg").find("text").should("contain", "1").and("contain", "Instances");
-      });
+      // Expect 1 instance in the summary
+      cy.contains(/^1 instance$/).should("be.visible");
     });
 
     it("3.3 Create a failed Instance by Duplicating and check details", () => {
@@ -191,16 +185,13 @@ if (isIso) {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
-      // Expect the number in the chart to be 2
-      cy.get(".pf-v6-c-chart").within(() => {
-        cy.get("svg").find("title").should("contain", "Number of instances by label");
-        cy.get("svg").find("text").should("contain", "2").and("contain", "Instances");
-      });
-
       // expect newly created instance to be visible in table
       cy.get('[aria-label="ServiceInventory-Success"]', {
         timeout: 20000,
       }).should("to.be.visible");
+
+      // Expect 2 instances in the summary
+      cy.contains(/^2 instances$/).should("be.visible");
 
       // Check if only one row has been added to the table.
       cy.get("@previousCount").then((previousCount) => {
@@ -231,11 +222,8 @@ if (isIso) {
       // Expect to be Details tab
       cy.get(".pf-m-current").should("contain", "Details");
 
-      // Expect the number in the chart to be 2
-      cy.get(".pf-v6-c-chart").within(() => {
-        cy.get("svg").find("title").should("contain", "Number of instances by label");
-        cy.get("svg").find("text").should("contain", "2").and("contain", "Instances");
-      });
+      // Expect 2 instances in the summary
+      cy.contains(/^2 instances$/).should("be.visible");
     });
 
     it("3.4 Callbacks", () => {
