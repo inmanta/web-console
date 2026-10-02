@@ -1,7 +1,6 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
@@ -20,28 +19,15 @@ function setup(halted: boolean = false) {
       <QueryClientProvider client={testClient}>
         <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
           <ModalProvider>
-            <ServiceInventoryContext.Provider
-              value={{
-                labelFiltering: {
-                  danger: [],
-                  warning: [],
-                  success: [],
-                  info: [],
-                  no_label: [],
-                  onClick: vi.fn(),
-                },
-              }}
-            >
-              <DeleteAction
-                id={ServiceInstance.a.id}
-                instance_identity={
-                  ServiceInstance.a.service_identity_attribute_value ?? ServiceInstance.a.id
-                }
-                version={ServiceInstance.a.version}
-                isDisabled={isDisabled}
-                service_entity={ServiceInstance.a.service_entity}
-              />
-            </ServiceInventoryContext.Provider>
+            <DeleteAction
+              id={ServiceInstance.a.id}
+              instance_identity={
+                ServiceInstance.a.service_identity_attribute_value ?? ServiceInstance.a.id
+              }
+              version={ServiceInstance.a.version}
+              isDisabled={isDisabled}
+              service_entity={ServiceInstance.a.service_entity}
+            />
           </ModalProvider>
         </MockedDependencyProvider>
       </QueryClientProvider>

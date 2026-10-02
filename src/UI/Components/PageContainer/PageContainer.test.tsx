@@ -29,3 +29,19 @@ test("Given a PageContainer with actions, then the title and actions are rendere
   // Title and actions should be siblings within the same flex row, not nested inside each other.
   expect(title.parentElement?.parentElement).toBe(actionsButton.parentElement?.parentElement);
 });
+
+test("Given a PageContainer with actions and a description, then the description sits in the title column", () => {
+  render(
+    <PageContainer pageTitle="My Page" actions={<button>Actions</button>} description={<p>Info</p>}>
+      <div>content</div>
+    </PageContainer>
+  );
+
+  const title = screen.getByRole("heading", { level: 1, name: "My Page" });
+  const description = screen.getByText("Info");
+
+  expect(description.parentElement).toBe(title.parentElement);
+  expect(screen.getByRole("button", { name: "Actions" }).parentElement).not.toBe(
+    title.parentElement
+  );
+});

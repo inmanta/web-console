@@ -6,6 +6,7 @@ import {
   Icon,
   MenuToggle,
   MenuToggleElement,
+  MenuToggleProps,
   Tooltip,
 } from "@patternfly/react-core";
 import { CopyIcon } from "@patternfly/react-icons";
@@ -17,6 +18,7 @@ interface Props {
   options: string[];
   tooltipContent?: string;
   isDisabled?: boolean;
+  size?: MenuToggleProps["size"];
 }
 
 /**
@@ -27,6 +29,7 @@ interface Props {
  *  @prop {string[]} options - The list of options to copy.
  *  @prop {string} [tooltipContent] - The tooltip content. Default is "Copy".
  *  @prop {boolean} [isDisabled] - Whether the button is disabled. Default is false.
+ *  @prop {"default" | "sm"} [size] - The size of the button, "sm" for compact tables. Default is "default".
  *
  * @returns {React.ReactElement} The CopyMultiOptions component.
  */
@@ -35,6 +38,7 @@ export const CopyMultiOptions: React.FC<Props> = ({
   tooltipContent,
   isDisabled,
   text = "",
+  size = "default",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -77,6 +81,7 @@ export const CopyMultiOptions: React.FC<Props> = ({
       isDisabled={isDisabled}
       ref={toggleRef}
       variant="plain"
+      size={size}
       isExpanded={isOpen}
       aria-label="Copy to clipboard"
       icon={
