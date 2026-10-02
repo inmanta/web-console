@@ -15,8 +15,11 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
   Wrapper,
   Dependant,
 }) => {
-  const { data, isError, error, isSuccess, refetch } =
-    useGetServiceModel(serviceName).useContinuous();
+  const { data, isError, error, refetch } = useGetServiceModel(serviceName).useContinuous();
+
+  if (data) {
+    return <Dependant service={data} />;
+  }
 
   if (isError) {
     return (
@@ -24,10 +27,6 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
         <ErrorView message={error.message} retry={refetch} ariaLabel="ServiceProvider-Failed" />
       </Wrapper>
     );
-  }
-
-  if (isSuccess) {
-    return <Dependant service={data} />;
   }
 
   return (
