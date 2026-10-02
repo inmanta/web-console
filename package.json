@@ -111,7 +111,7 @@
     "@patternfly/react-table": "^6.6.1",
     "@patternfly/react-tokens": "^6.6.1",
     "@react-keycloak/web": "^3.4.0",
-    "@tanstack/react-query": "^5.100.11",
+    "@tanstack/react-query": "^5.104.0",
     "bignumber.js": "^11.1.5",
     "copy-to-clipboard": "^4.0.2",
     "dayjs": "^1.11.21",
