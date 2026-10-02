@@ -84,6 +84,8 @@ const dict = {
   filters: "Filters",
   collapseAll: "Collapse all",
   expandAll: "Expand all",
+  showMore: "Show more",
+  showLess: "Show less",
   export: "Export",
   resourceId: "Resource Id",
   versionLabel: (version: string) => `Version: ${version}`,
@@ -473,6 +475,11 @@ const dict = {
   "catalog.summary.title": "Number of instances by label",
   "catalog.summary.noLabel": "no label",
   "catalog.summary.empty": "No instance summary found",
+  "catalog.summary.total": (total: number) => (
+    <>
+      <b>{total}</b> {total === 1 ? "instance" : "instances"}
+    </>
+  ),
   "catalog.button.inventory": "Show inventory",
   "catalog.button.update": "Update Service Catalog",
   "catalog.update.failed": "The update failed",
@@ -492,7 +499,6 @@ const dict = {
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,
   "catalog.delete.failed": "Deleting service entity failed",
-  "catalog.instances": "Instances",
   "catalog.callbacks.delete.title": "Delete Callback",
   "catalog.callbacks.delete": (url: string) =>
     `Are you sure you want to delete callback with url "${url}"?`,
