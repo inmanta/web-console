@@ -1,0 +1,7 @@
+description: |
+  Clicking a highlighted segment in the resource summary bars now removes its filter.
+issue-nr: 7415
+change-type: minor
+destination-branches: [iso9]
+sections:
+  minor-improvement: "{{description}}"
