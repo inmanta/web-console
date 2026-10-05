@@ -7,8 +7,7 @@ import {
 } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
-import { ActionDisabledTooltip, TextWithCopy } from "@/UI/Components";
-import { HoverRowGroup } from "@/UI/Components/RowHoverReveal";
+import { ActionDisabledTooltip, HoverRowGroup, TextWithCopy } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";

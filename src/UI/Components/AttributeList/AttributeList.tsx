@@ -4,7 +4,6 @@ import {
   DescriptionList,
   DescriptionListDescription,
   DescriptionListTerm,
-  Flex,
 } from "@patternfly/react-core";
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
@@ -14,6 +13,7 @@ import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { words } from "@/UI/words";
 import { CodeEditor } from "../CodeEditor";
 import { FileBlock } from "./FileBlock";
+import { WithSuffix } from "./WithSuffix";
 import { languageForKind } from "./helpers";
 
 type AttributeTextVariant = "default" | "monospace";
@@ -111,31 +111,6 @@ export const AttributeValue: React.FC<{
       );
   }
 };
-
-/**
- * Places a suffix right after an inline value, both vertically centered. Without a suffix the
- * value renders on its own.
- *
- * @prop {React.ReactNode} [suffix] - The content after the value.
- * @prop {React.ReactNode} children - The value.
- */
-const WithSuffix: React.FC<React.PropsWithChildren<{ suffix?: React.ReactNode }>> = ({
-  suffix,
-  children,
-}) =>
-  suffix ? (
-    <Flex
-      display={{ default: "inlineFlex" }}
-      gap={{ default: "gapSm" }}
-      flexWrap={{ default: "nowrap" }}
-      alignItems={{ default: "alignItemsCenter" }}
-    >
-      {children}
-      {suffix}
-    </Flex>
-  ) : (
-    <>{children}</>
-  );
 
 const TextContainer = styled.span<{ $variant?: AttributeTextVariant }>`
   ${(p) =>

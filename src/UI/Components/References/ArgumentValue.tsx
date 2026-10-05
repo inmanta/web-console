@@ -1,10 +1,10 @@
 import React from "react";
-import { Flex, FlexItem, Label, Stack, StackItem } from "@patternfly/react-core";
+import { Label, Stack, StackItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Reference, ResourceDetailsTab } from "@/Core/Domain";
 import { ClassifiedAttribute } from "@/Data/Common/AttributeClassifier/ClassifiedAttribute";
 import { classifyValue } from "@/Data/Common/References/classifyValue";
-import { AttributeValue } from "@/UI/Components/AttributeList";
+import { AttributeValue, WithSuffix } from "@/UI/Components/AttributeList";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
 import { HoverRow } from "@/UI/Components/RowHoverReveal";
 import { words } from "@/UI/words";
@@ -191,18 +191,7 @@ const factResourceId = (referenceType: string, arg: Reference.Argument): string 
 const WithKindLabel: React.FC<React.PropsWithChildren<{ label: string }>> = ({
   label,
   children,
-}) => (
-  <Flex
-    gap={{ default: "gapSm" }}
-    flexWrap={{ default: "nowrap" }}
-    alignItems={{ default: "alignItemsCenter" }}
-  >
-    <FlexItem>{children}</FlexItem>
-    <FlexItem>
-      <Label isCompact>{label}</Label>
-    </FlexItem>
-  </Flex>
-);
+}) => <WithSuffix suffix={<Label isCompact>{label}</Label>}>{children}</WithSuffix>;
 
 /**
  * A classified value, labelled when it renders inline and bare when it renders as
@@ -215,7 +204,12 @@ const WithKindLabel: React.FC<React.PropsWithChildren<{ label: string }>> = ({
 const ClassifiedValue: React.FC<{ attribute: ClassifiedAttribute; label: string }> = ({
   attribute,
   label,
-}) => <AttributeValue attribute={attribute} suffix={<Label isCompact>{label}</Label>} />;
+}) => (
+  <AttributeValue
+    attribute={attribute}
+    suffix={INLINE_KINDS.includes(attribute.kind) ? <Label isCompact>{label}</Label> : undefined}
+  />
+);
 
 const Unresolved = styled.span`
   color: var(--pf-t--global--text--color--subtle);
