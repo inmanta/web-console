@@ -6,6 +6,7 @@ import { ClassifiedAttribute } from "@/Data/Common/AttributeClassifier/Classifie
 import { classifyValue } from "@/Data/Common/References/classifyValue";
 import { AttributeValue } from "@/UI/Components/AttributeList";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
+import { HoverRow } from "@/UI/Components/RowHoverReveal";
 import { words } from "@/UI/words";
 import { ReferenceNode } from "./ReferenceNode";
 import { ReplacementList } from "./ReplacementList";
@@ -77,10 +78,12 @@ export const ArgumentValue: React.FC<Props> = ({
       return (
         <Stack hasGutter>
           <StackItem>
-            <ClassifiedValue
-              attribute={classifyValue(argument.name, argument.value)}
-              label={label}
-            />
+            <HoverRow>
+              <ClassifiedValue
+                attribute={classifyValue(argument.name, argument.value)}
+                label={label}
+              />
+            </HoverRow>
           </StackItem>
           <StackItem>
             <ReplacementList
@@ -139,11 +142,7 @@ export const ArgumentValue: React.FC<Props> = ({
       const attribute = classifyValue(argument.name, argument.raw);
 
       if (INLINE_KINDS.includes(attribute.kind)) {
-        return (
-          <WithKindLabel label={label}>
-            <AttributeValue attribute={attribute} />
-          </WithKindLabel>
-        );
+        return <ClassifiedValue attribute={attribute} label={label} />;
       }
 
       return (
@@ -207,7 +206,8 @@ const WithKindLabel: React.FC<React.PropsWithChildren<{ label: string }>> = ({
 
 /**
  * A classified value, labelled when it renders inline and bare when it renders as
- * a code editor.
+ * a code editor. The label goes before the copy button of a copyable value, so it
+ * sits right next to the value.
  *
  * @prop {ClassifiedAttribute} attribute - The classified value to render.
  * @prop {string} label - The kind label text for an inline value.
@@ -215,14 +215,7 @@ const WithKindLabel: React.FC<React.PropsWithChildren<{ label: string }>> = ({
 const ClassifiedValue: React.FC<{ attribute: ClassifiedAttribute; label: string }> = ({
   attribute,
   label,
-}) =>
-  INLINE_KINDS.includes(attribute.kind) ? (
-    <WithKindLabel label={label}>
-      <AttributeValue attribute={attribute} />
-    </WithKindLabel>
-  ) : (
-    <AttributeValue attribute={attribute} />
-  );
+}) => <AttributeValue attribute={attribute} suffix={<Label isCompact>{label}</Label>} />;
 
 const Unresolved = styled.span`
   color: var(--pf-t--global--text--color--subtle);

@@ -8,6 +8,7 @@ import {
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
 import { ActionDisabledTooltip, TextWithCopy } from "@/UI/Components";
+import { HoverRowGroup } from "@/UI/Components/RowHoverReveal";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
@@ -48,12 +49,12 @@ export const Actions: React.FC<Props> = ({ environment }) => {
 
   return (
     <>
-      <DescriptionListGroup>
+      <HoverRowGroup>
         <DescriptionListTerm>{words("id")}</DescriptionListTerm>
         <DescriptionListDescription>
           <TextWithCopy value={environment.id} tooltipContent={words("home.environment.copy")} />
         </DescriptionListDescription>
-      </DescriptionListGroup>
+      </HoverRowGroup>
       <DescriptionListGroup>
         <DescriptionListDescription>
           <ActionDisabledTooltip

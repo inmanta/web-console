@@ -11,7 +11,7 @@ import { words } from "@/UI/words";
 type Progress = Omit<DeploymentProgress, "total"> | undefined | null;
 
 /** Height of the bar segments */
-const BAR_ITEM_HEIGHT = "24px";
+const BAR_ITEM_HEIGHT = "28px";
 
 interface Props {
   progress: Progress;

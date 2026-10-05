@@ -17,6 +17,7 @@ import {
 import { DeploymentProgressBar } from "@/Slices/ServiceInventory/UI/Components";
 import { words } from "@/UI";
 import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
+import { HoverRowGroup } from "@/UI/Components/RowHoverReveal";
 import { InstanceDetailsContext } from "../../../Core/Context";
 
 /**
@@ -55,12 +56,12 @@ export const DetailsSection: React.FC = () => {
         <CardExpandableContent>
           <CardBody>
             <DescriptionList isHorizontal isCompact isFluid>
-              <DescriptionListGroup>
+              <HoverRowGroup>
                 <DescriptionListTerm>Id: </DescriptionListTerm>
                 <DescriptionListDescription>
                   <TextWithCopy value={instance.id} tooltipContent={words("id.copy")} />
                 </DescriptionListDescription>
-              </DescriptionListGroup>
+              </HoverRowGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>
                   {words("instanceDetails.details.created")}
