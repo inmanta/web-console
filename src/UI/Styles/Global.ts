@@ -110,6 +110,8 @@ export const GlobalStyles = createGlobalStyle`
   /**
    * PF icons sit on a text line with vertical-align: -0.125em, which makes the label icon wrapper taller than the icon
    * and pushes the icon above the centre of the text. Laying the icon out as a block keeps the wrapper exactly icon-sized.
+   * This affects nearly every label with an icon, so it is fixed globally instead of per component.
+   * Coupled to PF's label markup: on a PF upgrade, remove it and check whether label icons are still off centre.
    **/
   .pf-v6-c-label__icon {
     display: flex;
