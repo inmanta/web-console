@@ -1,0 +1,4 @@
+description: Center label icons exactly on the label text.
+change-type: patch
+destination-branches: [iso9]
+sections: {}
