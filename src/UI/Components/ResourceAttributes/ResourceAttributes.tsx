@@ -5,7 +5,6 @@ import {
   CardTitle,
   DescriptionList,
   DescriptionListDescription,
-  DescriptionListGroup,
   DescriptionListTerm,
   Flex,
   FlexItem,
@@ -24,6 +23,7 @@ import {
 } from "@/Data/Common/References";
 import { AttributeValue } from "@/UI/Components/AttributeList";
 import { ReferenceNode, ReplacementList } from "@/UI/Components/References";
+import { HoverRow, HoverRowGroup } from "@/UI/Components/RowHoverReveal";
 import { words } from "@/UI/words";
 import { MACHINERY_KEYS, groupReplacements, partitionOrchestrator } from "./helpers";
 
@@ -72,7 +72,7 @@ export const ResourceAttributes: React.FC<Props> = ({
   }, [attributes, classifier]);
 
   const renderAttribute = (attribute: ClassifiedAttribute) => (
-    <DescriptionListGroup key={attribute.key}>
+    <HoverRowGroup key={attribute.key}>
       <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
       <DescriptionListDescription data-testid={`attribute-${attribute.key}`}>
         <AttributeCell
@@ -83,7 +83,7 @@ export const ResourceAttributes: React.FC<Props> = ({
           onToggle={onToggle}
         />
       </DescriptionListDescription>
-    </DescriptionListGroup>
+    </HoverRowGroup>
   );
 
   // The model group is a single column, where a value can be a whole reference tree
@@ -166,7 +166,9 @@ const AttributeCell: React.FC<{
   return (
     <Stack hasGutter>
       <StackItem>
-        <AttributeValue attribute={attribute} />
+        <HoverRow>
+          <AttributeValue attribute={attribute} />
+        </HoverRow>
       </StackItem>
       <StackItem>
         <ReplacementList

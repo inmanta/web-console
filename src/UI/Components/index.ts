@@ -44,6 +44,7 @@ export * from "./ResourceAttributes";
 export * from "./ResourceLink";
 export * from "./ResourceStatus";
 export * from "./ResourceTable";
+export * from "./RowHoverReveal";
 export * from "./ServiceInstanceForm";
 export * from "./ServiceProvider";
 export * from "./SettingsList";

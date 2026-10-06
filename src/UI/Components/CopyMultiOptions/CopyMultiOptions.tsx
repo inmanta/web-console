@@ -6,30 +6,29 @@ import {
   Icon,
   MenuToggle,
   MenuToggleElement,
-  MenuToggleProps,
   Tooltip,
 } from "@patternfly/react-core";
 import { CopyIcon } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
 import { words } from "@/UI";
+import { RowHoverReveal } from "@/UI/Components/RowHoverReveal";
 
 interface Props {
   text?: string;
   options: string[];
   tooltipContent?: string;
   isDisabled?: boolean;
-  size?: MenuToggleProps["size"];
 }
 
 /**
- * Component that allows to copy one of the provided options to clipboard.
+ * Component that allows to copy one of the provided options to clipboard. Inside a row (see
+ * RowHoverReveal) the button stays hidden until that row is hovered.
  *
  * @param {Props} props - The props for the CopyMultiOptions component.
  *  @prop {string} text - The text to display on the button.
  *  @prop {string[]} options - The list of options to copy.
  *  @prop {string} [tooltipContent] - The tooltip content. Default is "Copy".
  *  @prop {boolean} [isDisabled] - Whether the button is disabled. Default is false.
- *  @prop {"default" | "sm"} [size] - The size of the button, "sm" for compact tables. Default is "default".
  *
  * @returns {React.ReactElement} The CopyMultiOptions component.
  */
@@ -38,7 +37,6 @@ export const CopyMultiOptions: React.FC<Props> = ({
   tooltipContent,
   isDisabled,
   text = "",
-  size = "default",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -81,7 +79,7 @@ export const CopyMultiOptions: React.FC<Props> = ({
       isDisabled={isDisabled}
       ref={toggleRef}
       variant="plain"
-      size={size}
+      size="sm"
       isExpanded={isOpen}
       aria-label="Copy to clipboard"
       icon={
@@ -95,19 +93,26 @@ export const CopyMultiOptions: React.FC<Props> = ({
   );
 
   return (
-    <Dropdown
-      isOpen={isOpen}
-      onSelect={onSelect}
-      toggle={toggle}
-      onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-    >
-      <DropdownList>
-        {options.map((value, index) => (
-          <Tooltip key={index} content={<div>{tooltipText}</div>} entryDelay={200} position="right">
-            <DropdownItem value={value}>{value}</DropdownItem>
-          </Tooltip>
-        ))}
-      </DropdownList>
-    </Dropdown>
+    <RowHoverReveal>
+      <Dropdown
+        isOpen={isOpen}
+        onSelect={onSelect}
+        toggle={toggle}
+        onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+      >
+        <DropdownList>
+          {options.map((value, index) => (
+            <Tooltip
+              key={index}
+              content={<div>{tooltipText}</div>}
+              entryDelay={200}
+              position="right"
+            >
+              <DropdownItem value={value}>{value}</DropdownItem>
+            </Tooltip>
+          ))}
+        </DropdownList>
+      </Dropdown>
+    </RowHoverReveal>
   );
 };

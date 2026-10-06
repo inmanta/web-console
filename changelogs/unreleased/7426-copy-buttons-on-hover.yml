@@ -1,0 +1,6 @@
+description: Copy buttons in tables and attribute lists now only show when you hover the row.
+issue-nr: 7426
+change-type: patch
+destination-branches: [iso9]
+sections:
+  minor-improvement: "{{description}}"
