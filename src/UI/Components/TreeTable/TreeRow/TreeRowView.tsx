@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { ParsedNumber, Attributes, AttributeAnnotations } from "@/Core";
 import { Toggle } from "@/UI/Components/Toggle";
 import { ClipboardCopyButton } from "../../ClipboardCopyButton";
+import { RowHoverReveal } from "../../RowHoverReveal";
 import { CellWithCopy } from "./CellWithCopy";
 import { Indent } from "./Indent";
 import { TreeRow } from "./TreeRow";
@@ -91,7 +92,9 @@ export const TreeRowView: React.FC<RowProps> = ({ row, annotations, setTab = () 
                           <ExclamationTriangleIcon />
                         </Icon>
                       </Tooltip>
-                      <ClipboardCopyButton value={row.primaryCell.warning}></ClipboardCopyButton>
+                      <RowHoverReveal>
+                        <ClipboardCopyButton value={row.primaryCell.warning} />
+                      </RowHoverReveal>
                     </Spacer>
                   ) : (
                     ""
@@ -123,7 +126,9 @@ export const TreeRowView: React.FC<RowProps> = ({ row, annotations, setTab = () 
                       <ExclamationTriangleIcon />
                     </Icon>
                   </Tooltip>
-                  <ClipboardCopyButton value={row.primaryCell.warning}></ClipboardCopyButton>
+                  <RowHoverReveal>
+                    <ClipboardCopyButton value={row.primaryCell.warning} />
+                  </RowHoverReveal>
                 </Spacer>
               ) : (
                 ""

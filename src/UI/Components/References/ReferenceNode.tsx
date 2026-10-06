@@ -4,7 +4,6 @@ import {
   CardBody,
   DescriptionList,
   DescriptionListDescription,
-  DescriptionListGroup,
   DescriptionListTerm,
   ExpandableSection,
   Flex,
@@ -14,6 +13,7 @@ import {
 import styled from "styled-components";
 import { Reference } from "@/Core/Domain";
 import { summarize } from "@/Data/Common/References";
+import { HoverRow, HoverRowGroup } from "@/UI/Components/RowHoverReveal";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { words } from "@/UI/words";
 import { ArgumentValue } from "./ArgumentValue";
@@ -131,7 +131,7 @@ export const ReferenceNode: React.FC<Props> = ({
             </Uuid>
             <DescriptionList>
               {visibleArgs.map((arg) => (
-                <DescriptionListGroup key={arg.name}>
+                <HoverRowGroup key={arg.name}>
                   <DescriptionListTerm>{arg.name}</DescriptionListTerm>
                   <DescriptionListDescription>
                     <ArgumentValue
@@ -145,7 +145,7 @@ export const ReferenceNode: React.FC<Props> = ({
                       path={nodePath}
                     />
                   </DescriptionListDescription>
-                </DescriptionListGroup>
+                </HoverRowGroup>
               ))}
             </DescriptionList>
           </CardBody>
@@ -155,7 +155,7 @@ export const ReferenceNode: React.FC<Props> = ({
   );
 };
 
-const Uuid = styled.div`
+const Uuid = styled(HoverRow)`
   font-family: var(--pf-t--global--font--family--mono);
   font-size: var(--pf-t--global--font--size--sm);
   color: var(--pf-t--global--text--color--subtle);

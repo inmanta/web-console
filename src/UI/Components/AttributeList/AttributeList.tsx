@@ -3,16 +3,17 @@ import {
   Content,
   DescriptionList,
   DescriptionListDescription,
-  DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { ClassifiedAttribute } from "@/Data";
+import { HoverRowGroup } from "@/UI/Components/RowHoverReveal";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { words } from "@/UI/words";
 import { CodeEditor } from "../CodeEditor";
 import { FileBlock } from "./FileBlock";
+import { WithSuffix } from "./WithSuffix";
 import { languageForKind } from "./helpers";
 
 type AttributeTextVariant = "default" | "monospace";
@@ -32,12 +33,12 @@ interface Props {
 export const AttributeList: React.FC<Props> = ({ attributes, variant = "default" }) => (
   <DescriptionList>
     {attributes.map((attribute) => (
-      <DescriptionListGroup key={attribute.key}>
+      <HoverRowGroup key={attribute.key}>
         <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
         <DescriptionListDescription data-testid={`attribute-${attribute.key}`}>
           <AttributeValue attribute={attribute} variant={variant} />
         </DescriptionListDescription>
-      </DescriptionListGroup>
+      </HoverRowGroup>
     ))}
   </DescriptionList>
 );
@@ -48,34 +49,50 @@ export const AttributeList: React.FC<Props> = ({ attributes, variant = "default"
  * the code editor for JSON/XML/Code, a file block for File, etc. Use this directly (instead of
  * {@link AttributeList}) when you need the value rendering without the
  * surrounding description-list term/label.
+ *
+ * @prop {ClassifiedAttribute} attribute - The classified attribute to render.
+ * @prop {AttributeTextVariant} [variant] - The variant of the attribute text.
+ * @prop {React.ReactNode} [suffix] - Shown right after an inline value and before its copy
+ *   button, such as a kind label. File and code values ignore it.
  */
 export const AttributeValue: React.FC<{
   attribute: ClassifiedAttribute;
   variant?: AttributeTextVariant;
-}> = ({ attribute, variant }) => {
+  suffix?: React.ReactNode;
+}> = ({ attribute, variant, suffix }) => {
   switch (attribute.kind) {
     case "Undefined":
       return (
-        <TextContainer $variant={variant}>
-          <OutlinedQuestionCircleIcon /> undefined
-        </TextContainer>
+        <WithSuffix suffix={suffix}>
+          <TextContainer $variant={variant}>
+            <OutlinedQuestionCircleIcon /> undefined
+          </TextContainer>
+        </WithSuffix>
       );
 
     case "Password":
-      return <TextContainer $variant={variant}>{attribute.value}</TextContainer>;
+      return (
+        <WithSuffix suffix={suffix}>
+          <TextContainer $variant={variant}>{attribute.value}</TextContainer>
+        </WithSuffix>
+      );
 
     case "SingleLine":
       if (attribute.value === "") {
         return (
-          <Content component="small">
-            <em>{words("attributes.emptyString")}</em>
-          </Content>
+          <WithSuffix suffix={suffix}>
+            <Content component="small">
+              <em>{words("attributes.emptyString")}</em>
+            </Content>
+          </WithSuffix>
         );
       }
 
       return (
-        <TextWithCopy value={attribute.value} tooltipContent="Copy to clipboard">
-          <TextContainer $variant={variant}>{attribute.value}</TextContainer>
+        <TextWithCopy value={attribute.value} tooltipContent={words("copy.clipboard")}>
+          <WithSuffix suffix={suffix}>
+            <TextContainer $variant={variant}>{attribute.value}</TextContainer>
+          </WithSuffix>
         </TextWithCopy>
       );
 
