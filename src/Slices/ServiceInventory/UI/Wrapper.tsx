@@ -9,6 +9,7 @@ import { AddInstanceButton } from "./Components";
 interface Props {
   name: string;
   service?: ServiceModel;
+  style?: React.CSSProperties;
 }
 
 /**

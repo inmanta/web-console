@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { Stack, StackItem } from "@patternfly/react-core";
 import { usePaginatedTable } from "@/Data";
 import { useGetAgents } from "@/Data/Queries";
 import { Filter } from "@/Slices/Agents/Core/Types";
@@ -87,12 +88,16 @@ export const Page: React.FC = () => {
             {data.data.length <= 0 ? (
               <EmptyView message={words("agents.empty.message")} aria-label="AgentsView-Empty" />
             ) : (
-              <TableProvider
-                agents={data.data}
-                aria-label="AgentsView-Success"
-                sort={sort}
-                setSort={setSort}
-              />
+              <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+                <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                  <TableProvider
+                    agents={data.data}
+                    aria-label="AgentsView-Success"
+                    sort={sort}
+                    setSort={setSort}
+                  />
+                </StackItem>
+              </Stack>
             )}
           </FilterDrawer>
         </GetAgentsContext.Provider>
