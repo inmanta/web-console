@@ -64,7 +64,7 @@ export const Page: React.FC = () => {
       <PageContainer
         pageTitle={words("agents.title")}
         actions={<AgentsActionsButton isDisabled={data.data.length <= 0} />}
-        style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+        style={{ display: "flex", flexDirection: "column" }}
       >
         <GetAgentsContext.Provider value={{ filter, sort, pageSize, currentPage }}>
           <AgentsTableControls
