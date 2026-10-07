@@ -1,5 +1,4 @@
 import React from "react";
-import { Panel } from "@patternfly/react-core";
 import {
   MarkdownContainer,
   SetStateButtonDefaults,
@@ -39,15 +38,13 @@ export const MarkdownCard: React.FC<Props> = ({
   const data = typeof attributeValue === "string" ? attributeValue : JSON.stringify(attributeValue);
 
   return (
-    <Panel>
-      <MarkdownContainer
-        text={data}
-        web_title={web_title}
-        onSetStateClick={onSetStateClick}
-        isVisible={isExpanded}
-        stateTransferDefaults={stateTransferDefaults}
-        disableStateTransfer={disableStateTransfer}
-      />
-    </Panel>
+    <MarkdownContainer
+      text={data}
+      web_title={web_title}
+      onSetStateClick={onSetStateClick}
+      isVisible={isExpanded}
+      stateTransferDefaults={stateTransferDefaults}
+      disableStateTransfer={disableStateTransfer}
+    />
   );
 };

@@ -100,3 +100,19 @@
   background: var(--pf-t--global--background--color--secondary--default, #f5f5f5);
   border-color: var(--pf-t--global--border--color--hover, #b8bbbe);
 }
+
+/* In PatternFly's stacked (grid) table layout every cell child becomes a grid item; keep inline code at its own width */
+.markdown-body .pf-v6-c-table__td > code {
+  justify-self: start;
+}
+
+/* Wide markdown tables scroll inside the markdown body instead of overflowing it */
+.markdown-body .markdown-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  margin-bottom: 16px;
+}
+
+.markdown-body .markdown-table-scroll > table {
+  margin-bottom: 0;
+}

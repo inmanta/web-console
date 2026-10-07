@@ -5,6 +5,7 @@ import { full } from "markdown-it-emoji";
 import { useTheme } from "../DarkmodeOption";
 import { renderMermaidBlocks } from "./MermaidHelpers";
 import mermaidPlugin from "./MermaidPlugin";
+import patternFlyTablePlugin from "./PatternFlyTablePlugin";
 import setStatePlugin, { SetStateButtonDefaults } from "./StateTransferPlugin";
 import type { MarkdownIt } from "markdown-it";
 import "./styles.css";
@@ -85,6 +86,7 @@ export const MarkdownContainer: React.FC<Props> = ({
     });
 
     markdownInstance.use(full);
+    markdownInstance.use(patternFlyTablePlugin);
     markdownInstance.use((md) => mermaidPlugin(md, web_title, { theme }));
     markdownInstance.use((md) => setStatePlugin(md, web_title, { stateTransferDefaults }));
 

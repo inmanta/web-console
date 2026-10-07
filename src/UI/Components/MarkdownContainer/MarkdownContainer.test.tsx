@@ -81,9 +81,12 @@ describe("MarkdownContainer", () => {
     );
   });
 
-  it("applies theme configuration to Mermaid diagrams", async () => {
-    // Set up dark theme in DOM (the implementation checks document.documentElement[data-theme])
-    document.documentElement.setAttribute("data-theme", "dark");
+  it("feeds PatternFly tokens to Mermaid's base theme", async () => {
+    const root = document.documentElement;
+    root.style.setProperty("--pf-t--global--text--color--regular", "#151515");
+    root.style.setProperty("--pf-t--global--color--nonstatus--blue--default", "#b9dafc");
+    root.style.setProperty("--pf-t--global--border--color--nonstatus--blue--default", "#4394e5");
+    root.style.setProperty("--pf-t--global--text--color--nonstatus--on-blue--default", "#002952");
 
     // Import the mermaid mock and set up spies before rendering
     const mermaidMock = await import("mermaid");
@@ -95,35 +98,38 @@ describe("MarkdownContainer", () => {
 
     render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
 
-    // Wait for the async setTimeout to execute and initialize to be called
     await waitFor(
       () => {
-        // Verify that mermaid.initialize was called with the dark theme
         expect(initializeSpy).toHaveBeenCalledWith(
           expect.objectContaining({
-            securityLevel: "loose",
-            startOnLoad: false,
-            theme: "dark",
+            theme: "base",
+            themeVariables: expect.objectContaining({
+              textColor: "#151515",
+              primaryTextColor: "#151515",
+            }),
+            themeCSS: expect.stringContaining(
+              ".node.pf-blue rect, .node.pf-blue polygon, .node.pf-blue circle"
+            ),
           })
         );
       },
       { timeout: 2000 }
     );
 
-    // Check that the mermaid block is created
-    await waitFor(() => {
-      const mermaidBlock = document.querySelector("pre.mermaid");
-      expect(mermaidBlock).toBeInTheDocument();
-    });
+    const { themeCSS } = initializeSpy.mock.calls[initializeSpy.mock.calls.length - 1][0] as {
+      themeCSS: string;
+    };
 
-    // Clean up
-    document.documentElement.removeAttribute("data-theme");
+    expect(themeCSS).toContain("fill: #b9dafc; stroke: #4394e5;");
+    expect(themeCSS).toContain(".cluster.pf-blue .nodeLabel");
+    // Hues whose tokens don't resolve are left out.
+    expect(themeCSS).not.toContain("pf-green");
+
+    root.removeAttribute("style");
   });
 
-  it("uses default theme when no theme preference is set", async () => {
-    // Ensure dark theme class is not present (the implementation checks document.documentElement.classList)
-    document.documentElement.removeAttribute("data-theme");
-
+  it("uses Mermaid's base theme with no overrides when PatternFly tokens are missing", async () => {
+    // PatternFly's CSS isn't loaded under jsdom, so every token reads empty.
     // Import the mermaid mock and set up spies before rendering
     const mermaidMock = await import("mermaid");
     const initializeSpy = vi.spyOn(mermaidMock.default, "initialize");
@@ -137,12 +143,13 @@ describe("MarkdownContainer", () => {
     // Wait for the async setTimeout to execute and initialize to be called
     await waitFor(
       () => {
-        // Verify that mermaid.initialize was called with the default theme
         expect(initializeSpy).toHaveBeenCalledWith(
           expect.objectContaining({
             securityLevel: "loose",
             startOnLoad: false,
-            theme: "default",
+            theme: "base",
+            themeVariables: {},
+            themeCSS: "",
           })
         );
       },
