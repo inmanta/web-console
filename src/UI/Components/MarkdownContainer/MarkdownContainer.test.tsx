@@ -106,6 +106,9 @@ describe("MarkdownContainer", () => {
             themeVariables: expect.objectContaining({
               textColor: "#151515",
               primaryTextColor: "#151515",
+              noteTextColor: "#151515",
+              // Blue is the first pie hue.
+              pie1: "#b9dafc",
             }),
             themeCSS: expect.stringContaining(
               ".node.pf-blue rect, .node.pf-blue polygon, .node.pf-blue circle"
@@ -128,8 +131,9 @@ describe("MarkdownContainer", () => {
     root.removeAttribute("style");
   });
 
-  it("uses Mermaid's base theme with no overrides when PatternFly tokens are missing", async () => {
-    // PatternFly's CSS isn't loaded under jsdom, so every token reads empty.
+  it("drops every token-based override when PatternFly tokens are missing", async () => {
+    // PatternFly's CSS isn't loaded under jsdom, so every token reads empty
+    // and only the fixed pie opacity remains.
     // Import the mermaid mock and set up spies before rendering
     const mermaidMock = await import("mermaid");
     const initializeSpy = vi.spyOn(mermaidMock.default, "initialize");
@@ -148,7 +152,7 @@ describe("MarkdownContainer", () => {
             securityLevel: "loose",
             startOnLoad: false,
             theme: "base",
-            themeVariables: {},
+            themeVariables: { pieOpacity: "1" },
             themeCSS: "",
           })
         );

@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Mermaid from "mermaid";
 import { words } from "@/UI/words";
+import { patternFlyHueCss, patternFlyThemeVariables } from "./MermaidTheme";
 
 /**
  * Serializes the first `<svg>` found in `block` and triggers a browser download
@@ -146,104 +147,6 @@ export function showMermaidError(block: HTMLElement, error: unknown): void {
   `;
 
   block.appendChild(errorDiv);
-}
-
-/**
- * Maps PatternFly design tokens onto Mermaid's `base` theme variables. Tokens are read
- * from the document root, so the active PatternFly theme resolves at render time.
- * Empty values are dropped, so a token renamed by a PatternFly upgrade falls back to
- * Mermaid's own base palette instead of rendering an invisible diagram.
- *
- * @returns The themeVariables to pass to `Mermaid.initialize`.
- */
-export function patternFlyThemeVariables(): Record<string, string> {
-  const styles = getComputedStyle(document.documentElement);
-  const token = (name: string): string => styles.getPropertyValue(name).trim();
-
-  const surface = token("--pf-t--global--background--color--primary--default");
-  const secondarySurface = token("--pf-t--global--background--color--secondary--default");
-  const text = token("--pf-t--global--text--color--regular");
-  const border = token("--pf-t--global--border--color--default");
-
-  const variables: Record<string, string> = {
-    background: surface,
-    primaryColor: secondarySurface,
-    secondaryColor: token("--pf-t--global--background--color--tertiary--default"),
-    tertiaryColor: surface,
-    primaryBorderColor: border,
-    secondaryBorderColor: border,
-    tertiaryBorderColor: border,
-    nodeBorder: border,
-    clusterBkg: secondarySurface,
-    clusterBorder: border,
-    noteBkgColor: secondarySurface,
-    noteBorderColor: border,
-    edgeLabelBackground: surface,
-    lineColor: token("--pf-t--global--icon--color--subtle"),
-    textColor: text,
-    primaryTextColor: text,
-    secondaryTextColor: text,
-    tertiaryTextColor: text,
-    fontFamily: token("--pf-t--global--font--family--body"),
-    fontSize: token("--pf-t--global--font--size--body--default"),
-  };
-
-  return Object.fromEntries(Object.entries(variables).filter(([, value]) => value !== ""));
-}
-
-/**
- * The nine PatternFly nonstatus hues, the same set the Label component uses.
- * Diagram authors can apply them to nodes and subgraphs as `pf-<hue>` classes,
- * e.g. `class routerSouth pf-blue`, instead of hard-coding colours in a `classDef`.
- */
-export const PATTERNFLY_HUES = [
-  "blue",
-  "gray",
-  "green",
-  "orange",
-  "orangered",
-  "purple",
-  "red",
-  "teal",
-  "yellow",
-] as const;
-
-const HUE_SHAPES = ["rect", "polygon", "circle", "ellipse", "path"];
-
-/**
- * Builds the CSS for the `pf-<hue>` diagram classes, passed to Mermaid as `themeCSS`.
- * Mermaid scopes `themeCSS` under the diagram's svg id, which is needed to outrank its own
- * `#id .node rect` rules. Tokens are resolved to literal values so a downloaded SVG keeps
- * its colours. Hues whose tokens don't resolve are skipped.
- *
- * @returns The CSS rules for every resolvable hue.
- */
-export function patternFlyHueCss(): string {
-  const styles = getComputedStyle(document.documentElement);
-  const token = (name: string): string => styles.getPropertyValue(name).trim();
-
-  return PATTERNFLY_HUES.map((hue) => {
-    const fill = token(`--pf-t--global--color--nonstatus--${hue}--default`);
-    const stroke = token(`--pf-t--global--border--color--nonstatus--${hue}--default`);
-    const text = token(`--pf-t--global--text--color--nonstatus--on-${hue}--default`);
-
-    if (!fill || !stroke || !text) {
-      return "";
-    }
-
-    const groups = [`.node.pf-${hue}`, `.cluster.pf-${hue}`];
-    const shapes = groups.flatMap((group) => HUE_SHAPES.map((shape) => `${group} ${shape}`));
-    const labels = groups.flatMap((group) => [`${group} .nodeLabel`, `${group} .label`]);
-    const texts = groups.map((group) => `${group} text`);
-
-    return (
-      `${shapes.join(", ")} { fill: ${fill}; stroke: ${stroke}; }\n` +
-      `${labels.join(", ")} { color: ${text}; }\n` +
-      `${texts.join(", ")} { fill: ${text}; }`
-    );
-  })
-    .filter((rule) => rule !== "")
-    .join("\n");
 }
 
 /**
