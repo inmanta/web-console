@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Mermaid from "mermaid";
 import { words } from "@/UI/words";
+import { patternFlyHueCss, patternFlyThemeVariables } from "./MermaidTheme";
 
 /**
  * Serializes the first `<svg>` found in `block` and triggers a browser download
@@ -167,14 +168,14 @@ export function renderMermaidBlocks(
     return;
   }
 
-  const isDarkTheme = document.documentElement.getAttribute("data-theme") === "dark";
-
   (Mermaid as any).initialize({
     startOnLoad: false,
     securityLevel: "loose",
-    // Switch Mermaid theme based on the current PatternFly theme.
-    // This keeps diagrams readable in both light and dark modes.
-    theme: isDarkTheme ? "dark" : "default",
+    // Only the `base` theme honours themeVariables. The PatternFly tokens already
+    // resolve to the active light/dark theme, so no theme branch is needed here.
+    theme: "base",
+    themeVariables: patternFlyThemeVariables(),
+    themeCSS: patternFlyHueCss(),
   });
 
   mermaidBlocks.forEach((block) => {
