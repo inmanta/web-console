@@ -6,10 +6,12 @@ import { ResourceActions } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../../Core/Context";
 import { buildInstanceResourceActionScopes } from "../../../Core/resourceActionScopes";
 import { InstanceActions } from "../InstanceActions";
+import { StateLabel } from "./HistorySection";
 
 /**
- * The Service Instance Details header actions: the Deploy/Repair split button (scoped to this
+ * The Service Instance Details header actions: the Deploy/Repair/Dry run split button (scoped to this
  * instance, plus its owned services when the catalog offers them) and the InstanceActions menu.
+ * A dry run can pick one of the instance's own versions, labelled with its lifecycle state.
  * Rendered only on the latest version; requires the ServiceInstanceDetails context.
  */
 export const InstanceHeaderActions: React.FC = () => {
@@ -69,8 +71,15 @@ export const InstanceHeaderActions: React.FC = () => {
           tooltips={{
             deploy: words("resources.resourceActions.deploy.tooltip.instance"),
             repair: words("resources.resourceActions.repair.tooltip.instance"),
+            dryRun: words("resources.resourceActions.dryRun.tooltip.instance"),
           }}
           disabledReason={disabledReason}
+          instance={{
+            id: instance.id,
+            serviceEntity: instance.service_entity,
+            name: instance.service_identity_attribute_value ?? instance.id,
+            renderState: (state) => <StateLabel state={state} service={serviceModelQuery.data} />,
+          }}
         />
       </FlexItem>
       <FlexItem>

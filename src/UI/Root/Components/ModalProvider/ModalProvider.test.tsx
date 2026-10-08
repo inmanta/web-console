@@ -66,6 +66,49 @@ describe("ModalProvider", () => {
       expect(screen.getByTestId("modal-description")).toBeVisible();
     });
 
+    it("renders an icon with the title and description, and drops it for a later modal without one", async () => {
+      const WithAndWithoutIcon = () => {
+        const { triggerModal } = useContext(ModalContext);
+
+        return (
+          <>
+            <button
+              onClick={() =>
+                triggerModal({
+                  title: "With icon",
+                  description: "Icon description",
+                  icon: <span data-testid="modal-icon" />,
+                  content: <div />,
+                })
+              }
+            >
+              Open with icon
+            </button>
+            <button onClick={() => triggerModal({ title: "Without icon", content: <div /> })}>
+              Open without icon
+            </button>
+          </>
+        );
+      };
+
+      render(
+        <ModalProvider>
+          <WithAndWithoutIcon />
+        </ModalProvider>
+      );
+
+      await userEvent.click(screen.getByText("Open with icon"));
+
+      expect(screen.getByTestId("modal-icon")).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "With icon" })).toBeVisible();
+      expect(screen.getByText("Icon description")).toBeVisible();
+
+      await userEvent.click(screen.getByText("Open without icon"));
+
+      expect(screen.getByText("Without icon")).toBeVisible();
+      expect(screen.queryByTestId("modal-icon")).not.toBeInTheDocument();
+    });
+
     it("renders footer actions when provided", async () => {
       setup({ actions: <button data-testid="confirm-btn">Confirm</button> });
 

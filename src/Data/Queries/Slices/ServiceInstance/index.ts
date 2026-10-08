@@ -7,6 +7,8 @@ export * from "./GetInfiniteInstanceLogs";
 export * from "./GetInstanceResources";
 export * from "./GetInstance";
 export * from "./GetInstanceConfig";
+export * from "./GetInstanceVersion";
+export * from "./GetInstanceVersions";
 export * from "./GetInstances";
 export * from "./GetInstanceWithRelations";
 export * from "./GetInventoryList";
