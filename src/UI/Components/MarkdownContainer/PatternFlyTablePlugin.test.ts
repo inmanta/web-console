@@ -29,7 +29,7 @@ describe("PatternFlyTablePlugin", () => {
     const html = md.render(table);
 
     expect(html).toMatch(
-      /^<div class="markdown-table-scroll" tabindex="0">\n<table [^>]*>[\s\S]*<\/table>\n<\/div>\n$/
+      /^<div class="pf-v6-c-scroll-inner-wrapper">\n<table [^>]*>[\s\S]*<\/table>\n<\/div>\n$/
     );
   });
 

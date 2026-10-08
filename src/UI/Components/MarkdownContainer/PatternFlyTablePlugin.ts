@@ -1,5 +1,6 @@
 import type { MarkdownIt, StateCore, Token } from "markdown-it";
 
+const SCROLL_WRAPPER_CLASS = "pf-v6-c-scroll-inner-wrapper";
 const TABLE_CLASS = "pf-v6-c-table pf-m-grid-md pf-m-compact";
 const THEAD_CLASS = "pf-v6-c-table__thead";
 const TBODY_CLASS = "pf-v6-c-table__tbody";
@@ -24,14 +25,15 @@ const inlineText = (token: Token | undefined): string =>
  * tables carry no column widths. Body cells also get a `data-label` with their column header,
  * which PatternFly prints in the stacked layout below the md breakpoint.
  *
- * Each table is wrapped in a `markdown-table-scroll` container, so a table wider than the
- * markdown body (long unbreakable values, many columns) scrolls instead of overflowing.
+ * Each table is wrapped in PatternFly's scroll wrapper, the same one `InnerScrollContainer`
+ * renders, so a table wider than the markdown body (long unbreakable values, many columns)
+ * scrolls instead of overflowing.
  *
  * @param md - The markdown-it instance to register the core rule on.
  */
 export default function patternFlyTablePlugin(md: MarkdownIt): void {
   md.renderer.rules.table_open = (tokens, idx, options, _env, self) =>
-    `<div class="markdown-table-scroll" tabindex="0">\n${self.renderToken(tokens, idx, options)}`;
+    `<div class="${SCROLL_WRAPPER_CLASS}">\n${self.renderToken(tokens, idx, options)}`;
   md.renderer.rules.table_close = (tokens, idx, options, _env, self) =>
     `${self.renderToken(tokens, idx, options)}</div>\n`;
 

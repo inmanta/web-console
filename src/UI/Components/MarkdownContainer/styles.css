@@ -106,13 +106,11 @@
   justify-self: start;
 }
 
-/* Wide markdown tables scroll inside the markdown body instead of overflowing it */
-.markdown-body .markdown-table-scroll {
-  max-width: 100%;
-  overflow-x: auto;
+/* Markdown tables sit in PatternFly's scroll wrapper, so the table spacing moves onto the wrapper */
+.markdown-body .pf-v6-c-scroll-inner-wrapper {
   margin-bottom: 16px;
 }
 
-.markdown-body .markdown-table-scroll > table {
+.markdown-body .pf-v6-c-scroll-inner-wrapper > table {
   margin-bottom: 0;
 }

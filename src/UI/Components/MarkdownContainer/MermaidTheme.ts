@@ -125,10 +125,7 @@ export function patternFlyThemeVariables(): Record<string, string> {
  * and subgraphs as `pf-<hue>` classes, e.g. `class routerSouth pf-blue`, instead of
  * hard-coding colours in a `classDef`.
  */
-export const PATTERNFLY_HUES: Record<
-  string,
-  { fill: PatternFlyToken; stroke: PatternFlyToken; text: PatternFlyToken }
-> = {
+const PATTERNFLY_HUES = {
   blue: {
     fill: t_global_color_nonstatus_blue_default,
     stroke: t_global_border_color_nonstatus_blue_default,
@@ -174,12 +171,18 @@ export const PATTERNFLY_HUES: Record<
     stroke: t_global_border_color_nonstatus_yellow_default,
     text: t_global_text_color_nonstatus_on_yellow_default,
   },
-};
+} satisfies Record<
+  string,
+  { fill: PatternFlyToken; stroke: PatternFlyToken; text: PatternFlyToken }
+>;
+
+/** One of the PatternFly nonstatus hues, e.g. `blue`. */
+type PatternFlyHue = keyof typeof PATTERNFLY_HUES;
 
 const HUE_SHAPES = ["rect", "polygon", "circle", "ellipse", "path"];
 
 /** Order in which pie slices take the PatternFly hues, alternating warm and cool for contrast. */
-const PIE_HUES = [
+const PIE_HUES: PatternFlyHue[] = [
   "blue",
   "orange",
   "green",
@@ -189,7 +192,7 @@ const PIE_HUES = [
   "red",
   "orangered",
   "gray",
-] as const;
+];
 
 /**
  * Builds the CSS for the `pf-<hue>` diagram classes, passed to Mermaid as `themeCSS`.

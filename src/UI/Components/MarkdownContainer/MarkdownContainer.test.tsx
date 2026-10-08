@@ -1,3 +1,9 @@
+import {
+  t_global_border_color_nonstatus_blue_default,
+  t_global_color_nonstatus_blue_default,
+  t_global_text_color_nonstatus_on_blue_default,
+  t_global_text_color_regular,
+} from "@patternfly/react-tokens";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { words } from "@/UI/words";
 import { MarkdownContainer } from "./MarkdownContainer";
@@ -9,6 +15,11 @@ vi.mock("../DarkmodeOption", () => ({
 }));
 
 describe("MarkdownContainer", () => {
+  afterEach(() => {
+    // Drop the PatternFly token values a test set on the document root.
+    document.documentElement.removeAttribute("style");
+  });
+
   it("renders the Markdown content correctly", () => {
     const markdownContent = "# Heading\n\n**This is some bold text.**";
     const webTitle = "Container_id";
@@ -83,10 +94,10 @@ describe("MarkdownContainer", () => {
 
   it("feeds PatternFly tokens to Mermaid's base theme", async () => {
     const root = document.documentElement;
-    root.style.setProperty("--pf-t--global--text--color--regular", "#151515");
-    root.style.setProperty("--pf-t--global--color--nonstatus--blue--default", "#b9dafc");
-    root.style.setProperty("--pf-t--global--border--color--nonstatus--blue--default", "#4394e5");
-    root.style.setProperty("--pf-t--global--text--color--nonstatus--on-blue--default", "#002952");
+    root.style.setProperty(t_global_text_color_regular.name, "#151515");
+    root.style.setProperty(t_global_color_nonstatus_blue_default.name, "#b9dafc");
+    root.style.setProperty(t_global_border_color_nonstatus_blue_default.name, "#4394e5");
+    root.style.setProperty(t_global_text_color_nonstatus_on_blue_default.name, "#002952");
 
     // Import the mermaid mock and set up spies before rendering
     const mermaidMock = await import("mermaid");
@@ -127,8 +138,6 @@ describe("MarkdownContainer", () => {
     expect(themeCSS).toContain(".cluster.pf-blue .nodeLabel");
     // Hues whose tokens don't resolve are left out.
     expect(themeCSS).not.toContain("pf-green");
-
-    root.removeAttribute("style");
   });
 
   it("drops every token-based override when PatternFly tokens are missing", async () => {

@@ -1,5 +1,4 @@
-description: |
-  Restyled the documentation tab with PatternFly. Markdown tables now render as PatternFly tables, headings and inline code follow PatternFly styling, the nested panel inside each section is gone, and Mermaid diagrams use PatternFly colours in both light and dark theme. Diagram nodes and subgraphs can use the PatternFly label hues through `pf-<hue>` classes, e.g. `class myNode pf-blue`.
+description: Restyled the documentation tab and its Mermaid diagrams with PatternFly, in light and dark theme.
 issue-nr: 7430
 change-type: patch
 destination-branches: [master, iso9]
