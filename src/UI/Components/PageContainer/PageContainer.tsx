@@ -12,6 +12,7 @@ export const PageContainer: React.FC<React.PropsWithChildren<Props>> = ({
   pageTitle,
   actions,
   description,
+  style,
   ...props
 }) => (
   <>
@@ -37,7 +38,14 @@ export const PageContainer: React.FC<React.PropsWithChildren<Props>> = ({
         )}
       </Content>
     </PageSection>
-    <PageSection hasBodyWrapper={false} {...props} isFilled padding={{ default: "padding" }}>
+    {/* The content section scrolls on its own, so the breadcrumbs and title above it stay in view. */}
+    <PageSection
+      hasBodyWrapper={false}
+      {...props}
+      style={{ flex: "1 1 auto", minHeight: 0, overflow: "auto", ...style }}
+      isFilled
+      padding={{ default: "padding" }}
+    >
       {children}
     </PageSection>
   </>
