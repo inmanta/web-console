@@ -1,17 +1,7 @@
 import React, { PropsWithChildren, createContext, useEffect, useState } from "react";
-import {
-  Content,
-  Flex,
-  FlexItem,
-  Modal,
-  ModalVariant,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Title,
-} from "@patternfly/react-core";
+import { Modal, ModalVariant, ModalBody, ModalFooter, ModalHeader } from "@patternfly/react-core";
 
-type IconVariant = "success" | "danger" | "warning" | "info" | "custom";
+type IconVariant = "success" | "danger" | "warning" | "info" | "custom" | React.ComponentType;
 
 /**
  * Our own class on the modal backdrop so the outside-press handler can detect
@@ -30,9 +20,7 @@ export const BACKDROP_CLASS = "global-modal-backdrop";
  * @param {React.ReactNode} content - The content of the modal.
  * @param {React.ReactNode | undefined} [actions] - The actions of the modal.
  * @param {ModalVariant} [variant] - The variant of the modal.
- * @param {IconVariant} [iconVariant] - The variant of the icon in the modal title.
- * @param {React.ReactNode} [icon] - An icon shown in front of the title and description, grouped
- *   together in a compact header. Takes precedence over iconVariant.
+ * @param {IconVariant} [iconVariant] - The variant of the icon in the modal title, or an icon component.
  * @param {() => void} [cancelCb] - Optional callback invoked when the modal is closed.
  * @param {boolean} [showClose] - Whether to show the close button in the modal header.
  */
@@ -46,7 +34,6 @@ export interface Params {
   actions?: React.ReactNode | null;
   variant?: ModalVariant;
   iconVariant?: IconVariant;
-  icon?: React.ReactNode;
   cancelCb?: () => void;
   showClose?: boolean;
 }
@@ -102,7 +89,6 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [actions, setAction] = useState<React.ReactNode | undefined>(undefined);
   const [variant, setVariant] = useState<ModalVariant>(ModalVariant.small);
   const [iconVariant, setIconVariant] = useState<IconVariant | undefined>("info");
-  const [icon, setIcon] = useState<React.ReactNode>();
   const [cancelCb, setCancelCb] = useState<(() => void) | null>(null);
   const [showClose, setShowClose] = useState(true);
 
@@ -125,8 +111,7 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
    * @param {React.ReactNode} params.content - The content of the modal.
    * @param {React.ReactNode | undefined} [params.actions] - *optional* The actions of the modal.
    * @param {ModalVariant} [params.variant] - *optional* The variant of the modal.
-   * @param {IconVariant} [params.iconVariant] - *optional* The variant of the icon in the modal title.
-   * @param {React.ReactNode} [params.icon] - *optional* An icon in front of the title and description.
+   * @param {IconVariant} [params.iconVariant] - *optional* The variant of the icon in the modal title, or an icon component.
    * @param {() => void} [params.cancelCb] - *optional* Callback invoked when the modal is closed.
    * @param {boolean} [params.showClose] - *optional* Whether to show the close button in the modal header.
    */
@@ -140,7 +125,6 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
       actions = undefined,
       variant = ModalVariant.small,
       iconVariant,
-      icon,
       cancelCb = null,
       showClose = true,
     } = params;
@@ -154,8 +138,8 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
     setIsOpen(true);
     setAction(actions);
     setVariant(variant);
-    setIconVariant(iconVariant);
-    setIcon(icon);
+    // An icon component is a function, which setState would call as an updater, so it's wrapped.
+    setIconVariant(() => iconVariant);
     setShowClose(showClose);
   };
 
@@ -210,26 +194,9 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
         ouiaId="GlobalModal"
         disableFocusTrap
       >
-        {title &&
-          (icon ? (
-            <ModalHeader>
-              <Flex
-                flexWrap={{ default: "nowrap" }}
-                alignItems={{ default: "alignItemsCenter" }}
-                gap={{ default: "gapMd" }}
-              >
-                <FlexItem>{icon}</FlexItem>
-                <Flex direction={{ default: "column" }} gap={{ default: "gapXs" }}>
-                  <Title headingLevel="h1" size="xl">
-                    {title}
-                  </Title>
-                  {description && <Content component="small">{description}</Content>}
-                </Flex>
-              </Flex>
-            </ModalHeader>
-          ) : (
-            <ModalHeader title={title} description={description} titleIconVariant={iconVariant} />
-          ))}
+        {title && (
+          <ModalHeader title={title} description={description} titleIconVariant={iconVariant} />
+        )}
         {content && <ModalBody>{content}</ModalBody>}
         {actions && <ModalFooter>{actions}</ModalFooter>}
       </Modal>

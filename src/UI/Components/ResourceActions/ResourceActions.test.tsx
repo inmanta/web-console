@@ -15,9 +15,9 @@ import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CustomDatePresenter } from "@/UI/Utils";
 import * as DesiredStatesMock from "@S/DesiredState/Data/Mock";
 import { historyData } from "@S/ServiceInstanceDetails/Test/mockData";
-import { ResourceActionInstance } from "./DryRunVersionField";
 import { ResourceActionScope } from "./ResourceActionConfirmModal";
 import { ResourceActions } from "./ResourceActions";
+import { ResourceActionInstance } from "./types";
 
 const filter: ResourceActionFilter = { isOrphan: false, agent: { eq: ["internal"] } };
 const deployLabel = words("resources.compoundStateSummary.deploy");
@@ -845,12 +845,12 @@ describe("ResourceActions", () => {
         );
       });
 
-      test("WHEN the model version lens is used THEN the filter pins a model version instead", async () => {
+      test("WHEN the model version type is used THEN the filter pins a model version instead", async () => {
         const dialog = await openInstanceDryRun();
 
         await userEvent.click(
           within(dialog).getByRole("button", {
-            name: words("resources.resourceActions.confirm.version.lens.model"),
+            name: words("resources.resourceActions.confirm.version.type.model"),
           })
         );
         expect(await within(dialog).findByText(versionLabel(activeVersion))).toBeVisible();

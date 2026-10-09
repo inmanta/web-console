@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useUrlStateWithString } from "@/Data";
-import { useGetServiceModel, useGetInstance, useGetInfiniteInstanceLogs } from "@/Data/Queries";
+import { useGetServiceModel, useGetInstance, useGetInstanceLogs } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
@@ -31,7 +31,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
 }) => {
   const instanceDetails = useGetInstance(service, instanceId).useContinuous();
 
-  const logsQuery = useGetInfiniteInstanceLogs(service, instanceId).useContinuous(version);
+  const logsQuery = useGetInstanceLogs(service, instanceId).useContinuous(version);
 
   const serviceModelQuery = useGetServiceModel(service).useOneTime();
 

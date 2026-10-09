@@ -17,6 +17,7 @@ import {
   SelectList,
   SelectOption,
 } from "@patternfly/react-core";
+import { t_global_text_color_disabled, t_global_text_color_subtle } from "@patternfly/react-tokens";
 import styled from "styled-components";
 import { Spinner } from "@/UI/Components/Spinner";
 import { CustomDatePresenter } from "@/UI/Utils";
@@ -32,7 +33,7 @@ const datePresenter = new CustomDatePresenter();
  * @example mutedStyle(true) // { color: "var(--pf-t--global--text--color--disabled)" }
  */
 const mutedStyle = (isDisabled: boolean | undefined): React.CSSProperties => ({
-  color: `var(--pf-t--global--text--color--${isDisabled ? "disabled" : "subtle"})`,
+  color: isDisabled ? t_global_text_color_disabled.var : t_global_text_color_subtle.var,
 });
 
 // PatternFly sizes the toggle's text slot to its content and offers no prop to stretch it, so the
@@ -51,7 +52,7 @@ const FullWidthTextToggle = styled(MenuToggle)`
  * the version (e.g. the model version an instance version maps to), and a disabled version is
  * listed but can't be picked.
  */
-export interface VersionOption {
+export interface VersionSelectOption {
   version: number;
   date: string;
   status: React.ReactNode;
@@ -63,17 +64,17 @@ export interface VersionOption {
  * A message under the select: why it is locked, why a version can't be used, or why the versions
  * are missing.
  */
-export interface VersionNotice {
+export interface VersionSelectNotice {
   variant: "warning" | "error";
   text: string;
 }
 
 interface Props {
   id: string;
-  options: VersionOption[];
-  shown: VersionOption | undefined;
+  options: VersionSelectOption[];
+  shown: VersionSelectOption | undefined;
   format: (version: string) => string;
-  onSelect: (option: VersionOption) => void;
+  onSelect: (option: VersionSelectOption) => void;
   search: string;
   onSearchChange: (search: string) => void;
   onReachEnd: () => void;
@@ -81,7 +82,7 @@ interface Props {
   listError: string | undefined;
   isDisabled: boolean;
   isLoading: boolean;
-  notice: VersionNotice | undefined;
+  notice: VersionSelectNotice | undefined;
 }
 
 /**
@@ -92,10 +93,10 @@ interface Props {
  *
  * @Props {Props} - The props of the component
  *  @prop {string} id - The toggle's id, for the form label to point at
- *  @prop {VersionOption[]} options - The listed versions
- *  @prop {VersionOption | undefined} shown - The version in the toggle, undefined when there is none yet
+ *  @prop {VersionSelectOption[]} options - The listed versions
+ *  @prop {VersionSelectOption | undefined} shown - The version in the toggle, undefined when there is none yet
  *  @prop {(version: string) => string} format - How a version number reads, e.g. "v8" or "instance v3"
- *  @prop {(option: VersionOption) => void} onSelect - Called with the picked version
+ *  @prop {(option: VersionSelectOption) => void} onSelect - Called with the picked version
  *  @prop {string} search - The text in the search box
  *  @prop {(search: string) => void} onSearchChange - Called when the search text changes
  *  @prop {() => void} onReachEnd - Called when the list is scrolled to its end
@@ -103,7 +104,7 @@ interface Props {
  *  @prop {string | undefined} listError - Shows this error at the end of the list, e.g. a failed lookup
  *  @prop {boolean} isDisabled - Disables the toggle
  *  @prop {boolean} isLoading - Shows a loading label in the toggle while there is nothing to show yet
- *  @prop {VersionNotice | undefined} notice - A message under the select
+ *  @prop {VersionSelectNotice | undefined} notice - A message under the select
  *
  * @returns {React.FC<Props>} The select and its notice
  */
@@ -148,7 +149,7 @@ export const VersionSelect: React.FC<Props> = ({
     listRef.current?.querySelector<HTMLElement>("li button:not(:disabled)")?.focus();
   };
 
-  const label = (option: VersionOption) => (
+  const label = (option: VersionSelectOption) => (
     <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
       {option.status}
       <span>{format(String(option.version))}</span>

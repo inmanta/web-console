@@ -8,7 +8,8 @@ export interface VersionPin {
 }
 
 /**
- * Why a dry-run filter can't be pinned to another version: it reaches owned services, or it
- * filters on the current resource status.
+ * Why a dry run can only use the active version: its filter includes owned services ("owned"), or
+ * uses a Status tab filter ("status"). Any other filter, like agent or resource type, can use any
+ * version.
  */
 export type VersionLock = "owned" | "status";

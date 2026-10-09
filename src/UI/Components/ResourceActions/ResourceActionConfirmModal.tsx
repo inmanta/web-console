@@ -16,11 +16,12 @@ import {
   VersionPin,
   getVersionLock,
   pinVersion,
-  useGetInstanceModelVersion,
+  useGetModelVersionForInstance,
   withLatestVersion,
 } from "@/Data/Queries";
 import { words } from "@/UI/words";
-import { DryRunVersionField, ResourceActionInstance } from "./DryRunVersionField";
+import { DryRunVersionField } from "./DryRunVersionField";
+import { ResourceActionInstance } from "./types";
 
 /**
  * The message under the version field when the chosen scope can't be pinned to another version.
@@ -164,7 +165,7 @@ export const ResourceActionConfirmModal: React.FC<Props> = ({
 
   // A picked instance version whose desired state was never released has nothing to dry-run, so
   // confirming waits until that is known.
-  const pinnedModelVersion = useGetInstanceModelVersion(
+  const pinnedModelVersion = useGetModelVersionForInstance(
     instance?.id,
     activePin?.field === "instanceVersion" ? activePin.version : undefined
   );

@@ -14,7 +14,7 @@ interface Response {
 
 /**
  * React Query hook looking up one desired state version by its number. The result is null when no
- * such version exists. It stays idle without a version.
+ * such version exists. Doesn't fetch until the version is known.
  *
  * @example useGetDesiredStateVersion(8).data // { version: 8, status: "active", ... }
  */

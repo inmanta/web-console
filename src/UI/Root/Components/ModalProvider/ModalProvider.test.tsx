@@ -66,7 +66,8 @@ describe("ModalProvider", () => {
       expect(screen.getByTestId("modal-description")).toBeVisible();
     });
 
-    it("renders an icon with the title and description, and drops it for a later modal without one", async () => {
+    it("renders an icon component in the title, and drops it for a later modal without one", async () => {
+      const ModalIcon = () => <span data-testid="modal-icon" />;
       const WithAndWithoutIcon = () => {
         const { triggerModal } = useContext(ModalContext);
 
@@ -76,8 +77,7 @@ describe("ModalProvider", () => {
               onClick={() =>
                 triggerModal({
                   title: "With icon",
-                  description: "Icon description",
-                  icon: <span data-testid="modal-icon" />,
+                  iconVariant: ModalIcon,
                   content: <div />,
                 })
               }
@@ -100,8 +100,7 @@ describe("ModalProvider", () => {
       await userEvent.click(screen.getByText("Open with icon"));
 
       expect(screen.getByTestId("modal-icon")).toBeInTheDocument();
-      expect(screen.getByRole("heading", { name: "With icon" })).toBeVisible();
-      expect(screen.getByText("Icon description")).toBeVisible();
+      expect(screen.getByText("With icon")).toBeVisible();
 
       await userEvent.click(screen.getByText("Open without icon"));
 

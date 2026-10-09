@@ -804,8 +804,8 @@ const dict = {
     "Preview the diff for this instance's resources. Nothing is deployed.",
   "resources.resourceActions.confirm.scope.title": "Scope",
   "resources.resourceActions.confirm.version.title": "Against version",
-  "resources.resourceActions.confirm.version.lens.instance": "Instance version",
-  "resources.resourceActions.confirm.version.lens.model": "Model version",
+  "resources.resourceActions.confirm.version.type.instance": "Instance version",
+  "resources.resourceActions.confirm.version.type.model": "Model version",
   "resources.resourceActions.confirm.version.option": (version: string) => `v${version}`,
   "resources.resourceActions.confirm.version.instanceOption": (version: string) =>
     `instance v${version}`,

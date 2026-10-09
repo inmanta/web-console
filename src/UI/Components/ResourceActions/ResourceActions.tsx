@@ -26,8 +26,8 @@ import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
-import { ResourceActionInstance } from "./DryRunVersionField";
 import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
+import { ResourceActionInstance } from "./types";
 
 const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 
@@ -175,11 +175,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
       // A dry run's version line holds a status, two long version numbers and a date, which only
       // fit on one line in the wider dialog.
       variant: isDryRun ? ModalVariant.medium : ModalVariant.small,
-      icon: (
-        <Icon size="xl">
-          <Glyph />
-        </Icon>
-      ),
+      iconVariant: Glyph,
       content: (
         <ResourceActionConfirmModal
           actionLabel={label}

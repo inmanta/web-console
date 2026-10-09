@@ -15,9 +15,9 @@ const hasCurrentStateFilter = (filter: ResourceActionFilter): boolean =>
   filter.lastHandlerRun !== undefined;
 
 /**
- * Why a filter can't be pinned to another version, or undefined when it can. The server only
- * resolves owned services at the latest released version, and rejects status filters next to a
- * pinned version.
+ * Returns why a dry run on this filter can only use the active version, or undefined when any
+ * version can be picked. The server can't combine a picked version with owned services, or with
+ * the Status tab filters, since those match a resource's current state rather than a version.
  *
  * @example getVersionLock({ isOrphan: false, serviceInstance: ["abc"], includeOwned: true }) // "owned"
  */
