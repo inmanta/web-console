@@ -13,23 +13,25 @@ interface Response {
 }
 
 /**
- * React Query hook looking up one desired state version by its number. The result is null when no
- * such version exists. Doesn't fetch until the version is known.
+ * React Query hook looking up one model version on the desired state endpoint by its number. The
+ * result is null when no such model version exists. Doesn't fetch until the model version is known.
  *
  * @example useGetDesiredStateVersion(8).data // { version: 8, status: "active", ... }
  */
 export const useGetDesiredStateVersion = (
-  version: number | undefined
+  modelVersion: number | undefined
 ): UseQueryResult<DesiredStateVersion | null, Error> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Response>;
 
   return useQuery({
-    queryKey: getDesiredStateVersionKey.single(String(version), [env]),
+    queryKey: getDesiredStateVersionKey.single(String(modelVersion), [env]),
     queryFn: () =>
-      get(`/api/v2/desiredstate?limit=1&filter.version=ge:${version}&filter.version=le:${version}`),
-    enabled: version !== undefined,
+      get(
+        `/api/v2/desiredstate?limit=1&filter.version=ge:${modelVersion}&filter.version=le:${modelVersion}`
+      ),
+    enabled: modelVersion !== undefined,
     select: (response) => response.data[0] ?? null,
   });
 };

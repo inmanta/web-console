@@ -1,15 +1,21 @@
 /**
- * A version to pin a dry-run filter to: a model version, or the version of the one service
- * instance the filter selects, which the server maps to a model version.
+ * The kinds of version a dry run can run against, named after their filter field: a model version,
+ * or a version of the one service instance the filter targets, which the server maps to a model
+ * version.
  */
-export interface VersionPin {
-  field: "modelVersion" | "instanceVersion";
+export type DryRunVersionType = "modelVersion" | "instanceVersion";
+
+/**
+ * The version a dry run runs against: its type and its number.
+ */
+export interface DryRunVersion {
+  type: DryRunVersionType;
   version: number;
 }
 
 /**
- * Why a dry run can only use the active version: its filter includes owned services ("owned"), or
- * uses a Status tab filter ("status"). Any other filter, like agent or resource type, can use any
- * version.
+ * The part of a filter that blocks selecting a version for a dry run, which then runs against the
+ * active model version: owned services ("ownedServices"), or a Status tab filter ("statusFilter").
+ * Any other filter, like agent or resource type, can run against any version.
  */
-export type VersionLock = "owned" | "status";
+export type VersionSelectionBlocker = "ownedServices" | "statusFilter";

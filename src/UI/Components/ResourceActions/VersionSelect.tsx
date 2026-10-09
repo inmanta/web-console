@@ -37,7 +37,7 @@ const mutedStyle = (isDisabled: boolean | undefined): React.CSSProperties => ({
 });
 
 // PatternFly sizes the toggle's text slot to its content and offers no prop to stretch it, so the
-// slot is grown here to let the selected version's date sit at the end of the line. A grown slot
+// slot is grown here to let the shown version's date sit at the end of the line. A grown slot
 // would centre its text like any button, so it is aligned to the start. Coupled to the PF v6
 // menu-toggle class name.
 const FullWidthTextToggle = styled(MenuToggle)`
@@ -50,7 +50,7 @@ const FullWidthTextToggle = styled(MenuToggle)`
 /**
  * One selectable version, with the status label shown next to it. The optional detail follows
  * the version (e.g. the model version an instance version maps to), and a disabled version is
- * listed but can't be picked.
+ * listed but can't be selected.
  */
 export interface VersionSelectOption {
   version: number;
@@ -61,8 +61,8 @@ export interface VersionSelectOption {
 }
 
 /**
- * A message under the select: why it is locked, why a version can't be used, or why the versions
- * are missing.
+ * A message under the select: why selecting a version is blocked, why a version can't be used, or
+ * why the versions are missing.
  */
 export interface VersionSelectNotice {
   variant: "warning" | "error";
@@ -72,8 +72,8 @@ export interface VersionSelectNotice {
 interface Props {
   id: string;
   options: VersionSelectOption[];
-  shown: VersionSelectOption | undefined;
-  format: (version: string) => string;
+  shownOption: VersionSelectOption | undefined;
+  formatVersion: (version: string) => string;
   onSelect: (option: VersionSelectOption) => void;
   search: string;
   onSearchChange: (search: string) => void;
@@ -87,16 +87,16 @@ interface Props {
 
 /**
  * A select of versions with a search box in its menu and a list that asks for more versions when
- * scrolled to its end, so a long history stays reachable. The toggle shows the version in use
- * with its date at the end. Opening the menu focuses the search box, and Down moves from there
- * into the list.
+ * scrolled to its end, so a long history stays reachable. The toggle shows the selected version,
+ * or the default one until a selection, with its date at the end. Opening the menu focuses the
+ * search box, and Down moves from there into the list.
  *
  * @Props {Props} - The props of the component
  *  @prop {string} id - The toggle's id, for the form label to point at
  *  @prop {VersionSelectOption[]} options - The listed versions
- *  @prop {VersionSelectOption | undefined} shown - The version in the toggle, undefined when there is none yet
- *  @prop {(version: string) => string} format - How a version number reads, e.g. "v8" or "instance v3"
- *  @prop {(option: VersionSelectOption) => void} onSelect - Called with the picked version
+ *  @prop {VersionSelectOption | undefined} shownOption - The version in the toggle, undefined when there is none yet
+ *  @prop {(version: string) => string} formatVersion - How a version number reads, e.g. "v8" or "instance v3"
+ *  @prop {(option: VersionSelectOption) => void} onSelect - Called with the selected version
  *  @prop {string} search - The text in the search box
  *  @prop {(search: string) => void} onSearchChange - Called when the search text changes
  *  @prop {() => void} onReachEnd - Called when the list is scrolled to its end
@@ -111,8 +111,8 @@ interface Props {
 export const VersionSelect: React.FC<Props> = ({
   id,
   options,
-  shown,
-  format,
+  shownOption,
+  formatVersion,
   onSelect,
   search,
   onSearchChange,
@@ -149,10 +149,10 @@ export const VersionSelect: React.FC<Props> = ({
     listRef.current?.querySelector<HTMLElement>("li button:not(:disabled)")?.focus();
   };
 
-  const label = (option: VersionSelectOption) => (
+  const optionLabel = (option: VersionSelectOption) => (
     <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
       {option.status}
-      <span>{format(String(option.version))}</span>
+      <span>{formatVersion(String(option.version))}</span>
       {option.detail && (
         // The font's own arrow, at the detail's size, points at the middle of its letters. Each
         // sits in a FlexItem, since Content drops its bottom margin only as a last child, and the
@@ -178,7 +178,7 @@ export const VersionSelect: React.FC<Props> = ({
   );
 
   const toggleContent = () => {
-    if (shown) {
+    if (shownOption) {
       return (
         <Flex
           justifyContent={{ default: "justifyContentSpaceBetween" }}
@@ -186,8 +186,8 @@ export const VersionSelect: React.FC<Props> = ({
           flexWrap={{ default: "nowrap" }}
           gap={{ default: "gapMd" }}
         >
-          {label(shown)}
-          <Content component="small">{datePresenter.getFull(shown.date)}</Content>
+          {optionLabel(shownOption)}
+          <Content component="small">{datePresenter.getFull(shownOption.date)}</Content>
         </Flex>
       );
     }
@@ -249,7 +249,7 @@ export const VersionSelect: React.FC<Props> = ({
         {/* The date sits in the option itself rather than its description, to keep a small gap
             below the status label. */}
         <Flex direction={{ default: "column" }} gap={{ default: "gapXs" }}>
-          {label(option)}
+          {optionLabel(option)}
           <Content component="small" style={mutedStyle(option.isDisabled)}>
             {datePresenter.getFull(option.date)}
           </Content>
@@ -274,7 +274,7 @@ export const VersionSelect: React.FC<Props> = ({
     <>
       <Select
         isOpen={isOpen}
-        selected={shown === undefined ? undefined : String(shown.version)}
+        selected={shownOption === undefined ? undefined : String(shownOption.version)}
         onOpenChange={(open) => setIsOpen(open)}
         onSelect={(_event, value) => {
           const option = options.find((candidate) => String(candidate.version) === value);

@@ -19,8 +19,8 @@ interface Body {
 /**
  * React Query hook for starting a dry run on the resources matching a filter.
  *
- * The server runs a dry run on a single model version, so the filter either pins one with
- * modelVersion or instanceVersion, or sets isOrphan: false for the latest released version. On
+ * The server runs a dry run on a single model version, so the filter either sets one with
+ * modelVersion or instanceVersion, or sets isOrphan: false for the active model version. On
  * success it invalidates the dry run lists so the new report shows up in the Compliance Check
  * page, then calls the caller's own onSuccess.
  *

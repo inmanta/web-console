@@ -1,8 +1,8 @@
 import { Resource } from "@/Core/Domain";
 import { ResourceActionFilter } from "../ResourceActionFilter";
-import { getVersionLock } from "./helpers";
+import { getVersionSelectionBlocker } from "./helpers";
 
-describe("getVersionLock", () => {
+describe("getVersionSelectionBlocker", () => {
   it.each<[string, ResourceActionFilter]>([
     ["isOrphan: true", { isOrphan: true }],
     ["isDeploying", { isOrphan: false, isDeploying: false }],
@@ -12,24 +12,28 @@ describe("getVersionLock", () => {
       "lastHandlerRun",
       { isOrphan: false, lastHandlerRun: { eq: [Resource.LAST_HANDLER_RUN.failed] } },
     ],
-  ])("locks a filter on the current status (%s)", (_field, filter) => {
-    expect(getVersionLock(filter)).toBe("status");
+  ])("blocks selecting a version for a filter on the current status (%s)", (_field, filter) => {
+    expect(getVersionSelectionBlocker(filter)).toBe("statusFilter");
   });
 
-  it("locks owned services, also next to a status filter", () => {
+  it("blocks selecting a version for owned services, also next to a status filter", () => {
     expect(
-      getVersionLock({
+      getVersionSelectionBlocker({
         isOrphan: false,
         serviceInstance: ["abc"],
         includeOwned: true,
         compliance: { eq: [Resource.COMPLIANCE.compliant] },
       })
-    ).toBe("owned");
+    ).toBe("ownedServices");
   });
 
-  it("leaves a filter on the latest version or on identity fields pinnable", () => {
+  it("lets a filter on the active model version or on identity fields select any version", () => {
     expect(
-      getVersionLock({ isOrphan: false, agent: { eq: ["internal"] }, serviceInstance: ["abc"] })
+      getVersionSelectionBlocker({
+        isOrphan: false,
+        agent: { eq: ["internal"] },
+        serviceInstance: ["abc"],
+      })
     ).toBeUndefined();
   });
 });

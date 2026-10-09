@@ -13,32 +13,33 @@ interface Response {
 }
 
 /**
- * React Query hook fetching the history log of one version of a service instance. The result is
- * null when the instance has no such version. Doesn't fetch until the service, instance and
- * version are known.
+ * React Query hook fetching the history log of one instance version of a service instance. The
+ * result is null when the instance has no such version. Doesn't fetch until the service entity,
+ * instance id and instance version are known.
  *
  * @example useGetInstanceLog("lsp", "abc", 4).data // { version: 4, state: "up", ... }
  */
 export const useGetInstanceLog = (
-  service: string | undefined,
-  instance: string | undefined,
-  version: number | undefined
+  serviceEntity: string | undefined,
+  instanceId: string | undefined,
+  instanceVersion: number | undefined
 ): UseQueryResult<InstanceLog | null, CustomError> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Response>;
 
   return useQuery({
-    queryKey: getInstanceLogKey.single(instance ?? "", [
-      { service: service ?? "" },
-      String(version),
+    queryKey: getInstanceLogKey.single(instanceId ?? "", [
+      { service: serviceEntity ?? "" },
+      String(instanceVersion),
       env,
     ]),
     queryFn: () =>
       get(
-        `/lsm/v1/service_inventory/${service}/${instance}/log?limit=1&filter.version=ge:${version}&filter.version=le:${version}`
+        `/lsm/v1/service_inventory/${serviceEntity}/${instanceId}/log?limit=1&filter.version=ge:${instanceVersion}&filter.version=le:${instanceVersion}`
       ),
-    enabled: service !== undefined && instance !== undefined && version !== undefined,
+    enabled:
+      serviceEntity !== undefined && instanceId !== undefined && instanceVersion !== undefined,
     select: (response) => response.data[0] ?? null,
   });
 };

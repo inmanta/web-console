@@ -15,8 +15,8 @@ interface Response {
 }
 
 /**
- * React Query hook listing the desired state versions, newest first, a page at a time, so a picker
- * can reach any version of a long history without loading it all.
+ * React Query hook listing the model versions on the desired state endpoint, newest first, a page
+ * at a time, so a version select can reach any version of a long history without loading it all.
  *
  * @example useGetDesiredStateVersions().data // [{ version: 9, status: "candidate", ... }, { version: 8, status: "active", ... }]
  */

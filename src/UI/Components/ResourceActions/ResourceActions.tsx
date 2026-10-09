@@ -42,7 +42,7 @@ type ResourceActionTooltips = Record<ActionKey, string>;
 
 interface ActionConfig {
   // PatternFly icons all share one component type.
-  Glyph: typeof PlayIcon;
+  IconComponent: typeof PlayIcon;
   label: string;
   hint: string;
   tooltip: string;
@@ -64,7 +64,7 @@ type Props =
  * Deploy is the default action; the caret adds Repair and Dry run. Deploy and Repair hit the
  * deploy_filtered endpoint and Dry run hits dryrun_filtered, so one control serves a single resource,
  * the active filter, a whole environment or a service instance. Dry run always opens the dialog, to
- * pick the version to preview against. It disables itself while the environment is halted.
+ * select the version to preview against. It disables itself while the environment is halted.
  *
  * @Props {Props} - The props of the component
  *  @prop {ResourceActionFilter} filter - Deploy and Repair run immediately against this filter (mutually exclusive with scopes)
@@ -72,7 +72,7 @@ type Props =
  *  @prop {ResourceActionTooltips} tooltips - The tooltip text for each action on this page
  *  @prop {string} [disabledReason] - When set, disables the control and shows this as its tooltip
  *  @prop {ResourceActionInstance} [instance] - The service instance the scopes belong to; the dialog names
- *    it and a dry run can pick one of its own versions
+ *    it and a dry run can select one of its own versions
  *
  * @returns {React.FC<Props>} The rendered split button
  */
@@ -92,19 +92,19 @@ export const ResourceActions: React.FC<Props> = (props) => {
 
   const actions: Record<ActionKey, ActionConfig> = {
     deploy: {
-      Glyph: PlayIcon,
+      IconComponent: PlayIcon,
       label: words("resources.compoundStateSummary.deploy"),
       hint: words("resources.resourceActions.deploy.hint"),
       tooltip: tooltips.deploy,
     },
     repair: {
-      Glyph: WrenchIcon,
+      IconComponent: WrenchIcon,
       label: words("resources.compoundStateSummary.repair"),
       hint: words("resources.resourceActions.repair.hint"),
       tooltip: tooltips.repair,
     },
     dryRun: {
-      Glyph: EyeIcon,
+      IconComponent: EyeIcon,
       label: words("resources.resourceActions.dryRun"),
       hint: words("resources.resourceActions.dryRun.hint"),
       tooltip: tooltips.dryRun,
@@ -142,7 +142,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
       return;
     }
 
-    const { Glyph, label } = actions[key];
+    const { IconComponent, label } = actions[key];
     const scopes: NonEmptyArray<ResourceActionScope> = props.scopes
       ? props.scopes
       : [{ id: "resource", title: label, filter: props.filter }];
@@ -172,16 +172,16 @@ export const ResourceActions: React.FC<Props> = (props) => {
     triggerModal({
       title: title(),
       description: description(),
-      // A dry run's version line holds a status, two long version numbers and a date, which only
-      // fit on one line in the wider dialog.
+      // A dry run's version select toggle holds a status, two long version numbers and a date,
+      // which only fit on one line in the wider dialog.
       variant: isDryRun ? ModalVariant.medium : ModalVariant.small,
-      iconVariant: Glyph,
+      iconVariant: IconComponent,
       content: (
         <ResourceActionConfirmModal
           actionLabel={label}
           scopes={scopes}
           showScopes={Boolean(props.scopes)}
-          showVersion={isDryRun}
+          showVersionField={isDryRun}
           instance={instance}
           onConfirm={(scopeFilter) => {
             closeModal();
@@ -235,14 +235,14 @@ export const ResourceActions: React.FC<Props> = (props) => {
     >
       <DropdownList>
         {(Object.keys(actions) as ActionKey[]).map((key) => {
-          const { Glyph, label, hint, tooltip: itemTooltip } = actions[key];
+          const { IconComponent, label, hint, tooltip: itemTooltip } = actions[key];
 
           return (
             <DropdownItem
               key={key}
               icon={
                 <Icon size="sm">
-                  <Glyph style={iconStyle} />
+                  <IconComponent style={iconStyle} />
                 </Icon>
               }
               onClick={() => onAction(key)}

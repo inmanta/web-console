@@ -13,39 +13,43 @@ interface LogsResponse {
 }
 
 /**
- * Return signature of the useGetInstanceLogs React Query hook: the history from a selected
- * version, polled, or the full history newest first, fetched once.
+ * Return signature of the useGetInstanceLogs React Query hook: the history up to a selected
+ * instance version, polled, or the full history newest first, fetched once.
  */
 interface GetInstanceLogs {
-  useContinuous: (selectedVersion: string) => UseInfiniteQueryResult<InstanceLog[], CustomError>;
+  useContinuous: (
+    selectedInstanceVersion: string
+  ) => UseInfiniteQueryResult<InstanceLog[], CustomError>;
   useOneTime: () => UseInfiniteQueryResult<InstanceLog[], CustomError>;
 }
 
 /**
- * React Infinite Query hook fetching the history logs of a service instance, one per version, a
- * page at a time. Doesn't fetch until the service and instance are known.
+ * React Infinite Query hook fetching the history logs of a service instance, one per instance
+ * version, a page at a time. Doesn't fetch until the service entity and instance id are known.
  *
  * @example useGetInstanceLogs("lsp", "abc").useOneTime().data // [{ version: 5, state: "up", ... }, { version: 4, ... }]
  */
 export const useGetInstanceLogs = (
-  service: string | undefined,
-  instance: string | undefined
+  serviceEntity: string | undefined,
+  instanceId: string | undefined
 ): GetInstanceLogs => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<LogsResponse>;
-  const url = `/lsm/v1/service_inventory/${service}/${instance}/log`;
-  const enabled = service !== undefined && instance !== undefined;
-  const serviceKey = { service: service ?? "" };
-  const instanceKey = { instance: instance ?? "" };
+  const url = `/lsm/v1/service_inventory/${serviceEntity}/${instanceId}/log`;
+  const enabled = serviceEntity !== undefined && instanceId !== undefined;
+  const serviceKey = { service: serviceEntity ?? "" };
+  const instanceKey = { instance: instanceId ?? "" };
 
   return {
-    useContinuous: (selectedVersion: string): UseInfiniteQueryResult<InstanceLog[], CustomError> =>
+    useContinuous: (
+      selectedInstanceVersion: string
+    ): UseInfiniteQueryResult<InstanceLog[], CustomError> =>
       useInfiniteQuery({
         queryKey: getInstanceLogsKey.list([serviceKey, instanceKey, env]),
         queryFn: ({ pageParam }) => {
-          const initialParameters = selectedVersion
-            ? `limit=50&end=${Number(selectedVersion) + 1}`
+          const initialParameters = selectedInstanceVersion
+            ? `limit=50&end=${Number(selectedInstanceVersion) + 1}`
             : "limit=50";
 
           return get(`${url}?${pageParam ? pageParam : initialParameters}`);

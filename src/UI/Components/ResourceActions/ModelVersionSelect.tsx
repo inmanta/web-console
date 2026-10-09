@@ -7,85 +7,89 @@ import { VersionSelectNotice, VersionSelectOption, VersionSelect } from "./Versi
 import { useVersionSearch } from "./useVersionSearch";
 
 /**
- * Turns a desired state version into a select option.
+ * Turns a model version from the desired state endpoint into a select option.
  *
- * @example toModelOption({ version: 8, date: "...", status: "active", ... }) // { version: 8, date: "...", status: <DesiredStateStatusLabel /> }
+ * @example toModelVersionOption({ version: 8, date: "...", status: "active", ... }) // { version: 8, date: "...", status: <DesiredStateStatusLabel /> }
  */
-const toModelOption = (version: DesiredStateVersion): VersionSelectOption => ({
-  version: Number(version.version),
-  date: version.date,
-  status: <DesiredStateStatusLabel status={version.status} />,
+const toModelVersionOption = (modelVersion: DesiredStateVersion): VersionSelectOption => ({
+  version: Number(modelVersion.version),
+  date: modelVersion.date,
+  status: <DesiredStateStatusLabel status={modelVersion.status} />,
 });
 
 interface Props {
   id: string;
-  onPick: (version: number) => void;
-  lockReason: string | undefined;
+  onSelect: (modelVersion: number) => void;
+  blockedMessage: string | undefined;
 }
 
 /**
- * The model version select of the dry-run dialog. It lists the latest model versions, loads older
- * ones as the list is scrolled, and finds any other by its number. Until a pick, it shows the
- * active version, which a dry run uses by default.
+ * The model version select of the dry-run dialog. It lists the newest model versions, loads older
+ * ones as the list is scrolled, and finds any other by its number. Until a version is selected, it
+ * shows the active model version, which a dry run uses by default.
  *
  * @Props {Props} - The props of the component
  *  @prop {string} id - The select's id, for the form label to point at
- *  @prop {(version: number) => void} onPick - Called with the picked model version
- *  @prop {string | undefined} lockReason - When set, keeps the select on the active version and shows this as the reason
+ *  @prop {(modelVersion: number) => void} onSelect - Called with the selected model version
+ *  @prop {string | undefined} blockedMessage - When set, selecting a version is blocked: the select stays on the active model version and shows this as the reason
  *
  * @returns {React.FC<Props>} The model version select
  */
-export const ModelVersionSelect: React.FC<Props> = ({ id, onPick, lockReason }) => {
-  const [picked, setPicked] = useState<VersionSelectOption>();
+export const ModelVersionSelect: React.FC<Props> = ({ id, onSelect, blockedMessage }) => {
+  const [selectedOption, setSelectedOption] = useState<VersionSelectOption>();
 
-  const versions = useGetDesiredStateVersions();
-  const loaded = versions.data?.map(toModelOption) ?? [];
-  const versionSearch = useVersionSearch(loaded, versions);
-  const lookup = useGetDesiredStateVersion(versionSearch.lookupVersion);
-  const { options, isLoadingMore, listError } = versionSearch.match(
-    lookup,
-    lookup.data ? toModelOption(lookup.data) : undefined
+  const modelVersionsQuery = useGetDesiredStateVersions();
+  const loadedOptions = modelVersionsQuery.data?.map(toModelVersionOption) ?? [];
+  const versionSearch = useVersionSearch(loadedOptions, modelVersionsQuery);
+  const searchedVersionLookup = useGetDesiredStateVersion(versionSearch.versionToLookUp);
+  const { options, isLoadingMore, listError } = versionSearch.getListState(
+    searchedVersionLookup,
+    searchedVersionLookup.data ? toModelVersionOption(searchedVersionLookup.data) : undefined
   );
 
-  // Before a pick, the select shows the active version. A lock keeps it there.
-  const active = versions.data?.find(
-    (version) => version.status === DesiredStateVersionStatus.active
+  // Until a version is selected, the select shows the active one. A blocked selection keeps it
+  // there.
+  const activeModelVersion = modelVersionsQuery.data?.find(
+    (modelVersion) => modelVersion.status === DesiredStateVersionStatus.active
   );
-  const defaultOption = active && toModelOption(active);
-  const shown = lockReason ? defaultOption : (picked ?? defaultOption);
+  const defaultOption = activeModelVersion && toModelVersionOption(activeModelVersion);
+  const shownOption = blockedMessage ? defaultOption : (selectedOption ?? defaultOption);
 
   // The message under the select, the most important one first.
   const notice = (): VersionSelectNotice | undefined => {
-    if (lockReason) {
-      return { variant: "warning", text: lockReason };
+    if (blockedMessage) {
+      return { variant: "warning", text: blockedMessage };
     }
-    if (versions.isError) {
-      return { variant: "error", text: words("resources.resourceActions.confirm.version.error") };
+    if (modelVersionsQuery.isError) {
+      return {
+        variant: "error",
+        text: words("resources.resourceActions.confirm.version.loadError"),
+      };
     }
 
     return undefined;
   };
 
-  const pick = (option: VersionSelectOption) => {
-    setPicked(option);
+  const selectOption = (option: VersionSelectOption) => {
+    setSelectedOption(option);
     versionSearch.setSearch("");
-    onPick(option.version);
+    onSelect(option.version);
   };
 
   return (
     <VersionSelect
       id={id}
       options={options}
-      shown={shown}
-      format={words("resources.resourceActions.confirm.version.option")}
-      onSelect={pick}
+      shownOption={shownOption}
+      formatVersion={words("resources.resourceActions.confirm.version.modelOption")}
+      onSelect={selectOption}
       search={versionSearch.search}
       onSearchChange={versionSearch.setSearch}
       onReachEnd={versionSearch.loadMore}
       isLoadingMore={isLoadingMore}
       listError={listError}
-      isDisabled={Boolean(lockReason)}
-      isLoading={versions.isLoading}
+      isDisabled={Boolean(blockedMessage)}
+      isLoading={modelVersionsQuery.isLoading}
       notice={notice()}
     />
   );

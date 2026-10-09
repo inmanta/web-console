@@ -24,7 +24,7 @@ const deployLabel = words("resources.compoundStateSummary.deploy");
 const repairLabel = words("resources.compoundStateSummary.repair");
 const toggleLabel = words("resources.resourceActions.toggle");
 const dryRunLabel = words("resources.resourceActions.dryRun");
-const versionToggleLabel = words("resources.resourceActions.confirm.version.title");
+const versionSelectLabel = words("resources.resourceActions.confirm.version.title");
 const searchLabel = words("resources.resourceActions.confirm.version.search");
 
 /**
@@ -62,12 +62,16 @@ const versionPage = <Item,>(
 
   return { data, links: { self: url.pathname, next } };
 };
-const versionLabel = (version: number) =>
-  words("resources.resourceActions.confirm.version.option")(String(version));
+const modelVersionLabel = (modelVersion: number) =>
+  words("resources.resourceActions.confirm.version.modelOption")(String(modelVersion));
 
-const versions = DesiredStatesMock.response.data;
-const activeVersion = versions.find((version) => version.status === "active")!.version;
-const candidateVersion = versions.find((version) => version.status === "candidate")!.version;
+const modelVersions = DesiredStatesMock.response.data;
+const activeModelVersion = modelVersions.find(
+  (modelVersion) => modelVersion.status === "active"
+)!.version;
+const candidateModelVersion = modelVersions.find(
+  (modelVersion) => modelVersion.status === "candidate"
+)!.version;
 
 const filteredScopes: NonEmptyArray<ResourceActionScope> = [
   {
@@ -409,15 +413,15 @@ describe("ResourceActions", () => {
 
   describe("Dry run", () => {
     let body: unknown;
-    const firstPage = versions.slice(0, MOCK_PAGE_SIZE);
-    const notLoaded = versions.slice(MOCK_PAGE_SIZE);
+    const firstModelVersionPage = modelVersions.slice(0, MOCK_PAGE_SIZE);
+    const notLoadedModelVersions = modelVersions.slice(MOCK_PAGE_SIZE);
 
     beforeEach(() => {
       body = undefined;
       server.use(
         http.get("/api/v2/desiredstate", ({ request }) =>
           HttpResponse.json(
-            versionPage(versions, (version) => version.version, new URL(request.url))
+            versionPage(modelVersions, (version) => version.version, new URL(request.url))
           )
         ),
         http.post("/api/v2/dryrun_filtered", async ({ request }) => {
@@ -434,13 +438,13 @@ describe("ResourceActions", () => {
 
       const dialog = await screen.findByRole("dialog");
 
-      // The picker shows the active version once the versions are loaded.
-      expect(await within(dialog).findByText(versionLabel(activeVersion))).toBeVisible();
+      // The version select shows the active model version once the model versions are loaded.
+      expect(await within(dialog).findByText(modelVersionLabel(activeModelVersion))).toBeVisible();
 
       return dialog;
     };
 
-    test("WHEN Dry run is chosen on a single resource THEN it opens the version picker without scopes and dry-runs the filter", async () => {
+    test("WHEN Dry run is chosen on a single resource THEN it opens the version field without scopes and dry-runs the filter", async () => {
       render(setup());
 
       const dialog = await openDryRun();
@@ -452,24 +456,26 @@ describe("ResourceActions", () => {
       await waitFor(() => expect(body).toEqual({ filter }));
     });
 
-    test("WHEN another version is picked THEN the chosen scope is pinned to that version", async () => {
+    test("WHEN another model version is selected THEN the dry run runs against that model version", async () => {
       render(setup({ scopes: filteredScopes, tooltips }));
 
       const dialog = await openDryRun();
 
-      await userEvent.click(within(dialog).getByRole("button", { name: versionToggleLabel }));
+      await userEvent.click(within(dialog).getByRole("button", { name: versionSelectLabel }));
       await userEvent.click(
-        screen.getByRole("option", { name: new RegExp(versionLabel(candidateVersion)) })
+        screen.getByRole("option", { name: new RegExp(modelVersionLabel(candidateModelVersion)) })
       );
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
       // The version replaces isOrphan, which the server does not accept alongside it.
       await waitFor(() =>
-        expect(body).toEqual({ filter: { agent: filter.agent, modelVersion: candidateVersion } })
+        expect(body).toEqual({
+          filter: { agent: filter.agent, modelVersion: candidateModelVersion },
+        })
       );
     });
 
-    test("WHEN the chosen scope filters on status THEN the version stays on the active one", async () => {
+    test("WHEN the chosen scope filters on status THEN the version select is blocked and the dry run uses the active model version", async () => {
       const statusFilter: ResourceActionFilter = {
         isOrphan: false,
         compliance: { eq: [Resource.COMPLIANCE.non_compliant] },
@@ -491,9 +497,11 @@ describe("ResourceActions", () => {
 
       const dialog = await openDryRun();
 
-      expect(within(dialog).getByRole("button", { name: versionToggleLabel })).toBeDisabled();
+      expect(within(dialog).getByRole("button", { name: versionSelectLabel })).toBeDisabled();
       expect(
-        within(dialog).getByText(words("resources.resourceActions.confirm.version.locked"))
+        within(dialog).getByText(
+          words("resources.resourceActions.confirm.version.blockedBy.statusFilter")
+        )
       ).toBeVisible();
 
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
@@ -501,9 +509,10 @@ describe("ResourceActions", () => {
       await waitFor(() => expect(body).toEqual({ filter: statusFilter }));
     });
 
-    test("WHEN the scope leaves isOrphan unset THEN the dry run runs on the latest released version", async () => {
-      // Without a version selector the server resolves each resource at its own latest version,
-      // so orphans would pull in older versions and the dry run would be rejected.
+    test("WHEN the scope leaves isOrphan unset THEN the dry run runs against the active model version", async () => {
+      // Without a version in the filter the server resolves each resource at the newest model
+      // version it appears in, so orphans would pull in older model versions and the dry run would
+      // be rejected.
       const unsetFilter: ResourceActionFilter = { agent: { eq: ["internal"] } };
 
       render(
@@ -527,12 +536,12 @@ describe("ResourceActions", () => {
       await waitFor(() => expect(body).toEqual({ filter: { ...unsetFilter, isOrphan: false } }));
     });
 
-    test("WHEN the picker is opened with the keyboard THEN the search box has focus and Down moves to the first version", async () => {
+    test("WHEN the version select is opened with the keyboard THEN the search box has focus and Down moves to the first version", async () => {
       render(setup({ scopes: filteredScopes, tooltips }));
 
       const dialog = await openDryRun();
 
-      within(dialog).getByRole("button", { name: versionToggleLabel }).focus();
+      within(dialog).getByRole("button", { name: versionSelectLabel }).focus();
       await userEvent.keyboard("{Enter}");
 
       await waitFor(() => expect(screen.getByLabelText(searchLabel)).toHaveFocus());
@@ -547,30 +556,32 @@ describe("ResourceActions", () => {
 
       const dialog = await openDryRun();
 
-      await userEvent.click(within(dialog).getByRole("button", { name: versionToggleLabel }));
-      expect(screen.getAllByRole("option")).toHaveLength(firstPage.length);
+      await userEvent.click(within(dialog).getByRole("button", { name: versionSelectLabel }));
+      expect(screen.getAllByRole("option")).toHaveLength(firstModelVersionPage.length);
 
       fireEvent.scroll(screen.getByRole("listbox"));
 
       expect(
-        await screen.findByRole("option", { name: new RegExp(versionLabel(notLoaded[0].version)) })
+        await screen.findByRole("option", {
+          name: new RegExp(modelVersionLabel(notLoadedModelVersions[0].version)),
+        })
       ).toBeVisible();
-      await waitFor(() => expect(screen.getAllByRole("option")).toHaveLength(versions.length));
+      await waitFor(() => expect(screen.getAllByRole("option")).toHaveLength(modelVersions.length));
     });
 
-    test("WHEN digits of a loaded version are typed THEN the list narrows to it without a lookup", async () => {
+    test("WHEN digits of a loaded version are searched THEN the list narrows to it without a lookup", async () => {
       render(setup({ scopes: filteredScopes, tooltips }));
 
       const dialog = await openDryRun();
 
-      await userEvent.click(within(dialog).getByRole("button", { name: versionToggleLabel }));
+      await userEvent.click(within(dialog).getByRole("button", { name: versionSelectLabel }));
 
       // The lookup waits for a pause in typing, so the clock is moved past that pause instead of
       // waiting it out. Leading zeros still read as the version.
       vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
       try {
         fireEvent.change(screen.getByLabelText(searchLabel), {
-          target: { value: `0${activeVersion}` },
+          target: { value: `0${activeModelVersion}` },
         });
         act(() => {
           vi.runOnlyPendingTimers();
@@ -579,19 +590,19 @@ describe("ResourceActions", () => {
         vi.useRealTimers();
       }
 
-      const narrowed = firstPage.filter((version) =>
-        String(version.version).startsWith(String(activeVersion))
+      const narrowedModelVersions = firstModelVersionPage.filter((modelVersion) =>
+        String(modelVersion.version).startsWith(String(activeModelVersion))
       );
 
-      expect(screen.getAllByRole("option")).toHaveLength(narrowed.length);
+      expect(screen.getAllByRole("option")).toHaveLength(narrowedModelVersions.length);
       expect(
-        screen.getByRole("option", { name: new RegExp(versionLabel(activeVersion)) })
+        screen.getByRole("option", { name: new RegExp(modelVersionLabel(activeModelVersion)) })
       ).toBeVisible();
-      // A lookup would have added a query for the typed version.
+      // A lookup would have added a query for the searched version.
       expect(
         testClient
           .getQueryCache()
-          .findAll({ queryKey: getDesiredStateVersionKey.single(String(activeVersion)) })
+          .findAll({ queryKey: getDesiredStateVersionKey.single(String(activeModelVersion)) })
       ).toEqual([]);
     });
 
@@ -601,22 +612,22 @@ describe("ResourceActions", () => {
           new URL(request.url).searchParams.has("filter.version")
             ? HttpResponse.json({ message: "lookup failed" }, { status: 500 })
             : HttpResponse.json(
-                versionPage(versions, (version) => version.version, new URL(request.url))
+                versionPage(modelVersions, (version) => version.version, new URL(request.url))
               )
         )
       );
-      const oldest = notLoaded[notLoaded.length - 1].version;
+      const oldestModelVersion = notLoadedModelVersions[notLoadedModelVersions.length - 1].version;
 
       render(setup({ scopes: filteredScopes, tooltips }));
 
       const dialog = await openDryRun();
 
-      await userEvent.click(within(dialog).getByRole("button", { name: versionToggleLabel }));
-      await userEvent.type(screen.getByLabelText(searchLabel), String(oldest));
+      await userEvent.click(within(dialog).getByRole("button", { name: versionSelectLabel }));
+      await userEvent.type(screen.getByLabelText(searchLabel), String(oldestModelVersion));
 
       expect(
         await screen.findByText(
-          words("resources.resourceActions.confirm.version.lookupError")(String(oldest))
+          words("resources.resourceActions.confirm.version.lookupError")(String(oldestModelVersion))
         )
       ).toBeVisible();
       expect(
@@ -624,29 +635,31 @@ describe("ResourceActions", () => {
       ).not.toBeInTheDocument();
     });
 
-    test("WHEN a version that isn't loaded is typed THEN it is looked up and can be picked", async () => {
-      const oldest = notLoaded[notLoaded.length - 1].version;
+    test("WHEN a version that isn't loaded is searched THEN it is looked up and can be selected", async () => {
+      const oldestModelVersion = notLoadedModelVersions[notLoadedModelVersions.length - 1].version;
 
       render(setup({ scopes: filteredScopes, tooltips }));
 
       const dialog = await openDryRun();
 
-      await userEvent.click(within(dialog).getByRole("button", { name: versionToggleLabel }));
-      await userEvent.type(screen.getByLabelText(searchLabel), String(oldest));
+      await userEvent.click(within(dialog).getByRole("button", { name: versionSelectLabel }));
+      await userEvent.type(screen.getByLabelText(searchLabel), String(oldestModelVersion));
 
       // Nothing loaded matches, so the list only shows the lookup running.
       expect(screen.getAllByRole("option")).toEqual([
         screen.getByRole("option", { name: words("loading") }),
       ]);
 
-      const found = await screen.findByRole("option", { name: new RegExp(versionLabel(oldest)) });
+      const lookedUpOption = await screen.findByRole("option", {
+        name: new RegExp(modelVersionLabel(oldestModelVersion)),
+      });
 
       expect(screen.getAllByRole("option")).toHaveLength(1);
-      await userEvent.click(found);
+      await userEvent.click(lookedUpOption);
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
       await waitFor(() =>
-        expect(body).toEqual({ filter: { agent: filter.agent, modelVersion: oldest } })
+        expect(body).toEqual({ filter: { agent: filter.agent, modelVersion: oldestModelVersion } })
       );
     });
 
@@ -658,10 +671,11 @@ describe("ResourceActions", () => {
         renderState: (state) => state,
       };
       // The history is newest first.
-      const [newest, older, unexported] = historyData.map((log) => Number(log.version));
-      const dateOf = (version: number) =>
-        historyData.find((log) => Number(log.version) === version)!.timestamp;
-      // The model version the server resolves each instance version to; null is never exported.
+      const [newestInstanceVersion, olderInstanceVersion, instanceVersionWithoutModelVersion] =
+        historyData.map((log) => Number(log.version));
+      const dateOfInstanceVersion = (instanceVersion: number) =>
+        historyData.find((log) => Number(log.version) === instanceVersion)!.timestamp;
+      // The model version each instance version maps to; null when there is none.
       let modelVersionOf: Record<number, number | null>;
       const instanceFilter: ResourceActionFilter = {
         isOrphan: false,
@@ -681,12 +695,16 @@ describe("ResourceActions", () => {
           filter: ownedFilter,
         },
       ];
-      const instanceVersionLabel = (version: number) =>
-        words("resources.resourceActions.confirm.version.instanceOption")(String(version));
+      const instanceVersionLabel = (instanceVersion: number) =>
+        words("resources.resourceActions.confirm.version.instanceOption")(String(instanceVersion));
       const mapsTo = words("resources.resourceActions.confirm.version.mapsTo");
 
       beforeEach(() => {
-        modelVersionOf = { [newest]: activeVersion, [older]: candidateVersion, [unexported]: null };
+        modelVersionOf = {
+          [newestInstanceVersion]: activeModelVersion,
+          [olderInstanceVersion]: candidateModelVersion,
+          [instanceVersionWithoutModelVersion]: null,
+        };
         server.use(
           http.get("/lsm/v1/service_inventory/:entity/:id/log", ({ request }) =>
             HttpResponse.json(
@@ -715,22 +733,24 @@ describe("ResourceActions", () => {
 
         const dialog = await screen.findByRole("dialog");
 
-        // The picker shows the newest instance version once the history is loaded.
-        expect(await within(dialog).findByText(instanceVersionLabel(newest))).toBeVisible();
+        // The version select shows the newest instance version once the history is loaded.
+        expect(
+          await within(dialog).findByText(instanceVersionLabel(newestInstanceVersion))
+        ).toBeVisible();
 
         return dialog;
       };
 
-      const pickInstanceVersion = async (dialog: HTMLElement, version: number) => {
-        await userEvent.click(within(dialog).getByRole("button", { name: versionToggleLabel }));
+      const selectInstanceVersion = async (dialog: HTMLElement, instanceVersion: number) => {
+        await userEvent.click(within(dialog).getByRole("button", { name: versionSelectLabel }));
         await userEvent.click(
-          screen.getByRole("option", { name: new RegExp(instanceVersionLabel(version)) })
+          screen.getByRole("option", { name: new RegExp(instanceVersionLabel(instanceVersion)) })
         );
       };
 
-      test("WHEN Dry run is chosen THEN the dialog names the instance and shows its newest version with the model version behind it", async () => {
+      test("WHEN Dry run is chosen THEN the dialog names the instance and shows its newest version and the model version it maps to", async () => {
         const dialog = await openInstanceDryRun();
-        const toggle = within(dialog).getByRole("button", { name: versionToggleLabel });
+        const toggle = within(dialog).getByRole("button", { name: versionSelectLabel });
 
         expect(
           within(dialog).getByText(
@@ -738,10 +758,12 @@ describe("ResourceActions", () => {
           )
         ).toBeVisible();
         expect(
-          await within(toggle).findByText(mapsTo(String(modelVersionOf[newest])))
+          await within(toggle).findByText(mapsTo(String(modelVersionOf[newestInstanceVersion])))
         ).toBeVisible();
         expect(
-          within(toggle).getByText(new CustomDatePresenter().getFull(dateOf(newest)))
+          within(toggle).getByText(
+            new CustomDatePresenter().getFull(dateOfInstanceVersion(newestInstanceVersion))
+          )
         ).toBeVisible();
 
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
@@ -749,43 +771,50 @@ describe("ResourceActions", () => {
         await waitFor(() => expect(body).toEqual({ filter: instanceFilter }));
       });
 
-      test("WHEN an earlier instance version is picked THEN the filter pins that instance version", async () => {
+      test("WHEN an older instance version is selected THEN the dry run runs against that instance version", async () => {
         const dialog = await openInstanceDryRun();
 
-        await pickInstanceVersion(dialog, older);
+        await selectInstanceVersion(dialog, olderInstanceVersion);
         expect(
-          await within(dialog).findByText(mapsTo(String(modelVersionOf[older])))
+          await within(dialog).findByText(mapsTo(String(modelVersionOf[olderInstanceVersion])))
         ).toBeVisible();
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
         await waitFor(() =>
           expect(body).toEqual({
-            filter: { serviceInstance: instanceFilter.serviceInstance, instanceVersion: older },
+            filter: {
+              serviceInstance: instanceFilter.serviceInstance,
+              instanceVersion: olderInstanceVersion,
+            },
           })
         );
       });
 
-      test("WHEN a picked instance version was never released THEN it says so and blocks the dry run", async () => {
+      test("WHEN a selected instance version has no model version THEN it says so and blocks the dry run", async () => {
         const dialog = await openInstanceDryRun();
 
-        await pickInstanceVersion(dialog, unexported);
+        await selectInstanceVersion(dialog, instanceVersionWithoutModelVersion);
 
         expect(
           await within(dialog).findByText(
-            words("resources.resourceActions.confirm.version.unexported")(String(unexported))
+            words("resources.resourceActions.confirm.version.noModelVersion.selected")(
+              String(instanceVersionWithoutModelVersion)
+            )
           )
         ).toBeVisible();
         expect(within(dialog).getByRole("button", { name: dryRunLabel })).toBeDisabled();
       });
 
-      test("WHEN the newest instance version is not released yet THEN the default falls back to the latest released one", async () => {
-        modelVersionOf[newest] = null;
+      test("WHEN the newest instance version has no model version yet THEN the default falls back to the active model version", async () => {
+        modelVersionOf[newestInstanceVersion] = null;
 
         const dialog = await openInstanceDryRun();
 
         expect(
           await within(dialog).findByText(
-            words("resources.resourceActions.confirm.version.unexported.default")(String(newest))
+            words("resources.resourceActions.confirm.version.noModelVersion.default")(
+              String(newestInstanceVersion)
+            )
           )
         ).toBeVisible();
 
@@ -797,16 +826,21 @@ describe("ResourceActions", () => {
       test("WHEN an instance version number is searched THEN only that version is listed", async () => {
         const dialog = await openInstanceDryRun();
 
-        await userEvent.click(within(dialog).getByRole("button", { name: versionToggleLabel }));
-        await userEvent.type(screen.getByLabelText(searchLabel), String(unexported));
+        await userEvent.click(within(dialog).getByRole("button", { name: versionSelectLabel }));
+        await userEvent.type(
+          screen.getByLabelText(searchLabel),
+          String(instanceVersionWithoutModelVersion)
+        );
 
         expect(
-          await screen.findByRole("option", { name: new RegExp(instanceVersionLabel(unexported)) })
+          await screen.findByRole("option", {
+            name: new RegExp(instanceVersionLabel(instanceVersionWithoutModelVersion)),
+          })
         ).toBeVisible();
         expect(screen.getAllByRole("option")).toHaveLength(1);
       });
 
-      test("WHEN an instance version that isn't loaded is typed THEN it is looked up and can be picked", async () => {
+      test("WHEN an instance version that isn't loaded is searched THEN it is looked up and can be selected", async () => {
         // The history pages two versions at a time, so the oldest one isn't loaded.
         server.use(
           http.get("/lsm/v1/service_inventory/:entity/:id/log", ({ request }) =>
@@ -815,12 +849,15 @@ describe("ResourceActions", () => {
             )
           )
         );
-        modelVersionOf[unexported] = candidateVersion;
+        modelVersionOf[instanceVersionWithoutModelVersion] = candidateModelVersion;
 
         const dialog = await openInstanceDryRun();
 
-        await userEvent.click(within(dialog).getByRole("button", { name: versionToggleLabel }));
-        await userEvent.type(screen.getByLabelText(searchLabel), String(unexported));
+        await userEvent.click(within(dialog).getByRole("button", { name: versionSelectLabel }));
+        await userEvent.type(
+          screen.getByLabelText(searchLabel),
+          String(instanceVersionWithoutModelVersion)
+        );
 
         // Nothing loaded matches, so the list only shows the lookup running.
         expect(screen.getAllByRole("option")).toEqual([
@@ -828,10 +865,14 @@ describe("ResourceActions", () => {
         ]);
 
         await userEvent.click(
-          await screen.findByRole("option", { name: new RegExp(instanceVersionLabel(unexported)) })
+          await screen.findByRole("option", {
+            name: new RegExp(instanceVersionLabel(instanceVersionWithoutModelVersion)),
+          })
         );
         expect(
-          await within(dialog).findByText(mapsTo(String(modelVersionOf[unexported])))
+          await within(dialog).findByText(
+            mapsTo(String(modelVersionOf[instanceVersionWithoutModelVersion]))
+          )
         ).toBeVisible();
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
@@ -839,25 +880,27 @@ describe("ResourceActions", () => {
           expect(body).toEqual({
             filter: {
               serviceInstance: instanceFilter.serviceInstance,
-              instanceVersion: unexported,
+              instanceVersion: instanceVersionWithoutModelVersion,
             },
           })
         );
       });
 
-      test("WHEN the model version type is used THEN the filter pins a model version instead", async () => {
+      test("WHEN the model version type is used THEN the dry run runs against a model version instead", async () => {
         const dialog = await openInstanceDryRun();
 
         await userEvent.click(
           within(dialog).getByRole("button", {
-            name: words("resources.resourceActions.confirm.version.type.model"),
+            name: words("resources.resourceActions.confirm.version.type.modelVersion"),
           })
         );
-        expect(await within(dialog).findByText(versionLabel(activeVersion))).toBeVisible();
+        expect(
+          await within(dialog).findByText(modelVersionLabel(activeModelVersion))
+        ).toBeVisible();
 
-        await userEvent.click(within(dialog).getByRole("button", { name: versionToggleLabel }));
+        await userEvent.click(within(dialog).getByRole("button", { name: versionSelectLabel }));
         await userEvent.click(
-          screen.getByRole("option", { name: new RegExp(versionLabel(candidateVersion)) })
+          screen.getByRole("option", { name: new RegExp(modelVersionLabel(candidateModelVersion)) })
         );
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
@@ -865,45 +908,49 @@ describe("ResourceActions", () => {
           expect(body).toEqual({
             filter: {
               serviceInstance: instanceFilter.serviceInstance,
-              modelVersion: candidateVersion,
+              modelVersion: candidateModelVersion,
             },
           })
         );
       });
 
-      test("WHEN the version type is switched after a pick THEN the dry run uses the default version again", async () => {
+      test("WHEN the version type is switched after a selection THEN the dry run uses the default version again", async () => {
         const dialog = await openInstanceDryRun();
 
-        await pickInstanceVersion(dialog, older);
+        await selectInstanceVersion(dialog, olderInstanceVersion);
         expect(
-          await within(dialog).findByText(mapsTo(String(modelVersionOf[older])))
+          await within(dialog).findByText(mapsTo(String(modelVersionOf[olderInstanceVersion])))
         ).toBeVisible();
 
         await userEvent.click(
           within(dialog).getByRole("button", {
-            name: words("resources.resourceActions.confirm.version.type.model"),
+            name: words("resources.resourceActions.confirm.version.type.modelVersion"),
           })
         );
-        expect(await within(dialog).findByText(versionLabel(activeVersion))).toBeVisible();
+        expect(
+          await within(dialog).findByText(modelVersionLabel(activeModelVersion))
+        ).toBeVisible();
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
         await waitFor(() => expect(body).toEqual({ filter: instanceFilter }));
       });
 
-      test("WHEN the owned scope is chosen THEN the version stays on the latest one", async () => {
+      test("WHEN the owned scope is chosen THEN the version select is blocked and the dry run uses the active model version", async () => {
         const dialog = await openInstanceDryRun();
 
-        // Pick an earlier version first, so the lock has something to override.
-        await pickInstanceVersion(dialog, older);
+        // Select an older instance version first, so the owned scope has a selection to ignore.
+        await selectInstanceVersion(dialog, olderInstanceVersion);
         await userEvent.click(
           within(dialog).getByRole("radio", {
             name: new RegExp(words("resources.resourceActions.confirm.owned.title"), "i"),
           })
         );
 
-        expect(within(dialog).getByRole("button", { name: versionToggleLabel })).toBeDisabled();
+        expect(within(dialog).getByRole("button", { name: versionSelectLabel })).toBeDisabled();
         expect(
-          within(dialog).getByText(words("resources.resourceActions.confirm.version.owned.locked"))
+          within(dialog).getByText(
+            words("resources.resourceActions.confirm.version.blockedBy.ownedServices")
+          )
         ).toBeVisible();
 
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));

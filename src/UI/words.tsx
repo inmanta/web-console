@@ -772,11 +772,11 @@ const dict = {
   "resources.resourceActions.dryRun": "Dry run",
   "resources.resourceActions.dryRun.hint": "preview, no change",
   "resources.resourceActions.dryRun.tooltip.resource":
-    "Preview what deploying this resource would change, against the version you pick. Nothing is deployed.",
+    "Preview what deploying this resource would change, against the version you select. Nothing is deployed.",
   "resources.resourceActions.dryRun.tooltip.resources":
-    "Preview what deploying the resources in the chosen scope would change, against the version you pick. Nothing is deployed.",
+    "Preview what deploying the resources in the chosen scope would change, against the version you select. Nothing is deployed.",
   "resources.resourceActions.dryRun.tooltip.instance":
-    "Preview what deploying the resources in the chosen scope of this service instance would change, against the version you pick. Nothing is deployed.",
+    "Preview what deploying the resources in the chosen scope of this service instance would change, against the version you select. Nothing is deployed.",
   "resources.resourceActions.deploy.tooltip.resource":
     "Enforce the compliance of this resource. Does nothing if it is already compliant.",
   "resources.resourceActions.repair.tooltip.resource":
@@ -804,18 +804,21 @@ const dict = {
     "Preview the diff for this instance's resources. Nothing is deployed.",
   "resources.resourceActions.confirm.scope.title": "Scope",
   "resources.resourceActions.confirm.version.title": "Against version",
-  "resources.resourceActions.confirm.version.type.instance": "Instance version",
-  "resources.resourceActions.confirm.version.type.model": "Model version",
-  "resources.resourceActions.confirm.version.option": (version: string) => `v${version}`,
-  "resources.resourceActions.confirm.version.instanceOption": (version: string) =>
-    `instance v${version}`,
+  "resources.resourceActions.confirm.version.type.title": "Version type",
+  "resources.resourceActions.confirm.version.type.instanceVersion": "Instance version",
+  "resources.resourceActions.confirm.version.type.modelVersion": "Model version",
+  "resources.resourceActions.confirm.version.modelOption": (modelVersion: string) =>
+    `v${modelVersion}`,
+  "resources.resourceActions.confirm.version.instanceOption": (instanceVersion: string) =>
+    `instance v${instanceVersion}`,
   "resources.resourceActions.confirm.version.arrow": "→",
-  "resources.resourceActions.confirm.version.mapsTo": (version: string) => `model v${version}`,
-  "resources.resourceActions.confirm.version.noModel": "no model version",
-  "resources.resourceActions.confirm.version.unexported": (version: string) =>
-    `Instance v${version} has no released desired state, so it can't be dry-run.`,
-  "resources.resourceActions.confirm.version.unexported.default": (version: string) =>
-    `Instance v${version} has no released desired state yet, so the dry run uses the latest released one.`,
+  "resources.resourceActions.confirm.version.mapsTo": (modelVersion: string) =>
+    `model v${modelVersion}`,
+  "resources.resourceActions.confirm.version.mapsTo.none": "no model version",
+  "resources.resourceActions.confirm.version.noModelVersion.selected": (instanceVersion: string) =>
+    `Instance v${instanceVersion} has no model version, so it can't be dry-run.`,
+  "resources.resourceActions.confirm.version.noModelVersion.default": (instanceVersion: string) =>
+    `Instance v${instanceVersion} has no model version yet, so the dry run uses the active model version.`,
   "resources.resourceActions.confirm.version.placeholder": "Select a version",
   "resources.resourceActions.confirm.version.search": "Search a version number",
   "resources.resourceActions.confirm.version.searchHint":
@@ -823,16 +826,13 @@ const dict = {
   "resources.resourceActions.confirm.version.noResults": "No version found",
   "resources.resourceActions.confirm.version.lookupError": (version: string) =>
     `Version ${version} couldn't be looked up.`,
-  "resources.resourceActions.confirm.version.help": "More info about the version",
-  "resources.resourceActions.confirm.version.helper": "Defaults to the active version.",
-  "resources.resourceActions.confirm.version.instance.helper":
-    "Defaults to this instance's current version.",
-  "resources.resourceActions.confirm.version.locked":
-    "Status filters only apply to the active version.",
-  "resources.resourceActions.confirm.version.owned.locked":
-    "Owned services can only be previewed against the active version.",
-  "resources.resourceActions.confirm.version.error":
-    "The versions couldn't be loaded, so the dry run uses the latest released version.",
+  "resources.resourceActions.confirm.version.moreInfo": "More info about the version",
+  "resources.resourceActions.confirm.version.blockedBy.statusFilter":
+    "Status filters only apply to the active model version.",
+  "resources.resourceActions.confirm.version.blockedBy.ownedServices":
+    "Owned services can only be previewed against the active model version.",
+  "resources.resourceActions.confirm.version.loadError":
+    "The versions couldn't be loaded, so the dry run uses the active model version.",
   "resources.resourceActions.confirm.filtered.title": "Filtered resources",
   "resources.resourceActions.confirm.environment.title": "All resources in this environment",
   "resources.resourceActions.confirm.environment.note": "Ignores the active filter",

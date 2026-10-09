@@ -14,100 +14,110 @@ const toSearchedVersion = (search: string): number | undefined =>
 /**
  * The paged query that lists the versions, newest first.
  */
-interface VersionList {
+interface VersionListQuery {
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage: () => unknown;
 }
 
 /**
- * The state of the query that looks up one version by its number.
+ * The state of the query that looks up the searched version by its number.
  */
-interface Lookup {
+interface LookupState {
   isLoading: boolean;
   isError: boolean;
 }
 
 /**
- * The search of a version select. lookupVersion is the version to look up on its own, loadMore
- * loads the next page of the list, and match turns the lookup into the options to list, whether
- * more are loading, and the lookup's error.
+ * What the version select lists: the options, whether more are loading, and the lookup's error.
+ */
+interface ListState {
+  options: VersionSelectOption[];
+  isLoadingMore: boolean;
+  listError: string | undefined;
+}
+
+/**
+ * The search of a version select. versionToLookUp is the version to look up on its own, loadMore
+ * loads the next page of the list, and getListState combines the loaded options with the lookup
+ * into what the select lists.
  */
 interface VersionSearch {
   search: string;
   setSearch: (search: string) => void;
-  lookupVersion: number | undefined;
+  versionToLookUp: number | undefined;
   loadMore: () => void;
-  match: (
-    lookup: Lookup,
-    found: VersionSelectOption | undefined
-  ) => {
-    options: VersionSelectOption[];
-    isLoadingMore: boolean;
-    listError: string | undefined;
-  };
+  getListState: (
+    lookupState: LookupState,
+    lookedUpOption: VersionSelectOption | undefined
+  ) => ListState;
 }
 
 /**
- * React hook holding the search of a version select. Typed digits narrow the loaded versions, and
- * a full number that isn't loaded is looked up on its own once typing pauses, by a query the
- * caller runs with lookupVersion. Scrolling to the end of the list loads its next page.
+ * React hook holding the search of a version select. Searched digits narrow the loaded versions,
+ * and a full number that isn't loaded is looked up on its own once typing pauses, by a query the
+ * caller runs with versionToLookUp. Scrolling to the end of the list loads its next page.
  *
  * @example
- * const versionSearch = useVersionSearch(loaded, versions);
- * const lookup = useGetDesiredStateVersion(versionSearch.lookupVersion);
- * versionSearch.match(lookup, found).options // the loaded versions starting with the typed digits, plus found
+ * const versionSearch = useVersionSearch(loadedOptions, modelVersionsQuery);
+ * const searchedVersionLookup = useGetDesiredStateVersion(versionSearch.versionToLookUp);
+ * versionSearch.getListState(searchedVersionLookup, lookedUpOption).options // the loaded versions starting with the searched digits, plus lookedUpOption
  */
 export const useVersionSearch = (
-  loaded: VersionSelectOption[],
-  list: VersionList
+  loadedOptions: VersionSelectOption[],
+  versionListQuery: VersionListQuery
 ): VersionSearch => {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
-  const typedVersion = toSearchedVersion(search);
-  const debouncedVersion = toSearchedVersion(debouncedSearch);
-  const isLoaded = (version: number) => loaded.some((option) => option.version === version);
-  const lookupVersion =
-    debouncedVersion !== undefined && !isLoaded(debouncedVersion) ? debouncedVersion : undefined;
+  const searchedVersion = toSearchedVersion(search);
+  const debouncedSearchedVersion = toSearchedVersion(debouncedSearch);
+  const isLoaded = (version: number) => loadedOptions.some((option) => option.version === version);
+  const versionToLookUp =
+    debouncedSearchedVersion !== undefined && !isLoaded(debouncedSearchedVersion)
+      ? debouncedSearchedVersion
+      : undefined;
 
   const loadMore = () => {
-    if (list.hasNextPage && !list.isFetchingNextPage) {
-      list.fetchNextPage();
+    if (versionListQuery.hasNextPage && !versionListQuery.isFetchingNextPage) {
+      versionListQuery.fetchNextPage();
     }
   };
 
-  const match: VersionSearch["match"] = (lookup, found) => {
+  const getListState: VersionSearch["getListState"] = (lookupState, lookedUpOption) => {
     // The lookup is still on its way while typing hasn't paused or its request is running.
     const isLookupPending =
-      typedVersion !== undefined &&
-      !isLoaded(typedVersion) &&
-      (typedVersion !== debouncedVersion || lookup.isLoading);
+      searchedVersion !== undefined &&
+      !isLoaded(searchedVersion) &&
+      (searchedVersion !== debouncedSearchedVersion || lookupState.isLoading);
     const listError =
-      lookupVersion !== undefined && lookupVersion === typedVersion && lookup.isError
-        ? words("resources.resourceActions.confirm.version.lookupError")(String(lookupVersion))
+      versionToLookUp !== undefined && versionToLookUp === searchedVersion && lookupState.isError
+        ? words("resources.resourceActions.confirm.version.lookupError")(String(versionToLookUp))
         : undefined;
 
-    // The loaded versions starting with the typed digits, plus the looked-up one. The digits are
+    // The loaded versions starting with the searched digits, plus the looked-up one. The digits are
     // read as a number, so leading zeros are ignored.
-    const matching = () => {
+    const matchingOptions = () => {
       if (search.trim() === "") {
-        return loaded;
+        return loadedOptions;
       }
-      if (typedVersion === undefined) {
+      if (searchedVersion === undefined) {
         return [];
       }
 
-      return [...loaded, ...(found && !isLoaded(found.version) ? [found] : [])]
-        .filter((option) => String(option.version).startsWith(String(typedVersion)))
+      return [
+        ...loadedOptions,
+        ...(lookedUpOption && !isLoaded(lookedUpOption.version) ? [lookedUpOption] : []),
+      ]
+        .filter((option) => String(option.version).startsWith(String(searchedVersion)))
         .sort((a, b) => b.version - a.version);
     };
 
     return {
-      options: matching(),
-      isLoadingMore: list.isFetchingNextPage || isLookupPending,
+      options: matchingOptions(),
+      isLoadingMore: versionListQuery.isFetchingNextPage || isLookupPending,
       listError,
     };
   };
 
-  return { search, setSearch, lookupVersion, loadMore, match };
+  return { search, setSearch, versionToLookUp, loadMore, getListState };
 };

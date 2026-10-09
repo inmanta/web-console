@@ -1,5 +1,5 @@
 description: |
-  The Deploy button menu now has Dry run, which previews the chosen resources against a version you pick.
+  The Deploy button menu now has Dry run, which previews a deploy against a version you select.
 issue-nr: 7266
 change-type: minor
 destination-branches: [master, iso9]
