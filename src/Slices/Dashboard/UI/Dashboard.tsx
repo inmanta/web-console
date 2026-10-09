@@ -1,87 +1,44 @@
-import React, { useContext, useState } from "react";
-import { Button, Flex } from "@patternfly/react-core";
-import styled from "styled-components";
-import { useGetMetrics } from "@/Data/Queries";
-import { ErrorView, LoadingView } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
-import dayjs from "@/dayjs";
-import { Section } from "./Section";
+import React from "react";
+import { Flex, FlexItem, Grid, GridItem } from "@patternfly/react-core";
+import { LatestCompileReportsPanel } from "./Components/CompileReports/LatestCompileReportsPanel";
+import { OrchestrationEngineCard } from "./Components/OrchestrationEngine/OrchestrationEngineCard";
+import { OrchestratorDetailCard } from "./Components/Orchestrator/OrchestratorDetailCard";
+import { ResourcesCard } from "./Components/Resources/ResourcesCard";
+import { EnvironmentHealthRow } from "./EnvironmentHealthRow";
 
 /**
- * Dashboard component that displays metrics data in sections
+ * Dashboard body. Environment Health, Latest Compile Reports, the Orchestrator detail card,
+ * the Resource Manager card and the Orchestration Engine trend card are all data-wired. The
+ * range picker and refresh control live inside OrchestrationEngineCard itself (rendered above its
+ * Card, not inside it) since it's the only card with the concept of a time range and it owns the
+ * date-range state that control drives.
  *
- * Fetches metrics for a date range (default last 7 days) and displays them in sections.
- * Includes a refresh button to update the data to the latest 7 day period.
- * Conditionally renders LSM (Lifecycle Service Manager) metrics if the feature is enabled.
- * Shows loading and error states appropriately.
- *
- * @returns React component that renders the metrics dashboard
+ * The outer layout is a single-column `Grid` (each `GridItem` defaults to a full-width span, so
+ * this stacks like PatternFly's `<Flex direction="column">` would) rather than `Flex` - Chromium
+ * miscomputes the auto (flex-basis) height of a column-flex item whose own content is itself a
+ * row-direction `Flex` (the Orchestrator/Resources row below), inflating that item's box well
+ * past its actual content height. Grid's row-sizing algorithm doesn't share that bug.
  */
-
-export const Dashboard: React.FC = () => {
-  const { orchestratorProvider } = useContext(DependencyContext);
-  const [startDate, setStartDate] = useState(dayjs().subtract(7, "days").toISOString());
-  const [endDate, setEndDate] = useState(dayjs().toISOString());
-  const {
-    data: metrics,
-    error,
-    isError,
-    isSuccess,
-    refetch,
-  } = useGetMetrics().useOneTime({
-    startDate,
-    endDate,
-    isLsmAvailable: orchestratorProvider.isLsmEnabled(),
-  });
-
-  const updateCharts = () => {
-    setStartDate(dayjs().subtract(7, "days").toISOString());
-    setEndDate(dayjs().toISOString());
-  };
-
-  if (isError) {
-    return <ErrorView message={error.message} retry={refetch} ariaLabel="Metrics-Failed" />;
-  }
-
-  if (isSuccess) {
-    return (
-      <Wrapper aria-label="Metrics-Success">
-        <RefreshWrapper>
-          <Button variant="secondary" onClick={updateCharts}>
-            {words("dashboard.refresh")}
-          </Button>
-        </RefreshWrapper>
-        <Flex direction={{ default: "column" }} gap={{ default: "gapLg" }}>
-          {orchestratorProvider.isLsmEnabled() && (
-            <Section
-              title={words("navigation.lifecycleServiceManager")}
-              metricType="lsm"
-              metrics={metrics}
-            />
-          )}
-          <Section
-            title={words("navigation.orchestrationEngine")}
-            metricType="orchestrator"
-            metrics={metrics}
-          />
-          <Section
-            title={words("navigation.resourceManager")}
-            metricType="resource"
-            metrics={metrics}
-          />
-        </Flex>
-      </Wrapper>
-    );
-  }
-
-  return <LoadingView ariaLabel="Metrics-Loading" />;
-};
-
-const Wrapper = styled.div`
-  position: relative;
-`;
-const RefreshWrapper = styled.div`
-  position: absolute;
-  right: 0;
-`;
+export const Dashboard: React.FC = () => (
+  <Grid hasGutter>
+    <GridItem>
+      <EnvironmentHealthRow />
+    </GridItem>
+    <GridItem>
+      <LatestCompileReportsPanel />
+    </GridItem>
+    <GridItem>
+      <Flex gap={{ default: "gapLg" }} alignItems={{ default: "alignItemsStretch" }}>
+        <FlexItem flex={{ default: "flex_1" }}>
+          <OrchestratorDetailCard />
+        </FlexItem>
+        <FlexItem flex={{ default: "flex_1" }}>
+          <ResourcesCard />
+        </FlexItem>
+      </Flex>
+    </GridItem>
+    <GridItem>
+      <OrchestrationEngineCard />
+    </GridItem>
+  </Grid>
+);

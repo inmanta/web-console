@@ -1,7 +1,33 @@
 import React from "react";
 import { Badge, Tooltip } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { LifecycleModel } from "@/Core";
+import { LifecycleModel, StateModel } from "@/Core";
+import { InstanceStateLabel } from "@/UI/Components/InstanceState";
+
+/**
+ * Renders a state name as a resolved `InstanceStateLabel` (web_label/web_icon/
+ * web_description, issue #7094) when it matches a known lifecycle state, falling
+ * back to the raw name (e.g. `null` error targets aren't real states).
+ *
+ * @param {string | null} stateName - the state name to resolve
+ * @param {StateModel[]} states - the lifecycle's known states
+ * @returns {React.ReactNode} the resolved state presentation
+ */
+const renderState = (stateName: string | null, states: StateModel[]): React.ReactNode => {
+  if (!stateName) {
+    return stateName;
+  }
+
+  const state = states.find((candidate) => candidate.name === stateName);
+
+  if (!state) {
+    return stateName;
+  }
+
+  return (
+    <InstanceStateLabel name={state.name} label={state.label} annotations={state.annotations} />
+  );
+};
 
 export const LifecycleTable: React.FunctionComponent<{
   lifecycle: LifecycleModel;
@@ -70,9 +96,9 @@ export const LifecycleTable: React.FunctionComponent<{
 
     return {
       cells: [
-        transferRow.source,
-        transferRow.target,
-        transferRow.error,
+        renderState(transferRow.source, props.lifecycle.states),
+        renderState(transferRow.target, props.lifecycle.states),
+        renderState(transferRow.error, props.lifecycle.states),
         transferRow.target_operation,
         transferRow.error_operation,
         transferRow.description,

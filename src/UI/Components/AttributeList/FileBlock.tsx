@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Button, Spinner } from "@patternfly/react-core";
+import { Button, Flex } from "@patternfly/react-core";
 import { DownloadIcon } from "@patternfly/react-icons";
 import { useGetFile } from "@/Data/Queries";
+import { Spinner } from "@/UI/Components";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { Delayed } from "@/UI/Utils";
 import { words } from "@/UI/words";
@@ -30,18 +31,26 @@ export const FileBlock: React.FC<Props> = ({ hash }) => {
     }
   }, [isError, error]);
 
+  // The copy button goes last, so the hash and the get button stay together while it is hidden.
   const copyAndButton = (
-    <>
-      <TextWithCopy value={hash} tooltipContent={words("copy.clipboard")} />
-      <Button
-        variant="link"
-        icon={<DownloadIcon />}
-        onClick={() => mutate()}
-        isDisabled={isPending || isSuccess}
+    <TextWithCopy value={hash} tooltipContent={words("copy.clipboard")}>
+      <Flex
+        display={{ default: "inlineFlex" }}
+        flexWrap={{ default: "wrap" }}
+        gap={{ default: "gapSm" }}
+        alignItems={{ default: "alignItemsCenter" }}
       >
-        {words("resources.file.get")}
-      </Button>
-    </>
+        {hash}
+        <Button
+          variant="link"
+          icon={<DownloadIcon />}
+          onClick={() => mutate()}
+          isDisabled={isPending || isSuccess}
+        >
+          {words("resources.file.get")}
+        </Button>
+      </Flex>
+    </TextWithCopy>
   );
 
   if (errorMessage) {
@@ -73,7 +82,7 @@ export const FileBlock: React.FC<Props> = ({ hash }) => {
         {copyAndButton}
         <Delayed delay={500}>
           <div>
-            <Spinner size="sm" />
+            <Spinner />
           </div>
         </Delayed>
       </>

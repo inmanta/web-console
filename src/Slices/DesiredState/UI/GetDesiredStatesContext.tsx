@@ -17,7 +17,7 @@ export const GetDesiredStatesContext = createContext<GetDesiredStatesProvider>({
   filter: {},
   pageSize: PageSize.initial,
   currentPage: initialCurrentPage,
-  compareSelection: { kind: "None" },
+  compareSelection: undefined,
   setCompareSelection: () => undefined,
   setDeleteModal: () => undefined,
 });

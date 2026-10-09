@@ -244,7 +244,7 @@ export const EnvSelector: React.FC<Props> = ({
   );
 };
 
-const EnvironmentIcon: React.FC<{ icon?: string }> = ({ icon }) => (
+export const EnvironmentIcon: React.FC<{ icon?: string }> = ({ icon }) => (
   <Avatar
     src={icon ?? fallBackImage}
     alt="Environment icon"

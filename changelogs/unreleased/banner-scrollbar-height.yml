@@ -1,0 +1,5 @@
+change-type: patch
+description: Give html, body and #root a full height so a stray scrollbar no longer appears when a banner is present.
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

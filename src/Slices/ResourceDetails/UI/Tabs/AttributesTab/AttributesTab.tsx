@@ -1,8 +1,7 @@
 import React from "react";
-import { Card, CardBody } from "@patternfly/react-core";
 import { Details } from "@/Core/Domain/Resource/Resource";
-import { AttributeClassifier } from "@/Data";
-import { AttributeList } from "@/UI/Components";
+import { AttributeClassifier, useUrlStateWithExpansion } from "@/Data";
+import { ResourceAttributesView } from "@/UI/Components";
 
 interface Props {
   details: Details;
@@ -11,22 +10,23 @@ interface Props {
 const classifier = new AttributeClassifier();
 
 /**
- * The AttributesTab component.
+ * The Desired State tab. Shows the resource's attributes with a Structured / JSON
+ * toggle, keeping reference expansion in the URL.
  *
- * This component is responsible of displaying the attributes of a resource.
- *
- * @Props {Props} - The props of the component
- *  @prop {Details} details - The details of the resource
- * @returns {React.FC<Props>} A React Component displaying the attributes of a resource
+ * @prop {Details} details - The details of the resource
  */
 export const AttributesTab: React.FC<Props> = ({ details }) => {
-  const classifiedAttributes = classifier.classify(details.attributes);
+  const [isExpanded, onToggle] = useUrlStateWithExpansion({
+    key: "references",
+    route: "ResourceDetails",
+  });
 
   return (
-    <Card isCompact>
-      <CardBody>
-        <AttributeList attributes={classifiedAttributes} />
-      </CardBody>
-    </Card>
+    <ResourceAttributesView
+      attributes={details.attributes}
+      classifier={classifier}
+      isExpanded={isExpanded}
+      onToggle={onToggle}
+    />
   );
 };

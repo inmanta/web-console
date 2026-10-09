@@ -10,10 +10,12 @@ import {
 } from "@patternfly/react-core";
 import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
+import { getAvailableStateTargets, StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
+import { SetStateButtonDefaults } from "@/UI/Components/MarkdownContainer";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider/ModalProvider";
 import { useNavigateTo } from "@/UI/Routing";
@@ -55,7 +57,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
   docAttributeDescriptors,
   selectedVersion,
 }) => {
-  const { logsQuery, instance } = useContext(InstanceDetailsContext);
+  const { logsQuery, instance, serviceModelQuery } = useContext(InstanceDetailsContext);
   const { environmentHandler } = useContext(DependencyContext);
   const { triggerModal } = useContext(ModalContext);
   const [expandedSet, setExpandedSet] = useState<Set<number>>(() => {
@@ -79,6 +81,32 @@ export const DocumentationTabContent: React.FC<Props> = ({
   const navigateTo = useNavigateTo();
 
   const isLatest = selectedVersion === String(instance.version);
+
+  // Resolved from the instance's actual current state, not the viewed version - a
+  // doc-tab button always acts on the live instance.
+  const stateTargets = useMemo(
+    () => getAvailableStateTargets(instance.state, serviceModelQuery.data),
+    [instance.state, serviceModelQuery.data]
+  );
+
+  const stateTargetByTarget = useMemo(
+    () => resolveFirstStateTargetByTarget(stateTargets),
+    [stateTargets]
+  );
+
+  const stateTransferDefaults = useMemo(() => {
+    return Object.fromEntries(
+      Object.values(stateTargetByTarget).map((target): [string, SetStateButtonDefaults] => [
+        target.target,
+        {
+          displayText: target.buttonLabel,
+          icon: target.buttonIcon,
+          variant: target.buttonVariant,
+          type: target.transfer.annotations?.web_button_type,
+        },
+      ])
+    );
+  }, [stateTargetByTarget]);
 
   const selectedSet = useMemo(() => {
     if (!isLatest) {
@@ -109,6 +137,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
       }
 
       const instanceDisplayIdentity = instance.service_identity_attribute_value || instance.id;
+      const webConfirm = stateTargetByTarget[targetState]?.transfer.annotations?.web_confirm;
 
       triggerModal({
         title: words("instanceDetails.stateTransfer.confirmTitle"),
@@ -117,6 +146,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
             instance_id={instance.id}
             service_entity={instance.service_entity}
             targetState={targetState}
+            webConfirm={webConfirm}
             instance_display_identity={instanceDisplayIdentity}
             version={instance.version}
             setInterfaceBlocked={setInterfaceBlocked}
@@ -130,7 +160,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
 
       setInterfaceBlocked(true);
     },
-    [instance, triggerModal, setInterfaceBlocked]
+    [instance, stateTargetByTarget, triggerModal, setInterfaceBlocked]
   );
 
   // Check expert mode for the MarkdownPreviewer button
@@ -206,6 +236,8 @@ export const DocumentationTabContent: React.FC<Props> = ({
           attributeValue={sections[0].value}
           web_title={sections[0].title}
           onSetStateClick={handleStateTransferClick}
+          stateTransferDefaults={stateTransferDefaults}
+          disableStateTransfer={!isLatest}
         />
       </TabContentWrapper>
     );
@@ -231,6 +263,8 @@ export const DocumentationTabContent: React.FC<Props> = ({
                 web_title={section.title}
                 onSetStateClick={handleStateTransferClick}
                 isExpanded={expandedSet.has(index)}
+                stateTransferDefaults={stateTransferDefaults}
+                disableStateTransfer={!isLatest}
               />
             </AccordionContent>
           </AccordionItem>
@@ -241,6 +275,27 @@ export const DocumentationTabContent: React.FC<Props> = ({
       </Accordion>
     </TabContentWrapper>
   );
+};
+
+/**
+ * Reduces `stateTargets` to one `StateTarget` per target state, first match wins.
+ * Two transfers from the current state can lead to the same target - the Actions
+ * dropdown shows both as separate items, but a doc-tab `setState` button only names a
+ * target state, so it can't disambiguate. Used for both the button's defaults and its
+ * confirm prompt, so they can't come from two different transfers.
+ */
+export const resolveFirstStateTargetByTarget = (
+  stateTargets: StateTarget[]
+): Record<string, StateTarget> => {
+  const map: Record<string, StateTarget> = {};
+
+  for (const target of stateTargets) {
+    if (!(target.target in map)) {
+      map[target.target] = target;
+    }
+  }
+
+  return map;
 };
 
 /**

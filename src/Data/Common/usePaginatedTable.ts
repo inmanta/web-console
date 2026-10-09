@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { RouteKind, Sort } from "@/Core";
 import {
   useUrlStateWithCurrentPage,
@@ -37,9 +37,15 @@ export function usePaginatedTable<TFilter = undefined, TSort extends string = st
     route,
   });
 
-  //when sorting or filtering is triggered, reset the current page
+  // Reset to page 1 only when sort or filter actually changes, not on mount.
+  // This keeps your page when you come back to it (e.g. the browser back button).
+  const previous = useRef({ sort, filter });
+
   useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
+    if (previous.current.sort !== sort || previous.current.filter !== filter) {
+      previous.current = { sort, filter };
+      setCurrentPage({ kind: "CurrentPage", value: "" });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort, filter]);
 

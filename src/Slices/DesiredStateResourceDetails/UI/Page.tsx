@@ -8,7 +8,11 @@ export const Page: React.FC = () => {
   const { version, resourceId } = useRouteParams<"DesiredStateResourceDetails">();
 
   return (
-    <PageContainer pageTitle={words("desiredState.resourceDetails.title")}>
+    <PageContainer
+      pageTitle={words("desiredState.resourceDetails.title")}
+      hasOverflowScroll
+      aria-label={words("desiredState.resourceDetails.title")}
+    >
       <Description>{resourceId}</Description>
       <DetailsProvider version={version} resourceId={resourceId} />
     </PageContainer>

@@ -9,7 +9,6 @@
  * seperated by dots. Using this method, you can have a
  * value for "inventory", but also for "inventory.state".
  */
-import React from "react";
 import { ParsedNumber } from "@/Core";
 
 const dict = {
@@ -48,6 +47,7 @@ const dict = {
   copy: "Copy",
   "copy.raw": "Copy raw value",
   "copy.clipboard": "Copy to clipboard",
+  resize: (name: string) => `Resize ${name}`,
   noData: "There is no data available to display.",
   success: "Success",
   "success.title": "Success",
@@ -55,6 +55,40 @@ const dict = {
   noResults: "No results found",
   include: "Include",
   exclude: "Exclude",
+
+  /**
+   * Generic labels reused across views (column headers, tabs, field labels)
+   */
+  name: "Name",
+  status: "Status",
+  value: "Value",
+  type: "Type",
+  id: "Id",
+  agent: "Agent",
+  message: "Message",
+  description: "Description",
+  version: "Version",
+  date: "Date",
+  timestamp: "Timestamp",
+  actions: "Actions",
+  options: "Options",
+  created: "Created",
+  updated: "Updated",
+  lastUpdated: "Last Updated",
+  showDetails: "Show Details",
+  attributes: "Attributes",
+  resources: "Resources",
+  events: "Events",
+  history: "History",
+  requires: "Requires",
+  filters: "Filters",
+  collapseAll: "Collapse all",
+  expandAll: "Expand all",
+  showMore: "Show more",
+  showLess: "Show less",
+  export: "Export",
+  resourceId: "Resource Id",
+  versionLabel: (version: string) => `Version: ${version}`,
 
   /**
    * Error related text
@@ -68,7 +102,6 @@ const dict = {
     `The following error occured while communicating with the server: ${errorMessage}`,
   "error.authentication": (message: string) => `Authentication error: ${message}`,
   "error.authorizationFailed": "Authorization failed, please log in",
-  "error.fetch": (error: string) => `There was an error retrieving data: ${error}`,
   "error.image.title": "Invalid image",
   "error.image.unknown": (name: string) => `Something went wrong with file ${name}`,
   "error.image.type": (name: string, type: string) =>
@@ -78,7 +111,6 @@ const dict = {
 
   "notFound.title": "404: We couldn't find that page",
   "notFound.home": "Go home",
-  "features.missing": "Features have not yet been set.",
   "validation.title": (amount: number) => `Errors found: ${amount}`,
   "validation.empty": "Invalid JSON",
 
@@ -91,35 +123,20 @@ const dict = {
   "attributes.active": "Active Attributes",
   "attributes.candidate": "Candidate Attributes",
   "attributes.rollback": "Rollback Attributes",
-  "attribute.name": "Name",
+  "attributes.emptyString": "empty string",
   "attributesTab.active": "Active",
   "attributesTab.candidate": "Candidate",
   "attributesTab.rollback": "Rollback",
   "attribute.value.copy": "Copy full value to clipboard",
-  "catalog.empty.message": "No services found",
   "empty.title": "There is nothing here",
   "inventory.intro": (service: string) => `Showing instances of ${service}`,
   "inventory.title": (name: string) => `Service Inventory: ${name}`,
   "inventory.empty.message": (service: string) => `No instances found for service ${service}`,
-  "inventory.column.id": "Id",
   "inventory.column.state": "State",
-  "inventory.column.attributesSummary": "Attributes",
   "inventory.collumn.deploymentProgress": "Deployment Progress",
-  "inventory.column.createdAt": "Created",
-  "inventory.column.updatedAt": "Updated",
-  "inventory.column.options": "Options",
-  "inventory.column.actions": "Actions",
-  "inventory.column.resources": "Resources",
   "inventory.actions.drilldown": "More actions",
-  "inventory.tabs.attributes": "Attributes",
-  "inventory.tabs.collapse": "Collapse all",
-  "inventory.tabs.expand": "Expand all",
-  "inventory.tabs.resources": "Resources",
-  "inventory.tabs.status": "Status",
-  "inventory.statustab.actions": "Actions",
   "inventory.statustab.expertActions": "Expert Actions",
   "inventory.statustab.diagnose": "Diagnose",
-  "inventory.statustab.version": "Version",
   "inventory.statustab.details": "Instance Details",
   "inventory.statustab.setInstanceState": "Set state to",
   "inventory.statustab.confirmTitle": "Confirm set state transfer",
@@ -134,13 +151,9 @@ const dict = {
   "inventory.statustab.forceState.confirmQuestion": "Are you sure you want to continue?",
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
-  "inventory.statusTab.history": "History",
-  "inventory.statusTab.events": "Events",
   "inventory.resourcesTab.empty.title": "No resources found",
   "inventory.resourcesTab.empty.body": "No resources could be found for this instance.",
   "inventory.resourcesTab.failed.title": "Something went wrong",
-  "inventory.resourcesTab.failed.body": (error: string) =>
-    `There was an error retrieving data: ${error}`,
   "inventory.resourcesTab.detailsLink": "Jump to Details",
   "inventory.deploymentProgress.waiting": "In Progress",
   "inventory.deploymentProgress.failed": "Failed",
@@ -170,6 +183,28 @@ const dict = {
     `Create an instance based of instance ${instanceId}`,
   "inventory.form.suggestions.unknownVariable": (variables: string, supported: string) =>
     `Unknown variable(s) in the suggested values parameter name: ${variables}. Supported variables: ${supported}.`,
+  "inventory.form.suggestions.unsupportedPath": (paths: string) =>
+    `Unsupported jsonpath in the suggested values projection: ${paths}. Only navigational paths (member access, array index, equality-filter selection) are supported.`,
+  "inventory.form.suggestions.invalidFilterKey": (keys: string) =>
+    `Invalid filter field(s) in the suggested values query: ${keys}. A filter key must be a plain GraphQL field name; nested fields are expressed as nested objects, not dotted paths.`,
+  "inventory.form.suggestions.invalidQuery":
+    "The graphql suggested values annotation is malformed. It requires a 'query' with a 'root' and a 'value' projection.",
+  "inventory.form.suggestions.unsupportedFieldPath": (paths: string) =>
+    `Unsupported jsonpath in a cascading field reference: ${paths}. Only navigational paths (member access, array index, equality-filter selection) are supported.`,
+  "inventory.form.suggestions.waitingOnSource": (dependencies: string) =>
+    `Waiting on ${dependencies} before suggestions become available.`,
+  "inventory.form.suggestions.empty": (dependencies: string) =>
+    `No suggested values are available for the current values of ${dependencies}.`,
+  "inventory.form.suggestions.notInList": (dependencies: string) =>
+    `The current value is not among the suggested values for ${dependencies}.`,
+  "inventory.form.suggestions.fetchError": "Could not load the suggested values. Please try again.",
+  "inventory.form.suggestions.loading": "Loading suggestions...",
+  "inventory.form.suggestions.missingDependency": (field: string, reference: string) =>
+    `The suggested values for '${field}' reference '${reference}', which is not a field in scope.`,
+  "inventory.form.suggestions.dependencyCycle": (cycle: string) =>
+    `The suggested values form a dependency cycle: ${cycle}. Dependencies between fields must be acyclic.`,
+  "inventory.form.suggestions.moreResults": (shown: number, total: number) =>
+    `Showing the first ${shown} of ${total} suggestions. Refine your search to narrow the results.`,
   "inventory.form.tabs.invalidCatalog":
     "The web_tabs entity annotation is malformed. Every tab requires a unique string 'key' and a string 'label'.",
   "inventory.form.tabs.defaultRequired": (count: number) =>
@@ -184,7 +219,6 @@ const dict = {
   "inventory.form.placeholder.dict": '{"key": "value"}',
   "inventory.form.button": "Form",
   "inventory.editor.button": "JSON-Editor",
-  "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
   "inventory.deleteInstance.header": (instanceName: string, serviceName: string) =>
@@ -199,7 +233,21 @@ const dict = {
   "inventory.deleteVersion.title": "Delete version",
   "inventory.deleteVersion.header": (version: ParsedNumber) =>
     `Are you sure you want to delete version ${version}?`,
+  "inventory.filters.state.label": "State",
   "inventory.filters.state.placeholder": "Select a state...",
+  "inventory.filters.id.label": "Id / Service identity",
+  "inventory.filters.id.placeholder": "Filter by id or identifier...",
+  "inventory.filters.attributeSet.label": "Attribute set (not empty / empty)",
+  "inventory.filters.attributeSet.activeLabel": "Attribute set",
+  "inventory.filters.attributeSet.active": "Active",
+  "inventory.filters.attributeSet.candidate": "Candidate",
+  "inventory.filters.attributeSet.rollback": "Rollback",
+  "inventory.filters.attributeSet.placeholder": "Filter by attribute set...",
+  "inventory.filters.deleted.label": "Deleted",
+  "inventory.filters.deleted.include.label": "Include",
+  "inventory.filters.deleted.include.description": "Also include deleted instances",
+  "inventory.filters.deleted.only.label": "Only",
+  "inventory.filters.deleted.only.description": "Only show deleted instances",
   "ServiceDetails.title": (name: string) => `Service Details: ${name}`,
   "inventory.test.creating": "creating",
   "inventory.editAttribute.placeholder": "New Attribute",
@@ -271,26 +319,17 @@ const dict = {
   /**
    * Service Instance Details text
    */
-  "instanceDetails.title.tag": (version) => `Version: ${version}`,
   "instanceDetails.title.next": "Latest Version",
   "instanceDetails.button": "Show instance",
   "instanceDetails.page.errorFallback": "Something went wrong retrieving the instance details",
   "instanceDetails.page.errorFallback.title": "Error",
   "instanceDetails.page.noData": "There is no data available to display.",
   "instanceDetails.page.noData.errorTitle": "No Data",
-  "instanceDetails.history.title": "History",
   "instanceDetails.history.diagnose": "Diagnose",
-  "instanceDetails.history.table.version": "Version",
-  "instanceDetails.history.table.timestamp": "Timestamp",
-  "instanceDetails.history.table.status": "Status",
   "instanceDetails.history.error": "Error loading Version History",
-  "instanceDetails.details.title": "Details",
   "instanceDetails.details.created": "Created:",
   "instanceDetails.details.updated": "Updated:",
   "instanceDetails.tabs.documentation": "Documentation",
-  "instanceDetails.tabs.attributes": "Attributes",
-  "instanceDetails.tabs.events": "Events",
-  "instanceDetails.tabs.resources": "Resources",
   "instanceDetails.tabs.resources.deploymentProgress": "Deployment Progress",
   "instanceDetails.tabs.resources.EmptyResources": "There is no data about deployment progress.",
   "instanceDetails.tabs.documentation.noData":
@@ -305,18 +344,14 @@ const dict = {
   candidate_attributes: "Candidate",
   rollback_attributes: "Rollback",
   "instanceDetails.searchPlaceholder": "Search version…",
-  "instanceDetails.expandAll": "Expand all",
-  "instanceDetails.collapseAll": "Collapse all",
   "instanceDetails.resetSort": "Reset sorting",
   "instanceDetails.table.attributeKey": "Attribute",
-  "instanceDetails.table.valueKey": "Value",
   "instanceDetails.table.sorting.tooltip": "The sorting can be resetted in the table options.",
   "instanceDetails.setState.label": "Set state",
+  "instanceDetails.setState.advanced": "Advanced",
   "instanceDetails.forceState.label": "Force state",
   "instanceDetails.stateTransfer.confirmTitle": "Confirm set state transfer",
-  "instanceDetails.stateTransfer.messageLabel": "Message",
   "instanceDetails.expertActions": "Expert Actions",
-  "instanceDetails.actions": "Actions",
   "instanceDetails.expert.transfer.options": "Select Operation",
   "instanceDetails.expert.editModal.title": "Confirm Attributes update",
   "instanceDetails.expert.editModal.message": (selectedSet) => `
@@ -332,13 +367,8 @@ const dict = {
   "instanceDetails.state.noOperation": "no operation",
   "instanceDetails.operation.selectLabel": "Select an operation",
   "instanceDetails.events.column.eventType": "Event type",
-  "instanceDetails.events.column.timestamp": "Timestamp",
-  "instanceDetails.events.column.sourceState": "Source state",
-  "instanceDetails.events.column.destinationState": "Destination state",
   "instanceDetails.events.column.report": "Compile Report",
-  "instanceDetails.events.rowDetails.message": "Message",
   "instanceDetails.events.rowDetails.details": "Event details",
-  "instanceDetails.events.exportReport": "Export",
   "instanceDetails.events.validationReport": "Validation",
   "instanceDetails.events.seeAll": "See all events",
   "instanceDetails.events.dateTooltip": (dateDiff: string) => `${dateDiff} since last event`,
@@ -359,29 +389,21 @@ const dict = {
   /**
    * Events related text
    */
-  "events.column.date": "Date",
   "events.column.id": "Event id",
   "events.column.instanceVersion": "Instance version",
   "events.column.sourceState": "Source state",
   "events.column.destinationState": "Destination state",
   "events.column.eventType": "Event Type",
-  "events.column.message": "Message",
   "events.details.compileReport": "Open compile report",
   "events.empty.title": "No events found",
   "events.empty.body": "No events could be found for this instance and the specified filters",
   "events.details.title": "Event details",
   "events.title": "Service Instance Events",
-  "events.failed.body": (error: string) => `There was an error retrieving data: ${error}`,
   "events.caption": (id: string) => `Showing events of instance ${id}`,
-  "events.filters": "Filters",
   "events.filters.source.placeholder": "Select a source state...",
   "events.filters.destination.placeholder": "Select a destination state...",
   "events.filters.eventType.placeholder": "Select an Event Type...",
-  "events.filters.version.label": "Version",
   "events.filters.version.placeholder": "Filter by version...",
-  "events.filters.from": "From",
-  "events.filters.to": "To",
-  "events.filters.date.to": "to",
 
   /**
    * History related text
@@ -389,12 +411,11 @@ const dict = {
   "history.title": "Service Instance History",
   "history.missing": (instanceId: string) => `No history could be found for instance ${instanceId}`,
   "history.caption": (instanceId: string) => `Showing history for instance ${instanceId}`,
-  "history.tabs.details": "Details",
-  "history.tabs.attributes": "Attributes",
-  "history.tabs.events": "Events",
 
+  /**
+   * Diagnose related text
+   */
   "diagnose.action": "Apply",
-
   "diagnose.empty": (instanceId: string) => `No errors were found for instance ${instanceId}`,
   "diagnose.failure.title": "Deployment failure",
   "diagnose.links.resourceDetails": "Resource Details",
@@ -402,6 +423,12 @@ const dict = {
   "diagnose.links.compileReport": "Compile Report",
   "diagnose.rejection.title": "Validation failure",
   "diagnose.rejection.traceback": "Show full traceback",
+  "diagnose.rejection.errorsCount": (amount: number) => `${amount} errors`,
+  "diagnose.rejection.errorCategory": "Category",
+  "diagnose.rejection.errorLocation": "Location",
+  "diagnose.rejection.showDetails": "Show details",
+  "diagnose.rejection.showDetailsAriaLabel": (index: number) => `Show details for error ${index}`,
+  "diagnose.rejection.instanceVersion": (version: ParsedNumber) => `Instance version: ${version}`,
   "diagnose.main.subtitle": (instanceId: string) =>
     `The following errors were found related to instance ${instanceId}`,
   "diagnose.title": "Diagnose Service Instance",
@@ -418,23 +445,19 @@ const dict = {
   "orders.column.created_at": "Created at",
   "orders.column.completed_at": "Completed at",
   "orders.column.progress": "Deployment Progress",
-  "orders.column.status": "Status",
   "orders.column.description": "Description / Order Id",
-  "orders.column.option": "Options",
   "orders.column.action": "Action",
   "orders.column.serviceEntity": "Service Entity",
   "orders.column.instance": "Instance",
   "orders.row.dependencies": "Dependencies",
   "orders.row.config": "Config",
   "orders.row.state": "State",
-  "orders.row.details": "Details",
   "orders.row.failureType": "Failure Type",
   "orders.row.reason": "Reason",
   "orders.row.compilerReport": "Show Compile Report",
   "orders.row.body": "Body",
   "orders.table.empty": "No orders could be found.",
   "orderDetails.table.empty": "No orders details could be found.",
-  "orders.links.details": "Show Details",
   "orders.row.empty": "Empty",
   "orders.row.instanceCreationFailed": "Order failed to create instance.",
   "orders.status.failed": "failed",
@@ -448,9 +471,15 @@ const dict = {
    * Catalog related text
    */
   "catalog.title": "Service Catalog",
+  "catalog.empty.message": "No services found",
   "catalog.summary.title": "Number of instances by label",
   "catalog.summary.noLabel": "no label",
   "catalog.summary.empty": "No instance summary found",
+  "catalog.summary.total": (total: number) => (
+    <>
+      <b>{total}</b> {total === 1 ? "instance" : "instances"}
+    </>
+  ),
   "catalog.button.inventory": "Show inventory",
   "catalog.button.update": "Update Service Catalog",
   "catalog.update.failed": "The update failed",
@@ -467,57 +496,24 @@ const dict = {
   "catalog.update.confirmation.p5": "Note: It will perform two consecutive compiles.",
   "catalog.update.tooltip": "Update project and export service definition",
   "catalog.API.tooltip": "Catalog API",
-  "catalog.button.details": "Show Details",
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,
   "catalog.delete.failed": "Deleting service entity failed",
-  "catalog.instances": "Instances",
   "catalog.callbacks.delete.title": "Delete Callback",
   "catalog.callbacks.delete": (url: string) =>
     `Are you sure you want to delete callback with url "${url}"?`,
   "catalog.callbacks.delete.failed": "Deleting callback failed",
   "catalog.callbacks.url": "Url",
-  "catalog.callbacks.id": "Id",
   "catalog.callbacks.minimalLogLevel": "Minimal Log Level",
   "catalog.callbacks.eventTypes": "Event Types",
-  "catalog.callbacks.actions": "Actions",
   "catalog.callbacks.uuid.copy": "Copy full callback id to clipboard",
   "catalog.callbacks.add": "Add",
-  "catalog.table.type": "Type",
-  "catalog.table.description": "Description",
   "catalog.table.modifier": "Modifier",
 
   /**
    * Dashboard
    */
-  "dashboard.title": (envName: string) => `Dashboard | ${envName}`,
-  "dashboard.refresh": "Refresh",
-  "dashboard.lsm.service_count.title": "Service Counter",
-  "dashboard.lsm.service_count.description": "The Number of service types",
-  "dashboard.lsm.service_count.label.x": "Number of Services [#]",
-  "dashboard.lsm.service_instance_count.title": "Service Instances",
-  "dashboard.lsm.service_instance_count.description":
-    "The number of service instances over time (grouped by state label)",
-  "dashboard.lsm.service_instance_count.label.x": "Number of units [#]",
-  "dashboard.orchestrator.compile_time.title": "Compile Time",
-  "dashboard.orchestrator.compile_time.description":
-    "The time (in seconds) required to compile the model",
-  "dashboard.orchestrator.compile_time.label.x": "Compile time [s]",
-  "dashboard.orchestrator.compile_waiting_time.title": "Compile Waiting Time",
-  "dashboard.orchestrator.compile_waiting_time.description":
-    "The amount of time (in seconds) a compile request spends waiting in the compile queue before being executed",
-  "dashboard.orchestrator.compile_waiting_time.label.x": "Waiting Time [s]",
-  "dashboard.orchestrator.compile_rate.title": "Compile Rate",
-  "dashboard.orchestrator.compile_rate.description":
-    "The rate of compile requests over time (number of compiles per hour)",
-  "dashboard.orchestrator.compile_rate.label.x": "Rate of Compiles [#/h]",
-  "dashboard.resource.agent_count.title": "Agents Count",
-  "dashboard.resource.agent_count.description": "The number of agents (grouped by agent state)",
-  "dashboard.resource.agent_count.label.x": "Number of Agents [#]",
-  "dashboard.resource.resource_count.title": "Resources Count",
-  "dashboard.resource.resource_count.description":
-    "The number of resources grouped (by resource state)",
-  "dashboard.resource.resource_count.label.x": "Number of Resources [#]",
+  "dashboard.title": "Environment Health",
   "dashboard.logout": "Logout",
   "dashboard.documentation.tooltip": "Documentation",
   "dashboard.API.tooltip": "REST API",
@@ -529,6 +525,100 @@ const dict = {
   "dashboard.setting.tooltip": "Settings",
   "dashboard.status_page.tooltip": "Status page",
   "dashboard.notifications.tooltip": "Show notifications",
+  "dashboard.environmentHealth.subtitle":
+    "Live status across orchestration, resources, compiles and services",
+  "dashboard.environmentHealth.switch": "Switch",
+  "dashboard.environmentHealth.orchestratorLabel": "ORCHESTRATOR",
+  "dashboard.environmentHealth.operational": "Operational",
+  "dashboard.environmentHealth.status.healthy": "Healthy",
+  "dashboard.environmentHealth.status.attention": "Attention",
+  "dashboard.environmentHealth.status.danger": "Danger",
+  "dashboard.environmentHealth.viewDetails": (title: string) => `View ${title} details`,
+  "dashboard.environmentHealth.checklist.serverOk": "Server OK",
+  "dashboard.environmentHealth.checklist.databaseConnected": "Database connected",
+  "dashboard.environmentHealth.checklist.schedulerRunning": "Scheduler running",
+  "dashboard.environmentHealth.services": "Services",
+  "dashboard.environmentHealth.compiles": "Compiles",
+  "dashboard.environmentHealth.agents": "Agents",
+  "dashboard.environmentHealth.servicesSummary": (
+    total: number,
+    healthy: number,
+    warning: number,
+    danger: number
+  ): string[] => [
+    `${total} instances`,
+    `${healthy} healthy`,
+    `${warning} warning`,
+    `${danger} danger`,
+  ],
+  "dashboard.environmentHealth.resourcesSummary": (
+    total: number,
+    failedCount: number,
+    nonCompliantCount: number
+  ): string[] => [
+    `${total} resources`,
+    `${failedCount} failed to deploy`,
+    `${nonCompliantCount} non-compliant`,
+  ],
+  "dashboard.environmentHealth.agentsSummary": (
+    total: number,
+    up: number,
+    down: number,
+    paused: number
+  ): string[] => [`${total} agents`, `${up} up`, `${down} down`, `${paused} paused`],
+  "dashboard.environmentHealth.compiles.latestSucceeded": "Latest compile succeeded",
+  "dashboard.environmentHealth.compiles.latestFailed": "Latest compile failed",
+  "dashboard.environmentHealth.compiles.latestRunning": "Latest compile running",
+  "dashboard.environmentHealth.compiles.none": "No compiles yet",
+  "dashboard.compileReports.title": "Latest compile reports",
+  "dashboard.compileReports.viewAll": "View all compile reports",
+  "dashboard.compileReports.empty": "No compile reports yet",
+  "dashboard.compileReports.running": "Running…",
+  "dashboard.compileReports.queued": "Queued",
+  "dashboard.compileReports.startedAgo": "started",
+  "dashboard.compileReports.viewProgress": "View progress",
+  "dashboard.compileReports.viewReport": "View report",
+  "dashboard.orchestrator.title": "Orchestrator",
+  "dashboard.orchestrator.edition": "Edition",
+  "dashboard.orchestrator.license": "License",
+  "dashboard.orchestrator.pythonVersion": "Python",
+  "dashboard.orchestrator.postgresqlVersion": "PostgreSQL",
+  "dashboard.orchestrator.licenseSummary": (isValid: boolean, expiry: string): string =>
+    `${isValid ? "Valid" : "Expired"} · exp ${expiry}`,
+  "dashboard.orchestrator.extensionsLabel": "EXTENSIONS",
+  "dashboard.orchestrator.extensionTag": "extension",
+  "dashboard.orchestrator.viewFullStatus": "Open full Orchestrator Status page",
+  "dashboard.resourceManager.title": "Resource Manager",
+  "dashboard.resourceManager.subtitle": "Deployment state",
+  "dashboard.resourceManager.compliance.title": "Compliance",
+  "dashboard.resourceManager.deployResult.title": "Deploy result",
+  "dashboard.resourceManager.blocked.title": "Blocked",
+  "dashboard.resourceManager.summary": "Summary",
+  "dashboard.resourceManager.summaryCount": (count: number) =>
+    `${count.toLocaleString()} resources`,
+  "dashboard.resourceManager.deployingNow": "Deploying now",
+  "dashboard.resourceManager.deployedOk": "Deployed OK",
+  "dashboard.resourceManager.failed": "Failed",
+  "dashboard.resourceManager.nonCompliant": "Non-compliant",
+  "dashboard.orchestrationEngine.title": "Orchestration Engine",
+  "dashboard.orchestrationEngine.subtitle": (days: number): string =>
+    `Compile activity · last ${days} days`,
+  "dashboard.orchestrationEngine.tabs.rate": "Compile rate",
+  "dashboard.orchestrationEngine.tabs.time": "Compile time",
+  "dashboard.orchestrationEngine.tabs.waiting": "Waiting time",
+  "dashboard.orchestrationEngine.stats.compiles": "Compiles",
+  "dashboard.orchestrationEngine.stats.failed": "Failed",
+  "dashboard.orchestrationEngine.stats.avgCompile": "Avg compile",
+  "dashboard.orchestrationEngine.stats.avgWaiting": "Avg waiting",
+  "dashboard.orchestrationEngine.chart.rate.title": "Compiles per day",
+  "dashboard.orchestrationEngine.chart.time.title": "Avg compile time (s)",
+  "dashboard.orchestrationEngine.chart.waiting.title": "Avg waiting time (s)",
+  "dashboard.orchestrationEngine.chart.xStart": (days: number): string => `${days} days ago`,
+  "dashboard.orchestrationEngine.chart.xEnd": "Today",
+  "dashboard.orchestrationEngine.range.last7Days": "Last 7 days",
+  "dashboard.orchestrationEngine.range.last14Days": "Last 14 days",
+  "dashboard.orchestrationEngine.range.last30Days": "Last 30 days",
+  "dashboard.orchestrationEngine.refresh": "Refresh",
 
   /**
    * Environment controls
@@ -561,15 +651,9 @@ const dict = {
     `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying${
       count > 0 ? ", click to filter" : ""
     }`,
+  "resources.deploying.spinner": "Resources deploying",
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
-  "discoveredResourceDetails.title": "Discovered Resource Details",
-  "discoveredResourceDetails.empty": "No discovered resource details found",
-  "resources.column.type": "Type",
-  "resources.column.agent": "Agent",
-  "resources.column.value": "Value",
-  "resources.column.requires": "Requires",
-  "resources.column.status": "Status",
   "resources.column.status.toolTip":
     "Toggle fields to include them in sorting. Drag active fields to set their priority order.",
   "resources.button.statusDetails": "Show status details",
@@ -593,14 +677,32 @@ const dict = {
   "resources.filters.reset": "Reset filters",
   "resources.filters.filter": "Add filter",
   "resources.filters.tabs.resource": "Resource",
-  "resources.filters.tabs.status": "Status",
-  "resources.filters.resource.sectionTitle": "Resource Id",
-  "resources.filters.resource.type.label": "Type",
+  "resources.filters.tabs.service": "Service",
+  "resources.filters.service.sectionTitle": "Service",
+  "resources.filters.service.entity.label": "Service entity",
+  "resources.filters.service.entity.placeholder": "Select a service entity",
+  "resources.filters.service.entity.selectInfoLabel": "Use text input",
+  "resources.filters.service.entity.textInfoLabel": "Use select input",
+  "resources.filters.service.entity.loading": "Loading service entities...",
+  "resources.filters.service.entity.empty": "No service entities found",
+  "resources.filters.service.instance.label": "Instance",
+  "resources.filters.service.instance.placeholder": "Select an instance",
+  "resources.filters.service.instance.loading": "Loading instances...",
+  "resources.filters.service.instance.empty": "No instances found",
+  "resources.filters.service.includeOwned.label": "Include owned services",
+  "resources.filters.service.includeOwned.description":
+    "Also match resources of services owned by the selected instances",
+  "resources.filters.service.includeOwned.chipValue": "Included",
   "resources.filters.resource.type.placeholder": "Resource type...",
-  "resources.filters.resource.value.label": "Value",
+  "resources.filters.resource.type.hint":
+    "Matches any resource whose type contains this text, ignoring case.",
   "resources.filters.resource.value.placeholder": "Value...",
+  "resources.filters.resource.value.hint":
+    "Matches any resource whose value contains this text, ignoring case.",
   "resources.filters.resource.agent.label": "Agent(s)",
   "resources.filters.resource.agent.placeholder": "Select Agent(s)",
+  "resources.filters.resource.agent.hint":
+    "Matches any resource whose agent contains this text, ignoring case.",
   "resources.filters.resource.agent.selectInfoLabel": "Use text input",
   "resources.filters.resource.agent.textInfoLabel": "Use select input",
   "resources.filters.resource.agent.loading": "Loading agents...",
@@ -614,7 +716,6 @@ const dict = {
   "resources.filters.active.empty.body.noTabs":
     "Use the fields above to add filters and refine your results.",
   "resources.filters.active.group.close": (group: string) => `Remove ${group} filters`,
-  "resources.filters": "Filters",
   "resources.sort.label.blocked": "Blocked",
   "resources.sort.label.compliance": "Compliance",
   "resources.sort.label.lastHandlerRun": "Last Handler Run",
@@ -625,50 +726,92 @@ const dict = {
   "resources.compoundStateSummary.title": "Compound state summary",
   "resources.compoundStateSummary.deploy": "Deploy",
   "resources.compoundStateSummary.repair": "Repair",
-  "resources.link.details": "Show Details",
   "resources.details.title": "Resource Details",
-  "resources.info.id": "Id",
   "resources.info.lastDeploy": "Last Deploy",
-  "resources.info.firstTime": "Created",
-  "resources.requires.title": "Requires",
   "resources.requires.empty.message": "No requirements found",
   "resources.requires.resource": "Resource",
   "resources.requires.deployState": "Deploy State",
-  "resources.history.title": "History",
-  "resources.history.column.date": "Date",
   "resources.history.tabs.attributes": "Desired State",
-  "resources.history.tabs.requires": "Requires",
   "resources.history.empty.message": "No requirements found",
   "resources.attributes.title": "Desired State",
+  "resources.attributes.view.label": "Attribute view",
+  "resources.attributes.view.structured": "Structured",
+  "resources.attributes.view.json": "JSON",
+  "resources.attributes.modelGroup": "Attributes",
+  "resources.attributes.orchestratorGroup": "Orchestrator attributes",
+  "references.chip.tooltip": "resolved at deploy time",
+  "references.uuid.copy": "Copy reference id",
+  "references.unresolved.marker": "unresolved",
+  "references.unresolved.tooltip": "This reference could not be found in the payload",
+  "references.cycle.marker": "cycle",
+  "references.cycle.tooltip": "This reference repeats one of its parents",
+  "references.argumentKind.literal": "literal",
+  "references.argumentKind.json": "json",
+  "references.argumentKind.mjson": "json",
+  "references.argumentKind.reference": "reference",
+  "references.argumentKind.resource": "resource",
+  "references.argumentKind.python_type": "python type",
+  "references.argumentKind.get": "dict path",
+  "references.truncated": "Reference tree truncated at 10 levels",
+  "references.mutatorsNotDisplayed": (count: number) =>
+    `${count} ${count === 1 ? "mutator is" : "mutators are"} not displayed`,
   "resources.logs.title": "Logs",
   "resources.logs.empty.message": "No logs found",
   "resources.logs.filterOnAction": (actionType: string) => `Filter on '${actionType}'`,
-  "resources.logs.timestamp": "Timestamp",
   "resources.logs.actionType": "Action Type",
   "resources.logs.actionType.placeholder": "Action Type...",
   "resources.logs.logLevel": "Log Level",
   "resources.logs.logLevel.placeholder": "Minimal Log Level...",
-  "resources.logs.message": "Message",
   "resources.logs.message.placeholder": "Message...",
   "resources.facts.title": "Facts",
-  "resources.facts.columns.name": "Name",
-  "resources.facts.columns.updated": "Last Updated",
-  "resources.facts.columns.value": "Value",
-  "resources.deploy.tooltip":
-    "Request the agents to check the current state of each resource in a state different from the deployed state and make the current state of those resources in line with the desired state.",
-  "resources.repair.tooltip":
-    "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
   "resources.file.get": "Get file",
   "resources.file.error": "Error fetching file content",
+  "resources.resourceActions.toggle": "Deploy actions",
+  "resources.resourceActions.deploy.hint": "default - incremental",
+  "resources.resourceActions.repair.hint": "full",
+  "resources.resourceActions.deploy.tooltip.resource":
+    "Enforce the compliance of this resource. Does nothing if it is already compliant.",
+  "resources.resourceActions.repair.tooltip.resource":
+    "(Re-)enforce the intent of this resource. Fixes any drift from the desired state, even if it is marked as compliant.",
+  "resources.resourceActions.deploy.tooltip.resources":
+    "Enforce the compliance of the resources in the chosen scope. Resources that are already compliant are skipped.",
+  "resources.resourceActions.repair.tooltip.resources":
+    "(Re-)enforce the intent of every resource in the chosen scope. Fixes any drift from the desired state, even for resources marked as compliant.",
+  "resources.resourceActions.deploy.tooltip.instance":
+    "Enforce the compliance of the resources in the chosen scope of this service instance. Resources that are already compliant are skipped.",
+  "resources.resourceActions.repair.tooltip.instance":
+    "(Re-)enforce the intent of every resource in the chosen scope of this service instance. Fixes any drift from the desired state, even for resources marked as compliant.",
+  "resources.resourceActions.orphaned.disabled":
+    "Orphaned resources are no longer part of the latest desired state, so they cannot be deployed or repaired.",
+  "resources.resourceActions.success": (action: string) => `${action} triggered`,
+  "resources.resourceActions.failed": (action: string) =>
+    `Triggering ${action.toLowerCase()} failed`,
+  "resources.resourceActions.confirm.title": (action: string) => `${action} resources`,
+  "resources.resourceActions.confirm.description": "Choose the scope, then confirm.",
+  "resources.resourceActions.confirm.filtered.title": "Filtered resources",
+  "resources.resourceActions.confirm.environment.title": "All resources in this environment",
+  "resources.resourceActions.confirm.environment.note": "Ignores the active filter",
+  "resources.resourceActions.confirm.scope.count": (count: number) =>
+    `${count} resource${count === 1 ? "" : "s"}`,
+  "resources.resourceActions.instance.deleted.disabled":
+    "This instance is deleted, so its resources can no longer be deployed or repaired.",
+  "resources.resourceActions.instance.empty.disabled":
+    "This instance has no resources to deploy or repair.",
+  "resources.resourceActions.catalog.loading":
+    "Loading the service catalog to work out the deploy scope.",
+  "resources.resourceActions.catalog.error":
+    "The service catalog couldn't be loaded, so the deploy scope is unavailable.",
+  "resources.resourceActions.confirm.instance.title": "This instance only",
+  "resources.resourceActions.confirm.owned.title": "This instance and owned services",
+  "resources.resourceActions.confirm.owned.description": (services: string) =>
+    `May also act on owned services of these types: ${services}.`,
+  "resources.resourceActions.confirm.orphanNote":
+    "Orphaned resources (in no released version) can't be deployed or repaired.",
 
   /** Discovered Resources related text */
-  "discovered.column.resource_id": "Resource Id",
-  "discovered.column.agent": "Agent",
-  "discovered.column.value": "Value",
-  "discovered.column.type": "Type",
-  "discovered.column.managed_resource": "Managed resource",
+  "discoveredResourceDetails.title": "Discovered Resource Details",
+  "discoveredResourceDetails.empty": "No discovered resource details found",
   "discovered.column.discovery_resource": "Discovery resource",
-  "discovered.column.show_details": "Show Details",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",
   "discovered_resources.show_resource.managed": "Show managed resource",
@@ -678,11 +821,8 @@ const dict = {
   "compileReports.title": "Compile Reports",
   "compileReports.empty.message": "No compile reports found",
   "compileReports.columns.requested": "Requested",
-  "compileReports.columns.status": "Status",
-  "compileReports.columns.message": "Message",
   "compileReports.columns.waitTime": "Wait Time",
   "compileReports.columns.compileTime": "Compile Time",
-  "compileReports.columns.actions": "Actions",
   "compileReports.columns.inProgress": "In Progress",
   "compileReports.columns.messageValue": (update: boolean, reinstall: boolean) =>
     update
@@ -690,7 +830,6 @@ const dict = {
       : reinstall
         ? "Compile triggered from the console with a cleanup and reinstall of the project and python virtual environments"
         : "Compile triggered from the console",
-  "compileReports.links.details": "Show Details",
   "compileReports.filters.status.placeholder": "Select compile status...",
   "compileReports.filters.result.placeholder": "Select result...",
   "compileReports.filters.result.success": "Successful",
@@ -700,18 +839,12 @@ const dict = {
 
   /** Compile details related text */
   "compileDetails.title": "Compile Details",
-  "compileDetails.status.title": "Status",
-  "compileDetails.status.export": "Export",
   "compileDetails.status.update": "Update",
   "compileDetails.status.success": "Success",
-  "compileDetails.status.message": "Message",
   "compileDetails.status.trigger": "Trigger",
   "compileDetails.status.envVars": "Environment Variables",
   "compileDetails.errors.title": "Errors",
-  "compileDetails.errors.type": "Type",
-  "compileDetails.errors.message": "Message",
   "compileDetails.stages.title": "Stages",
-  "compileDetails.stages.columns.name": "Name",
   "compileDetails.stages.columns.command": "Command",
   "compileDetails.stages.columns.delay": "Stage start delay",
   "compileDetails.stages.columns.duration": "Duration",
@@ -736,7 +869,6 @@ const dict = {
   "home.manageProjects.environments.remain": (n: number) =>
     `${n} environment${n === 1 ? "" : "s"} remaining`,
   "home.manageProjects.environments.empty": "empty",
-  "home.manageProjects.delete.button": "Delete",
   "home.manageProjects.delete.confirm.button": "Confirm delete",
   "home.manageProjects.delete.cancel.button": "Cancel",
   "home.manageProjects.delete.confirm.warning": "This action cannot be undone.",
@@ -779,8 +911,6 @@ const dict = {
   "home.filters.env.placeholder": "Filter by name",
   "home.environment.copy": "Copy id",
 
-  "createEnv.name": "Name",
-  "createEnv.description": "Description",
   "createEnv.projectName": "Project Name",
   "createEnv.repository": "Repository",
   "createEnv.repository.tooltip":
@@ -802,12 +932,9 @@ const dict = {
    */
   "settings.title": "Settings",
   "settings.tabs.environment": "Environment",
-  "settings.tabs.environment.name": "Name",
-  "settings.tabs.environment.description": "Description",
   "settings.tabs.environment.repoSettings": "Repository Settings",
   "settings.tabs.environment.projectName": "Project Name",
   "settings.tabs.environment.icon": "Icon",
-  "settings.tabs.environment.id": "Id",
   "settings.tabs.configuration": "Configuration",
   "settings.tabs.tokens": "Tokens",
   "settings.tabs.token.disabledInfo": "An authenticated user is required to create tokens",
@@ -832,7 +959,6 @@ const dict = {
   "settings.tabs.token.column.issuedAt": "Issued",
   "settings.tabs.token.column.expiresAt": "Expires at",
   "settings.tabs.token.column.lastUsed": "Last used",
-  "settings.tabs.token.column.status": "Status",
   "settings.tabs.token.column.revokedAt": "Revoked at",
   "settings.tabs.token.status.active": "Active",
   "settings.tabs.token.status.revoked": "Revoked",
@@ -862,59 +988,60 @@ const dict = {
   /** Agents */
   "agents.title": "Agents",
   "agents.empty.message": "No agents found",
-  "agents.columns.name": "Name",
   "agents.columns.process": "Process",
-  "agents.columns.status": "Status",
   "agents.columns.failover": "Last failover",
   "agents.columns.unpause": "On resume",
-  "agents.columns.actions": "Actions",
   "agents.actions.failed": "Agent action failed",
   "agents.actions.pause": "Pause",
   "agents.actions.unpause": "Unpause",
   "agents.actions.deploy": "Force deploy",
   "agents.actions.repair": "Force repair",
   "agents.actions.onResume": "Unpause agent when environment is resumed",
-  "agents.filters": "Filters",
+  "agents.actions.pauseAll": "Pause all",
+  "agents.actions.resumeAll": "Resume all",
+  "agents.actions.keepPausedOnResumeAll": "Keep paused on resume",
+  "agents.actions.unpauseOnResumeAll": "Unpause on resume",
+  "agents.actions.removeAllVenvs": "Remove all agent venvs",
+  "agents.actions.pauseAll.requested": "Pausing all agents has been requested",
+  "agents.actions.resumeAll.requested": "Resuming all agents has been requested",
+  "agents.actions.keepPausedOnResumeAll.requested":
+    "Keep paused on resume has been requested for all agents",
+  "agents.actions.unpauseOnResumeAll.requested":
+    "Unpause on resume has been requested for all agents",
+  "agents.actions.removeAllVenvs.requested": "Removal of all agent venvs has been requested",
+  "agents.actions.removeAllVenvs.modal.title": "Remove all agent venvs",
+  "agents.actions.removeAllVenvs.confirmation.p1":
+    "This will remove the virtual environments (venvs) of all agents.",
+  "agents.actions.removeAllVenvs.confirmation.p2":
+    "This action is asynchronous and might take a long time until the venvs are actually removed, because all executing agent operations will be allowed to finish first.",
+  "agents.actions.removeAllVenvs.confirmation.p3":
+    "As such, a long deploy operation might delay the removal of the venvs considerably.",
   "agents.filters.status.placeholder": "Select status...",
   "agents.filters.name.placeholder": "Filter by name",
   "agents.filters.processName.placeholder": "Filter by process name",
   "agent.tests.processName": "Process Name",
-  "agent.tests.status": "Status",
   "agent.tests.up": "up",
 
   /** Facts */
   "facts.title": "Facts",
   "facts.filters.name.placeholder": "Name...",
   "facts.filters.resourceId.placeholder": "Resource Id...",
-  "facts.column.name": "Name",
-  "facts.column.updated": "Updated",
-  "facts.column.value": "Value",
-  "facts.column.resourceId": "Resource Id",
   "facts.empty.message": "No facts found",
 
   /** Desired State */
   "desiredState.title": "Desired State",
-  "desiredState.details.title.tag": (version) => `Version: ${version}`,
   "desiredState.empty.message": "No desired state versions found",
-  "desiredState.columns.date": "Date",
-  "desiredState.columns.version": "Version",
-  "desiredState.columns.status": "Status",
   "desiredState.columns.resources": "Number of resources",
   "desiredState.columns.labels": "Labels",
-  "desiredState.actions.delete": "Delete",
   "desiredState.actions.showResources": "Show Resources",
   "desiredState.actions.promote": "Promote",
   "desiredState.actions.promote.failed": "Promoting desired state version failed",
   "desiredState.actions.promote.disabledTooltip": "Promoting this version is not allowed",
-  "desiredState.filters": "Filters",
-  "desiredState.filters.from": "From",
-  "desiredState.filters.to": "To",
   "desiredState.filters.status.placeholder": "Select status...",
   "desiredState.filters.version.placeholder": "Filter by version",
   "desiredState.filters.date.placeholder": "Filter by date",
 
   /** Desired State Details */
-  "desiredState.details.title": "Details",
   "desiredState.resourceDetails.title": "Resource Details",
   "desiredState.compare.title": "Compare",
   "desiredState.compare.action.compare": "Select for compare",
@@ -945,15 +1072,9 @@ const dict = {
   /** Parameters */
   "parameters.title": "Parameters",
   "parameters.empty.message": "No parameters found",
-  "parameters.columns.name": "Name",
-  "parameters.columns.updated": "Last Updated",
   "parameters.columns.source": "Source",
-  "parameters.columns.value": "Value",
   "parameters.filters.name.placeholder": "Filter by name",
   "parameters.filters.source.placeholder": "Filter by source",
-  "parameters.filters": "Filters",
-  "parameters.filters.from": "From",
-  "parameters.filters.to": "To",
 
   /**
    * Notification
@@ -969,7 +1090,6 @@ const dict = {
   "notification.drawer.showAll": "Show all notifications",
   "notification.drawer.readAll": "Mark all as read",
   "notification.drawer.clearAll": "Clear all",
-  "notification.drawer.details": "Details",
   "notification.drawer.clear": "Clear",
   "notification.instanceForm.prompt":
     "Are you sure you want to leave this page? You have unsaved changes",
@@ -978,11 +1098,8 @@ const dict = {
    * Banners
    */
   "banner.expertMode": "LSM expert mode is enabled, proceed with caution. ",
-  "banner.updateBanner": (currentVersion: string) =>
-    `You are running ${currentVersion}, a new version is available! Please hard-reload (Ctrl+F5 | Cmd + Shift + R) your page to load the new version.`,
-  "banner.entitlement.expired": (days: number) => `Your license has expired ${days} days ago!`,
-  "banner.certificate.expired": (days: number) => `Your license has expired ${days} days ago!`,
   "banner.certificate.will.expire": (days: number) => `Your license will expire in ${days} days.`,
+  "banner.license.expired": (days: number) => `Your license has expired ${days} days ago!`,
   "banner.disableExpertMode": "Disable expert mode",
 
   /**
@@ -1021,7 +1138,6 @@ const dict = {
    * User Management
    */
   "userManagement.title": "User Management",
-  "userManagement.name": "Name",
   "userManagement.changePassword": "Change Password",
   "userManagement.changePassword.placeholder": "New Password...",
   "userManagement.changePassword.currentPassword": "Current Password",
@@ -1029,7 +1145,6 @@ const dict = {
   "userManagement.changePassword.success": "Password changed successfully",
   "userManagement.changePassword.message": (username: string) =>
     `Please provide a new password for user ${username}`,
-  "userManagement.actions": "Actions",
   "userManagement.filter.placeholder": "Username...",
   "userManagement.addUser": "Add User",
   "userManagement.deleteUser.title": "Delete User",
@@ -1079,6 +1194,8 @@ const dict = {
   "filters.timestamp.to.timePicker": "To Time Picker",
   "filters.timestamp.from.apply": "Apply date from filter",
   "filters.timestamp.to.apply": "Apply date to filter",
+  "filters.from": "From",
+  "filters.to": "To",
   "filters.range.from.input": (label: string) => `${label} range from`,
   "filters.range.to.input": (label: string) => `${label} range to`,
   "filters.range.from.apply": (label: string) => `Apply ${label} from filter`,
@@ -1094,6 +1211,30 @@ const dict = {
   "logViewer.autoscroll.pause": "Pause Autoscroll",
   "logViewer.download": "Download",
   "logViewer.download.aria": "Download current logs",
+
+  /**
+   * UnitInputField (issue #7022 / #7131)
+   */
+  "unitInput.unitSelect.ariaLabel": "Unit",
+  "unitInput.durationUnit.ns": "nanoseconds",
+  "unitInput.durationUnit.us": "microseconds",
+  "unitInput.durationUnit.ms": "milliseconds",
+  "unitInput.durationUnit.s": "seconds",
+  "unitInput.durationUnit.min": "minutes",
+  "unitInput.durationUnit.h": "hours",
+  "unitInput.durationUnit.d": "days",
+  "unitInput.helper.stored": (value: string, unit: string) => `= ${value} ${unit}`,
+  "unitInput.helper.equivalent": (value: string, unit: string, family: string) =>
+    `≈ ${value} ${unit} (${family})`,
+  "unitInput.error.notANumber": "Enter a number.",
+  "unitInput.error.notExact": (entered: string, unit: string, apiValue: string, apiUnit: string) =>
+    `Must be a whole number of ${apiUnit} (${entered} ${unit} = ${apiValue} ${apiUnit}).`,
+  "unitInput.error.bound.ge": (limit: string, unit: string) => `Must be at least ${limit} ${unit}.`,
+  "unitInput.error.bound.gt": (limit: string, unit: string) =>
+    `Must be more than ${limit} ${unit}.`,
+  "unitInput.error.bound.le": (limit: string, unit: string) => `Must be at most ${limit} ${unit}.`,
+  "unitInput.error.bound.lt": (limit: string, unit: string) =>
+    `Must be less than ${limit} ${unit}.`,
 };
 
 type Key = keyof typeof dict;

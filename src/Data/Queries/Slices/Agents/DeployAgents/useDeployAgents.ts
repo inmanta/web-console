@@ -4,30 +4,30 @@ import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 
 /**
+ * Deploy (incremental) or repair (full) action. The value is the scheduler's agent_trigger_method
+ */
+export enum DeployAgentsAction {
+  deploy = "push_incremental_deploy",
+  repair = "push_full_deploy",
+}
+
+/**
  * Interface representing the request body for agent deployment
  */
 interface Body {
-  agent_trigger_method: string;
+  agent_trigger_method: DeployAgentsAction;
   agents?: string[];
 }
 
 /**
  * Parameters for the useDeployAgents mutation function
- * @property {string} method - The deployment method, either "Deploy" for incremental deployment or "Repair" for full deployment
+ * @property {DeployAgentsAction} method - Deploy (incremental) or repair (full)
  * @property {string[]} [agents] - Optional array of agent IDs to deploy or repair. If not provided, all agents will be affected
  */
 type Params = {
   method: DeployAgentsAction;
   agents?: string[];
 };
-
-/**
- * Enum that represents the different kinds of actions for method to dpely agents.
- */
-export enum DeployAgentsAction {
-  deploy = "Deploy",
-  repair = "Repair",
-}
 
 /**
  * React Query hook for repairing or deploying Agents
@@ -44,7 +44,7 @@ export const useDeployAgents = (
   return useMutation({
     mutationFn: ({ method, agents }) =>
       post("/api/v1/deploy", {
-        agent_trigger_method: method === "Deploy" ? "push_incremental_deploy" : "push_full_deploy",
+        agent_trigger_method: method,
         agents: agents,
       }),
     mutationKey: ["deploy_agents", env],

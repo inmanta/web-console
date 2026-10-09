@@ -1,6 +1,7 @@
 import React from "react";
 import { Flex, FlexItem, NumberInput } from "@patternfly/react-core";
 import { EnvironmentSettings } from "@/Core";
+import { preventNumberInputScroll } from "@/UI/Utils";
 import { Warning } from "./Warning";
 
 interface Props {
@@ -24,6 +25,7 @@ export const IntInput: React.FC<Props> = ({ info }) => {
           onPlus={onPlus}
           inputName="input"
           inputAriaLabel="number input"
+          inputProps={{ onWheel: preventNumberInputScroll }}
           minusBtnAriaLabel="minus"
           plusBtnAriaLabel="plus"
           widthChars={10}

@@ -1,7 +1,8 @@
 import React from "react";
-import { Icon, Spinner } from "@patternfly/react-core";
+import { Icon } from "@patternfly/react-core";
 import { CheckCircleIcon, ExclamationCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
+import { Spinner } from "../Spinner";
 import { Timestamp } from "./Timestamp";
 
 interface FrameProps {
@@ -26,7 +27,7 @@ export const Frame: React.FC<FrameProps> = ({ started, completed, success }) => 
     </Icon>
   );
 
-  const LoadingState = () => <Spinner aria-label="loading-state" role="img" size="lg" />;
+  const LoadingState = () => <Spinner aria-label="loading-state" role="img" size={24} />;
 
   const ErrorState = () => (
     <Icon aria-label="error-state" role="img" size="lg" status="danger">

@@ -8,7 +8,6 @@ import {
   FormSelectOption,
   TextArea,
   Content,
-  Spinner,
   Button,
   Flex,
   FlexItem,
@@ -16,7 +15,7 @@ import {
 import { ParsedNumber } from "@/Core";
 import { usePostExpertStateTransfer } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
-import { AppAlert } from "@/UI/Components";
+import { AppAlert, Spinner } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
@@ -206,10 +205,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
             ))}
           </FormSelect>
         </FormGroup>
-        <FormGroup
-          label={words("instanceDetails.stateTransfer.messageLabel")}
-          fieldId="expert-state-transfer-message"
-        >
+        <FormGroup label={words("message")} fieldId="expert-state-transfer-message">
           <TextArea
             id="expert-state-transfer-message"
             value={message}
@@ -232,7 +228,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
             isDisabled={isPending}
           >
             {words("yes")}
-            {isPending && <Spinner size="sm" />}
+            {isPending && <Spinner />}
           </Button>
         </FlexItem>
         <FlexItem>

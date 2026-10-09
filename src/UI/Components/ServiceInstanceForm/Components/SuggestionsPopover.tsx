@@ -1,7 +1,17 @@
 import React, { useEffect, forwardRef } from "react";
-import { Menu, MenuContent, MenuGroup, MenuItem, MenuList, Popper } from "@patternfly/react-core";
-import styled from "styled-components";
+import {
+  Menu,
+  MenuContent,
+  MenuFooter,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+  Popper,
+} from "@patternfly/react-core";
 import { SuggestionValue } from "@/Core";
+import { words } from "@/UI/words";
+
+export const MAX_VISIBLE_SUGGESTIONS = 50;
 
 interface Props {
   suggestions: SuggestionValue[];
@@ -9,6 +19,9 @@ interface Props {
   handleSuggestionClick: (value: string) => void;
   isOpen: boolean;
   close: () => void;
+  maxVisible?: number;
+  menuRef?: React.RefObject<HTMLDivElement | null>;
+  onMenuBlur?: (event: React.FocusEvent<HTMLElement>) => void;
 }
 
 /**
@@ -32,11 +45,26 @@ interface Props {
  * @param {string} props.filter - The filter string matched against each suggestion's `label`.
  * @param {Function} props.close - Callback to close the popover (selection, click-outside, keyboard dismiss).
  * @param {boolean} props.isOpen - The current open state of the popover.
+ * @param {number} [props.maxVisible] - How many matches to render at once (defaults to {@link MAX_VISIBLE_SUGGESTIONS}). Extra matches are hidden behind the "more results" footer.
+ * @param {React.RefObject<HTMLDivElement | null>} [props.menuRef] - Optional ref to the suggestions menu, so the field can tell when focus moves into it.
+ * @param {Function} [props.onMenuBlur] - Optional callback for when focus leaves a menu item, so the field can react when focus leaves it from the menu.
  * @param {React.RefObject<NonNullable<HTMLInputElement>>} props.ref - The ref for the input element.
  * @returns {React.FC} The rendered SuggestionsPopover component.
  */
 export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Props>(
-  ({ suggestions, handleSuggestionClick, filter, close, isOpen }, ref) => {
+  (
+    {
+      suggestions,
+      handleSuggestionClick,
+      filter,
+      close,
+      isOpen,
+      maxVisible = MAX_VISIBLE_SUGGESTIONS,
+      menuRef,
+      onMenuBlur,
+    },
+    ref
+  ) => {
     if (!ref) {
       throw new Error("You need to define a ref for the SuggestionsPopover component.");
     }
@@ -44,11 +72,14 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
     const reference = ref as React.RefObject<NonNullable<HTMLInputElement>>;
     const parentCurrent = reference?.current;
 
-    const autocompleteRef = React.useRef<HTMLDivElement>(null);
+    const ownRef = React.useRef<HTMLDivElement>(null);
+    const autocompleteRef = menuRef ?? ownRef;
 
     const autocompleteOptions = suggestions.filter((suggestion) =>
       suggestion.label.toLowerCase().includes(filter.toLowerCase())
     );
+    const visibleOptions = autocompleteOptions.slice(0, maxVisible);
+    const hasMore = autocompleteOptions.length > visibleOptions.length;
 
     /**
      * Handles the suggestion click event.
@@ -63,6 +94,9 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
     ) => {
       event.stopPropagation();
       handleSuggestionClick(suggestion.value);
+      // Return focus to the input the list was opened from, so tab navigation
+      // continues from that field instead of resetting to the top of the page.
+      reference.current?.focus();
       close();
     };
 
@@ -140,11 +174,17 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
     };
 
     const autoCompleteSuggestions = (
-      <Menu ref={autocompleteRef}>
+      <Menu
+        ref={autocompleteRef}
+        isScrollable
+        // Keep focus on the input while clicking a suggestion, so the field doesn't see a blur.
+        onMouseDown={(event) => event.preventDefault()}
+        onBlur={onMenuBlur}
+      >
         <MenuContent>
-          <StyledMenu label="Suggested values" labelHeadingLevel="h3">
+          <MenuGroup label="Suggested values" labelHeadingLevel="h3">
             <MenuList>
-              {autocompleteOptions.map((suggestion) => (
+              {visibleOptions.map((suggestion) => (
                 <MenuItem
                   aria-label={suggestion.label}
                   key={`${suggestion.label}::${suggestion.value}`}
@@ -154,8 +194,16 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
                 </MenuItem>
               ))}
             </MenuList>
-          </StyledMenu>
+          </MenuGroup>
         </MenuContent>
+        {hasMore && (
+          <MenuFooter role="status" aria-live="polite">
+            {words("inventory.form.suggestions.moreResults")(
+              visibleOptions.length,
+              autocompleteOptions.length
+            )}
+          </MenuFooter>
+        )}
       </Menu>
     );
 
@@ -181,8 +229,3 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
     );
   }
 );
-
-const StyledMenu = styled(MenuGroup)`
-  max-height: 400px;
-  overflow-y: auto;
-`;

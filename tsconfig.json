@@ -68,7 +68,6 @@
       "target": "ES2020",
       "esModuleInterop": true,
       "types": [
-        "cypress-file-upload",
         "vitest",
         "jsdom"
       ]

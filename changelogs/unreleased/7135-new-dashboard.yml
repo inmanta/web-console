@@ -1,0 +1,6 @@
+description: Replacing the dashboard that provides better insights into the system's performance and status.
+issue-nr: 7135
+change-type: minor
+destination-branches: [master]
+sections:
+  feature: "{{description}}"

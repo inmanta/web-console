@@ -1,17 +1,9 @@
 import React, { useCallback, useContext, useState } from "react";
-import {
-  Content,
-  Button,
-  Spinner,
-  Flex,
-  FlexItem,
-  Form,
-  FormGroup,
-  TextArea,
-} from "@patternfly/react-core";
+import { Content, Button, Flex, FlexItem, Form, FormGroup, TextArea } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
+import { Spinner } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
@@ -22,6 +14,9 @@ export interface StateTransferModalContentProps {
   instance_display_identity: string;
   version: ParsedNumber;
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
+
+  /** Custom confirmation prompt from the transfer's `web_confirm` annotation. Falls back to the default confirmation text when absent. */
+  webConfirm?: string;
 }
 
 /**
@@ -34,6 +29,7 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
   instance_display_identity,
   version,
   setInterfaceBlocked,
+  webConfirm,
 }) => {
   const { authHelper } = useContext(DependencyContext);
   const username = authHelper.getUser();
@@ -79,13 +75,11 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
   return (
     <>
       <Content component="p">
-        {words("inventory.statustab.confirmMessage")(instance_display_identity, targetState)}
+        {webConfirm ??
+          words("inventory.statustab.confirmMessage")(instance_display_identity, targetState)}
       </Content>
       <Form>
-        <FormGroup
-          label={words("instanceDetails.stateTransfer.messageLabel")}
-          fieldId="state-transfer-message"
-        >
+        <FormGroup label={words("message")} fieldId="state-transfer-message">
           <TextArea
             id="state-transfer-message"
             value={message}
@@ -106,7 +100,7 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
             isDisabled={isPending}
           >
             {words("yes")}
-            {isPending && <Spinner size="sm" />}
+            {isPending && <Spinner />}
           </Button>
         </FlexItem>
         <FlexItem>

@@ -180,6 +180,9 @@ describe("EnvironmentSettings", () => {
     expect(await screen.findByTestId("repo_branch-value")).toBeVisible();
     expect(await screen.findByTestId("repo_url-value")).toBeVisible();
 
+    expect(screen.getByRole("button", { name: "More info for Repo Url field" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "More info for Repo Branch field" })).toBeVisible();
+
     await userEvent.click(screen.getByRole("button", { name: "Repository Settings-toggle-edit" }));
 
     expect(await screen.findByRole("textbox", { name: "repo_branch-input" })).toBeVisible();

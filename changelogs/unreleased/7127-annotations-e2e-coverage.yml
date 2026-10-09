@@ -1,0 +1,5 @@
+description: Added end-to-end test coverage for the annotation-driven service instance form (label/value suggestions, parameter and graphql flavors, cascading fields, form tabs, unit inputs, and model-error cases) using the suggestions-showcase-service.
+issue-nr: 7127
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

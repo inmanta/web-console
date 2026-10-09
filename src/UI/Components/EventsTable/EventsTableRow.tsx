@@ -61,7 +61,7 @@ export const EventsTableRow: React.FC<Props> = ({
         <ExpandableRowContent>
           <DescriptionList>
             <DescriptionListGroup>
-              <DescriptionListTerm>{words("events.column.message")}</DescriptionListTerm>
+              <DescriptionListTerm>{words("message")}</DescriptionListTerm>
               <DescriptionListDescription>{row.message}</DescriptionListDescription>
             </DescriptionListGroup>
             <DescriptionListGroup>

@@ -10,9 +10,10 @@ import {
   Divider,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Maybe, Resource } from "@/Core";
+import { Resource } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { Classification, Item, Refs } from "@/UI/Components/DiffWizard/types";
+import { ResourceLink } from "@/UI/Components/ResourceLink";
 import { words } from "@/UI/words";
 import { Entry } from "./Entry/Entry";
 
@@ -51,7 +52,7 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
         >
           <CardTitle id={item.id}>
             <StatusDescriptor status={item.status} />
-            {item.id}
+            <ResourceLink resourceId={item.id} isInline />
           </CardTitle>
         </CardHeader>
         <CardExpandableContent>
@@ -81,7 +82,7 @@ const Body: React.FC<{ item: Item; classify?: Classify }> = ({ item, classify })
     case "unmodified":
       return <BodyWithMessage message={words("desiredState.compare.unmodified")} />;
     case "agent_down": {
-      const agent = Maybe.withFallback(Resource.IdParser.getAgentName(item.id), "???");
+      const agent = Resource.IdParser.getAgentName(item.id) ?? "???";
 
       return <BodyWithMessage message={words("desiredState.compare.agent_down")(agent)} />;
     }

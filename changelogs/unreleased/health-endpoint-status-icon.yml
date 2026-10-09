@@ -1,0 +1,6 @@
+description: Poll /api/v2/health to show the header status icon as red when it reports an unhealthy server.
+issue-nr: 7026
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

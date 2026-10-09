@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Drawer, DrawerContent, DrawerContentBody, Stack, StackItem } from "@patternfly/react-core";
+import { Stack, StackItem } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Queries";
@@ -9,6 +9,7 @@ import {
   PageContainer,
   ConfirmUserActionForm,
   EmptyView,
+  FilterDrawer,
   LoadingView,
   ErrorView,
   PaginationWidget,
@@ -39,9 +40,7 @@ export const Page: React.FC = () => {
 
   const filterWithDefaults = useMemo(() => applyFilterDefaults(filter), [filter]);
 
-  const [compareSelection, setCompareSelection] = useState<CompareSelection>({
-    kind: "None",
-  });
+  const [compareSelection, setCompareSelection] = useState<CompareSelection>(undefined);
 
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
 
@@ -110,7 +109,7 @@ export const Page: React.FC = () => {
     return (
       <PageContainer
         pageTitle={words("desiredState.title")}
-        style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+        style={{ display: "flex", flexDirection: "column" }}
       >
         <GetDesiredStatesContext.Provider
           value={{
@@ -135,35 +134,23 @@ export const Page: React.FC = () => {
             isDrawerExpanded={isDrawerExpanded}
             activeFilterCount={activeFilterCount}
           />
-          <Drawer
+          <FilterDrawer
             isExpanded={isDrawerExpanded}
-            isInline
-            style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+            panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
           >
-            <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
-              <DrawerContentBody
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  flex: "1 1 auto",
-                  minHeight: 0,
-                }}
-              >
-                {data.data.length <= 0 ? (
-                  <EmptyView
-                    message={words("desiredState.empty.message")}
-                    aria-label="DesiredStatesView-Empty"
-                  />
-                ) : (
-                  <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
-                    <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
-                      <DesiredStatesTable rows={data.data} aria-label="DesiredStatesView-Success" />
-                    </StackItem>
-                  </Stack>
-                )}
-              </DrawerContentBody>
-            </DrawerContent>
-          </Drawer>
+            {data.data.length <= 0 ? (
+              <EmptyView
+                message={words("desiredState.empty.message")}
+                aria-label="DesiredStatesView-Empty"
+              />
+            ) : (
+              <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+                <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                  <DesiredStatesTable rows={data.data} aria-label="DesiredStatesView-Success" />
+                </StackItem>
+              </Stack>
+            )}
+          </FilterDrawer>
         </GetDesiredStatesContext.Provider>
       </PageContainer>
     );

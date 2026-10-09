@@ -71,13 +71,14 @@ export const OrderDetailsRow: React.FC<Props> = ({
         <Td width={20} dataLabel={words("orders.column.action")}>
           {row.action.toUpperCase()}
         </Td>
-        <Td style={{ width: "50px" }} dataLabel={words("orders.column.status")}>
+        <Td style={{ width: "50px" }} dataLabel={words("status")}>
           <OrderStatusLabel status={row.status.state} />
         </Td>
       </Tr>
       {isExpanded && (
         <Tr aria-label="Expanded-Discovered-Row" isExpanded={isExpanded}>
-          <Td colSpan={numberOfColumns}>
+          <Td />
+          <Td colSpan={numberOfColumns - 1}>
             <PaddedDescriptionList
               isFillColumns
               isHorizontal
@@ -86,7 +87,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
               }}
             >
               <TopAlignedLayout aria-label="Expanded-Details">
-                <DescriptionListTerm>{words("orders.row.details")}</DescriptionListTerm>
+                <DescriptionListTerm>{words("details")}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <OrderStateDetails state={row.status} />
                 </DescriptionListDescription>
@@ -109,7 +110,6 @@ export const OrderDetailsRow: React.FC<Props> = ({
                       code={jsonFormatter.format(row.config)}
                       rawValue={JSON.stringify(row.config)}
                       language={Language.json}
-                      height="400px"
                     />
                   ) : (
                     <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
@@ -126,7 +126,6 @@ export const OrderDetailsRow: React.FC<Props> = ({
                       code={jsonFormatter.format(row.attributes || row.edits)}
                       rawValue={JSON.stringify(row.attributes || row.edits)}
                       language={Language.json}
-                      height="400px"
                     />
                   </DescriptionListDescription>
                 </TopAlignedLayout>

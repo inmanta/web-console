@@ -6,8 +6,10 @@ import {
   Field,
   InterServiceRelation,
   RelationAttribute,
+  UnitField,
 } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
+import { resolveUnitField } from "@/UI/Components/UnitInput";
 import { ModifierHandler } from "./ModifierHandler";
 
 /**
@@ -102,6 +104,7 @@ export class FieldCreator {
         fields: [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities, ...fieldsFromRelations],
         min: entity.lower_limit,
         max: entity.upper_limit,
+        keyAttributes: entity.key_attributes ?? [],
         isDisabled: this.shouldFieldBeDisabled(entity),
         tab,
       };
@@ -178,6 +181,12 @@ export class FieldCreator {
       attribute.default_value_set,
       attribute.default_value
     );
+
+    const unitField = this.tryCreateUnitField(attribute, defaultValue);
+
+    if (unitField) {
+      return unitField;
+    }
 
     if (type === "bool") {
       return {
@@ -262,6 +271,38 @@ export class FieldCreator {
       isOptional: this.isTextFieldOptional(attribute),
       isDisabled: this.shouldFieldBeDisabled(attribute),
       suggestion: attribute.attribute_annotations?.web_suggested_values || null,
+    };
+  }
+
+  /**
+   * `web_presentation: "unit"` opt-in (issue #7022). Returns `null` — never throws — for anything
+   * that isn't opted in, or that fails to resolve (unrecognized `web_unit`, non-numeric type):
+   * the caller falls through to the normal Text/Textarea/etc. branches, and a `console.warn` is
+   * the only signal, per the spec's "the form never breaks on a bad annotation" contract.
+   */
+  private tryCreateUnitField(attribute: AttributeModel, defaultValue: unknown): UnitField | null {
+    const resolved = resolveUnitField(attribute);
+
+    if (!resolved) {
+      return null;
+    }
+
+    if (!resolved.ok) {
+      console.warn(`${resolved.reason} Falling back to a plain field.`);
+
+      return null;
+    }
+
+    return {
+      kind: "Unit",
+      name: attribute.name,
+      defaultValue,
+      description: attribute.description,
+      type: attribute.type,
+      isOptional: this.isTextFieldOptional(attribute),
+      isDisabled: this.shouldFieldBeDisabled(attribute),
+      config: resolved.config,
+      bounds: resolved.bounds,
     };
   }
 

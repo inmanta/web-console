@@ -21,17 +21,3 @@ export interface CompileStageReport {
   outstream: string;
   returncode?: ParsedNumber | null;
 }
-
-export interface CompileStageReportRow {
-  id: string;
-  started: string;
-  completed?: string;
-  shortCommand: string;
-  command: string;
-  name: string;
-  startDelay: string;
-  duration?: string;
-  errstream: string;
-  outstream: string;
-  returncode?: ParsedNumber | null;
-}

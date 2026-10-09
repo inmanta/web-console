@@ -1,0 +1,6 @@
+description: An `api_set_state` transfer flagged `web_advanced_state` now collapses out of the primary Actions-dropdown list into a secondary "Advanced" disclosure, one click away, instead of always showing in the main Set-state group.
+issue-nr: 7095
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

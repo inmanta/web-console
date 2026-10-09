@@ -5,11 +5,12 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { graphql, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { PageInfo } from "@/Data/Queries";
+import { PageInfo, mapStatusToGraphQLFilter } from "@/Data/Queries";
 import { response } from "@/Slices/Agents";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
 import { createMockResourceSummary } from "@/Test/Data/Resource";
 import { words } from "@/UI";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
 
@@ -31,6 +32,7 @@ interface GqlVariables {
     resourceIdValue?: { contains?: string[] };
     isOrphan?: boolean;
     isDeploying?: boolean;
+    compliance?: { eq?: string[]; neq?: string[] };
   };
   first?: number;
   after?: string;
@@ -117,7 +119,9 @@ function setup(entries?: string[], halted = false) {
       <QueryClientProvider client={client}>
         <TestMemoryRouter initialEntries={entries}>
           <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
-            <Page />
+            <ModalProvider>
+              <Page />
+            </ModalProvider>
           </MockedDependencyProvider>
         </TestMemoryRouter>
       </QueryClientProvider>
@@ -137,11 +141,27 @@ async function openFiltersDrawer() {
   }
 }
 
+// Applies a Resource-tab filter by placeholder. The agent field is a typeahead, so free-text
+// values (agents not in the catalog) are entered through its text-input toggle; type and value are
+// plain text inputs.
+async function applyResourceFilter(placeholderText: string, value: string) {
+  if (placeholderText === words("resources.filters.resource.agent.placeholder")) {
+    await userEvent.click(
+      within(screen.getByRole("tabpanel")).getByRole("button", {
+        name: words("resources.filters.resource.agent.selectInfoLabel"),
+      })
+    );
+  }
+
+  const input = await screen.findByPlaceholderText(placeholderText);
+  await userEvent.type(input, `${value}{enter}`);
+}
+
 async function openStatusFiltersTab() {
   await openFiltersDrawer();
 
   const statusTab = await screen.findByRole("tab", {
-    name: words("resources.filters.tabs.status"),
+    name: words("status"),
   });
   await userEvent.click(statusTab);
 }
@@ -254,15 +274,9 @@ describe("ResourcesPage", () => {
 
     const table = await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    expect(
-      within(table).getByRole("button", { name: words("resources.column.type") })
-    ).toBeVisible();
-    expect(
-      within(table).getByRole("button", { name: words("resources.column.agent") })
-    ).toBeVisible();
-    expect(
-      within(table).getByRole("button", { name: words("resources.column.value") })
-    ).toBeVisible();
+    expect(within(table).getByRole("button", { name: words("type") })).toBeVisible();
+    expect(within(table).getByRole("button", { name: words("agent") })).toBeVisible();
+    expect(within(table).getByRole("button", { name: words("value") })).toBeVisible();
     expect(within(table).getByRole("button", { name: "Sort by status fields" })).toBeVisible();
 
     await act(async () => {
@@ -371,10 +385,7 @@ describe("ResourcesPage", () => {
 
     await openFiltersDrawer();
 
-    const agentInput = await screen.findByPlaceholderText(
-      words("resources.filters.resource.agent.placeholder")
-    );
-    await userEvent.type(agentInput, "agent2{enter}");
+    await applyResourceFilter(words("resources.filters.resource.agent.placeholder"), "agent2");
 
     const rowsAfterAgentFilter = await screen.findAllByLabelText("Resource Table Row");
     expect(rowsAfterAgentFilter).toHaveLength(3);
@@ -415,8 +426,7 @@ describe("ResourcesPage", () => {
 
       await openFiltersDrawer();
 
-      const filterInput = await screen.findByPlaceholderText(placeholderText);
-      await userEvent.type(filterInput, `${filterValue}{enter}`);
+      await applyResourceFilter(placeholderText, filterValue);
 
       const rowsAfterFilter = await screen.findAllByLabelText("Resource Table Row");
       expect(rowsAfterFilter).toHaveLength(3);
@@ -471,10 +481,8 @@ describe("ResourcesPage", () => {
 
       await openFiltersDrawer();
 
-      const filterInputOne = await screen.findByPlaceholderText(placeholderTextOne);
-      await userEvent.type(filterInputOne, `${filterValueOne}{enter}`);
-      const filterInputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
-      await userEvent.type(filterInputTwo, `${filterValueTwo}{enter}`);
+      await applyResourceFilter(placeholderTextOne, filterValueOne);
+      await applyResourceFilter(placeholderTextTwo, filterValueTwo);
 
       const rowsAfterFiltering = await screen.findAllByLabelText("Resource Table Row");
       expect(rowsAfterFiltering).toHaveLength(3);
@@ -517,14 +525,8 @@ describe("ResourcesPage", () => {
 
     await openFiltersDrawer();
 
-    const agentInput = await screen.findByPlaceholderText(
-      words("resources.filters.resource.agent.placeholder")
-    );
-    await userEvent.type(agentInput, `${agentValue}{enter}`);
-    const typeInput = await screen.findByPlaceholderText(
-      words("resources.filters.resource.type.placeholder")
-    );
-    await userEvent.type(typeInput, `${typeValue}{enter}`);
+    await applyResourceFilter(words("resources.filters.resource.agent.placeholder"), agentValue);
+    await applyResourceFilter(words("resources.filters.resource.type.placeholder"), typeValue);
 
     const idInput = await screen.findByPlaceholderText(
       words("resources.filters.resource.value.placeholder")
@@ -635,17 +637,11 @@ describe("ResourcesPage", () => {
     // Default filter (orphaned excluded) counts as 1
     expect(screen.getByRole("button", { name: /^\d*\s*Filters$/ })).toHaveTextContent("1");
 
-    const agentInput = await screen.findByPlaceholderText(
-      words("resources.filters.resource.agent.placeholder")
-    );
-    await userEvent.type(agentInput, "agent2{enter}");
+    await applyResourceFilter(words("resources.filters.resource.agent.placeholder"), "agent2");
 
     expect(screen.getByRole("button", { name: /^\d*\s*Filters$/ })).toHaveTextContent("2");
 
-    const typeInput = await screen.findByPlaceholderText(
-      words("resources.filters.resource.type.placeholder")
-    );
-    await userEvent.type(typeInput, "std::File{enter}");
+    await applyResourceFilter(words("resources.filters.resource.type.placeholder"), "std::File");
 
     expect(screen.getByRole("button", { name: /^\d*\s*Filters$/ })).toHaveTextContent("3");
   });
@@ -746,6 +742,42 @@ describe("ResourcesPage", () => {
     await waitFor(() => expect(lastVariables?.filter?.isDeploying).toBeUndefined());
   });
 
+  test("clicking a summary bar segment toggles its status filter on and off", async () => {
+    let lastVariables: GqlVariables | undefined;
+
+    server.use(
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
+        lastVariables = variables;
+
+        return HttpResponse.json({ data: gqlFull });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
+
+    const getSegment = () => screen.getByRole("button", { name: "LegendItem-compliant" });
+
+    expect(getSegment()).toHaveAttribute("aria-pressed", "false");
+
+    // First click adds the compliant filter and marks the segment
+    await userEvent.click(getSegment());
+    await waitFor(() =>
+      expect(lastVariables?.filter?.compliance).toEqual(
+        mapStatusToGraphQLFilter(["compliant"]).compliance
+      )
+    );
+    expect(getSegment()).toHaveAttribute("aria-pressed", "true");
+
+    // Second click removes it again
+    await userEvent.click(getSegment());
+    await waitFor(() => expect(lastVariables?.filter?.compliance).toBeUndefined());
+    expect(getSegment()).toHaveAttribute("aria-pressed", "false");
+  });
+
   test("deploying label is not clickable when nothing is deploying", async () => {
     server.use(
       queryLink.query("GetResources", () =>
@@ -794,7 +826,7 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    const compliantLegendItem = screen.getByRole("generic", { name: "LegendItem-compliant" });
+    const compliantLegendItem = screen.getByRole("button", { name: "LegendItem-compliant" });
     expect(compliantLegendItem).toHaveAttribute("data-value", "3");
 
     const nextPageButton = screen.getAllByRole("button", { name: "Go to next page" })[0];
@@ -805,20 +837,20 @@ describe("ResourcesPage", () => {
     });
     expect(legendBars[0]).toBeVisible();
 
-    const repairButton = screen.getByRole("button", {
-      name: words("resources.compoundStateSummary.repair"),
-    });
-    expect(repairButton).toBeVisible();
-
     const deployButton = screen.getByRole("button", {
       name: words("resources.compoundStateSummary.deploy"),
     });
     expect(deployButton).toBeVisible();
 
+    const deployToggle = screen.getByRole("button", {
+      name: words("resources.resourceActions.toggle"),
+    });
+    expect(deployToggle).toBeVisible();
+
     expect(screen.getByRole("navigation", { name: "top-Pagination" })).toBeVisible();
     expect(screen.getByRole("navigation", { name: "bottom-Pagination" })).toBeInTheDocument();
 
-    const compliantLegendItemAfterActions = await screen.findByRole("generic", {
+    const compliantLegendItemAfterActions = await screen.findByRole("button", {
       name: "LegendItem-compliant",
     });
     expect(compliantLegendItemAfterActions).toHaveAttribute("data-value", "4");
@@ -847,7 +879,7 @@ describe("ResourcesPage", () => {
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
     const complianceLegendBar = screen.getByTestId("legend-bar-compliance");
-    const compliantLegendItem = within(complianceLegendBar).getByRole("generic", {
+    const compliantLegendItem = within(complianceLegendBar).getByRole("button", {
       name: "LegendItem-compliant",
     });
     expect(compliantLegendItem).toHaveAttribute("data-value", "3");
@@ -868,15 +900,17 @@ describe("ResourcesPage", () => {
     });
   });
 
-  // --- Deploy / Repair buttons ---
+  // --- Deploy actions ---
 
-  test("deploy button fires correct request", async () => {
+  test("deploy confirms against the filtered scope and fires a filtered deploy", async () => {
     let body: unknown = {};
 
     server.use(
       queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })),
-      http.post("/api/v1/deploy", async ({ request }) => {
+      http.post("/api/v2/deploy_filtered", async ({ request }) => {
         body = await request.json();
+
+        return HttpResponse.json({});
       })
     );
 
@@ -886,14 +920,21 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    const deployButton = await screen.findByRole("button", {
-      name: words("resources.compoundStateSummary.deploy"),
-    });
-    await userEvent.click(deployButton);
+    await userEvent.click(
+      screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+    );
 
-    expect(deployButton).toBeDisabled();
-    expect(screen.getByTestId("dot-indication")).toBeInTheDocument();
-    expect(body).toEqual({ agent_trigger_method: "push_incremental_deploy" });
+    const dialog = await screen.findByRole("dialog");
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+    );
+
+    await waitFor(() =>
+      expect(body).toEqual({
+        filter: { isOrphan: false },
+        agent_trigger_method: "push_incremental_deploy",
+      })
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -901,13 +942,15 @@ describe("ResourcesPage", () => {
     });
   });
 
-  test("repair button fires correct request", async () => {
+  test("repair from the menu confirms and fires a filtered full deploy", async () => {
     let body: unknown = {};
 
     server.use(
       queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })),
-      http.post("/api/v1/deploy", async ({ request }) => {
+      http.post("/api/v2/deploy_filtered", async ({ request }) => {
         body = await request.json();
+
+        return HttpResponse.json({});
       })
     );
 
@@ -917,13 +960,26 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    const repairButton = await screen.findByRole("button", {
-      name: words("resources.compoundStateSummary.repair"),
-    });
-    await userEvent.click(repairButton);
+    await userEvent.click(
+      screen.getByRole("button", { name: words("resources.resourceActions.toggle") })
+    );
+    await userEvent.click(
+      screen.getByRole("menuitem", {
+        name: new RegExp(words("resources.compoundStateSummary.repair"), "i"),
+      })
+    );
 
-    expect(repairButton).toBeDisabled();
-    expect(body).toEqual({ agent_trigger_method: "push_full_deploy" });
+    const dialog = await screen.findByRole("dialog");
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: words("resources.compoundStateSummary.repair") })
+    );
+
+    await waitFor(() =>
+      expect(body).toEqual({
+        filter: { isOrphan: false },
+        agent_trigger_method: "push_full_deploy",
+      })
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -931,7 +987,7 @@ describe("ResourcesPage", () => {
     });
   });
 
-  test("deploy and repair buttons are disabled when environment is halted", async () => {
+  test("deploy actions are disabled when environment is halted", async () => {
     server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })));
 
     const { component } = setup(undefined, true);
@@ -940,15 +996,12 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    const repairButton = screen.getByRole("button", {
-      name: words("resources.compoundStateSummary.repair"),
-    });
-    expect(repairButton).toBeDisabled();
-
-    const deployButton = await screen.findByRole("button", {
-      name: words("resources.compoundStateSummary.deploy"),
-    });
-    expect(deployButton).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+    ).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: words("resources.resourceActions.toggle") })
+    ).toBeDisabled();
 
     await act(async () => {
       const results = await axe(document.body);

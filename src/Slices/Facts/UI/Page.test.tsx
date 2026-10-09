@@ -98,7 +98,7 @@ describe("FactsPage", () => {
     render(component);
 
     const resourceIdButton = await screen.findByRole("button", {
-      name: words("facts.column.resourceId"),
+      name: words("resourceId"),
     });
 
     expect(resourceIdButton).toBeVisible();
@@ -138,6 +138,8 @@ describe("FactsPage", () => {
       render(component);
 
       expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(10);
+
+      await userEvent.click(screen.getByRole("button", { name: /Filters/, pressed: false }));
 
       const input = await screen.findByPlaceholderText(placeholderText);
 

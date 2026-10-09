@@ -6,16 +6,6 @@ import { ParsedNumber } from "@/Core/Language";
 export type InstanceAttributeModel = Record<string, unknown>;
 
 /**
- * Interface representing a patch field. This is meant to be used with V2 of the PATCH API.
- */
-export interface PatchField {
-  edit_id: string;
-  operation: string;
-  target: string;
-  value: InstanceAttributeModel | null;
-}
-
-/**
  * Interface representing the progress of a deployment.
  */
 export interface DeploymentProgress {
@@ -83,13 +73,11 @@ export interface FormAttributeResult {
 }
 
 /**
- * Interface representing a single, normalized suggestion.
+ * A single normalized suggestion: `label` is shown/searched, `value` is submitted. Both are
+ * always strings (a plain-string suggestion normalizes to `label === value`).
  *
- * This is the shape the form actually consumes: the `label` is shown to the user
- * and searched on, while the `value` is what gets submitted to the API. Both are
- * always strings - `normalizeSuggestions` coerces every raw entry (see
- * {@link RawFormSuggestion}) into this shape. A plain string suggestion
- * normalizes to a pair where `label === value`.
+ * @example
+ * { label: "10 Gbps", value: "10000" }
  */
 export interface SuggestionValue {
   label: string;
@@ -97,32 +85,58 @@ export interface SuggestionValue {
 }
 
 /**
- * A suggestion entry exactly as it arrives in `web_suggested_values` (or a
- * parameter's metadata), before normalization.
+ * A suggestion entry as it arrives in `web_suggested_values` (or parameter metadata), before
+ * normalization: a bare scalar or a `{ label, value }` pair, either as string or number.
  *
- * It can be a bare scalar or an explicit `{ label, value }` pair, and either
- * form may be a string or a number (numeric attributes). Every variant is
- * coerced to a string-only {@link SuggestionValue} by `normalizeSuggestions`
- * before the form uses it.
+ * @example
+ * "dot1q" // or { label: "10 Gbps", value: 10000 }
  */
 export type RawFormSuggestion =
   string | number | { label: string | number; value: string | number };
 
 /**
- * Interface representing the suggestions that are stored in the web_suggested_values.
+ * The `web_suggested_values` annotation. The active field depends on `type`: `values` for
+ * `literal`, `parameter_name` for `parameters`, `query` for `graphql`.
  *
- * `values` holds the raw entries (see {@link RawFormSuggestion}): each is a plain
- * scalar (label and value are identical) or a `{ label, value }` pair where the
- * displayed/searched label differs from the submitted value.
+ * @example
+ * { type: "parameters", parameter_name: "showcase_regions" }
  */
 export interface FormSuggestion {
   type: FormSuggestionType;
   values?: RawFormSuggestion[];
   parameter_name?: string;
+  query?: GraphQLSuggestionQuery;
 }
 
 /**
- * Type representing a form suggestion type.
- * Can be either "literal" or "parameters".
+ * Which suggestion flavor a field uses.
+ *
+ * @example
+ * "graphql" // one of "literal" | "parameters" | "graphql"
  */
-type FormSuggestionType = "literal" | "parameters";
+type FormSuggestionType = "literal" | "parameters" | "graphql";
+
+/**
+ * A value usable in a `graphql` suggestion filter: a scalar or `${...}` reference, a list, or
+ * a nested input object (so a filter can mirror any GraphQL filter input the author writes).
+ *
+ * @example
+ * { contains: ["%vm%"] } // or "${form.site}", 10, true, null
+ */
+export type GraphQLFilterValue =
+  string | number | boolean | null | GraphQLFilterValue[] | { [key: string]: GraphQLFilterValue };
+
+/**
+ * The live GraphQL query behind a `graphql` suggestion: `root` is the connection, `filter`
+ * narrows it (camelCase GraphQL fields), `label`/`value` are jsonpath projections into each
+ * node (value-only yields values, label + value yields labels mapped to values).
+ *
+ * @example
+ * { root: "environments", label: "$.name", value: "$.id" }
+ */
+export interface GraphQLSuggestionQuery {
+  root: string;
+  filter?: Record<string, GraphQLFilterValue>;
+  label?: string;
+  value: string;
+}

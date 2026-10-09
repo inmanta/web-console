@@ -1,8 +1,8 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { words } from "@/UI";
-import { instanceData } from "./mockData";
+import { instanceData, serviceModel } from "./mockData";
 import { defaultServer, serverFailedActions } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
 
@@ -33,6 +33,217 @@ describe("Page Actions - Success", () => {
   // Clean up after the tests are finished.
   afterAll(() => server.close());
 
+  it("Deploy actions - deploys the instance's resources through deploy_filtered", async () => {
+    let body: unknown;
+
+    server.use(
+      http.post("/api/v2/deploy_filtered", async ({ request }) => {
+        body = await request.json();
+
+        return HttpResponse.json({});
+      })
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    // The Deploy split button sits beside the Actions menu. It stays disabled until the service
+    // catalog settles, so the confirm dialog always offers the full scope set.
+    const deployButton = screen.getByRole("button", {
+      name: words("resources.compoundStateSummary.deploy"),
+    });
+    await waitFor(() => expect(deployButton).toBeEnabled());
+    await userEvent.click(deployButton);
+
+    const dialog = await screen.findByRole("dialog");
+
+    expect(
+      within(dialog).getByText(words("resources.resourceActions.confirm.instance.title"))
+    ).toBeVisible();
+
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+    );
+
+    await waitFor(() =>
+      expect(body).toEqual({
+        filter: { isOrphan: false, serviceInstance: [instanceData.id] },
+        agent_trigger_method: "push_incremental_deploy",
+      })
+    );
+  });
+
+  it("Deploy actions - offers the owned-services scope when the service type owns entities", async () => {
+    let body: unknown;
+
+    server.use(
+      http.get("/lsm/v1/service_catalog/mobileCore", () =>
+        HttpResponse.json({ data: { ...serviceModel, owned_entities: ["l2Connect"] } })
+      ),
+      http.post("/api/v2/deploy_filtered", async ({ request }) => {
+        body = await request.json();
+
+        return HttpResponse.json({});
+      })
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    const deployButton = screen.getByRole("button", {
+      name: words("resources.compoundStateSummary.deploy"),
+    });
+    await waitFor(() => expect(deployButton).toBeEnabled());
+    await userEvent.click(deployButton);
+
+    const dialog = await screen.findByRole("dialog");
+
+    // The catalog declares an owned entity, so the dialog offers the wider "owned services" scope.
+    await userEvent.click(
+      within(dialog).getByRole("radio", {
+        name: new RegExp(words("resources.resourceActions.confirm.owned.title"), "i"),
+      })
+    );
+
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+    );
+
+    await waitFor(() =>
+      expect(body).toEqual({
+        filter: { isOrphan: false, serviceInstance: [instanceData.id], includeOwned: true },
+        agent_trigger_method: "push_incremental_deploy",
+      })
+    );
+  });
+
+  it("Deploy actions - disables the split button when the instance explicitly has zero resources", async () => {
+    server.use(
+      http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", () =>
+        HttpResponse.json({
+          data: {
+            ...instanceData,
+            deployment_progress: { deployed: 0, waiting: 0, failed: 0, total: 0 },
+          },
+        })
+      )
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    // The service type owns nothing and the instance reports an explicit zero total, so there is
+    // genuinely nothing to act on.
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+      ).toBeDisabled()
+    );
+  });
+
+  it("Deploy actions - offers the instance scope without a count when deployment progress is unknown", async () => {
+    // deployment_progress null means the count is unknown, not that there are zero resources, so
+    // the action stays available and the dialog offers the instance scope with no count.
+    server.use(
+      http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", () =>
+        HttpResponse.json({ data: { ...instanceData, deployment_progress: null } })
+      )
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    const deployButton = screen.getByRole("button", {
+      name: words("resources.compoundStateSummary.deploy"),
+    });
+    await waitFor(() => expect(deployButton).toBeEnabled());
+    await userEvent.click(deployButton);
+
+    const dialog = await screen.findByRole("dialog");
+
+    expect(
+      within(dialog).getByRole("radio", {
+        name: new RegExp(words("resources.resourceActions.confirm.instance.title"), "i"),
+      })
+    ).toBeVisible();
+    // The total is unknown, so no "N resources" count line is shown.
+    expect(within(dialog).queryByText(/\d+ resource/i)).not.toBeInTheDocument();
+  });
+
+  it("Deploy actions - disables the split button when the service catalog fails to load", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog/mobileCore", () =>
+        HttpResponse.json({ message: "catalog unavailable" }, { status: 500 })
+      )
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    // Without the catalog the deploy scope can't be resolved, so the action is disabled rather than
+    // silently offering only the instance scope and hiding that a wider one might exist.
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+      ).toBeDisabled()
+    );
+  });
+
+  it("Deploy actions - disables the split button when the instance is deleted", async () => {
+    server.use(
+      http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", () =>
+        HttpResponse.json({ data: { ...instanceData, deleted: true } })
+      )
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    // The instance still has resources, but a deleted instance can't be deployed or repaired.
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+      ).toBeDisabled()
+    );
+  });
+
+  it("Deploy actions - keeps the split button disabled while the service catalog is loading", async () => {
+    // The catalog never answers, so serviceModelQuery stays pending for the whole test.
+    server.use(http.get("/lsm/v1/service_catalog/mobileCore", () => new Promise(() => {})));
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    // The scope set can't be built until the catalog settles, so the button stays disabled.
+    // (The happy path - it enables once the catalog is present - is covered by the deploy test above.)
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+      ).toBeDisabled()
+    );
+  });
+
   it("Expert actions - Force State", async () => {
     const component = setupServiceInstanceDetails(true);
 
@@ -53,8 +264,8 @@ describe("Page Actions - Success", () => {
 
     await userEvent.click(expertDropdown);
 
-    // expect 20 menu items (1 for the destroy action, and 19 others for state options)
-    expect(screen.getAllByRole("menuitem")).toHaveLength(20);
+    // expect 21 menu items (1 for the destroy action, and 20 others for state options)
+    expect(screen.getAllByRole("menuitem")).toHaveLength(21);
 
     const stateUp = screen.getByRole("menuitem", { name: "up" });
 
@@ -177,7 +388,7 @@ describe("Page Actions - Success", () => {
 
     const actions = screen.getAllByRole("menuitem");
 
-    expect(actions).toHaveLength(5);
+    expect(actions).toHaveLength(6);
 
     actions.forEach((action) => {
       expect(action).toBeEnabled();
@@ -186,10 +397,9 @@ describe("Page Actions - Success", () => {
     // delete instance
     await userEvent.click(actions[3]);
 
+    // the on_delete transfer carries a web_confirm annotation, which replaces the default prompt
     expect(
-      screen.getByText(
-        /are you sure you want to delete instance core1 of service entity mobilecore\?/i
-      )
+      screen.getByText(/delete this service and all its resources\? this cannot be undone\.?/i)
     ).toBeVisible();
 
     const confirmButton = screen.getByRole("button", {
@@ -235,14 +445,115 @@ describe("Page Actions - Success", () => {
       name: /yes/i,
     });
 
+    // the on_update transfer carries a web_confirm annotation, which replaces the default prompt
     expect(
-      screen.getByText(/are you sure you want to set state of instance core1 to update_start\?/i)
+      screen.getByText(/apply the updated attributes to the running service\?/i)
     ).toBeVisible();
 
     await userEvent.click(confirmButton);
 
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
+  });
+
+  it("Normal Instance Actions Enabled - set-state transfer with web_button_* annotations (issue #7093)", async () => {
+    const component = setupServiceInstanceDetails();
+
+    render(component);
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Actions-Toggle" }));
+
+    // web_button_label overrides the raw target-state name ("setting_start"), and
+    // the transfer's web_icon is rendered on the item
+    const pushSettings = screen.getByRole("menuitem", { name: "Push settings" });
+
+    expect(pushSettings).toBeVisible();
+    expect(pushSettings).toContainElement(screen.getByTestId("FaSlidersH"));
+
+    // web_button_variant: "warning" does not apply the danger styling reserved for "danger"
+    expect(pushSettings.closest("li")).not.toHaveClass("pf-m-danger");
+
+    await userEvent.click(pushSettings);
+
+    // the transfer's own web_confirm annotation still replaces the default prompt
+    expect(screen.getByText(/push the current settings to the running service\?/i)).toBeVisible();
+
+    await userEvent.click(screen.getByRole("button", { name: /no/i }));
+  });
+
+  it("Normal Instance Actions Enabled - web_advanced_state demotes a transfer into the Advanced disclosure (issue #7095)", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog/mobileCore", () => {
+        return HttpResponse.json({
+          data: {
+            ...serviceModel,
+            lifecycle: {
+              ...serviceModel.lifecycle,
+              transfers: [
+                ...serviceModel.lifecycle.transfers,
+                {
+                  source: "up",
+                  target: "maintenance",
+                  error: null,
+                  on_update: false,
+                  on_delete: false,
+                  api_set_state: true,
+                  resource_based: false,
+                  auto: false,
+                  validate: false,
+                  config_name: null,
+                  description: "up to maintenance",
+                  target_operation: null,
+                  error_operation: null,
+                  annotations: {
+                    web_button_label: "Enter maintenance mode",
+                    web_advanced_state: true,
+                  },
+                },
+              ],
+            },
+          },
+        });
+      })
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    const actionDropdown = screen.getByRole("button", { name: "Actions-Toggle" });
+
+    await userEvent.click(actionDropdown);
+
+    // decluttered: not shown directly in the primary Set-state group
+    expect(
+      screen.queryByRole("menuitem", { name: "Enter maintenance mode" })
+    ).not.toBeInTheDocument();
+
+    const advancedToggle = screen.getByRole("menuitem", { name: "Advanced" });
+
+    await userEvent.click(advancedToggle);
+
+    // expanding the disclosure only reveals it in place, it doesn't collapse the outer dropdown
+    expect(actionDropdown).toHaveAttribute("aria-expanded", "true");
+
+    const maintenanceItem = screen.getByRole("menuitem", { name: "Enter maintenance mode" });
+
+    await userEvent.click(maintenanceItem);
+
+    // reachable and still triggers the same confirm modal as any other state transfer
+    expect(screen.getByRole("dialog")).toBeVisible();
+    expect(actionDropdown).toHaveAttribute("aria-expanded", "false");
+
+    await userEvent.click(screen.getByRole("button", { name: /yes/i }));
+
+    expect(screen.queryByRole("dialog")).toBeNull();
   });
 
   it("Normal Instance Actions - sends the user provided message on state transfer", async () => {
@@ -368,8 +679,8 @@ describe("Page Actions - Failed", () => {
 
     await userEvent.click(expertDropdown);
 
-    // expect 20 menu items (1 for the destroy action, and 19 others for state options)
-    expect(screen.getAllByRole("menuitem")).toHaveLength(20);
+    // expect 21 menu items (1 for the destroy action, and 20 others for state options)
+    expect(screen.getAllByRole("menuitem")).toHaveLength(21);
 
     const stateUp = screen.getByRole("menuitem", { name: "up" });
 
@@ -463,7 +774,7 @@ describe("Page Actions - Failed", () => {
 
     const actions = screen.getAllByRole("menuitem");
 
-    expect(actions).toHaveLength(5);
+    expect(actions).toHaveLength(6);
 
     actions.forEach((action) => {
       expect(action).toBeEnabled();
@@ -472,10 +783,9 @@ describe("Page Actions - Failed", () => {
     // delete instance
     await userEvent.click(actions[3]);
 
+    // the on_delete transfer carries a web_confirm annotation, which replaces the default prompt
     expect(
-      screen.getByText(
-        /are you sure you want to delete instance core1 of service entity mobilecore\?/i
-      )
+      screen.getByText(/delete this service and all its resources\? this cannot be undone\.?/i)
     ).toBeVisible();
 
     const confirmButton = screen.getByRole("button", {
@@ -523,8 +833,9 @@ describe("Page Actions - Failed", () => {
       name: /yes/i,
     });
 
+    // the on_update transfer carries a web_confirm annotation, which replaces the default prompt
     expect(
-      screen.getByText(/are you sure you want to set state of instance core1 to update_start\?/i)
+      screen.getByText(/apply the updated attributes to the running service\?/i)
     ).toBeVisible();
 
     await userEvent.click(confirmButton);

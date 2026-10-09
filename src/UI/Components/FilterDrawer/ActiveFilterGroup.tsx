@@ -7,6 +7,7 @@ export interface ActiveFilterGroupProps {
   values?: string[];
   onRemove: (value: string) => void;
   onRemoveGroup?: () => void;
+  renderValue?: (value: string) => string;
 }
 
 /**
@@ -18,8 +19,9 @@ export interface ActiveFilterGroupProps {
  * @Props {ActiveFilterGroupProps} - Component props.
  *  @prop {string} title - Display name for the category heading.
  *  @prop {string[]} [values] - Current chip values that belong to the category.
- *  @prop {(value: string) => void} onRemove - Callback executed when an individual chip is dismissed.
+ *  @prop {(value: string) => void} onRemove - Callback executed with the raw stored value when an individual chip is dismissed.
  *  @prop {() => void} [onRemoveGroup] - Callback executed when the entire label group is closed.
+ *  @prop {(value: string) => string} [renderValue] - Maps a stored value to its chip text; defaults to the value itself (used when the stored value differs from what should be shown, e.g. an "id|label").
  *
  * @returns {React.ReactElement | null} The rendered label group or null if no values are present.
  */
@@ -28,6 +30,7 @@ export const ActiveFilterGroup: React.FC<ActiveFilterGroupProps> = ({
   values,
   onRemove,
   onRemoveGroup,
+  renderValue = (value) => value,
 }) => {
   if (!values || values.length === 0) {
     return null;
@@ -50,7 +53,7 @@ export const ActiveFilterGroup: React.FC<ActiveFilterGroupProps> = ({
           color={value.startsWith("!") ? "red" : "grey"}
           onClose={() => onRemove(value)}
         >
-          {value}
+          {renderValue(value)}
         </Label>
       ))}
     </LabelGroup>

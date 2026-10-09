@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, Thead, Tr, Th, OnSort } from "@patternfly/react-table";
 import { Row, ServiceModel, Sort } from "@/Core";
+import { words } from "@/UI/words";
 import { InstanceRow } from "./InstanceRow";
 import { InventoryTablePresenter } from "./Presenters";
 
@@ -60,9 +61,12 @@ export const InventoryTable: React.FC<Props> = ({
   });
 
   return (
-    <Table {...props}>
+    <Table {...props} isStickyHeader>
       <Thead>
-        <Tr>{heads}</Tr>
+        <Tr>
+          {heads}
+          <Th screenReaderText={words("common.emptyColumnHeader")} />
+        </Tr>
       </Thead>
       {rows.map((row) => (
         <InstanceRow

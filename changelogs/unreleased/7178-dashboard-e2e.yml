@@ -1,0 +1,4 @@
+description: Add e2e tests for the new dashboard.
+issue-nr: 7178
+change-type: patch
+destination-branches: [master]

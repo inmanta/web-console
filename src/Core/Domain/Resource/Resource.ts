@@ -1,5 +1,5 @@
 import { Pagination } from "@/Core/Domain/Pagination";
-import { Maybe, ParsedNumber } from "@/Core/Language";
+import { ParsedNumber } from "@/Core/Language";
 
 /**
  * --- General explanation of compound state ---
@@ -159,6 +159,12 @@ export enum Status {
   orphaned = "orphaned",
 }
 
+/**
+ * Whether a resource details status marks it as an orphan - no longer part of the latest intent
+ * (see {@link ResourceState.isOrphan}).
+ */
+export const isOrphanedStatus = (status: string): boolean => status === "orphaned";
+
 interface BaseDetails {
   resource_id: string;
   resource_type: string;
@@ -179,17 +185,10 @@ export interface Details extends ReleasedDetails {
   requires_status: Record<string, Status>;
 }
 
-export interface RawDetails extends ReleasedDetails {
-  status: string;
-  requires_status: Record<string, string>;
-}
-
 export interface VersionedDetails extends BaseDetails {
   version: ParsedNumber;
   resource_version_id: string;
 }
-
-export const TRANSIENT_STATES = ["available", "deploying", "processing_events"];
 
 /**
  * Interface for filtering resources
@@ -199,17 +198,32 @@ export interface Filter {
   agent?: string[];
   value?: string[];
   status?: string[];
+  serviceEntity?: string[];
+  serviceInstance?: string[];
+  includeOwned?: boolean;
 }
+
+/**
+ * Encodes a `serviceInstance` filter value from an instance id and optional label as JSON, so the
+ * label can contain any character without colliding with a separator. Falls back to the id as label.
+ *
+ * @example encodeServiceInstanceFilterValue("abc", "cpe-1") => '{"id":"abc","label":"cpe-1"}'
+ * @example encodeServiceInstanceFilterValue("abc") => '{"id":"abc","label":"abc"}'
+ */
+export const encodeServiceInstanceFilterValue = (id: string, label?: string): string =>
+  JSON.stringify({ id, label: label ?? id });
+
+/**
+ * Decodes a `serviceInstance` filter value back into its id and display label.
+ *
+ * @example parseServiceInstanceFilterValue('{"id":"abc","label":"cpe-1"}') => { id: "abc", label: "cpe-1" }
+ * @example parseServiceInstanceFilterValue('{"id":"abc","label":"abc"}') => { id: "abc", label: "abc" }
+ */
+export const parseServiceInstanceFilterValue = (value: string): { id: string; label: string } =>
+  JSON.parse(value);
 
 export interface FilterWithDefaultHandling extends Filter {
   disregardDefault?: boolean;
-}
-
-export enum FilterKind {
-  Type = "Type",
-  Agent = "Agent",
-  Value = "Value",
-  Status = "Status",
 }
 
 export const STATUS_SORT_KEYS = ["blocked", "compliance", "lastHandlerRun", "isDeploying"] as const;
@@ -228,7 +242,10 @@ export const isStatusSortKey = (key: SortKey): key is StatusSortKey => STATUS_SO
 
 export type SortKeyFromVersion = Exclude<SortKey, StatusSortKey>;
 
-export type FilterFromVersion = Omit<Filter, "status">;
+export type FilterFromVersion = Omit<
+  Filter,
+  "status" | "serviceEntity" | "serviceInstance" | "includeOwned"
+>;
 
 export interface IdDetails {
   resource_type: string;
@@ -263,24 +280,22 @@ export class IdParser {
   private static readonly parseIdRegex =
     /^(?<id>(?<type>(?<ns>[\w-]+(::[\w-]+)*)::(?<class>[\w-]+))\[(?<hostname>[^,]+),(?<attr>[^=]+)=(?<value>[^\]]+)\])(,v=(?<version>[0-9]+))?$/;
 
-  public static parse(idStr: string): Maybe.Maybe<Id> {
+  public static parse(idStr: string): Id | undefined {
     const groups = idStr.match(IdParser.parseIdRegex)?.groups;
 
     if (!groups) {
-      return Maybe.none();
+      return undefined;
     }
 
-    return Maybe.some({
+    return {
       entityType: groups.type,
       agentName: groups.hostname,
       attribute: groups.attr,
       attributeValue: groups.value,
-    });
+    };
   }
 
-  public static getAgentName(idStr: string): Maybe.Maybe<Id["agentName"]> {
-    const id = IdParser.parse(idStr);
-
-    return Maybe.isSome(id) ? Maybe.some(id.value.agentName) : Maybe.none();
+  public static getAgentName(idStr: string): Id["agentName"] | undefined {
+    return IdParser.parse(idStr)?.agentName;
   }
 }

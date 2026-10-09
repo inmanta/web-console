@@ -68,27 +68,23 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
       <Stack hasGutter style={{ padding: "1rem 0" }}>
         <StackItem>
           <Title headingLevel="h3" size="md">
-            {words("resources.filters.resource.sectionTitle")}
+            {words("resourceId")}
           </Title>
         </StackItem>
         <StackItem>
           <AddableTextInput
-            label={words("resources.filters.resource.type.label")}
+            label={words("type")}
             placeholder={words("resources.filters.resource.type.placeholder")}
             onAdd={onAddType}
-
-            //TODO: decide what to do with the hints for these inputs, releated to:
-            // https://github.com/inmanta/web-console/issues/6823
-            /* hint={words("resources.filters.resource.type.hint")} */
+            hint={words("resources.filters.resource.type.hint")}
           />
         </StackItem>
         <StackItem>
           <AddableTextInput
-            label={words("resources.filters.resource.value.label")}
+            label={words("value")}
             placeholder={words("resources.filters.resource.value.placeholder")}
             onAdd={onAddValue}
-
-            /* hint={words("resources.filters.resource.value.hint")} */
+            hint={words("resources.filters.resource.value.hint")}
           />
         </StackItem>
         <StackItem>
@@ -96,6 +92,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
             <AddableSelectInput
               label={words("resources.filters.resource.agent.label")}
               placeholder={words("resources.filters.resource.agent.placeholder")}
+              hint={words("resources.filters.resource.agent.hint")}
               onAdd={onAddAgent}
               options={agentOptions.filter((option) => !filter.agent?.includes(option.value))}
               onFilter={setAgentSearch}
@@ -115,6 +112,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               label={words("resources.filters.resource.agent.label")}
               placeholder={words("resources.filters.resource.agent.placeholder")}
               onAdd={onAddAgent}
+              hint={words("resources.filters.resource.agent.hint")}
               onToggleInputMode={() => setInputMode("select")}
               toggleLabel={words("resources.filters.resource.agent.textInfoLabel")}
             />

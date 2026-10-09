@@ -1,7 +1,7 @@
 import { EntityAnnotations, Field } from "@/Core";
 import * as Test from "@/Test";
 import { words } from "@/UI/words";
-import { resolveFormTabs } from "./FormTabs";
+import { isSingleRelationTab, resolveFormTabs } from "./FormTabs";
 
 const { general, network, extras, entityAnnotations } = Test.Service.FormTabs;
 
@@ -85,4 +85,16 @@ test("GIVEN resolveFormTabs WHEN the catalog is malformed THEN a model error is 
   expect(resolveFormTabs(notAList, [])).toEqual(invalidCatalogError);
   expect(resolveFormTabs(missingLabel, [])).toEqual(invalidCatalogError);
   expect(resolveFormTabs(duplicateKeys, [])).toEqual(invalidCatalogError);
+});
+
+test("GIVEN isSingleRelationTab WHEN the tab holds one embedded relation and nothing else THEN it renders flat", () => {
+  expect(isSingleRelationTab([Test.Field.dictList()])).toBeTruthy();
+  expect(isSingleRelationTab([Test.Field.nested()])).toBeTruthy();
+});
+
+test("GIVEN isSingleRelationTab WHEN the tab holds anything else THEN it keeps its expandable group", () => {
+  expect(isSingleRelationTab([])).toBeFalsy();
+  expect(isSingleRelationTab([Test.Field.text])).toBeFalsy();
+  expect(isSingleRelationTab([Test.Field.dictList(), Test.Field.text])).toBeFalsy();
+  expect(isSingleRelationTab([Test.Field.dictList(), Test.Field.nested()])).toBeFalsy();
 });

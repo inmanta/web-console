@@ -1,7 +1,7 @@
 import React from "react";
 import { ServiceModel, ServiceInstanceModelWithTargetStates, Sort } from "@/Core";
 import { InventoryTable } from "./InventoryTable";
-import { InventoryTablePresenter } from "./Presenters";
+import { createInventoryTablePresenter } from "./Presenters";
 
 interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
@@ -17,7 +17,7 @@ export const TableProvider: React.FC<Props> = ({
   setSort,
   ...props
 }) => {
-  const tablePresenter = new InventoryTablePresenter(
+  const tablePresenter = createInventoryTablePresenter(
     serviceEntity.service_identity,
     serviceEntity.service_identity_display_name
   );

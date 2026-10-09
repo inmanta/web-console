@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Router } from "react-router";
 import { createMemoryHistory } from "@remix-run/router";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
@@ -13,6 +13,7 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
+import { EnvSelectorOpenContext } from "./EnvSelectorOpenContext";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 
@@ -25,14 +26,19 @@ const EnvSelectorWrapper = ({
 }) => {
   const environments = useGetEnvironments().useOneTime(true);
   const projects = useGetProjects().useOneTime();
+  // Production provides this via PageFrame; tests need their own stateful Provider, otherwise
+  // the toggle falls back to the context's default no-op setIsOpen and never actually opens.
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <EnvironmentSelector
-      environments={environments}
-      projects={projects}
-      onSelectEnvironment={onSelectEnvironment}
-      selectedEnvironment={selectedEnvironment}
-    />
+    <EnvSelectorOpenContext.Provider value={{ isOpen, setIsOpen }}>
+      <EnvironmentSelector
+        environments={environments}
+        projects={projects}
+        onSelectEnvironment={onSelectEnvironment}
+        selectedEnvironment={selectedEnvironment}
+      />
+    </EnvSelectorOpenContext.Provider>
   );
 };
 
@@ -111,6 +117,29 @@ describe("EnvironmentSelector", () => {
     expect(history.location.pathname).toEqual("/");
   });
 
+  test("GIVEN EnvironmentSelector WHEN environments fail to load THEN a dismissible toast is shown instead of a permanent inline alert", async () => {
+    server.use(
+      http.get("/api/v2/environment", async () => HttpResponse.error()),
+      http.get("/api/v2/project", async () => HttpResponse.json({ data: Project.filterable }))
+    );
+
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const history = createMemoryHistory();
+
+    render(
+      <Router location={history.location} navigator={history}>
+        <QueryClientProvider client={queryClient}>
+          <MockedDependencyProvider>
+            <EnvSelectorWrapper onSelectEnvironment={() => {}} />
+          </MockedDependencyProvider>
+        </QueryClientProvider>
+      </Router>
+    );
+
+    expect(await screen.findByTestId("ToastAlert")).toBeVisible();
+    expect(screen.queryByTestId("AlertError")).not.toBeInTheDocument();
+  });
+
   test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", async () => {
     server.use(
       http.get("/api/v2/environment", async () => {
@@ -134,9 +163,9 @@ describe("EnvironmentSelector", () => {
 
     await userEvent.click(toggle);
 
-    const listItem = screen.getAllByText(`${envB.name} (${envB.projectName})`)[0];
-
-    expect(listItem).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getAllByText(`${envB.name} (${envB.projectName})`)[0]).toBeVisible();
+    });
   });
 
   test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item THEN selected environment is changed", async () => {
@@ -166,9 +195,12 @@ describe("EnvironmentSelector", () => {
 
     await userEvent.click(toggle);
 
-    const listItem = screen.getAllByText(`${envB.name} (${envB.projectName})`)[0];
+    // Wait for the menu to fade in before clicking, otherwise this is flaky on CI.
+    await waitFor(() => {
+      expect(screen.getAllByText(`${envB.name} (${envB.projectName})`)[0]).toBeVisible();
+    });
 
-    expect(listItem).toBeVisible();
+    const listItem = screen.getAllByText(`${envB.name} (${envB.projectName})`)[0];
 
     await userEvent.click(listItem);
 

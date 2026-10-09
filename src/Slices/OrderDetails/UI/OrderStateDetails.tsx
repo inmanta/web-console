@@ -60,7 +60,7 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
           {state.validation_compile_id && (
             <DescriptionListGroup>
               <DescriptionListDescription>
-                <Link
+                <NoWrapLink
                   target="_blank"
                   to={{
                     pathname: routeManager.getUrl("CompileDetails", {
@@ -70,7 +70,7 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
                   }}
                 >
                   {words("orders.row.compilerReport")}
-                </Link>
+                </NoWrapLink>
               </DescriptionListDescription>
             </DescriptionListGroup>
           )}
@@ -83,4 +83,8 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
 const PaddedDescriptionList = styled(DescriptionList)`
   padding-left: 1em;
   padding-right: 1em;
+`;
+
+const NoWrapLink = styled(Link)`
+  white-space: nowrap;
 `;

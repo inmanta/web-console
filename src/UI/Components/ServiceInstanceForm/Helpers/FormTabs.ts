@@ -128,3 +128,14 @@ const byOrderThenKey = (a: FormTabDefinition, b: FormTabDefinition): number => {
 
   return orderA - orderB || a.key.localeCompare(b.key);
 };
+
+/**
+ * Whether a tab holds a single embedded relation and nothing else. Such a tab is the
+ * relation's group already, so the relation renders flat: its description, actions and
+ * sub-form show without the user expanding anything.
+ *
+ * @param {Field[]} fields - The fields assigned to one tab.
+ * @returns {boolean} True when the tab's only field is an embedded relation.
+ */
+export const isSingleRelationTab = (fields: Field[]): boolean =>
+  fields.length === 1 && (fields[0].kind === "Nested" || fields[0].kind === "DictList");

@@ -5,7 +5,7 @@ import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { InstanceDetailsContext } from "../Core/Context";
-import { VersionedPageTitleWithActions } from "./Components/Sections";
+import { InstanceHeaderActions, VersionedPageTitle } from "./Components/Sections";
 import { ServiceInstanceDetailsLayout } from "./ServiceInstanceDetailsLayout";
 interface Props {
   service: string;
@@ -68,7 +68,8 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
     >
       <PageContainer
         aria-label="Instance-Details-Success"
-        pageTitle={<VersionedPageTitleWithActions title={pageTitle} />}
+        pageTitle={<VersionedPageTitle title={pageTitle} />}
+        actions={<InstanceHeaderActions />}
       >
         <ServiceInstanceDetailsLayout />
       </PageContainer>

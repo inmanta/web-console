@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump brace-expansion from 1.1.18 to 1.1.21
+destination-branches:
+- master
+sections: {}

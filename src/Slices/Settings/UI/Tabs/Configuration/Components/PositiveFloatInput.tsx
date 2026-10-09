@@ -1,6 +1,7 @@
 import React from "react";
 import { Flex, FlexItem, NumberInput } from "@patternfly/react-core";
 import { EnvironmentSettings } from "@/Core";
+import { preventNumberInputScroll } from "@/UI/Utils";
 import { Warning } from "./Warning";
 
 const MINVALUE = 0;
@@ -28,6 +29,7 @@ export const PositiveFloatInput: React.FC<Props> = ({ info }) => {
           min={MINVALUE}
           inputName="input"
           inputAriaLabel="number input"
+          inputProps={{ onWheel: preventNumberInputScroll }}
           minusBtnAriaLabel="minus"
           plusBtnAriaLabel="plus"
           widthChars={10}

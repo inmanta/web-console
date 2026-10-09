@@ -10,17 +10,16 @@ import {
   UrlManagerImpl,
 } from "@/UI";
 import { AuthContext } from "./Data/Auth";
-import { UpdateBanner } from "./UI/Components/UpdateBanner";
 import { AppAlertProvider } from "./UI/Root/Components/AppAlertProvider";
 import { ModalProvider } from "./UI/Root/Components/ModalProvider";
 
 /**
  * This component creates instances of managers, helpers, and resolvers, and provides them through a `DependencyProvider`.
- * It also contains `ModalProvider`, `AppAlertProvider`, and an `UpdateBanner`.
+ * It also contains `ModalProvider` and `AppAlertProvider`.
  *
  * @props {Props} props - The properties passed to the component.
  * @prop {React.ReactNode} children - The children to be rendered within the Injector.
- * @returns {React.FC<React.PropsWithChildren<Props>>} A `DependencyProvider` that wraps a `ModalProvider`, an `UpdateBanner`, and the children.
+ * @returns {React.FC<React.PropsWithChildren<Props>>} A `DependencyProvider` that wraps a `ModalProvider` and the children.
  */
 export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const authHelper = useContext(AuthContext);
@@ -31,11 +30,7 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl();
   const routeManager = PrimaryRouteManager(basePathname);
-  const orchestratorProvider = OrchestratorProvider(
-    getJsonParserId(globalThis),
-    COMMITHASH,
-    APP_VERSION
-  );
+  const orchestratorProvider = OrchestratorProvider(getJsonParserId(globalThis), COMMITHASH);
   const urlManager = new UrlManagerImpl(orchestratorProvider, baseUrl);
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
   const fileManager = new PrimaryFileManager();
@@ -53,10 +48,7 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
       }}
     >
       <AppAlertProvider>
-        <ModalProvider>
-          <UpdateBanner />
-          {children}
-        </ModalProvider>
+        <ModalProvider>{children}</ModalProvider>
       </AppAlertProvider>
     </DependencyProvider>
   );

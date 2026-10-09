@@ -1,0 +1,5 @@
+description: Share one typed ResourceActionFilter interface between the resources GraphQL query and the deploy_filtered endpoint, and type the GraphQL query filter with it.
+issue-nr: 7271
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

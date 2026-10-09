@@ -1,6 +1,6 @@
 import { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse, delay } from "msw";
@@ -208,11 +208,7 @@ describe("CompileReports", () => {
 
     expect(initialRows).toHaveLength(8);
 
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i, pressed: false }));
 
     const input = screen.getByPlaceholderText(words("compileReports.filters.status.placeholder"));
 
@@ -260,17 +256,7 @@ describe("CompileReports", () => {
 
     expect(initialRows).toHaveLength(8);
 
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
-
-    await userEvent.click(
-      screen.getByRole("option", {
-        name: words("compileReports.columns.status"),
-      })
-    );
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i, pressed: false }));
 
     const input = screen.getByPlaceholderText(words("compileReports.filters.status.placeholder"));
 
@@ -322,39 +308,25 @@ describe("CompileReports", () => {
 
     expect(initialRows).toHaveLength(8);
 
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
-
-    await userEvent.click(
-      screen.getByRole("option", {
-        name: words("compileReports.columns.requested"),
-      })
-    );
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i, pressed: false }));
 
     const fromDatePicker = await screen.findByLabelText("From Date Picker");
 
     await userEvent.type(fromDatePicker, "2021-09-28");
 
+    await userEvent.click(await screen.findByLabelText("Apply date from filter"));
+
     const toDatePicker = await screen.findByLabelText("To Date Picker");
 
     await userEvent.type(toDatePicker, "2021-09-30");
 
-    await userEvent.click(await screen.findByLabelText("Apply date filter"));
+    await userEvent.click(await screen.findByLabelText("Apply date to filter"));
 
     const rowsAfter = await screen.findAllByRole("row", {
       name: "Compile Reports Table Row",
     });
 
     expect(rowsAfter).toHaveLength(3);
-
-    // The chips are hidden in small windows, so resize it
-    window = Object.assign(window, { innerWidth: 1200 });
-    await act(async () => {
-      window.dispatchEvent(new Event("resize"));
-    });
 
     expect(await screen.findByText("from | 2021/09/28 00:00:00", { exact: false })).toBeVisible();
     expect(await screen.findByText("to | 2021/09/30 00:00:00", { exact: false })).toBeVisible();

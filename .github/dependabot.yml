@@ -26,3 +26,12 @@ updates:
       jointjs:
         patterns:
           - "@joint/*"
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+      markdown-it:
+        patterns:
+          - "markdown-it"
+          - "markdown-it-*"
+          - "@types/markdown-it-*"

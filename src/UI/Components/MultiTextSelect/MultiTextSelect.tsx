@@ -29,6 +29,7 @@ interface Props {
   toggleIcon?: React.ReactNode;
   noInputField?: boolean;
   footer?: React.ReactNode;
+  maxMenuHeight?: string;
 }
 
 /**
@@ -46,6 +47,7 @@ interface Props {
  * @param toggleIcon Custom Icon component if you want a different toggleIcon
  * @param noInputField To have a default select without filter-input field.
  * @param footer Component containing a footer element for the list
+ * @param maxMenuHeight Maximum height of the scrollable options menu (defaults to 300px).
  *
  * @returns MultiTextSelect Component
  */
@@ -58,6 +60,7 @@ export const MultiTextSelect: React.FC<Props> = ({
   onSearchTextChanged = () => {},
   hasChips = false,
   noInputField = false,
+  maxMenuHeight = "300px",
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -248,6 +251,8 @@ export const MultiTextSelect: React.FC<Props> = ({
       onSelect={(_ev, selection) => onSelect(selection as string)}
       onOpenChange={() => setIsOpen(false)}
       toggle={toggle}
+      isScrollable
+      maxMenuHeight={maxMenuHeight}
     >
       <SelectList
         isAriaMultiselectable

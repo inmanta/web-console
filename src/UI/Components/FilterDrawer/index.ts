@@ -1,3 +1,4 @@
+export * from "./FilterDrawer";
 export * from "./FilterDrawerPanelContent";
 export * from "./FilterToggleButton";
 export * from "./ActiveFilterGroup";

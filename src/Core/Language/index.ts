@@ -1,7 +1,4 @@
-export * as Either from "./Either";
-export * as Maybe from "./Maybe";
-export * from "./Deferred";
+export * as JsonPath from "./JsonPath";
 export * from "./fromEntries";
 export * from "./TreeNode";
 export * from "./Utils";
-export * from "./Dictionary";

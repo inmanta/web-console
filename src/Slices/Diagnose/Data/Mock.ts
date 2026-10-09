@@ -1,6 +1,6 @@
-import { RawDiagnostics } from "@S/Diagnose/Core/Domain";
+import { Diagnostics } from "@S/Diagnose/Core/Domain";
 
-const failure: RawDiagnostics = {
+const failure: Diagnostics = {
   failures: [
     {
       resource_id: "unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2",
@@ -19,7 +19,7 @@ const failure: RawDiagnostics = {
   rejections: [],
 };
 
-const rejection: RawDiagnostics = {
+const rejection: Diagnostics = {
   failures: [],
   rejections: [
     {
@@ -28,10 +28,23 @@ const rejection: RawDiagnostics = {
       compile_id: "2369b94d-7a3e-4a73-86ef-ef476ca088db",
       errors: [
         {
-          // category: "runtime_error",
+          category: "runtime_error",
           type: "inmanta.ast.DoubleSetException",
           message:
             "value set twice:\n\told value: 1\n\t\tset at ./main.cf:30\n\tnew value: 0\n\t\tset at ./main.cf:29\n",
+          location: {
+            uri: "./main.cf",
+            range: { start: { line: 29, character: 0 }, end: { line: 29, character: 5 } },
+          },
+        },
+        {
+          category: "plugin_exception",
+          type: "inmanta.ast.AttributeException",
+          message: "Could not set attribute `name` on instance my_entity (reported in main.cf:12)",
+          location: {
+            uri: "./main.cf",
+            range: { start: { line: 12, character: 0 }, end: { line: 12, character: 10 } },
+          },
         },
       ],
       trace:
@@ -40,7 +53,7 @@ const rejection: RawDiagnostics = {
   ],
 };
 
-export const failureAndRejection: RawDiagnostics = {
+export const failureAndRejection: Diagnostics = {
   failures: failure.failures,
   rejections: rejection.rejections,
 };

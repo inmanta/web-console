@@ -1,8 +1,10 @@
 import React from "react";
-import { Flex, FlexItem } from "@patternfly/react-core";
+import { Content, Flex, FlexItem, PageSection } from "@patternfly/react-core";
+import { Resource, ResourceDetailsTab } from "@/Core/Domain";
 import { useUrlStateWithString } from "@/Data";
-import { useGetResourceDetails } from "@/Data/Queries";
+import { ResourceActionFilter, useGetResourceDetails } from "@/Data/Queries";
 import {
+  ResourceActions,
   Description,
   ErrorView,
   labelColorConfig,
@@ -11,7 +13,7 @@ import {
   ResourceStatusLabel,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { TabKey, Tabs } from "./Tabs";
+import { Tabs } from "./Tabs";
 
 interface Props {
   id: string;
@@ -28,8 +30,8 @@ interface Props {
  * @returns {React.FC<Props>} A React Component displaying the resource details
  */
 export const View: React.FC<Props> = ({ id }) => {
-  const [activeTab, setActiveTab] = useUrlStateWithString<TabKey>({
-    default: TabKey.Attributes,
+  const [activeTab, setActiveTab] = useUrlStateWithString<ResourceDetailsTab>({
+    default: ResourceDetailsTab.Attributes,
     key: "tab",
     route: "ResourceDetails",
   });
@@ -45,22 +47,55 @@ export const View: React.FC<Props> = ({ id }) => {
   }
 
   if (isSuccess) {
-    return (
-      <PageContainer
-        pageTitle={words("resources.details.title")}
-        aria-label="ResourceDetails-Success"
-      >
-        <Flex>
-          <FlexItem aria-label={`resourceName-${id}`}>
-            <Description>{id}</Description>
-          </FlexItem>
-          <FlexItem>
-            <ResourceStatusLabel status={labelColorConfig[data.status]} label={data.status} />
-          </FlexItem>
-        </Flex>
+    // A single resource is a filter of one: pin its identity (type/agent/value) on the latest
+    // released intent, so deploy and repair act on exactly this resource.
+    const resourceFilter: ResourceActionFilter = {
+      isOrphan: false,
+      resourceType: { eq: [data.resource_type] },
+      agent: { eq: [data.agent] },
+      resourceIdValue: { eq: [data.id_attribute_value] },
+    };
 
+    return (
+      <>
+        <PageSection hasBodyWrapper={false}>
+          <Flex
+            justifyContent={{ default: "justifyContentSpaceBetween" }}
+            alignItems={{ default: "alignItemsCenter" }}
+          >
+            <FlexItem>
+              <Content>
+                <Content component="h1">{words("resources.details.title")}</Content>
+              </Content>
+            </FlexItem>
+            <FlexItem>
+              <ResourceActions
+                filter={resourceFilter}
+                tooltips={{
+                  deploy: words("resources.resourceActions.deploy.tooltip.resource"),
+                  repair: words("resources.resourceActions.repair.tooltip.resource"),
+                }}
+                disabledReason={
+                  Resource.isOrphanedStatus(data.status)
+                    ? words("resources.resourceActions.orphaned.disabled")
+                    : undefined
+                }
+              />
+            </FlexItem>
+          </Flex>
+        </PageSection>
+        <PageSection hasBodyWrapper={false} aria-label="ResourceDetails-Success">
+          <Flex>
+            <FlexItem aria-label={`resourceName-${id}`}>
+              <Description>{id}</Description>
+            </FlexItem>
+            <FlexItem>
+              <ResourceStatusLabel status={labelColorConfig[data.status]} label={data.status} />
+            </FlexItem>
+          </Flex>
+        </PageSection>
         <Tabs {...{ id, data, activeTab, setActiveTab }} />
-      </PageContainer>
+      </>
     );
   }
 

@@ -7,6 +7,7 @@ import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@/UI/words";
 import { ResourceLogs } from "@S/ResourceDetails/Data/Mock";
 import { View } from "./View";
 
@@ -72,9 +73,13 @@ describe("ResourceLogsView", () => {
 
     render(component);
 
-    const messageFilter = await screen.findByRole("textbox", {
-      name: "MessageFilter",
-    });
+    expect(await screen.findByRole("grid", { name: "ResourceLogsTable" })).toBeVisible();
+
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i, pressed: false }));
+
+    const messageFilter = await screen.findByPlaceholderText(
+      words("resources.logs.message.placeholder")
+    );
 
     await userEvent.type(messageFilter, "failed{enter}");
 

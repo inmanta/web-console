@@ -10,6 +10,7 @@ import {
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { IntRange, RangeOperator } from "@/Core";
+import { preventNumberInputScroll } from "@/UI/Utils";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -89,6 +90,7 @@ export const IntRangeFilter: React.FC<Props> = ({ label, fromLabel, toLabel, val
                   placeholder={fromLabel}
                   aria-label={words("filters.range.from.input")(label)}
                   onKeyDown={onEnter(applyFrom)}
+                  onWheel={preventNumberInputScroll}
                 />
               </InputGroupItem>
               <InputGroupItem>
@@ -115,6 +117,7 @@ export const IntRangeFilter: React.FC<Props> = ({ label, fromLabel, toLabel, val
                   placeholder={toLabel}
                   aria-label={words("filters.range.to.input")(label)}
                   onKeyDown={onEnter(applyTo)}
+                  onWheel={preventNumberInputScroll}
                 />
               </InputGroupItem>
               <InputGroupItem>

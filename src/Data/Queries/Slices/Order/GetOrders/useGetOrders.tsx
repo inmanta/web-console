@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination, Sort } from "@/Core";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
@@ -57,6 +57,7 @@ export const useGetOrders = (): GetOrders => {
         queryKey: getOrdersKey.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
+        placeholderData: keepPreviousData,
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),

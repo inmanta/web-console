@@ -44,11 +44,11 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
     (filter.version?.length ?? 0) > 0;
 
   return (
-    <FilterDrawerPanelContent title={words("desiredState.filters")} onClose={onClose}>
+    <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
       <Stack hasGutter>
         <Form onSubmit={(e) => e.preventDefault()}>
           <StackItem>
-            <FormGroup label={words("desiredState.columns.status")}>
+            <FormGroup label={words("status")}>
               <MultiTextSelect
                 toggleAriaLabel="Status"
                 options={desiredStateStatuses.map((status) => ({
@@ -69,9 +69,9 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
           <StackItem>
             <TimestampRangeFilter
-              label={words("desiredState.columns.date")}
-              fromLabel={words("desiredState.filters.from")}
-              toLabel={words("desiredState.filters.to")}
+              label={words("date")}
+              fromLabel={words("filters.from")}
+              toLabel={words("filters.to")}
               value={filter.date ?? []}
               onChange={(date) => setFilter({ ...filter, date })}
             />
@@ -79,9 +79,9 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
           <StackItem>
             <IntRangeFilter
-              label={words("desiredState.columns.version")}
-              fromLabel={words("desiredState.filters.from")}
-              toLabel={words("desiredState.filters.to")}
+              label={words("version")}
+              fromLabel={words("filters.from")}
+              toLabel={words("filters.to")}
               value={filter.version ?? []}
               onChange={(version) => setFilter({ ...filter, version })}
             />
@@ -94,7 +94,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           {(filter.status ?? []).length > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("desiredState.columns.status")}
+                title={words("status")}
                 values={filter.status}
                 onRemove={(value) => removeStringChip("status", value, { disregardDefault: true })}
                 onRemoveGroup={() => clearStringGroup("status", { disregardDefault: true })}
@@ -104,7 +104,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           {(filter.date?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("desiredState.columns.date")}
+                title={words("date")}
                 values={dateChips("date", datePresenter)}
                 onRemove={(label) => removeDateChip("date", label)}
                 onRemoveGroup={() => clearDateRange("date")}
@@ -114,7 +114,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           {(filter.version?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("desiredState.columns.version")}
+                title={words("version")}
                 values={intChips("version")}
                 onRemove={(label) => removeIntChip("version", label)}
                 onRemoveGroup={() => clearIntRange("version")}

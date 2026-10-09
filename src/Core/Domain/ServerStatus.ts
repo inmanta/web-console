@@ -7,6 +7,7 @@ interface Extension {
 interface Slice {
   name: string;
   status: Record<string, unknown>;
+  reported_status: string;
 }
 
 interface Feature {
@@ -23,4 +24,7 @@ export interface ServerStatus {
   extensions: Extension[];
   slices: Slice[];
   features: Feature[];
+  status: string;
+  python_version: string;
+  postgresql_version: string;
 }

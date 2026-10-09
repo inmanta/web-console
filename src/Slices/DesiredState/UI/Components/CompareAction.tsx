@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { DropdownItem } from "@patternfly/react-core";
-import { Maybe } from "@/Core";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -18,7 +17,7 @@ export const CompareAction: React.FC<Props> = ({ version, isDisabled }) => {
   return (
     <>
       <DropdownItem
-        onClick={isDisabled ? undefined : () => setCompareSelection(Maybe.some(version))}
+        onClick={isDisabled ? undefined : () => setCompareSelection(version)}
         isDisabled={isDisabled}
       >
         {words("desiredState.compare.action.compare")}
@@ -31,7 +30,7 @@ export const CompareAction: React.FC<Props> = ({ version, isDisabled }) => {
 
 interface CompareWithSelectedProps {
   version: number;
-  selection: Maybe.Maybe<number>;
+  selection: number | undefined;
   isDisabled?: boolean;
 }
 
@@ -42,11 +41,7 @@ const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
 }) => {
   const { routeManager } = useContext(DependencyContext);
 
-  if (
-    isDisabled ||
-    Maybe.isNone(selection) ||
-    (Maybe.isSome(selection) && selection.value === version)
-  ) {
+  if (isDisabled || selection === undefined || selection === version) {
     return (
       <DropdownItem isDisabled>
         {words("desiredState.compare.action.compareWithSelected")}
@@ -57,10 +52,7 @@ const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
   return (
     <DropdownItem>
       <Link
-        pathname={routeManager.getUrl(
-          "DesiredStateCompare",
-          sanitizeFromTo(selection.value, version)
-        )}
+        pathname={routeManager.getUrl("DesiredStateCompare", sanitizeFromTo(selection, version))}
       >
         {words("desiredState.compare.action.compareWithSelected")}
       </Link>

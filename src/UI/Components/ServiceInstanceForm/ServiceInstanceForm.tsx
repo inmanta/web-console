@@ -35,6 +35,8 @@ import {
   createDuplicateFormState,
   createEditFormState,
   createFormState,
+  isSingleRelationTab,
+  resolveFieldDependencies,
   resolveFormTabs,
 } from "./Helpers";
 
@@ -60,8 +62,8 @@ interface Props {
 }
 
 /**
- * Creates the form state.
- * If the form is not in edit mode but has original attributes, it returns a state for a duplicated instance.
+ * The initial form state for the mode: edit, duplicate (original attributes but not editing),
+ * or blank create.
  *
  * @param {Fields} fields - Array of Fields.
  * @param {string} apiVersion - API version ("v1" or "v2").
@@ -134,6 +136,11 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     () => resolveFormTabs(entityAnnotations, fields),
     [entityAnnotations, fields]
   );
+
+  // Cascading fields: a reference to a non-existent field or a dependency cycle
+  // is a model error surfaced to the developer, not an infinite loop or a silently
+  // stuck control. Derived purely from the schema, so it is stable across value edits.
+  const dependencyErrors = useMemo(() => resolveFieldDependencies(fields).errors, [fields]);
   const [activeTab, setActiveTab] = useState(formTabs.kind === "tabs" ? formTabs.defaultKey : "");
 
   // Values that resolve `${...}` variables in a suggestion's parameter name.
@@ -159,9 +166,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   usePrompt(words("notification.instanceForm.prompt"), isDirty);
 
   /**
-   * Get an update for the form state based on the provided path and value.
-   *
-   * callback was used to avoid re-render in useEffect used in SelectFormInput inside FieldInput
+   * Writes `value` into form state at `path` (marking the form dirty); `multi` toggles a value
+   * in/out of a multi-select list. Memoized to avoid re-renders in FieldInput's SelectFormInput.
    *
    * @param {string} path - The path within the form state to update.
    * @param {unknown} value - The new value to set at the specified path.
@@ -203,7 +209,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   );
 
   /**
-   * Prevent the default behavior of a React form event.
+   * Prevents the default submit behavior of a form event.
    *
    * @param {React.FormEvent} event - The React form event.
    * @returns {void}
@@ -232,7 +238,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   );
 
   /**
-   * Handle confirmation action by triggering form submission and updating dirty state.
+   * Submits the current form state and resets the dirty flag.
    *
    * @returns {void}
    */
@@ -247,7 +253,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     }
   }, [shouldPerformCancel, onCancel]);
 
-  const fieldToInput = (field: Field) => (
+  const fieldToInput = (field: Field, isFlat = false) => (
     <FieldInput
       key={field.name}
       field={field}
@@ -257,6 +263,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       path={null}
       suggestions={field.suggestion}
       suggestionVariables={suggestionVariables}
+      isFlat={isFlat}
     />
   );
 
@@ -279,6 +286,16 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           onChange={() => setIsForm(false)}
         />
       </ToggleGroup>
+
+      {dependencyErrors.map((message) => (
+        <AppAlert
+          key={message}
+          title={message}
+          variant={AlertVariant.warning}
+          testId="FieldDependencies-Error"
+          isInline
+        />
+      ))}
 
       {!isForm ? (
         <JSONEditor
@@ -309,7 +326,9 @@ export const ServiceInstanceForm: React.FC<Props> = ({
               }
             >
               <Flex direction={{ default: "column" }} gap={{ default: "gapLg" }}>
-                {tabFields.map(fieldToInput)}
+                {/* A tab holding one embedded relation is that relation's group, so it
+                    renders flat: no expandable to open before the sub-form shows. */}
+                {tabFields.map((field) => fieldToInput(field, isSingleRelationTab(tabFields)))}
               </Flex>
             </Tab>
           ))}
@@ -324,7 +343,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
               isInline
             />
           )}
-          {fields.map(fieldToInput)}
+          {fields.map((field) => fieldToInput(field))}
         </>
       )}
       {fields.length <= 0 && (

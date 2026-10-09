@@ -14,7 +14,9 @@ import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Con
 import {
   getAvailableStateTargets,
   getExpertStateTargets,
+  getTransferForType,
   isTransferDisabled,
+  StateTarget,
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
 import { Link } from "@/UI/Components";
@@ -39,14 +41,19 @@ export const InstanceActions: React.FC = () => {
 
   const editDisabled =
     instance.deleted || isTransferDisabled(instance, "on_update", serviceModelQuery.data);
-  const deleteDisabled =
-    instance.deleted || isTransferDisabled(instance, "on_delete", serviceModelQuery.data);
+  const deleteTransfer = getTransferForType(instance, "on_delete", serviceModelQuery.data);
+  const deleteDisabled = instance.deleted || deleteTransfer === undefined;
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isExpertDropdownOpen, setIsExpertDropdownOpen] = useState<boolean>(false);
   const [blockedInterface, setBlockedInterface] = useState<boolean>(false);
 
-  const stateTargets: string[] = getAvailableStateTargets(instance.state, serviceModelQuery.data);
+  const stateTargets: StateTarget[] = getAvailableStateTargets(
+    instance.state,
+    serviceModelQuery.data
+  );
+  const primaryStateTargets = stateTargets.filter((target) => !target.advanced);
+  const advancedStateTargets = stateTargets.filter((target) => target.advanced);
   const expertStateTargets: string[] = getExpertStateTargets(serviceModelQuery.data);
 
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
@@ -57,7 +64,7 @@ export const InstanceActions: React.FC = () => {
       aria-label="Actions-Toggle"
       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
     >
-      {words("instanceDetails.actions")}
+      {words("actions")}
     </MenuToggle>
   );
 
@@ -180,6 +187,7 @@ export const InstanceActions: React.FC = () => {
             instance_display_identity={instance.service_identity_attribute_value ?? instance.id}
             instance_id={instance.id}
             version={instance.version}
+            webConfirm={deleteTransfer?.annotations?.web_confirm}
             collapseToggle={() => setIsDropdownOpen(false)}
             setInterfaceBlocked={setBlockedInterface}
           />
@@ -188,7 +196,8 @@ export const InstanceActions: React.FC = () => {
               <Divider component="li" />
               <DropdownGroup>
                 <StateAction
-                  targets={stateTargets.sort()}
+                  targets={primaryStateTargets}
+                  advancedTargets={advancedStateTargets}
                   instance_display_identity={
                     instance.service_identity_attribute_value ?? instance.id
                   }

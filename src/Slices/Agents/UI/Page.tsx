@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
+import { Stack, StackItem } from "@patternfly/react-core";
 import { usePaginatedTable } from "@/Data";
 import { useGetAgents } from "@/Data/Queries";
 import { Filter } from "@/Slices/Agents/Core/Types";
 import {
   EmptyView,
+  FilterDrawer,
   PageContainer,
   PaginationWidget,
   LoadingView,
@@ -13,6 +14,7 @@ import {
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { AgentsTableControls } from "./AgentsTableControls";
+import { AgentsActionsButton } from "./Components";
 import { ConnectedFilterWidget } from "./FilterWidget";
 import { GetAgentsContext } from "./GetAgentsContext";
 import { TableProvider } from "./TableProvider";
@@ -52,7 +54,7 @@ export const Page: React.FC = () => {
 
   if (isError) {
     return (
-      <PageContainer pageTitle={words("agents.title")}>
+      <PageContainer pageTitle={words("agents.title")} actions={<AgentsActionsButton isDisabled />}>
         <ErrorView ariaLabel="AgentsView-Error" retry={refetch} message={error.message} />
       </PageContainer>
     );
@@ -62,7 +64,8 @@ export const Page: React.FC = () => {
     return (
       <PageContainer
         pageTitle={words("agents.title")}
-        style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+        actions={<AgentsActionsButton isDisabled={data.data.length <= 0} />}
+        style={{ display: "flex", flexDirection: "column" }}
       >
         <GetAgentsContext.Provider value={{ filter, sort, pageSize, currentPage }}>
           <AgentsTableControls
@@ -78,32 +81,32 @@ export const Page: React.FC = () => {
             isDrawerExpanded={isDrawerExpanded}
             activeFilterCount={activeFilterCount}
           />
-          <Drawer isExpanded={isDrawerExpanded} isInline>
-            <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
-              <DrawerContentBody>
-                {data.data.length <= 0 ? (
-                  <EmptyView
-                    message={words("agents.empty.message")}
-                    aria-label="AgentsView-Empty"
-                  />
-                ) : (
+          <FilterDrawer
+            isExpanded={isDrawerExpanded}
+            panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
+          >
+            {data.data.length <= 0 ? (
+              <EmptyView message={words("agents.empty.message")} aria-label="AgentsView-Empty" />
+            ) : (
+              <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+                <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
                   <TableProvider
                     agents={data.data}
                     aria-label="AgentsView-Success"
                     sort={sort}
                     setSort={setSort}
                   />
-                )}
-              </DrawerContentBody>
-            </DrawerContent>
-          </Drawer>
+                </StackItem>
+              </Stack>
+            )}
+          </FilterDrawer>
         </GetAgentsContext.Provider>
       </PageContainer>
     );
   }
 
   return (
-    <PageContainer pageTitle={words("agents.title")}>
+    <PageContainer pageTitle={words("agents.title")} actions={<AgentsActionsButton isDisabled />}>
       <LoadingView ariaLabel="AgentsView-Loading" />
     </PageContainer>
   );

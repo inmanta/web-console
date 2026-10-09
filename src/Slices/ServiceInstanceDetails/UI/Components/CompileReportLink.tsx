@@ -35,9 +35,7 @@ export const CompileReportLink: React.FC<Props> = ({ compileId, isExport }) => {
       }}
     >
       <Button variant="link" isInline>
-        {isExport
-          ? words("instanceDetails.events.exportReport")
-          : words("instanceDetails.events.validationReport")}
+        {isExport ? words("export") : words("instanceDetails.events.validationReport")}
       </Button>
     </Link>
   );

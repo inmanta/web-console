@@ -1,4 +1,4 @@
-import environmentHelpers from "../support/environmentHelpers";
+import environmentHelpers from "../support/environmentHelpers.js";
 
 const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
@@ -71,8 +71,9 @@ if (isIso) {
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();
 
       // expect to find in the history the up state as last
+      // "Up" (not "up"): the up state carries a web_label annotation (issue #7094).
       cy.get('[aria-label="History-Row"]', { timeout: 90000 }).should(($rows) => {
-        expect($rows[0]).to.contain("up");
+        expect($rows[0]).to.contain("Up");
         expect($rows[0]).to.contain(3);
         expect($rows).to.have.length(3);
       });
@@ -89,8 +90,9 @@ if (isIso) {
       cy.get("button").contains("Yes").click();
 
       // expect to find in the history the creating state after the up state
-      cy.get('[data-testid="version-3-state"]').should("have.text", "up");
-      cy.get('[data-testid="version-4-state"]', { timeout: 60000 }).should("have.text", "creating");
+      // "Up"/"Creating" (not "up"/"creating"): both states carry a web_label annotation (issue #7094).
+      cy.get('[data-testid="version-3-state"]').should("have.text", "Up");
+      cy.get('[data-testid="version-4-state"]', { timeout: 60000 }).should("have.text", "Creating");
     });
 
     it("2.4.2 Verify markdown preview in documentation tab", () => {
@@ -182,16 +184,19 @@ if (isIso) {
       cy.wait(1000); // let the editor settle to avoid typing text to fail
 
       // search for eth0
+      // Focus the input explicitly and assert it, so the keystrokes can't end up in the editor itself.
       cy.get('[aria-label="Find"]')
-        .click({ force: true })
-        .type("{selectall}{backspace}eth0", { delay: 100 });
+        .focus()
+        .should("have.focus")
+        .type("{selectall}{backspace}eth0", { delay: 100, force: true });
 
       // toggle replace option
       cy.get('[aria-label="Toggle Replace"]').click();
       // go to the replace field
       cy.get('[aria-label="Replace"]')
-        .click({ force: true })
-        .type("{selectall}{backspace}eth1{enter}{enter}", { delay: 100 });
+        .focus()
+        .should("have.focus")
+        .type("{selectall}{backspace}eth1{enter}{enter}", { delay: 100, force: true });
 
       // confirm edit
       cy.get('[aria-label="Expert-Submit-Button"]').click();

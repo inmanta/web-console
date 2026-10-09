@@ -1,57 +1,99 @@
 /**
- * Standalone `${...}` engine for a suggestion's parameter name.
+ * The low-level `${...}` engine: parses references out of a suggestion's parameter name or
+ * graphql filter, and substitutes resolved values back in. Extract runs at load time (before
+ * any value) to answer "what does this depend on?"; substitute runs later with the known
+ * values. References are never evaluated - only parsed into a key and looked up.
  *
- * Extract and substitute are deliberately two separate operations that run at
- * different times. Extract takes just the parameter name and returns data: the
- * list of variables it references. It runs the moment the annotation loads,
- * before any value exists, and answers "what does this parameter name depend
- * on?". Substitute takes the parameter name plus the now-known values and
- * produces the final string. The extract output is what lets callers skip a
- * fetch while a required value is absent, flag an unknown variable as a model
- * error at load time, and build a field dependency graph over all annotations.
- *
- * The `${...}` content is never evaluated: it is parsed into a namespace and
- * used as a lookup key, and substituted values are URL-encoded.
+ *   extractReferences    string -> every ${...} ref, classified (context/field/unknown), deduped
+ *   parseReference       one ${...} body -> its classification
+ *   isFieldReference     narrows a parsed ref to a field ref
+ *   substituteVariables  string + value map -> the string with every ${...} replaced
  */
 
 /**
- * The namespaces the form can currently provide a value for.
+ * The context namespaces a `${...}` reference may name. The first three are form-derived
+ * (supplied by the caller); `environment` is filled by the suggestions hook with the
+ * active environment UUID.
+ *
+ * @example
+ * "${entity_type}" // -> namespace "entity_type"
  */
 export const SUGGESTION_NAMESPACES = [
   "entity_type",
   "identifying_attribute",
   "instance_id",
+  "environment",
 ] as const;
 
 export type SuggestionNamespace = (typeof SUGGESTION_NAMESPACES)[number];
 
 /**
- * The values available for substitution, keyed by namespace.
- * An absent or empty entry means "no value (yet)".
+ * Context values available for substitution, keyed by namespace; an absent or empty entry
+ * means "no value yet".
+ *
+ * @example
+ * { entity_type: "network", environment: "abc-123" }
  */
 export type SuggestionVariables = Partial<Record<SuggestionNamespace, string>>;
+
+/**
+ * The scopes a cascading field reference may resolve against: `form` reads from
+ * the form root, `self` from the field's own embedded instance. A `${...}` beginning
+ * `form.`/`self.` is always a field reference.
+ *
+ * @example
+ * "${self.region}" // -> scope "self"
+ */
+export const FIELD_SCOPES = ["form", "self"] as const;
+
+export type FieldScope = (typeof FIELD_SCOPES)[number];
+
+/**
+ * A parsed `${form.<path>}` / `${self.<path>}` reference: `path` is a jsonpath evaluated
+ * against the scope's data, and `raw` is the exact `${...}` content reused as the
+ * substitution-map key.
+ *
+ * @example
+ * { scope: "form", path: "site", raw: "form.site" }
+ */
+export interface FieldReference {
+  scope: FieldScope;
+  path: string;
+  raw: string;
+}
+
+/**
+ * The value map {@link substituteVariables} reads from, keyed by raw `${...}` content,
+ * carrying both context values and resolved field references so one pass fills every
+ * reference.
+ *
+ * @example
+ * { entity_type: "network", "form.site": "site-a" }
+ */
+export type SubstitutionValues = Record<string, string | undefined>;
 
 /** Extracts the namespaces between brackets */
 const suggestionVariablePattern = /\$\{([^}]*)\}/g;
 
+/** Matches a field reference, splitting scope from jsonpath on the first dot. */
+const fieldReferencePattern = /^(form|self)\.(.+)$/;
+
 /**
- * Type guard narrowing a raw namespace string to a supported {@link SuggestionNamespace}.
+ * Whether a raw namespace is one the form can supply a context value for.
  *
- * @param namespace - The raw namespace parsed out of a `${...}` reference.
- * @returns Whether the namespace is one the form can provide a value for.
+ * @example
+ * isKnownNamespace("entity_type") // => true
+ * isKnownNamespace("form.site")   // => false
  */
 export const isKnownNamespace = (namespace: string): namespace is SuggestionNamespace =>
   SUGGESTION_NAMESPACES.some((known) => known === namespace);
 
 /**
- * Extracts the `${...}` variables a parameter name references.
+ * The raw `${...}` contents referenced in a string, deduplicated in order of first
+ * appearance. Unknown ones are included too - validating them is the caller's job.
  *
- * Unknown namespaces are extracted too - validating them is the caller's
- * concern (see {@link isKnownNamespace}), so the full dependency list stays
- * available for error reporting.
- *
- * @param parameterName - The parameter name, e.g. `"topology_files_${entity_type}"`.
- * @returns The referenced namespaces, deduplicated, in order of first appearance.
+ * @example
+ * extractVariables("files_${entity_type}") // => ["entity_type"]
  */
 export const extractVariables = (parameterName: string): string[] => {
   const namespaces = new Set<string>();
@@ -64,34 +106,72 @@ export const extractVariables = (parameterName: string): string[] => {
 };
 
 /**
- * Returns the `${...}` namespaces a parameter name references that the form
- * cannot provide a value for. An empty result means the parameter name is
- * model-valid.
+ * A `${...}` reference classified by kind: a known `context` namespace, a `field`
+ * reference into another field, or an `unknown` reference (a model error). `raw` is the
+ * original `${...}` content in every case.
  *
- * This is the single source of truth for "is this annotation broken?", shared by
- * the suggestions hook (behavior) and any UI that reports the error. Pure and
- * static: it depends only on the parameter name, never on form values.
- *
- * @param parameterName - The parameter name, e.g. `"topology_files_${entity_typo}"`.
- * @returns The unknown namespaces, in order of first appearance (empty if none).
+ * @example
+ * { kind: "Field", scope: "form", path: "site", raw: "form.site" }
  */
-export const getUnknownNamespaces = (parameterName: string): string[] =>
-  extractVariables(parameterName).filter((namespace) => !isKnownNamespace(namespace));
+export type ParsedReference =
+  | { kind: "Context"; namespace: SuggestionNamespace; raw: string }
+  | ({ kind: "Field" } & FieldReference)
+  | { kind: "Unknown"; raw: string };
 
 /**
- * Substitutes every `${...}` variable in a parameter name with its URL-encoded value.
+ * Narrows a parsed reference to a field reference (drops context/unknown).
  *
- * Purely mechanical: callers are expected to have validated the parameter name with
- * {@link extractVariables} first. A variable without a value substitutes to "".
+ * @example
+ * references.filter(isFieldReference) // => only the ${form.*}/${self.*} refs
+ */
+export const isFieldReference = (
+  reference: ParsedReference
+): reference is { kind: "Field" } & FieldReference => reference.kind === "Field";
+
+/**
+ * Classifies one raw `${...}` content: `form.`/`self.` (with a non-empty path) is a field
+ * reference, a known namespace is `context`, anything else is `unknown`.
  *
- * @param parameterName - The parameter name, e.g. `"topology_files_${entity_type}"`.
- * @param variables - The values to substitute, keyed by namespace.
- * @returns The resolved string, e.g. `"topology_files_Connection"`.
+ * @example
+ * parseReference("form.site")   // => { kind: "Field", scope: "form", path: "site", raw: "form.site" }
+ * parseReference("entity_type") // => { kind: "Context", namespace: "entity_type", raw: "entity_type" }
+ */
+export const parseReference = (raw: string): ParsedReference => {
+  const match = raw.match(fieldReferencePattern);
+
+  if (match) {
+    return { kind: "Field", scope: match[1] as FieldScope, path: match[2], raw };
+  }
+  if (isKnownNamespace(raw)) {
+    return { kind: "Context", namespace: raw, raw };
+  }
+
+  return { kind: "Unknown", raw };
+};
+
+/**
+ * Parses every `${...}` reference in a string, classified and deduplicated by raw content.
+ * This is the structural extract step the dependency graph and blocking build on.
+ *
+ * @example
+ * extractReferences("f_${form.site}") // => [{ kind: "Field", scope: "form", path: "site", raw: "form.site" }]
+ */
+export const extractReferences = (input: string): ParsedReference[] =>
+  extractVariables(input).map(parseReference);
+
+/**
+ * Replaces every `${...}` in a string with its (encoded) value; a reference without a value
+ * becomes "". `encode` defaults to `encodeURIComponent` (REST path); graphql passes identity
+ * and quotes the value itself.
+ *
+ * @example
+ * substituteVariables("files_${entity_type}", { entity_type: "network" }) // => "files_network"
  */
 export const substituteVariables = (
-  parameterName: string,
-  variables: SuggestionVariables
+  input: string,
+  variables: SubstitutionValues,
+  encode: (value: string) => string = encodeURIComponent
 ): string =>
-  parameterName.replace(suggestionVariablePattern, (_match, namespace: string) =>
-    encodeURIComponent(variables[namespace] ?? "")
+  input.replace(suggestionVariablePattern, (_match, namespace: string) =>
+    encode(variables[namespace] ?? "")
   );

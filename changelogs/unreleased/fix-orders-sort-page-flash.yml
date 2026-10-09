@@ -1,0 +1,7 @@
+description: |
+  Sorting the orders table no longer reloads the whole page. The orders query now keeps the
+  previous results on screen while the next sort loads, matching the other list views.
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

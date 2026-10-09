@@ -9,6 +9,9 @@ export interface ServiceInstanceParams {
   currentPage: CurrentPage;
 }
 
+/** Infinite scroll query, which manages its own cursor and so needs no currentPage */
+export type ServiceInstanceInfiniteParams = Omit<ServiceInstanceParams, "currentPage">;
+
 export enum AttributeSet {
   Active = "active_attributes",
   Candidate = "candidate_attributes",
@@ -25,12 +28,3 @@ export interface Filter {
 }
 
 export type DeletedRule = "Include" | "Only" | undefined;
-
-export enum Kind {
-  State = "State",
-  Id = "Id",
-  AttributeSet = "AttributeSet",
-  Deleted = "Deleted",
-}
-
-export const List: Kind[] = [Kind.State, Kind.Id, Kind.AttributeSet, Kind.Deleted];

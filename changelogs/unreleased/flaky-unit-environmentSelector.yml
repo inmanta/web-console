@@ -1,0 +1,3 @@
+description: Fixed flaky unit test for the environmentSelector
+change-type: patch
+destination-branches: [master, iso9]

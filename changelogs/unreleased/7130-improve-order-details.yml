@@ -1,0 +1,4 @@
+description: Improved order details view to be more readable.
+issue-nr: 7130
+change-type: patch
+destination-branches: [master, iso9]

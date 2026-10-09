@@ -24,7 +24,7 @@ interface ConnectedFilterWidgetProps {
 export const ConnectedFilterWidget: React.FC<ConnectedFilterWidgetProps> = memo(({ onClose }) => {
   const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterWithDefaultHandling>({
     route: "Resources",
-    keys: { disregardDefault: "Boolean" },
+    keys: { disregardDefault: "Boolean", includeOwned: "Boolean" },
   });
 
   const filterWithDefaults = useMemo(() => {

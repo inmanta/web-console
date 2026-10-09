@@ -1,0 +1,6 @@
+description: The inter-service relation autocomplete in the service instance form now debounces its search. It refetches matching instances 500ms after you stop typing instead of on every keystroke, which cuts the number of requests while filtering.
+issue-nr: 5157
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

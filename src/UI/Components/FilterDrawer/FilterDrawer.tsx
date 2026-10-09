@@ -1,0 +1,40 @@
+import React from "react";
+import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
+
+interface Props {
+  isExpanded: boolean;
+  panelContent: React.ReactNode;
+  children: React.ReactNode;
+}
+
+const drawerStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  flex: "1 1 auto",
+};
+
+const contentBodyStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  flex: "1 1 auto",
+  minHeight: 0,
+};
+
+/**
+ * Renders the shared inline filter drawer: a side panel holding the filter widget next to the page content.
+ * Replaces the Drawer + DrawerContent + DrawerContentBody boilerplate duplicated across the filtered pages.
+ *
+ * @Props {Props} - Component props.
+ *  @prop {boolean} isExpanded - Whether the filter side panel is currently shown.
+ *  @prop {React.ReactNode} panelContent - The filter widget rendered in the side panel.
+ *  @prop {React.ReactNode} children - The main page content (table, empty view, ...) shown beside the panel.
+ *
+ * @returns {React.ReactElement} The rendered filter drawer.
+ */
+export const FilterDrawer: React.FC<Props> = ({ isExpanded, panelContent, children }) => (
+  <Drawer isExpanded={isExpanded} isInline style={drawerStyle}>
+    <DrawerContent panelContent={panelContent}>
+      <DrawerContentBody style={contentBodyStyle}>{children}</DrawerContentBody>
+    </DrawerContent>
+  </Drawer>
+);

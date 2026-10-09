@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { Resource } from "@/Core";
+import { words } from "@/UI";
 import { ActiveFiltersSection } from "./ActiveFiltersSection";
 
 const createHandlers = () => ({
@@ -12,6 +14,11 @@ const createHandlers = () => ({
   clearAgentFilters: vi.fn(),
   clearValueFilters: vi.fn(),
   clearStatusFilters: vi.fn(),
+  removeServiceEntityChip: vi.fn(),
+  clearServiceEntities: vi.fn(),
+  removeServiceInstanceChip: vi.fn(),
+  clearServiceInstances: vi.fn(),
+  removeIncludeOwned: vi.fn(),
 });
 
 describe("ActiveFiltersSection", () => {
@@ -84,5 +91,40 @@ describe("ActiveFiltersSection", () => {
       })
     );
     expect(handlers.removeStatusChip).toHaveBeenCalledWith("deployed");
+  });
+
+  it("renders service scope chips and delegates their removal", async () => {
+    const instanceValue = Resource.encodeServiceInstanceFilterValue(
+      "e0f1b3d2-0000-0000-0000-000000000000",
+      "demo-cpe-ring"
+    );
+    const filter = {
+      serviceEntity: ["l2Connect"],
+      serviceInstance: [instanceValue],
+      includeOwned: true,
+    };
+
+    render(<ActiveFiltersSection filter={filter} {...handlers} />);
+
+    expect(screen.getByText(words("resources.filters.service.entity.label"))).toBeInTheDocument();
+    expect(screen.getByText(words("resources.filters.service.instance.label"))).toBeInTheDocument();
+    expect(
+      screen.getByText(words("resources.filters.service.includeOwned.label"))
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: /close l2Connect/i }));
+    expect(handlers.removeServiceEntityChip).toHaveBeenCalledWith("l2Connect");
+
+    // The chip shows the resolved name, not the id, but removal carries the stored id|name value.
+    expect(screen.queryByText("e0f1b3d2-0000-0000-0000-000000000000")).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: /close demo-cpe-ring/i }));
+    expect(handlers.removeServiceInstanceChip).toHaveBeenCalledWith(instanceValue);
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: new RegExp(`close ${words("resources.filters.service.includeOwned.chipValue")}`, "i"),
+      })
+    );
+    expect(handlers.removeIncludeOwned).toHaveBeenCalledTimes(1);
   });
 });

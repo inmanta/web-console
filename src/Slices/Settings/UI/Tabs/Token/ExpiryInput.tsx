@@ -1,18 +1,10 @@
-import React, { useState } from "react";
-import {
-  Flex,
-  FlexItem,
-  FormGroup,
-  FormSelect,
-  FormSelectOption,
-  InputGroup,
-  TextInput,
-} from "@patternfly/react-core";
+import React, { useEffect, useState } from "react";
+import { Flex, FlexItem, FormGroup, FormSelect, FormSelectOption } from "@patternfly/react-core";
 import styled from "styled-components";
+import { resolveUnitConfig, UnitFormInput } from "@/UI/Components/UnitInput";
 import { words } from "@/UI/words";
 
-const ONE_MINUTE_SECONDS = 60;
-const ONE_HOUR_SECONDS = 60 * ONE_MINUTE_SECONDS;
+const ONE_HOUR_SECONDS = 60 * 60;
 const ONE_DAY_SECONDS = 24 * ONE_HOUR_SECONDS;
 const THIRTY_DAYS_SECONDS = 30 * ONE_DAY_SECONDS;
 const ONE_YEAR_SECONDS = 365 * ONE_DAY_SECONDS;
@@ -29,48 +21,49 @@ const EXPIRY_OPTIONS: { seconds: number; label: string }[] = [
   { seconds: ONE_YEAR_SECONDS, label: "1 year" },
 ];
 
-const CUSTOM_UNITS: { unit: string; seconds: number }[] = [
-  { unit: "minutes", seconds: ONE_MINUTE_SECONDS },
-  { unit: "hours", seconds: ONE_HOUR_SECONDS },
-  { unit: "days", seconds: ONE_DAY_SECONDS },
-];
+// Custom-entry unit config: a plain duration in seconds, displayed in days by default.
+const CUSTOM_CONFIG_RESULT = resolveUnitConfig({ web_unit: "s", web_unit_display: "d" }, "int");
+
+if (!CUSTOM_CONFIG_RESULT.ok) {
+  throw new Error(CUSTOM_CONFIG_RESULT.reason);
+}
+
+const CUSTOM_CONFIG = CUSTOM_CONFIG_RESULT.config;
 
 interface Props {
   onChange(value: number | null): void;
+  onValidityChange(isValid: boolean): void;
   isDisabled: boolean;
 }
 
 /**
  * Labeled expiry editor for the create-token form: preset lifetimes plus a custom amount + unit entry.
  * Emits the effective lifetime in seconds through onChange, or null when no (valid) expiry is set.
+ * Reports through onValidityChange whether the custom entry currently has a validation error, so
+ * the caller can gate submission on it — a blank custom entry is valid (it just means "never").
  *
  * @returns {React.FC<Props>} The expiry input.
  */
-export const ExpiryInput: React.FC<Props> = ({ onChange, isDisabled }) => {
+export const ExpiryInput: React.FC<Props> = ({ onChange, onValidityChange, isDisabled }) => {
   const [choice, setChoice] = useState(String(DEFAULT_EXPIRY_SECONDS));
-  const [customAmount, setCustomAmount] = useState("");
-  const [customUnit, setCustomUnit] = useState("days");
+  const [customValue, setCustomValue] = useState<number | bigint | null>(null);
+  const [isCustomValid, setIsCustomValid] = useState(true);
 
-  const toSeconds = (choice: string, amount: string, unit: string): number | null => {
-    if (choice === "") {
-      return null;
-    }
+  const isValid = choice !== "custom" || isCustomValid;
 
-    if (choice !== "custom") {
-      return Number(choice);
-    }
+  useEffect(() => {
+    onValidityChange(isValid);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid]);
 
-    const parsed = Number(amount);
-    const unitSeconds = CUSTOM_UNITS.find((option) => option.unit === unit)?.seconds;
-
-    return Number.isInteger(parsed) && parsed > 0 && unitSeconds ? parsed * unitSeconds : null;
+  const selectPreset = (value: string) => {
+    setChoice(value);
+    onChange(value === "" || value === "custom" ? null : Number(value));
   };
 
-  const update = (choice: string, amount: string, unit: string) => {
-    setChoice(choice);
-    setCustomAmount(amount);
-    setCustomUnit(unit);
-    onChange(toSeconds(choice, amount, unit));
+  const selectCustom = (value: number | bigint | null) => {
+    setCustomValue(value);
+    onChange(value === null ? null : Number(value));
   };
 
   return (
@@ -80,7 +73,7 @@ export const ExpiryInput: React.FC<Props> = ({ onChange, isDisabled }) => {
           <FormSelect
             id="token-expiry"
             value={choice}
-            onChange={(_event, value) => update(value, customAmount, customUnit)}
+            onChange={(_event, value) => selectPreset(value)}
             isDisabled={isDisabled}
           >
             <FormSelectOption value="" label={words("settings.tabs.token.expiry.never")} />
@@ -95,43 +88,31 @@ export const ExpiryInput: React.FC<Props> = ({ onChange, isDisabled }) => {
           </FormSelect>
         </FlexItem>
         {choice === "custom" && (
-          <FlexItem>
-            <InputGroup>
-              <AmountInput
-                id="token-expiry-amount"
-                type="number"
-                aria-label="ExpiryCustomAmount"
-                value={customAmount}
-                onChange={(_event, value) => update(choice, value, customUnit)}
-                isDisabled={isDisabled}
-              />
-              <UnitSelect
-                id="token-expiry-unit"
-                aria-label="ExpiryCustomUnit"
-                value={customUnit}
-                onChange={(_event, value) => update(choice, customAmount, value)}
-                isDisabled={isDisabled}
-              >
-                {CUSTOM_UNITS.map((option) => (
-                  <FormSelectOption key={option.unit} value={option.unit} label={option.unit} />
-                ))}
-              </UnitSelect>
-            </InputGroup>
-          </FlexItem>
+          <UnlabeledFlexItem>
+            <UnitFormInput
+              attributeName="token-expiry-custom"
+              label=""
+              attributeValue={customValue}
+              isOptional
+              config={CUSTOM_CONFIG}
+              bounds={{ gt: 0 }}
+              shouldBeDisabled={isDisabled}
+              handleInputChange={(value) => selectCustom(value)}
+              onValidityChange={setIsCustomValid}
+            />
+          </UnlabeledFlexItem>
         )}
       </Flex>
     </StyledFormGroup>
   );
 };
 
-const AmountInput = styled(TextInput)`
-  width: 6rem;
-`;
-
-const UnitSelect = styled(FormSelect)`
-  width: auto;
-`;
-
 const StyledFormGroup = styled(FormGroup)`
   --pf-v6-c-form--m-horizontal__group-label--md--GridColumnWidth: 16rem;
+`;
+
+// UnitFormInput renders its own (unused, label="") FormGroup, which otherwise inherits the
+// horizontal-form label-column width above and reserves that as blank space before its control.
+const UnlabeledFlexItem = styled(FlexItem)`
+  --pf-v6-c-form--m-horizontal__group-label--md--GridColumnWidth: 0px;
 `;

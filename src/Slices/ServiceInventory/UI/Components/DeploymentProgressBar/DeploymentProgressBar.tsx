@@ -10,6 +10,9 @@ import { words } from "@/UI/words";
 
 type Progress = Omit<DeploymentProgress, "total"> | undefined | null;
 
+/** Height of the bar segments */
+const BAR_ITEM_HEIGHT = "28px";
+
 interface Props {
   progress: Progress;
 }
@@ -46,5 +49,7 @@ function fromProgressToItems(progress: Progress): LegendItemDetails[] {
       value: Number(progress.waiting),
       backgroundColor: chart_color_blue_300.var,
     },
-  ].filter((item) => item.value > 0);
+  ]
+    .filter((item) => item.value > 0)
+    .map((item) => ({ ...item, height: BAR_ITEM_HEIGHT }));
 }

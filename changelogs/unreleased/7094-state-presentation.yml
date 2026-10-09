@@ -1,0 +1,6 @@
+description: A lifecycle state now renders its `web_label` / `web_icon` / `web_description` annotations wherever its badge appears (instance state column, history timeline, catalog lifecycle table), instead of just the raw state name.
+issue-nr: 7094
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

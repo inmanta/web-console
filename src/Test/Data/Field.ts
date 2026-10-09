@@ -8,6 +8,7 @@ import {
   EnumField,
   Textarea,
   DictField,
+  UnitField,
 } from "@/Core";
 
 export const textArea: Textarea = {
@@ -163,6 +164,25 @@ export const numberArr: TextField = {
   isDisabled: false,
 };
 
+export const unit: UnitField = {
+  kind: "Unit",
+  name: "unit_field",
+  description: "description",
+  isOptional: true,
+  isDisabled: false,
+  defaultValue: null,
+  type: "int?",
+  config: {
+    kind: "bitrate",
+    apiUnit: "kbit/s",
+    isInt: true,
+    scales: "metric",
+    offeredUnits: ["kbit/s", "Mbit/s", "Gbit/s", "Tbit/s"],
+    displayUnit: "kbit/s",
+  },
+  bounds: { le: 1000000 },
+};
+
 export const dictionary: DictField = {
   kind: "Dict",
   name: "dictionary_field",
@@ -184,6 +204,7 @@ export const nested = (fields?: Field[]): NestedField => ({
 
 export const dictList = (fields?: Field[]): DictListField => ({
   kind: "DictList",
+  keyAttributes: [],
   name: "dict_list_field",
   description: "description",
   isOptional: true,
@@ -195,6 +216,7 @@ export const dictList = (fields?: Field[]): DictListField => ({
 
 export const nestedDictList = (fields?: Field[]): DictListField => ({
   kind: "DictList",
+  keyAttributes: [],
   name: "nested_dict_list_field",
   description: "description",
   isOptional: true,
@@ -256,6 +278,7 @@ export const nestedEditable: Field[] = [
   },
   {
     kind: "DictList",
+    keyAttributes: [],
     name: "embedded",
     isOptional: true,
     isDisabled: false,
@@ -308,6 +331,7 @@ export const nestedEditable: Field[] = [
   },
   {
     kind: "DictList",
+    keyAttributes: [],
     name: "another_embedded",
     isOptional: true,
     isDisabled: false,

@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump qs from 6.15.2 to 6.15.3
+destination-branches:
+- master
+sections: {}

@@ -1,6 +1,6 @@
 import { act, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider, ServiceInstance } from "@/Test";
@@ -71,12 +71,15 @@ test("Given the AutoCompleteInputProvider When typing an instance name or id The
   expect(relationInputField).toHaveValue("a");
   expect(await screen.findByText("service_name_a")).toBeInTheDocument();
 
-  // Type 'ab' and check input value and option
+  // Type 'ab' and check input value and option. The search feeding the request is
+  // debounced, so the option only disappears once the debounced request settles.
   await act(async () => {
     fireEvent.change(relationInputField, { target: { value: "ab" } });
   });
   expect(relationInputField).toHaveValue("ab");
-  expect(screen.queryByText("service_name_a")).not.toBeInTheDocument();
+  await waitFor(() => expect(screen.queryByText("service_name_a")).not.toBeInTheDocument(), {
+    timeout: 2000,
+  });
 
   // Clear input and check value and option
   await act(async () => {

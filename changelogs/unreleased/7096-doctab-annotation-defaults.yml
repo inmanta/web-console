@@ -1,0 +1,6 @@
+description: The documentation-tab `setState` markdown button now defaults its label, icon, type and variant from the transfer's `web_button_label` / `web_icon` / `web_button_type` / `web_button_variant` annotations (an explicit codeblock value still wins), shows the transfer's `web_confirm` prompt, and is disabled while viewing a historical instance version.
+issue-nr: 7096
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

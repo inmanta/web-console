@@ -10,6 +10,7 @@ import {
   Dropdown,
   DropdownList,
   DropdownItem,
+  Tooltip,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import {
@@ -34,6 +35,7 @@ import {
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
 import { MultiLinkCell } from "@/UI/Components/TreeTable/TreeRow/CellWithCopy";
+import { formatReadOnly, resolveUnitField } from "@/UI/Components/UnitInput";
 
 interface Props {
   dropdownOptions: string[];
@@ -62,6 +64,10 @@ export const AttributesTable: React.FC<Props> = ({
   const navigate = useNavigate();
 
   const [selectedSet, setSelectedSet] = useState(dropdownOptions[0]);
+
+  // The selected set can be missing from the selected version. Show the first option then, but keep the choice for when it is available again.
+  const activeSet = dropdownOptions.includes(selectedSet) ? selectedSet : dropdownOptions[0];
+
   const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>([""]);
 
   // Sort direction of the currently sorted column
@@ -148,6 +154,69 @@ export const AttributesTable: React.FC<Props> = ({
   };
 
   /**
+   * Formats a leaf's value with its unit (issue #7022/#7132) when its matched AttributeModel
+   * opts into `web_presentation: "unit"`. Returns `null` for anything else — no attribute match,
+   * not opted in, a bad annotation (logged and skipped, never breaking the table), or a value
+   * that isn't actually a number/bigint — so the caller falls back to the plain `printValue` text.
+   */
+  const formatUnitCell = (treeRowCell: TreeRowData): { text: string; tooltip: string } | null => {
+    if (!treeRowCell.attribute) {
+      return null;
+    }
+
+    const resolved = resolveUnitField(treeRowCell.attribute);
+
+    if (!resolved) {
+      return null;
+    }
+
+    if (!resolved.ok) {
+      console.warn(`${resolved.reason} Displaying the raw value instead.`);
+
+      return null;
+    }
+
+    if (typeof treeRowCell.value !== "number" && typeof treeRowCell.value !== "bigint") {
+      return null;
+    }
+
+    const formatted = formatReadOnly(treeRowCell.value, resolved.config);
+
+    return {
+      text: `${formatted.value.toFixed()} ${formatted.unit}`,
+      tooltip: `${formatted.apiValue.toFixed()} ${formatted.apiUnit}`,
+    };
+  };
+
+  /**
+   * Renders a value cell: a relation link, a unit-formatted value with a raw-value tooltip, or
+   * the plain stringified value — in that priority order.
+   */
+  const renderValue = (treeRowCell: TreeRowData): React.ReactNode => {
+    if (treeRowCell.type === "Relation") {
+      return (
+        <MultiLinkCell
+          value={String(treeRowCell.value)}
+          serviceName={treeRowCell.serviceName}
+          onClick={navigateToInstanceDetails}
+        />
+      );
+    }
+
+    const unitCell = formatUnitCell(treeRowCell);
+
+    if (unitCell) {
+      return (
+        <Tooltip content={unitCell.tooltip} entryDelay={200}>
+          <span>{unitCell.text}</span>
+        </Tooltip>
+      );
+    }
+
+    return printValue(treeRowCell);
+  };
+
+  /**
    * Handle the select event of the table options dropdown.
    * Current handled options are:
    *
@@ -170,7 +239,7 @@ export const AttributesTable: React.FC<Props> = ({
         collapseAll();
         break;
       case "Reset-sort":
-        setTableData(formatTreeRowData(attributeSets[selectedSet], serviceModel));
+        setTableData(formatTreeRowData(attributeSets[activeSet], serviceModel));
         setActiveSortIndex(0);
         setActiveSortDirection(undefined);
         break;
@@ -310,15 +379,7 @@ export const AttributesTable: React.FC<Props> = ({
           aria-label={node.id + "_value"}
           modifier="truncate"
         >
-          {node.type === "Relation" ? (
-            <MultiLinkCell
-              value={String(node.value)}
-              serviceName={node.serviceName}
-              onClick={navigateToInstanceDetails}
-            />
-          ) : (
-            printValue(node)
-          )}
+          {renderValue(node)}
         </Td>
       </TreeRowWrapper>,
       ...childRows,
@@ -327,16 +388,8 @@ export const AttributesTable: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    setTableData(formatTreeRowData(attributeSets[selectedSet], serviceModel));
-  }, [attributeSets, selectedSet, serviceModel]);
-
-  useEffect(() => {
-    // When the version changes, it can happen that the selectedSet isn't available in the dropdown.
-    // In that case, we want to fall back to the first option available.
-    if (!dropdownOptions.includes(selectedSet)) {
-      setSelectedSet(dropdownOptions[0]);
-    }
-  }, [dropdownOptions, selectedSet]);
+    setTableData(formatTreeRowData(attributeSets[activeSet], serviceModel));
+  }, [attributeSets, activeSet, serviceModel]);
 
   useEffect(() => {
     if (activeSortDirection) {
@@ -349,7 +402,7 @@ export const AttributesTable: React.FC<Props> = ({
       <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
         <FlexItem>
           <StyledSelect
-            value={selectedSet}
+            value={activeSet}
             onChange={onSetSelectionChange}
             aria-label="Select-AttributeSet"
             ouiaId="Select-AttributeSet"
@@ -374,10 +427,10 @@ export const AttributesTable: React.FC<Props> = ({
           >
             <DropdownList>
               <DropdownItem aria-label="Collapse-all" value="Collapse-all" key="Collapse-all">
-                {words("instanceDetails.collapseAll")}
+                {words("collapseAll")}
               </DropdownItem>
               <DropdownItem aria-label="Expand-all" value="Expand-all" key="Expand-all">
-                {words("instanceDetails.expandAll")}
+                {words("expandAll")}
               </DropdownItem>
               <DropdownItem aria-label="Reset-sort" value="Reset-sort" key="Reset-sort">
                 {words("instanceDetails.resetSort")}
@@ -398,7 +451,7 @@ export const AttributesTable: React.FC<Props> = ({
             >
               {words("instanceDetails.table.attributeKey")}
             </Th>
-            <Th width={60}>{words("instanceDetails.table.valueKey")}</Th>
+            <Th width={60}>{words("value")}</Th>
           </Tr>
         </Thead>
         <Tbody>{renderRows(tableData)}</Tbody>
