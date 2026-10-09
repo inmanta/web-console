@@ -134,20 +134,30 @@ test("renders a terminal chip when a reference repeats an ancestor", () => {
   expect(screen.getByText(/cycle/)).toBeInTheDocument();
 });
 
-test("renders a truncation notice at the depth cap", () => {
-  const index = indexReferences(environmentReferences);
+test("renders a long reference chain down to its last link", () => {
+  const length = 15;
+  const leafValue = "end";
+  const chain: Reference.RawReference[] = Array.from({ length }, (_, position) => ({
+    id: `link-${position}`,
+    type: "test::Link",
+    args: [
+      position < length - 1
+        ? { name: "next", type: "reference", id: `link-${position + 1}` }
+        : { name: "name", type: "literal", value: leafValue },
+    ],
+  }));
 
   renderNode(
     <ReferenceNode
-      referenceId={environmentId}
-      index={index}
-      isExpanded={collapsed}
+      referenceId={chain[0].id}
+      index={indexReferences(chain)}
+      isExpanded={() => true}
       onToggle={noToggle}
-      depth={10}
     />
   );
 
-  expect(screen.getByText(/truncated/)).toBeInTheDocument();
+  expect(screen.getByText(chain[length - 1].id)).toBeVisible();
+  expect(screen.getByText(leafValue)).toBeVisible();
 });
 
 test("renders each argument kind, links genuine resources and drops the self resource", async () => {

@@ -7,8 +7,6 @@ import {
   DescriptionListTerm,
   ExpandableSection,
   Flex,
-  HelperText,
-  HelperTextItem,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Reference } from "@/Core/Domain";
@@ -19,16 +17,11 @@ import { words } from "@/UI/words";
 import { ArgumentValue } from "./ArgumentValue";
 import { ReferenceChip } from "./ReferenceChip";
 
-// Depth cap: exported data cannot cycle, so this only guards malformed data
-// alongside the ancestor check below.
-const MAX_DEPTH = 10;
-
 interface Props {
   referenceId: string;
   index: Reference.ReferenceIndex;
   isExpanded: (key: string) => boolean;
   onToggle: (key: string) => () => void;
-  depth?: number;
   ancestors?: string[];
   path?: string;
   toggleLabel?: React.ReactNode;
@@ -41,16 +34,15 @@ const isSelfResourceArg = (arg: Reference.Argument): boolean =>
 
 /**
  * One reference at any depth: a chip with a chevron, and when expanded a card with
- * its copyable id and one row per argument. A missing id, an ancestor cycle, or the
- * depth cap each render a terminal chip or notice instead of recursing. Expansion is
- * keyed by `path` (its position in the tree, defaulting to the id at the top level), so
- * a node shown in two places opens independently.
+ * its copyable id and one row per argument. A missing id or an ancestor cycle renders
+ * a terminal chip instead of recursing, so a cyclic chain still ends. Expansion
+ * is keyed by `path` (its position in the tree, defaulting to the id at the top level),
+ * so a node shown in two places opens independently.
  *
  * @prop {string} referenceId - Id of the reference node to render.
  * @prop {Reference.ReferenceIndex} index - Lookup from reference id to normalized node.
  * @prop {(key: string) => boolean} isExpanded - Whether the node at a path is expanded.
  * @prop {(key: string) => () => void} onToggle - Returns the toggle handler for a path.
- * @prop {number} [depth] - Current nesting depth, checked against the depth cap.
  * @prop {string[]} [ancestors] - Reference ids on the path here, for cycle detection.
  * @prop {string} [path] - This node's position in the tree; the expansion key.
  * @prop {React.ReactNode} [toggleLabel] - Shown next to the chip in the toggle.
@@ -60,7 +52,6 @@ export const ReferenceNode: React.FC<Props> = ({
   index,
   isExpanded,
   onToggle,
-  depth = 0,
   ancestors = [],
   path,
   toggleLabel,
@@ -85,14 +76,6 @@ export const ReferenceNode: React.FC<Props> = ({
         color="orange"
         tooltip={words("references.cycle.tooltip")}
       />
-    );
-  }
-
-  if (depth >= MAX_DEPTH) {
-    return (
-      <HelperText>
-        <HelperTextItem variant="indeterminate">{words("references.truncated")}</HelperTextItem>
-      </HelperText>
     );
   }
 
@@ -140,7 +123,6 @@ export const ReferenceNode: React.FC<Props> = ({
                       index={index}
                       isExpanded={isExpanded}
                       onToggle={onToggle}
-                      depth={depth}
                       ancestors={childAncestors}
                       path={nodePath}
                     />

@@ -142,13 +142,12 @@ if (isIso) {
         "be.visible"
       );
 
-      // A deep chain stops at the depth cap instead of rendering forever
-      for (let level = 1; level <= 10; level++) {
+      // A deep chain expands all the way down to its leaf
+      for (let level = 1; level <= 12; level++) {
         referenceToggle("chain", `frontend_model::showcase::Link(label=link-${level})`).click();
       }
-      cy.get('[data-testid="attribute-chain"]').should(
-        "contain",
-        "Reference tree truncated at 10 levels"
+      referenceToggle("chain", "frontend_model::showcase::Secret(name=chain-leaf)").should(
+        "be.visible"
       );
     });
 

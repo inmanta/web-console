@@ -752,7 +752,6 @@ const dict = {
   "references.argumentKind.resource": "resource",
   "references.argumentKind.python_type": "python type",
   "references.argumentKind.get": "dict path",
-  "references.truncated": "Reference tree truncated at 10 levels",
   "references.mutatorsNotDisplayed": (count: number) =>
     `${count} ${count === 1 ? "mutator is" : "mutators are"} not displayed`,
   "resources.logs.title": "Logs",
