@@ -1,0 +1,6 @@
+description: The service inventory header shows the service description and clickable instance counts instead of a donut chart.
+issue-nr: 7414
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

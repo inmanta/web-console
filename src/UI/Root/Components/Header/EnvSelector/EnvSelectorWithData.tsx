@@ -1,9 +1,10 @@
-import React from "react";
-import { Dropdown, Spinner, MenuToggle } from "@patternfly/react-core";
+import React, { useEffect } from "react";
+import { Dropdown, MenuToggle } from "@patternfly/react-core";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Environment, FlatEnvironment, ProjectModel } from "@/Core";
 import { EnvironmentPreview } from "@/Data/Queries";
-import { AppAlert } from "@/UI/Components";
+import { Spinner } from "@/UI/Components";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
 import { EnvironmentSelectorItem, EnvSelectorWrapper } from "./EnvSelectorWrapper";
 
@@ -32,37 +33,28 @@ export const EnvSelectorWithData: React.FC<Props> = ({
   onSelectEnvironment,
   selectedEnvironment,
 }) => {
-  if (environments.isError) {
-    return (
-      <>
-        <Dropdown
-          aria-label="EnvSelector-Failed"
-          toggle={() => <MenuToggle>{words("error")}</MenuToggle>}
-        />
-        <AppAlert
-          title={words("error")}
-          testId="AlertError"
-          isInline
-          message={environments.error?.message}
-        />
-      </>
-    );
-  }
+  const { notifyError } = useAppAlert();
 
-  if (projects.isError) {
+  useEffect(() => {
+    if (environments.isError) {
+      notifyError({ title: words("error"), message: environments.error?.message });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [environments.isError, environments.error]);
+
+  useEffect(() => {
+    if (projects.isError) {
+      notifyError({ title: words("error"), message: projects.error?.message });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projects.isError, projects.error]);
+
+  if (environments.isError || projects.isError) {
     return (
-      <>
-        <Dropdown
-          aria-label="EnvSelector-Failed"
-          toggle={() => <MenuToggle>{words("error")}</MenuToggle>}
-        />
-        <AppAlert
-          title={words("error")}
-          testId="AlertError"
-          isInline
-          message={projects.error.message}
-        />
-      </>
+      <Dropdown
+        aria-label="EnvSelector-Failed"
+        toggle={() => <MenuToggle>{words("error")}</MenuToggle>}
+      />
     );
   }
 
@@ -92,9 +84,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
     );
   }
 
-  return (
-    <Dropdown toggle={() => <Spinner size="sm" />} aria-label="EnvSelector-Loading"></Dropdown>
-  );
+  return <Dropdown toggle={() => <Spinner />} aria-label="EnvSelector-Loading"></Dropdown>;
 };
 
 /**

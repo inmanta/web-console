@@ -16,7 +16,6 @@ export interface OrchestratorProvider {
   getEdition(): string;
   getJsonParser(): JsonParserId;
   getCommitHash(): string;
-  getAppVersion(): string;
   getLicenseInformation(): StatusLicense | undefined;
   setAllFeatures(
     features: Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices">

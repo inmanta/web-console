@@ -44,7 +44,7 @@ export const HistorySection: React.FC = () => {
       <PanelHeader>
         <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
           <FlexItem>
-            <Title headingLevel="h2">{words("instanceDetails.history.title")}</Title>
+            <Title headingLevel="h2">{words("history")}</Title>
           </FlexItem>
           <FlexItem>
             <Link
@@ -185,5 +185,6 @@ export const StateLabel: React.FC<StateLabelProps> = ({ service, state }) => {
   return InstanceStateLabel({
     name: lifecycleState.name,
     label: lifecycleState.label,
+    annotations: lifecycleState.annotations,
   });
 };

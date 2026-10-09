@@ -13,7 +13,7 @@ import { AppAlert, CreatableSelectInput } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
+import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentParams";
 import { ImageField } from "./ImageField";
 import { TextAreaField } from "./TextAreaField";
 import { TextField } from "./TextField";
@@ -169,12 +169,12 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       <TextField
         isRequired
         value={createEnvironmentBody.name}
-        label={words("createEnv.name")}
+        label={words("name")}
         onChange={setName}
       />
       <TextAreaField
         value={createEnvironmentBody.description || ""}
-        label={words("createEnv.description")}
+        label={words("description")}
         onChange={(_event, value) => setDescription(value)}
       />
       <TextField

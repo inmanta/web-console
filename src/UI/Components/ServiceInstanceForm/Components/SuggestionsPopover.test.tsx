@@ -2,7 +2,8 @@ import React, { RefObject } from "react";
 import { Button } from "@patternfly/react-core";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { SuggestionValue } from "@/Core";
-import { SuggestionsPopover } from "./SuggestionsPopover";
+import { words } from "@/UI/words";
+import { MAX_VISIBLE_SUGGESTIONS, SuggestionsPopover } from "./SuggestionsPopover";
 
 describe("SuggestionsPopover", () => {
   const suggestions: SuggestionValue[] = [
@@ -46,6 +47,30 @@ describe("SuggestionsPopover", () => {
 
     // Clicking submits the value, not the displayed label.
     expect(handleSuggestionClick).toHaveBeenCalledWith(labeled[0].value);
+  });
+
+  it("returns focus to the input when a suggestion is selected", () => {
+    render(
+      <>
+        <input ref={ref} />
+        <SuggestionsPopover
+          suggestions={suggestions}
+          handleSuggestionClick={handleSuggestionClick}
+          filter={filter}
+          close={close}
+          isOpen={isOpen}
+          ref={ref}
+        />
+      </>
+    );
+
+    const input = screen.getByRole("textbox");
+
+    fireEvent.click(screen.getByText(suggestions[0].label));
+
+    // Selecting hands focus back to the field so tab navigation resumes there.
+    expect(input).toHaveFocus();
+    expect(close).toHaveBeenCalled();
   });
 
   it("calls close when the popover is closed", () => {
@@ -125,5 +150,54 @@ describe("SuggestionsPopover", () => {
 
     // Assert that handleSuggestionClick is called with the correct suggestion value
     expect(handleSuggestionClick).toHaveBeenCalledWith(suggestions[0].value);
+  });
+
+  it("caps the rendered matches and reports how many more exist", () => {
+    const many: SuggestionValue[] = Array.from(
+      { length: MAX_VISIBLE_SUGGESTIONS + 2 },
+      (_, index) => ({ label: `option-${index}`, value: `${index}` })
+    );
+
+    render(
+      <>
+        <input ref={ref} />
+        <SuggestionsPopover
+          suggestions={many}
+          handleSuggestionClick={handleSuggestionClick}
+          filter="option"
+          close={close}
+          isOpen={isOpen}
+          ref={ref}
+        />
+      </>
+    );
+
+    // Only the first slice is rendered, not the full match set.
+    expect(screen.getAllByRole("menuitem")).toHaveLength(MAX_VISIBLE_SUGGESTIONS);
+    // The footer reports the shown/total counts so the user knows to narrow down.
+    expect(
+      screen.getByText(
+        words("inventory.form.suggestions.moreResults")(MAX_VISIBLE_SUGGESTIONS, many.length)
+      )
+    ).toBeInTheDocument();
+  });
+
+  it("omits the more-results footer when every match fits", () => {
+    render(
+      <>
+        <input ref={ref} />
+        <SuggestionsPopover
+          suggestions={suggestions}
+          handleSuggestionClick={handleSuggestionClick}
+          filter=""
+          close={close}
+          isOpen={isOpen}
+          ref={ref}
+        />
+      </>
+    );
+
+    expect(screen.getAllByRole("menuitem")).toHaveLength(suggestions.length);
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 });

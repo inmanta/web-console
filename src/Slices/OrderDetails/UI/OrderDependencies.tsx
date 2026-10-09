@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Card, Label } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
+import styled from "styled-components";
 import { ServiceOrderItem, ServiceOrderItemDependencies } from "@/Slices/Orders/Core/Types";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { words } from "@/UI";
@@ -46,7 +47,7 @@ export const OrderDependencies: React.FC<Props> = ({
 
   return (
     <Card>
-      <Table>
+      <NarrowTable>
         <Tbody>
           {Object.entries(dependencies).map(([instance_id, status], index) => {
             const instanceDisplayName = getInstanceDisplayName(
@@ -105,7 +106,12 @@ export const OrderDependencies: React.FC<Props> = ({
             );
           })}
         </Tbody>
-      </Table>
+      </NarrowTable>
     </Card>
   );
 };
+
+const NarrowTable = styled(Table)`
+  width: fit-content;
+  max-width: 100%;
+`;

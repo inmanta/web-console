@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import MarkdownIt from "markdown-it";
+import type { MarkdownIt } from "markdown-it";
 
 /**
  * Markdown-it plugin: replaces ```mermaid fences with <pre class="mermaid"> blocks.

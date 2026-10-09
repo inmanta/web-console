@@ -22,6 +22,7 @@ const status: ServerStatus = {
     {
       name: "lsm.order",
       status: {},
+      reported_status: "OK",
     },
     {
       name: "core.transport",
@@ -30,6 +31,7 @@ const status: ServerStatus = {
         running: true,
         sockets: ["0.0.0.0:8888"],
       },
+      reported_status: "OK",
     },
     {
       name: "core.scheduler_manager",
@@ -53,9 +55,13 @@ const status: ServerStatus = {
           pool_exhaustion_count: 209,
         },
       },
+      reported_status: "OK",
     },
   ],
   features: [],
+  status: "OK",
+  python_version: "3.11.0",
+  postgresql_version: "13.0",
 };
 
 describe("Given StatusList", () => {

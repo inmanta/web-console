@@ -1,5 +1,3 @@
-import { Maybe } from "@/Core";
-
 interface FileSize {
   size: number;
 }
@@ -9,16 +7,16 @@ interface FileType {
 }
 
 export class ImageHelper {
-  static validateFile(file: FileSize & FileType): Maybe.Maybe<"TYPE" | "SIZE"> {
+  static validateFile(file: FileSize & FileType): "TYPE" | "SIZE" | undefined {
     if (!this.isFileTypeValid(file)) {
-      return Maybe.some("TYPE");
+      return "TYPE";
     }
 
     if (!this.isFileSizeValid(file)) {
-      return Maybe.some("SIZE");
+      return "SIZE";
     }
 
-    return Maybe.none();
+    return undefined;
   }
 
   static formatFileSize(file: FileSize): string {

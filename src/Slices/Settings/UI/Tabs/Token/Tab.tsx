@@ -20,6 +20,7 @@ export const Tab: React.FC = () => {
   const client = useQueryClient();
   const [clientTypes, setClientTypes] = useState<ClientType[]>(["api"]);
   const [expire, setExpire] = useState<number | null>(DEFAULT_EXPIRY_SECONDS);
+  const [isExpiryValid, setIsExpiryValid] = useState(true);
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -68,6 +69,8 @@ export const Tab: React.FC = () => {
         getClientTypeSelector={getClientTypeSelector}
         isClientTypeSelected={isClientTypeSelected}
         onExpireChange={setExpire}
+        onExpiryValidityChange={setIsExpiryValid}
+        isExpiryValid={isExpiryValid}
         token={token}
         error={error}
         isBusy={isBusy}

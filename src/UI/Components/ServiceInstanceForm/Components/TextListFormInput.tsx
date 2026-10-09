@@ -8,6 +8,7 @@ import {
   HelperText,
   HelperTextItem,
   Popover,
+  Spinner,
   TextInputGroup,
   TextInputGroupMain,
   TextInputGroupUtilities,
@@ -20,6 +21,7 @@ import { SuggestionValue } from "@/Core";
 import { words } from "@/UI/words";
 import { SuggestionsPopover } from "./SuggestionsPopover";
 import { resolveLabel, resolveValue } from "./suggestionResolvers";
+import { useStableFeedback } from "./useStableFeedback";
 
 /**
  * Props for the TextListFormInput component.
@@ -34,7 +36,9 @@ interface Props {
   placeholder?: string;
   handleInputChange: (value: string[], event: React.FormEvent<HTMLInputElement> | null) => void;
   suggestions?: SuggestionValue[] | null;
-  errorMessage?: string | null;
+  warningMessage?: string | null;
+  hint?: string | null;
+  loading?: boolean;
 }
 
 /**
@@ -43,6 +47,8 @@ interface Props {
  * When suggestions are provided, the field behaves as a typeahead: each chip
  * displays the suggestion's `label` while the stored/submitted value is its
  * `value`. Free typing still works (the typed text is both shown and stored).
+ * Typed text is committed as a chip on Enter, Tab, "Add" or when the field
+ * loses focus, so it can't be left behind unsaved when the form is submitted.
  *
  * @props {Props} props - The props for the TextListFormInput component.
  *  @prop {string} attributeName - The name of the attribute.
@@ -65,13 +71,16 @@ export const TextListFormInput: React.FC<Props> = ({
   placeholder,
   handleInputChange,
   suggestions = [],
-  errorMessage,
+  warningMessage,
+  hint,
+  loading = false,
   ...props
 }) => {
   const [inputValue, setInputValue] = React.useState("");
   const [currentChips, setCurrentChips] = React.useState<string[]>([]);
   const [isOpen, setIsOpen] = React.useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const hasSuggestions = !!(suggestions && suggestions.length > 0);
 
   /**
@@ -99,7 +108,7 @@ export const TextListFormInput: React.FC<Props> = ({
   /**
    * Adds a new chip. When the input text matches a suggestion label (whether
    * picked from the list or typed), that suggestion's value is stored; otherwise
-   * the typed text is stored as-is.
+   * the typed text is stored as-is. A value that is already a chip is not added again.
    *
    * @returns {void}
    */
@@ -110,7 +119,15 @@ export const TextListFormInput: React.FC<Props> = ({
       return;
     }
 
-    const newChips = [...currentChips, resolveValue(suggestions, trimmed)];
+    const value = resolveValue(suggestions, trimmed);
+
+    if (currentChips.includes(value)) {
+      setInputValue("");
+
+      return;
+    }
+
+    const newChips = [...currentChips, value];
 
     setCurrentChips(newChips);
     handleInputChange(newChips, null);
@@ -118,10 +135,40 @@ export const TextListFormInput: React.FC<Props> = ({
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" || event.key === "Tab") {
+    if (event.key === "Enter") {
+      // Enter commits the pending text and keeps the field focused so more chips
+      // can be added;
       event.preventDefault();
       addChip();
+    } else if (event.key === "Tab") {
+      // Tab commits any pending text as well, but must NOT preventDefault: doing so
+      // trapped keyboard focus on the field and blocked tab navigation to the next
+      // input.
+      addChip();
     }
+  };
+
+  /**
+   * Commits pending text when focus leaves the field, from the input or from the suggestions menu.
+   * Moving between the input and the menu doesn't count as leaving.
+   */
+  const handleBlur = (event: React.FocusEvent<HTMLElement>) => {
+    // Arrowing into the suggestions is still editing this field: the picked suggestion replaces
+    // the typed filter, so committing that filter as a chip would be wrong.
+    if (
+      event.relatedTarget === inputRef.current ||
+      menuRef.current?.contains(event.relatedTarget)
+    ) {
+      return;
+    }
+
+    // Switching windows (e.g. to copy the rest of a value) blurs the input too. It regains focus
+    // when the window does, so a real blur still commits later.
+    if (!document.hasFocus()) {
+      return;
+    }
+
+    addChip();
   };
 
   const clearChipsAndInput = () => {
@@ -131,10 +178,16 @@ export const TextListFormInput: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (attributeValue && attributeValue.length) {
-      setCurrentChips(attributeValue);
-    }
+    // Fully controlled by the stored value: syncing on every change (not only a non-empty one)
+    // keeps the chips in step when the value is cleared or replaced from outside, instead of
+    // leaving stale ones displayed. The stored value can momentarily be a non-array (e.g. a
+    // cleared scalar), so guard it.
+    setCurrentChips(Array.isArray(attributeValue) ? attributeValue : []);
   }, [attributeValue]);
+
+  // One feedback slot: a warning wins over a hint, and the last one is held across a refresh so it
+  // swaps in place instead of blanking out and shifting the layout while new data loads.
+  const feedback = useStableFeedback(warningMessage, hint, loading);
 
   return (
     <FormGroup
@@ -172,6 +225,8 @@ export const TextListFormInput: React.FC<Props> = ({
               setInputValue(resolveLabel(suggestions, value));
             }}
             ref={inputRef}
+            menuRef={menuRef}
+            onMenuBlur={handleBlur}
             isOpen={isOpen}
             close={() => setIsOpen(false)}
           />
@@ -183,6 +238,11 @@ export const TextListFormInput: React.FC<Props> = ({
           onChange={handleChangeInput}
           onFocus={() => hasSuggestions && setIsOpen(true)}
           onKeyDown={handleKeyDown}
+          onBlur={handleBlur}
+          // With suggestions this is a custom typeahead, so suppress the browser's own autofill
+          // dropdown - it overlaps and competes with the suggestions popover. `inputProps` targets
+          // the real <input>; a bare `autoComplete` would land on the wrapping element instead.
+          inputProps={hasSuggestions ? { autoComplete: "off" } : undefined}
         >
           <LabelGroup>
             {currentChips.map((currentChip) => (
@@ -199,6 +259,7 @@ export const TextListFormInput: React.FC<Props> = ({
           </LabelGroup>
         </TextInputGroupMain>
         <TextInputGroupUtilities>
+          {loading && <Spinner isInline aria-label={words("inventory.form.suggestions.loading")} />}
           <Button
             icon={words("catalog.callbacks.add")}
             variant="plain"
@@ -214,10 +275,12 @@ export const TextListFormInput: React.FC<Props> = ({
           />
         </TextInputGroupUtilities>
       </TextInputGroup>
-      {errorMessage && (
+      {feedback && (
         <FormHelperText>
           <HelperText>
-            <HelperTextItem variant="error">{errorMessage}</HelperTextItem>
+            <HelperTextItem variant={feedback.isWarning ? "warning" : "default"}>
+              {feedback.message}
+            </HelperTextItem>
           </HelperText>
         </FormHelperText>
       )}

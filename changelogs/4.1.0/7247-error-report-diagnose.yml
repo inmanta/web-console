@@ -1,0 +1,6 @@
+description: The diagnose page now shows the compile error message(s), type, category and location for a rejected validation, instead of requiring the user to inspect the full traceback.
+issue-nr: 7247
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

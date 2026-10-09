@@ -1,4 +1,4 @@
-import environmentHelpers from "../support/environmentHelpers";
+import environmentHelpers from "../support/environmentHelpers.js";
 
 const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
@@ -27,6 +27,67 @@ const expectRowCountRestored = (alias) => {
   cy.get(`@${alias}`).then((initialCount) => {
     cy.get('[aria-label="Resource Table Row"]').should("have.length", initialCount);
   });
+};
+
+// Add a Type filter and confirm its chip. handleAdd clears the input on a committed add
+// (AddableTextInput.tsx), so wait for that; on CI the add has occasionally cleared without rendering
+// a chip, so if the chip is still missing, add once more (harmless - addString dedupes via uniq).
+const addTypeFilter = (value) => {
+  cy.get('[aria-label="Type"]').should("be.visible").clear().type(value);
+  cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
+  cy.get('[aria-label="Type"]').should("have.value", "");
+  cy.get("body").then(($body) => {
+    if (!$body.find(`[aria-label="Close ${value}"]`).length) {
+      cy.get('[aria-label="Type"]').clear().type(value);
+      cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
+    }
+  });
+  cy.get(`[aria-label="Close ${value}"]`, { timeout: 10000 }).should("be.visible");
+};
+
+// Deploys a filtered subset from the toolbar's primary Deploy action and asserts the success toast.
+// It first narrows the list with a type filter, then clicks the primary split-button action - the
+// one-click path users take - instead of the caret menu.
+const deployFilteredWithConfirm = () => {
+  const typeFilter = isIso ? "lsm" : "TestResource";
+
+  cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+  cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+  // Narrow the list before deploying. On iso this genuinely shrinks the set, so the deploy stays
+  // small; on OSS every resource is a frontend_model::TestResource, so the filter matches them all
+  // and the deploy is effectively environment-wide (only 5 resources there, so still small).
+  // Alias the filtered resources request so we can wait for it to land before opening the dialog.
+  // The dialog freezes its default scope at mount (ResourceActionConfirmModal.tsx:107, first
+  // non-zero-count scope), so opening against a stale/0 filtered count would silently default to
+  // the whole-environment scope and confirm an environment-wide deploy while the toast still passes.
+  cy.intercept("POST", "**/api/v2/graphql", (req) => {
+    if (req.body?.variables?.filter?.resourceType?.contains?.includes(`%${typeFilter}%`)) {
+      req.alias = "resourcesFilteredByType";
+    }
+  });
+
+  cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+  addTypeFilter(typeFilter);
+  cy.wait("@resourcesFilteredByType", { timeout: 20000 })
+    .its("response.statusCode")
+    .should("eq", 200);
+  cy.get('[aria-label="Resource Table Row"]', { timeout: 20000 }).should("have.length.at.least", 1);
+
+  // Trigger the primary Deploy action of the split button (not the caret menu)
+  cy.contains("button", "Deploy").click();
+
+  // Confirm the filtered scope, and assert it is the chosen default - otherwise we would deploy the
+  // whole environment while every assertion below still passes.
+  cy.get('[role="dialog"]').within(() => {
+    cy.contains("Deploy resources").should("be.visible");
+    cy.get("#resource-action-scope-filtered").should("have.class", "pf-m-selected");
+    cy.get("#resource-action-scope-environment").should("be.visible");
+    cy.contains("button", "Deploy").click();
+  });
+
+  // A success toast confirms the deploy was triggered
+  cy.get('[data-testid="ToastAlert"]').should("contain", "Deploy triggered");
 };
 
 describe("Scenario 6 : Resources", () => {
@@ -80,7 +141,7 @@ describe("Scenario 6 : Resources", () => {
       const resourceName = "test-compliant-successful-not-blocked-0";
       cy.contains('[aria-label="Resource Table Row"]', resourceName).should("be.visible");
       cy.contains('[aria-label="Resource Table Row"]', resourceName)
-        .find("button")
+        .find("a")
         .contains("Show Details")
         .click();
 
@@ -130,7 +191,7 @@ describe("Scenario 6 : Resources", () => {
       // Navigate to the target resource logs
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.contains('[aria-label="Resource Table Row"]', "test-compliant-successful-not-blocked-0")
-        .find("button")
+        .find("a")
         .contains("Show Details")
         .click();
       cy.get("button").contains("Logs").click();
@@ -139,6 +200,9 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="ResourceLogRow"]').then(($rows) => {
         cy.wrap($rows.length).as("initialRowCount");
       });
+
+      // Open the filter drawer
+      cy.get('[aria-label="ResourceLogs-toolbar"]').find("button[aria-pressed]").click();
 
       // Apply INFO filter and verify count decreases
       cy.get('[aria-label="MinimalLogLevelFilterInput"]').click();
@@ -177,7 +241,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Navigate to details and verify both requirements are listed
       cy.contains('[aria-label="Resource Table Row"]', resourceName)
-        .find("button")
+        .find("a")
         .contains("Show Details")
         .click();
       cy.get("button").contains("Requires").click();
@@ -185,8 +249,8 @@ describe("Scenario 6 : Resources", () => {
         // 2 requirement rows + 1 header row
         expect($table.find("tr")).to.have.length(3);
       });
-      cy.get("button").contains(requireA).should("exist");
-      cy.get("button").contains(requireB).should("exist");
+      cy.get("a").contains(requireA).should("exist");
+      cy.get("a").contains(requireB).should("exist");
 
       // History tab should have 2 entries, one of which has 2 requires
       cy.get("button").contains("History").click();
@@ -195,17 +259,17 @@ describe("Scenario 6 : Resources", () => {
 
       // Navigate to requireA from the requires tab and verify landing page
       cy.get("button").contains("Requires").click();
-      cy.get("button").contains(requireA).click();
+      cy.get("a").contains(requireA).click();
       cy.get(`[aria-label="resourceName-${requireA}"]`).should("be.visible");
 
       // Go back and verify navigation works a second time
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.contains('[aria-label="Resource Table Row"]', resourceName)
-        .find("button")
+        .find("a")
         .contains("Show Details")
         .click();
       cy.get("button").contains("Requires").click();
-      cy.get("button").contains(requireA).click();
+      cy.get("a").contains(requireA).click();
       cy.get(`[aria-label="resourceName-${requireA}"]`).should("be.visible");
     });
 
@@ -283,9 +347,11 @@ describe("Scenario 6 : Resources", () => {
       }).should("have.text", "21 - 40");
 
       cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
-      // Filtering on type input with "lsm" will return 2 results
-      cy.get('[aria-label="Type"]').type("lsm");
-      cy.get('[aria-label="Add filter-Type"]').click();
+      // Filtering on "lsm" returns 2 results.
+      addTypeFilter("lsm");
+      // keepPreviousData keeps the 20 pre-filter rows briefly; the 20s assertions retry past that
+      // onto the filtered result (20/"1 - 20" differ from 2/"1 - 2", so they never latch early).
+      cy.get('[aria-label="Resource Table Row"]', { timeout: 20000 }).should("have.length", 2);
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
       }).should("have.text", "1 - 2");
@@ -619,6 +685,89 @@ describe("Scenario 6 : Resources", () => {
       // only one active item remains
       cy.get('[data-testid="status-sort-item-blocked-active"]').should("exist");
     });
+
+    it("6.9 Service filters", () => {
+      cy.visit("/console/");
+      selectEnvironment();
+
+      // Reuses the fully-deployed resource-states instance left behind by 6.5 (pagination-test)
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="ResourcesPage-Success"]', { timeout: 20000 }).should("be.visible");
+
+      // Store initial row count
+      cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
+
+      // Open the filter drawer and switch to the Service tab
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+      cy.get('[role="tab"]').contains("Service").click();
+
+      // The instance field and include-owned switch stay disabled until their prerequisites are met.
+      // The typeahead toggle carries its disabled state on the inner input, not the chevron button.
+      cy.get('[aria-label="Instance-input"]').should("be.disabled");
+      cy.get("#resources-filter-include-owned").should("be.disabled");
+
+      // --- Service entity filter ---
+      cy.get('[aria-label="Service entity-input"]').click().type("resource-states");
+      cy.get('[aria-label="Service entity options"]').contains("button", "resource-states").click();
+      cy.get('[aria-label="Add filter-Service entity"]').should("not.be.disabled").click();
+
+      // The entity chip appears and the table filters down to the resources that belong to the service
+      cy.get('[aria-label="Close resource-states"]').should("exist");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      expectFilteredLessThan("initialRowCount");
+
+      // Removing the entity chip restores the full set
+      cy.get('[aria-label="Close resource-states"]').click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      expectRowCountRestored("initialRowCount");
+
+      // --- Service instance filter ---
+      // Selecting (without adding) an entity in the input enables and populates the instance field
+      cy.get('[aria-label="Service entity-input"]').click().type("resource-states");
+      cy.get('[aria-label="Service entity options"]').contains("button", "resource-states").click();
+
+      cy.get('[aria-label="Instance-input"]').should("not.be.disabled");
+      cy.get('[aria-label="Instance-menuToggle"]').click();
+      cy.get('[aria-label="Instance options"]', { timeout: 20000 })
+        .find("button")
+        .should("have.length.at.least", 1);
+      cy.get('[aria-label="Instance options"]')
+        .find("button")
+        .first()
+        .then(($option) => {
+          const instanceLabel = $option.text().trim();
+
+          cy.wrap($option).click();
+          cy.get('[aria-label="Add filter-Instance"]').should("not.be.disabled").click();
+
+          // The instance chip appears (labelled by service identity, falling back to the id)
+          cy.get(`[aria-label="Close ${instanceLabel}"]`).should("exist");
+          cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+          expectFilteredLessThan("initialRowCount");
+
+          // --- Include owned services ---
+          // The switch becomes enabled once an instance is set; toggling it adds its own chip
+          cy.get("#resources-filter-include-owned")
+            .should("not.be.disabled")
+            .click({ force: true });
+          cy.get('[aria-label="Close Included"]').should("exist");
+          cy.get('[aria-label="ResourcesPage-Success"]', { timeout: 20000 }).should("be.visible");
+        });
+
+      // Reset all filters and verify the table is restored
+      cy.get("button").contains("Reset Filters").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      expectRowCountRestored("initialRowCount");
+    });
+
+    it("6.10 Deploy the filtered resources from the toolbar", () => {
+      cy.visit("/console/");
+      selectEnvironment();
+
+      deployFilteredWithConfirm();
+    });
   } else {
     it("6.2 Resources for OSS", () => {
       cy.visit("/console/");
@@ -632,10 +781,16 @@ describe("Scenario 6 : Resources", () => {
         cy.wrap($row).should("contain", "frontend_model::TestResource");
       });
 
+      // The Service filter tab is LSM-only, so it must not appear on OSS
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+      cy.contains('[role="tab"]', "Resource").should("be.visible");
+      cy.contains('[role="tab"]', "Service").should("not.exist");
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+
       // Navigate to the first resource details
       cy.get('[aria-label="Resource Table Row"]')
         .first()
-        .find("button")
+        .find("a")
         .contains("Show Details")
         .click();
 
@@ -681,7 +836,7 @@ describe("Scenario 6 : Resources", () => {
         .last()
         .should("contain", "Successfully stored version");
       cy.get('[aria-label="Details"]').last().click();
-      cy.contains("Successfully stored version").should("be.visible");
+      cy.contains("Successfully stored version").scrollIntoView().should("be.visible");
     });
 
     it("6.3 OSS basic status sort menu", () => {
@@ -718,6 +873,13 @@ describe("Scenario 6 : Resources", () => {
       // Verify removed and badge resets
       cy.get('[data-testid="status-sort-item-blocked-inactive"]').should("exist");
       cy.get('[data-testid="status-sort-badge"]').should("have.text", "0");
+    });
+
+    it("6.4 Deploy the filtered resources from the toolbar", () => {
+      cy.visit("/console/");
+      selectEnvironment();
+
+      deployFilteredWithConfirm();
     });
   }
 });

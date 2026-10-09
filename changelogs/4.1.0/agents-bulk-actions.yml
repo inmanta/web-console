@@ -1,0 +1,6 @@
+description: Added an Actions dropdown to the Agents page for pausing/resuming all agents at once, controlling their on-resume behavior while the environment is halted, and removing all agent venvs (asynchronous, confirmed via a modal since it can take a while to complete).
+change-type: minor
+issue-nr: 6539
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

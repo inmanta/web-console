@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump vitest, @vitest/coverage-v8 and @vitest/ui from 4.1.10 to 5.0.0 together, and add a dependabot group so they stay in sync.
+destination-branches:
+- master
+sections: {}

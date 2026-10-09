@@ -55,13 +55,13 @@ const getExpirationMessage = (entitlementDate, certificateDate) => {
   const diffTimeEntitlement = checkExpiration(entitlementDate);
 
   if (diffTimeCertificate < 0) {
-    return words("banner.certificate.expired")(Math.abs(diffTimeCertificate));
+    return words("banner.license.expired")(Math.abs(diffTimeCertificate));
   }
 
   if (diffTimeCertificate < 15) {
     return words("banner.certificate.will.expire")(Math.abs(diffTimeCertificate));
   } else if (diffTimeEntitlement < 0) {
-    return words("banner.entitlement.expired")(Math.abs(diffTimeEntitlement));
+    return words("banner.license.expired")(Math.abs(diffTimeEntitlement));
   }
 
   return null;

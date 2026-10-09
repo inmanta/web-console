@@ -70,9 +70,7 @@ export const MarkdownStyles = `
 .markdown-body h1 {
   margin: .67em 0;
   font-weight: var(--pf-t--global--font--weight--200);
-  padding-bottom: .3em;
   font-size: var(--pf-t--global--font--size--heading--h1);
-  border-bottom: 1px solid var(--pf-t--global--border--color--default);
 }
 
 .markdown-body mark {
@@ -195,20 +193,6 @@ export const MarkdownStyles = `
   content: "";
 }
 
-.markdown-body table {
-  border-spacing: 0;
-  border-collapse: collapse;
-  display: block;
-  width: max-content;
-  max-width: 100%;
-  overflow: auto;
-}
-
-.markdown-body td,
-.markdown-body th {
-  padding: 0;
-}
-
 .markdown-body details {
   margin: 16px 0;
   border: 1px solid var(--pf-t--global--border--color--default);
@@ -329,9 +313,7 @@ export const MarkdownStyles = `
 
 .markdown-body h2 {
   font-weight: var(--pf-t--global--font--weight--200);
-  padding-bottom: .3em;
   font-size: var(--pf-t--global--font--size--heading--h2);
-  border-bottom: 1px solid var(--pf-t--global--border--color--default);
 }
 
 .markdown-body h3 {
@@ -618,29 +600,6 @@ export const MarkdownStyles = `
   margin-bottom: 16px;
 }
 
-.markdown-body table th {
-  font-weight: var(--pf-t--global--font--weight--200);
-}
-
-.markdown-body table th,
-.markdown-body table td {
-  padding: 6px 13px;
-  border: 1px solid var(--pf-t--global--border--color--nonstatus--gray--default);
-}
-
-.markdown-body table td>:last-child {
-  margin-bottom: 0;
-}
-
-.markdown-body table tr {
-  background-color: var(--pf-t--global--background--color--primary--default);
-  border-top: 1px solid var(--pf-t--global--border--color--nonstatus--gray--clicked);
-}
-
-.markdown-body table tr:nth-child(2n) {
-  background-color: var(--pf-t--global--background--color--secondary--default);
-}
-
 .markdown-body table img {
   background-color: transparent;
 }
@@ -754,7 +713,7 @@ export const MarkdownStyles = `
   font-size: 85%;
   white-space: break-spaces;
   background-color: var(--pf-t--global--background--color--secondary--default);
-  border: var(--pf-t--global--border--width--regular) solid var(--pf-t--global--border--color--nonstatus--gray--default);
+  border-radius: var(--pf-t--global--border--radius--tiny);
 }
 
 .markdown-body code br,

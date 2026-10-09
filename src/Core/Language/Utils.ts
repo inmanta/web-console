@@ -12,6 +12,9 @@
  */
 export type ParsedNumber = number | bigint;
 
+/** An array with at least one element, so its first index is always defined. */
+export type NonEmptyArray<T> = [T, ...T[]];
+
 /**
  * Toggles a value in the list.
  * - If it is present, remove it.
@@ -39,27 +42,22 @@ export const invertFilter = (selection: string): string =>
 
 /**
  * Ensures the include and exclude variants of the same value do not coexist by removing the
- * inverted counterpart of `selection` from `selectedStates` when it is present.
+ * inverted counterpart of `selection` from `selectedItems` when it is present.
  */
-export const removeInvertedSelection = (selection: string, selectedStates: string[]): string[] => {
+export const removeInvertedSelection = (selection: string, selectedItems: string[]): string[] => {
   const invertedFilter = invertFilter(selection);
 
-  if (selectedStates.includes(invertedFilter)) {
-    return toggleValueInList(invertedFilter, selectedStates);
+  if (selectedItems.includes(invertedFilter)) {
+    return toggleValueInList(invertedFilter, selectedItems);
   }
 
-  return selectedStates;
+  return selectedItems;
 };
 
 export const isNotNull = <T>(value: T | null): value is NonNullable<T> => value !== null;
 
 export const isNotUndefined = <T>(value: T | undefined): value is NonNullable<T> =>
   typeof value !== "undefined";
-
-export const objectHasKey = <X extends Record<string, unknown>, Y extends PropertyKey>(
-  obj: X,
-  prop: Y
-): obj is X & Record<Y, unknown> => prop in obj;
 
 export const isObject = (value: unknown): value is Record<string, unknown> => {
   if (typeof value !== "object") {
@@ -124,10 +122,6 @@ export const resolvePromiseRecord = async (
 
     return acc;
   }, {});
-};
-
-export const stringifyObjectOrUndefined = (obj: unknown): string => {
-  return typeof obj === "undefined" ? "undefined" : JSON.stringify(obj);
 };
 
 export const stringToBoolean = (value: unknown): boolean | undefined => {

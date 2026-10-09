@@ -55,7 +55,7 @@ export const OrdersTable: React.FC<Props> = ({ tablePresenter, rows, sort, setSo
   });
 
   return (
-    <Table {...props} variant={TableVariant.compact}>
+    <Table {...props} variant={TableVariant.compact} isStickyHeader>
       <Thead>
         <Tr aria-hidden>
           {heads}

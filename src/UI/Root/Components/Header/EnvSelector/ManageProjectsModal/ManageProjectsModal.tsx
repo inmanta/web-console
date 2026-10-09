@@ -8,7 +8,6 @@ import {
   FlexItem,
   Label,
   LabelGroup,
-  Spinner,
   Split,
   SplitItem,
   Stack,
@@ -17,6 +16,7 @@ import {
 import { FolderIcon, LockIcon } from "@patternfly/react-icons";
 import { ProjectModel } from "@/Core";
 import { useDeleteProject, useGetProjects } from "@/Data/Queries";
+import { Spinner } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 /**
@@ -30,7 +30,7 @@ export const ManageProjectsModal: React.FC = () => {
     return (
       <Flex justifyContent={{ default: "justifyContentCenter" }}>
         <FlexItem>
-          <Spinner size="lg" />
+          <Spinner size={24} />
         </FlexItem>
       </Flex>
     );
@@ -195,7 +195,7 @@ const ProjectRow: React.FC<ProjectRowProps> = ({ project }) => {
                 onClick={handleDeleteClick}
                 data-testid={`delete-project-${project.id}`}
               >
-                {words("home.manageProjects.delete.button")}
+                {words("delete")}
               </Button>
             </FlexItem>
           </Flex>

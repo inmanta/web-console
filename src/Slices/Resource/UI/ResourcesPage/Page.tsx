@@ -2,39 +2,35 @@ import React, { useCallback, useMemo, useState } from "react";
 import {
   Flex,
   FlexItem,
-  Drawer,
-  DrawerContent,
-  DrawerContentBody,
   Content,
   PageSection,
   Stack,
   StackItem,
   ToolbarItem,
   Label,
-  Spinner,
   Tooltip,
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
 import { usePaginatedTableWithMultiSort } from "@/Data";
-import { useGetResources } from "@/Data/Queries";
+import { useGetResources, mapToResourceActionFilter } from "@/Data/Queries";
 import {
   EmptyView,
+  FilterDrawer,
   PaginationWidget,
   ErrorView,
   LoadingView,
   CompoundResourceStatus,
+  Spinner,
   countActiveFilters,
+  ResourceActions,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import {
-  ResourceTableControls,
-  ConnectedFilterWidget,
-  DeployButton,
-  RepairButton,
-} from "./Components";
+import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
 import { ResourcesTable } from "./ResourcesTable";
-import { createRows } from "./ResourcesTablePresenter";
+import { createResourcesTablePresenter } from "./ResourcesTablePresenter";
+
+const tablePresenter = createResourcesTablePresenter();
 
 export const Page: React.FC = () => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
@@ -83,7 +79,7 @@ export const Page: React.FC = () => {
     });
   };
 
-  const rows = useMemo(() => createRows(data?.resources ?? []), [data?.resources]);
+  const rows = useMemo(() => tablePresenter.createRows(data?.resources ?? []), [data?.resources]);
 
   if (isError) {
     return <ErrorView message={error.message} ariaLabel="ResourcesPage-Error" retry={refetch} />;
@@ -111,7 +107,7 @@ export const Page: React.FC = () => {
         >
           <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
             <Content component="h1" style={{ marginBottom: 0 }}>
-              {words("inventory.tabs.resources")}
+              {words("resources")}
             </Content>
             <Tooltip
               content={words("resources.deploying.popover")(deployingCount)}
@@ -129,7 +125,7 @@ export const Page: React.FC = () => {
                   {deployingCount > 0 && (
                     <>
                       {deployingCount}
-                      <Spinner size="sm" isInline />
+                      <Spinner aria-label={words("resources.deploying.spinner")} />
                       <span>/</span>
                     </>
                   )}
@@ -140,17 +136,40 @@ export const Page: React.FC = () => {
           </Flex>
           <Flex>
             <ToolbarItem>
-              <DeployButton />
-            </ToolbarItem>
-            <ToolbarItem>
-              <RepairButton />
+              <ResourceActions
+                tooltips={{
+                  deploy: words("resources.resourceActions.deploy.tooltip.resources"),
+                  repair: words("resources.resourceActions.repair.tooltip.resources"),
+                }}
+                scopes={[
+                  {
+                    id: "filtered",
+                    title: words("resources.resourceActions.confirm.filtered.title"),
+                    filter: mapToResourceActionFilter(filterWithDefaults),
+                    count: Number(data.metadata.total),
+                  },
+                  {
+                    id: "environment",
+                    title: words("resources.resourceActions.confirm.environment.title"),
+                    // The whole environment minus orphans. resourceSummary.totalCount already
+                    // excludes orphans, so the count matches this filter exactly.
+                    filter: { isOrphan: false },
+                    detail: words("resources.resourceActions.confirm.environment.note"),
+                    count: resourceSummary.totalCount,
+                  },
+                ]}
+              />
             </ToolbarItem>
           </Flex>
         </Flex>
 
         <ResourceTableControls
           summaryWidget={
-            <CompoundResourceStatus updateFilter={updateFilter} resourceSummary={resourceSummary} />
+            <CompoundResourceStatus
+              updateFilter={updateFilter}
+              resourceSummary={resourceSummary}
+              activeStatuses={filterWithDefaults.status ?? []}
+            />
           }
           paginationWidget={
             <PaginationWidget
@@ -173,54 +192,42 @@ export const Page: React.FC = () => {
         padding={{ default: "padding" }}
         style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
       >
-        <Drawer
+        <FilterDrawer
           isExpanded={isDrawerExpanded}
-          isInline
-          style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+          panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
         >
-          <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
-            <DrawerContentBody
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                flex: "1 1 auto",
-                minHeight: 0,
-              }}
-            >
-              {resources.length <= 0 ? (
-                <EmptyView
-                  message={words("resources.empty.filterMessage")}
-                  aria-label="ResourcesPage-Empty"
+          {resources.length <= 0 ? (
+            <EmptyView
+              message={words("resources.empty.filterMessage")}
+              aria-label="ResourcesPage-Empty"
+            />
+          ) : (
+            <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+              <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                <ResourcesTable
+                  aria-label="ResourcesPage-Success"
+                  rows={rows}
+                  sort={sort}
+                  setSort={setSort}
                 />
-              ) : (
-                <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
-                  <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
-                    <ResourcesTable
-                      aria-label="ResourcesPage-Success"
-                      rows={rows}
-                      sort={sort}
-                      setSort={setSort}
+              </StackItem>
+              <StackItem>
+                <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+                  <FlexItem>
+                    <PaginationWidget
+                      data={data}
+                      pageSize={pageSize}
+                      setPageSize={setPageSize}
+                      setCurrentPage={setCurrentPage}
+                      isDisabled={isFetching}
+                      variant="bottom"
                     />
-                  </StackItem>
-                  <StackItem>
-                    <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
-                      <FlexItem>
-                        <PaginationWidget
-                          data={data}
-                          pageSize={pageSize}
-                          setPageSize={setPageSize}
-                          setCurrentPage={setCurrentPage}
-                          isDisabled={isFetching}
-                          variant="bottom"
-                        />
-                      </FlexItem>
-                    </Flex>
-                  </StackItem>
-                </Stack>
-              )}
-            </DrawerContentBody>
-          </DrawerContent>
-        </Drawer>
+                  </FlexItem>
+                </Flex>
+              </StackItem>
+            </Stack>
+          )}
+        </FilterDrawer>
       </PageSection>
     </>
   );

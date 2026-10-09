@@ -1,0 +1,6 @@
+description: Selecting a suggestion in a service instance form field now returns keyboard focus to that field, so tab navigation continues from there instead of resetting to the top of the page.
+issue-nr: 7042
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

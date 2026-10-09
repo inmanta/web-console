@@ -8,6 +8,15 @@ import { TextListFormInput } from "./TextListFormInput";
 describe("TextListInputField", () => {
   const handleClick = vi.fn();
 
+  // jsdom reports no document focus while focus moves between elements, which reads as a window blur.
+  beforeEach(() => {
+    vi.spyOn(document, "hasFocus").mockReturnValue(true);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("Should render an inputfield with chips when values are preset.", () => {
     render(
       <TextListFormInput
@@ -47,6 +56,222 @@ describe("TextListInputField", () => {
 
     expect(chips.length).toBe(4);
     expect(handleClick).toHaveBeenCalledWith(["value1", "value2", "value3", "test"], null);
+  });
+
+  it("Should commit pending text on Tab without trapping focus", async () => {
+    const handleInputChange = vi.fn();
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={["value1"]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+      />
+    );
+
+    const input = screen.getByRole("textbox");
+
+    await userEvent.type(input, "test");
+
+    // Tab commits the typed text as a chip...
+    const notPrevented = fireEvent.keyDown(input, { key: "Tab" });
+
+    // ...but does not call preventDefault, so the browser is free to move focus
+    // to the next input instead of the navigation getting stuck on this field.
+    expect(notPrevented).toBe(true);
+    expect(handleInputChange).toHaveBeenCalledWith(["value1", "test"], null);
+  });
+
+  it("Should let Tab move focus straight through an empty field (#7235).", () => {
+    const handleInputChange = vi.fn();
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={["value1"]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+      />
+    );
+
+    const input = screen.getByRole("textbox");
+
+    // With nothing typed, Tab neither adds a chip nor blocks the default focus move.
+    const notPrevented = fireEvent.keyDown(input, { key: "Tab" });
+
+    expect(notPrevented).toBe(true);
+    expect(handleInputChange).not.toHaveBeenCalled();
+  });
+
+  it("Should commit pending text on Enter while preventing form submission.", async () => {
+    const handleInputChange = vi.fn();
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={["value1"]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+      />
+    );
+
+    const input = screen.getByRole("textbox");
+
+    await userEvent.type(input, "test");
+
+    // Enter commits the chip and preventDefault keeps the surrounding form from submitting.
+    const notPrevented = fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(notPrevented).toBe(false);
+    expect(handleInputChange).toHaveBeenCalledWith(["value1", "test"], null);
+  });
+
+  it("Should commit pending text when the field loses focus.", async () => {
+    const handleInputChange = vi.fn();
+
+    render(
+      <>
+        <TextListFormInput
+          attributeName="text_list"
+          type={TextInputTypes.text}
+          attributeValue={["value1"]}
+          description="a text list input field"
+          handleInputChange={handleInputChange}
+        />
+        <button>outside</button>
+      </>
+    );
+
+    await userEvent.type(screen.getByRole("textbox"), "test");
+    await userEvent.click(screen.getByRole("button", { name: "outside" }));
+
+    expect(handleInputChange).toHaveBeenCalledWith(["value1", "test"], null);
+  });
+
+  it("Should not commit pending text when the window loses focus.", async () => {
+    const handleInputChange = vi.fn();
+    vi.spyOn(document, "hasFocus").mockReturnValue(false);
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={[]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+      />
+    );
+
+    const input = screen.getByRole("textbox");
+
+    await userEvent.type(input, "10.0.");
+    fireEvent.blur(input, { relatedTarget: null });
+
+    expect(handleInputChange).not.toHaveBeenCalled();
+    expect(input).toHaveValue("10.0.");
+  });
+
+  it("Should not add a duplicate chip when the value is already present.", async () => {
+    const handleInputChange = vi.fn();
+    const attributeValue = ["value1"];
+
+    render(
+      <>
+        <TextListFormInput
+          attributeName="text_list"
+          type={TextInputTypes.text}
+          attributeValue={attributeValue}
+          description="a text list input field"
+          handleInputChange={handleInputChange}
+        />
+        <button>outside</button>
+      </>
+    );
+
+    const input = screen.getByRole("textbox");
+
+    await userEvent.type(input, attributeValue[0]);
+    await userEvent.click(screen.getByRole("button", { name: "outside" }));
+
+    expect(handleInputChange).not.toHaveBeenCalled();
+    expect(input).toHaveValue("");
+  });
+
+  it("Should not commit the typed filter when a suggestion is clicked.", async () => {
+    const handleInputChange = vi.fn();
+    const suggestions: SuggestionValue[] = [{ label: "Production network", value: "9f3c1b2a" }];
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={[]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+        suggestions={suggestions}
+      />
+    );
+
+    const input = screen.getByRole("textbox");
+
+    await userEvent.type(input, "Prod");
+    await userEvent.click(screen.getByRole("menuitem", { name: suggestions[0].label }));
+
+    expect(handleInputChange).not.toHaveBeenCalled();
+    expect(input).toHaveValue(suggestions[0].label);
+  });
+
+  it("Should not commit the typed filter when arrowing into the suggestions.", async () => {
+    const handleInputChange = vi.fn();
+    const suggestions: SuggestionValue[] = [{ label: "Production network", value: "9f3c1b2a" }];
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={[]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+        suggestions={suggestions}
+      />
+    );
+
+    await userEvent.type(screen.getByRole("textbox"), "Prod");
+    await userEvent.keyboard("{ArrowDown}");
+
+    expect(screen.getByRole("menuitem", { name: suggestions[0].label })).toHaveFocus();
+    expect(handleInputChange).not.toHaveBeenCalled();
+  });
+
+  it("Should commit pending text when focus leaves the field from the suggestions.", async () => {
+    const handleInputChange = vi.fn();
+    const suggestions: SuggestionValue[] = [{ label: "Production network", value: "9f3c1b2a" }];
+    const typed = "Pro";
+
+    render(
+      <>
+        <TextListFormInput
+          attributeName="text_list"
+          type={TextInputTypes.text}
+          attributeValue={[]}
+          description="a text list input field"
+          handleInputChange={handleInputChange}
+          suggestions={suggestions}
+        />
+        <button>outside</button>
+      </>
+    );
+
+    await userEvent.type(screen.getByRole("textbox"), typed);
+    await userEvent.keyboard("{ArrowDown}");
+    await userEvent.click(screen.getByRole("button", { name: "outside" }));
+
+    expect(handleInputChange).toHaveBeenCalledWith([typed], null);
+    expect(screen.getByRole("textbox")).toHaveValue("");
   });
 
   it("Should remove one chip from the input on delete.", async () => {

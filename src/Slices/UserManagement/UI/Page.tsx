@@ -70,7 +70,7 @@ export const UserManagementPage: React.FC = () => {
           <Table aria-label="users-table">
             <Thead>
               <Tr>
-                <Th width={40}>{words("userManagement.name")}</Th>
+                <Th width={40}>{words("name")}</Th>
                 {showRoles && <Th width={40}>{words("userManagement.roles")}</Th>}
                 <Th
                   isStickyColumn

@@ -1,4 +1,4 @@
-import environmentHelpers from "../support/environmentHelpers";
+import environmentHelpers from "../support/environmentHelpers.js";
 
 const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
@@ -44,13 +44,13 @@ describe("Scenario 4 Desired State", () => {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
-      // Should show the chart
-      cy.get(".pf-v6-c-chart").should("be.visible");
-
       // Should show the ServiceInventory-Success Component.
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
       // Check if only one row has been added to the table.
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+
+      // Should show the instance count in the toolbar
+      cy.contains(/^1 instance$/).should("be.visible");
     }
 
     //got to desired stated page
@@ -137,56 +137,21 @@ describe("Scenario 4 Desired State", () => {
 
       cy.get("tbody").eq(0).contains("Show Details").click();
 
-      // Check all values in the description list
-      cy.get(".pf-v6-c-description-list").within(() => {
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("next_desired_state_version")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("have.text", "4");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("next_version")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("have.text", "4");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("purge_on_delete")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("have.text", "false");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("purged")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("have.text", "false");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("receive_events")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("include.text", "true");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("requires")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("include.text", "frontend_model::TestResource[internal,name=default-0001]");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("resources")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("include.text", '"frontend_model::TestResource[internal,name=default-0001]"');
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("service_entity")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("have.text", "basic-service");
-      });
+      // Check all values of the attributes
+      cy.get('[data-testid="attribute-next_desired_state_version"]').should("have.text", "4");
+      cy.get('[data-testid="attribute-next_version"]').should("have.text", "4");
+      cy.get('[data-testid="attribute-purge_on_delete"]').should("have.text", "false");
+      cy.get('[data-testid="attribute-purged"]').should("have.text", "false");
+      cy.get('[data-testid="attribute-receive_events"]').should("include.text", "true");
+      cy.get('[data-testid="attribute-requires"]').should(
+        "include.text",
+        "frontend_model::TestResource[internal,name=default-0001]"
+      );
+      cy.get('[data-testid="attribute-resources"]').should(
+        "include.text",
+        '"frontend_model::TestResource[internal,name=default-0001]"'
+      );
+      cy.get('[data-testid="attribute-service_entity"]').should("have.text", "basic-service");
     }
 
     // Go back to the Desired State page.

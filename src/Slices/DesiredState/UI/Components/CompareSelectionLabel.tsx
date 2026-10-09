@@ -1,6 +1,5 @@
 import React from "react";
 import { Label, LabelGroup } from "@patternfly/react-core";
-import { Maybe } from "@/Core";
 import { words } from "@/UI/words";
 import { CompareSelection } from "../Utils";
 
@@ -10,9 +9,9 @@ interface Props {
 }
 
 export const CompareSelectionLabel: React.FC<Props> = ({ selection, onDelete }) => {
-  return Maybe.isSome(selection) ? (
+  return selection !== undefined ? (
     <LabelGroup categoryName={words("desiredState.compare.selectionLabel")}>
-      <Label onClose={onDelete}>{selection.value}</Label>
+      <Label onClose={onDelete}>{selection}</Label>
     </LabelGroup>
   ) : null;
 };

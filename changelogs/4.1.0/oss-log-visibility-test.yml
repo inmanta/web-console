@@ -1,0 +1,4 @@
+description: Scroll the matched resource log into view before asserting its visibility so the OSS resources e2e (scenario 6.2) passes now that the log table has its own scroll container.
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

@@ -8,6 +8,7 @@ import { setupServer } from "msw/node";
 import { MockedDependencyProvider, DesiredStateDiff } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { View } from "./Page";
 
 const axe = configureAxe({
@@ -17,13 +18,17 @@ const axe = configureAxe({
   },
 });
 
+const environment = "aaa";
+
 function setup() {
   const component = (
-    <QueryClientProvider client={testClient}>
-      <MockedDependencyProvider>
-        <View from="123" to="456" />
-      </MockedDependencyProvider>
-    </QueryClientProvider>
+    <TestMemoryRouter initialEntries={[`/?env=${environment}`]}>
+      <QueryClientProvider client={testClient}>
+        <MockedDependencyProvider>
+          <View from="123" to="456" />
+        </MockedDependencyProvider>
+      </QueryClientProvider>
+    </TestMemoryRouter>
   );
 
   return { component };
@@ -75,6 +80,23 @@ describe("DesiredStateCompare", () => {
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("GIVEN DesiredStateCompare THEN each diff entry links to its resource details page", async () => {
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findAllByTestId("DiffBlock");
+
+    const resourceId = DesiredStateDiff.response.data[0].resource_id;
+    const link = screen.getByRole("link", { name: resourceId });
+    const href = link.getAttribute("href") ?? "";
+
+    // The link points at the resource details page for this resource, keeping the environment.
+    expect(href).toMatch(/^\/resources\//);
+    expect(decodeURIComponent(href)).toContain(resourceId);
+    expect(href).toContain(`env=${environment}`);
   });
 
   test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", async () => {

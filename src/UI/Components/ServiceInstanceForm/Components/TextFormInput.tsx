@@ -6,14 +6,18 @@ import {
   HelperText,
   HelperTextItem,
   Popover,
+  Spinner,
   TextArea,
   TextInput,
   TextInputTypes,
 } from "@patternfly/react-core";
 import { HelpIcon } from "@patternfly/react-icons";
 import { SuggestionValue } from "@/Core";
+import { preventNumberInputScroll } from "@/UI/Utils";
+import { words } from "@/UI/words";
 import { SuggestionsPopover } from "./SuggestionsPopover";
 import { resolveLabel, resolveValue } from "./suggestionResolvers";
+import { useStableFeedback } from "./useStableFeedback";
 
 interface Props {
   attributeName: string;
@@ -27,7 +31,9 @@ interface Props {
   isTextarea?: boolean;
   handleInputChange: (value, event) => void;
   suggestions?: SuggestionValue[] | null;
-  errorMessage?: string | null;
+  warningMessage?: string | null;
+  hint?: string | null;
+  loading?: boolean;
 }
 
 /**
@@ -47,7 +53,9 @@ export const TextFormInput: React.FC<Props> = ({
   isTextarea = false,
   shouldBeDisabled = false,
   suggestions = [],
-  errorMessage,
+  warningMessage,
+  hint,
+  loading = false,
   ...props
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -72,9 +80,11 @@ export const TextFormInput: React.FC<Props> = ({
     }
   };
 
-  // Selecting a suggestion shows its label and submits its value.
+  // Selecting a suggestion shows its label and submits its value. This is a commit, not
+  // in-progress typing, so editing is cleared: the field stays controlled and a later external
+  // change (e.g. a cascading source clearing it) can still resync the display.
   const handleSelect = (value: string) => {
-    editedRef.current = true;
+    editedRef.current = false;
     setDisplayValue(resolveLabel(suggestions, value));
     handleInputChange(value, null);
   };
@@ -97,6 +107,10 @@ export const TextFormInput: React.FC<Props> = ({
       setDisplayValue(resolveLabel(suggestions, attributeValue));
     }
   }, [attributeValue, suggestions]);
+
+  // One feedback slot: a warning wins over a hint, and the last one is held across a refresh so it
+  // swaps in place instead of blanking out and shifting the layout while new data loads.
+  const feedback = useStableFeedback(warningMessage, hint, loading);
 
   return (
     <FormGroup
@@ -134,7 +148,7 @@ export const TextFormInput: React.FC<Props> = ({
           placeholder={placeholder}
           isRequired={!isOptional}
           isDisabled={shouldBeDisabled}
-          validated={errorMessage ? "error" : "default"}
+          validated={feedback?.isWarning ? "warning" : "default"}
           aria-describedby={`${attributeName}-helper`}
           aria-label={`TextareaInput-${attributeName}`}
         />
@@ -151,12 +165,21 @@ export const TextFormInput: React.FC<Props> = ({
             placeholder={placeholder}
             aria-describedby={`${attributeName}-helper`}
             aria-label={`TextInput-${attributeName}`}
+            // With suggestions this is a custom typeahead, so suppress the browser's own
+            // autofill dropdown - it overlaps and competes with the suggestions popover.
+            autoComplete={hasSuggestions ? "off" : undefined}
             value={displayValue}
             onChange={(_event, value) => handleType(value)}
+            onWheel={preventNumberInputScroll}
             isDisabled={shouldBeDisabled}
-            validated={errorMessage ? "error" : "default"}
+            validated={feedback?.isWarning ? "warning" : "default"}
             onFocus={() => hasSuggestions && setIsOpen(true)}
             onBlur={handleBlur}
+            customIcon={
+              loading ? (
+                <Spinner isInline aria-label={words("inventory.form.suggestions.loading")} />
+              ) : null
+            }
           />
           {hasSuggestions && (
             <SuggestionsPopover
@@ -170,10 +193,12 @@ export const TextFormInput: React.FC<Props> = ({
           )}
         </>
       )}
-      {errorMessage && (
+      {feedback && (
         <FormHelperText>
           <HelperText>
-            <HelperTextItem variant="error">{errorMessage}</HelperTextItem>
+            <HelperTextItem variant={feedback.isWarning ? "warning" : "default"}>
+              {feedback.message}
+            </HelperTextItem>
           </HelperText>
         </FormHelperText>
       )}

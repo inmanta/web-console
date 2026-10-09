@@ -1,19 +1,12 @@
 import React, { useCallback, useMemo, useState } from "react";
-import {
-  Content,
-  Drawer,
-  DrawerContent,
-  DrawerContentBody,
-  Flex,
-  Label,
-  PageSection,
-} from "@patternfly/react-core";
+import { Content, Flex, Label, PageSection, Stack, StackItem } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetVersionResources } from "@/Data/Queries";
 import {
   EmptyView,
   ErrorView,
+  FilterDrawer,
   LoadingView,
   PaginationWidget,
   countActiveFilters,
@@ -22,7 +15,7 @@ import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Controls, DesiredStateDetailsFilterWidget } from "./Controls";
 import { VersionResourceTable } from "./VersionResourceTable";
-import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
+import { createVersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 
 export const Provider: React.FC = () => {
   const { version } = useRouteParams<"DesiredStateDetails">();
@@ -50,7 +43,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
     currentPage,
   }).useContinuous();
 
-  const presenter = new VersionResourceTablePresenter();
+  const presenter = createVersionResourceTablePresenter();
 
   if (isError) {
     return (
@@ -73,9 +66,9 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
         >
           <Content component="h1">
             <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
-              {words("desiredState.details.title")}
+              {words("details")}
               <Label color="purple" data-testid="version-label">
-                {words("desiredState.details.title.tag")(version)}
+                {words("versionLabel")(version)}
               </Label>
             </Flex>
           </Content>
@@ -99,40 +92,30 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
           padding={{ default: "padding" }}
           style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
         >
-          <Drawer
+          <FilterDrawer
             isExpanded={isDrawerExpanded}
-            isInline
-            style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+            panelContent={<DesiredStateDetailsFilterWidget onClose={onCloseFilterWidget} />}
           >
-            <DrawerContent
-              panelContent={<DesiredStateDetailsFilterWidget onClose={onCloseFilterWidget} />}
-            >
-              <DrawerContentBody
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  flex: "1 1 auto",
-                  minHeight: 0,
-                }}
-              >
-                {data.data.length <= 0 ? (
-                  <EmptyView
-                    message={words("resources.empty.message")}
-                    aria-label="VersionResourcesTable-Empty"
-                  />
-                ) : (
+            {data.data.length <= 0 ? (
+              <EmptyView
+                message={words("resources.empty.message")}
+                aria-label="VersionResourcesTable-Empty"
+              />
+            ) : (
+              <Stack style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+                <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
                   <VersionResourceTable
                     aria-label="VersionResourcesTable-Success"
                     version={version}
                     rows={presenter.createRows(data.data)}
-                    tablePresenter={new VersionResourceTablePresenter()}
+                    tablePresenter={createVersionResourceTablePresenter()}
                     sort={sort}
                     setSort={setSort}
                   />
-                )}
-              </DrawerContentBody>
-            </DrawerContent>
-          </Drawer>
+                </StackItem>
+              </Stack>
+            )}
+          </FilterDrawer>
         </PageSection>
       </>
     );

@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Stack, StackItem } from "@patternfly/react-core";
 import { usePaginatedTable } from "@/Data";
 import { useGetOrders } from "@/Data/Queries";
 import {
@@ -12,7 +13,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { SortKey } from "../Core/Types";
 import { OrdersTable } from "./OrdersTable";
-import { OrdersTablePresenter } from "./OrdersTablePresenter";
+import { createOrdersTablePresenter } from "./OrdersTablePresenter";
 import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
@@ -43,7 +44,10 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     return (
-      <PageContainer pageTitle={words("orders.title")}>
+      <PageContainer
+        pageTitle={words("orders.title")}
+        style={{ display: "flex", flexDirection: "column" }}
+      >
         <TableControls
           paginationWidget={
             <PaginationWidget
@@ -60,14 +64,20 @@ export const Page: React.FC = () => {
             aria-label="OrdersView-Empty"
           />
         ) : (
-          <div aria-label="OrdersView-Success">
-            <OrdersTable
-              rows={data.data}
-              tablePresenter={new OrdersTablePresenter()}
-              sort={sort}
-              setSort={setSort}
-            />
-          </div>
+          <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+            <StackItem
+              isFilled
+              style={{ minHeight: 0, height: "100%", overflow: "auto" }}
+              aria-label="OrdersView-Success"
+            >
+              <OrdersTable
+                rows={data.data}
+                tablePresenter={createOrdersTablePresenter()}
+                sort={sort}
+                setSort={setSort}
+              />
+            </StackItem>
+          </Stack>
         )}
       </PageContainer>
     );

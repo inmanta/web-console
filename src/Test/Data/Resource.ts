@@ -81,9 +81,6 @@ export const responseFromVersion: Resource.ResponseFromVersion = {
 export const id =
   "kubernetes_calico::resources::IPPool[dc-3,identifier=/cluster/dc-3/calicoctl/kc3-calicoctl/ippool/bb1-ip-pool-3]";
 
-export const encodedId =
-  "kubernetes_calico%3A%3Aresources%3A%3AIPPool%5Bdc-3%2Cidentifier%3D%2Fcluster%2Fdc-3%2Fcalicoctl%2Fkc3-calicoctl%2Fippool%2Fbb1-ip-pool-3%5D";
-
 type Overrides = Partial<Resource.ResourceSummary>;
 
 export const createMockResourceSummary = (overrides?: Overrides): Resource.ResourceSummary => {

@@ -6,7 +6,7 @@ import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { OrderDetailsHeading } from "./OrderDetailsHeading";
 import { OrderDetailsTable } from "./OrderDetailsTable";
-import { OrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";
+import { createOrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";
 
 export const Page: React.FC = () => {
   const { orchestratorProvider } = useContext(DependencyContext);
@@ -41,7 +41,7 @@ export const Page: React.FC = () => {
             <OrderDetailsHeading serviceOrder={data} />
             <OrderDetailsTable
               rows={data.service_order_items}
-              tablePresenter={new OrderDetailsTablePresenter()}
+              tablePresenter={createOrderDetailsTablePresenter()}
             />
           </div>
         )}

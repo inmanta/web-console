@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef } from "react";
 import { ui } from "@joint/plus";
 import styled from "styled-components";
 import { ComposerContext } from "../Data/Context";
+import { LEFT_SIDEBAR_WIDTH, RIGHT_SIDEBAR_WIDTH } from "../config";
 
 /**
  * Main JointJS canvas host.
@@ -48,12 +49,14 @@ export const Canvas: React.FC = () => {
 };
 
 const CanvasContainer = styled.div`
-  width: calc(100% - 540px); // 240px left sidebar + 300px right sidebar
+  // Leave room for both flanking sidebars so the canvas never runs under them.
+  width: calc(100% - ${LEFT_SIDEBAR_WIDTH + RIGHT_SIDEBAR_WIDTH}px);
   height: 100%;
   background: var(--pf-t--global--background--color--primary--default);
 
+  // The left sidebar is hidden in view mode, so only reserve the right sidebar.
   &.view_mode {
-    width: calc(100% - 300px);
+    width: calc(100% - ${RIGHT_SIDEBAR_WIDTH}px);
   }
 
   * {

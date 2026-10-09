@@ -1,0 +1,9 @@
+description: |
+  Reworked all table presenters from classes into a single shared functional factory
+  (createTablePresenter), so every table builds its columns, sorting and rows the same way.
+  This drops the old per-class boilerplate and the duplicate presenter interface, with no
+  change to how the tables look or behave.
+issue-nr: 6809
+change-type: patch
+destination-branches: [master]
+sections: {}

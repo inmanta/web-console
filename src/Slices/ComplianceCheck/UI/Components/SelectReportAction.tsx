@@ -6,10 +6,10 @@ import {
   Select,
   SelectList,
   SelectOption,
-  Spinner,
   ToolbarGroup,
 } from "@patternfly/react-core";
 import { DryRun } from "@/Data/Queries";
+import { Spinner } from "@/UI/Components";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { Progress as DomainProgress } from "@S/ComplianceCheck/Core/Domain";
 
@@ -138,11 +138,11 @@ const Progress: React.FC<{ report: DomainProgress }> = ({ report }) => {
   }, [tot, current, report.total, report.todo, done]);
 
   return done ? (
-    <Label variant="outline">
+    <Label isCompact variant="outline">
       {current} / {tot}
     </Label>
   ) : (
-    <Label variant="outline" color="blue" icon={<Spinner size="sm" />}>
+    <Label isCompact variant="outline" color="blue" icon={<Spinner size={8} />}>
       {current} / {tot}
     </Label>
   );

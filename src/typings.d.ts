@@ -12,4 +12,3 @@ declare module "*.rdf";
 declare module "*.ttl";
 declare module "*.pdf";
 declare const COMMITHASH: string;
-declare const APP_VERSION: string;

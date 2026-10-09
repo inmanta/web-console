@@ -99,21 +99,21 @@ export const TabView: React.FC = () => {
             )}
             <Tab
               eventKey={TabKeys.ATTRIBUTES}
-              title={<TabTitleText>{words("instanceDetails.tabs.attributes")}</TabTitleText>}
+              title={<TabTitleText>{words("attributes")}</TabTitleText>}
               aria-label="attributes-content"
             >
               <AttributesTabContent />
             </Tab>
             <Tab
               eventKey={TabKeys.EVENTS}
-              title={<TabTitleText>{words("instanceDetails.tabs.events")}</TabTitleText>}
+              title={<TabTitleText>{words("events")}</TabTitleText>}
               aria-label="events-content"
             >
               <EventsTabContent selectedVersion={selectedVersion} />
             </Tab>
             <Tab
               eventKey={TabKeys.RESOURCES}
-              title={<TabTitleText>{words("instanceDetails.tabs.resources")}</TabTitleText>}
+              title={<TabTitleText>{words("resources")}</TabTitleText>}
               aria-label="resources-content"
               isDisabled={String(instance.version) !== selectedVersion}
               isAriaDisabled={String(instance.version) !== selectedVersion}

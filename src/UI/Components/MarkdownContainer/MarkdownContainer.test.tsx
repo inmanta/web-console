@@ -1,3 +1,9 @@
+import {
+  t_global_border_color_nonstatus_blue_default,
+  t_global_color_nonstatus_blue_default,
+  t_global_text_color_nonstatus_on_blue_default,
+  t_global_text_color_regular,
+} from "@patternfly/react-tokens";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { words } from "@/UI/words";
 import { MarkdownContainer } from "./MarkdownContainer";
@@ -9,6 +15,11 @@ vi.mock("../DarkmodeOption", () => ({
 }));
 
 describe("MarkdownContainer", () => {
+  afterEach(() => {
+    // Drop the PatternFly token values a test set on the document root.
+    document.documentElement.removeAttribute("style");
+  });
+
   it("renders the Markdown content correctly", () => {
     const markdownContent = "# Heading\n\n**This is some bold text.**";
     const webTitle = "Container_id";
@@ -81,9 +92,12 @@ describe("MarkdownContainer", () => {
     );
   });
 
-  it("applies theme configuration to Mermaid diagrams", async () => {
-    // Set up dark theme in DOM (the implementation checks document.documentElement[data-theme])
-    document.documentElement.setAttribute("data-theme", "dark");
+  it("feeds PatternFly tokens to Mermaid's base theme", async () => {
+    const root = document.documentElement;
+    root.style.setProperty(t_global_text_color_regular.name, "#151515");
+    root.style.setProperty(t_global_color_nonstatus_blue_default.name, "#b9dafc");
+    root.style.setProperty(t_global_border_color_nonstatus_blue_default.name, "#4394e5");
+    root.style.setProperty(t_global_text_color_nonstatus_on_blue_default.name, "#002952");
 
     // Import the mermaid mock and set up spies before rendering
     const mermaidMock = await import("mermaid");
@@ -95,35 +109,40 @@ describe("MarkdownContainer", () => {
 
     render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
 
-    // Wait for the async setTimeout to execute and initialize to be called
     await waitFor(
       () => {
-        // Verify that mermaid.initialize was called with the dark theme
         expect(initializeSpy).toHaveBeenCalledWith(
           expect.objectContaining({
-            securityLevel: "loose",
-            startOnLoad: false,
-            theme: "dark",
+            theme: "base",
+            themeVariables: expect.objectContaining({
+              textColor: "#151515",
+              primaryTextColor: "#151515",
+              noteTextColor: "#151515",
+              // Blue is the first pie hue.
+              pie1: "#b9dafc",
+            }),
+            themeCSS: expect.stringContaining(
+              ".node.pf-blue rect, .node.pf-blue polygon, .node.pf-blue circle"
+            ),
           })
         );
       },
       { timeout: 2000 }
     );
 
-    // Check that the mermaid block is created
-    await waitFor(() => {
-      const mermaidBlock = document.querySelector("pre.mermaid");
-      expect(mermaidBlock).toBeInTheDocument();
-    });
+    const { themeCSS } = initializeSpy.mock.calls[initializeSpy.mock.calls.length - 1][0] as {
+      themeCSS: string;
+    };
 
-    // Clean up
-    document.documentElement.removeAttribute("data-theme");
+    expect(themeCSS).toContain("fill: #b9dafc; stroke: #4394e5;");
+    expect(themeCSS).toContain(".cluster.pf-blue .nodeLabel");
+    // Hues whose tokens don't resolve are left out.
+    expect(themeCSS).not.toContain("pf-green");
   });
 
-  it("uses default theme when no theme preference is set", async () => {
-    // Ensure dark theme class is not present (the implementation checks document.documentElement.classList)
-    document.documentElement.removeAttribute("data-theme");
-
+  it("drops every token-based override when PatternFly tokens are missing", async () => {
+    // PatternFly's CSS isn't loaded under jsdom, so every token reads empty
+    // and only the fixed pie opacity remains.
     // Import the mermaid mock and set up spies before rendering
     const mermaidMock = await import("mermaid");
     const initializeSpy = vi.spyOn(mermaidMock.default, "initialize");
@@ -137,12 +156,13 @@ describe("MarkdownContainer", () => {
     // Wait for the async setTimeout to execute and initialize to be called
     await waitFor(
       () => {
-        // Verify that mermaid.initialize was called with the default theme
         expect(initializeSpy).toHaveBeenCalledWith(
           expect.objectContaining({
             securityLevel: "loose",
             startOnLoad: false,
-            theme: "default",
+            theme: "base",
+            themeVariables: { pieOpacity: "1" },
+            themeCSS: "",
           })
         );
       },
@@ -173,6 +193,50 @@ describe("MarkdownContainer", () => {
         targetState: "desired-state",
       });
     });
+  });
+
+  it("resolves setState button label/icon from stateTransferDefaults", async () => {
+    const markdownContent = '```setState\n{"targetState":"setting_start"}\n```';
+    const webTitle = "Container_id";
+
+    render(
+      <MarkdownContainer
+        text={markdownContent}
+        web_title={webTitle}
+        stateTransferDefaults={{
+          setting_start: { displayText: "Push settings", icon: "FaSlidersH", variant: "warning" },
+        }}
+      />
+    );
+
+    const button = await screen.findByRole("button", { name: "Push settings" });
+
+    expect(button).toHaveAttribute("data-setstate-target", "setting_start");
+    expect(button.querySelector('[data-testid="FaSlidersH"]')).toBeInTheDocument();
+  });
+
+  it("disables setState buttons and ignores clicks when disableStateTransfer is set", async () => {
+    const markdownContent =
+      '```setState\n{"displayText":"Apply state","targetState":"desired-state"}\n```';
+    const webTitle = "Container_id";
+    const handleSetStateClick = vi.fn();
+
+    render(
+      <MarkdownContainer
+        text={markdownContent}
+        web_title={webTitle}
+        onSetStateClick={handleSetStateClick}
+        disableStateTransfer
+      />
+    );
+
+    const button = await screen.findByRole("button", { name: "Apply state" });
+
+    expect(button).toBeDisabled();
+
+    fireEvent.click(button);
+
+    expect(handleSetStateClick).not.toHaveBeenCalled();
   });
 
   describe("Mermaid download toolbar", () => {

@@ -11,6 +11,7 @@ import {
 import { CopyIcon } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
 import { words } from "@/UI";
+import { RowHoverReveal } from "@/UI/Components/RowHoverReveal";
 
 interface Props {
   text?: string;
@@ -20,7 +21,8 @@ interface Props {
 }
 
 /**
- * Component that allows to copy one of the provided options to clipboard.
+ * Component that allows to copy one of the provided options to clipboard. Inside a row (see
+ * RowHoverReveal) the button stays hidden until that row is hovered.
  *
  * @param {Props} props - The props for the CopyMultiOptions component.
  *  @prop {string} text - The text to display on the button.
@@ -77,6 +79,7 @@ export const CopyMultiOptions: React.FC<Props> = ({
       isDisabled={isDisabled}
       ref={toggleRef}
       variant="plain"
+      size="sm"
       isExpanded={isOpen}
       aria-label="Copy to clipboard"
       icon={
@@ -90,19 +93,26 @@ export const CopyMultiOptions: React.FC<Props> = ({
   );
 
   return (
-    <Dropdown
-      isOpen={isOpen}
-      onSelect={onSelect}
-      toggle={toggle}
-      onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-    >
-      <DropdownList>
-        {options.map((value, index) => (
-          <Tooltip key={index} content={<div>{tooltipText}</div>} entryDelay={200} position="right">
-            <DropdownItem value={value}>{value}</DropdownItem>
-          </Tooltip>
-        ))}
-      </DropdownList>
-    </Dropdown>
+    <RowHoverReveal>
+      <Dropdown
+        isOpen={isOpen}
+        onSelect={onSelect}
+        toggle={toggle}
+        onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+      >
+        <DropdownList>
+          {options.map((value, index) => (
+            <Tooltip
+              key={index}
+              content={<div>{tooltipText}</div>}
+              entryDelay={200}
+              position="right"
+            >
+              <DropdownItem value={value}>{value}</DropdownItem>
+            </Tooltip>
+          ))}
+        </DropdownList>
+      </Dropdown>
+    </RowHoverReveal>
   );
 };

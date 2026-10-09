@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -7,7 +8,9 @@ import {
   Flex,
   FlexItem,
   TextInput,
+  Tooltip,
 } from "@patternfly/react-core";
+import { HelpIcon } from "@patternfly/react-icons";
 import { convertToTitleCase } from "@/UI/Utils";
 import { CancelEditButton, EnableEditButton, SubmitEditButton } from "./InlineEditButtons";
 import { InlineValue } from "./InlineFillers";
@@ -15,6 +18,7 @@ import { InlineValue } from "./InlineFillers";
 interface Props {
   groupName: string;
   initialValues: Record<string, string>;
+  tooltips?: Record<string, string>;
   initiallyEditable?: boolean;
   onSubmit: (fieldDescriptors: Record<string, string>) => void;
   setError: (error: string | null) => void;
@@ -26,6 +30,7 @@ interface Props {
  * @props {Props} props - The component props
  * @prop {string} groupName - The name of the group
  * @prop {Record<string, string>} initialValues - The initial values of the fields
+ * @prop {Record<string, string>} [tooltips] - Optional help text per field, keyed by field name
  * @prop {boolean} initiallyEditable - Whether the fields are initially editable
  * @prop {Function} onSubmit - The function to call when the form is submitted
  * @prop {string | null} [error] - The error message of the field
@@ -36,6 +41,7 @@ interface Props {
 export const EditableMultiTextField: React.FC<Props> = ({
   groupName,
   initialValues,
+  tooltips,
   initiallyEditable,
   onSubmit,
   setError,
@@ -98,6 +104,19 @@ export const EditableMultiTextField: React.FC<Props> = ({
             <DescriptionListGroup key={label}>
               <DescriptionListTerm aria-label={`${label}-label`}>
                 {convertToTitleCase(label)}
+                {tooltips?.[label] && (
+                  <>
+                    {" "}
+                    <Tooltip content={tooltips[label]}>
+                      <Button
+                        variant="plain"
+                        type="button"
+                        icon={<HelpIcon />}
+                        aria-label={`More info for ${convertToTitleCase(label)} field`}
+                      />
+                    </Tooltip>
+                  </>
+                )}
               </DescriptionListTerm>
               <DescriptionListDescription>
                 {!editable && <InlineValue data-testid={`${label}-value`}>{value}</InlineValue>}

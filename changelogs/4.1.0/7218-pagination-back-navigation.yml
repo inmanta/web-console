@@ -1,0 +1,6 @@
+description: The paginated tables (Resources, Service Inventory, Agents and others) now keep the page you were on when you return to them, for example with the browser back button, instead of jumping back to the first page.
+issue-nr: 7218
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

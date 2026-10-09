@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Drawer, DrawerContent, DrawerContentBody, Stack, StackItem } from "@patternfly/react-core";
+import { Stack, StackItem } from "@patternfly/react-core";
 import { usePaginatedTable } from "@/Data";
 import { useGetParameters } from "@/Data/Queries";
 import { Filter, SortKey } from "@/Slices/Parameters/Core/Types";
 import {
   EmptyView,
+  FilterDrawer,
   PageContainer,
   LoadingView,
   PaginationWidget,
@@ -14,7 +15,7 @@ import {
 import { words } from "@/UI/words";
 import { ConnectedFilterWidget } from "./FilterWidget";
 import { ParametersTable } from "./ParametersTable";
-import { ParametersTablePresenter } from "./ParametersTablePresenter";
+import { createParametersTablePresenter } from "./ParametersTablePresenter";
 import { TableControls } from "./TableControls";
 
 /**
@@ -56,7 +57,7 @@ export const Page: React.FC = () => {
     return (
       <PageContainer
         pageTitle={words("parameters.title")}
-        style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+        style={{ display: "flex", flexDirection: "column" }}
       >
         <TableControls
           paginationWidget={
@@ -71,41 +72,29 @@ export const Page: React.FC = () => {
           isDrawerExpanded={isDrawerExpanded}
           activeFilterCount={activeFilterCount}
         />
-        <Drawer
+        <FilterDrawer
           isExpanded={isDrawerExpanded}
-          isInline
-          style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+          panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
         >
-          <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
-            <DrawerContentBody
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                flex: "1 1 auto",
-                minHeight: 0,
-              }}
-            >
-              {data.data.length <= 0 ? (
-                <EmptyView
-                  message={words("parameters.empty.message")}
-                  aria-label="ParametersView-Empty"
+          {data.data.length <= 0 ? (
+            <EmptyView
+              message={words("parameters.empty.message")}
+              aria-label="ParametersView-Empty"
+            />
+          ) : (
+            <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+              <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                <ParametersTable
+                  rows={data.data}
+                  aria-label="ParametersView-Success"
+                  tablePresenter={createParametersTablePresenter()}
+                  sort={sort}
+                  setSort={setSort}
                 />
-              ) : (
-                <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
-                  <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
-                    <ParametersTable
-                      rows={data.data}
-                      aria-label="ParametersView-Success"
-                      tablePresenter={new ParametersTablePresenter()}
-                      sort={sort}
-                      setSort={setSort}
-                    />
-                  </StackItem>
-                </Stack>
-              )}
-            </DrawerContentBody>
-          </DrawerContent>
-        </Drawer>
+              </StackItem>
+            </Stack>
+          )}
+        </FilterDrawer>
       </PageContainer>
     );
   }

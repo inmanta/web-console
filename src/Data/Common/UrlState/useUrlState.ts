@@ -1,11 +1,9 @@
 import { useRef } from "react";
 import { isObject } from "@/Core";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
-import { provide, Location, Replace, Update, StateConfig } from "./helpers";
+import { Location, Replace, Update, StateConfig } from "./helpers";
 
 const searchHelper = new SearchHelper();
-
-export const useUrlState = provide(useUrlStateHandler);
 
 export function useUrlStateHandler<Data>(
   config: StateConfig<Data>,

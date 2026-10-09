@@ -9,7 +9,21 @@ import {
   EXTENSION_LIST,
   FEATURE_LIST,
 } from "@/Core";
-import { words } from "@/UI";
+
+/**
+ * Safe default returned by get() before the serverstatus response has been received,
+ * so that consumers reading feature flags before initialization degrade instead of throwing.
+ */
+const DEFAULT_FEATURES: Pick<
+  ServerStatus,
+  "features" | "extensions" | "version" | "edition" | "slices"
+> = {
+  features: [],
+  extensions: [],
+  version: "",
+  edition: "",
+  slices: [],
+};
 
 /**
  * Represents the primary feature manager.
@@ -17,21 +31,12 @@ import { words } from "@/UI";
  */
 export const OrchestratorProvider = (
   jsonParserId: JsonParserId = "Native",
-  commitHash: string = "",
-  appVersion: string = ""
+  commitHash: string = ""
 ): OrchestratorProviderType => {
   const [features, setFeatures] = useState<Pick<
     ServerStatus,
     "features" | "extensions" | "version" | "edition" | "slices"
   > | null>(null);
-
-  /**
-   * Gets the version of the application.
-   * @returns The version of the application.
-   */
-  function getAppVersion(): string {
-    return appVersion;
-  }
 
   /**
    * Gets the commit hash of the application.
@@ -43,7 +48,7 @@ export const OrchestratorProvider = (
 
   function get(): Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices"> {
     if (!features) {
-      throw new Error(words("features.missing"));
+      return DEFAULT_FEATURES;
     }
 
     return features;
@@ -181,12 +186,11 @@ export const OrchestratorProvider = (
 
   useEffect(() => {
     console.info(
-      `[inmanta-web-console] Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
+      `[inmanta-web-console] Application configured with ${jsonParserId} JSON parser, Commit: ${commitHash}`
     );
-  }, [jsonParserId, appVersion, commitHash]);
+  }, [jsonParserId, commitHash]);
 
   return {
-    getAppVersion,
     getCommitHash,
     isLicencedFeatureEnabled,
     getJsonParser,

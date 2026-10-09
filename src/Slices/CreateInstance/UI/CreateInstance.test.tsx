@@ -149,7 +149,7 @@ describe("CreateInstance", () => {
 
     render(component);
 
-    await screen.findByPlaceholderText("Select an instance of test_entity"); // await for the relation input be rendered
+    await screen.findByPlaceholderText("Select instances of test_entity"); // await for the relation input be rendered
 
     const relationInputField = await screen.findByRole("button", {
       name: "test_entity-select-toggle",
@@ -236,7 +236,7 @@ describe("CreateInstance", () => {
 
     //check if direct attributes for embedded entities have correct default values
 
-    await userEvent.click(within(embedded_base).getByRole("button", { name: "0" }));
+    await userEvent.click(within(embedded_base).getByRole("button", { name: "#1" }));
 
     expect(within(embedded_base).queryByLabelText("TextInput-string")).toHaveValue(
       "default_string"

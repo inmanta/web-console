@@ -1,0 +1,4 @@
+description: Fixed a type error in the ServiceInstanceDetails page test where the StateTarget helper was missing the required advanced field.
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

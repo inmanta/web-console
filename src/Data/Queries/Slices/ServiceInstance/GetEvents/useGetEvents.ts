@@ -61,18 +61,6 @@ export interface Filter {
 }
 
 /**
- * Enum representing different types of filters
- * @enum {string}
- */
-export enum FilterKind {
-  EventType = "EventType",
-  Version = "Version",
-  Source = "Source",
-  Destination = "Destination",
-  Date = "Date",
-}
-
-/**
  * Return Signature of the useGetInstanceEvents React Query
  */
 interface GetInstance {

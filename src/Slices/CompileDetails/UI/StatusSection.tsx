@@ -44,7 +44,7 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
       <FlexItem>
         <DescriptionList isHorizontal isFillColumns columnModifier={{ default: "2Col" }}>
           <DescriptionListGroup>
-            <DescriptionListTerm>{words("compileDetails.status.export")}</DescriptionListTerm>
+            <DescriptionListTerm>{words("export")}</DescriptionListTerm>
             <DescriptionListDescription>
               {compileDetails.do_export.toString()}
             </DescriptionListDescription>
@@ -56,7 +56,7 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
-            <DescriptionListTerm>{words("compileDetails.status.message")}</DescriptionListTerm>
+            <DescriptionListTerm>{words("message")}</DescriptionListTerm>
             <DescriptionListDescription>
               {compileDetails.metadata["message"] as string}
             </DescriptionListDescription>

@@ -30,6 +30,15 @@ export interface AttributeAnnotations {
   web_order?: number;
   web_default_open?: boolean;
   web_tab?: string;
+
+  /** Canonical unit code of the raw API value. Required (with `web_presentation: "unit"`) to opt an int/float attribute into the UnitInputField (issue #7022). */
+  web_unit?: string;
+
+  /** "metric" | "iec" | "both" — which unit families the UnitInputField offers. See issue #7022 for the defaulting rules. */
+  web_unit_scales?: string;
+
+  /** Preferred unit pre-selected in an empty create form. See issue #7022. */
+  web_unit_display?: string;
 }
 
 /**
@@ -78,6 +87,22 @@ export interface StateModel {
   name: string;
   purge_resources: boolean;
   values?: Record<string, unknown>;
+  annotations?: StateAnnotations;
+}
+
+/**
+ * Interface that represents annotations for a state.
+ */
+export interface StateAnnotations {
+  /** Display label used as the fallback for a transfer button leading to this
+   * state when the transfer itself has no `web_button_label` (issue #7093). */
+  web_label?: string;
+
+  /** Font Awesome icon name for the state badge (issue #7094). No fallback. */
+  web_icon?: string;
+
+  /** Tooltip/blurb shown on hover over the state badge (issue #7094). No fallback. */
+  web_description?: string;
 }
 
 /**
@@ -97,6 +122,37 @@ export interface TransferModel {
   target: string;
   target_operation: string | null;
   validate: boolean;
+  annotations?: TransferAnnotations;
+}
+
+/**
+ * Interface that represents annotations for a transfer.
+ */
+export interface TransferAnnotations {
+  /** Custom confirmation prompt shown before the transfer is invoked (set-state /
+   * delete). Falls back to the default confirmation text when absent. */
+  web_confirm?: string;
+
+  /** Overrides the Actions-dropdown button label for an api_set_state transfer.
+   * Fallback chain: web_button_label -> target state's web_label -> target state name. */
+  web_button_label?: string;
+
+  /** Font Awesome icon name for the Actions-dropdown button (issue #7093). No fallback. */
+  web_icon?: string;
+
+  /** Button emphasis for the Actions-dropdown item. No PatternFly DropdownItem equivalent
+   * exists, so this is approximated with text/icon color (issue #7093). */
+  web_button_type?: "primary" | "secondary" | "tertiary" | "link";
+
+  /** Status styling for the Actions-dropdown item: danger maps to the existing
+   * DropdownItem `isDanger` styling, warning tints the icon only (issue #7093). */
+  web_button_variant?: "danger" | "warning";
+
+  /** Demotes an api_set_state transfer's Actions-dropdown item into a secondary
+   * "Advanced" disclosure, collapsed by default. Rendering hint only - the
+   * transfer is still invocable via the API. Ignored for non-api_set_state
+   * transfers (issue #7095). */
+  web_advanced_state?: boolean;
 }
 
 /**

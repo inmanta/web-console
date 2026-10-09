@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
@@ -78,6 +78,7 @@ export const useGetResourceLogs = (params: GetResourceLogsParams): GetResourceLo
           env,
         ]),
         queryFn: () => get(url),
+        placeholderData: keepPreviousData,
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),

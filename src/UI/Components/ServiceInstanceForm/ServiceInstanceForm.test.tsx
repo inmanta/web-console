@@ -1,19 +1,21 @@
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import {
   BooleanField,
   DictListField,
   EntityAnnotations,
   EnumField,
+  Field,
   InstanceAttributeModel,
   NestedField,
   TextField,
   Textarea,
+  UnitField,
 } from "@/Core";
 import { SUGGESTION_NAMESPACES } from "@/Data/Queries";
 import * as Test from "@/Test";
@@ -25,7 +27,16 @@ import { ServiceInstanceForm } from "./ServiceInstanceForm";
 import type { Mock } from "vitest";
 
 const setup = (
-  fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
+  fields: (
+    | TextField
+    | BooleanField
+    | NestedField
+    | DictListField
+    | EnumField
+    | Textarea
+    | UnitField
+    | Field
+  )[],
   func: undefined | Mock = undefined,
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined,
@@ -570,9 +581,57 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
     })
   );
 
-  await userEvent.click(within(group).getByRole("button", { name: "0" }));
+  await userEvent.click(within(group).getByRole("button", { name: "#1" }));
 
   expect(screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })).toBeVisible();
+});
+
+test("GIVEN ServiceInstanceForm and a DictListField with key attributes WHEN rendered and edited THEN items are titled by their key values", async () => {
+  const keyField = Test.Field.text.name;
+  const secondKeyField = Test.Field.number.name;
+  const originalAttributes = {
+    dict_list_field: [
+      { [keyField]: "ep-east", [secondKeyField]: "" },
+      { [keyField]: "", [secondKeyField]: "" },
+      { [keyField]: "ep-west", [secondKeyField]: 2500 },
+    ],
+  };
+  const [first, , third] = originalAttributes.dict_list_field;
+
+  const { component } = setup(
+    [
+      {
+        ...Test.Field.dictList([Test.Field.text, Test.Field.number]),
+        keyAttributes: [keyField, secondKeyField],
+      },
+    ],
+    undefined,
+    true,
+    originalAttributes
+  );
+
+  render(component);
+
+  const group = screen.getByRole("group", { name: "dict_list_field" });
+
+  await userEvent.click(within(group).getByRole("button", { name: "dict_list_field" }));
+
+  expect(within(group).getByRole("button", { name: `${first[keyField]}` })).toBeVisible();
+  expect(within(group).getByRole("button", { name: "#2" })).toBeVisible();
+  expect(
+    within(group).getByRole("button", { name: `${third[keyField]} / ${third[secondKeyField]}` })
+  ).toBeVisible();
+
+  await userEvent.click(within(group).getByRole("button", { name: "#2" }));
+  await userEvent.type(
+    within(screen.getByLabelText("DictListFieldInputItem-dict_list_field.1")).getByRole("textbox", {
+      name: `TextInput-${keyField}`,
+    }),
+    "ep-south"
+  );
+
+  expect(within(group).getByRole("button", { name: "ep-south" })).toBeVisible();
+  expect(within(group).queryByRole("button", { name: "#2" })).not.toBeInTheDocument();
 });
 
 test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, new items should be enabled.", async () => {
@@ -605,7 +664,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
     })
   );
 
-  await userEvent.click(within(group).getByRole("button", { name: "0" }));
+  await userEvent.click(within(group).getByRole("button", { name: "#1" }));
 
   expect(
     screen.queryByRole("textbox", {
@@ -625,7 +684,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
     })
   );
 
-  await userEvent.click(within(nestedGroup).getByRole("button", { name: "0" }));
+  await userEvent.click(within(nestedGroup).getByRole("button", { name: "#1" }));
 
   const disabledNestedTextField = within(nestedGroup).getByRole("textbox", {
     name: `TextInput-${Test.Field.textDisabled.name}`,
@@ -635,7 +694,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
 
   await userEvent.click(within(nestedGroup).getByRole("button", { name: "Add" }));
 
-  await userEvent.click(within(nestedGroup).getByRole("button", { name: "1" }));
+  await userEvent.click(within(nestedGroup).getByRole("button", { name: "#2" }));
 
   const nestedTextFields = screen.getAllByRole("textbox", {
     name: `TextInput-${Test.Field.textDisabled.name}`,
@@ -669,9 +728,9 @@ test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index,
   await userEvent.click(screen.getByRole("button", { name: dictListField.name }));
 
   // Open all the collapsible sections
-  await userEvent.click(screen.getByRole("button", { name: "0" }));
-  await userEvent.click(screen.getByRole("button", { name: "1" }));
-  await userEvent.click(screen.getByRole("button", { name: "2" }));
+  await userEvent.click(screen.getByRole("button", { name: "#1" }));
+  await userEvent.click(screen.getByRole("button", { name: "#2" }));
+  await userEvent.click(screen.getByRole("button", { name: "#3" }));
 
   const textBoxes = screen.getAllByRole("textbox");
 
@@ -740,7 +799,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
 
   await userEvent.click(screen.getByRole("button", { name: dictListField.name }));
 
-  await userEvent.click(screen.getByRole("button", { name: "0" }));
+  await userEvent.click(screen.getByRole("button", { name: "#1" }));
 
   await userEvent.type(
     screen.getByRole("textbox", {
@@ -760,6 +819,59 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     },
     expect.any(Function)
   );
+});
+
+test("GIVEN ServiceInstanceForm WHEN list text is typed and submit is clicked without adding it THEN the text is submitted", async () => {
+  const listField = { ...Test.Field.text, kind: "TextList" as const, type: "string[]" };
+  const value = "pending value";
+  const submitCb = vi.fn();
+  const { component } = setup([listField], submitCb);
+
+  // jsdom reports no document focus while focus moves between elements.
+  const hasFocus = vi.spyOn(document, "hasFocus").mockReturnValue(true);
+
+  render(component);
+
+  const group = screen.getByRole("generic", { name: `TextFieldInput-${listField.name}` });
+
+  await userEvent.type(within(group).getByRole("textbox"), value);
+  await userEvent.click(screen.getByText(words("confirm")));
+
+  expect(submitCb).toHaveBeenCalledWith({ [listField.name]: [value] }, expect.any(Function));
+
+  hasFocus.mockRestore();
+});
+
+test("GIVEN ServiceInstanceForm WHEN passed a UnitField THEN shows that field and submits the value converted to API units", async () => {
+  const submitCb = vi.fn();
+  const { component } = setup([Test.Field.unit], submitCb);
+
+  render(component);
+
+  const numberInput = screen.getByLabelText(`UnitInput-${Test.Field.unit.name}`);
+
+  expect(screen.getByRole("combobox", { name: "Unit" })).toHaveValue("kbit/s");
+
+  await userEvent.type(numberInput, "500");
+  await userEvent.click(screen.getByText(words("confirm")));
+
+  expect(submitCb).toHaveBeenCalledWith({ [Test.Field.unit.name]: 500 }, expect.any(Function));
+});
+
+test("GIVEN ServiceInstanceForm WHEN a UnitField's unit is switched THEN the same typed digits submit as a different API-unit value", async () => {
+  const submitCb = vi.fn();
+  const { component } = setup([Test.Field.unit], submitCb);
+
+  render(component);
+
+  const numberInput = screen.getByLabelText(`UnitInput-${Test.Field.unit.name}`);
+  const unitSelect = screen.getByRole("combobox", { name: "Unit" });
+
+  await userEvent.type(numberInput, "2");
+  await userEvent.selectOptions(unitSelect, "Mbit/s");
+  await userEvent.click(screen.getByText(words("confirm")));
+
+  expect(submitCb).toHaveBeenCalledWith({ [Test.Field.unit.name]: 2000 }, expect.any(Function));
 });
 
 test.each`
@@ -952,6 +1064,79 @@ test("GIVEN ServiceInstanceForm WHEN the entity has a web_tabs catalog THEN fiel
   ).not.toBeInTheDocument();
 });
 
+test("GIVEN ServiceInstanceForm WHEN a tab holds a single embedded relation THEN the relation renders flat, without a group to expand first", async () => {
+  const { network, entityAnnotations } = Test.Service.FormTabs;
+  const relation = { ...Test.Field.dictList([Test.Field.text]), min: 0, tab: network.key };
+
+  const { component } = setup(
+    [Test.Field.number, relation],
+    undefined,
+    false,
+    undefined,
+    [],
+    entityAnnotations
+  );
+
+  render(component);
+
+  await userEvent.click(screen.getByRole("tab", { name: network.label }));
+
+  // The tab is the relation's group: its description and Add action sit on the tab itself.
+  expect(screen.queryByLabelText(`DictListFieldInput-${relation.name}`)).not.toBeInTheDocument();
+  expect(
+    screen.getByText(`${relation.description} (${words("inventory.createInstance.items")(0)})`)
+  ).toBeVisible();
+
+  await userEvent.click(screen.getByRole("button", { name: words("add") }));
+
+  // The added item shows straight away, without opening anything first.
+  expect(screen.getByLabelText(`DictListFieldInputItem-${relation.name}.0`)).toBeVisible();
+  expect(
+    screen.getByText(`${relation.description} (${words("inventory.createInstance.items")(1)})`)
+  ).toBeVisible();
+});
+
+test("GIVEN ServiceInstanceForm WHEN a flat relation tab opens on a list that already has items THEN every item renders exactly once", async () => {
+  const { network, entityAnnotations } = Test.Service.FormTabs;
+  const relation = { ...Test.Field.dictList([Test.Field.text]), min: 2, tab: network.key };
+
+  const { component } = setup(
+    [Test.Field.number, relation],
+    undefined,
+    false,
+    undefined,
+    [],
+    entityAnnotations
+  );
+
+  render(component);
+
+  await userEvent.click(screen.getByRole("tab", { name: network.label }));
+
+  expect(screen.getAllByLabelText(/^DictListFieldInputItem-/)).toHaveLength(relation.min);
+});
+
+test("GIVEN ServiceInstanceForm WHEN a tab holds an embedded relation next to another field THEN the relation keeps its expandable group", async () => {
+  const { network, entityAnnotations } = Test.Service.FormTabs;
+  const relation = { ...Test.Field.dictList([Test.Field.text]), tab: network.key };
+  const sibling = { ...Test.Field.text, tab: network.key };
+
+  const { component } = setup(
+    [relation, sibling],
+    undefined,
+    false,
+    undefined,
+    [],
+    entityAnnotations
+  );
+
+  render(component);
+
+  await userEvent.click(screen.getByRole("tab", { name: network.label }));
+
+  expect(screen.getByLabelText(`DictListFieldInput-${relation.name}`)).toBeVisible();
+});
+
 test("GIVEN ServiceInstanceForm WHEN the web_tabs catalog does not have exactly one default THEN the model error is surfaced and the form falls back to a single column", () => {
   const { general, network } = Test.Service.FormTabs;
   const twoDefaults: EntityAnnotations = {
@@ -981,4 +1166,237 @@ test("GIVEN ServiceInstanceForm WHEN a field is assigned to a tab that is not in
     words("inventory.form.tabs.unknownKey")(assigned.name, "not_in_catalog")
   );
   expect(screen.queryByRole("tab")).not.toBeInTheDocument();
+});
+
+describe("cascading fields", () => {
+  const site = { ...Test.Field.text, name: "site" };
+  const uplink = {
+    ...Test.Field.text,
+    name: "uplink",
+    suggestion: { type: "parameters" as const, parameter_name: "files_${form.site}" },
+  };
+
+  const parameter = (values: string[]) =>
+    HttpResponse.json({ parameter: { metadata: { values } } });
+
+  test("GIVEN a field referencing ${form.*} WHEN the source is empty THEN it stays editable and warns, and the warning clears once the source has a value", async () => {
+    server.use(http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])));
+
+    const { component } = setup([site, uplink]);
+
+    render(component);
+
+    const uplinkBox = screen.getByRole("textbox", { name: "TextInput-uplink" });
+
+    // No suggestions until the source (site) has a value, but the field stays editable and only
+    // hints, naming the field to fill in first.
+    expect(uplinkBox).toBeEnabled();
+    expect(
+      screen.getByText(words("inventory.form.suggestions.waitingOnSource")("site"))
+    ).toBeVisible();
+
+    // Free typing is always allowed, even while waiting on the source.
+    await userEvent.type(uplinkBox, "free-form");
+    expect(uplinkBox).toHaveValue("free-form");
+    await userEvent.clear(uplinkBox);
+
+    await userEvent.type(screen.getByRole("textbox", { name: "TextInput-site" }), "brussels");
+
+    await waitFor(() =>
+      expect(
+        screen.queryByText(words("inventory.form.suggestions.waitingOnSource")("site"))
+      ).not.toBeInTheDocument()
+    );
+  });
+
+  test("GIVEN a dependent field WHEN its source changes THEN it is disabled and shows loading until the new query settles", async () => {
+    server.use(
+      http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])),
+      // Hold the second query in flight so the transient busy state is observable.
+      http.get("/api/v1/parameter/files_antwerp", async () => {
+        await delay(100);
+
+        return parameter(["uplink-9"]);
+      })
+    );
+
+    const { component } = setup([site, uplink]);
+
+    render(component);
+
+    const siteBox = screen.getByRole("textbox", { name: "TextInput-site" });
+    const uplinkBox = screen.getByRole("textbox", { name: "TextInput-uplink" });
+
+    await userEvent.type(siteBox, "brussels");
+    await waitFor(() => expect(uplinkBox).toBeEnabled());
+
+    await userEvent.clear(siteBox);
+    await userEvent.type(siteBox, "antwerp");
+
+    // While its source-driven query is settling the dependent is disabled and shows an in-input
+    // spinner, so a now-stale option cannot be picked.
+    await waitFor(() => {
+      expect(uplinkBox).toBeDisabled();
+      expect(
+        screen.getByRole("progressbar", { name: words("inventory.form.suggestions.loading") })
+      ).toBeVisible();
+    });
+
+    // Once the new options arrive it re-enables.
+    await waitFor(() => expect(uplinkBox).toBeEnabled(), { timeout: 5000 });
+  });
+
+  test("GIVEN a dependent field with a chosen value WHEN its source changes THEN the value is kept and a hint flags it is no longer among the options", async () => {
+    server.use(
+      http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])),
+      http.get("/api/v1/parameter/files_antwerp", () => parameter(["uplink-9"]))
+    );
+
+    const { component } = setup([site, uplink]);
+
+    render(component);
+
+    const siteBox = screen.getByRole("textbox", { name: "TextInput-site" });
+    const uplinkBox = screen.getByRole("textbox", { name: "TextInput-uplink" });
+
+    await userEvent.type(siteBox, "brussels");
+    await waitFor(() => expect(uplinkBox).toBeEnabled());
+
+    // Pick a suggestion so the dependent holds a value tied to the current source.
+    await userEvent.click(uplinkBox);
+    await userEvent.click(await screen.findByRole("menuitem", { name: "uplink-1" }));
+    expect(uplinkBox).toHaveValue("uplink-1");
+
+    // Changing the source no longer clears the dependent: its value is left untouched.
+    await userEvent.clear(siteBox);
+    await userEvent.type(siteBox, "antwerp");
+    await waitFor(() => expect(siteBox).toHaveValue("antwerp"));
+
+    // Wait for antwerp's refreshed list to actually land: its options are ["uplink-9"], so the
+    // kept "uplink-1" is no longer among them and the field surfaces the "not in list" hint.
+    await waitFor(() =>
+      expect(screen.getByText(words("inventory.form.suggestions.notInList")("site"))).toBeVisible()
+    );
+    expect(uplinkBox).toHaveValue("uplink-1");
+  });
+
+  test("GIVEN a locked dependent field in edit mode WHEN its source changes THEN its stored value is kept with no spurious warning", async () => {
+    server.use(
+      http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])),
+      http.get("/api/v1/parameter/files_antwerp", () => parameter(["uplink-9"]))
+    );
+
+    const editableSite = { ...site, isDisabled: false };
+    const lockedUplink = { ...uplink, isDisabled: true };
+
+    const { component } = setup([editableSite, lockedUplink], undefined, true, {
+      site: "brussels",
+      uplink: "uplink-1",
+    });
+
+    render(component);
+
+    const siteBox = screen.getByRole("textbox", { name: "TextInput-site" });
+    const uplinkBox = screen.getByRole("textbox", { name: "TextInput-uplink" });
+
+    // The locked dependent shows its stored value and is disabled (it can't be re-picked).
+    await waitFor(() => expect(uplinkBox).toHaveValue("uplink-1"));
+    expect(uplinkBox).toBeDisabled();
+
+    // Changing the source must not wipe the locked value, nor flag a value the user can't change.
+    await userEvent.clear(siteBox);
+    await userEvent.type(siteBox, "antwerp");
+    await waitFor(() => expect(siteBox).toHaveValue("antwerp"));
+
+    expect(uplinkBox).toHaveValue("uplink-1");
+    expect(
+      screen.queryByText(words("inventory.form.suggestions.notInList")("site"))
+    ).not.toBeInTheDocument();
+  });
+
+  test("GIVEN a cascading TextList field WHEN its source changes THEN kept chips stay and a hint flags one no longer among the options", async () => {
+    server.use(
+      http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])),
+      http.get("/api/v1/parameter/files_antwerp", () => parameter(["uplink-9"]))
+    );
+
+    const uplinkList = {
+      ...Test.Field.text,
+      kind: "TextList" as const,
+      name: "uplink",
+      suggestion: uplink.suggestion,
+    };
+
+    // Edit mode seeds a chip (uplink-1) tied to the current source (brussels) without typing into
+    // the list input; the field stays editable so its hint is not suppressed.
+    const { component } = setup([site, uplinkList], undefined, true, {
+      site: "brussels",
+      uplink: ["uplink-1"],
+    });
+
+    render(component);
+
+    const siteBox = screen.getByRole("textbox", { name: "TextInput-site" });
+
+    // The chip renders and, since uplink-1 is among brussels' options, no hint yet.
+    await waitFor(() => expect(screen.getByText("uplink-1")).toBeVisible());
+    expect(
+      screen.queryByText(words("inventory.form.suggestions.notInList")("site"))
+    ).not.toBeInTheDocument();
+
+    // Changing the source keeps the chip, and the kept value isn't among antwerp's options, so the
+    // three-way feedback wired into TextListFormInput surfaces the "not in list" hint.
+    await userEvent.clear(siteBox);
+    await userEvent.type(siteBox, "antwerp");
+    await waitFor(() => expect(siteBox).toHaveValue("antwerp"));
+
+    await waitFor(() =>
+      expect(screen.getByText(words("inventory.form.suggestions.notInList")("site"))).toBeVisible()
+    );
+    expect(screen.getByText("uplink-1")).toBeVisible();
+  });
+
+  test("GIVEN a dependent field WHEN its source is filled but yields no suggestions THEN it stays editable and warns", async () => {
+    server.use(http.get("/api/v1/parameter/files_brussels", () => parameter([])));
+
+    const { component } = setup([site, uplink]);
+
+    render(component);
+
+    const uplinkBox = screen.getByRole("textbox", { name: "TextInput-uplink" });
+
+    await userEvent.type(screen.getByRole("textbox", { name: "TextInput-site" }), "brussels");
+
+    // The query settled with no options: no blocked warning, but an explicit "no suggestions"
+    // warning so the empty result isn't mistaken for still-loading.
+    await waitFor(() =>
+      expect(screen.getByText(words("inventory.form.suggestions.empty")("site"))).toBeVisible()
+    );
+    expect(uplinkBox).toBeEnabled();
+
+    // Free typing still works even with no suggestions.
+    await userEvent.type(uplinkBox, "free-form");
+    expect(uplinkBox).toHaveValue("free-form");
+  });
+
+  test("GIVEN field suggestions that form a dependency cycle THEN the model error is surfaced", () => {
+    const a = {
+      ...Test.Field.text,
+      name: "a",
+      suggestion: { type: "parameters" as const, parameter_name: "x_${form.b}" },
+    };
+    const b = {
+      ...Test.Field.text,
+      name: "b",
+      suggestion: { type: "parameters" as const, parameter_name: "x_${form.a}" },
+    };
+
+    const { component } = setup([a, b]);
+
+    render(component);
+
+    expect(screen.getByTestId("FieldDependencies-Error")).toHaveTextContent(
+      words("inventory.form.suggestions.dependencyCycle")("a -> b -> a")
+    );
+  });
 });

@@ -12,8 +12,6 @@ export const DeleteAction: React.FC<Props> = ({ version }) => {
   const { setDeleteModal } = useContext(GetDesiredStatesContext);
 
   return (
-    <DropdownItem onClick={() => setDeleteModal(version, true)}>
-      {words("desiredState.actions.delete")}
-    </DropdownItem>
+    <DropdownItem onClick={() => setDeleteModal(version, true)}>{words("delete")}</DropdownItem>
   );
 };

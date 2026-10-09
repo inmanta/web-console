@@ -8,6 +8,14 @@ export const GlobalStyles = createGlobalStyle`
     --pf-v5-chart-global--label--Fill: var(--pf-t--global--text--color--regular);
   }
 
+  /** This solves the issue where whenever a banner is present we have this
+   small scrollbar which really shouldn't be present at all **/
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
   /** 
    * The standard file upload from patternfly 6 is adding a default inline padding that is different than the ones from other input fields. 
    * This override aligns it with the other fields. 
@@ -97,6 +105,20 @@ export const GlobalStyles = createGlobalStyle`
   */
   .pf-v6-c-label.pf-m-outline.pf-m-blue {
      --pf-v6-c-label--BorderColor: var(--pf-t--color--blue--50);
+  }
+
+  /**
+   * PF icons sit on a text line with vertical-align: -0.125em, which makes the label icon wrapper taller than the icon
+   * and pushes the icon above the centre of the text. Laying the icon out as a block keeps the wrapper exactly icon-sized.
+   * This affects nearly every label with an icon, so it is fixed globally instead of per component.
+   * Coupled to PF's label markup: on a PF upgrade, remove it and check whether label icons are still off centre.
+   **/
+  .pf-v6-c-label__icon {
+    display: flex;
+  }
+
+  .pf-v6-c-label__icon svg {
+    display: block;
   }
 
   ${MarkdownStyles}

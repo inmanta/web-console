@@ -24,7 +24,7 @@ export const ResourceTemporalData: React.FC<Props> = ({ details }) => (
       </DescriptionListDescription>
     </DescriptionListGroup>
     <DescriptionListGroup>
-      <DescriptionListTerm>{words("resources.info.firstTime")}</DescriptionListTerm>
+      <DescriptionListTerm>{words("created")}</DescriptionListTerm>
       <DescriptionListDescription>
         {datePresenter.getFull(details.first_generated_time)}
       </DescriptionListDescription>

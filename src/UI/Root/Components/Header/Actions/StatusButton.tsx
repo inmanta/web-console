@@ -2,17 +2,19 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button, ToolbarItem, Tooltip } from "@patternfly/react-core";
 import { PortIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
+import { useGetHealth } from "@/Data/Queries";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
 export const StatusButton: React.FC = () => {
-  const [statusColor, setStatusColor] = useState("currentColor");
+  const [isEnvironmentDown, setIsEnvironmentDown] = useState(false);
   const { routeManager } = useContext(DependencyContext);
+  const { isError: isHealthDown } = useGetHealth().useContinuous();
 
   useEffect(() => {
-    const changeStatusToRed = () => setStatusColor("red");
-    const changeStatusToCurrent = () => setStatusColor("currentColor");
+    const changeStatusToRed = () => setIsEnvironmentDown(true);
+    const changeStatusToCurrent = () => setIsEnvironmentDown(false);
 
     document.addEventListener("status-down", changeStatusToRed);
     document.addEventListener("status-up", changeStatusToCurrent);
@@ -22,6 +24,8 @@ export const StatusButton: React.FC = () => {
       document.removeEventListener("status-up", changeStatusToCurrent);
     };
   }, []);
+
+  const statusColor = isEnvironmentDown || isHealthDown ? "red" : "currentColor";
 
   return (
     <ToolbarItem>

@@ -7,11 +7,3 @@ export interface Filter {
   status?: DesiredStateVersionStatus[];
   disregardDefault?: boolean;
 }
-
-export enum FilterKind {
-  Version = "Version",
-  Date = "Date",
-  Status = "Status",
-}
-
-export const FilterList: FilterKind[] = [FilterKind.Version, FilterKind.Date, FilterKind.Status];

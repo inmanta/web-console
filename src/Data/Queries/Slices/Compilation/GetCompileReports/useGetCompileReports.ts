@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { CompileStatus, Sort, PageSize, Pagination } from "@/Core/Domain";
 import { DateRange } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
@@ -54,6 +54,7 @@ export const useGetCompileReports = (params: CompileReportsParams): GetCompileRe
       useQuery({
         queryKey: getCompileReportsKey.list([env, ...Object.values(params)]),
         queryFn: () => get(url),
+        placeholderData: keepPreviousData,
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         select: (data) => ({
           ...data,

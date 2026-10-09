@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { ServiceModel } from "@/Core";
+import { ServiceModel, warnUnrecognisedAnnotations } from "@/Core";
 import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
@@ -32,14 +32,22 @@ export const useGetServiceModel = (service: string): GetServiceModel => {
       useQuery({
         queryKey: getServiceModelKey.single(service, [env]),
         queryFn: () => get(`/lsm/v1/service_catalog/${service}?instance_summary=True`),
-        select: (data) => data.data,
+        select: (data) => {
+          warnUnrecognisedAnnotations(data.data);
+
+          return data.data;
+        },
       }),
     useContinuous: (): UseQueryResult<ServiceModel, CustomError> =>
       useQuery({
         queryKey: getServiceModelKey.single(service, [env]),
         queryFn: () => get(`/lsm/v1/service_catalog/${service}?instance_summary=True`),
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
-        select: (data) => data.data,
+        select: (data) => {
+          warnUnrecognisedAnnotations(data.data);
+
+          return data.data;
+        },
       }),
   };
 };

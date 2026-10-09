@@ -1,4 +1,4 @@
-import environmentHelpers from "../support/environmentHelpers";
+import environmentHelpers from "../support/environmentHelpers.js";
 
 const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
@@ -7,6 +7,24 @@ beforeEach(() => {
 });
 
 const isIso = Cypress.expose("edition") === "iso";
+
+/**
+ * Click a version row and confirm the selection reached the URL. The click is occasionally dropped
+ * entirely (the version param never appears - exact cause not pinned down); re-selecting the same
+ * version is idempotent, so click again until it lands. `(&|$)` avoids version=2 matching version=20.
+ */
+const selectHistoryVersion = (version, attempt = 1) => {
+  cy.get(`[id="version-${version}"]`).find('[data-label="version"]').click();
+  cy.location("search").then((search) => {
+    if (new RegExp(`InstanceDetails\\.version=${version}(&|$)`).test(search)) {
+      return;
+    }
+    if (attempt >= 5) {
+      throw new Error(`version ${version} was not selected after ${attempt} clicks`);
+    }
+    selectHistoryVersion(version, attempt + 1);
+  });
+};
 
 if (isIso) {
   describe("Scenario 2.1 Service Catalog - basic-service", () => {
@@ -91,13 +109,13 @@ if (isIso) {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
-      // Should show the chart
-      cy.get(".pf-v6-c-chart").should("be.visible");
-
       // Should show the ServiceInventory-Success Component.
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
       // Check if only one row has been added to the table.
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+
+      // Should show the instance count in the toolbar
+      cy.contains(/^1 instance$/).should("be.visible");
 
       // check whether there are two options available in the dropdown to copy the id/identifier.
       cy.get('[aria-label="IdentityCell-basic-service"]').within(() => {
@@ -126,12 +144,11 @@ if (isIso) {
       cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should("have.length", 3);
 
       // Check the state of the instance is up in the history section.
-      cy.get('[aria-label="History-Row"]').eq(0).should("contain", "up");
+      // "Up" (not "up"): the up state carries a web_label annotation (issue #7094).
+      cy.get('[aria-label="History-Row"]').eq(0).should("contain", "Up");
 
       // Selecting a version in the table should change the tags in the heading of the page.
-      cy.get('[id="version-2"]').within(() => {
-        cy.get('[data-label="version"]').click();
-      });
+      selectHistoryVersion(2);
 
       cy.get('[data-testid="selected-version"]', { timeout: 30000 }).should(
         "have.text",
@@ -206,8 +223,13 @@ if (isIso) {
       // platform specific command to select all and delete the content of the editor
       const deleteShortcut =
         Cypress.platform === "darwin" ? "{meta+a}{backspace}" : "{ctrl+a}{backspace}";
-      // delete the JSON entirely
-      cy.get(".monaco-editor").click().focused().type(deleteShortcut);
+      // Confirm the editor took focus (Monaco adds .focused) before clearing, so the delete isn't
+      // dropped onto an unfocused editor (which leaves the JSON valid and no error appears).
+      cy.get(".monaco-editor").click();
+      cy.get(".monaco-editor.focused").should("exist");
+      cy.focused().type(deleteShortcut);
+      // Confirm the delete landed before expecting the error (also a sync point for the steps below).
+      cy.get(".view-lines").should("not.contain.text", "ip_r1");
 
       // expect the JSON to be invalid
       cy.get('[data-testid="Error-container"]').should("contain", "Errors found");
@@ -220,8 +242,12 @@ if (isIso) {
 
       // platform specific undo command to restore the JSON
       const undoShortcut = Cypress.platform === "darwin" ? "{meta+z}" : "{ctrl+z}";
-      // ctrl+z to undo the deletion
-      cy.get(".monaco-editor").click().focused().type(undoShortcut);
+      // ctrl+z to undo the deletion - focus the editor first, same as the delete above.
+      cy.get(".monaco-editor").click();
+      cy.get(".monaco-editor.focused").should("exist");
+      cy.focused().type(undoShortcut);
+      // Confirm the JSON is back before proceeding (sync point for the search/replace steps below).
+      cy.get(".view-lines").should("contain.text", "ip_r1");
 
       // expect the JSON to be valid
       cy.get('[data-testid="Error-container"]').should("not.exist");
@@ -242,8 +268,10 @@ if (isIso) {
       cy.get("#address_r1").clear();
       cy.get("#editorButton").click();
 
-      // expect the value for address_r1 to be empty
-      cy.get(".view-line > :nth-child(1) > .mtk5").first().should("contain", '""');
+      // expect the value for address_r1 to be empty. address_r1 is the only cleared field, so an
+      // empty string ("") is unique in the JSON. Assert on Monaco's stable .view-lines container
+      // and retry until it renders, instead of a positional, theme-generated .mtk5 token span.
+      cy.get(".view-lines").should("contain.text", '""');
 
       // empty value should be valid and allow going back to form.
       cy.get("#formButton").click();
@@ -325,8 +353,9 @@ if (isIso) {
       cy.visit("/console/");
       selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      // Expect to find one badges on the basic-service row.
-      cy.get("#basic-service", { timeout: 40000 }).should(($parent) => {
+      // One badge once both instances settle to "up". The 2.1.4 "-copy" still has to deploy there
+      // (not awaited) and briefly shows a second label, so allow time instead of the default 40s.
+      cy.get("#basic-service", { timeout: 90000 }).should(($parent) => {
         const target = $parent.find('[aria-label="Number of instances by label"]');
         const children = target.children();
         expect(children).to.have.length(1);
@@ -383,16 +412,20 @@ if (isIso) {
       // Check for the presence of diff markers (insert/delete signs)
       cy.get(".codicon-diff-insert, .codicon-diff-remove").should("exist");
 
-      // Update the state to setting_start
+      // Update the state to setting_start: the transfer is flagged web_advanced_state
+      // so its "Push settings" button is demoted behind the "Advanced" disclosure.
       cy.get('[aria-label="Actions-Toggle"]').click();
-      cy.get('[role="menuitem"]').last().click();
+      cy.get('[role="menuitem"]').contains("Advanced").click();
+      cy.get('[role="menuitem"]').contains("Push settings").click();
 
       // Confirm in the modal
       cy.get("button").contains("Yes").click();
 
       // expect to find in the history table,
-      cy.get('[aria-label="History-Row"]').should(($rows) => {
-        expect($rows[0]).to.contain("up");
+      // "Up" (not "up"): the up state carries a web_label annotation (issue #7094).
+      // Pushing settings runs setting_start -> setting_inprogress -> up (a compile), so allow time.
+      cy.get('[aria-label="History-Row"]', { timeout: 90000 }).should(($rows) => {
+        expect($rows[0]).to.contain("Up");
         expect($rows[1]).to.contain("setting_inprogress");
         expect($rows[2]).to.contain("setting_start");
       });
@@ -421,12 +454,11 @@ if (isIso) {
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).last().click();
 
       // change version and go to events page. The second version should contain a validation report.
-      cy.get('[aria-label="History-Row"]')
-        .eq(7)
-        .within(() => {
-          cy.get('[data-label="version"]').click(); //it's done to avoid flake where the tooltip comes in a way and click ins't triggered
-        });
-      cy.get('[data-testid="selected-version"]').should("have.text", "Version: 2");
+      selectHistoryVersion(2);
+      cy.get('[data-testid="selected-version"]', { timeout: 30000 }).should(
+        "have.text",
+        "Version: 2"
+      );
 
       cy.get('[aria-label="events-content"]').click();
 
@@ -485,7 +517,8 @@ if (isIso) {
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();
 
       // Check the state of the instance is up in the history section.
-      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should("contain", "up");
+      // "Up" (not "up"): the up state carries a web_label annotation (issue #7094).
+      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should("contain", "Up");
 
       // Go back to inventory using the breadcrumbs
       cy.get('[aria-label="BreadcrumbItem"]').contains("Service Inventory: basic-service").click();

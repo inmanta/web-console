@@ -11,11 +11,10 @@ import { Details } from "@/Core/Domain/Resource/Resource";
 import { usePaginatedTable } from "@/Data";
 import { useGetResourceHistory } from "@/Data/Queries";
 import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
-import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { ResourceHistoryTable } from "./ResourceHistoryTable";
 import { ResourceTemporalData } from "./ResourceTemporalData";
-import { ResourceHistoryTablePresenter } from "./TablePresenter";
+import { createResourceHistoryTablePresenter } from "./TablePresenter";
 
 interface Props {
   resourceId: string;
@@ -40,7 +39,7 @@ export const ResourceHistoryView: React.FC<Props> = ({ resourceId, details }) =>
     return <ErrorView message={error.message} retry={refetch} ariaLabel="ResourceHistory-Error" />;
   }
   if (isSuccess) {
-    const tablePresenter = new ResourceHistoryTablePresenter(new CustomDatePresenter());
+    const tablePresenter = createResourceHistoryTablePresenter();
     const rows = tablePresenter.createRows(data.data);
 
     return (

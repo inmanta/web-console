@@ -1,8 +1,7 @@
-import { Maybe } from "@/Core";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
 import { DesiredStateVersionStatus } from "../Core/Domain";
 
-export type CompareSelection = Maybe.Maybe<number>;
+export type CompareSelection = number | undefined;
 
 /**
  * Applies default status filters when the user has not set an explicit status filter

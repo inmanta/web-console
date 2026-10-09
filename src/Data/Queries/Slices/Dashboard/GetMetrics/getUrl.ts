@@ -5,5 +5,5 @@ export const getUrl = (params: GetMetricsParams) => {
 
   return `/api/v2/metrics?${
     params.isLsmAvailable ? lsmMetrics : ""
-  }metrics=orchestrator.compile_time&metrics=orchestrator.compile_waiting_time&metrics=orchestrator.compile_rate&metrics=resource.agent_count&metrics=resource.resource_count&start_interval=${params.startDate}&end_interval=${params.endDate}&nb_datapoints=15&round_timestamps=true`;
+  }metrics=orchestrator.compile_time&metrics=orchestrator.compile_waiting_time&metrics=orchestrator.compile_rate&metrics=resource.agent_count&metrics=resource.resource_count&start_interval=${params.startDate}&end_interval=${params.endDate}&nb_datapoints=${params.nbDatapoints}&round_timestamps=true`;
 };
