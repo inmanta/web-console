@@ -74,6 +74,7 @@ export const View: React.FC<Props> = ({ id }) => {
                 tooltips={{
                   deploy: words("resources.resourceActions.deploy.tooltip.resource"),
                   repair: words("resources.resourceActions.repair.tooltip.resource"),
+                  dryRun: words("resources.resourceActions.dryRun.tooltip.resource"),
                 }}
                 disabledReason={
                   Resource.isOrphanedStatus(data.status)

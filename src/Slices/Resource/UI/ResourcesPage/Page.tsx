@@ -140,6 +140,7 @@ export const Page: React.FC = () => {
                 tooltips={{
                   deploy: words("resources.resourceActions.deploy.tooltip.resources"),
                   repair: words("resources.resourceActions.repair.tooltip.resources"),
+                  dryRun: words("resources.resourceActions.dryRun.tooltip.resources"),
                 }}
                 scopes={[
                   {

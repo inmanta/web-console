@@ -1,11 +1,29 @@
 import React, { useState } from "react";
-import { Button, Card, CardHeader, CardTitle, Content, Flex } from "@patternfly/react-core";
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardTitle,
+  Content,
+  Flex,
+  Form,
+  FormGroup,
+} from "@patternfly/react-core";
 import { NonEmptyArray } from "@/Core/Language";
-import { ResourceActionFilter } from "@/Data/Queries";
+import {
+  DryRunVersion,
+  ResourceActionFilter,
+  getVersionSelectionBlocker,
+  useGetModelVersionForInstanceVersion,
+  withActiveModelVersion,
+  withDryRunVersion,
+} from "@/Data/Queries";
 import { words } from "@/UI/words";
+import { DryRunVersionField } from "./DryRunVersionField";
+import { ResourceActionInstance } from "./types";
 
 /**
- * One selectable scope in the deploy/repair confirm dialog.
+ * One selectable scope in the resource action confirm dialog.
  *
  * @prop {string} id - Identifies the scope within the dialog; also used for the card's DOM ids
  * @prop {string} title - The card's label
@@ -27,6 +45,9 @@ export interface ResourceActionScope {
 interface Props {
   actionLabel: string;
   scopes: NonEmptyArray<ResourceActionScope>;
+  showScopes: boolean;
+  showVersionField: boolean;
+  instance: ResourceActionInstance | undefined;
   onConfirm: (filter: ResourceActionFilter) => void;
   onClose: () => void;
 }
@@ -87,13 +108,19 @@ const ScopeCard: React.FC<ScopeCardProps> = ({
 };
 
 /**
- * The confirm content for a filter-scoped deploy/repair, passed to ModalProvider's triggerModal.
- * It shows the given scopes as selectable cards and confirms the action against the chosen one.
+ * The confirm content for a filter-scoped deploy, repair or dry run, passed to ModalProvider's
+ * triggerModal. It shows the given scopes as selectable cards and confirms the action against the
+ * selected one.
+ * With the version field, a dry run on the selected scope runs against the selected version, or
+ * against the active model version when none is selected or selecting one is blocked.
  *
  * @Props {Props} - The props of the component
- *  @prop {string} actionLabel - The verb being confirmed (Deploy/Repair)
+ *  @prop {string} actionLabel - The verb being confirmed (Deploy/Repair/Dry run)
  *  @prop {NonEmptyArray<ResourceActionScope>} scopes - The selectable scopes
- *  @prop {(filter: ResourceActionFilter) => void} onConfirm - Called with the chosen scope's filter
+ *  @prop {boolean} showScopes - Shows the scope cards; when false the first scope is used as is
+ *  @prop {boolean} showVersionField - Shows the version field, for dry run
+ *  @prop {ResourceActionInstance | undefined} instance - The service instance, to offer its own versions
+ *  @prop {(filter: ResourceActionFilter) => void} onConfirm - Called with the filter to act on
  *  @prop {() => void} onClose - Called when the dialog is dismissed
  *
  * @returns {React.FC<Props>} The confirmation content
@@ -101,40 +128,91 @@ const ScopeCard: React.FC<ScopeCardProps> = ({
 export const ResourceActionConfirmModal: React.FC<Props> = ({
   actionLabel,
   scopes,
+  showScopes,
+  showVersionField,
+  instance,
   onConfirm,
   onClose,
 }) => {
   const defaultScope = scopes.find((scope) => scope.count !== 0) ?? scopes[0];
-  const [selectedId, setSelectedId] = useState(defaultScope.id);
-  const chosen = scopes.find((scope) => scope.id === selectedId) ?? defaultScope;
+  const [selectedScopeId, setSelectedScopeId] = useState(defaultScope.id);
+  const [selectedVersion, setSelectedVersion] = useState<DryRunVersion>();
+  const selectedScope = scopes.find((scope) => scope.id === selectedScopeId) ?? defaultScope;
+
+  // When the selected scope blocks selecting a version, the selected version is ignored and the
+  // dry run uses the active model version.
+  const versionSelectionBlocker = getVersionSelectionBlocker(selectedScope.filter);
+  const blockedMessage =
+    versionSelectionBlocker &&
+    words(`resources.resourceActions.confirm.version.blockedBy.${versionSelectionBlocker}`);
+  const dryRunVersion = versionSelectionBlocker ? undefined : selectedVersion;
+
+  // A dry run without a selected version runs against the active model version.
+  const filterWithoutSelectedVersion = showVersionField
+    ? withActiveModelVersion(selectedScope.filter)
+    : selectedScope.filter;
+  const filter = dryRunVersion
+    ? withDryRunVersion(selectedScope.filter, dryRunVersion)
+    : filterWithoutSelectedVersion;
+
+  // A selected instance version that has no model version has nothing to dry-run, so confirming
+  // waits until its model version is known.
+  const modelVersionOfSelectedInstanceVersionQuery = useGetModelVersionForInstanceVersion(
+    instance?.id,
+    dryRunVersion?.type === "instanceVersion" ? dryRunVersion.version : undefined
+  );
+  const canConfirmSelectedVersion =
+    !modelVersionOfSelectedInstanceVersionQuery.isLoading &&
+    modelVersionOfSelectedInstanceVersionQuery.data !== null;
+
+  const scopeCards = (
+    <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }}>
+      {scopes.map((scope) => (
+        <ScopeCard
+          key={scope.id}
+          id={scope.id}
+          isSelected={scope.id === selectedScopeId}
+          onSelect={setSelectedScopeId}
+          title={scope.title}
+          detail={scope.detail}
+          count={scope.count}
+        />
+      ))}
+      {selectedScope.filter.isOrphan !== false && (
+        <Content component="small">{words("resources.resourceActions.confirm.orphanNote")}</Content>
+      )}
+    </Flex>
+  );
 
   return (
-    <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
-      <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }}>
-        {scopes.map((scope) => (
-          <ScopeCard
-            key={scope.id}
-            id={scope.id}
-            isSelected={scope.id === selectedId}
-            onSelect={setSelectedId}
-            title={scope.title}
-            detail={scope.detail}
-            count={scope.count}
-          />
+    <Form onSubmit={(event) => event.preventDefault()}>
+      {showScopes &&
+        (showVersionField ? (
+          // Next to the version field, the scope gets a label of its own.
+          <FormGroup
+            label={words("resources.resourceActions.confirm.scope.title")}
+            role="radiogroup"
+            fieldId="resource-action-scope"
+          >
+            {scopeCards}
+          </FormGroup>
+        ) : (
+          scopeCards
         ))}
-        {chosen.filter.isOrphan !== false && (
-          <Content component="small">
-            {words("resources.resourceActions.confirm.orphanNote")}
-          </Content>
-        )}
-      </Flex>
+      {showVersionField && (
+        <DryRunVersionField
+          instance={instance}
+          onSelect={setSelectedVersion}
+          blockedMessage={blockedMessage}
+        />
+      )}
       <Flex gap={{ default: "gapSm" }}>
         <Button
           key="confirm"
           variant="primary"
           autoFocus
-          isDisabled={chosen.count === 0}
-          onClick={() => onConfirm(chosen.filter)}
+          isDisabled={selectedScope.count === 0 || !canConfirmSelectedVersion}
+          onClick={() => onConfirm(filter)}
         >
           {actionLabel}
         </Button>
@@ -142,6 +220,6 @@ export const ResourceActionConfirmModal: React.FC<Props> = ({
           {words("cancel")}
         </Button>
       </Flex>
-    </Flex>
+    </Form>
   );
 };

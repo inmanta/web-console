@@ -769,6 +769,14 @@ const dict = {
   "resources.resourceActions.toggle": "Deploy actions",
   "resources.resourceActions.deploy.hint": "default - incremental",
   "resources.resourceActions.repair.hint": "full",
+  "resources.resourceActions.dryRun": "Dry run",
+  "resources.resourceActions.dryRun.hint": "preview, no change",
+  "resources.resourceActions.dryRun.tooltip.resource":
+    "Preview what deploying this resource would change, against the version you select. Nothing is deployed.",
+  "resources.resourceActions.dryRun.tooltip.resources":
+    "Preview what deploying the resources in the chosen scope would change, against the version you select. Nothing is deployed.",
+  "resources.resourceActions.dryRun.tooltip.instance":
+    "Preview what deploying the resources in the chosen scope of this service instance would change, against the version you select. Nothing is deployed.",
   "resources.resourceActions.deploy.tooltip.resource":
     "Enforce the compliance of this resource. Does nothing if it is already compliant.",
   "resources.resourceActions.repair.tooltip.resource":
@@ -788,6 +796,43 @@ const dict = {
     `Triggering ${action.toLowerCase()} failed`,
   "resources.resourceActions.confirm.title": (action: string) => `${action} resources`,
   "resources.resourceActions.confirm.description": "Choose the scope, then confirm.",
+  "resources.resourceActions.confirm.single.title": (action: string) => `${action} this resource`,
+  "resources.resourceActions.confirm.titleFor": (action: string, subject: string) =>
+    `${action} ${subject}`,
+  "resources.resourceActions.confirm.dryRun.description": "Preview the diff. Nothing is deployed.",
+  "resources.resourceActions.confirm.dryRun.instance.description":
+    "Preview the diff for this instance's resources. Nothing is deployed.",
+  "resources.resourceActions.confirm.scope.title": "Scope",
+  "resources.resourceActions.confirm.version.title": "Against version",
+  "resources.resourceActions.confirm.version.type.title": "Version type",
+  "resources.resourceActions.confirm.version.type.instanceVersion": "Instance version",
+  "resources.resourceActions.confirm.version.type.modelVersion": "Model version",
+  "resources.resourceActions.confirm.version.modelOption": (modelVersion: string) =>
+    `v${modelVersion}`,
+  "resources.resourceActions.confirm.version.instanceOption": (instanceVersion: string) =>
+    `instance v${instanceVersion}`,
+  "resources.resourceActions.confirm.version.arrow": "→",
+  "resources.resourceActions.confirm.version.mapsTo": (modelVersion: string) =>
+    `model v${modelVersion}`,
+  "resources.resourceActions.confirm.version.mapsTo.none": "no model version",
+  "resources.resourceActions.confirm.version.noModelVersion.selected": (instanceVersion: string) =>
+    `Instance v${instanceVersion} has no model version, so it can't be dry-run.`,
+  "resources.resourceActions.confirm.version.noModelVersion.default": (instanceVersion: string) =>
+    `Instance v${instanceVersion} has no model version yet, so the dry run uses the active model version.`,
+  "resources.resourceActions.confirm.version.placeholder": "Select a version",
+  "resources.resourceActions.confirm.version.search": "Search a version number",
+  "resources.resourceActions.confirm.version.searchHint":
+    "Scroll the list to load older versions, or type a version number to find it.",
+  "resources.resourceActions.confirm.version.noResults": "No version found",
+  "resources.resourceActions.confirm.version.lookupError": (version: string) =>
+    `Version ${version} couldn't be looked up.`,
+  "resources.resourceActions.confirm.version.moreInfo": "More info about the version",
+  "resources.resourceActions.confirm.version.blockedBy.statusFilter":
+    "Status filters only apply to the active model version.",
+  "resources.resourceActions.confirm.version.blockedBy.ownedServices":
+    "Owned services can only be previewed against the active model version.",
+  "resources.resourceActions.confirm.version.loadError":
+    "The versions couldn't be loaded, so the dry run uses the active model version.",
   "resources.resourceActions.confirm.filtered.title": "Filtered resources",
   "resources.resourceActions.confirm.environment.title": "All resources in this environment",
   "resources.resourceActions.confirm.environment.note": "Ignores the active filter",
@@ -806,7 +851,7 @@ const dict = {
   "resources.resourceActions.confirm.owned.description": (services: string) =>
     `May also act on owned services of these types: ${services}.`,
   "resources.resourceActions.confirm.orphanNote":
-    "Orphaned resources (in no released version) can't be deployed or repaired.",
+    "Orphaned resources (in no released version) can't be deployed, repaired or dry-run.",
 
   /** Discovered Resources related text */
   "discoveredResourceDetails.title": "Discovered Resource Details",
