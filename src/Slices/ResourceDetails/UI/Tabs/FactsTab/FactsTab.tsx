@@ -1,4 +1,5 @@
 import React from "react";
+import { Stack, StackItem } from "@patternfly/react-core";
 import { useGetResourceFacts } from "@/Data/Queries";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { FactsTable } from "./FactsTable";
@@ -26,7 +27,13 @@ export const FactsTab: React.FC<Props> = ({ resourceId }) => {
   }
 
   if (isSuccess) {
-    return <FactsTable facts={data} />;
+    return (
+      <Stack style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+        <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+          <FactsTable facts={data} />
+        </StackItem>
+      </Stack>
+    );
   }
 
   return <LoadingView ariaLabel="Facts-Loading" />;

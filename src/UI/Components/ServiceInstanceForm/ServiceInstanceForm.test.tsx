@@ -581,9 +581,57 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
     })
   );
 
-  await userEvent.click(within(group).getByRole("button", { name: "0" }));
+  await userEvent.click(within(group).getByRole("button", { name: "#1" }));
 
   expect(screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })).toBeVisible();
+});
+
+test("GIVEN ServiceInstanceForm and a DictListField with key attributes WHEN rendered and edited THEN items are titled by their key values", async () => {
+  const keyField = Test.Field.text.name;
+  const secondKeyField = Test.Field.number.name;
+  const originalAttributes = {
+    dict_list_field: [
+      { [keyField]: "ep-east", [secondKeyField]: "" },
+      { [keyField]: "", [secondKeyField]: "" },
+      { [keyField]: "ep-west", [secondKeyField]: 2500 },
+    ],
+  };
+  const [first, , third] = originalAttributes.dict_list_field;
+
+  const { component } = setup(
+    [
+      {
+        ...Test.Field.dictList([Test.Field.text, Test.Field.number]),
+        keyAttributes: [keyField, secondKeyField],
+      },
+    ],
+    undefined,
+    true,
+    originalAttributes
+  );
+
+  render(component);
+
+  const group = screen.getByRole("group", { name: "dict_list_field" });
+
+  await userEvent.click(within(group).getByRole("button", { name: "dict_list_field" }));
+
+  expect(within(group).getByRole("button", { name: `${first[keyField]}` })).toBeVisible();
+  expect(within(group).getByRole("button", { name: "#2" })).toBeVisible();
+  expect(
+    within(group).getByRole("button", { name: `${third[keyField]} / ${third[secondKeyField]}` })
+  ).toBeVisible();
+
+  await userEvent.click(within(group).getByRole("button", { name: "#2" }));
+  await userEvent.type(
+    within(screen.getByLabelText("DictListFieldInputItem-dict_list_field.1")).getByRole("textbox", {
+      name: `TextInput-${keyField}`,
+    }),
+    "ep-south"
+  );
+
+  expect(within(group).getByRole("button", { name: "ep-south" })).toBeVisible();
+  expect(within(group).queryByRole("button", { name: "#2" })).not.toBeInTheDocument();
 });
 
 test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, new items should be enabled.", async () => {
@@ -616,7 +664,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
     })
   );
 
-  await userEvent.click(within(group).getByRole("button", { name: "0" }));
+  await userEvent.click(within(group).getByRole("button", { name: "#1" }));
 
   expect(
     screen.queryByRole("textbox", {
@@ -636,7 +684,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
     })
   );
 
-  await userEvent.click(within(nestedGroup).getByRole("button", { name: "0" }));
+  await userEvent.click(within(nestedGroup).getByRole("button", { name: "#1" }));
 
   const disabledNestedTextField = within(nestedGroup).getByRole("textbox", {
     name: `TextInput-${Test.Field.textDisabled.name}`,
@@ -646,7 +694,7 @@ test("GIVEN ServiceInstanceForm and a nested DictListField WHEN in EDIT mode, ne
 
   await userEvent.click(within(nestedGroup).getByRole("button", { name: "Add" }));
 
-  await userEvent.click(within(nestedGroup).getByRole("button", { name: "1" }));
+  await userEvent.click(within(nestedGroup).getByRole("button", { name: "#2" }));
 
   const nestedTextFields = screen.getAllByRole("textbox", {
     name: `TextInput-${Test.Field.textDisabled.name}`,
@@ -680,9 +728,9 @@ test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index,
   await userEvent.click(screen.getByRole("button", { name: dictListField.name }));
 
   // Open all the collapsible sections
-  await userEvent.click(screen.getByRole("button", { name: "0" }));
-  await userEvent.click(screen.getByRole("button", { name: "1" }));
-  await userEvent.click(screen.getByRole("button", { name: "2" }));
+  await userEvent.click(screen.getByRole("button", { name: "#1" }));
+  await userEvent.click(screen.getByRole("button", { name: "#2" }));
+  await userEvent.click(screen.getByRole("button", { name: "#3" }));
 
   const textBoxes = screen.getAllByRole("textbox");
 
@@ -751,7 +799,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
 
   await userEvent.click(screen.getByRole("button", { name: dictListField.name }));
 
-  await userEvent.click(screen.getByRole("button", { name: "0" }));
+  await userEvent.click(screen.getByRole("button", { name: "#1" }));
 
   await userEvent.type(
     screen.getByRole("textbox", {
@@ -771,6 +819,27 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     },
     expect.any(Function)
   );
+});
+
+test("GIVEN ServiceInstanceForm WHEN list text is typed and submit is clicked without adding it THEN the text is submitted", async () => {
+  const listField = { ...Test.Field.text, kind: "TextList" as const, type: "string[]" };
+  const value = "pending value";
+  const submitCb = vi.fn();
+  const { component } = setup([listField], submitCb);
+
+  // jsdom reports no document focus while focus moves between elements.
+  const hasFocus = vi.spyOn(document, "hasFocus").mockReturnValue(true);
+
+  render(component);
+
+  const group = screen.getByRole("generic", { name: `TextFieldInput-${listField.name}` });
+
+  await userEvent.type(within(group).getByRole("textbox"), value);
+  await userEvent.click(screen.getByText(words("confirm")));
+
+  expect(submitCb).toHaveBeenCalledWith({ [listField.name]: [value] }, expect.any(Function));
+
+  hasFocus.mockRestore();
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed a UnitField THEN shows that field and submits the value converted to API units", async () => {

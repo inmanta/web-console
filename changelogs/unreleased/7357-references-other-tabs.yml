@@ -1,0 +1,6 @@
+description: Show where reference-backed values come from on the versioned resource page and the resource history tab.
+issue-nr: 7357
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump @testing-library/react from 16.3.2 to 16.3.3
+destination-branches:
+- master
+sections: {}

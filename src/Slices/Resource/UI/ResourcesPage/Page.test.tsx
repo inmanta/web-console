@@ -6,7 +6,7 @@ import { configureAxe } from "jest-axe";
 import { delay, graphql, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { Pagination } from "@/Core/Domain";
-import { REFETCH_INTERVAL } from "@/Data/Queries";
+import { REFETCH_INTERVAL, mapStatusToGraphQLFilter } from "@/Data/Queries";
 import { response } from "@/Slices/Agents";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
 import { createMockResourceSummary } from "@/Test/Data/Resource";
@@ -33,6 +33,7 @@ interface GqlVariables {
     resourceIdValue?: { contains?: string[] };
     isOrphan?: boolean;
     isDeploying?: boolean;
+    compliance?: { eq?: string[]; neq?: string[] };
   };
   first?: number;
   after?: string;
@@ -807,6 +808,42 @@ describe("ResourcesPage", () => {
     await waitFor(() => expect(lastVariables?.filter?.isDeploying).toBeUndefined());
   });
 
+  test("clicking a summary bar segment toggles its status filter on and off", async () => {
+    let lastVariables: GqlVariables | undefined;
+
+    server.use(
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
+        lastVariables = variables;
+
+        return HttpResponse.json({ data: gqlFull });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
+
+    const getSegment = () => screen.getByRole("button", { name: "LegendItem-compliant" });
+
+    expect(getSegment()).toHaveAttribute("aria-pressed", "false");
+
+    // First click adds the compliant filter and marks the segment
+    await userEvent.click(getSegment());
+    await waitFor(() =>
+      expect(lastVariables?.filter?.compliance).toEqual(
+        mapStatusToGraphQLFilter(["compliant"]).compliance
+      )
+    );
+    expect(getSegment()).toHaveAttribute("aria-pressed", "true");
+
+    // Second click removes it again
+    await userEvent.click(getSegment());
+    await waitFor(() => expect(lastVariables?.filter?.compliance).toBeUndefined());
+    expect(getSegment()).toHaveAttribute("aria-pressed", "false");
+  });
+
   test("deploying label is not clickable when nothing is deploying", async () => {
     server.use(
       queryLink.query("GetResources", () =>
@@ -855,7 +892,7 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    const compliantLegendItem = screen.getByRole("generic", { name: "LegendItem-compliant" });
+    const compliantLegendItem = screen.getByRole("button", { name: "LegendItem-compliant" });
     expect(compliantLegendItem).toHaveAttribute("data-value", "3");
 
     const nextPageButton = screen.getAllByRole("button", { name: "Go to next page" })[0];
@@ -879,7 +916,7 @@ describe("ResourcesPage", () => {
     expect(screen.getByRole("navigation", { name: "top-Pagination" })).toBeVisible();
     expect(screen.getByRole("navigation", { name: "bottom-Pagination" })).toBeInTheDocument();
 
-    const compliantLegendItemAfterActions = await screen.findByRole("generic", {
+    const compliantLegendItemAfterActions = await screen.findByRole("button", {
       name: "LegendItem-compliant",
     });
     expect(compliantLegendItemAfterActions).toHaveAttribute("data-value", "4");
@@ -908,7 +945,7 @@ describe("ResourcesPage", () => {
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
     const complianceLegendBar = screen.getByTestId("legend-bar-compliance");
-    const compliantLegendItem = within(complianceLegendBar).getByRole("generic", {
+    const compliantLegendItem = within(complianceLegendBar).getByRole("button", {
       name: "LegendItem-compliant",
     });
     expect(compliantLegendItem).toHaveAttribute("data-value", "3");

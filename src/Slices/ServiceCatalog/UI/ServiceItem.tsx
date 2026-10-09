@@ -19,12 +19,11 @@ import {
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { ServiceModel } from "@/Core";
 import { useDeleteService } from "@/Data/Queries";
-import { ConfirmUserActionForm } from "@/UI/Components";
+import { ConfirmUserActionForm, InstanceSummaryLabels } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
-import { SummaryIcons } from "./SummaryIcons";
 
 interface Props {
   service: ServiceModel;
@@ -104,7 +103,7 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
                 </Content>
                 {service.instance_summary && (
                   <Content>
-                    <SummaryIcons summary={service.instance_summary} />
+                    <InstanceSummaryLabels byLabel={service.instance_summary.by_label} />
                   </Content>
                 )}
               </Flex>

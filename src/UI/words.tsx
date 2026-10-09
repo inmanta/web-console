@@ -47,6 +47,7 @@ const dict = {
   copy: "Copy",
   "copy.raw": "Copy raw value",
   "copy.clipboard": "Copy to clipboard",
+  resize: (name: string) => `Resize ${name}`,
   noData: "There is no data available to display.",
   success: "Success",
   "success.title": "Success",
@@ -83,6 +84,8 @@ const dict = {
   filters: "Filters",
   collapseAll: "Collapse all",
   expandAll: "Expand all",
+  showMore: "Show more",
+  showLess: "Show less",
   export: "Export",
   resourceId: "Resource Id",
   versionLabel: (version: string) => `Version: ${version}`,
@@ -120,6 +123,7 @@ const dict = {
   "attributes.active": "Active Attributes",
   "attributes.candidate": "Candidate Attributes",
   "attributes.rollback": "Rollback Attributes",
+  "attributes.emptyString": "empty string",
   "attributesTab.active": "Active",
   "attributesTab.candidate": "Candidate",
   "attributesTab.rollback": "Rollback",
@@ -471,6 +475,11 @@ const dict = {
   "catalog.summary.title": "Number of instances by label",
   "catalog.summary.noLabel": "no label",
   "catalog.summary.empty": "No instance summary found",
+  "catalog.summary.total": (total: number) => (
+    <>
+      <b>{total}</b> {total === 1 ? "instance" : "instances"}
+    </>
+  ),
   "catalog.button.inventory": "Show inventory",
   "catalog.button.update": "Update Service Catalog",
   "catalog.update.failed": "The update failed",
@@ -490,7 +499,6 @@ const dict = {
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,
   "catalog.delete.failed": "Deleting service entity failed",
-  "catalog.instances": "Instances",
   "catalog.callbacks.delete.title": "Delete Callback",
   "catalog.callbacks.delete": (url: string) =>
     `Are you sure you want to delete callback with url "${url}"?`,
@@ -734,6 +742,27 @@ const dict = {
   "resources.history.tabs.attributes": "Desired State",
   "resources.history.empty.message": "No requirements found",
   "resources.attributes.title": "Desired State",
+  "resources.attributes.view.label": "Attribute view",
+  "resources.attributes.view.structured": "Structured",
+  "resources.attributes.view.json": "JSON",
+  "resources.attributes.modelGroup": "Attributes",
+  "resources.attributes.orchestratorGroup": "Orchestrator attributes",
+  "references.chip.tooltip": "resolved at deploy time",
+  "references.uuid.copy": "Copy reference id",
+  "references.unresolved.marker": "unresolved",
+  "references.unresolved.tooltip": "This reference could not be found in the payload",
+  "references.cycle.marker": "cycle",
+  "references.cycle.tooltip": "This reference repeats one of its parents",
+  "references.argumentKind.literal": "literal",
+  "references.argumentKind.json": "json",
+  "references.argumentKind.mjson": "json",
+  "references.argumentKind.reference": "reference",
+  "references.argumentKind.resource": "resource",
+  "references.argumentKind.python_type": "python type",
+  "references.argumentKind.get": "dict path",
+  "references.truncated": "Reference tree truncated at 10 levels",
+  "references.mutatorsNotDisplayed": (count: number) =>
+    `${count} ${count === 1 ? "mutator is" : "mutators are"} not displayed`,
   "resources.logs.title": "Logs",
   "resources.logs.empty.message": "No logs found",
   "resources.logs.filterOnAction": (actionType: string) => `Filter on '${actionType}'`,
@@ -748,10 +777,18 @@ const dict = {
   "resources.resourceActions.toggle": "Deploy actions",
   "resources.resourceActions.deploy.hint": "default - incremental",
   "resources.resourceActions.repair.hint": "full",
-  "resources.resourceActions.deploy.tooltip":
-    "Request the agents to check the current state of each resource in a state different from the deployed state and make the current state of those resources in line with the desired state.",
-  "resources.resourceActions.repair.tooltip":
-    "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
+  "resources.resourceActions.deploy.tooltip.resource":
+    "Enforce the compliance of this resource. Does nothing if it is already compliant.",
+  "resources.resourceActions.repair.tooltip.resource":
+    "(Re-)enforce the intent of this resource. Fixes any drift from the desired state, even if it is marked as compliant.",
+  "resources.resourceActions.deploy.tooltip.resources":
+    "Enforce the compliance of the resources in the chosen scope. Resources that are already compliant are skipped.",
+  "resources.resourceActions.repair.tooltip.resources":
+    "(Re-)enforce the intent of every resource in the chosen scope. Fixes any drift from the desired state, even for resources marked as compliant.",
+  "resources.resourceActions.deploy.tooltip.instance":
+    "Enforce the compliance of the resources in the chosen scope of this service instance. Resources that are already compliant are skipped.",
+  "resources.resourceActions.repair.tooltip.instance":
+    "(Re-)enforce the intent of every resource in the chosen scope of this service instance. Fixes any drift from the desired state, even for resources marked as compliant.",
   "resources.resourceActions.orphaned.disabled":
     "Orphaned resources are no longer part of the latest desired state, so they cannot be deployed or repaired.",
   "resources.resourceActions.success": (action: string) => `${action} triggered`,
@@ -782,7 +819,6 @@ const dict = {
   /** Discovered Resources related text */
   "discoveredResourceDetails.title": "Discovered Resource Details",
   "discoveredResourceDetails.empty": "No discovered resource details found",
-  "discovered.column.managed_resource": "Managed resource",
   "discovered.column.discovery_resource": "Discovery resource",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",

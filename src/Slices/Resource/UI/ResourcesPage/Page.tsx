@@ -202,6 +202,10 @@ export const Page: React.FC = () => {
             </ToolbarItem>
             <ToolbarItem>
               <ResourceActions
+                tooltips={{
+                  deploy: words("resources.resourceActions.deploy.tooltip.resources"),
+                  repair: words("resources.resourceActions.repair.tooltip.resources"),
+                }}
                 scopes={[
                   {
                     id: "filtered",
@@ -230,6 +234,7 @@ export const Page: React.FC = () => {
               <CompoundResourceStatus
                 updateFilter={updateFilter}
                 resourceSummary={resourceSummary}
+                activeStatuses={filterWithDefaults.status ?? []}
               />
             ) : (
               <CompoundResourceStatusSkeleton />

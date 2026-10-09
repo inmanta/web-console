@@ -211,7 +211,7 @@ describe("DuplicateInstancePage", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "circuits" }));
 
-    await userEvent.click(screen.getByRole("button", { name: "1" }));
+    await userEvent.click(screen.getByRole("button", { name: "#2" }));
 
     await userEvent.click(screen.getByRole("button", { name: "csp_endpoint" }));
 

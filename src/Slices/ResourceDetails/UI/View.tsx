@@ -1,6 +1,6 @@
 import React from "react";
 import { Content, Flex, FlexItem, PageSection } from "@patternfly/react-core";
-import { Resource } from "@/Core/Domain";
+import { Resource, ResourceDetailsTab } from "@/Core/Domain";
 import { useUrlStateWithString } from "@/Data";
 import { ResourceActionFilter, useGetResourceDetails } from "@/Data/Queries";
 import {
@@ -13,7 +13,7 @@ import {
   ResourceStatusLabel,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { TabKey, Tabs } from "./Tabs";
+import { Tabs } from "./Tabs";
 
 interface Props {
   id: string;
@@ -30,8 +30,8 @@ interface Props {
  * @returns {React.FC<Props>} A React Component displaying the resource details
  */
 export const View: React.FC<Props> = ({ id }) => {
-  const [activeTab, setActiveTab] = useUrlStateWithString<TabKey>({
-    default: TabKey.Attributes,
+  const [activeTab, setActiveTab] = useUrlStateWithString<ResourceDetailsTab>({
+    default: ResourceDetailsTab.Attributes,
     key: "tab",
     route: "ResourceDetails",
   });
@@ -71,6 +71,10 @@ export const View: React.FC<Props> = ({ id }) => {
             <FlexItem>
               <ResourceActions
                 filter={resourceFilter}
+                tooltips={{
+                  deploy: words("resources.resourceActions.deploy.tooltip.resource"),
+                  repair: words("resources.resourceActions.repair.tooltip.resource"),
+                }}
                 disabledReason={
                   Resource.isOrphanedStatus(data.status)
                     ? words("resources.resourceActions.orphaned.disabled")

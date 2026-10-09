@@ -4,6 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http, delay } from "msw";
 import { setupServer } from "msw/node";
+import { environmentReferences, referenceAttributes } from "@/Data/Common/References/Mock";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -30,6 +31,7 @@ describe("ResourceHistoryView", () => {
 
   beforeAll(() => server.listen());
   beforeEach(() => server.resetHandlers());
+  afterEach(() => testClient.clear());
   afterAll(() => server.close());
 
   test("ResourceHistoryView shows empty table", async () => {
@@ -134,6 +136,37 @@ describe("ResourceHistoryView", () => {
 
     expect(screen.getAllByRole("tab", { name: "Desired State" })[0]).toBeVisible();
     expect(screen.getAllByRole("tab", { name: "Requires" })[0]).toBeVisible();
+  });
+
+  test("GIVEN The ResourceHistoryView WHEN an expanded entry has references THEN they render and stay expanded across its tabs", async () => {
+    const [first, ...rest] = ResourceHistory.response.data;
+    const nodeId = environmentReferences[0].id;
+
+    server.use(
+      http.get("/api/v2/resource/abc/history", () => {
+        return HttpResponse.json({
+          ...ResourceHistory.response,
+          data: [{ ...first, attributes: referenceAttributes }, ...rest],
+        });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByLabelText("ResourceHistory-Success")).toBeVisible();
+
+    await userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
+    await userEvent.click(
+      screen.getByRole("button", { name: /std::Environment\(name=CLOUDSMITH_API_KEY\)/ })
+    );
+
+    expect(screen.getByText(nodeId)).toBeVisible();
+
+    await userEvent.click(screen.getByRole("tab", { name: "Requires" }));
+    await userEvent.click(screen.getByRole("tab", { name: "Desired State" }));
+
+    expect(screen.getByText(nodeId)).toBeVisible();
   });
 
   test("GIVEN The ResourceHistoryView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {

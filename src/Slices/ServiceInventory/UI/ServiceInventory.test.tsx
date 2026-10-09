@@ -1,3 +1,4 @@
+import assert from "assert";
 import { act } from "react";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -11,7 +12,6 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
 
 function setup(service = Service.a, pageSize = "") {
@@ -21,11 +21,7 @@ function setup(service = Service.a, pageSize = "") {
         <MockedDependencyProvider>
           <ModalProvider>
             <Page>
-              <ServiceInventory
-                serviceName={service.name}
-                service={service}
-                intro={<Chart summary={service.instance_summary} />}
-              />
+              <ServiceInventory serviceName={service.name} service={service} />
             </Page>
           </ModalProvider>
         </MockedDependencyProvider>
@@ -106,6 +102,7 @@ describe("ServiceInventory", () => {
     expect(
       await screen.findByRole("region", { name: "ServiceInventory-Failed" })
     ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "AddInstanceToggle" })).toBeVisible();
 
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));
 
@@ -172,30 +169,66 @@ describe("ServiceInventory", () => {
     });
   });
 
-  test("ServiceInventory shows instance summary chart", async () => {
+  test("GIVEN ServiceInventory WHEN the service has an instance summary THEN the toolbar shows the total and the labels", async () => {
     server.use(
       http.get("/lsm/v1/service_inventory/service_name_e", () => {
-        return HttpResponse.json({
-          data: [
-            {
-              ...ServiceInstance.allAttrs,
-              id: "a",
-              service_identity_attribute_value: undefined,
-            },
-          ],
-          links: Pagination.links,
-          metadata: Pagination.metadata,
-        });
+        return HttpResponse.json(twoInstancesResponse());
       })
     );
+    const { instance_summary: summary, description } = Service.withInstanceSummary;
 
-    const { component } = setup(Service.withInstanceSummary);
+    assert(summary && description);
 
-    render(component);
+    render(setup(Service.withInstanceSummary).component);
 
+    expect(await screen.findByText(String(summary.total), { selector: "b" })).toBeVisible();
     expect(
-      await screen.findByRole("img", { name: words("catalog.summary.title") })
-    ).toBeInTheDocument();
+      screen.getByRole("button", {
+        name: `${words("catalog.summary.noLabel")}: ${summary.by_label.no_label}`,
+      })
+    ).toBeVisible();
+    expect(screen.getByText(description)).toBeVisible();
+  });
+
+  test("GIVEN ServiceInventory WHEN the user clicks a label twice THEN the state filter is set and cleared", async () => {
+    const { lifecycle, instance_summary } = Service.withInstanceSummary;
+    const warningStates = lifecycle.states
+      .filter((state) => state.label === "warning")
+      .map((state) => state.name)
+      .sort();
+
+    assert(instance_summary);
+
+    server.use(
+      http.get("/lsm/v1/service_inventory/service_name_e", ({ request }) => {
+        const url = new URL(request.url);
+        const stateFilter = url.searchParams.getAll("filter.state").sort();
+
+        if (stateFilter.join() === warningStates.join()) {
+          return HttpResponse.json({
+            ...twoInstancesResponse(),
+            data: [{ ...ServiceInstance.a, id: "a" }],
+          });
+        }
+
+        return HttpResponse.json(twoInstancesResponse());
+      })
+    );
+    const labelName = `warning: ${instance_summary.by_label.warning}`;
+
+    render(setup(Service.withInstanceSummary).component);
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(2);
+
+    await userEvent.click(screen.getByRole("button", { name: labelName, pressed: false }));
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(1);
+    expect(screen.getByRole("button", { name: labelName, pressed: true })).toBeVisible();
+
+    await userEvent.click(screen.getByRole("button", { name: labelName, pressed: true }));
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(2);
+    expect(screen.getByRole("button", { name: labelName, pressed: false })).toBeVisible();
   });
 
   test("ServiceInventory shows enabled composer buttons for root instances ", async () => {

@@ -31,11 +31,6 @@ export const DiscoveredResourceRow: React.FC<Props> = ({ row }) => {
           {value}
         </Td>
         <Td
-          dataLabel={words("discovered.column.managed_resource")}
-          data-testid={words("discovered.column.managed_resource")}
-          width={15}
-        ></Td>
-        <Td
           dataLabel={words("discovered.column.discovery_resource")}
           data-testid={words("discovered.column.discovery_resource")}
           width={20}

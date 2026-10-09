@@ -52,7 +52,7 @@ export const ParametersTable: React.FC<Props> = ({
   });
 
   return (
-    <Table {...props} variant={TableVariant.compact}>
+    <Table {...props} variant={TableVariant.compact} isStickyHeader>
       <Thead>
         <Tr>
           {hasExpandableRows && <Th screenReaderText="Row expansion" />}

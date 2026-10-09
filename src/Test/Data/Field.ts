@@ -204,6 +204,7 @@ export const nested = (fields?: Field[]): NestedField => ({
 
 export const dictList = (fields?: Field[]): DictListField => ({
   kind: "DictList",
+  keyAttributes: [],
   name: "dict_list_field",
   description: "description",
   isOptional: true,
@@ -215,6 +216,7 @@ export const dictList = (fields?: Field[]): DictListField => ({
 
 export const nestedDictList = (fields?: Field[]): DictListField => ({
   kind: "DictList",
+  keyAttributes: [],
   name: "nested_dict_list_field",
   description: "description",
   isOptional: true,
@@ -276,6 +278,7 @@ export const nestedEditable: Field[] = [
   },
   {
     kind: "DictList",
+    keyAttributes: [],
     name: "embedded",
     isOptional: true,
     isDisabled: false,
@@ -328,6 +331,7 @@ export const nestedEditable: Field[] = [
   },
   {
     kind: "DictList",
+    keyAttributes: [],
     name: "another_embedded",
     isOptional: true,
     isDisabled: false,

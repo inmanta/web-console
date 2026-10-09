@@ -1,0 +1,6 @@
+description: The Desired State tab now shows where reference-backed values come from, labels their argument types, and has a Structured / JSON toggle for the raw payload.
+issue-nr: 7355
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

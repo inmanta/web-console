@@ -1,6 +1,7 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Resource, Sort } from "@/Core";
+import { words } from "@/UI/words";
 import { Row, RowFromVersion } from "./Row";
 import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 
@@ -54,7 +55,10 @@ export const VersionResourceTable: React.FC<Props> = ({
   return (
     <Table {...props} variant={TableVariant.compact} isStickyHeader>
       <Thead>
-        <Tr>{heads}</Tr>
+        <Tr>
+          {heads}
+          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")} />
+        </Tr>
       </Thead>
       {rows.map((row) => (
         <Row row={row} key={row.id} version={version} />

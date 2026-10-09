@@ -1,0 +1,5 @@
+description: Service pages now show an error with a Retry button when the service fails to load.
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

@@ -40,7 +40,7 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
   }, [facts, sort]);
 
   return (
-    <Table variant="compact" aria-label="Facts-Success">
+    <Table variant="compact" aria-label="Facts-Success" isStickyHeader>
       <Thead>
         <Tr>
           {hasExpandableRows && <Th screenReaderText="Row expansion" />}
