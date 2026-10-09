@@ -871,6 +871,25 @@ describe("ResourceActions", () => {
         );
       });
 
+      test("WHEN the version type is switched after a pick THEN the dry run uses the default version again", async () => {
+        const dialog = await openInstanceDryRun();
+
+        await pickInstanceVersion(dialog, older);
+        expect(
+          await within(dialog).findByText(mapsTo(String(modelVersionOf[older])))
+        ).toBeVisible();
+
+        await userEvent.click(
+          within(dialog).getByRole("button", {
+            name: words("resources.resourceActions.confirm.version.type.model"),
+          })
+        );
+        expect(await within(dialog).findByText(versionLabel(activeVersion))).toBeVisible();
+        await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
+
+        await waitFor(() => expect(body).toEqual({ filter: instanceFilter }));
+      });
+
       test("WHEN the owned scope is chosen THEN the version stays on the latest one", async () => {
         const dialog = await openInstanceDryRun();
 

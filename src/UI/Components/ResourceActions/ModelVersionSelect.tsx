@@ -40,9 +40,9 @@ export const ModelVersionSelect: React.FC<Props> = ({ id, onPick, lockReason }) 
 
   const versions = useGetDesiredStateVersions();
   const loaded = versions.data?.map(toModelOption) ?? [];
-  const versionSearch = useVersionSearch(loaded);
+  const versionSearch = useVersionSearch(loaded, versions);
   const lookup = useGetDesiredStateVersion(versionSearch.lookupVersion);
-  const { options, isLookupPending, lookupError } = versionSearch.match(
+  const { options, isLoadingMore, listError } = versionSearch.match(
     lookup,
     lookup.data ? toModelOption(lookup.data) : undefined
   );
@@ -72,13 +72,6 @@ export const ModelVersionSelect: React.FC<Props> = ({ id, onPick, lockReason }) 
     onPick(option.version);
   };
 
-  // Scrolling to the end of the list loads the next page.
-  const loadMore = () => {
-    if (versions.hasNextPage && !versions.isFetchingNextPage) {
-      versions.fetchNextPage();
-    }
-  };
-
   return (
     <VersionSelect
       id={id}
@@ -88,9 +81,9 @@ export const ModelVersionSelect: React.FC<Props> = ({ id, onPick, lockReason }) 
       onSelect={pick}
       search={versionSearch.search}
       onSearchChange={versionSearch.setSearch}
-      onReachEnd={loadMore}
-      isLoadingMore={versions.isFetchingNextPage || isLookupPending}
-      listError={lookupError}
+      onReachEnd={versionSearch.loadMore}
+      isLoadingMore={isLoadingMore}
+      listError={listError}
       isDisabled={Boolean(lockReason)}
       isLoading={versions.isLoading}
       notice={notice()}

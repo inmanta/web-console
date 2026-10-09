@@ -52,13 +52,13 @@ export const InstanceVersionSelect: React.FC<Props> = ({ id, instance, onPick, l
 
   const versions = useGetInstanceLogs(instance.serviceEntity, instance.id).useOneTime();
   const loaded = versions.data?.map(toOption) ?? [];
-  const versionSearch = useVersionSearch(loaded);
+  const versionSearch = useVersionSearch(loaded, versions);
   const lookup = useGetInstanceLog(
     instance.serviceEntity,
     instance.id,
     versionSearch.lookupVersion
   );
-  const { options, isLookupPending, lookupError } = versionSearch.match(
+  const { options, isLoadingMore, listError } = versionSearch.match(
     lookup,
     lookup.data ? toOption(lookup.data) : undefined
   );
@@ -115,13 +115,6 @@ export const InstanceVersionSelect: React.FC<Props> = ({ id, instance, onPick, l
     onPick(option.version);
   };
 
-  // Scrolling to the end of the list loads the next page.
-  const loadMore = () => {
-    if (versions.hasNextPage && !versions.isFetchingNextPage) {
-      versions.fetchNextPage();
-    }
-  };
-
   return (
     <VersionSelect
       id={id}
@@ -131,9 +124,9 @@ export const InstanceVersionSelect: React.FC<Props> = ({ id, instance, onPick, l
       onSelect={pick}
       search={versionSearch.search}
       onSearchChange={versionSearch.setSearch}
-      onReachEnd={loadMore}
-      isLoadingMore={versions.isFetchingNextPage || isLookupPending}
-      listError={lookupError}
+      onReachEnd={versionSearch.loadMore}
+      isLoadingMore={isLoadingMore}
+      listError={listError}
       isDisabled={Boolean(lockReason)}
       isLoading={versions.isLoading}
       notice={notice()}

@@ -12,6 +12,15 @@ const toSearchedVersion = (search: string): number | undefined =>
   /^\d+$/.test(search.trim()) ? Number(search.trim()) : undefined;
 
 /**
+ * The paged query that lists the versions, newest first.
+ */
+interface VersionList {
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => unknown;
+}
+
+/**
  * The state of the query that looks up one version by its number.
  */
 interface Lookup {
@@ -20,34 +29,39 @@ interface Lookup {
 }
 
 /**
- * The search of a version select. lookupVersion is the version to look up on its own, and match
- * turns that lookup into the options to list, whether it is still running, and its error.
+ * The search of a version select. lookupVersion is the version to look up on its own, loadMore
+ * loads the next page of the list, and match turns the lookup into the options to list, whether
+ * more are loading, and the lookup's error.
  */
 interface VersionSearch {
   search: string;
   setSearch: (search: string) => void;
   lookupVersion: number | undefined;
+  loadMore: () => void;
   match: (
     lookup: Lookup,
     found: VersionSelectOption | undefined
   ) => {
     options: VersionSelectOption[];
-    isLookupPending: boolean;
-    lookupError: string | undefined;
+    isLoadingMore: boolean;
+    listError: string | undefined;
   };
 }
 
 /**
  * React hook holding the search of a version select. Typed digits narrow the loaded versions, and
  * a full number that isn't loaded is looked up on its own once typing pauses, by a query the
- * caller runs with lookupVersion.
+ * caller runs with lookupVersion. Scrolling to the end of the list loads its next page.
  *
  * @example
- * const versionSearch = useVersionSearch(loaded);
+ * const versionSearch = useVersionSearch(loaded, versions);
  * const lookup = useGetDesiredStateVersion(versionSearch.lookupVersion);
  * versionSearch.match(lookup, found).options // the loaded versions starting with the typed digits, plus found
  */
-export const useVersionSearch = (loaded: VersionSelectOption[]): VersionSearch => {
+export const useVersionSearch = (
+  loaded: VersionSelectOption[],
+  list: VersionList
+): VersionSearch => {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
   const typedVersion = toSearchedVersion(search);
@@ -56,13 +70,19 @@ export const useVersionSearch = (loaded: VersionSelectOption[]): VersionSearch =
   const lookupVersion =
     debouncedVersion !== undefined && !isLoaded(debouncedVersion) ? debouncedVersion : undefined;
 
+  const loadMore = () => {
+    if (list.hasNextPage && !list.isFetchingNextPage) {
+      list.fetchNextPage();
+    }
+  };
+
   const match: VersionSearch["match"] = (lookup, found) => {
     // The lookup is still on its way while typing hasn't paused or its request is running.
     const isLookupPending =
       typedVersion !== undefined &&
       !isLoaded(typedVersion) &&
       (typedVersion !== debouncedVersion || lookup.isLoading);
-    const lookupError =
+    const listError =
       lookupVersion !== undefined && lookupVersion === typedVersion && lookup.isError
         ? words("resources.resourceActions.confirm.version.lookupError")(String(lookupVersion))
         : undefined;
@@ -82,8 +102,12 @@ export const useVersionSearch = (loaded: VersionSelectOption[]): VersionSearch =
         .sort((a, b) => b.version - a.version);
     };
 
-    return { options: matching(), isLookupPending, lookupError };
+    return {
+      options: matching(),
+      isLoadingMore: list.isFetchingNextPage || isLookupPending,
+      listError,
+    };
   };
 
-  return { search, setSearch, lookupVersion, match };
+  return { search, setSearch, lookupVersion, loadMore, match };
 };
