@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Stack } from "@patternfly/react-core";
+import { Stack, StackItem } from "@patternfly/react-core";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetInstances } from "@/Data/Queries";
@@ -83,49 +83,55 @@ export const ServiceInventory: React.FunctionComponent<{
 
   if (isSuccess) {
     return (
-      <Wrapper name={serviceName} service={service}>
-        <Stack>
-          <TableControls
-            instanceSummary={
-              service.instance_summary && (
-                <InstanceCounts
-                  summary={service.instance_summary}
-                  filtering={{ activeLabel, onToggle: onToggleLabel }}
+      <Wrapper
+        name={serviceName}
+        service={service}
+        style={{ display: "flex", flexDirection: "column" }}
+      >
+        <TableControls
+          instanceSummary={
+            service.instance_summary && (
+              <InstanceCounts
+                summary={service.instance_summary}
+                filtering={{ activeLabel, onToggle: onToggleLabel }}
+              />
+            )
+          }
+          paginationWidget={
+            <PaginationWidget
+              data={data}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              setCurrentPage={setCurrentPage}
+            />
+          }
+          onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
+          isDrawerExpanded={isDrawerExpanded}
+          activeFilterCount={activeFilterCount}
+        />
+        <FilterDrawer
+          isExpanded={isDrawerExpanded}
+          panelContent={<ConnectedFilterWidget states={states} onClose={onCloseFilterWidget} />}
+        >
+          {data.data.length > 0 ? (
+            <Stack style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+              <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                <TableProvider
+                  aria-label="ServiceInventory-Success"
+                  instances={data.data}
+                  serviceEntity={service}
+                  sort={sort}
+                  setSort={setSort}
                 />
-              )
-            }
-            paginationWidget={
-              <PaginationWidget
-                data={data}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-                setCurrentPage={setCurrentPage}
-              />
-            }
-            onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
-            isDrawerExpanded={isDrawerExpanded}
-            activeFilterCount={activeFilterCount}
-          />
-          <FilterDrawer
-            isExpanded={isDrawerExpanded}
-            panelContent={<ConnectedFilterWidget states={states} onClose={onCloseFilterWidget} />}
-          >
-            {data.data.length > 0 ? (
-              <TableProvider
-                aria-label="ServiceInventory-Success"
-                instances={data.data}
-                serviceEntity={service}
-                sort={sort}
-                setSort={setSort}
-              />
-            ) : (
-              <EmptyView
-                message={words("inventory.empty.message")(serviceName)}
-                aria-label="ServiceInventory-Empty"
-              />
-            )}
-          </FilterDrawer>
-        </Stack>
+              </StackItem>
+            </Stack>
+          ) : (
+            <EmptyView
+              message={words("inventory.empty.message")(serviceName)}
+              aria-label="ServiceInventory-Empty"
+            />
+          )}
+        </FilterDrawer>
       </Wrapper>
     );
   }

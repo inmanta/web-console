@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Content, Flex, Label, PageSection } from "@patternfly/react-core";
+import { Content, Flex, Label, PageSection, Stack, StackItem } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetVersionResources } from "@/Data/Queries";
@@ -102,14 +102,18 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
                 aria-label="VersionResourcesTable-Empty"
               />
             ) : (
-              <VersionResourceTable
-                aria-label="VersionResourcesTable-Success"
-                version={version}
-                rows={presenter.createRows(data.data)}
-                tablePresenter={createVersionResourceTablePresenter()}
-                sort={sort}
-                setSort={setSort}
-              />
+              <Stack style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+                <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                  <VersionResourceTable
+                    aria-label="VersionResourcesTable-Success"
+                    version={version}
+                    rows={presenter.createRows(data.data)}
+                    tablePresenter={createVersionResourceTablePresenter()}
+                    sort={sort}
+                    setSort={setSort}
+                  />
+                </StackItem>
+              </Stack>
             )}
           </FilterDrawer>
         </PageSection>

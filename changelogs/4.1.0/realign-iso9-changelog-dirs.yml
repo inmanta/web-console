@@ -1,0 +1,4 @@
+description: Restore the 3.2.0 changelog directory and remove its duplicate entries from the 4.0.0 directory after realigning iso9 with master.
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

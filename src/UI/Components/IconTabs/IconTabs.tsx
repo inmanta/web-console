@@ -23,7 +23,20 @@ interface Props<K extends string> {
   activeTab: K;
   onChange: (tabKey: K) => void;
   tabContentId?: (tabKey: K) => string;
+  isSticky?: boolean;
 }
+
+/**
+ * Keeps a tab bar in view at the top of the scrolling PageContainer content section.
+ * The negative offset cancels the section's top padding, so content can't scroll by above the bar.
+ */
+export const stickyTabsStyle: React.CSSProperties = {
+  position: "sticky",
+  top: "calc(-1 * var(--pf-v6-c-page__main-section--PaddingBlockStart))",
+  zIndex: "var(--pf-t--global--z-index--sm)",
+  flexShrink: 0,
+  backgroundColor: "var(--pf-t--global--background--color--primary--default)",
+};
 
 /**
  * A tabs component with icons in the title
@@ -33,11 +46,18 @@ export const IconTabs = <Key extends string>({
   onChange,
   tabs,
   tabContentId,
+  isSticky,
 }: Props<Key>): ReturnType<React.FC<Props<Key>>> => {
   const setActiveTabWithEventKey = (_event, eventKey: number | string) => onChange(eventKey as Key);
 
   return (
-    <Tabs activeKey={activeTab} onSelect={setActiveTabWithEventKey} mountOnEnter unmountOnExit>
+    <Tabs
+      activeKey={activeTab}
+      onSelect={setActiveTabWithEventKey}
+      mountOnEnter
+      unmountOnExit
+      style={isSticky ? stickyTabsStyle : undefined}
+    >
       {tabs.map((tab) => (
         <Tab
           key={tab.id}

@@ -1,6 +1,7 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
+import { words } from "@/UI/words";
 import { AgentRow } from "@S/Agents/Core/Domain";
 import { AgentsTablePresenter } from "./AgentsTablePresenter";
 import { AgentsTableRow } from "./AgentsTableRow";
@@ -43,9 +44,13 @@ export const AgentsTable: React.FC<Props> = ({ tablePresenter, rows, sort, setSo
   });
 
   return (
-    <Table {...props} variant={TableVariant.compact}>
+    <Table {...props} variant={TableVariant.compact} isStickyHeader>
       <Thead>
-        <Tr>{heads}</Tr>
+        <Tr>
+          {heads}
+          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")} />
+          <Th screenReaderText={words("common.emptyColumnHeader")} />
+        </Tr>
       </Thead>
       {rows.map((row) => (
         <AgentsTableRow row={row} key={row.name} />

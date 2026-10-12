@@ -65,6 +65,7 @@ export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab, data }) => 
         hasOverflowScroll
         padding={{ default: "padding" }}
         aria-label={activeDescriptor.title}
+        style={{ display: "flex", flexDirection: "column", minHeight: 0 }}
       >
         <TabContent
           eventKey={activeDescriptor.id}

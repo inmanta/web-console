@@ -2,6 +2,7 @@ import React from "react";
 import { Tabs, Tab, TabContentBody } from "@patternfly/react-core";
 import { ServiceModel } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
+import { stickyTabsStyle } from "@/UI/Components";
 import { AttributeTable } from "./AttributeTable";
 import { CallbacksView } from "./Callbacks";
 import { Config } from "./Config";
@@ -23,7 +24,13 @@ export const CatalogTabs: React.FunctionComponent<Props> = ({ service }) => {
   };
 
   return (
-    <Tabs title="" activeKey={activeTabKey} onSelect={handleTabClick} mountOnEnter>
+    <Tabs
+      title=""
+      activeKey={activeTabKey}
+      onSelect={handleTabClick}
+      mountOnEnter
+      style={stickyTabsStyle}
+    >
       <Tab eventKey="details" title="Details">
         <Details instanceSummary={service.instance_summary} />
       </Tab>

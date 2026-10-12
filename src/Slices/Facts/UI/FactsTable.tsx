@@ -47,7 +47,7 @@ export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSor
   });
 
   return (
-    <Table {...props} variant={TableVariant.compact}>
+    <Table {...props} variant={TableVariant.compact} isStickyHeader>
       <Thead>
         <Tr>
           {hasExpandableRows && <Th screenReaderText="Row expansion" />}

@@ -363,7 +363,7 @@ describe("Agents", () => {
 
     const tableHeaders = await screen.findAllByRole("columnheader");
 
-    expect(tableHeaders).toHaveLength(2);
+    expect(tableHeaders).toHaveLength(4);
 
     const onResumeColumnHeader = tableHeaders.find((header) => header.textContent === "On resume");
 
@@ -471,7 +471,7 @@ describe("Agents", () => {
 
     const tableHeaders = await screen.findAllByRole("columnheader");
 
-    expect(tableHeaders).toHaveLength(3);
+    expect(tableHeaders).toHaveLength(5);
 
     const onResumeColumnHeader = tableHeaders.find((header) => header.textContent === "On resume");
 

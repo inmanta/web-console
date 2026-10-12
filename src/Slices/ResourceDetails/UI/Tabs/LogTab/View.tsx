@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { Stack, StackItem } from "@patternfly/react-core";
 import { toggleValueInList } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetResourceLogs } from "@/Data/Queries";
@@ -95,12 +96,16 @@ export const View: React.FC<Props> = ({ resourceId }) => {
               aria-label="ResourceLogs-Empty"
             />
           ) : (
-            <ResourceLogsTable
-              logs={data.data}
-              toggleActionType={toggleActionType}
-              sort={sort}
-              setSort={setSort}
-            />
+            <Stack style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+              <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                <ResourceLogsTable
+                  logs={data.data}
+                  toggleActionType={toggleActionType}
+                  sort={sort}
+                  setSort={setSort}
+                />
+              </StackItem>
+            </Stack>
           )}
         </FilterDrawer>
       </>

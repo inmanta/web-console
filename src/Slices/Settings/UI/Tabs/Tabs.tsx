@@ -34,6 +34,7 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
   return (
     <>
       <IconTabs
+        isSticky
         activeTab={activeTab}
         onChange={setActiveTab}
         tabs={[

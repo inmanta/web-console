@@ -25,7 +25,7 @@ export const ResourceLogsTable: React.FC<Props> = ({ logs, toggleActionType, sor
   };
 
   return (
-    <Table aria-label="ResourceLogsTable" variant="compact">
+    <Table aria-label="ResourceLogsTable" variant="compact" isStickyHeader>
       <Thead>
         <Tr>
           <Th aria-hidden screenReaderText={words("common.emptyColumnHeader")} />

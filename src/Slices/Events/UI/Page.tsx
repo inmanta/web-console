@@ -10,7 +10,7 @@ const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children, ...prop
   <PageContainer
     {...props}
     pageTitle={words("events.title")}
-    style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+    style={{ display: "flex", flexDirection: "column" }}
   >
     {children}
   </PageContainer>
