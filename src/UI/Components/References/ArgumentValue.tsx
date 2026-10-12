@@ -21,7 +21,6 @@ interface Props {
   index: Reference.ReferenceIndex;
   isExpanded: (key: string) => boolean;
   onToggle: (key: string) => () => void;
-  depth: number;
   ancestors: string[];
   path: string;
 }
@@ -40,7 +39,6 @@ interface Props {
  * @prop {Reference.ReferenceIndex} index - Lookup from reference id to normalized node.
  * @prop {(key: string) => boolean} isExpanded - Whether the node at a path is expanded.
  * @prop {(key: string) => () => void} onToggle - Returns the toggle handler for a path.
- * @prop {number} depth - Current nesting depth, checked against the depth cap.
  * @prop {string[]} ancestors - Reference ids on the path here, for cycle detection.
  * @prop {string} path - The owning node's path, extended for child nodes.
  */
@@ -50,7 +48,6 @@ export const ArgumentValue: React.FC<Props> = ({
   index,
   isExpanded,
   onToggle,
-  depth,
   ancestors,
   path,
 }) => {
@@ -91,7 +88,6 @@ export const ArgumentValue: React.FC<Props> = ({
               index={index}
               isExpanded={isExpanded}
               onToggle={onToggle}
-              depth={depth + 1}
               ancestors={ancestors}
               parentPath={`${path}/${argument.name}`}
             />
@@ -106,7 +102,6 @@ export const ArgumentValue: React.FC<Props> = ({
           index={index}
           isExpanded={isExpanded}
           onToggle={onToggle}
-          depth={depth + 1}
           ancestors={ancestors}
           path={`${path}/${argument.name}`}
           toggleLabel={<Label isCompact>{label}</Label>}
