@@ -15,6 +15,7 @@ export * from "./ConfirmUserActionForm";
 export * from "./DateWithTooltip";
 export * from "./DefaultSwitch";
 export * from "./Description";
+export * from "./DesiredStateStatusLabel";
 export * from "./DictEditor";
 export * from "./EmptyView";
 export * from "./ErrorView";
