@@ -30,7 +30,6 @@ export const TriggerDryRunAction: React.FC<Props> = ({ version, onDryRunStarted 
   const isHalted = environmentHandler.useIsHalted();
   const { notifyError } = useAppAlert();
   const { mutate } = useTriggerDryRun({
-    onSuccess: onDryRunStarted,
     onError: (error) => {
       notifyError({
         title: words("desiredState.complianceCheck.action.dryRun.failed"),
@@ -39,9 +38,9 @@ export const TriggerDryRunAction: React.FC<Props> = ({ version, onDryRunStarted 
     },
   });
 
-  const onTrigger = async () => {
-    mutate(version);
-  };
+  // Passed to mutate rather than the hook, so it is skipped once the page is left: selecting the
+  // report rewrites the URL, which would otherwise navigate back here.
+  const onTrigger = () => mutate(version, { onSuccess: onDryRunStarted });
 
   return (
     <ActionDisabledTooltip

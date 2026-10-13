@@ -1,4 +1,5 @@
-import { act } from "react";
+import { act, useState } from "react";
+import { useLocation } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -34,16 +35,31 @@ const modelVersionResponse = (status: DesiredStateVersionStatus) => ({
   data: [{ ...DesiredStateMock.response.data[0], version: Number(Mock.b.model), status }],
 });
 
-function setup(search = "", env = EnvironmentDetails.env) {
+/**
+ * The page with a button that leaves it, and the current search, to check what happens after the
+ * page is left.
+ */
+const LeavablePage: React.FC = () => {
+  const [isShown, setIsShown] = useState(true);
+  const { search } = useLocation();
+
+  return (
+    <>
+      <div data-testid="search">{search}</div>
+      <button onClick={() => setIsShown(false)}>Leave</button>
+      {isShown && <View version="123" />}
+    </>
+  );
+};
+
+function setup(search = "", env = EnvironmentDetails.env, page = <View version="123" />) {
   const datePresenter = new CustomDatePresenter();
 
   const component = (
     <TestMemoryRouter initialEntries={[`/?env=${environment}${search}`]}>
       <QueryClientProvider client={testClient}>
         <MockedDependencyProvider env={env}>
-          <ModalProvider>
-            <View version="123" />
-          </ModalProvider>
+          <ModalProvider>{page}</ModalProvider>
         </MockedDependencyProvider>
       </QueryClientProvider>
     </TestMemoryRouter>
@@ -214,6 +230,34 @@ describe("ComplianceCheck page", () => {
 
     expect(options).toHaveLength(4);
     expect(options[0]).toHaveAttribute("aria-selected", "true");
+  });
+
+  test("GIVEN a dry run was started WHEN the page is left before it is done THEN the new report isn't selected", async () => {
+    let startDryRun = () => {};
+    const isDryRunStarted = new Promise<void>((resolve) => (startDryRun = resolve));
+
+    server.use(
+      http.post("/api/v2/dryrun/123", async () => {
+        await isDryRunStarted;
+
+        return HttpResponse.json({ data: Mock.a.id });
+      })
+    );
+    const { component } = setup("", EnvironmentDetails.env, <LeavablePage />);
+
+    render(component);
+
+    await userEvent.click(
+      await screen.findByRole("button", {
+        name: words("desiredState.complianceCheck.action.dryRun"),
+      })
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Leave" }));
+    startDryRun();
+
+    await waitFor(() => expect(testClient.isMutating()).toBe(0));
+    // Selecting the report would set it in the URL, and so navigate back to the page.
+    expect(screen.getByTestId("search")).not.toHaveTextContent("report");
   });
 
   test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
