@@ -3,7 +3,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { delay, HttpResponse, http } from "msw";
+import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { Diff, Resource } from "@/Core";
 import { EnvironmentDetails, MockedDependencyProvider, ServiceInstance } from "@/Test";
@@ -198,20 +198,15 @@ describe("ComplianceCheck page", () => {
 
     render(component);
 
-    const dryRunButton = screen.getByRole("button", {
+    const dryRunButton = await screen.findByRole("button", {
       name: words("desiredState.complianceCheck.action.dryRun"),
     });
 
     await userEvent.click(dryRunButton);
 
-    await act(async () => {
-      await delay(5000);
-    });
-
     const select = await screen.findByRole("button", { name: "ReportListSelect" });
 
-    expect(select).toBeInTheDocument();
-    expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date));
+    await waitFor(() => expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date)));
 
     await userEvent.click(select);
 

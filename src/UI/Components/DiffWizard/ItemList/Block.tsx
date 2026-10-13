@@ -94,7 +94,8 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
             padding: "var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md)",
           }}
         >
-          <Body item={item} classify={classify} />
+          {/* Only rendered while open, since computing every diff up front is slow. */}
+          {isExpanded && <Body item={item} classify={classify} />}
         </div>
       </DataListContent>
     </DataListItem>
