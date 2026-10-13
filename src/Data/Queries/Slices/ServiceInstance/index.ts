@@ -9,6 +9,7 @@ export * from "./GetInstance";
 export * from "./GetInstanceConfig";
 export * from "./GetInstanceLog";
 export * from "./GetInstances";
+export * from "./GetInstancesById";
 export * from "./GetInstanceWithRelations";
 export * from "./GetInventoryList";
 export * from "./GetJSONSchema";

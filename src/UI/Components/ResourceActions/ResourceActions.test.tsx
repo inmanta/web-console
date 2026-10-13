@@ -1,3 +1,4 @@
+import { useLocation } from "react-router";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
@@ -6,11 +7,12 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { Resource } from "@/Core/Domain";
 import { NonEmptyArray } from "@/Core/Language";
-import { ResourceActionFilter, getDesiredStateVersionKey } from "@/Data/Queries";
+import { ResourceActionFilter, StartedDryRun, getDesiredStateVersionKey } from "@/Data/Queries";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { PrimaryRouteManager, SearchHelper } from "@/UI/Routing";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CustomDatePresenter } from "@/UI/Utils";
 import * as DesiredStatesMock from "@S/DesiredState/Data/Mock";
@@ -62,8 +64,7 @@ const versionPage = <Item,>(
 
   return { data, links: { self: url.pathname, next } };
 };
-const modelVersionLabel = (modelVersion: number) =>
-  words("resources.resourceActions.confirm.version.modelOption")(String(modelVersion));
+const modelVersionLabel = (modelVersion: number) => words("modelVersion")(String(modelVersion));
 
 const modelVersions = DesiredStatesMock.response.data;
 const activeModelVersion = modelVersions.find(
@@ -95,13 +96,30 @@ const tooltips = {
   dryRun: "dry run tooltip from page",
 };
 
+const searchHelper = new SearchHelper();
+
+/**
+ * Shows the current path and parsed search, to assert where a link navigated to.
+ */
+const LocationDisplay: React.FC = () => {
+  const { pathname, search } = useLocation();
+
+  return (
+    <div data-testid="location">{JSON.stringify({ pathname, ...searchHelper.parse(search) })}</div>
+  );
+};
+
 function setup(props: React.ComponentProps<typeof ResourceActions> = { filter, tooltips }) {
   return (
     <QueryClientProvider client={testClient}>
-      <TestMemoryRouter>
+      {/* Starts with page state next to the environment, to check what a link keeps. */}
+      <TestMemoryRouter
+        initialEntries={[`/?env=${EnvironmentDetails.env.id}&state.Resources.pageSize=50`]}
+      >
         <MockedDependencyProvider env={EnvironmentDetails.env}>
           <ModalProvider>
             <Page>
+              <LocationDisplay />
               <ResourceActions {...props} />
             </Page>
           </ModalProvider>
@@ -413,6 +431,10 @@ describe("ResourceActions", () => {
 
   describe("Dry run", () => {
     let body: unknown;
+    const startedDryRun: StartedDryRun = {
+      id: "dry-run-id",
+      modelVersion: activeModelVersion,
+    };
     const firstModelVersionPage = modelVersions.slice(0, MOCK_PAGE_SIZE);
     const notLoadedModelVersions = modelVersions.slice(MOCK_PAGE_SIZE);
 
@@ -427,7 +449,9 @@ describe("ResourceActions", () => {
         http.post("/api/v2/dryrun_filtered", async ({ request }) => {
           body = await request.json();
 
-          return HttpResponse.json({ data: "dry-run-id" });
+          return HttpResponse.json({
+            data: { id: startedDryRun.id, model: startedDryRun.modelVersion },
+          });
         })
       );
     });
@@ -454,6 +478,33 @@ describe("ResourceActions", () => {
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
       await waitFor(() => expect(body).toEqual({ filter }));
+    });
+
+    test("WHEN a dry run starts THEN its toast links to its report", async () => {
+      render(setup());
+
+      const dialog = await openDryRun();
+
+      await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
+
+      const viewReport = await screen.findByRole("button", {
+        name: words("desiredState.complianceCheck.report.view"),
+      });
+
+      expect(screen.getByTestId("ToastAlert")).toHaveTextContent(
+        words("desiredState.complianceCheck.report.started")
+      );
+
+      await userEvent.click(viewReport);
+
+      // The link keeps the environment and drops the state of the page it was started from.
+      expect(JSON.parse(screen.getByTestId("location").textContent ?? "{}")).toEqual({
+        pathname: PrimaryRouteManager("").getUrl("ComplianceCheck", {
+          version: String(startedDryRun.modelVersion),
+        }),
+        env: EnvironmentDetails.env.id,
+        state: { ComplianceCheck: { report: startedDryRun.id } },
+      });
     });
 
     test("WHEN another model version is selected THEN the dry run runs against that model version", async () => {
@@ -696,7 +747,7 @@ describe("ResourceActions", () => {
         },
       ];
       const instanceVersionLabel = (instanceVersion: number) =>
-        words("resources.resourceActions.confirm.version.instanceOption")(String(instanceVersion));
+        words("instanceVersion")(String(instanceVersion));
       const mapsTo = words("resources.resourceActions.confirm.version.mapsTo");
 
       beforeEach(() => {

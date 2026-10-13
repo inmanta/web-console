@@ -53,7 +53,12 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           </Toolbar>
         </PageSection>
         <PageSection hasBodyWrapper={false} hasShadowBottom>
-          <DiffWizard.Controls data={filteredResources} refs={refs} from={from} to={to} />
+          <DiffWizard.Controls
+            data={filteredResources}
+            refs={refs}
+            from={words("modelVersion")(from)}
+            to={words("modelVersion")(to)}
+          />
         </PageSection>
         <PageSection hasBodyWrapper={false} isFilled>
           {data.length <= 0 ? (

@@ -1,5 +1,11 @@
 import React from "react";
-import { Bullseye, Button, Grid, GridItem } from "@patternfly/react-core";
+import {
+  Bullseye,
+  Button,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+} from "@patternfly/react-core";
 import styled from "styled-components";
 import { Diff } from "@/Core";
 import { useGetFile } from "@/Data/Queries";
@@ -7,7 +13,6 @@ import { EntryInfo } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
 import { DefaultEntry } from "./DefaultEntry";
 import { DiffView } from "./DiffView";
-import { Title } from "./utils";
 
 /**
  * A component that displays a file entry in the diff wizard.
@@ -33,12 +38,12 @@ export const FileEntry: React.FC<EntryInfo> = ({ title, fromValue, toValue }) =>
   const wrapper = (content: React.ReactNode) => (
     <>
       <DefaultEntry {...{ title, fromValue, toValue }} />
-      <Grid>
-        <GridItem span={2}>
-          <Title>{words("desiredState.compare.file.attributeLabel")}</Title>
-        </GridItem>
-        <GridItem span={10}>{content}</GridItem>
-      </Grid>
+      <DescriptionListGroup>
+        <DescriptionListTerm>
+          {words("desiredState.compare.file.attributeLabel")}
+        </DescriptionListTerm>
+        <DescriptionListDescription>{content}</DescriptionListDescription>
+      </DescriptionListGroup>
     </>
   );
 

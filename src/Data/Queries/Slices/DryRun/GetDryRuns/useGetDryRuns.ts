@@ -3,7 +3,7 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { REFETCH_INTERVAL, useGet } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
-import { DryRun } from "../GetDryRunReport";
+import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 
 /**
  * Response interface for the dry runs API response

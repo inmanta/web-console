@@ -1,16 +1,18 @@
 import React, { useEffect, useRef } from "react";
-import { PageSection } from "@patternfly/react-core";
-import { Diff, ParsedNumber } from "@/Core";
-import { DryRun, useGetDryRunReport } from "@/Data/Queries";
+import { Grid, PageSection } from "@patternfly/react-core";
+import { Diff } from "@/Core";
+import { useGetDryRunReport } from "@/Data/Queries";
 import { EmptyView, DiffWizard, LoadingView, ErrorView } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { LoadingIndicator } from "./Components";
+import { DryRun } from "@S/ComplianceCheck/Core/Domain";
+import { DryRunProgressLabel, ReportScope } from "./Components";
 
 interface Props {
   report: DryRun | null;
   version: string;
   statuses: Diff.Status[];
   searchFilter: string;
+  onRerunStarted: (dryRunId: string) => void;
 }
 
 /**
@@ -22,44 +24,39 @@ interface Props {
  * @prop {string} version - The version of the dry run
  * @prop {Diff.Status[]} statuses - The statuses to filter the resources by
  * @prop {string} searchFilter - The search filter to filter the resources by
+ * @prop {(dryRunId: string) => void} onRerunStarted - Called with the id of a re-run dry run
  *
  * @returns {React.FC<Props>} The DiffPageSection component
  */
-export const DiffPageSection: React.FC<Props> = ({ report, version, statuses, searchFilter }) =>
-  report ? (
-    <DiffView
-      id={report.id}
-      todo={report.todo as number}
-      version={version}
-      statuses={statuses}
-      searchFilter={searchFilter}
-    />
-  ) : null;
+export const DiffPageSection: React.FC<Props> = ({ report, ...props }) =>
+  report ? <DiffView report={report} {...props} /> : null;
 
 /**
  * DiffView component displays the compliance check diff results
- * Shows a loading view when data is being fetched, error view on failure,
- * and the diff wizard with filtered resources when data is available
+ * Shows the scope of the report on top, which stays in place while switching reports, and below it
+ * a loading view when data is being fetched, error view on failure,
+ * and the diff wizard with filtered resources when data is available. It scrolls on its own.
  * @props {Props} props - The component props
- * @prop {string} id - The id of the dry run
- * @prop {number} todo - The number of todo resources
+ * @prop {DryRun} report - The dry run report
  * @prop {string} version - The version of the dry run
  * @prop {Diff.Status[]} statuses - The statuses to filter the resources by
  * @prop {string} searchFilter - The search filter to filter the resources by
+ * @prop {(dryRunId: string) => void} onRerunStarted - Called with the id of a re-run dry run
  *
  * @returns {React.FC<Props>} The DiffView component
  */
-const DiffView: React.FC<{
-  id: string;
-  todo: number;
-  version: string;
-  statuses: Diff.Status[];
-  searchFilter: string;
-}> = ({ id, todo, version, statuses, searchFilter }) => {
+const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
+  report,
+  version,
+  statuses,
+  searchFilter,
+  onRerunStarted,
+}) => {
   const refs: DiffWizard.Refs = useRef({});
+  const todo = Number(report.todo);
   const { data, isSuccess, isError, isLoading, error, refetch } = useGetDryRunReport().useOneTime(
     version,
-    id
+    report.id
   );
 
   useEffect(() => {
@@ -70,56 +67,63 @@ const DiffView: React.FC<{
     refetch();
   }, [todo, isLoading, refetch]);
 
-  if (isError) {
-    return <ErrorView message={error.message} retry={refetch} ariaLabel="DiffPageSection-Error" />;
-  }
+  const getDiff = () => {
+    if (isError) {
+      return (
+        <ErrorView message={error.message} retry={refetch} ariaLabel="DiffPageSection-Error" />
+      );
+    }
 
-  if (isSuccess) {
+    if (!isSuccess) {
+      return <LoadingView ariaLabel="DiffPageSection-Loading" />;
+    }
+
     const diffData = data.diff.filter((resource) => statuses.includes(resource.status));
 
     return (
       <>
-        <PageSection hasBodyWrapper={false} hasShadowBottom>
-          <DiffWizard.Controls data={diffData} refs={refs} from={"current"} to={version} />
-        </PageSection>
-        <PageSection hasBodyWrapper={false} isFilled>
-          {
-            <>
-              {data.summary.todo > 0 && <LoadingIndicator progress={getProgress(data.summary)} />}
-              {data.diff.length <= 0 ? (
-                <EmptyView message={words("desiredState.compare.empty")} />
-              ) : (
-                <DiffWizard.ItemList
-                  items={data.diff
-                    .filter(
-                      (resource) =>
-                        statuses.includes(resource.status) &&
-                        resource.resource_id
-                          .toLocaleLowerCase()
-                          .includes(searchFilter.toLocaleLowerCase())
-                    )
-                    .map(DiffWizard.fromResourceToItem)}
-                  refs={refs}
-                />
-              )}
-            </>
-          }
-        </PageSection>
+        <DiffWizard.Controls
+          data={diffData}
+          refs={refs}
+          from={words("currentState")}
+          to={words("modelVersion")(version)}
+        >
+          {Number(data.summary.todo) > 0 && <DryRunProgressLabel progress={data.summary} />}
+        </DiffWizard.Controls>
+        {data.diff.length <= 0 ? (
+          <EmptyView message={words("desiredState.compare.empty")} />
+        ) : (
+          <DiffWizard.ItemList
+            items={diffData
+              .filter((resource) =>
+                resource.resource_id.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase())
+              )
+              .map(DiffWizard.fromResourceToItem)}
+            refs={refs}
+          />
+        )}
       </>
     );
-  }
+  };
 
-  return <LoadingView ariaLabel="DiffPageSection-Loading" />;
+  return (
+    // Scrolls on its own, so the page title, report picker and filters above it stay in view.
+    // No top padding: the section above already ends in padding, which keeps the report close to
+    // the filters.
+    <PageSection
+      hasBodyWrapper={false}
+      isFilled
+      style={{ flex: "1 1 auto", minHeight: 0, overflow: "auto", paddingTop: 0 }}
+    >
+      {/*
+       * A grid rather than a flex column: a flex column squeezes the scope card, which scrolls
+       * its own overflow, down to its border. It keeps its full height, so the section scrolls.
+       */}
+      <Grid hasGutter style={{ flexShrink: 0 }}>
+        {/* The scope comes from the report itself, so it stays in place while the diff loads. */}
+        <ReportScope report={report} diff={data?.diff} onRerunStarted={onRerunStarted} />
+        {getDiff()}
+      </Grid>
+    </PageSection>
+  );
 };
-
-/**
- * Calculates the progress based on the DryRun summary data
- *
- * @param {Object} summary - The DryRun summary containing total and todo counts
- * @param {ParsedNumber} summary.todo - The number of todo resources
- * @param {ParsedNumber} summary.total - The total number of resources
- *
- * @returns {string} The progress of completed tasks as a string in the format "completed/total"
- */
-const getProgress = (summary: { todo: ParsedNumber; total: ParsedNumber }): string =>
-  `${Number(summary.total) - Number(summary.todo)}/${Number(summary.total)}`;

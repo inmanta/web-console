@@ -1,5 +1,7 @@
 import React, { useContext, useState } from "react";
+import { useLocation } from "react-router";
 import {
+  AlertActionLink,
   Content,
   Dropdown,
   DropdownItem,
@@ -14,10 +16,12 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { EyeIcon, WrenchIcon, PlayIcon } from "@patternfly/react-icons";
+import { keepKeys } from "@/Core";
 import { NonEmptyArray } from "@/Core/Language";
 import {
   DeployAgentsAction,
   ResourceActionFilter,
+  StartedDryRun,
   useDeployFiltered,
   useDryRunFiltered,
 } from "@/Data/Queries";
@@ -25,9 +29,12 @@ import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { SearchHelper, useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
 import { ResourceActionInstance } from "./types";
+
+const searchHelper = new SearchHelper();
 
 const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 
@@ -64,7 +71,8 @@ type Props =
  * Deploy is the default action; the caret adds Repair and Dry run. Deploy and Repair hit the
  * deploy_filtered endpoint and Dry run hits dryrun_filtered, so one control serves a single resource,
  * the active filter, a whole environment or a service instance. Dry run always opens the dialog, to
- * select the version to preview against. It disables itself while the environment is halted.
+ * select the version to preview against, and its toast links to the dry run's report. It disables
+ * itself while the environment is halted.
  *
  * @Props {Props} - The props of the component
  *  @prop {ResourceActionFilter} filter - Deploy and Repair run immediately against this filter (mutually exclusive with scopes)
@@ -82,7 +90,9 @@ export const ResourceActions: React.FC<Props> = (props) => {
   const { environmentHandler } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
   const isHalted = environmentHandler.useIsHalted();
-  const { notifySuccess, notifyError } = useAppAlert();
+  const { notifySuccess, notifyError, notifyInfo } = useAppAlert();
+  const navigateTo = useNavigateTo();
+  const { search } = useLocation();
 
   const deploy = useDeployFiltered();
   const dryRun = useDryRunFiltered();
@@ -111,24 +121,53 @@ export const ResourceActions: React.FC<Props> = (props) => {
     },
   };
 
+  // Keeps only the environment from the search, not the state of the current page.
+  const openReport = (dryRunId: string, modelVersion: number) =>
+    navigateTo(
+      "ComplianceCheck",
+      { version: String(modelVersion) },
+      searchHelper.stringify({
+        ...keepKeys(["env"], searchHelper.parse(search)),
+        state: { ComplianceCheck: { report: dryRunId } },
+      })
+    );
+
+  const notifyDryRunStarted = ({ id, modelVersion }: StartedDryRun) =>
+    notifyInfo({
+      customIcon: <EyeIcon />,
+      title: words("desiredState.complianceCheck.report.started"),
+      actionLinks: (
+        <AlertActionLink onClick={() => openReport(id, modelVersion)}>
+          {words("desiredState.complianceCheck.report.view")}
+        </AlertActionLink>
+      ),
+    });
+
   const run = (key: ActionKey, scopeFilter: ResourceActionFilter) => {
     const { label } = actions[key];
-    const callbacks = {
-      onSuccess: () => notifySuccess({ title: words("resources.resourceActions.success")(label) }),
-      onError: (error: Error) =>
-        notifyError({
-          title: words("resources.resourceActions.failed")(label),
-          message: error.message,
-        }),
-    };
+    const onError = (error: Error) =>
+      notifyError({
+        title: words("resources.resourceActions.failed")(label),
+        message: error.message,
+      });
 
     if (key === "dryRun") {
-      dryRun.mutate(scopeFilter, callbacks);
+      dryRun.mutate(scopeFilter, {
+        onSuccess: notifyDryRunStarted,
+        onError,
+      });
 
       return;
     }
 
-    deploy.mutate({ method: DeployAgentsAction[key], filter: scopeFilter }, callbacks);
+    deploy.mutate(
+      { method: DeployAgentsAction[key], filter: scopeFilter },
+      {
+        onSuccess: () =>
+          notifySuccess({ title: words("resources.resourceActions.success")(label) }),
+        onError,
+      }
+    );
   };
 
   const onAction = (key: ActionKey) => {

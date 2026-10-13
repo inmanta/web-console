@@ -1,3 +1,4 @@
+import { ServiceInstance } from "@/Test";
 import { resources } from "@/Test/Data/DesiredStateDiff";
 import { DryRun, Report } from "@S/ComplianceCheck/Core/Domain";
 
@@ -8,7 +9,10 @@ export const a: DryRun = {
   date: "2022-02-09T17:45:21.609693",
   total: 23,
   todo: 23,
+  resource_filter: null,
 };
+export const filteredAgent = "internal";
+
 export const b: DryRun = {
   id: "a35064a3-42c1-4723-b60c-7e5942cad753",
   environment: "040687c1-9ad6-4ebc-b146-513760ee4517",
@@ -16,6 +20,12 @@ export const b: DryRun = {
   date: "2022-02-09T16:58:17.098544",
   total: 10,
   todo: 0,
+  resource_filter: {
+    isOrphan: false,
+    agent: { eq: [filteredAgent] },
+    resourceType: { contains: ["%File%"] },
+    compliance: { eq: ["NON_COMPLIANT"] },
+  },
 };
 export const c: DryRun = {
   id: "0d88ed3a-e2ee-4590-a127-1d587f5824a3",
@@ -24,6 +34,7 @@ export const c: DryRun = {
   date: "2022-02-09T16:50:33.721474",
   total: 4,
   todo: 0,
+  resource_filter: null,
 };
 
 const d: DryRun = {
@@ -33,6 +44,7 @@ const d: DryRun = {
   date: "2022-02-09T16:50:10.785976",
   total: 100,
   todo: 2,
+  resource_filter: { modelVersion: 32, serviceInstance: [ServiceInstance.a.id] },
 };
 
 export const listOfReports = [b, c, d];

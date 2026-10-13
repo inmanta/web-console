@@ -1,36 +1,9 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { Diff } from "@/Core";
-import { ParsedNumber } from "@/Core/Language";
 import { useGet } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
-
-/**
- * DryRun interface
- */
-export interface DryRun extends DryRunProgress {
-  id: string;
-  environment: string;
-  model: ParsedNumber;
-  date: string;
-}
-
-/**
- * Report interface for the dry run report
- */
-export interface Report {
-  summary: DryRun;
-  diff: Diff.Resource[];
-}
-
-/**
- * DryRunProgress interface
- */
-export interface DryRunProgress {
-  total: ParsedNumber;
-  todo: ParsedNumber;
-}
+import { Report } from "@S/ComplianceCheck/Core/Domain";
 
 /**
  * Report interface for the dry run report API response
