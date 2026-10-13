@@ -2,8 +2,8 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { useGet, REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
-import { DiscoveredResource } from "@/Data/Queries/Slices/DiscoveredResources";
 import { DependencyContext } from "@/UI/Dependency";
+import type { DiscoveredResource } from "./useGetDiscoveredResources";
 
 /**
  * DiscoveredResource interface for the resource details API response
