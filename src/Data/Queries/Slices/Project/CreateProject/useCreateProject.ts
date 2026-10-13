@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ProjectModel } from "@/Core";
-import { usePutWithoutEnv } from "@/Data/Queries";
+import { usePutWithoutEnv } from "@/Data/Queries/Helpers";
 import { getProjectsKey } from "../GetProjects";
 
 /**

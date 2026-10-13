@@ -9,7 +9,7 @@ import { setupServer } from "msw/node";
 import { PrimaryArchiveHelper } from "@/Data/Common/PrimaryArchiveHelper";
 import { MockedDependencyProvider, MockOrchestratorProvider, ServerStatus } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { StatusPage } from ".";
 
 function setup() {

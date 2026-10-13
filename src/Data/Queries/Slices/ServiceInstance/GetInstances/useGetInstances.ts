@@ -13,7 +13,12 @@ import {
   ServiceInstanceInfiniteParams,
   ServiceInstanceParams,
 } from "@/Core/Domain/ServiceInstanceParams";
-import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
+import {
+  CustomError,
+  useGet,
+  REFETCH_INTERVAL,
+  getPaginationHandlers,
+} from "@/Data/Queries/Helpers";
 import { DependencyContext } from "@/UI/Dependency";
 import { getInstanceKey } from "../GetInstance";
 import { getUrl } from "./getUrl";

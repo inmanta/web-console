@@ -1,6 +1,6 @@
 import React from "react";
 import { ServiceModel } from "@/Core";
-import { useGetServiceModel } from "@/Data/Queries";
+import { useGetServiceModel } from "@/Data/Queries/Slices/Service";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
 

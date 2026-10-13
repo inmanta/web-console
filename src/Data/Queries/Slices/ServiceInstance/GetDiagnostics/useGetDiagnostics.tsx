@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { CustomError, useGet } from "@/Data/Queries";
+import { CustomError, useGet } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { Diagnostics } from "@/Slices/Diagnose/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";

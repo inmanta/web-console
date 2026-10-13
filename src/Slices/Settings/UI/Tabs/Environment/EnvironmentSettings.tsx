@@ -1,15 +1,16 @@
 import React, { useContext, useState } from "react";
 import { DescriptionList } from "@patternfly/react-core";
 import { FlatEnvironment, ProjectModel } from "@/Core";
-import { useModifyEnvironment, useCreateProject } from "@/Data/Queries";
+import { useModifyEnvironment } from "@/Data/Queries/Slices/Environment";
+import { useCreateProject } from "@/Data/Queries/Slices/Project";
+import { AppAlert } from "@/UI/Components/AppAlert";
 import {
   EditableTextField,
   EditableMultiTextField,
   EditableSelectField,
   EditableImageField,
   EditableTextAreaField,
-  AppAlert,
-} from "@/UI/Components";
+} from "@/UI/Components/InlineEditable";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Actions } from "./Components";

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FileUpload, FileUploadProps } from "@patternfly/react-core";
-import { ImageHelper } from "@/Data";
+import { ImageHelper } from "@/Data/Common";
 import { words } from "@/UI/words";
 import { AppAlert } from "../AppAlert";
 import { ImagePreview } from "./ImagePreview";

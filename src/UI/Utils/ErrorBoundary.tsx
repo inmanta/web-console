@@ -1,7 +1,7 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import { Button, ClipboardCopy, Content } from "@patternfly/react-core";
 import styled from "styled-components";
-import { ErrorView } from "../Components";
+import { ErrorView } from "@/UI/Components/ErrorView";
 
 interface Props {
   children?: ReactNode;

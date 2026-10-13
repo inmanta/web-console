@@ -1,5 +1,5 @@
 import { EnvironmentHandler, FlatEnvironment } from "@/Core";
-import { EnvironmentPreview } from "@/Data/Queries";
+import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 
 /**
  * MockEnvironmentHandler is a function that returns a mocked EnvironmentHandler object.

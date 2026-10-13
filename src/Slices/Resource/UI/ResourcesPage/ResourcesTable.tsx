@@ -1,8 +1,8 @@
 import React, { memo, useCallback } from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Resource } from "@/Core";
-import { MultiSort } from "@/Data";
-import { words } from "@/UI";
+import { MultiSort } from "@/Data/Common";
+import { words } from "@/UI/words";
 import { StatusSortMenu } from "./Components";
 import { ResourceTableRow, ResourceRow } from "./ResourceTableRow";
 import { createResourcesTablePresenter } from "./ResourcesTablePresenter";

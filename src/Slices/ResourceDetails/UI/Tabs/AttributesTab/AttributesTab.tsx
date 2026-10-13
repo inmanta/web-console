@@ -1,7 +1,7 @@
 import React from "react";
 import { Details } from "@/Core/Domain/Resource/Resource";
-import { AttributeClassifier, useUrlStateWithExpansion } from "@/Data";
-import { ResourceAttributesView } from "@/UI/Components";
+import { AttributeClassifier, useUrlStateWithExpansion } from "@/Data/Common";
+import { ResourceAttributesView } from "@/UI/Components/ResourceAttributes";
 
 interface Props {
   details: Details;

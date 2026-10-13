@@ -9,7 +9,7 @@ import { KeycloakAuthConfig, LocalConfig } from "@/Data/Auth";
 import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import * as CookieHelper from "@/Data/Common/CookieHelper";
 import { AuthTestWrapper } from "@/Test/Inject";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { Login } from "./Page";
 
 const mockedUsedNavigate = vi.hoisted(() => vi.fn());

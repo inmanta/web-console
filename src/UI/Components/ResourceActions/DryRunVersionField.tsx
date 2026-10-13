@@ -9,7 +9,8 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@patternfly/react-core";
-import { DryRunVersion, DryRunVersionType, useGetDesiredStateVersions } from "@/Data/Queries";
+import { useGetDesiredStateVersions } from "@/Data/Queries/Slices/DesiredState";
+import { DryRunVersion, DryRunVersionType } from "@/Data/Queries/Slices/Resource";
 import { words } from "@/UI/words";
 import { InstanceVersionSelect } from "./InstanceVersionSelect";
 import { ModelVersionSelect } from "./ModelVersionSelect";

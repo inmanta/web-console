@@ -3,8 +3,8 @@ import { AlertVariant, FlexItem, Form } from "@patternfly/react-core";
 import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel } from "@/Core";
 import { set } from "@/Core/Language/collection";
-import { sanitizeAttributes } from "@/Data";
-import { SuggestionVariables } from "@/Data/Queries";
+import { sanitizeAttributes } from "@/Data/Common";
+import { SuggestionVariables } from "@/Data/Queries/Slices/ServiceInstance";
 import {
   createFormState,
   CreateModifierHandler,

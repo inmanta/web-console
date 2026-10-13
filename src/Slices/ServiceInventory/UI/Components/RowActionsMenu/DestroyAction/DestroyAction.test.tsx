@@ -3,8 +3,8 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { words } from "@/UI/words";
 import { DestroyAction } from "./DestroyAction";
 
 const mockedMutate = vi.hoisted(() => vi.fn());

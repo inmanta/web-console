@@ -7,9 +7,9 @@ import { delay, HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CustomDatePresenter } from "@/UI/Utils";
+import { words } from "@/UI/words";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { View } from "./Page";
 

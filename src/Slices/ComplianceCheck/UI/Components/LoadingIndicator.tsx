@@ -1,7 +1,7 @@
 import React from "react";
 import { Bullseye } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Spinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components/Spinner";
 
 export const LoadingIndicator: React.FC<{ progress: string }> = ({ progress }) => (
   <Bullseye style={{ paddingBottom: "24px" }}>

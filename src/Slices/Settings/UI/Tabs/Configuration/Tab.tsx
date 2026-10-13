@@ -1,6 +1,7 @@
 import React from "react";
-import { useGetEnvironmentSettings } from "@/Data/Queries";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { useGetEnvironmentSettings } from "@/Data/Queries/Slices/Environment";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { Provider } from "./Provider";
 
 interface Props {

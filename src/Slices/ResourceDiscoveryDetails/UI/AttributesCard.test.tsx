@@ -2,7 +2,7 @@ import { act } from "react";
 import { Page } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { DiscoveredResource } from "@/Data/Queries";
+import { DiscoveredResource } from "@/Data/Queries/Slices/DiscoveredResources";
 import { AttributesCard } from "./AttributesCard";
 
 const mockResource: DiscoveredResource = {

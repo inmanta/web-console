@@ -5,8 +5,8 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useDelete } from "@/Data/Queries";
-import { DependencyContext } from "@/UI";
+import { useDelete } from "@/Data/Queries/Helpers";
+import { DependencyContext } from "@/UI/Dependency";
 import { getTokensKey } from "../GetTokens/useGetTokens";
 
 /**

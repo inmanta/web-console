@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseInfiniteQueryResult, useInfiniteQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core";
-import { useGet } from "@/Data/Queries";
+import { useGet } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DesiredStateVersion } from "@/Slices/DesiredState/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";

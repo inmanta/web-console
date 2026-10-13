@@ -2,7 +2,7 @@ import React from "react";
 import { Label } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
 import { CompileStatus } from "@/Core";
-import { Spinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components/Spinner";
 
 /**
  * CompileStatusLabel component

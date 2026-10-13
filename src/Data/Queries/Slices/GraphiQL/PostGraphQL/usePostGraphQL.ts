@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { FetcherParams, SyncExecutionResult } from "@graphiql/toolkit";
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
 import { useFetchHelpers } from "@/Data/Queries/Helpers/useFetchHelpers";
-import { PrimaryBaseUrlManager } from "@/UI";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
 
 /**
  * React Query mutation hook for executing GraphQL requests against /api/v2/graphql.

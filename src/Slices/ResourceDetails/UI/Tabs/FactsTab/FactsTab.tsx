@@ -1,7 +1,8 @@
 import React from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { useGetResourceFacts } from "@/Data/Queries";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { useGetResourceFacts } from "@/Data/Queries/Slices/Resource";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { FactsTable } from "./FactsTable";
 
 interface Props {

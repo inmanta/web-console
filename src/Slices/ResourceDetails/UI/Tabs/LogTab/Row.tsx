@@ -1,7 +1,7 @@
 import React from "react";
 import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
 import { LogLevelString } from "@/Core";
-import { CodeText } from "@/UI/Components";
+import { CodeText } from "@/UI/Components/CodeText";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
 import { Details } from "./Details";

@@ -1,6 +1,7 @@
 import React from "react";
-import { useGetDesiredStateResourceDetails } from "@/Data/Queries";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { useGetDesiredStateResourceDetails } from "@/Data/Queries/Slices/DesiredState";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { Details } from "./Details";
 
 interface Props {

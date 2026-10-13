@@ -1,5 +1,5 @@
 import React from "react";
-import { PageSectionWithTitle } from "@/UI/Components";
+import { PageSectionWithTitle } from "@/UI/Components/PageSectionWithTitle";
 import { words } from "@/UI/words";
 import { CompileDetails } from "@S/CompileDetails/Core/Domain";
 import { CompileErrorsSection } from "./CompileErrorsSection";

@@ -7,8 +7,8 @@ import { setupServer } from "msw/node";
 import {
   EnvironmentPreviewResponse,
   GetEnvironmentPreviewKey,
-  getServerStatusKey,
-} from "@/Data/Queries";
+} from "@/Data/Queries/Slices/Environment";
+import { getServerStatusKey } from "@/Data/Queries/Slices/Server";
 import { MockedDependencyProvider, ServerStatus } from "@/Test";
 import { Initializer } from "./Initializer";
 

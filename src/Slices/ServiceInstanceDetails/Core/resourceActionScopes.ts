@@ -1,5 +1,5 @@
 import { NonEmptyArray, ParsedNumber } from "@/Core/Language";
-import { ResourceActionScope } from "@/UI/Components";
+import { ResourceActionScope } from "@/UI/Components/ResourceActions";
 import { words } from "@/UI/words";
 
 /**

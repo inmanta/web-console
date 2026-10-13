@@ -23,7 +23,7 @@ import {
 import styled from "styled-components";
 import { InstanceAttributeModel, EntityAnnotations, Field } from "@/Core";
 import { set as setAtPath } from "@/Core/Language/collection";
-import { SuggestionVariables } from "@/Data/Queries";
+import { SuggestionVariables } from "@/Data/Queries/Slices/ServiceInstance";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";

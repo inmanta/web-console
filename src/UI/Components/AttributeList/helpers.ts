@@ -1,5 +1,5 @@
 import { CodeEditorProps, Language } from "@patternfly/react-code-editor";
-import type { ClassifiedAttribute } from "@/Data";
+import type { ClassifiedAttribute } from "@/Data/Common";
 
 /**
  * The classified kinds that render inside the editor, mapped to their

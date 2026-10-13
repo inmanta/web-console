@@ -1,14 +1,12 @@
 import React, { useContext } from "react";
 import { useLocation } from "react-router";
 import { isJsonParserId, JsonParserId } from "@/Core";
-import { OrchestratorProvider, PrimaryArchiveHelper, PrimaryFileManager } from "@/Data";
-import {
-  PrimaryBaseUrlManager,
-  PrimaryRouteManager,
-  DependencyProvider,
-  EnvironmentHandlerImpl,
-  UrlManagerImpl,
-} from "@/UI";
+import { OrchestratorProvider, PrimaryArchiveHelper, PrimaryFileManager } from "@/Data/Common";
+import { DependencyProvider } from "@/UI/Dependency";
+import { EnvironmentHandlerImpl } from "@/UI/Dependency/EnvironmentHandler";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
+import { UrlManagerImpl } from "@/UI/Utils";
 import { AuthContext } from "./Data/Auth";
 import { AppAlertProvider } from "./UI/Root/Components/AppAlertProvider";
 import { ModalProvider } from "./UI/Root/Components/ModalProvider";

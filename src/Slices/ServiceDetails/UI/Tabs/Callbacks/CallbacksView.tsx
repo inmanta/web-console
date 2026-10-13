@@ -1,6 +1,7 @@
 import React from "react";
-import { useGetCallbacks } from "@/Data/Queries";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { useGetCallbacks } from "@/Data/Queries/Slices/Callback";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { CallbacksTable } from "./CallbacksTable";
 
 interface Props {

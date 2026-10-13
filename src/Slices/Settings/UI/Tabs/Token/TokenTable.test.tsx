@@ -6,9 +6,9 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { Token } from "@/Core/Domain";
 import { MockedDependencyProvider } from "@/Test";
-import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { CustomDatePresenter } from "@/UI/Utils";
+import { words } from "@/UI/words";
 import { TokenTable } from "./TokenTable";
 
 const datePresenter = new CustomDatePresenter();

@@ -1,7 +1,7 @@
 import { TextInputTypes } from "@patternfly/react-core";
 import { Textarea } from "@/Core";
 import { Field } from "@/Test";
-import { createFormState } from "@/UI/Components";
+import { createFormState } from "@/UI/Components/ServiceInstanceForm";
 import { sanitizeAttributes } from "./sanitizeAttributes";
 
 test("GIVEN sanitizeAttributes WHEN passed DictListFields THEN sanitizes all fields", () => {

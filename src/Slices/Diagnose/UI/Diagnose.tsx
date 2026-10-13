@@ -1,6 +1,8 @@
 import React from "react";
-import { useGetDiagnostics } from "@/Data/Queries";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import { useGetDiagnostics } from "@/Data/Queries/Slices/ServiceInstance";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { words } from "@/UI/words";
 import { DiagnoseCardLayout } from "./DiagnoseCardLayout";
 

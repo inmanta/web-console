@@ -1,6 +1,6 @@
 import React from "react";
-import { useUrlStateWithString } from "@/Data";
-import { PageContainer } from "@/UI/Components";
+import { useUrlStateWithString } from "@/Data/Common";
+import { PageContainer } from "@/UI/Components/PageContainer";
 import { words } from "@/UI/words";
 import { TabKey, Tabs } from "./Tabs";
 

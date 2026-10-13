@@ -1,7 +1,8 @@
 import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
-import { useGetServiceConfig } from "@/Data/Queries";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { useGetServiceConfig } from "@/Data/Queries/Slices/Service";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { ConfigList } from "./ConfigList";
 
 interface Props {
