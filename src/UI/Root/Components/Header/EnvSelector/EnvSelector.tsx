@@ -72,7 +72,10 @@ export const EnvSelector: React.FC<Props> = ({
 
   // Only show the user management link for a database session (database auth, or the
   // OIDC/JWT local login fallback). Other auth methods have external user and role management.
-  const showUserManagement = !authHelper.isDisabled() && authHelper.isDatabaseSession();
+  const showUserManagement =
+    routeManager.has("UserManagement") &&
+    !authHelper.isDisabled() &&
+    authHelper.isDatabaseSession();
   const showLogout = !authHelper.isDisabled();
 
   const filteredItems = searchText

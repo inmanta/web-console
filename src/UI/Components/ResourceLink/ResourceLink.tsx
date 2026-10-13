@@ -41,6 +41,14 @@ export const ResourceLink: React.FC<Props> = ({
 }) => {
   const { routeManager } = useContext(DependencyContext);
   const { search: currentSearch } = useLocation();
+
+  // Without the resource details page, show the resource id as plain text instead of a broken link.
+  if (!routeManager.has("ResourceDetails")) {
+    const text = linkText ? linkText : resourceId;
+
+    return isInline ? <>{text}</> : <Truncate content={text} />;
+  }
+
   const pathname = routeManager.getUrl("ResourceDetails", { resourceId });
 
   const search = tab

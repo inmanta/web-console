@@ -5,10 +5,11 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as wordsModule from "@/UI/words";
+import { routes } from "@/routes";
 import { ResourceRow } from "./ResourceTableRow";
 import { ResourcesTable } from "./ResourcesTable";
 
-const routeManager = PrimaryRouteManager("");
+const routeManager = PrimaryRouteManager("", routes);
 
 function makeRow(id: string): ResourceRow {
   return {

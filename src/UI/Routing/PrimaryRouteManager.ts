@@ -3,116 +3,50 @@ import {
   RouteDictionary,
   RouteManager,
   Route,
+  RouteFactory,
   RouteKind,
   RouteParams,
   RouteMatch,
   Crumb,
   RouteKindWithId,
 } from "@/Core";
-import { Dashboard } from "@/Slices/Dashboard";
-import { DuplicateInstance } from "@/Slices/DuplicateInstance";
-import { InstanceComposer } from "@/Slices/InstanceComposerCreator";
-import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
-import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
-import { MarkdownPreviewer } from "@/Slices/MarkdownPreviewer";
-import { ServiceDetails } from "@/Slices/ServiceDetails";
-import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
-import { Agents } from "@S/Agents";
-import { CompileDetails } from "@S/CompileDetails";
-import { CompileReports } from "@S/CompileReports";
-import { ComplianceCheck } from "@S/ComplianceCheck";
-import { CreateEnvironment } from "@S/CreateEnvironment";
-import { CreateInstance } from "@S/CreateInstance";
-import { DesiredState } from "@S/DesiredState";
-import { DesiredStateCompare } from "@S/DesiredStateCompare";
-import { DesiredStateDetails } from "@S/DesiredStateDetails";
-import { DesiredStateResourceDetails } from "@S/DesiredStateResourceDetails";
-import { Diagnose } from "@S/Diagnose";
-import { EditInstance } from "@S/EditInstance";
-import { Events } from "@S/Events";
-import { Facts } from "@S/Facts";
-import { GraphiQL } from "@S/GraphiQL";
-import { Notification } from "@S/Notification";
-import { OrderDetails } from "@S/OrderDetails";
-import { Orders } from "@S/Orders";
-import { Parameters } from "@S/Parameters";
-import { Resource } from "@S/Resource";
-import { ResourceDetails } from "@S/ResourceDetails";
-import { DiscoveredResources } from "@S/ResourceDiscovery";
-import { DiscoveredResourceDetails } from "@S/ResourceDiscoveryDetails";
-import { ServiceCatalog } from "@S/ServiceCatalog";
-import { ServiceInventory } from "@S/ServiceInventory";
-import { Settings } from "@S/Settings";
-import { Status } from "@S/Status";
-import { UserManagement } from "@S/UserManagement";
 
-export function PrimaryRouteManager(baseUrl: string): RouteManager {
-  const routeDictionary: RouteDictionary = {
-    /**
-     * Main
-     */
-    CreateEnvironment: CreateEnvironment.route(baseUrl),
-    GraphiQL: GraphiQL.route(baseUrl),
-    NotificationCenter: Notification.route(baseUrl),
-    Settings: Settings.route(baseUrl),
-    Status: Status.route(baseUrl),
-    UserManagement: UserManagement.route(baseUrl),
+/**
+ * Builds the route table from the routes the app registers.
+ * Only these routes exist: a kind of a feature that is not part of the app is not registered.
+ *
+ * @param baseUrl the base url every route path is prefixed with
+ * @param routes the routes the app registers
+ * @throws when two routes are registered with the same kind
+ */
+export function PrimaryRouteManager(baseUrl: string, routes: RouteFactory[]): RouteManager {
+  const routeDictionary: RouteDictionary = {};
 
-    /**
-     * LSM
-     */
-    Catalog: ServiceCatalog.route(baseUrl),
-    CreateInstance: CreateInstance.route(baseUrl),
-    Dashboard: Dashboard.route(baseUrl),
-    Diagnose: Diagnose.route(baseUrl),
-    DuplicateInstance: DuplicateInstance.route(baseUrl),
-    EditInstance: EditInstance.route(baseUrl),
-    Events: Events.route(baseUrl),
-    InstanceDetails: InstanceDetails.route(baseUrl),
-    InstanceComposer: InstanceComposer.route(baseUrl),
-    InstanceComposerEditor: InstanceComposerEditor.route(baseUrl),
-    InstanceComposerViewer: InstanceComposerViewer.route(baseUrl),
-    Inventory: ServiceInventory.route(baseUrl),
-    MarkdownPreviewer: MarkdownPreviewer.route(baseUrl),
-    ServiceDetails: ServiceDetails.route(baseUrl),
-    Orders: Orders.route(baseUrl),
-    OrderDetails: OrderDetails.route(baseUrl),
+  routes.forEach((createRoute) => {
+    const route = createRoute(baseUrl);
 
-    /**
-     * Resource Manager
-     */
-    Agents: Agents.route(baseUrl),
-    DiscoveredResources: DiscoveredResources.route(baseUrl),
-    DiscoveredResourceDetails: DiscoveredResourceDetails.route(baseUrl),
-    Facts: Facts.route(baseUrl),
-    ResourceDetails: ResourceDetails.route(baseUrl),
-    Resources: Resource.route(baseUrl),
+    if (routeDictionary[route.kind] !== undefined) {
+      throw new Error(`Route "${route.kind}" is registered more than once.`);
+    }
 
-    /**
-     * Orchestration Engine
-     */
-    CompileDetails: CompileDetails.route(baseUrl),
-    CompileReports: CompileReports.route(baseUrl),
-    ComplianceCheck: ComplianceCheck.route(baseUrl),
-    DesiredState: DesiredState.route(baseUrl),
-    DesiredStateCompare: DesiredStateCompare.route(baseUrl),
-    DesiredStateDetails: DesiredStateDetails.route(baseUrl),
-    DesiredStateResourceDetails: DesiredStateResourceDetails.route(baseUrl),
-    Parameters: Parameters.route(baseUrl),
-  };
+    routeDictionary[route.kind] = route;
+  });
 
   function isBaseUrlDefined(): boolean {
     return baseUrl !== "";
   }
 
+  function has(kind: RouteKind): boolean {
+    return routeDictionary[kind] !== undefined;
+  }
+
   function getLineageFromRoute(route: Route, routes: Route[] = []): Route[] {
-    if (route.parent) {
+    if (route.parent && has(route.parent)) {
       return getLineageFromRoute(getRoute(route.parent), [route, ...routes]);
     }
 
     return [route, ...routes];
   }
-
   function getRelatedUrlWithoutParams(pathname: string): string {
     const routeMatch = getRouteMatchFromUrl(pathname);
 
@@ -146,7 +80,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   }
 
   function getRoutes(): Route[] {
-    return Object.values(routeDictionary);
+    return Object.values(routeDictionary).filter((route) => route !== undefined);
   }
 
   function getRouteDictionary(): RouteDictionary {
@@ -154,7 +88,13 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   }
 
   function getRoute<K extends RouteKind>(kind: K): Route<K> {
-    return routeDictionary[kind] as Route<K>;
+    const route = routeDictionary[kind];
+
+    if (route === undefined) {
+      throw new Error(`Route "${kind}" is not registered.`);
+    }
+
+    return route as Route<K>;
   }
 
   function getUrl<K extends RouteKind>(kind: K, params: RouteParams<K>): string {
@@ -167,7 +107,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   }
 
   function getUrlForApiUri(uri: string): string | undefined {
-    if (uri.length <= 0) {
+    if (uri.length <= 0 || !has("CompileDetails")) {
       return undefined;
     }
 
@@ -186,7 +126,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   }
 
   function getParamsFromUrl(uri: string): RouteKindWithId<"CompileDetails"> | undefined {
-    if (uri.length <= 0) {
+    if (uri.length <= 0 || !has("CompileDetails")) {
       return undefined;
     }
 
@@ -258,6 +198,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
 
   return {
     isBaseUrlDefined,
+    has,
     getRoutes,
     getRouteDictionary,
     getRoute,

@@ -1,0 +1,5 @@
+description: Replaced the closed list of route kinds with an open route registry that each feature extends, and build the route table from the routes the app registers. Links to a route that is not registered are hidden instead of broken.
+issue-nr: 7455
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

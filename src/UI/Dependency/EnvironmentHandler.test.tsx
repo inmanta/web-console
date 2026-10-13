@@ -6,9 +6,10 @@ import { setupServer } from "msw/node";
 import { Environment, EnvironmentSettings } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
+import { routes } from "@/routes";
 import { EnvironmentHandlerImpl } from "./EnvironmentHandler";
 
-const routeManager = PrimaryRouteManager("");
+const routeManager = PrimaryRouteManager("", routes);
 
 describe("EnvironmentHandler", () => {
   const server = setupServer();

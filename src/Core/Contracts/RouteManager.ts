@@ -1,11 +1,25 @@
 import { RouteKind, Route, RouteParams, RouteMatch, Crumb, RouteKindWithId } from "@/Core/Domain";
 
-export type RouteDictionary = Record<RouteKind, Route>;
+/**
+ * The registered routes by kind. A kind is missing when the feature that declares it is not part
+ * of the app.
+ */
+export type RouteDictionary = Partial<Record<RouteKind, Route>>;
 
 export interface RouteManager {
   isBaseUrlDefined(): boolean;
   getRoutes(): Route[];
   getRouteDictionary(): RouteDictionary;
+
+  /**
+   * Whether a route of this kind is registered. Links to a route of another feature check this
+   * first, so they are hidden instead of broken when that feature is not part of the app.
+   */
+  has(kind: RouteKind): boolean;
+
+  /**
+   * @throws when no route of this kind is registered
+   */
   getRoute<K extends RouteKind>(routeKind: K): Route<K>;
 
   /**
@@ -15,7 +29,7 @@ export interface RouteManager {
 
   /**
    * Generates a url based on the provided api uri.
-   * If the api uri does not correspond to an existing route,
+   * If the api uri does not correspond to a registered route,
    * undefined is returned.
    */
   getUrlForApiUri(uri: string): string | undefined;
@@ -43,5 +57,9 @@ export interface RouteManager {
   useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string;
   getCrumbs(url: string): Crumb[];
 
+  /**
+   * Gets the compile details route and params for a compile report api uri.
+   * Returns undefined when the uri is not a compile report or the route is not registered.
+   */
   getParamsFromUrl(uri: string): RouteKindWithId<"CompileDetails"> | undefined;
 }

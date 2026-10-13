@@ -6,6 +6,7 @@ import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 import { MockEnvironmentHandler } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
+import { routes } from "@/routes";
 import { DefaultRoute } from "./DefaultRoute";
 
 const DashboardSentinel: React.FC = () => {
@@ -41,7 +42,7 @@ const setup = ({
 }: SetupProps = {}) => {
   const queryClient = new QueryClient();
   const baseUrl = "";
-  const routeManager = PrimaryRouteManager(baseUrl);
+  const routeManager = PrimaryRouteManager(baseUrl, routes);
 
   const environmentHandler = {
     ...MockEnvironmentHandler({
