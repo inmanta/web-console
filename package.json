@@ -29,7 +29,7 @@
     "cypress-test:local-auth": "yarn cypress run --config-file cypress.config.local-auth.cjs",
     "cypress-test:oidc": "yarn cypress run --config-file cypress.config.oidc.cjs",
     "package-cleanup": "node clean_up_packages",
-    "check-circular-deps": "madge --circular ./src/index.tsx",
+    "check-circular-deps": "node scripts/check-circular-deps.js",
     "check-no-cdn": "node scripts/check-no-cdn.js",
     "install:orchestrator:keycloak": "sh ./shell-scripts/setup-auth.sh version='oss' release='dev' branch='oss_case_1'",
     "install:orchestrator:oidc": "sh ./shell-scripts/setup-auth.sh version='oss' release='dev' branch='oss_case_1' auth='oidc'",
@@ -81,7 +81,7 @@
     "eslint-plugin-testing-library": "^7.16.2",
     "jest-axe": "^11.0.0",
     "jsdom": "^30.1.2",
-    "madge": "^6.1.0",
+    "madge": "^8.0.0",
     "markdown-it-emoji": "^3.1.0",
     "msw": "^2.15.0",
     "prettier": "^3.9.6",
@@ -157,6 +157,23 @@
       "tsx"
     ],
     "tsConfig": "./tsconfig.json",
+    "excludeRegExp": [
+      "\\.test\\.tsx?$"
+    ],
+    "detectiveOptions": {
+      "ts": {
+        "skipTypeImports": true,
+        "skipAsyncImports": true
+      },
+      "tsx": {
+        "skipTypeImports": true,
+        "skipAsyncImports": true
+      },
+      "es6": {
+        "skipTypeImports": true,
+        "skipAsyncImports": true
+      }
+    },
     "layout": "dot"
   },
   "browserslist": [
