@@ -8,7 +8,7 @@ import {
   variantIcons,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { DateWithTooltip } from "@/UI/Components";
+import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { Notification, Severity } from "@S/Notification/Core/Domain";
 import {
   getColorForVisualSeverity,

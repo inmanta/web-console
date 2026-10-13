@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { ServiceModel } from "@/Core";
-import { REFETCH_INTERVAL } from "@/Data/Queries";
+import { REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
 import { MockedDependencyProvider, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI/words";

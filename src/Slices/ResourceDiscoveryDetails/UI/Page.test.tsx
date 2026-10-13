@@ -8,8 +8,8 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@/UI/words";
 import { Page as ResourceDiscoveryDetailsPage } from "./Page";
 
 // Mock data for individual resource details

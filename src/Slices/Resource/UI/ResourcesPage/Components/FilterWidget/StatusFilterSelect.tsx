@@ -1,12 +1,9 @@
 import { FormGroup, Stack, StackItem } from "@patternfly/react-core";
 import { Resource, removeInvertedSelection, toggleValueInList } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
-import {
-  IncludeExcludeSelect,
-  OptionalToggleGroup,
-  excludeIcons,
-  includeIcons,
-} from "@/UI/Components";
+import { excludeIcons, includeIcons } from "@/UI/Components/IncludeExcludeIcons";
+import { IncludeExcludeSelect } from "@/UI/Components/IncludeExcludeSelect";
+import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
 import { words } from "@/UI/words";
 
 function typedKeys<T extends object>(obj: T): (keyof T)[] {

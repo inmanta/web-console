@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { ServiceInstanceParams } from "@/Core";
-import { useUrlStateWithFilter } from "@/Data";
+import { useUrlStateWithFilter } from "@/Data/Common";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
 interface Props {

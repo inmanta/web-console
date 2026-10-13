@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
-import { useGetEnvironmentDetails } from "@/Data/Queries";
-import { words } from "@/UI";
-import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+import { useGetEnvironmentDetails } from "@/Data/Queries/Slices/Environment";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 import { Dashboard } from "./Dashboard";
 
 /**

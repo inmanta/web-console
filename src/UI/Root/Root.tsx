@@ -2,7 +2,8 @@ import React, { lazy, Suspense, useContext, useEffect, useMemo, useState } from 
 import { Route, Routes } from "react-router";
 import { LoginPage } from "@/Slices/Login";
 import { DependencyContext } from "@/UI/Dependency";
-import { RouteOutlet, SearchSanitizer, PrimaryBaseUrlManager } from "@/UI/Routing";
+import { SearchSanitizer, PrimaryBaseUrlManager } from "@/UI/Routing";
+import { RouteOutlet } from "@/UI/Routing/RouteOutlet";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
 import { getThemePreference, setThemePreference } from "../Components/DarkmodeOption";

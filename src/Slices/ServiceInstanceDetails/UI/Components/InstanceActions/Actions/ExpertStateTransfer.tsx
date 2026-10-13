@@ -13,11 +13,13 @@ import {
   FlexItem,
 } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
-import { usePostExpertStateTransfer } from "@/Data/Queries";
-import { DependencyContext, words } from "@/UI";
-import { AppAlert, Spinner } from "@/UI/Components";
+import { usePostExpertStateTransfer } from "@/Data/Queries/Slices/ServiceInstance";
+import { AppAlert } from "@/UI/Components/AppAlert";
+import { Spinner } from "@/UI/Components/Spinner";
+import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { words } from "@/UI/words";
 
 interface Props {
   targets: string[];

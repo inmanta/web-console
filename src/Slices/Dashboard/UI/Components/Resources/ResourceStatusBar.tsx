@@ -1,8 +1,9 @@
 import React from "react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { LegendBar, statusMapping, statusPriority } from "@/UI/Components";
+import { statusMapping, statusPriority } from "@/UI/Components/CompoundResourceStatus";
 import { colorConfig } from "@/UI/Components/CompoundResourceStatus/config";
+import { LegendBar } from "@/UI/Components/LegendBar";
 import { words } from "@/UI/words";
 import { Dot } from "../EnvironmentHealth/Dot";
 

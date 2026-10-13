@@ -1,16 +1,12 @@
 import { useMemo, useState } from "react";
 import { FormGroup, Stack, StackItem, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { useGetAgents } from "@/Data/Queries";
-import { useDebounce } from "@/UI";
-import {
-  AddableSelectInput,
-  AddableSelectOption,
-  AddableTextInput,
-  OptionalToggleGroup,
-  excludeIcons,
-  includeIcons,
-} from "@/UI/Components";
+import { useGetAgents } from "@/Data/Queries/Slices/Agents";
+import { AddableSelectInput, AddableSelectOption } from "@/UI/Components/AddableSelectInput";
+import { AddableTextInput } from "@/UI/Components/AddableTextInput";
+import { excludeIcons, includeIcons } from "@/UI/Components/IncludeExcludeIcons";
+import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
+import { useDebounce } from "@/UI/Utils";
 import { words } from "@/UI/words";
 
 export interface ResourceFilterFormProps {

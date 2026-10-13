@@ -1,5 +1,5 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { CustomError, useGetWithoutEnv } from "@/Data/Queries";
+import { CustomError, useGetWithoutEnv } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 interface LoggedUser {

@@ -1,5 +1,5 @@
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
-import { useDeleteWithoutEnv } from "@/Data/Queries";
+import { useDeleteWithoutEnv } from "@/Data/Queries/Helpers";
 
 /**
  * React Query hook for deleting an environment.

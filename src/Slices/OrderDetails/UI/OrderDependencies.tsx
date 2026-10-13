@@ -5,9 +5,9 @@ import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ServiceOrderItem, ServiceOrderItemDependencies } from "@/Slices/Orders/Core/Types";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
-import { words } from "@/UI";
-import { TextWithCopy } from "@/UI/Components";
 import { CopyMultiOptions } from "@/UI/Components/CopyMultiOptions";
+import { TextWithCopy } from "@/UI/Components/TextWithCopy";
+import { words } from "@/UI/words";
 import { getInstanceDisplayName } from "./getInstanceDisplayName";
 
 interface Props {

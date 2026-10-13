@@ -1,6 +1,6 @@
 import { Resource } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
-import { CurrentPage, MultiSort } from "@/Data";
+import { CurrentPage, MultiSort } from "@/Data/Common";
 import { ResourceActionFilter } from "../ResourceActionFilter";
 import { PageInfo } from "./useGetResources";
 

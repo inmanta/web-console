@@ -3,7 +3,12 @@ import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-quer
 import { CompileStatus, Sort, PageSize, Pagination } from "@/Core/Domain";
 import { DateRange } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { CustomError, REFETCH_INTERVAL, useGet, getPaginationHandlers } from "@/Data/Queries";
+import {
+  CustomError,
+  REFETCH_INTERVAL,
+  useGet,
+  getPaginationHandlers,
+} from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";

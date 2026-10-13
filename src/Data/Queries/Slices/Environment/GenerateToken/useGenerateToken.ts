@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { TokenInfo } from "@/Core/Domain";
-import { usePost } from "@/Data/Queries";
-import { DependencyContext } from "@/UI";
+import { usePost } from "@/Data/Queries/Helpers";
+import { DependencyContext } from "@/UI/Dependency";
 
 /**
  * Interface for the response from the generate token mutation.

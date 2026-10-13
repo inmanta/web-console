@@ -1,7 +1,9 @@
 import React from "react";
 import { ServiceModel } from "@/Core";
-import { useGetInstance } from "@/Data/Queries";
-import { Description, PageContainer, ServiceProvider } from "@/UI/Components";
+import { useGetInstance } from "@/Data/Queries/Slices/ServiceInstance";
+import { Description } from "@/UI/Components/Description";
+import { PageContainer } from "@/UI/Components/PageContainer";
+import { ServiceProvider } from "@/UI/Components/ServiceProvider";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Events } from "./Events";

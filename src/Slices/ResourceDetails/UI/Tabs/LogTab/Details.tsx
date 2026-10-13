@@ -6,8 +6,9 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import { isObjectEmpty } from "@/Core";
-import { AttributeClassifier } from "@/Data";
-import { AttributeList, CodeText } from "@/UI/Components";
+import { AttributeClassifier } from "@/Data/Common";
+import { AttributeList } from "@/UI/Components/AttributeList";
+import { CodeText } from "@/UI/Components/CodeText";
 import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
 
 interface Props {

@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { usePostWithoutEnv } from "@/Data/Queries";
+import { usePostWithoutEnv } from "@/Data/Queries/Helpers";
 
 interface LoginResponse {
   data: {

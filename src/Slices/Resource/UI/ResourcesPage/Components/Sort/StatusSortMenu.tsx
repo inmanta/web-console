@@ -17,8 +17,8 @@ import {
 } from "@patternfly/react-drag-drop";
 import { SortAmountDownIcon, SortAmountUpIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
-import { MultiSort, toggleMulti } from "@/Data";
-import { words } from "@/UI";
+import { MultiSort, toggleMulti } from "@/Data/Common";
+import { words } from "@/UI/words";
 
 const getLabel = (key: Resource.StatusSortKey) => words(`resources.sort.label.${key}`);
 

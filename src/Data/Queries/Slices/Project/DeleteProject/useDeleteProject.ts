@@ -4,7 +4,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useDeleteWithoutEnv } from "@/Data/Queries";
+import { useDeleteWithoutEnv } from "@/Data/Queries/Helpers";
 import { getProjectsKey } from "../GetProjects";
 
 /**

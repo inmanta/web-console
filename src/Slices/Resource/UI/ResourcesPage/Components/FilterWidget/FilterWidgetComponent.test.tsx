@@ -5,11 +5,11 @@ import { userEvent } from "@testing-library/user-event";
 import { Resource } from "@/Core";
 import { getById } from "@/Test";
 import { MockOrchestratorProvider } from "@/Test/Mock";
-import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
-vi.mock("@/Data/Queries", () => ({
+vi.mock("@/Data/Queries/Slices/Agents", () => ({
   useGetAgents: () => ({
     useInfiniteScroll: () => ({
       data: { pages: [] },
@@ -19,9 +19,15 @@ vi.mock("@/Data/Queries", () => ({
       fetchNextPage: vi.fn(),
     }),
   }),
+}));
+
+vi.mock("@/Data/Queries/Slices/Service", () => ({
   useGetServiceModels: () => ({
     useOneTime: () => ({ data: [] }),
   }),
+}));
+
+vi.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
   useGetInstances: () => ({
     useInfiniteScroll: () => ({
       data: { pages: [] },

@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
+import { useGetServiceModels } from "@/Data/Queries/Slices/Service";
 import {
-  useGetServiceModels,
   useGetInstanceWithRelations,
   useGetInventoryList,
-} from "@/Data/Queries";
-import { words } from "@/UI";
-import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+} from "@/Data/Queries/Slices/ServiceInstance";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
+import { words } from "@/UI/words";
 import { Composer } from "../Composer";
 import { findInterServiceRelations } from "../Data/Helpers";
 import {

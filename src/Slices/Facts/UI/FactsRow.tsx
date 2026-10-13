@@ -1,15 +1,15 @@
 import React, { memo, useContext } from "react";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { ClassifiedAttribute } from "@/Data";
+import { ClassifiedAttribute } from "@/Data/Common";
 import {
   AttributeExpandTd,
   AttributeExpansionRow,
   AttributeValueCell,
-  DateWithTooltip,
-  Link,
   useAttributeExpansion,
-} from "@/UI/Components";
+} from "@/UI/Components/AttributeList";
+import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
+import { Link } from "@/UI/Components/Link";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";

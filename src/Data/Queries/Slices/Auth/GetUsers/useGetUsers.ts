@@ -3,7 +3,7 @@
  * @returns An object containing a custom hook to fetch user information.
  */
 import { useQuery } from "@tanstack/react-query";
-import { useGetWithoutEnv } from "@/Data/Queries";
+import { useGetWithoutEnv } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { EnvironmentRoles } from "../AddRole/useAddRole";
 

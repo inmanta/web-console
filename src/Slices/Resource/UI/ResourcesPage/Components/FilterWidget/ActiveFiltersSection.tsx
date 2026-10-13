@@ -1,7 +1,7 @@
 import React from "react";
 import { StackItem } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { ActiveFilterGroup, ActiveFilters } from "@/UI/Components";
+import { ActiveFilterGroup, ActiveFilters } from "@/UI/Components/FilterDrawer";
 import { words } from "@/UI/words";
 
 export interface ActiveFiltersSectionProps {

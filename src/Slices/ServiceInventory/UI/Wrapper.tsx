@@ -2,7 +2,7 @@ import React from "react";
 import { Content, ContentVariants, ExpandableSection } from "@patternfly/react-core";
 import { t_global_font_size_body_sm } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
-import { PageContainer } from "@/UI/Components";
+import { PageContainer } from "@/UI/Components/PageContainer";
 import { words } from "@/UI/words";
 import { AddInstanceButton } from "./Components";
 

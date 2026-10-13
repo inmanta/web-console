@@ -1,8 +1,11 @@
 import React from "react";
 
-import { useUrlStateWithString } from "@/Data";
-import { useGetInstance } from "@/Data/Queries";
-import { Description, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+import { useUrlStateWithString } from "@/Data/Common";
+import { useGetInstance } from "@/Data/Queries/Slices/ServiceInstance";
+import { Description } from "@/UI/Components/Description";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Diagnose } from "./Diagnose";

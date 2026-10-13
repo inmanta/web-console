@@ -1,7 +1,7 @@
 import React from "react";
 import { Label } from "@patternfly/react-core";
-import { words } from "@/UI";
-import { Spinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components/Spinner";
+import { words } from "@/UI/words";
 import { ServiceOrderItemState, ServiceOrderState } from "../Core/Types";
 
 /**

@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { graphql, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { NotificationsResponse } from "@/Data/Queries";
+import { NotificationsResponse } from "@/Data/Queries/Slices/Notification";
 import { MockedDependencyProvider } from "@/Test";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Badge } from "./Badge";

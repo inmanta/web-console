@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { InstanceAttributeModel } from "@/Core";
+import { useGetServiceModels } from "@/Data/Queries/Slices/Service";
 import {
   useGetInventoryList,
-  useGetServiceModels,
   useGetInstanceWithRelations,
-} from "@/Data/Queries";
+} from "@/Data/Queries/Slices/ServiceInstance";
 import { createCanvasHandlers } from "./Data/CanvasHandlers";
 import { ComposerContext, composerContext } from "./Data/Context";
 import { createRelationsDictionary, RelationsDictionary } from "./Data/Helpers";

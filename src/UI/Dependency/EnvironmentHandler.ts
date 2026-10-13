@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Location } from "react-router";
 import { EnvironmentHandler, EnvironmentSettings, Navigate, RouteManager } from "@/Core";
-import { useGetEnvironmentSettings } from "@/Data/Queries";
-import { EnvironmentPreview } from "@/Data/Queries";
-import { SearchHelper } from "@/UI/Routing/SearchHelper";
+import { useGetEnvironmentSettings } from "@/Data/Queries/Slices/Environment";
+import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
+import { SearchHelper } from "@/UI/Routing";
 
 /**
  * EnvironmentHandlerImpl is a React component that manages the environment selection and navigation.

@@ -6,8 +6,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
-import { usePost } from "@/Data/Queries";
-import { DependencyContext } from "@/UI";
+import { usePost } from "@/Data/Queries/Helpers";
+import { DependencyContext } from "@/UI/Dependency";
 import { getInstanceKey } from "../GetInstance";
 
 interface PostStateTransfer {

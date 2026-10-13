@@ -1,8 +1,8 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
-import { DiscoveredResource, SortKey } from "@/Data/Queries";
-import { words } from "@/UI";
+import { DiscoveredResource, SortKey } from "@/Data/Queries/Slices/DiscoveredResources";
+import { words } from "@/UI/words";
 import { DiscoveredResourceRow } from "./DiscoveredResourcesRow";
 import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
 

@@ -2,14 +2,12 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
 import { PageSize } from "@/Core/Domain";
-import {
-  useGetAgents,
-  useGetEnvironments,
-  useGetProjects,
-  useGetResources,
-  useGetServerStatus,
-  useGetServiceModels,
-} from "@/Data/Queries";
+import { useGetAgents } from "@/Data/Queries/Slices/Agents";
+import { useGetEnvironments } from "@/Data/Queries/Slices/Environment";
+import { useGetProjects } from "@/Data/Queries/Slices/Project";
+import { useGetResources } from "@/Data/Queries/Slices/Resource";
+import { useGetServerStatus } from "@/Data/Queries/Slices/Server";
+import { useGetServiceModels } from "@/Data/Queries/Slices/Service";
 import { AgentStatus } from "@/Slices/Agents/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { EnvironmentIcon } from "@/UI/Root/Components/Header/EnvSelector/EnvSelector";
