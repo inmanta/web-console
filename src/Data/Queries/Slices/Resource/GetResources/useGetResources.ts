@@ -57,7 +57,7 @@ interface GetResourcesParams {
   currentPage: CurrentPage;
 }
 
-const GET_RESOURCES_QUERY = gql`
+const getResourcesQuery = (orderBy: string): string => gql`
   query GetResources(
     $filter: ResourceFilter!
     $environment: String!
@@ -65,7 +65,6 @@ const GET_RESOURCES_QUERY = gql`
     $after: String
     $last: Int
     $before: String
-    $orderBy: [StrawberryOrder!]
   ) {
     resources(
       filter: $filter
@@ -73,7 +72,7 @@ const GET_RESOURCES_QUERY = gql`
       after: $after
       last: $last
       before: $before
-      orderBy: $orderBy
+      ${orderBy}
     ) {
       totalCount
       pageInfo {
@@ -139,12 +138,14 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
     filter: graphqlFilter,
     environment: env,
     ...paginationVariables,
-    ...(sort.length > 0 ? { orderBy: mapSort(sort) } : {}),
   };
 
   const filterArray = filter ? Object.values(filter) : [];
 
-  const queryFn = useGraphQLRequest<ResourcesGraphQLResponse>(GET_RESOURCES_QUERY, variables);
+  const queryFn = useGraphQLRequest<ResourcesGraphQLResponse>(
+    getResourcesQuery(mapSort(sort)),
+    variables
+  );
 
   return {
     useContinuous: (): UseQueryResult<GetResourcesResponse, Error> =>

@@ -1,0 +1,4 @@
+description: Write the sort of the resources query inline, so it works whether the orchestrator calls the order input type `StrawberryOrder` or `ResourceOrder`.
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

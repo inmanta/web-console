@@ -131,11 +131,21 @@ export function mapToResourceActionFilter(filter?: Resource.Filter): ResourceAct
 }
 
 /**
- * Maps sort parameters to the GraphQL orderBy format.
+ * Maps sort parameters to the GraphQL orderBy argument, empty when there is no sort.
  * Preserves array order as sort priority.
+ * The values are written inline, so the query doesn't name the order input type, which the orchestrator calls
+ * `StrawberryOrder` on some versions and `ResourceOrder` on others. JSON.stringify escapes them as GraphQL strings.
  */
-export function mapSort(sort: MultiSort<Resource.SortKey>): Array<{ key: string; order: string }> {
-  return sort.map((s) => ({ key: s.name, order: s.order }));
+export function mapSort(sort: MultiSort<Resource.SortKey>): string {
+  if (sort.length === 0) {
+    return "";
+  }
+
+  const entries = sort.map(
+    (s) => `{ key: ${JSON.stringify(s.name)}, order: ${JSON.stringify(s.order)} }`
+  );
+
+  return `orderBy: [${entries.join(", ")}]`;
 }
 
 /**

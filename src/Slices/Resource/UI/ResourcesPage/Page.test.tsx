@@ -38,7 +38,6 @@ interface GqlVariables {
   after?: string;
   last?: number;
   before?: string;
-  orderBy?: Array<{ key: string; order: string }>;
 }
 
 type ResourceData = (typeof Resource.response)["data"];
@@ -287,8 +286,8 @@ describe("ResourcesPage", () => {
 
   test("sets sorting parameters correctly on click", async () => {
     server.use(
-      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-        if (variables.orderBy?.[0]?.key === "agent" && variables.orderBy?.[0]?.order === "asc") {
+      queryLink.query("GetResources", ({ query }) => {
+        if (query.includes('orderBy: [{ key: "agent", order: "asc" }]')) {
           return HttpResponse.json({
             data: toGqlResponse(
               { ...BASE_DATA, resources: { ...BASE_DATA.resources, ...ALL_EDGES.reverse() } },

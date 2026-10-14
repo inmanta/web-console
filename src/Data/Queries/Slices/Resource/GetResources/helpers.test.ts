@@ -240,22 +240,22 @@ describe("mapToResourceActionFilter", () => {
 // ─── mapSort ────────────────────────────────────────────────────────────────
 
 describe("mapSort", () => {
-  it("returns an empty array when given an empty array", () => {
+  it("returns no argument when there is no sort", () => {
     const result = mapSort([]);
 
-    expect(result).toEqual([]);
+    expect(result).toEqual("");
   });
 
   it("maps a single sort entry to the GraphQL orderBy format", () => {
     const result = mapSort([{ name: "resource_type", order: "asc" }]);
 
-    expect(result).toEqual([{ key: "resource_type", order: "asc" }]);
+    expect(result).toEqual('orderBy: [{ key: "resource_type", order: "asc" }]');
   });
 
   it("maps descending sort correctly", () => {
     const result = mapSort([{ name: "agent", order: "desc" }]);
 
-    expect(result).toEqual([{ key: "agent", order: "desc" }]);
+    expect(result).toEqual('orderBy: [{ key: "agent", order: "desc" }]');
   });
 
   it("maps multiple sort entries preserving priority order", () => {
@@ -264,10 +264,9 @@ describe("mapSort", () => {
       { name: "agent", order: "desc" },
     ]);
 
-    expect(result).toEqual([
-      { key: "resource_type", order: "asc" },
-      { key: "agent", order: "desc" },
-    ]);
+    expect(result).toEqual(
+      'orderBy: [{ key: "resource_type", order: "asc" }, { key: "agent", order: "desc" }]'
+    );
   });
 });
 
