@@ -4,12 +4,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Environment, ProjectModel } from "@/Core";
 import {
   useCreateEnvironment,
-  useCreateProject,
   getEnvironmentsKey,
   GetEnvironmentPreviewKey,
   EnvironmentPreviewResponse,
-} from "@/Data/Queries";
-import { AppAlert, CreatableSelectInput } from "@/UI/Components";
+} from "@/Data/Queries/Slices/Environment";
+import { useCreateProject } from "@/Data/Queries/Slices/Project";
+import { AppAlert } from "@/UI/Components/AppAlert";
+import { CreatableSelectInput } from "@/UI/Components/InlineEditable";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";

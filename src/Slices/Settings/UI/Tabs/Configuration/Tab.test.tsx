@@ -7,8 +7,8 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { EnvironmentSettings, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@/UI/words";
 import { Tab } from "./Tab";
 
 const axe = configureAxe({

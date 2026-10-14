@@ -8,8 +8,8 @@ import {
   SelectOption,
   ToolbarGroup,
 } from "@patternfly/react-core";
-import { DryRun } from "@/Data/Queries";
-import { Spinner } from "@/UI/Components";
+import { DryRun } from "@/Data/Queries/Slices/DryRun";
+import { Spinner } from "@/UI/Components/Spinner";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { Progress as DomainProgress } from "@S/ComplianceCheck/Core/Domain";
 

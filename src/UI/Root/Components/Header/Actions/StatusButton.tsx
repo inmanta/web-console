@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button, ToolbarItem, Tooltip } from "@patternfly/react-core";
 import { PortIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { useGetHealth } from "@/Data/Queries";
-import { Link } from "@/UI/Components";
+import { useGetHealth } from "@/Data/Queries/Slices/Server";
+import { Link } from "@/UI/Components/Link";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 

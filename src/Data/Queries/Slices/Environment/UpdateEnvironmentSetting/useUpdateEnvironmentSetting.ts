@@ -6,8 +6,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { EnvironmentSettings } from "@/Core";
-import { usePost } from "@/Data/Queries";
-import { DependencyContext } from "@/UI";
+import { usePost } from "@/Data/Queries/Helpers";
+import { DependencyContext } from "@/UI/Dependency";
 import { GetEnvironmentPreviewKey } from "../GetEnvironmentPreview";
 import { getEnvironmentSettingsKey } from "../GetEnvironmentSettings";
 

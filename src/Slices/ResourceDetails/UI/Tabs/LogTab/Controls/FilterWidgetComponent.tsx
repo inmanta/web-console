@@ -1,16 +1,16 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
 import { LogLevelsList } from "@/Core";
+import { AddableTextInput } from "@/UI/Components/AddableTextInput";
 import {
   ActiveFilterGroup,
   ActiveFilters,
-  AddableTextInput,
   FilterDrawerPanelContent,
-  MultiTextSelect,
-  SingleTextSelect,
   getFilterActions,
-} from "@/UI/Components";
+} from "@/UI/Components/FilterDrawer";
 import { TimestampRangeFilter } from "@/UI/Components/Filters";
+import { MultiTextSelect } from "@/UI/Components/MultiTextSelect";
+import { SingleTextSelect } from "@/UI/Components/SingleTextSelect";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { ResourceLogFilter, actionTypes } from "@S/ResourceDetails/Core/ResourceLog";

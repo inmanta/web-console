@@ -17,8 +17,8 @@ import {
   useDeleteEnvironment,
   getEnvironmentsKey,
   GetEnvironmentPreviewKey,
-} from "@/Data/Queries";
-import { AppAlert } from "@/UI/Components";
+} from "@/Data/Queries/Slices/Environment";
+import { AppAlert } from "@/UI/Components/AppAlert";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { useNavigateTo } from "@/UI/Routing";

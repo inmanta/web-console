@@ -1,5 +1,6 @@
 import React from "react";
-import { Description, PageContainer } from "@/UI/Components";
+import { Description } from "@/UI/Components/Description";
+import { PageContainer } from "@/UI/Components/PageContainer";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { DetailsProvider } from "./DetailsProvider";

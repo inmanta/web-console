@@ -1,5 +1,5 @@
 import { PageSize } from "@/Core/Domain";
-import { useGetCompileReports } from "@/Data/Queries";
+import { useGetCompileReports } from "@/Data/Queries/Slices/Compilation";
 
 const PARAMS = {
   pageSize: PageSize.few,

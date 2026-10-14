@@ -1,10 +1,10 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Resource } from "@/Core";
-import { MultiSort } from "@/Data";
+import { MultiSort } from "@/Data/Common";
 import { StatusSortMenu, reorderSorts } from "./StatusSortMenu";
 
-vi.mock("@/UI", () => ({
+vi.mock("@/UI/words", () => ({
   words: (key: string) => key,
 }));
 

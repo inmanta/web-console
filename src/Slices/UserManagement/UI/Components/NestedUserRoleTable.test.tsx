@@ -5,7 +5,7 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { UserInfo } from "@/Data/Queries";
+import { UserInfo } from "@/Data/Queries/Slices/Auth";
 import { AppAlertProvider } from "@/UI/Root/Components/AppAlertProvider";
 import { NestedUserRoleTable } from "./NestedUserRoleTable";
 

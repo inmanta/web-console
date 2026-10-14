@@ -1,5 +1,5 @@
 import React from "react";
-import { PageContainer } from "@/UI/Components";
+import { PageContainer } from "@/UI/Components/PageContainer";
 import { words } from "@/UI/words";
 
 interface Props {

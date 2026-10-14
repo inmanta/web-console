@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, ToolbarGroup } from "@patternfly/react-core";
-import { useTriggerDryRun } from "@/Data/Queries";
+import { useTriggerDryRun } from "@/Data/Queries/Slices/DryRun";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
 

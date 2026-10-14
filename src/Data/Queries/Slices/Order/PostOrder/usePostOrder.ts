@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
-import { usePost } from "@/Data/Queries";
+import { usePost } from "@/Data/Queries/Helpers";
 import { ServiceOrder } from "@/Slices/Orders/Core/Types";
-import { words } from "@/UI";
-import { DependencyContext } from "@/UI";
 import type { ComposerServiceOrderItem } from "@/UI/Components/Composer/Data/Helpers/deploymentHelpers";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface PostResponse {
   data: ServiceOrder;

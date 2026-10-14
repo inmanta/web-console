@@ -1,5 +1,5 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { usePostWithoutEnv } from "@/Data/Queries";
+import { usePostWithoutEnv } from "@/Data/Queries/Helpers";
 
 /**
  * Represents the roles for a given environment.

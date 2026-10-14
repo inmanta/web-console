@@ -7,7 +7,7 @@ import {
   useUpdateEnvironmentSetting,
   getEnvironmentSettingsKey,
   GetEnvironmentPreviewKey,
-} from "@/Data/Queries";
+} from "@/Data/Queries/Slices/Environment";
 import { Container } from "./Container";
 import { InputInfoCreator } from "./InputInfoCreator";
 

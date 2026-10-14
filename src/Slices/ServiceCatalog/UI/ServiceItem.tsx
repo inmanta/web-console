@@ -18,8 +18,9 @@ import {
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { ServiceModel } from "@/Core";
-import { useDeleteService } from "@/Data/Queries";
-import { ConfirmUserActionForm, InstanceSummaryLabels } from "@/UI/Components";
+import { useDeleteService } from "@/Data/Queries/Slices/Service";
+import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
+import { InstanceSummaryLabels } from "@/UI/Components/InstanceSummaryLabels";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";

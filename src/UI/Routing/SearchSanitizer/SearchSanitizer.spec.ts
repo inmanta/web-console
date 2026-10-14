@@ -1,4 +1,4 @@
-import { PrimaryRouteManager } from "@/UI";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { SearchSanitizer } from "./SearchSanitizer";
 
 const sanitizer = new SearchSanitizer(PrimaryRouteManager(""));

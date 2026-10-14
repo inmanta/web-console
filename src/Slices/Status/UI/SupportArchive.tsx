@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { useCreateSupportArchive } from "@/Data/Queries";
-import { words } from "@/UI";
+import { useCreateSupportArchive } from "@/Data/Queries/Slices/Server";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { words } from "@/UI/words";
 import { DownloadButton } from "./Components";
 
 /**

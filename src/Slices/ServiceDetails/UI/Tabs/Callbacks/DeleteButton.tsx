@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
-import { useDeleteCallback } from "@/Data/Queries";
-import { ConfirmUserActionForm } from "@/UI/Components";
+import { useDeleteCallback } from "@/Data/Queries/Slices/Callback";
+import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";

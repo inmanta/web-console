@@ -1,14 +1,12 @@
 import React, { useContext } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { usePaginatedTable } from "@/Data";
-import { useGetOrders } from "@/Data/Queries";
-import {
-  EmptyView,
-  PageContainer,
-  LoadingView,
-  PaginationWidget,
-  ErrorView,
-} from "@/UI/Components";
+import { usePaginatedTable } from "@/Data/Common";
+import { useGetOrders } from "@/Data/Queries/Slices/Order";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
+import { PaginationWidget } from "@/UI/Components/PaginationWidget";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { SortKey } from "../Core/Types";

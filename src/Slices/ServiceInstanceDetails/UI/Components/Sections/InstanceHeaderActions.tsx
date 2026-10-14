@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { useUrlStateWithString } from "@/Data";
-import { words } from "@/UI";
-import { ResourceActions } from "@/UI/Components";
+import { useUrlStateWithString } from "@/Data/Common";
+import { ResourceActions } from "@/UI/Components/ResourceActions";
+import { words } from "@/UI/words";
 import { InstanceDetailsContext } from "../../../Core/Context";
 import { buildInstanceResourceActionScopes } from "../../../Core/resourceActionScopes";
 import { InstanceActions } from "../InstanceActions";

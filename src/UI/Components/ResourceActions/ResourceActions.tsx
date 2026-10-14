@@ -15,12 +15,12 @@ import {
 } from "@patternfly/react-core";
 import { EyeIcon, WrenchIcon, PlayIcon } from "@patternfly/react-icons";
 import { NonEmptyArray } from "@/Core/Language";
+import { DeployAgentsAction } from "@/Data/Queries/Slices/Agents";
 import {
-  DeployAgentsAction,
   ResourceActionFilter,
   useDeployFiltered,
   useDryRunFiltered,
-} from "@/Data/Queries";
+} from "@/Data/Queries/Slices/Resource";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";

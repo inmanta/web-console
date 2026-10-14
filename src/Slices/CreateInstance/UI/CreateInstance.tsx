@@ -1,13 +1,13 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
-import { usePostInstance } from "@/Data/Queries/";
+import { usePostInstance } from "@/Data/Queries/Slices/ServiceInstance";
+import { Description } from "@/UI/Components/Description";
 import {
   CreateModifierHandler,
-  Description,
   FieldCreator,
   ServiceInstanceForm,
-} from "@/UI/Components";
+} from "@/UI/Components/ServiceInstanceForm";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";

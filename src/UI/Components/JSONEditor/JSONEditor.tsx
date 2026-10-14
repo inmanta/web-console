@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
-import { useGetJSONSchema } from "@/Data/Queries";
-import { words } from "@/UI";
-import { Spinner } from "@/UI/Components";
+import { useGetJSONSchema } from "@/Data/Queries/Slices/ServiceInstance";
+import { Spinner } from "@/UI/Components/Spinner";
+import { words } from "@/UI/words";
 import { useTheme } from "../DarkmodeOption";
 import { ErrorMessageContainer } from "../ErrorMessageContainer";
 

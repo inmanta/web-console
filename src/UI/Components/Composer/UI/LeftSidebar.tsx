@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, Dispatch, SetStateAction } from "
 import { dia, ui } from "@joint/plus";
 import styled from "styled-components";
 import { ServiceModel } from "@/Core";
-import { Inventories } from "@/Data/Queries";
+import { Inventories } from "@/Data/Queries/Slices/ServiceInstance";
 import { words } from "@/UI/words";
 import { RelationsDictionary } from "../Data";
 import { ComposerContext } from "../Data/Context";

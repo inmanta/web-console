@@ -17,7 +17,7 @@ import {
   Textarea,
   UnitField,
 } from "@/Core";
-import { SUGGESTION_NAMESPACES } from "@/Data/Queries";
+import { SUGGESTION_NAMESPACES } from "@/Data/Queries/Slices/ServiceInstance";
 import * as Test from "@/Test";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";

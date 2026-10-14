@@ -2,10 +2,10 @@ import React from "react";
 import { MemoryRouter, Route, Routes, useSearchParams } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { EnvironmentPreview } from "@/Data/Queries";
+import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 import { MockEnvironmentHandler } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { DefaultRoute } from "./DefaultRoute";
 
 const DashboardSentinel: React.FC = () => {

@@ -1,11 +1,15 @@
 import React, { useContext } from "react";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
-import { useGetUsers } from "@/Data/Queries";
+import { useGetUsers } from "@/Data/Queries/Slices/Auth";
 import { UserCredentialsForm } from "@/Slices/UserManagement/UI/Components/AddUserForm";
-import { DependencyContext, words } from "@/UI";
-import { EmptyView, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
+import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { words } from "@/UI/words";
 import { UserInfoRow } from "./Components/UserInfoRow";
 
 /**

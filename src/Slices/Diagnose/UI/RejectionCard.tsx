@@ -25,7 +25,7 @@ import {
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { CompileError, CompileErrorLocation } from "@/Core";
-import { Link } from "@/UI/Components";
+import { Link } from "@/UI/Components/Link";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Rejection } from "@S/Diagnose/Core/Domain";

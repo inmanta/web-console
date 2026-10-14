@@ -1,6 +1,6 @@
 import React from "react";
 import { Table, Th, Thead, Tr } from "@patternfly/react-table";
-import { useUrlStateWithExpansion } from "@/Data";
+import { useUrlStateWithExpansion } from "@/Data/Common";
 import { words } from "@/UI/words";
 import { Callback } from "@S/ServiceDetails/Core/Callback";
 import { CreateCallbackForm } from "./CreateCallbackForm";

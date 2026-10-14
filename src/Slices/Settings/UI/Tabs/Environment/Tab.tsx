@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
 import { FlatEnvironment, ProjectModel } from "@/Core";
-import { useGetEnvironmentDetails, useGetProjects } from "@/Data/Queries";
-import { DependencyContext } from "@/UI";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { useGetEnvironmentDetails } from "@/Data/Queries/Slices/Environment";
+import { useGetProjects } from "@/Data/Queries/Slices/Project";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { DependencyContext } from "@/UI/Dependency";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
 /**
