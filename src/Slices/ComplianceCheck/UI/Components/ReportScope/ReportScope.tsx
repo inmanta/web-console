@@ -12,7 +12,7 @@ import { useScopeRows } from "./useScopeRows";
 interface Props {
   report: DryRun;
   diff: Diff.Resource[] | undefined;
-  onRerunStarted: (dryRunId: string) => void;
+  onRerunStart: () => void;
 }
 
 /**
@@ -38,11 +38,11 @@ const countDiff = (diff: Diff.Resource[]): { agentCount: number; changedCount: n
  *  @prop {DryRun} report - The selected dry run report
  *  @prop {Diff.Resource[] | undefined} diff - The resources of the report, undefined while they
  *    load; the agent and change counts show once they are there
- *  @prop {(dryRunId: string) => void} onRerunStarted - Called with the id of a re-run dry run
+ *  @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The scope band
  */
-export const ReportScope: React.FC<Props> = ({ report, diff, onRerunStarted }) => {
+export const ReportScope: React.FC<Props> = ({ report, diff, onRerunStart }) => {
   const modelVersion = Number(report.model);
   const desiredStateVersionQuery = useGetDesiredStateVersion(modelVersion);
   const desiredStateVersion = desiredStateVersionQuery.data;
@@ -112,7 +112,7 @@ export const ReportScope: React.FC<Props> = ({ report, diff, onRerunStarted }) =
               resourceFilter={resourceFilter}
               modelVersion={modelVersion}
               modelVersionLookup={modelVersionLookup}
-              onRerunStarted={onRerunStarted}
+              onRerunStart={onRerunStart}
             />
           )}
         </Flex>

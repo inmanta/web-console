@@ -9,7 +9,7 @@ import { words } from "@/UI/words";
 
 interface Props {
   version: string;
-  onDryRunStarted: (dryRunId: string) => void;
+  onDryRunStart: () => void;
 }
 
 /**
@@ -21,11 +21,11 @@ interface Props {
  *
  * @props {Props} props - The component props
  * @prop {string} version - The version to trigger the dry run for
- * @prop {(dryRunId: string) => void} onDryRunStarted - Called with the id of the new dry run
+ * @prop {() => void} onDryRunStart - Called when the dry run is started
  *
  * @returns {React.FC<Props>} The TriggerDryRunAction component
  */
-export const TriggerDryRunAction: React.FC<Props> = ({ version, onDryRunStarted }) => {
+export const TriggerDryRunAction: React.FC<Props> = ({ version, onDryRunStart }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const isHalted = environmentHandler.useIsHalted();
   const { notifyError } = useAppAlert();
@@ -38,9 +38,10 @@ export const TriggerDryRunAction: React.FC<Props> = ({ version, onDryRunStarted 
     },
   });
 
-  // Passed to mutate rather than the hook, so it is skipped once the page is left: selecting the
-  // report rewrites the URL, which would otherwise navigate back here.
-  const onTrigger = () => mutate(version, { onSuccess: onDryRunStarted });
+  const onTrigger = () => {
+    onDryRunStart();
+    mutate(version);
+  };
 
   return (
     <ActionDisabledTooltip

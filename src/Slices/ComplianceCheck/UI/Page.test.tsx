@@ -210,17 +210,18 @@ describe("ComplianceCheck page", () => {
         return HttpResponse.json({ data: Mock.a.id });
       })
     );
-    const { component, datePresenter } = setup();
+    // Starts on an older report, to check that the new one replaces it.
+    const { component, datePresenter } = setup(`&state.ComplianceCheck.report=${Mock.c.id}`);
 
     render(component);
 
-    const dryRunButton = await screen.findByRole("button", {
-      name: words("desiredState.complianceCheck.action.dryRun"),
-    });
-
-    await userEvent.click(dryRunButton);
-
     const select = await screen.findByRole("button", { name: "ReportListSelect" });
+
+    await waitFor(() => expect(select).toHaveTextContent(datePresenter.getFull(Mock.c.date)));
+
+    await userEvent.click(
+      screen.getByRole("button", { name: words("desiredState.complianceCheck.action.dryRun") })
+    );
 
     await waitFor(() => expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date)));
 
@@ -232,7 +233,7 @@ describe("ComplianceCheck page", () => {
     expect(options[0]).toHaveAttribute("aria-selected", "true");
   });
 
-  test("GIVEN a dry run was started WHEN the page is left before it is done THEN the new report isn't selected", async () => {
+  test("GIVEN a dry run was started WHEN the page is left before it is done THEN it doesn't navigate back", async () => {
     let startDryRun = () => {};
     const isDryRunStarted = new Promise<void>((resolve) => (startDryRun = resolve));
 
@@ -256,7 +257,7 @@ describe("ComplianceCheck page", () => {
     startDryRun();
 
     await waitFor(() => expect(testClient.isMutating()).toBe(0));
-    // Selecting the report would set it in the URL, and so navigate back to the page.
+    // Selecting the report once the dry run is done would set it in the URL, and so navigate back.
     expect(screen.getByTestId("search")).not.toHaveTextContent("report");
   });
 

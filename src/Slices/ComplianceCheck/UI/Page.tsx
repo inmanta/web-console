@@ -63,6 +63,9 @@ export const View: React.FC<Props> = ({ version }) => {
     key: "report",
     route: "ComplianceCheck",
   });
+  // A new dry run becomes the newest report once the list refreshes. Selecting it when it starts,
+  // rather than once the server answers, keeps a late answer from navigating back to this page.
+  const selectNewestReport = () => setSelectedReportId("");
   const { notifyError } = useAppAlert();
 
   const selectedReport: DryRun | null =
@@ -93,7 +96,7 @@ export const View: React.FC<Props> = ({ version }) => {
               </FlexItem>
               <Label variant="outline">{words("modelVersion")(Number(version))}</Label>
             </Flex>
-            <TriggerDryRunAction version={version} onDryRunStarted={setSelectedReportId} />
+            <TriggerDryRunAction version={version} onDryRunStart={selectNewestReport} />
           </Flex>
           <Flex direction={{ default: "column" }} gap={{ default: "gapXs" }}>
             {/* Wrapped for the same reason, so it sits right above the picker. */}
@@ -125,7 +128,7 @@ export const View: React.FC<Props> = ({ version }) => {
         version={version}
         statuses={statuses}
         searchFilter={searchFilter}
-        onRerunStarted={setSelectedReportId}
+        onRerunStart={selectNewestReport}
       />
     </>
   );

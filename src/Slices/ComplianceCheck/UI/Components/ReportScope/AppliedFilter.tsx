@@ -29,7 +29,7 @@ interface Props {
   resourceFilter: ResourceActionFilter;
   modelVersion: number;
   modelVersionLookup: ModelVersionLookup;
-  onRerunStarted: (dryRunId: string) => void;
+  onRerunStart: () => void;
 }
 
 /**
@@ -43,7 +43,7 @@ interface Props {
  *  @prop {ResourceActionFilter} resourceFilter - The filter the dry run was started with
  *  @prop {number} modelVersion - The model version of the dry run
  *  @prop {ModelVersionLookup} modelVersionLookup - What is known about that model version
- *  @prop {(dryRunId: string) => void} onRerunStarted - Called with the id of a re-run dry run
+ *  @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The applied filter panel
  */
@@ -52,7 +52,7 @@ export const AppliedFilter: React.FC<Props> = ({
   resourceFilter,
   modelVersion,
   modelVersionLookup,
-  onRerunStarted,
+  onRerunStart,
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const rowsId = useId();
@@ -82,7 +82,7 @@ export const AppliedFilter: React.FC<Props> = ({
               resourceFilter={resourceFilter}
               modelVersion={modelVersion}
               modelVersionLookup={modelVersionLookup}
-              onRerunStarted={onRerunStarted}
+              onRerunStart={onRerunStart}
             />
             <Divider orientation={{ default: "vertical" }} />
             <Button

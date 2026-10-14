@@ -12,7 +12,7 @@ interface Props {
   version: string;
   statuses: Diff.Status[];
   searchFilter: string;
-  onRerunStarted: (dryRunId: string) => void;
+  onRerunStart: () => void;
 }
 
 /**
@@ -24,7 +24,7 @@ interface Props {
  * @prop {string} version - The version of the dry run
  * @prop {Diff.Status[]} statuses - The statuses to filter the resources by
  * @prop {string} searchFilter - The search filter to filter the resources by
- * @prop {(dryRunId: string) => void} onRerunStarted - Called with the id of a re-run dry run
+ * @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The DiffPageSection component
  */
@@ -41,7 +41,7 @@ export const DiffPageSection: React.FC<Props> = ({ report, ...props }) =>
  * @prop {string} version - The version of the dry run
  * @prop {Diff.Status[]} statuses - The statuses to filter the resources by
  * @prop {string} searchFilter - The search filter to filter the resources by
- * @prop {(dryRunId: string) => void} onRerunStarted - Called with the id of a re-run dry run
+ * @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The DiffView component
  */
@@ -50,7 +50,7 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
   version,
   statuses,
   searchFilter,
-  onRerunStarted,
+  onRerunStart,
 }) => {
   const refs: DiffWizard.Refs = useRef({});
   const todo = Number(report.todo);
@@ -121,7 +121,7 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
        */}
       <Grid hasGutter style={{ flexShrink: 0 }}>
         {/* The scope comes from the report itself, so it stays in place while the diff loads. */}
-        <ReportScope report={report} diff={data?.diff} onRerunStarted={onRerunStarted} />
+        <ReportScope report={report} diff={data?.diff} onRerunStart={onRerunStart} />
         {getDiff()}
       </Grid>
     </PageSection>

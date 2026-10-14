@@ -12,7 +12,7 @@ interface Props {
   resourceFilter: ResourceActionFilter;
   modelVersion: number;
   modelVersionLookup: ModelVersionLookup;
-  onRerunStarted: (dryRunId: string) => void;
+  onRerunStart: () => void;
 }
 
 /**
@@ -26,7 +26,7 @@ interface Props {
  *  @prop {ResourceActionFilter} resourceFilter - The resource filter the report was started with
  *  @prop {number} modelVersion - The model version of the report
  *  @prop {ModelVersionLookup} modelVersionLookup - What is known about that model version
- *  @prop {(dryRunId: string) => void} onRerunStarted - Called with the id of the new dry run
+ *  @prop {() => void} onRerunStart - Called when the re-run is started
  *
  * @returns {React.FC<Props>} The re-run button
  */
@@ -34,7 +34,7 @@ export const RerunButton: React.FC<Props> = ({
   resourceFilter,
   modelVersion,
   modelVersionLookup,
-  onRerunStarted,
+  onRerunStart,
 }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const isHalted = environmentHandler.useIsHalted();
@@ -70,8 +70,8 @@ export const RerunButton: React.FC<Props> = ({
       return;
     }
 
+    onRerunStart();
     dryRun.mutate(rerunFilter.filter, {
-      onSuccess: ({ id }) => onRerunStarted(id),
       onError: (error) =>
         notifyError({
           title: words("desiredState.complianceCheck.scope.rerun.failed"),
