@@ -1,6 +1,6 @@
 import { Location } from "react-router";
 import { Navigate } from "@/Core/Language";
-import { EnvironmentPreview } from "@/Data/Queries";
+import type { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 
 /**
  * EnvironmentHandler is a contract for managing the environment selection and navigation.

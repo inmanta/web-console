@@ -2,8 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { LoginForm } from "@patternfly/react-core";
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
-import { useLogin } from "@/Data/Queries";
-import { DependencyContext, words, PrimaryBaseUrlManager } from "@/UI";
+import { useLogin } from "@/Data/Queries/Slices/Auth";
+import { DependencyContext } from "@/UI/Dependency";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
+import { words } from "@/UI/words";
 
 interface Props {
   submitButtonText: string;

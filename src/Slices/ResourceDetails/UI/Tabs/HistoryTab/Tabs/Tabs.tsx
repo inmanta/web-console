@@ -1,8 +1,9 @@
 import React from "react";
 import { ListIcon, ModuleIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { AttributeClassifier } from "@/Data";
-import { IconTabs, ResourceAttributes, TabDescriptor } from "@/UI/Components";
+import { AttributeClassifier } from "@/Data/Common";
+import { IconTabs, TabDescriptor } from "@/UI/Components/IconTabs";
+import { ResourceAttributes } from "@/UI/Components/ResourceAttributes";
 import { words } from "@/UI/words";
 
 const classifier = new AttributeClassifier();

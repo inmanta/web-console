@@ -17,7 +17,7 @@ import {
   useGetModelVersionForInstanceVersion,
   withActiveModelVersion,
   withDryRunVersion,
-} from "@/Data/Queries";
+} from "@/Data/Queries/Slices/Resource";
 import { words } from "@/UI/words";
 import { DryRunVersionField } from "./DryRunVersionField";
 import { ResourceActionInstance } from "./types";

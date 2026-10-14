@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import {
-  useGetInstanceLog,
-  useGetInstanceLogs,
-  useGetModelVersionForInstanceVersion,
-} from "@/Data/Queries";
+import { useGetModelVersionForInstanceVersion } from "@/Data/Queries/Slices/Resource";
+import { useGetInstanceLog, useGetInstanceLogs } from "@/Data/Queries/Slices/ServiceInstance";
 import { words } from "@/UI/words";
 import { VersionSelectNotice, VersionSelectOption, VersionSelect } from "./VersionSelect";
 import { ResourceActionInstance } from "./types";

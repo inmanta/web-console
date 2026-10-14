@@ -1,7 +1,8 @@
 import React, { useContext, useRef } from "react";
 import { TabContentBody, Tooltip } from "@patternfly/react-core";
 import { CogIcon, InfoCircleIcon, KeyIcon } from "@patternfly/react-icons";
-import { ErrorView, IconTabs, TabDescriptor } from "@/UI/Components";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { IconTabs, TabDescriptor } from "@/UI/Components/IconTabs";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ConfigurationTab } from "./Configuration";

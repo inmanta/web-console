@@ -1,20 +1,20 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
-import { usePaginatedTable } from "@/Data";
-import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Queries";
+import { usePaginatedTable } from "@/Data/Common";
+import {
+  useDeleteDesiredStateVersion,
+  useGetDesiredStates,
+} from "@/Data/Queries/Slices/DesiredState";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
 
-import {
-  PageContainer,
-  ConfirmUserActionForm,
-  EmptyView,
-  FilterDrawer,
-  LoadingView,
-  ErrorView,
-  PaginationWidget,
-  countActiveFilters,
-} from "@/UI/Components";
+import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
+import { PaginationWidget } from "@/UI/Components/PaginationWidget";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";

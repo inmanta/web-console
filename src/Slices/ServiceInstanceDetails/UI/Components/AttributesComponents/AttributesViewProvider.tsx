@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { InstanceAttributeModel } from "@/Core";
-import { useUrlStateWithString } from "@/Data";
+import { useUrlStateWithString } from "@/Data/Common";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import {
   AttributeSets,
@@ -9,7 +9,7 @@ import {
   getAttributeSetsFromInstance,
   getAvailableAttributesSets,
 } from "@/Slices/ServiceInstanceDetails/Utils";
-import { LoadingView } from "@/UI/Components";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { AttributesCompare } from "./AttributesCompare";
 import { AttributesEditor } from "./AttributesEditor";
 import { AttributesTable } from "./AttributesTable";

@@ -1,6 +1,8 @@
 import React, { useEffect, useContext, useState } from "react";
-import { useGetEnvironmentPreview, useGetServerStatus } from "@/Data/Queries";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { useGetEnvironmentPreview } from "@/Data/Queries/Slices/Environment";
+import { useGetServerStatus } from "@/Data/Queries/Slices/Server";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**

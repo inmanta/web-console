@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { DropdownItem } from "@patternfly/react-core";
-import { Link } from "@/UI/Components";
+import { Link } from "@/UI/Components/Link";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { GetDesiredStatesContext } from "@S/DesiredState/UI/GetDesiredStatesContext";

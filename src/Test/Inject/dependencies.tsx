@@ -1,12 +1,13 @@
 import React from "react";
 import { FlatEnvironment } from "@/Core";
-import { AuthContextInterface, PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
-import { EnvironmentPreview } from "@/Data/Queries";
+import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth";
+import { PrimaryArchiveHelper } from "@/Data/Common";
+import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 import { EnvironmentDetails } from "@/Test";
 import { MockEnvironmentHandler, MockOrchestratorProvider, MockFileManager } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
 import { AppAlertProvider } from "@/UI/Root/Components/AppAlertProvider";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { UrlManagerImpl } from "@/UI/Utils";
 
 interface Props {

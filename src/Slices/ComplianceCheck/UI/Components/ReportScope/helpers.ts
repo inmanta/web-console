@@ -1,5 +1,5 @@
 import { Diff, Resource, ResourceActionFilter, ServiceInstanceModel, StringMatch } from "@/Core";
-import { getVersionSelectionBlocker, withDryRunVersion } from "@/Data/Queries";
+import { getVersionSelectionBlocker, withDryRunVersion } from "@/Data/Queries/Slices/Resource";
 import { words } from "@/UI/words";
 import { DesiredStateVersion } from "@S/DesiredState/Core/Domain";
 import { DiffCounts, FilterRow, FilterValue, ModelVersionState, RerunPlan } from "./types";

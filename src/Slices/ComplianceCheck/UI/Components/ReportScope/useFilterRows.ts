@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useGetInstancesById } from "@/Data/Queries";
+import { useGetInstancesById } from "@/Data/Queries/Slices/ServiceInstance";
 import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 import { getFilterRows } from "./helpers";
 import { FilterRow } from "./types";

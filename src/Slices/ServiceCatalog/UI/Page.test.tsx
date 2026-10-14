@@ -9,9 +9,9 @@ import { setupServer } from "msw/node";
 import { ServiceModel } from "@/Core";
 import { MockedDependencyProvider, Environment, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@/UI/words";
 import { ServiceCatalogPage } from ".";
 
 const [env1] = Environment.filterable.map((env) => env.id);

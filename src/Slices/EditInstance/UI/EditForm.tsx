@@ -1,9 +1,13 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
-import { AttributeInputConverterImpl } from "@/Data";
-import { usePatchAttributes, usePutAttributes } from "@/Data/Queries";
-import { FieldCreator, ServiceInstanceForm, EditModifierHandler } from "@/UI/Components";
+import { AttributeInputConverterImpl } from "@/Data/Common";
+import { usePatchAttributes, usePutAttributes } from "@/Data/Queries/Slices/ServiceInstance";
+import {
+  FieldCreator,
+  ServiceInstanceForm,
+  EditModifierHandler,
+} from "@/UI/Components/ServiceInstanceForm";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";

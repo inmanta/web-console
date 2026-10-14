@@ -9,8 +9,8 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { ServiceModel } from "@/Core";
-import { useUrlStateWithString } from "@/Data";
-import { words } from "@/UI";
+import { useUrlStateWithString } from "@/Data/Common";
+import { words } from "@/UI/words";
 
 import { InstanceDetailsContext } from "../../Core/Context";
 import {

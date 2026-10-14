@@ -1,7 +1,7 @@
 import React from "react";
 import { act, renderHook } from "@testing-library/react";
 import { PageSize, Resource } from "@/Core";
-import { MultiSort } from "@/Data";
+import { MultiSort } from "@/Data/Common";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { usePaginatedTableWithMultiSort } from "./usePaginatedTableWithMultiSort";
 

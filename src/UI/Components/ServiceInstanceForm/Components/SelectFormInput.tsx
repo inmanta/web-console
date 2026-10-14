@@ -11,7 +11,7 @@ import {
   SelectOption,
 } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 
 interface Props {
   options: Record<string, string | ParsedNumber>;

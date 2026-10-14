@@ -12,19 +12,16 @@ import {
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
-import { usePaginatedTableWithMultiSort } from "@/Data";
-import { useGetResources, mapToResourceActionFilter } from "@/Data/Queries";
-import {
-  EmptyView,
-  FilterDrawer,
-  PaginationWidget,
-  ErrorView,
-  LoadingView,
-  CompoundResourceStatus,
-  Spinner,
-  countActiveFilters,
-  ResourceActions,
-} from "@/UI/Components";
+import { usePaginatedTableWithMultiSort } from "@/Data/Common";
+import { useGetResources, mapToResourceActionFilter } from "@/Data/Queries/Slices/Resource";
+import { CompoundResourceStatus } from "@/UI/Components/CompoundResourceStatus";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PaginationWidget } from "@/UI/Components/PaginationWidget";
+import { ResourceActions } from "@/UI/Components/ResourceActions";
+import { Spinner } from "@/UI/Components/Spinner";
 import { words } from "@/UI/words";
 import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
 import { ResourcesTable } from "./ResourcesTable";

@@ -8,7 +8,7 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Diff } from "@/Core";
-import { useGetFile } from "@/Data/Queries";
+import { useGetFile } from "@/Data/Queries/Slices/Server";
 import { EntryInfo } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
 import { DefaultEntry } from "./DefaultEntry";

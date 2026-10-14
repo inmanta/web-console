@@ -1,6 +1,6 @@
 import React from "react";
-import { words } from "@/UI";
-import { ErrorView } from "@/UI/Components";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { words } from "@/UI/words";
 
 /**
  * React Component containing the errorView that is shared

@@ -10,9 +10,9 @@ import {
   ToolbarContent,
 } from "@patternfly/react-core";
 import { Diff } from "@/Core";
-import { useUrlStateWithString } from "@/Data";
-import { useGetDryRuns } from "@/Data/Queries";
-import { DiffWizard } from "@/UI/Components";
+import { useUrlStateWithString } from "@/Data/Common";
+import { useGetDryRuns } from "@/Data/Queries/Slices/DryRun";
+import * as DiffWizard from "@/UI/Components/DiffWizard";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";

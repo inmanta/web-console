@@ -6,8 +6,8 @@ import { configureAxe } from "jest-axe";
 import { http, HttpResponse, delay } from "msw";
 import { setupServer } from "msw/node";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
-import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@/UI/words";
 import * as Mock from "@S/CompileReports/Core/Mock";
 import { Page } from "./Page";
 

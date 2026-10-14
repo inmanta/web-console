@@ -5,9 +5,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { GraphiQL } from "graphiql";
 import graphiqlCSS from "graphiql/style.css?inline";
 import styled, { createGlobalStyle } from "styled-components";
-import { useGetGraphQLSchema, usePostGraphQL, graphQLSchemaKey } from "@/Data/Queries";
-import { PageContainer } from "@/UI/Components";
+import {
+  useGetGraphQLSchema,
+  usePostGraphQL,
+  graphQLSchemaKey,
+} from "@/Data/Queries/Slices/GraphiQL";
 import { useTheme } from "@/UI/Components/DarkmodeOption";
+import { PageContainer } from "@/UI/Components/PageContainer";
 import { words } from "@/UI/words";
 
 // ?inline tells Vite to give us the CSS as a plain string instead of injecting

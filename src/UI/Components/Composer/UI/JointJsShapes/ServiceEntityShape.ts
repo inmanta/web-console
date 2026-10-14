@@ -11,8 +11,8 @@ import {
   t_global_font_size_body_lg,
 } from "@patternfly/react-tokens";
 import { EmbeddedEntity, Field, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { sanitizeAttributes } from "@/Data";
-import { SuggestionVariables } from "@/Data/Queries";
+import { sanitizeAttributes } from "@/Data/Common";
+import { SuggestionVariables } from "@/Data/Queries/Slices/ServiceInstance";
 import { ServiceOrderItemAction } from "@/Slices/Orders/Core/Types";
 import { CreateModifierHandler, FieldCreator } from "@/UI/Components/ServiceInstanceForm";
 import { RelationsDictionary } from "../../Data";

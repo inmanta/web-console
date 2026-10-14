@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
 import { ResourceActionFilter } from "@/Core";
-import { useDryRunFiltered } from "@/Data/Queries";
+import { useDryRunFiltered } from "@/Data/Queries/Slices/Resource";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";

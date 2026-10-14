@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from "react";
 import { Resource } from "@/Core";
-import { useUrlStateWithFilter } from "@/Data";
+import { useUrlStateWithFilter } from "@/Data/Common";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
 interface ConnectedFilterWidgetProps {

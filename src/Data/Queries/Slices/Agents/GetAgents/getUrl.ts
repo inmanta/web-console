@@ -1,6 +1,6 @@
 import qs from "qs";
 import { Sort } from "@/Core";
-import { urlEncodeParams } from "@/Data/Queries";
+import { urlEncodeParams } from "@/Data/Queries/Helpers";
 import { GetAgentsInfiniteParams, GetAgentsParams } from "./useGetAgents";
 
 /**

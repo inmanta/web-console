@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { DateWithTooltip } from "@/UI/Components";
+import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CompileReportRow } from "@S/CompileReports/Core/Domain";

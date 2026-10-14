@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { CustomError, REFETCH_INTERVAL, useGet } from "@/Data/Queries";
+import { CustomError, REFETCH_INTERVAL, useGet } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { CompileDetails } from "@/Slices/CompileDetails/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";

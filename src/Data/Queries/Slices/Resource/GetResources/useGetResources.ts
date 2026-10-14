@@ -3,9 +3,9 @@ import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-quer
 import { gql } from "graphql-request";
 import { PageSize, Pagination, Resource, ResourceActionFilter } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
-import { MultiSort } from "@/Data";
+import { MultiSort } from "@/Data/Common";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGraphQLRequest, REFETCH_INTERVAL } from "@/Data/Queries";
+import { useGraphQLRequest, REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { buildHandlers, mapSort, mapToResourceActionFilter, parseCurrentPage } from "./helpers";

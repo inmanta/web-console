@@ -6,7 +6,7 @@ import {
   InstanceAttributeModel,
   ServiceInstanceModel,
 } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Queries";
+import { InstanceWithRelations } from "@/Data/Queries/Slices/ServiceInstance";
 import { convertLowerLimitToNumber } from "./shapeUtils";
 
 /**

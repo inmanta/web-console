@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { Order } from "@/Core/Domain/Sort";
-import { useClassifiedRows } from "@/UI/Components";
+import { useClassifiedRows } from "@/UI/Components/AttributeList";
 import { ColumnHead } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";

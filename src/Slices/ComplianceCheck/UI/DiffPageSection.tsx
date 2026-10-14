@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { Grid, PageSection } from "@patternfly/react-core";
 import { Diff } from "@/Core";
-import { useGetDryRunReport } from "@/Data/Queries";
-import { EmptyView, DiffWizard, LoadingView, ErrorView } from "@/UI/Components";
+import { useGetDryRunReport } from "@/Data/Queries/Slices/DryRun";
+import * as DiffWizard from "@/UI/Components/DiffWizard";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { words } from "@/UI/words";
 import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 import { DryRunProgressLabel, ReportScope } from "./Components";

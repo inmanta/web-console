@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Alert, Card, CardBody, CardHeader, CardTitle, Flex } from "@patternfly/react-core";
 import { Diff } from "@/Core";
-import { useGetDesiredStateVersion } from "@/Data/Queries";
+import { useGetDesiredStateVersion } from "@/Data/Queries/Slices/DesiredState";
 import { DesiredStateStatusLabel } from "@/UI/Components/DesiredStateStatusLabel";
 import { words } from "@/UI/words";
 import { DryRun } from "@S/ComplianceCheck/Core/Domain";

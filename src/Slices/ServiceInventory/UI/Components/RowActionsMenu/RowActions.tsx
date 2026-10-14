@@ -15,8 +15,9 @@ import {
   ToolsIcon,
 } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
-import { DependencyContext, words } from "@/UI";
-import { Link } from "@/UI/Components";
+import { Link } from "@/UI/Components/Link";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 import { DeleteAction } from "./DeleteAction";
 
 interface InstanceActionsProps {

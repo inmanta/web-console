@@ -5,7 +5,7 @@ import { axe } from "jest-axe";
 import { HttpResponse, graphql, http } from "msw";
 import { setupServer } from "msw/node";
 import { defaultAuthContext } from "@/Data/Auth/AuthContext";
-import { EnvironmentPreviewResponse } from "@/Data/Queries";
+import { EnvironmentPreviewResponse } from "@/Data/Queries/Slices/Environment";
 import {
   Environment,
   EnvironmentSettings,

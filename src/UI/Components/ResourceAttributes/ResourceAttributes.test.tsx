@@ -1,7 +1,7 @@
 import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
-import { AttributeClassifier, useExpansion } from "@/Data";
+import { AttributeClassifier, useExpansion } from "@/Data/Common";
 import { attributes as plainAttributes } from "@/Data/Common/AttributeClassifier/Mock";
 import { environmentReferences, referenceAttributes } from "@/Data/Common/References/Mock";
 import { MockedDependencyProvider } from "@/Test";

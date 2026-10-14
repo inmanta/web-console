@@ -19,13 +19,13 @@ import {
   SuggestionValue,
 } from "@/Core";
 import { get } from "@/Core/Language/collection";
-import { toOptionalBoolean } from "@/Data";
+import { toOptionalBoolean } from "@/Data/Common";
 import {
   FieldScopes,
   SuggestionVariables,
   getFieldDependencyNames,
   useSuggestedValues,
-} from "@/Data/Queries";
+} from "@/Data/Queries/Slices/ServiceInstance";
 import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
 import { createFormState, getItemTitle } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { UnitFormInput } from "@/UI/Components/UnitInput";

@@ -15,7 +15,7 @@ import {
 } from "@patternfly/react-core";
 import { CheckIcon, ExclamationCircleIcon, ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { ServerStatus, StatusLicense } from "@/Core";
-import { useGetServerStatus } from "@/Data/Queries";
+import { useGetServerStatus } from "@/Data/Queries/Slices/Server";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";

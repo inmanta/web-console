@@ -1,17 +1,14 @@
 import React from "react";
 import { Content, Flex, FlexItem, PageSection } from "@patternfly/react-core";
 import { Resource, ResourceActionFilter, ResourceDetailsTab } from "@/Core/Domain";
-import { useUrlStateWithString } from "@/Data";
-import { useGetResourceDetails } from "@/Data/Queries";
-import {
-  ResourceActions,
-  Description,
-  ErrorView,
-  labelColorConfig,
-  LoadingView,
-  PageContainer,
-  ResourceStatusLabel,
-} from "@/UI/Components";
+import { useUrlStateWithString } from "@/Data/Common";
+import { useGetResourceDetails } from "@/Data/Queries/Slices/Resource";
+import { Description } from "@/UI/Components/Description";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
+import { ResourceActions } from "@/UI/Components/ResourceActions";
+import { labelColorConfig, ResourceStatusLabel } from "@/UI/Components/ResourceStatus";
 import { words } from "@/UI/words";
 import { Tabs } from "./Tabs";
 

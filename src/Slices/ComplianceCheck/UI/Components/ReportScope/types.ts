@@ -1,5 +1,5 @@
 import { ResourceActionFilter, StringMatch } from "@/Core";
-import { VersionSelectionBlocker } from "@/Data/Queries";
+import { VersionSelectionBlocker } from "@/Data/Queries/Slices/Resource";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 
 /**
