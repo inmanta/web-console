@@ -16,11 +16,10 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { EyeIcon, WrenchIcon, PlayIcon } from "@patternfly/react-icons";
-import { keepKeys } from "@/Core";
+import { ResourceActionFilter } from "@/Core";
 import { NonEmptyArray } from "@/Core/Language";
 import {
   DeployAgentsAction,
-  ResourceActionFilter,
   StartedDryRun,
   useDeployFiltered,
   useDryRunFiltered,
@@ -29,12 +28,11 @@ import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { SearchHelper, useNavigateTo } from "@/UI/Routing";
+import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
+import { getReportSearch } from "@S/ComplianceCheck/UI/reportSearch";
 import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
 import { ResourceActionInstance } from "./types";
-
-const searchHelper = new SearchHelper();
 
 const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 
@@ -121,15 +119,11 @@ export const ResourceActions: React.FC<Props> = (props) => {
     },
   };
 
-  // Keeps only the environment from the search, not the state of the current page.
   const openReport = (dryRunId: string, modelVersion: number) =>
     navigateTo(
       "ComplianceCheck",
       { version: String(modelVersion) },
-      searchHelper.stringify({
-        ...keepKeys(["env"], searchHelper.parse(search)),
-        state: { ComplianceCheck: { report: dryRunId } },
-      })
+      getReportSearch(search, dryRunId)
     );
 
   const notifyDryRunStarted = ({ id, modelVersion }: StartedDryRun) =>

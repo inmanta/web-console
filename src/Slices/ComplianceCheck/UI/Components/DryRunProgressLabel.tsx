@@ -22,16 +22,14 @@ export const DryRunProgressLabel: React.FC<Props> = ({ progress }) => {
   const checked = total - Number(progress.todo);
   const text = words("desiredState.complianceCheck.progress")(checked, total);
 
-  if (checked === total) {
-    return (
-      <Label isCompact variant="outline">
-        {text}
-      </Label>
-    );
-  }
+  const isRunning = checked !== total;
 
   return (
-    <Label isCompact variant="outline" color="blue" icon={<Spinner size={8} />}>
+    <Label
+      isCompact
+      variant="outline"
+      {...(isRunning ? { color: "blue", icon: <Spinner size={8} /> } : {})}
+    >
       {text}
     </Label>
   );

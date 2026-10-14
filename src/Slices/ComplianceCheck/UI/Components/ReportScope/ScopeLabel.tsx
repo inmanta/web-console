@@ -2,7 +2,7 @@ import React from "react";
 import { Label } from "@patternfly/react-core";
 import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 import { getScopeLabel, isFiltered } from "./helpers";
-import { useScopeRows } from "./useScopeRows";
+import { useFilterRows } from "./useFilterRows";
 
 /**
  * The most characters a scope label shows before it is truncated: enough for the design's longest
@@ -26,7 +26,7 @@ interface Props {
  * @returns {React.FC<Props>} The scope label
  */
 export const ScopeLabel: React.FC<Props> = ({ report }) => {
-  const rows = useScopeRows(report);
+  const rows = useFilterRows(report);
 
   return (
     <Label

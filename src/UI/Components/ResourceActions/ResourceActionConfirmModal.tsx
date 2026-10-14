@@ -9,10 +9,10 @@ import {
   Form,
   FormGroup,
 } from "@patternfly/react-core";
+import { ResourceActionFilter } from "@/Core/Domain";
 import { NonEmptyArray } from "@/Core/Language";
 import {
   DryRunVersion,
-  ResourceActionFilter,
   getVersionSelectionBlocker,
   useGetModelVersionForInstanceVersion,
   withActiveModelVersion,

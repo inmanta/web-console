@@ -5,6 +5,7 @@ import {
   FlexItem,
   Label,
   PageSection,
+  Title,
   Toolbar,
   ToolbarContent,
 } from "@patternfly/react-core";
@@ -18,6 +19,7 @@ import { words } from "@/UI/words";
 import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 import { SelectReportAction, TriggerDryRunAction } from "./Components";
 import { DiffPageSection } from "./DiffPageSection";
+import { REPORT_URL_STATE_KEY } from "./reportSearch";
 
 /**
  * ComplianceCheck Page component
@@ -60,7 +62,7 @@ export const View: React.FC<Props> = ({ version }) => {
   // An empty id selects the newest report.
   const [selectedReportId, setSelectedReportId] = useUrlStateWithString<string>({
     default: "",
-    key: "report",
+    key: REPORT_URL_STATE_KEY,
     route: "ComplianceCheck",
   });
   // A new dry run becomes the newest report once the list refreshes. Selecting it when it starts,
@@ -68,6 +70,8 @@ export const View: React.FC<Props> = ({ version }) => {
   const selectNewestReport = () => setSelectedReportId("");
   const { notifyError } = useAppAlert();
 
+  // An id that isn't in the list (a deleted report, or a stale link) also shows the newest report,
+  // and the picker shows which one that is.
   const selectedReport: DryRun | null =
     data?.find((report) => report.id === selectedReportId) ?? data?.[0] ?? null;
 
@@ -94,17 +98,14 @@ export const View: React.FC<Props> = ({ version }) => {
               <FlexItem>
                 <Content component="h1">{words("desiredState.complianceCheck.title")}</Content>
               </FlexItem>
-              <Label variant="outline">{words("modelVersion")(Number(version))}</Label>
+              <Label variant="outline">{words("modelVersion")(version)}</Label>
             </Flex>
             <TriggerDryRunAction version={version} onDryRunStart={selectNewestReport} />
           </Flex>
           <Flex direction={{ default: "column" }} gap={{ default: "gapXs" }}>
-            {/* Wrapped for the same reason, so it sits right above the picker. */}
-            <FlexItem>
-              <Content component="small">
-                <strong>{words("desiredState.complianceCheck.report.title")}</strong>
-              </Content>
-            </FlexItem>
+            <Title headingLevel="h2" size="md">
+              {words("desiredState.complianceCheck.report.title")}
+            </Title>
             <Toolbar>
               <ToolbarContent style={{ padding: 0 }}>
                 <SelectReportAction

@@ -6,7 +6,6 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { Diff, Resource } from "@/Core";
 import { EnvironmentDetails, MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
@@ -16,7 +15,7 @@ import { CustomDatePresenter } from "@/UI/Utils";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import * as DesiredStateMock from "@S/DesiredState/Data/Mock";
-import { getScopeLabel, getScopeRows } from "./Components/ReportScope/helpers";
+import { countDiff, getFilterRows, getScopeLabel } from "./Components/ReportScope/helpers";
 import { View } from "./Page";
 
 const axe = configureAxe({
@@ -88,7 +87,6 @@ describe("ComplianceCheck page", () => {
   );
 
   beforeAll(() => server.listen());
-  beforeEach(() => server.restoreHandlers());
   afterEach(() => {
     server.resetHandlers();
     testClient.clear();
@@ -362,10 +360,11 @@ describe("ComplianceCheck page", () => {
 
       await userEvent.click(await screen.findByRole("button", { name: "ReportListSelect" }));
 
-      // Instances show by name once they are looked up.
+      // Instances show by name once they are looked up. The labels themselves are tested in
+      // helpers.test.ts; this checks that each option shows its own.
       const labels = Mock.listOfReports.map((report) =>
         getScopeLabel(
-          getScopeRows(report.resource_filter ?? {}, Number(report.model), {
+          getFilterRows(report.resource_filter ?? {}, Number(report.model), {
             [instance.id]: instance,
           })
         )
@@ -385,12 +384,7 @@ describe("ComplianceCheck page", () => {
 
       const scope = await findScope();
       const modelVersion = modelVersionResponse(DesiredStateVersionStatus.active).data[0];
-      const agentCount = new Set(
-        diff.flatMap(({ resource_id }) => Resource.IdParser.getAgentName(resource_id) ?? [])
-      ).size;
-      const changedCount = diff.filter(({ status }) =>
-        Diff.changedStatuses.includes(status)
-      ).length;
+      const { agentCount, changedCount } = countDiff(diff);
 
       await waitFor(() =>
         expect(scope).toHaveTextContent(
@@ -421,13 +415,13 @@ describe("ComplianceCheck page", () => {
 
       await userEvent.click(
         within(scope).getByRole("button", {
-          name: words("desiredState.complianceCheck.scope.filter.hide"),
+          name: words("desiredState.complianceCheck.scope.filter.title"),
         })
       );
 
       expect(
-        within(scope).getByText(words("desiredState.complianceCheck.scope.row.agent"))
-      ).not.toBeVisible();
+        within(scope).queryByText(words("desiredState.complianceCheck.scope.row.agent"))
+      ).not.toBeInTheDocument();
 
       await act(async () => {
         const results = await axe(document.body);
@@ -491,12 +485,15 @@ describe("ComplianceCheck page", () => {
 
       render(component);
 
-      const rerun = within(await findScope()).getByRole("button", {
-        name: words("desiredState.complianceCheck.scope.rerun"),
-      });
+      const scope = await findScope();
+      // Queried each time: the button is rendered anew once its disabled reason goes away.
+      const getRerun = () =>
+        within(scope).getByRole("button", {
+          name: words("desiredState.complianceCheck.scope.rerun"),
+        });
 
-      await waitFor(() => expect(rerun).toBeEnabled());
-      await userEvent.click(rerun);
+      await waitFor(() => expect(getRerun()).toBeEnabled());
+      await userEvent.click(getRerun());
 
       await waitFor(() => expect(body).toEqual({ filter: Mock.b.resource_filter }));
       await waitFor(() =>
@@ -531,8 +528,8 @@ describe("ComplianceCheck page", () => {
       ).toBeDisabled();
     });
 
-    test("GIVEN a filter row with more than two values THEN the rest collapse, flags apart", async () => {
-      const agents = ["router-east", "router-west", "router-south"];
+    test("GIVEN a filter row with more than three values THEN the rest collapse, flags apart", async () => {
+      const agents = ["router-east", "router-west", "router-south", "router-north"];
 
       server.use(
         http.get("/api/v2/dryrun/123", () =>
@@ -554,10 +551,10 @@ describe("ComplianceCheck page", () => {
       const agentRow = within(scope).getByRole("list", {
         name: words("desiredState.complianceCheck.scope.row.agent"),
       });
-      const [shown1, shown2, collapsed] = agents;
+      const shown = agents.slice(0, -1);
+      const collapsed = agents[agents.length - 1];
 
-      expect(within(agentRow).getByText(shown1)).toBeVisible();
-      expect(within(agentRow).getByText(shown2)).toBeVisible();
+      shown.forEach((agent) => expect(within(agentRow).getByText(agent)).toBeVisible());
       expect(within(agentRow).queryByText(collapsed)).not.toBeInTheDocument();
       expect(
         within(agentRow).getByText(
@@ -579,8 +576,11 @@ describe("ComplianceCheck page", () => {
       const scope = await findScope();
 
       expect(
-        await within(scope).findByText(words("desiredState.complianceCheck.scope.notActive"))
+        await within(scope).findByText(words("desiredState.complianceCheck.scope.missing"))
       ).toBeVisible();
+      expect(
+        within(scope).queryByText(words("desiredState.complianceCheck.scope.notActive"))
+      ).not.toBeInTheDocument();
       expect(
         within(scope).getByRole("button", {
           name: words("desiredState.complianceCheck.scope.rerun"),

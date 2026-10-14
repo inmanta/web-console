@@ -5,9 +5,9 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { Resource } from "@/Core/Domain";
+import { Resource, ResourceActionFilter } from "@/Core/Domain";
 import { NonEmptyArray } from "@/Core/Language";
-import { ResourceActionFilter, StartedDryRun, getDesiredStateVersionKey } from "@/Data/Queries";
+import { StartedDryRun, getDesiredStateVersionKey } from "@/Data/Queries";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";

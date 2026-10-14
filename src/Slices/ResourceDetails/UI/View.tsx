@@ -1,8 +1,8 @@
 import React from "react";
 import { Content, Flex, FlexItem, PageSection } from "@patternfly/react-core";
-import { Resource, ResourceDetailsTab } from "@/Core/Domain";
+import { Resource, ResourceActionFilter, ResourceDetailsTab } from "@/Core/Domain";
 import { useUrlStateWithString } from "@/Data";
-import { ResourceActionFilter, useGetResourceDetails } from "@/Data/Queries";
+import { useGetResourceDetails } from "@/Data/Queries";
 import {
   ResourceActions,
   Description,

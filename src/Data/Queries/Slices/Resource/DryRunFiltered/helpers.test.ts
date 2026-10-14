@@ -1,5 +1,4 @@
-import { Resource } from "@/Core/Domain";
-import { ResourceActionFilter } from "../ResourceActionFilter";
+import { Resource, ResourceActionFilter } from "@/Core/Domain";
 import { getVersionSelectionBlocker } from "./helpers";
 
 describe("getVersionSelectionBlocker", () => {

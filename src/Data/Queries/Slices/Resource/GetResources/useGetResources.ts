@@ -1,14 +1,13 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { PageSize, Pagination, Resource } from "@/Core/Domain";
+import { PageSize, Pagination, Resource, ResourceActionFilter } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { MultiSort } from "@/Data";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGraphQLRequest, REFETCH_INTERVAL } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
-import { ResourceActionFilter } from "../ResourceActionFilter";
 import { buildHandlers, mapSort, mapToResourceActionFilter, parseCurrentPage } from "./helpers";
 
 export interface PageInfo {

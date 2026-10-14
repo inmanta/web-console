@@ -2,11 +2,11 @@ import React, { PropsWithChildren } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { Diff } from "@/Core";
 import { EmptyJumpToAction, JumpToAction } from "./JumpToAction";
-import { Versus } from "./Versus";
+import { Versus, VersusLabels } from "./Versus";
 import { fromResourceToItem } from "./fromResourceToItem";
 import { Refs } from "./types";
 
-interface Props extends Diff.Identifiers {
+interface Props extends VersusLabels {
   data: Diff.Resource[];
   refs: Refs;
 }
@@ -20,8 +20,8 @@ interface Props extends Diff.Identifiers {
  * @props {PropsWithChildren<Props>} props - The component props
  * @prop {Diff.Resource[]} data - The data to display
  * @prop {Refs} refs - The refs to use
- * @prop {string} from - The from version
- * @prop {string} to - The to version
+ * @prop {string} fromLabel - The display text of the side the diff starts from
+ * @prop {string} toLabel - The display text of the side the diff goes to
  * @prop {React.ReactNode} [children] - Shown at the end of the row
  *
  * @returns {React.FC<PropsWithChildren<Props>>} The Controls component
@@ -29,8 +29,8 @@ interface Props extends Diff.Identifiers {
 export const Controls: React.FC<PropsWithChildren<Props>> = ({
   data,
   refs,
-  from,
-  to,
+  fromLabel,
+  toLabel,
   children,
 }) => (
   <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapMd" }}>
@@ -39,7 +39,7 @@ export const Controls: React.FC<PropsWithChildren<Props>> = ({
     ) : (
       <JumpToAction items={data.map(fromResourceToItem)} refs={refs} />
     )}
-    <Versus from={from} to={to} />
+    <Versus fromLabel={fromLabel} toLabel={toLabel} />
     {children && <FlexItem align={{ default: "alignRight" }}>{children}</FlexItem>}
   </Flex>
 );

@@ -1,4 +1,4 @@
-import { Resource } from "@/Core/Domain";
+import { Resource } from "./Resource";
 
 /**
  * An enum-valued field of a {@link ResourceActionFilter} (GraphQL *EnumFilter). Enum filters only

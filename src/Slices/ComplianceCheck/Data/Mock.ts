@@ -2,6 +2,8 @@ import { ServiceInstance } from "@/Test";
 import { resources } from "@/Test/Data/DesiredStateDiff";
 import { DryRun, Report } from "@S/ComplianceCheck/Core/Domain";
 
+export const filteredAgent = "internal";
+
 export const a: DryRun = {
   id: "3eab9e22-4166-4145-80a8-587ccee4a9fc",
   environment: "040687c1-9ad6-4ebc-b146-513760ee4517",
@@ -11,8 +13,6 @@ export const a: DryRun = {
   todo: 23,
   resource_filter: null,
 };
-export const filteredAgent = "internal";
-
 export const b: DryRun = {
   id: "a35064a3-42c1-4723-b60c-7e5942cad753",
   environment: "040687c1-9ad6-4ebc-b146-513760ee4517",

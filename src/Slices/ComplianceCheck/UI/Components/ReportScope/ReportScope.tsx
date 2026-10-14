@@ -1,13 +1,14 @@
-import React from "react";
-import { Alert, Card, CardBody, Flex } from "@patternfly/react-core";
-import { Diff, Resource } from "@/Core";
+import React, { useMemo } from "react";
+import { Alert, Card, CardBody, CardHeader, CardTitle, Flex } from "@patternfly/react-core";
+import { Diff } from "@/Core";
 import { useGetDesiredStateVersion } from "@/Data/Queries";
 import { DesiredStateStatusLabel } from "@/UI/Components/DesiredStateStatusLabel";
 import { words } from "@/UI/words";
 import { DryRun } from "@S/ComplianceCheck/Core/Domain";
+import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import { AppliedFilter } from "./AppliedFilter";
-import { getModelVersionLookup, isNotActiveVersion } from "./helpers";
-import { useScopeRows } from "./useScopeRows";
+import { countDiff, getModelVersionState } from "./helpers";
+import { useFilterRows } from "./useFilterRows";
 
 interface Props {
   report: DryRun;
@@ -16,16 +17,13 @@ interface Props {
 }
 
 /**
- * Counts the agents and the changed resources in a dry run's diff.
- *
- * @example countDiff([{ resource_id: "std::File[a,path=/x]", status: "modified", ... }]) // { agentCount: 1, changedCount: 1 }
+ * One count on the scope line, keyed by what it counts.
  */
-const countDiff = (diff: Diff.Resource[]): { agentCount: number; changedCount: number } => ({
-  agentCount: new Set(
-    diff.flatMap(({ resource_id }) => Resource.IdParser.getAgentName(resource_id) ?? [])
-  ).size,
-  changedCount: diff.filter(({ status }) => Diff.changedStatuses.includes(status)).length,
-});
+interface ScopeCount {
+  id: "resources" | "agents" | "changed";
+  count: number;
+  text: string;
+}
 
 /**
  * Shows what a dry run report covered, between the report picker and its diff. The scope line
@@ -46,29 +44,45 @@ export const ReportScope: React.FC<Props> = ({ report, diff, onRerunStart }) => 
   const modelVersion = Number(report.model);
   const desiredStateVersionQuery = useGetDesiredStateVersion(modelVersion);
   const desiredStateVersion = desiredStateVersionQuery.data;
-  const modelVersionLookup = getModelVersionLookup(desiredStateVersionQuery);
-  const rows = useScopeRows(report);
+  const modelVersionState = getModelVersionState(desiredStateVersionQuery);
+  const rows = useFilterRows(report);
+  const diffCounts = useMemo(() => diff && countDiff(diff), [diff]);
   const resourceFilter = report.resource_filter;
+  const modelVersionText = words("modelVersion")(modelVersion);
+  const isInactive =
+    modelVersionState.state === "known" &&
+    modelVersionState.status !== DesiredStateVersionStatus.active;
 
   const resourceCount = Number(report.total);
+  const counts: ScopeCount[] = [
+    {
+      id: "resources",
+      count: resourceCount,
+      text:
+        resourceFilter && desiredStateVersion
+          ? words("desiredState.complianceCheck.scope.resourcesOfTotal")(
+              Number(desiredStateVersion.total)
+            )
+          : words("desiredState.complianceCheck.scope.resources")(resourceCount),
+    },
+  ];
 
-  const resourcesText =
-    resourceFilter && desiredStateVersion
-      ? words("desiredState.complianceCheck.scope.resourcesOfTotal")(
-          Number(desiredStateVersion.total)
-        )
-      : words("desiredState.complianceCheck.scope.resources")(resourceCount);
-
-  const counts: [number, string][] = [[resourceCount, resourcesText]];
-
-  if (diff) {
-    const { agentCount, changedCount } = countDiff(diff);
-
+  if (diffCounts) {
     counts.push(
-      [agentCount, words("desiredState.complianceCheck.scope.agents")(agentCount)],
-      [changedCount, words("desiredState.complianceCheck.scope.changed")]
+      {
+        id: "agents",
+        count: diffCounts.agentCount,
+        text: words("desiredState.complianceCheck.scope.agents")(diffCounts.agentCount),
+      },
+      {
+        id: "changed",
+        count: diffCounts.changedCount,
+        text: words("desiredState.complianceCheck.scope.changed"),
+      }
     );
   }
+
+  const hasBody = modelVersionState.state === "missing" || isInactive || Boolean(resourceFilter);
 
   return (
     <Card
@@ -76,47 +90,61 @@ export const ReportScope: React.FC<Props> = ({ report, diff, onRerunStart }) => 
       isCompact
       aria-label={words("desiredState.complianceCheck.scope.title")}
     >
-      <CardBody>
-        <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
-          <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
-            <strong>{words("desiredState.complianceCheck.scope.title")}</strong>
-            {desiredStateVersion && (
-              <DesiredStateStatusLabel status={desiredStateVersion.status}>
-                {words("modelVersion")(modelVersion)}
-              </DesiredStateStatusLabel>
-            )}
-            {counts.map(([count, text], index) => (
-              <React.Fragment key={text}>
-                {index > 0 && <span aria-hidden>·</span>}
-                <span>
-                  <strong>{count}</strong> {text}
-                </span>
-              </React.Fragment>
-            ))}
-          </Flex>
-          {isNotActiveVersion(modelVersionLookup) && (
-            <Alert
-              isInline
-              isPlain
-              variant="warning"
-              title={words("desiredState.complianceCheck.scope.notActive")}
-            >
-              {words("desiredState.complianceCheck.scope.notActive.description")(
-                words("modelVersion")(modelVersion)
-              )}
-            </Alert>
+      <CardHeader>
+        <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
+          <CardTitle>{words("desiredState.complianceCheck.scope.title")}</CardTitle>
+          {desiredStateVersion && (
+            <DesiredStateStatusLabel status={desiredStateVersion.status}>
+              {modelVersionText}
+            </DesiredStateStatusLabel>
           )}
-          {resourceFilter && (
-            <AppliedFilter
-              rows={rows}
-              resourceFilter={resourceFilter}
-              modelVersion={modelVersion}
-              modelVersionLookup={modelVersionLookup}
-              onRerunStart={onRerunStart}
-            />
-          )}
+          {counts.map(({ id, count, text }, index) => (
+            <React.Fragment key={id}>
+              {index > 0 && <span aria-hidden>·</span>}
+              <span>
+                <strong>{count}</strong> {text}
+              </span>
+            </React.Fragment>
+          ))}
         </Flex>
-      </CardBody>
+      </CardHeader>
+      {hasBody && (
+        <CardBody>
+          <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
+            {modelVersionState.state === "missing" && (
+              <Alert
+                isInline
+                isPlain
+                variant="warning"
+                title={words("desiredState.complianceCheck.scope.missing")}
+              >
+                {words("desiredState.complianceCheck.scope.missing.description")(modelVersionText)}
+              </Alert>
+            )}
+            {isInactive && (
+              <Alert
+                isInline
+                isPlain
+                variant="warning"
+                title={words("desiredState.complianceCheck.scope.notActive")}
+              >
+                {words("desiredState.complianceCheck.scope.notActive.description")(
+                  modelVersionText
+                )}
+              </Alert>
+            )}
+            {resourceFilter && (
+              <AppliedFilter
+                rows={rows}
+                resourceFilter={resourceFilter}
+                modelVersion={modelVersion}
+                modelVersionState={modelVersionState}
+                onRerunStart={onRerunStart}
+              />
+            )}
+          </Flex>
+        </CardBody>
+      )}
     </Card>
   );
 };

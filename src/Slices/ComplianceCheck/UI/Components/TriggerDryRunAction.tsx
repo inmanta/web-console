@@ -17,7 +17,7 @@ interface Props {
  *
  * This component allows users to trigger a dry run for a given version.
  * It displays a toast alert for error messages and a button to trigger the dry run, which is
- * disabled while the environment is halted.
+ * disabled while the environment is halted and while a dry run is starting.
  *
  * @props {Props} props - The component props
  * @prop {string} version - The version to trigger the dry run for
@@ -29,7 +29,7 @@ export const TriggerDryRunAction: React.FC<Props> = ({ version, onDryRunStart })
   const { environmentHandler } = useContext(DependencyContext);
   const isHalted = environmentHandler.useIsHalted();
   const { notifyError } = useAppAlert();
-  const { mutate } = useTriggerDryRun({
+  const { mutate, isPending } = useTriggerDryRun({
     onError: (error) => {
       notifyError({
         title: words("desiredState.complianceCheck.action.dryRun.failed"),
@@ -49,7 +49,12 @@ export const TriggerDryRunAction: React.FC<Props> = ({ version, onDryRunStart })
       tooltipContent={words("environment.halt.tooltip")}
       isDisabled={isHalted}
     >
-      <Button variant="secondary" icon={<EyeIcon />} onClick={onTrigger} isDisabled={isHalted}>
+      <Button
+        variant="secondary"
+        icon={<EyeIcon />}
+        onClick={onTrigger}
+        isDisabled={isHalted || isPending}
+      >
         {words("desiredState.complianceCheck.action.dryRun")}
       </Button>
     </ActionDisabledTooltip>

@@ -5,9 +5,9 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { ResourceActionFilter } from "@/Core/Domain";
 import { getDryRunsKey, usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { ResourceActionFilter } from "../ResourceActionFilter";
 import { StartedDryRun } from "./types";
 
 /**
@@ -33,7 +33,7 @@ interface DryRunFilteredResponse {
  * modelVersion or instanceVersion, or sets isOrphan: false for the active model version. It
  * resolves to the new dry run's id and model version, which locate its report. On success it
  * invalidates the dry run lists so the new report shows up in the Compliance Check page, then
- * calls the caller's own onSuccess once they hold it.
+ * calls the caller's own onSuccess once the lists include the new dry run.
  *
  * @returns {Mutation} The mutation object for sending the request.
  */
@@ -56,9 +56,10 @@ export const useDryRunFiltered = (
     mutationKey: ["dryrun_filtered", env],
     ...options,
     onSuccess: async (...args) => {
-      // Waits for the open lists to hold the new dry run, so the caller can select it right away.
+      // Waits for the open lists to include the new dry run, so the caller can select it right away.
       await client.invalidateQueries({ queryKey: getDryRunsKey.root() });
-      options?.onSuccess?.(...args);
+
+      return options?.onSuccess?.(...args);
     },
   });
 };

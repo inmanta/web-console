@@ -1,6 +1,6 @@
+import { ResourceActionFilter } from "@/Core/Domain";
 import { Diff } from "@/Core/Domain/Diff";
 import { ParsedNumber } from "@/Core/Language";
-import type { ResourceActionFilter } from "@/Data/Queries/Slices/Resource/ResourceActionFilter";
 
 /**
  * A dry run of one model version. resource_filter is the filter it was started with through

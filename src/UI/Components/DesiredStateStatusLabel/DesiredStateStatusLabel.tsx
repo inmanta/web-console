@@ -1,7 +1,20 @@
 import React, { PropsWithChildren } from "react";
-import { Label } from "@patternfly/react-core";
+import { Label, LabelProps } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
+
+/**
+ * The color and icon of the label for each status of a desired state version.
+ */
+const statusLabelProps: Record<
+  DesiredStateVersionStatus,
+  Pick<LabelProps, "status" | "color" | "icon">
+> = {
+  [DesiredStateVersionStatus.active]: { status: "success" },
+  [DesiredStateVersionStatus.skipped_candidate]: { status: "warning" },
+  [DesiredStateVersionStatus.candidate]: { color: "blue", icon: <InfoAltIcon /> },
+  [DesiredStateVersionStatus.retired]: {},
+};
 
 /**
  * DesiredStateStatusLabel Component
@@ -20,35 +33,14 @@ export const DesiredStateStatusLabel: React.FC<
   PropsWithChildren<{
     status: DesiredStateVersionStatus;
   }>
-> = ({ status, children }) => {
-  const text = children ? (
-    <>
-      {status} {children}
-    </>
-  ) : (
-    status
-  );
-
-  switch (status) {
-    case DesiredStateVersionStatus.active:
-      return (
-        <Label status="success" variant="outline">
-          {text}
-        </Label>
-      );
-    case DesiredStateVersionStatus.skipped_candidate:
-      return (
-        <Label status="warning" variant="outline">
-          {text}
-        </Label>
-      );
-    case DesiredStateVersionStatus.candidate:
-      return (
-        <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
-          {text}
-        </Label>
-      );
-    case DesiredStateVersionStatus.retired:
-      return <Label variant="outline">{text}</Label>;
-  }
-};
+> = ({ status, children }) => (
+  <Label variant="outline" {...statusLabelProps[status]}>
+    {children ? (
+      <>
+        {status} {children}
+      </>
+    ) : (
+      status
+    )}
+  </Label>
+);

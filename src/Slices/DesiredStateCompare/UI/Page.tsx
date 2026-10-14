@@ -56,8 +56,8 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           <DiffWizard.Controls
             data={filteredResources}
             refs={refs}
-            from={words("modelVersion")(from)}
-            to={words("modelVersion")(to)}
+            fromLabel={words("modelVersion")(from)}
+            toLabel={words("modelVersion")(to)}
           />
         </PageSection>
         <PageSection hasBodyWrapper={false} isFilled>

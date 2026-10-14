@@ -56,8 +56,10 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
         <DataListItemCells
           dataListCells={[
             <DataListCell key="resource">
+              {/* The jump-to list scrolls to this title; the margin keeps the whole row in view. */}
               <div
                 id={titleId}
+                style={{ scrollMarginTop: "var(--pf-t--global--spacer--md)" }}
                 ref={(element) => {
                   if (element) {
                     refs.current[item.id] = element;

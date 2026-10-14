@@ -85,8 +85,8 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
         <DiffWizard.Controls
           data={diffData}
           refs={refs}
-          from={words("currentState")}
-          to={words("modelVersion")(version)}
+          fromLabel={words("currentStateShort")}
+          toLabel={words("modelVersion")(version)}
         >
           {Number(data.summary.todo) > 0 && <DryRunProgressLabel progress={data.summary} />}
         </DiffWizard.Controls>
