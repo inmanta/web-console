@@ -8,7 +8,8 @@
   "scripts": {
     "prebuild": "yarn clean",
     "build": "vite build",
-    "build:ci": "node --max-old-space-size=6144 ./node_modules/.bin/vite build",
+    "build:ci": "node --max-old-space-size=6144 ./node_modules/.bin/vite build && yarn build:sbom",
+    "build:sbom": "yarn cyclonedx --production --output-reproducible -o dist/sbom.cdx.json",
     "start": "dotenv vite",
     "start:https": "HTTPS=true dotenv vite",
     "test": "vitest --run",
