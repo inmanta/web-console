@@ -65,7 +65,7 @@ const GET_RESOURCES_QUERY = gql`
     $after: String
     $last: Int
     $before: String
-    $orderBy: [StrawberryOrder!]
+    $orderBy: [ResourceOrder!]
   ) {
     resources(
       filter: $filter
