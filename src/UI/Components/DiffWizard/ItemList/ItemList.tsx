@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex } from "@patternfly/react-core";
+import { DataList } from "@patternfly/react-core";
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { Block } from "./Block";
 
@@ -10,7 +10,7 @@ interface Props {
 
 export const ItemList: React.FC<Props> = ({ items, refs }) => {
   return (
-    <Flex direction={{ default: "column" }} aria-label="DiffItemList">
+    <DataList isCompact aria-label="DiffItemList">
       {items.map((item) => (
         <Block
           key={item.id}
@@ -21,6 +21,6 @@ export const ItemList: React.FC<Props> = ({ items, refs }) => {
           }
         />
       ))}
-    </Flex>
+    </DataList>
   );
 };

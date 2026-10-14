@@ -1,0 +1,7 @@
+description: |
+  Resource diffs on the Compare and Compliance Check pages are compact rows that expand into their changes, with each attribute's name above its diff.
+issue-nr: 7243
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

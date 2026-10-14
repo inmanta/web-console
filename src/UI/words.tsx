@@ -89,6 +89,8 @@ const dict = {
   export: "Export",
   resourceId: "Resource Id",
   versionLabel: (version: string) => `Version: ${version}`,
+  modelVersion: (modelVersion: number | string) => `v${modelVersion}`,
+  currentStateShort: "current",
 
   /**
    * Error related text
@@ -1092,6 +1094,7 @@ const dict = {
   "desiredState.compare.action.compareWithSelected": "Compare with selected",
   "desiredState.compare.action.compareWithCurrentState": "Compare with current state",
   "desiredState.compare.selectionLabel": "Selected for compare: ",
+  "desiredState.compare.changes": (resourceId: string) => `Changes of ${resourceId}`,
   "desiredState.compare.deleted": "This resource has been deleted.",
   "desiredState.compare.deleted.action": "Show attributes",
   "desiredState.compare.unmodified": "This resource has not been modified.",

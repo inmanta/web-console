@@ -83,7 +83,12 @@ const DiffView: React.FC<{
     return (
       <>
         <PageSection hasBodyWrapper={false} hasShadowBottom>
-          <DiffWizard.Controls data={diffData} refs={refs} from={"current"} to={version} />
+          <DiffWizard.Controls
+            data={diffData}
+            refs={refs}
+            fromLabel={words("currentStateShort")}
+            toLabel={words("modelVersion")(version)}
+          />
         </PageSection>
         <PageSection hasBodyWrapper={false} isFilled>
           {

@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import {
   Bullseye,
   Button,
-  Card,
-  CardBody,
-  CardExpandableContent,
-  CardHeader,
-  CardTitle,
-  Divider,
+  Content,
+  DataListCell,
+  DataListContent,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  DataListToggle,
+  DescriptionList,
+  Flex,
 } from "@patternfly/react-core";
-import styled from "styled-components";
 import { Resource } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { Classification, Item, Refs } from "@/UI/Components/DiffWizard/types";
@@ -25,42 +27,80 @@ interface Props {
   classify?: Classify;
 }
 
+/**
+ * One resource in a diff, as a row of a compact data list: its status and a link to the resource,
+ * expanding into its changes.
+ *
+ * @props {Props} props - The props of the component
+ *  @prop {Item} item - The resource and its changes
+ *  @prop {Refs} refs - Where the row registers itself, so the jump-to list can scroll to it
+ *  @prop {Classify} [classify] - Picks how an attribute's change is shown
+ *
+ * @returns {React.FC<Props>} The diff row
+ */
 export const Block: React.FC<Props> = ({ item, refs, classify }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const onExpand = () => setIsExpanded(!isExpanded);
+  const titleId = useId();
+  const contentId = useId();
 
   return (
-    <>
-      <ScrollAnchor
-        ref={(element) => {
-          if (element) {
-            refs.current[item.id] = element;
-          } else {
-            delete refs.current[item.id];
-          }
-        }}
-      />
-      <Card isExpanded={isExpanded} isCompact aria-label="DiffBlock" data-testid="DiffBlock">
-        <CardHeader
-          onExpand={onExpand}
-          toggleButtonProps={{
-            id: `${item.id}-toggle-button`,
-            "aria-label": "Details",
-            "aria-labelledby": "toggle-button",
-            "aria-expanded": isExpanded,
+    <DataListItem aria-labelledby={titleId} isExpanded={isExpanded} data-testid="DiffBlock">
+      <DataListItemRow>
+        <DataListToggle
+          style={{ alignItems: "center" }}
+          id={`${contentId}-toggle`}
+          isExpanded={isExpanded}
+          aria-controls={contentId}
+          onClick={() => setIsExpanded(!isExpanded)}
+        />
+        <DataListItemCells
+          dataListCells={[
+            <DataListCell key="resource">
+              {/* The jump-to list scrolls to this title; the margin keeps the whole row in view. */}
+              <div
+                id={titleId}
+                style={{ scrollMarginTop: "var(--pf-t--global--spacer--md)" }}
+                ref={(element) => {
+                  if (element) {
+                    refs.current[item.id] = element;
+                  } else {
+                    delete refs.current[item.id];
+                  }
+                }}
+              >
+                {/* Keeps the body text size; the compact list shrinks its text to small. */}
+                <Content>
+                  <Flex
+                    alignItems={{ default: "alignItemsCenter" }}
+                    gap={{ default: "gapNone" }}
+                    flexWrap={{ default: "nowrap" }}
+                  >
+                    <StatusDescriptor status={item.status} />
+                    <ResourceLink resourceId={item.id} isInline />
+                  </Flex>
+                </Content>
+              </div>
+            </DataListCell>,
+          ]}
+        />
+      </DataListItemRow>
+      <DataListContent
+        id={contentId}
+        aria-label={words("desiredState.compare.changes")(item.id)}
+        isHidden={!isExpanded}
+        hasNoPadding
+      >
+        {/* Less padding than the data list's default, which even the compact list keeps large. */}
+        <div
+          style={{
+            padding: "var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md)",
           }}
         >
-          <CardTitle id={item.id}>
-            <StatusDescriptor status={item.status} />
-            <ResourceLink resourceId={item.id} isInline />
-          </CardTitle>
-        </CardHeader>
-        <CardExpandableContent>
-          <Divider />
-          <Body item={item} classify={classify} />
-        </CardExpandableContent>
-      </Card>
-    </>
+          {/* Only rendered while open, since computing every diff up front is slow. */}
+          {isExpanded && <Body item={item} classify={classify} />}
+        </div>
+      </DataListContent>
+    </DataListItem>
   );
 };
 
@@ -107,14 +147,12 @@ const BodyWithToggle: React.FC<{
   return isShown ? (
     <BodyWithChanges {...{ item, classify }} />
   ) : (
-    <CardBody>
-      <Bullseye>
-        {message}
-        <Button onClick={() => setIsShown(true)} variant="link" isInline>
-          {actionLabel}
-        </Button>
-      </Bullseye>
-    </CardBody>
+    <Bullseye>
+      {message}
+      <Button onClick={() => setIsShown(true)} variant="link" isInline>
+        {actionLabel}
+      </Button>
+    </Bullseye>
   );
 };
 
@@ -122,7 +160,7 @@ const BodyWithChanges: React.FC<{
   item: Pick<Item, "entries" | "id">;
   classify?: Classify;
 }> = ({ item, classify }) => (
-  <CardBody>
+  <DescriptionList isCompact>
     {item.entries.map((entry) => (
       <Entry
         key={entry.title}
@@ -130,22 +168,9 @@ const BodyWithChanges: React.FC<{
         classify={classify ? (title, to, from) => classify(item.id, title, to, from) : undefined}
       />
     ))}
-  </CardBody>
+  </DescriptionList>
 );
 
-const BodyWithMessage: React.FC<{ message: string }> = ({ message }) => {
-  return (
-    <CardBody>
-      <Bullseye>{message}</Bullseye>
-    </CardBody>
-  );
-};
-
-/**
- * @NOTE Hack for scrollIntoView behaviour not working correctly.
- * 100px = 84px (overlapped toolbar) + 16px (padding)
- */
-const ScrollAnchor = styled.div`
-  position: relative;
-  top: -100px;
-`;
+const BodyWithMessage: React.FC<{ message: string }> = ({ message }) => (
+  <Bullseye>{message}</Bullseye>
+);
