@@ -1,7 +1,8 @@
 /**
  * The open registry of routes: maps each route kind to its path params (environment not included).
- * Core declares no routes. Every feature adds its own through declaration merging, next to the
- * route definition, so core doesn't need to know which features exist:
+ * The web-console core layer (`src/Core`) declares no routes. Every feature adds its own through
+ * declaration merging, next to the route definition, so `src/Core` doesn't need to know which
+ * features exist:
  *
  * @example
  * declare module "@/Core/Domain/Route" {
