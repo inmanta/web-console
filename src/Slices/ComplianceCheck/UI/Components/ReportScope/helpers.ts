@@ -1,8 +1,59 @@
-import { Diff, Resource, ResourceActionFilter, ServiceInstanceModel, StringMatch } from "@/Core";
+import { Diff, Resource, ResourceActionFilter, StringMatch } from "@/Core";
 import { getVersionSelectionBlocker, withDryRunVersion } from "@/Data/Queries/Slices/Resource";
+import { InstanceIdLookup } from "@/Data/Queries/Slices/ServiceInstance";
 import { words } from "@/UI/words";
+import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 import { DesiredStateVersion } from "@S/DesiredState/Core/Domain";
-import { DiffCounts, FilterRow, FilterValue, ModelVersionState, RerunPlan } from "./types";
+import {
+  DiffCounts,
+  FilterRow,
+  FilterValue,
+  InstancesById,
+  ModelVersionState,
+  RerunPlan,
+} from "./types";
+
+/**
+ * Collects the service instances that the reports' filters name, to look them up in as few
+ * requests as possible. Instances whose filter also names service entities are grouped under
+ * those entities; the others, like a Resources page filter without an entity, are looked up on
+ * their own, unless another report already groups them under an entity.
+ *
+ * @example getInstanceIdLookup([{ resource_filter: { serviceEntity: ["lab"], serviceInstance: ["b", "a"] }, ... }, { resource_filter: { serviceInstance: ["c"] }, ... }]) // { byEntity: { lab: ["a", "b"] }, withoutEntity: ["c"] }
+ */
+export const getInstanceIdLookup = (reports: DryRun[]): InstanceIdLookup => {
+  const idsByEntity = new Map<string, Set<string>>();
+  const idsWithoutEntity = new Set<string>();
+
+  reports.forEach(({ resource_filter }) => {
+    const instanceIds = resource_filter?.serviceInstance ?? [];
+    const serviceEntities = resource_filter?.serviceEntity ?? [];
+
+    if (serviceEntities.length === 0) {
+      instanceIds.forEach((instanceId) => idsWithoutEntity.add(instanceId));
+
+      return;
+    }
+
+    serviceEntities.forEach((serviceEntity) => {
+      const ids = idsByEntity.get(serviceEntity) ?? new Set<string>();
+
+      instanceIds.forEach((instanceId) => ids.add(instanceId));
+      idsByEntity.set(serviceEntity, ids);
+    });
+  });
+
+  const idsUnderEntity = new Set([...idsByEntity.values()].flatMap((ids) => [...ids]));
+
+  return {
+    byEntity: Object.fromEntries(
+      [...idsByEntity]
+        .filter(([, ids]) => ids.size > 0)
+        .map(([serviceEntity, ids]) => [serviceEntity, [...ids].sort()])
+    ),
+    withoutEntity: [...idsWithoutEntity].filter((id) => !idsUnderEntity.has(id)).sort(),
+  };
+};
 
 /**
  * Whether a value is a flag (owned services, latest intent) rather than a condition value.
@@ -56,10 +107,8 @@ const matchToValues = (
  *
  * @example getInstanceName("7cd8...", { "7cd8...": { service_identity_attribute_value: "cpe-east-2", ... } }) // "cpe-east-2"
  */
-export const getInstanceName = (
-  instanceId: string,
-  instances: Record<string, ServiceInstanceModel>
-): string => instances[instanceId]?.service_identity_attribute_value ?? instanceId;
+export const getInstanceName = (instanceId: string, instances: InstancesById): string =>
+  instances[instanceId]?.service_identity_attribute_value ?? instanceId;
 
 /**
  * Formats a status enum value the way it reads in a sentence.
@@ -115,7 +164,7 @@ const getVersionRow = (
 export const getFilterRows = (
   filter: ResourceActionFilter,
   modelVersion: number,
-  instances: Record<string, ServiceInstanceModel>
+  instances: InstancesById
 ): FilterRow[] => {
   const ownedValue: FilterValue = {
     value: words("desiredState.complianceCheck.scope.value.owned"),

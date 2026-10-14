@@ -33,6 +33,7 @@ export const InstanceHeaderActions: React.FC = () => {
   const ownedEntities = serviceModelQuery.data?.owned_entities ?? [];
 
   const scopes = buildInstanceResourceActionScopes({
+    serviceEntity: instance.service_entity,
     instanceId: instance.id,
     total,
     ownedEntities,

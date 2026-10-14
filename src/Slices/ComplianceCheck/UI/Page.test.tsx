@@ -347,9 +347,16 @@ describe("ComplianceCheck page", () => {
     const findScope = () =>
       screen.findByRole("region", { name: words("desiredState.complianceCheck.scope.title") });
 
+    let inventoryRequests: URL[] = [];
+
     beforeEach(() => {
+      inventoryRequests = [];
       server.use(
-        http.get("/lsm/v1/service_inventory", () => HttpResponse.json({ data: instance }))
+        http.get("/lsm/v1/service_inventory/:serviceEntity", ({ request }) => {
+          inventoryRequests.push(new URL(request.url));
+
+          return HttpResponse.json({ data: [instance] });
+        })
       );
     });
 
@@ -375,6 +382,42 @@ describe("ComplianceCheck page", () => {
       await waitFor(() =>
         labels.forEach((label, index) => expect(options[index]).toHaveTextContent(label))
       );
+      // The picker and the scope card share one lookup per service entity.
+      expect(inventoryRequests).toHaveLength(1);
+      expect(inventoryRequests[0].pathname).toBe(
+        `/lsm/v1/service_inventory/${instance.service_entity}`
+      );
+      expect(inventoryRequests[0].searchParams.getAll("filter.id_or_service_identity")).toEqual([
+        instance.id,
+      ]);
+    });
+
+    test("GIVEN a report whose filter names no service entity THEN its instance is looked up by id", async () => {
+      let instanceRequests: URL[] = [];
+
+      server.use(
+        http.get("/api/v2/dryrun/123", () =>
+          HttpResponse.json({
+            data: [{ ...Mock.b, resource_filter: { serviceInstance: [instance.id] } }],
+          })
+        ),
+        http.get("/lsm/v1/service_inventory", ({ request }) => {
+          instanceRequests = [...instanceRequests, new URL(request.url)];
+
+          return HttpResponse.json({ data: instance });
+        })
+      );
+      const { component } = setup();
+
+      render(component);
+
+      const picker = await screen.findByRole("button", { name: "ReportListSelect" });
+
+      await waitFor(() => expect(picker).toHaveTextContent(instanceName));
+      expect(inventoryRequests).toHaveLength(0);
+      expect(instanceRequests.map((url) => url.searchParams.get("service_id"))).toEqual([
+        instance.id,
+      ]);
     });
 
     test("GIVEN a report started on a resource filter THEN the scope band shows what it covered", async () => {

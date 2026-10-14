@@ -5,6 +5,7 @@ import { buildInstanceResourceActionScopes } from "./resourceActionScopes";
 describe("buildInstanceResourceActionScopes", () => {
   it("offers only the instance scope when the service type owns nothing", () => {
     const scopes = buildInstanceResourceActionScopes({
+      serviceEntity: "lab",
       instanceId: "abc",
       total: 3,
       ownedEntities: [],
@@ -14,7 +15,7 @@ describe("buildInstanceResourceActionScopes", () => {
       {
         id: "instance",
         title: words("resources.resourceActions.confirm.instance.title"),
-        filter: { isOrphan: false, serviceInstance: ["abc"] },
+        filter: { isOrphan: false, serviceEntity: ["lab"], serviceInstance: ["abc"] },
         count: 3,
       },
     ]);
@@ -22,6 +23,7 @@ describe("buildInstanceResourceActionScopes", () => {
 
   it("adds the owned scope with includeOwned when the service type declares owned_entities", () => {
     const scopes = buildInstanceResourceActionScopes({
+      serviceEntity: "lab",
       instanceId: "abc",
       total: 3,
       ownedEntities: ["l2Connect", "vlan"],
@@ -31,13 +33,19 @@ describe("buildInstanceResourceActionScopes", () => {
     expect(scopes[1]).toEqual({
       id: "owned",
       title: words("resources.resourceActions.confirm.owned.title"),
-      filter: { isOrphan: false, serviceInstance: ["abc"], includeOwned: true },
+      filter: {
+        isOrphan: false,
+        serviceEntity: ["lab"],
+        serviceInstance: ["abc"],
+        includeOwned: true,
+      },
       detail: words("resources.resourceActions.confirm.owned.description")("l2Connect, vlan"),
     });
   });
 
   it("leaves the instance count off when the deployment progress is unknown", () => {
     const scopes = buildInstanceResourceActionScopes({
+      serviceEntity: "lab",
       instanceId: "abc",
       total: null,
       ownedEntities: [],

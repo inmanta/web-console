@@ -12,11 +12,13 @@ import { CustomDatePresenter } from "@/UI/Utils";
 import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 import { DryRunProgressLabel } from "./DryRunProgressLabel";
 import { ScopeLabel } from "./ReportScope";
+import { InstancesById } from "./ReportScope/types";
 
 interface Props {
   setSelectedReport(report: DryRun | null): void;
   selectedReport: DryRun | null;
   reportsData?: DryRun[];
+  instances: InstancesById;
 }
 
 const datePresenter = new CustomDatePresenter();
@@ -33,6 +35,7 @@ export const SelectReportAction: React.FC<Props> = ({
   setSelectedReport,
   selectedReport,
   reportsData,
+  instances,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   // This should be the trigger from the command
@@ -57,6 +60,7 @@ export const SelectReportAction: React.FC<Props> = ({
       <Picker
         reportsData={reportsData}
         selectedReport={selectedReport}
+        instances={instances}
         isOpen={isOpen}
         setIsOpen={(value) => setIsOpen(value)}
         onSelect={onSelect}
@@ -68,6 +72,7 @@ export const SelectReportAction: React.FC<Props> = ({
 interface PickerProps {
   reportsData?: DryRun[];
   selectedReport: DryRun | null;
+  instances: InstancesById;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   onSelect: (value: string | number | undefined) => void;
@@ -76,6 +81,7 @@ interface PickerProps {
 const Picker: React.FC<PickerProps> = ({
   reportsData,
   selectedReport,
+  instances,
   isOpen,
   setIsOpen,
   onSelect,
@@ -99,7 +105,7 @@ const Picker: React.FC<PickerProps> = ({
       aria-label="ReportListSelect"
       isExpanded={isOpen}
     >
-      <ReportLabel report={selectedReport} />
+      <ReportLabel report={selectedReport} instances={instances} />
     </MenuToggle>
   );
 
@@ -116,7 +122,7 @@ const Picker: React.FC<PickerProps> = ({
       <SelectList aria-label="ReportSelectOptions">
         {reportsData.map((report) => (
           <SelectOption key={report.id} value={report.id}>
-            <ReportLabel report={report} />
+            <ReportLabel report={report} instances={instances} />
           </SelectOption>
         ))}
       </SelectList>
@@ -136,12 +142,16 @@ const EmptyPicker: React.FC = () => <Select toggle={DisabledToggle} aria-label="
  * Identifies a report in the picker: its progress and date, with a summary of its scope on the
  * right.
  *
- * @props {{ report: DryRun }} props - The props of the component
+ * @props {{ report: DryRun; instances: InstancesById }} props - The props of the component
  *  @prop {DryRun} report - The dry run report
+ *  @prop {InstancesById} instances - The instances of the reports' filters, to show by name
  *
- * @returns {React.FC<{ report: DryRun }>} The report's line
+ * @returns {React.FC<{ report: DryRun; instances: InstancesById }>} The report's line
  */
-const ReportLabel: React.FC<{ report: DryRun }> = ({ report }) => (
+const ReportLabel: React.FC<{ report: DryRun; instances: InstancesById }> = ({
+  report,
+  instances,
+}) => (
   <Flex
     justifyContent={{ default: "justifyContentSpaceBetween" }}
     alignItems={{ default: "alignItemsCenter" }}
@@ -157,6 +167,6 @@ const ReportLabel: React.FC<{ report: DryRun }> = ({ report }) => (
       <DryRunProgressLabel progress={report} />
       {datePresenter.getFull(report.date)}
     </Flex>
-    <ScopeLabel report={report} />
+    <ScopeLabel report={report} instances={instances} />
   </Flex>
 );

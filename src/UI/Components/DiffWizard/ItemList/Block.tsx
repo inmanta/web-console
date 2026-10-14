@@ -38,7 +38,7 @@ interface Props {
  *
  * @returns {React.FC<Props>} The diff row
  */
-export const Block: React.FC<Props> = ({ item, refs, classify }) => {
+const BlockRow: React.FC<Props> = ({ item, refs, classify }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const titleId = useId();
   const contentId = useId();
@@ -103,6 +103,12 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
     </DataListItem>
   );
 };
+
+/**
+ * The diff row, skipped when the list re-renders with the same item, like when the Compliance
+ * Check page polls its list of reports.
+ */
+export const Block = React.memo(BlockRow);
 
 const Body: React.FC<{ item: Item; classify?: Classify }> = ({ item, classify }) => {
   switch (item.status) {

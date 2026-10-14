@@ -25,6 +25,9 @@ export interface StringMatch extends EnumMatch<string> {
  * point composes the scope once and the server resolves it. A single resource is expressed as a
  * filter of one, by pinning resourceType/agent/resourceIdValue with the eq operator.
  *
+ * TODO(#7490): serviceEntity, serviceInstance and lifecycleState are lists despite their singular
+ * names (core's naming).
+ *
  * @example { resourceType: { eq: ["std::File"] }, agent: { eq: ["internal"] }, resourceIdValue: { eq: ["/tmp/f"] }, isOrphan: false }
  */
 export interface ResourceActionFilter {

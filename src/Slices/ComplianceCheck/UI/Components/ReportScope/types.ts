@@ -1,4 +1,4 @@
-import { ResourceActionFilter, StringMatch } from "@/Core";
+import { ResourceActionFilter, ServiceInstanceModel, StringMatch } from "@/Core";
 import { VersionSelectionBlocker } from "@/Data/Queries/Slices/Resource";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 
@@ -64,6 +64,11 @@ export type ModelVersionState =
 export type RerunPlan =
   | { kind: "ready"; filter: ResourceActionFilter }
   | { kind: "blocked"; blockedBy: VersionSelectionBlocker };
+
+/**
+ * The service instances the reports' filters name, looked up so far, keyed by their id.
+ */
+export type InstancesById = Record<string, ServiceInstanceModel>;
 
 /**
  * The agents and the changed resources in a dry run's diff.

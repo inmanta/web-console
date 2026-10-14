@@ -44,7 +44,11 @@ const d: DryRun = {
   date: "2022-02-09T16:50:10.785976",
   total: 100,
   todo: 2,
-  resource_filter: { modelVersion: 32, serviceInstance: [ServiceInstance.a.id] },
+  resource_filter: {
+    modelVersion: 32,
+    serviceEntity: [ServiceInstance.a.service_entity],
+    serviceInstance: [ServiceInstance.a.id],
+  },
 };
 
 export const listOfReports = [b, c, d];

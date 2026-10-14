@@ -1,11 +1,13 @@
 import { Diff, ResourceActionFilter, ServiceInstanceModel } from "@/Core";
 import { ServiceInstance } from "@/Test";
 import { words } from "@/UI/words";
+import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import * as DesiredStateMock from "@S/DesiredState/Data/Mock";
 import {
   countDiff,
   getFilterRows,
+  getInstanceIdLookup,
   getModelVersionState,
   getRerunPlan,
   getScopeLabel,
@@ -18,6 +20,36 @@ const instances = { [instance.id]: instance };
 const instanceName = instance.service_identity_attribute_value ?? instance.id;
 
 const versionRow = getFilterRows({ isOrphan: false }, modelVersion, {});
+
+describe("getInstanceIdLookup", () => {
+  const reportWith = (resource_filter: ResourceActionFilter) => ({ ...Mock.a, resource_filter });
+
+  it("groups the instances of all reports under their entities, each id once", () => {
+    expect(
+      getInstanceIdLookup([
+        reportWith({ serviceEntity: ["lab"], serviceInstance: ["b", "a"] }),
+        reportWith({ serviceEntity: ["lab"], serviceInstance: ["a", "c"] }),
+        reportWith({ serviceEntity: ["vlan"], serviceInstance: ["d"] }),
+      ])
+    ).toEqual({ byEntity: { lab: ["a", "b", "c"], vlan: ["d"] }, withoutEntity: [] });
+  });
+
+  it("looks up instances without an entity on their own, unless another report groups them", () => {
+    expect(
+      getInstanceIdLookup([
+        reportWith({ serviceInstance: ["b", "a"] }),
+        reportWith({ serviceEntity: ["lab"], serviceInstance: ["a"] }),
+      ])
+    ).toEqual({ byEntity: { lab: ["a"] }, withoutEntity: ["b"] });
+  });
+
+  it("looks up nothing for reports without instances", () => {
+    expect(getInstanceIdLookup([Mock.a, reportWith({ serviceEntity: ["lab"] })])).toEqual({
+      byEntity: {},
+      withoutEntity: [],
+    });
+  });
+});
 
 describe("getFilterRows", () => {
   it("groups the filter into service, instance, agent, type, value, version and status rows", () => {

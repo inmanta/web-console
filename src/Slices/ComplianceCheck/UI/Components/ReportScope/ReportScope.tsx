@@ -8,11 +8,13 @@ import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import { AppliedFilter } from "./AppliedFilter";
 import { countDiff, getModelVersionState } from "./helpers";
+import { InstancesById } from "./types";
 import { useFilterRows } from "./useFilterRows";
 
 interface Props {
   report: DryRun;
   diff: Diff.Resource[] | undefined;
+  instances: InstancesById;
   onRerunStart: () => void;
 }
 
@@ -36,16 +38,17 @@ interface ScopeCount {
  *  @prop {DryRun} report - The selected dry run report
  *  @prop {Diff.Resource[] | undefined} diff - The resources of the report, undefined while they
  *    load; the agent and change counts show once they are there
+ *  @prop {InstancesById} instances - The instances of the reports' filters, to show by name
  *  @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The scope band
  */
-export const ReportScope: React.FC<Props> = ({ report, diff, onRerunStart }) => {
+export const ReportScope: React.FC<Props> = ({ report, diff, instances, onRerunStart }) => {
   const modelVersion = Number(report.model);
   const desiredStateVersionQuery = useGetDesiredStateVersion(modelVersion);
   const desiredStateVersion = desiredStateVersionQuery.data;
   const modelVersionState = getModelVersionState(desiredStateVersionQuery);
-  const rows = useFilterRows(report);
+  const rows = useFilterRows(report, instances);
   const diffCounts = useMemo(() => diff && countDiff(diff), [diff]);
   const resourceFilter = report.resource_filter;
   const modelVersionText = words("modelVersion")(modelVersion);

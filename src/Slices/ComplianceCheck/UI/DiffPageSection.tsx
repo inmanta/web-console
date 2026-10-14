@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Grid, PageSection } from "@patternfly/react-core";
 import { Diff } from "@/Core";
 import { useGetDryRunReport } from "@/Data/Queries/Slices/DryRun";
@@ -9,12 +9,14 @@ import { LoadingView } from "@/UI/Components/LoadingView";
 import { words } from "@/UI/words";
 import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 import { DryRunProgressLabel, ReportScope } from "./Components";
+import { InstancesById } from "./Components/ReportScope/types";
 
 interface Props {
   report: DryRun | null;
   version: string;
   statuses: Diff.Status[];
   searchFilter: string;
+  instances: InstancesById;
   onRerunStart: () => void;
 }
 
@@ -27,6 +29,7 @@ interface Props {
  * @prop {string} version - The version of the dry run
  * @prop {Diff.Status[]} statuses - The statuses to filter the resources by
  * @prop {string} searchFilter - The search filter to filter the resources by
+ * @prop {InstancesById} instances - The instances of the reports' filters, to show by name
  * @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The DiffPageSection component
@@ -44,6 +47,7 @@ export const DiffPageSection: React.FC<Props> = ({ report, ...props }) =>
  * @prop {string} version - The version of the dry run
  * @prop {Diff.Status[]} statuses - The statuses to filter the resources by
  * @prop {string} searchFilter - The search filter to filter the resources by
+ * @prop {InstancesById} instances - The instances of the reports' filters, to show by name
  * @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The DiffView component
@@ -53,6 +57,7 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
   version,
   statuses,
   searchFilter,
+  instances,
   onRerunStart,
 }) => {
   const refs: DiffWizard.Refs = useRef({});
@@ -70,6 +75,22 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
     refetch();
   }, [todo, isLoading, refetch]);
 
+  // Kept until the report or the filters change, so polling the report list doesn't rebuild every
+  // row of a large diff.
+  const diffData = useMemo(
+    () => data?.diff.filter((resource) => statuses.includes(resource.status)) ?? [],
+    [data, statuses]
+  );
+  const items = useMemo(
+    () =>
+      diffData
+        .filter((resource) =>
+          resource.resource_id.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase())
+        )
+        .map(DiffWizard.fromResourceToItem),
+    [diffData, searchFilter]
+  );
+
   const getDiff = () => {
     if (isError) {
       return (
@@ -80,8 +101,6 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
     if (!isSuccess) {
       return <LoadingView ariaLabel="DiffPageSection-Loading" />;
     }
-
-    const diffData = data.diff.filter((resource) => statuses.includes(resource.status));
 
     return (
       <>
@@ -96,14 +115,7 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
         {data.diff.length <= 0 ? (
           <EmptyView message={words("desiredState.compare.empty")} />
         ) : (
-          <DiffWizard.ItemList
-            items={diffData
-              .filter((resource) =>
-                resource.resource_id.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase())
-              )
-              .map(DiffWizard.fromResourceToItem)}
-            refs={refs}
-          />
+          <DiffWizard.ItemList items={items} refs={refs} />
         )}
       </>
     );
@@ -124,7 +136,12 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
        */}
       <Grid hasGutter style={{ flexShrink: 0 }}>
         {/* The scope comes from the report itself, so it stays in place while the diff loads. */}
-        <ReportScope report={report} diff={data?.diff} onRerunStart={onRerunStart} />
+        <ReportScope
+          report={report}
+          diff={data?.diff}
+          instances={instances}
+          onRerunStart={onRerunStart}
+        />
         {getDiff()}
       </Grid>
     </PageSection>
