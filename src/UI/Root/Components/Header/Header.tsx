@@ -89,7 +89,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
                     </Tooltip>
                   </ToolbarItem>
                 )}
-                <StatusButton />
+                {routeManager.has("Status") && <StatusButton />}
                 <DocumentationLinks />
                 <APIActionsButton />
               </ToolbarGroup>

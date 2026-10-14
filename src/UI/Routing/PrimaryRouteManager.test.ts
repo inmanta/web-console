@@ -22,8 +22,12 @@ test.each`
   }
 );
 
-const { Dashboard, Catalog, Inventory, CreateInstance, Events, Diagnose } =
-  routeManager.getRouteDictionary();
+const Dashboard = routeManager.getRoute("Dashboard");
+const Catalog = routeManager.getRoute("Catalog");
+const Inventory = routeManager.getRoute("Inventory");
+const CreateInstance = routeManager.getRoute("CreateInstance");
+const Events = routeManager.getRoute("Events");
+const Diagnose = routeManager.getRoute("Diagnose");
 
 it.each`
   route             | routeTxt            | length | result                                             | resultTxt

@@ -62,9 +62,10 @@ const withSuspense = (element: React.ReactElement): React.ReactElement => (
 );
 
 /**
- * The page element of each route kind.
+ * The page element of each route kind. Every declared route kind needs one, so a route can't be
+ * added without its page.
  */
-const pageElements: Partial<Record<RouteKind, ReactElement>> = {
+const pageElements: Record<RouteKind, ReactElement> = {
   /**
    * Main
    */
@@ -121,16 +122,12 @@ const pageElements: Partial<Record<RouteKind, ReactElement>> = {
 };
 
 /**
- * Builds the pages of the registered routes. A route without a page element gets no page.
+ * Builds the pages of the registered routes.
  */
 export class PrimaryPageManager implements PageManager {
   constructor(private readonly routes: Route[]) {}
 
   getPages(): Page[] {
-    return this.routes.flatMap((route) => {
-      const element = pageElements[route.kind];
-
-      return element ? [{ ...route, element }] : [];
-    });
+    return this.routes.map((route) => ({ ...route, element: pageElements[route.kind] }));
   }
 }

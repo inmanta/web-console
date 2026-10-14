@@ -40,6 +40,9 @@ import * as UserManagement from "@S/UserManagement/Core/Route";
  * The routes this app registers. The route table, pages and links only know these routes, so a
  * feature whose routes are left out is absent from the app.
  *
+ * The shell links to `Dashboard` and `CreateEnvironment` without checking `routeManager.has`,
+ * so these two must always be registered.
+ *
  * Order matters: a url resolves to the first route whose path matches it.
  */
 export const routes: RouteFactory[] = [

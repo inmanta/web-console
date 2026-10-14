@@ -1,6 +1,5 @@
 import { generatePath, matchPath, PathMatch, useLocation } from "react-router";
 import {
-  RouteDictionary,
   RouteManager,
   Route,
   RouteFactory,
@@ -20,7 +19,8 @@ import {
  * @throws when two routes are registered with the same kind
  */
 export function PrimaryRouteManager(baseUrl: string, routes: RouteFactory[]): RouteManager {
-  const routeDictionary: RouteDictionary = {};
+  // A kind is missing when the feature that declares it is not part of the app.
+  const routeDictionary: Partial<Record<RouteKind, Route>> = {};
 
   routes.forEach((createRoute) => {
     const route = createRoute(baseUrl);
@@ -81,10 +81,6 @@ export function PrimaryRouteManager(baseUrl: string, routes: RouteFactory[]): Ro
 
   function getRoutes(): Route[] {
     return Object.values(routeDictionary).filter((route) => route !== undefined);
-  }
-
-  function getRouteDictionary(): RouteDictionary {
-    return routeDictionary;
   }
 
   function getRoute<K extends RouteKind>(kind: K): Route<K> {
@@ -200,7 +196,6 @@ export function PrimaryRouteManager(baseUrl: string, routes: RouteFactory[]): Ro
     isBaseUrlDefined,
     has,
     getRoutes,
-    getRouteDictionary,
     getRoute,
     getUrl,
     getUrlForApiUri,

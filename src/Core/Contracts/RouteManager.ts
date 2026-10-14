@@ -1,15 +1,8 @@
 import { RouteKind, Route, RouteParams, RouteMatch, Crumb, RouteKindWithId } from "@/Core/Domain";
 
-/**
- * The registered routes by kind. A kind is missing when the feature that declares it is not part
- * of the app.
- */
-export type RouteDictionary = Partial<Record<RouteKind, Route>>;
-
 export interface RouteManager {
   isBaseUrlDefined(): boolean;
   getRoutes(): Route[];
-  getRouteDictionary(): RouteDictionary;
 
   /**
    * Whether a route of this kind is registered. Links to a route of another feature check this
