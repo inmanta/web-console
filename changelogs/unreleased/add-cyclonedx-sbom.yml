@@ -1,0 +1,5 @@
+description: Ship a CycloneDX SBOM of the web-console dependencies in the npm package.
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
