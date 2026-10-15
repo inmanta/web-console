@@ -18,7 +18,7 @@ const ReactQueryDevtools = lazy(() =>
 );
 
 export const Root: React.FC = () => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, features } = useContext(DependencyContext);
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
@@ -30,8 +30,8 @@ export const Root: React.FC = () => {
   setThemePreference(themePreference || "light");
 
   const pageManager = useMemo(
-    () => new PrimaryPageManager(routeManager.getRoutes()),
-    [routeManager]
+    () => new PrimaryPageManager(routeManager.getRoutes(), features),
+    [routeManager, features]
   );
 
   const [pages, setPages] = useState(pageManager.getPages());

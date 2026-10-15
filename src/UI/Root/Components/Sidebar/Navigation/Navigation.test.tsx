@@ -2,7 +2,9 @@ import { act } from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { RouteFactory } from "@/Core";
+import { FeatureModule, RouteFactory } from "@/Core";
+import { environmentFeature } from "@/Features/Environment";
+import { resourceManagerFeature } from "@/Features/ResourceManager";
 import { MockedDependencyProvider, MockOrchestratorProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
@@ -11,13 +13,18 @@ import * as Dashboard from "@S/Dashboard/Core/Route";
 import * as Resource from "@S/Resource/Core/Route";
 import { Navigation } from "./Navigation";
 
-function setup(initialEntries?: string[], isCompiling: boolean = false, routes?: RouteFactory[]) {
+function setup(
+  initialEntries?: string[],
+  isCompiling: boolean = false,
+  routes?: RouteFactory[],
+  features?: FeatureModule[]
+) {
   const queryClient = new QueryClient();
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={initialEntries}>
-        <MockedDependencyProvider isCompiling={isCompiling} routes={routes}>
+        <MockedDependencyProvider isCompiling={isCompiling} routes={routes} features={features}>
           <Navigation environment="env" />
         </MockedDependencyProvider>
       </TestMemoryRouter>
@@ -94,6 +101,47 @@ describe("Navigation", () => {
         .getAllByRole("link")
         .map((link) => link.textContent)
     ).toEqual(["Dashboard", "Resources", "Agents"]);
+  });
+
+  test("GIVEN Navigation WHEN a feature is left out THEN its links are not shown", () => {
+    const { component } = setup(undefined, false, undefined, [environmentFeature]);
+
+    render(component);
+
+    const navigation = screen.getByRole("navigation", { name: "Global" });
+
+    expect(within(navigation).getAllByRole("region")).toHaveLength(1);
+    expect(
+      within(navigation)
+        .getAllByRole("link")
+        .map((link) => link.textContent)
+    ).toEqual(["Dashboard", "Settings"]);
+  });
+
+  test("GIVEN Navigation WHEN the license feature of a feature is not enabled THEN its links are not shown", () => {
+    vi.spyOn(MockOrchestratorProvider.prototype, "isLicencedFeatureEnabled").mockImplementation(
+      (feature) => feature !== "ui.ui"
+    );
+
+    const { component } = setup(undefined, false, undefined, [
+      environmentFeature,
+      { ...resourceManagerFeature, licenseFeature: "ui.ui" },
+    ]);
+
+    render(component);
+
+    const navigation = screen.getByRole("navigation", { name: "Global" });
+
+    expect(
+      within(navigation).queryByRole("region", { name: words("navigation.resourceManager") })
+    ).not.toBeInTheDocument();
+    expect(
+      within(navigation)
+        .getAllByRole("link")
+        .map((link) => link.textContent)
+    ).toEqual(["Dashboard", "Settings"]);
+
+    vi.mocked(MockOrchestratorProvider.prototype.isLicencedFeatureEnabled).mockRestore();
   });
 
   test("GIVEN Navigation WHEN no features enabled THEN no extra features are not shown", () => {

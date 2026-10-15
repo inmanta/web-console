@@ -15,6 +15,9 @@ const getGitCommitHash = () => {
   }
 };
 
+// Version of the app, stamped into every feature module
+const appVersion = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf-8")).version;
+
 const PROTOCOL_REWRITE = process.env.HTTPS === "true" ? "https" : "http";
 
 // Custom plugin to move assets to root and rewrite references
@@ -192,6 +195,7 @@ export default defineConfig({
   publicDir: "public",
   define: {
     COMMITHASH: JSON.stringify(getGitCommitHash()),
+    APP_VERSION: JSON.stringify(appVersion),
     global: "globalThis",
     ...(process.env.VITEST || process.env.NODE_ENV === "production"
       ? {

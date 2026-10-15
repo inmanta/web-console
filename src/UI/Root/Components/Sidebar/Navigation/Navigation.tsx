@@ -2,12 +2,7 @@ import React, { useContext } from "react";
 import { useLocation } from "react-router";
 import { Nav, NavGroup } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
-import {
-  envrionment,
-  lifecycleServiceManager,
-  orchestrationEngine,
-  resourceManager,
-} from "./Group";
+import { getGroups } from "./Group";
 import { NavigationItem } from "./NavigationItem";
 
 /**
@@ -17,18 +12,11 @@ import { NavigationItem } from "./NavigationItem";
  * @returns {React.FC} - Navigation component
  */
 export const Navigation: React.FC<{ environment: string | undefined }> = ({ environment }) => {
-  const { orchestratorProvider, routeManager } = useContext(DependencyContext);
+  const { orchestratorProvider, routeManager, features } = useContext(DependencyContext);
   const { pathname } = useLocation();
 
   const isEnvPresent = typeof environment !== "undefined";
-  const groups = [
-    envrionment(routeManager, isEnvPresent),
-    ...(orchestratorProvider.isLsmEnabled()
-      ? [lifecycleServiceManager(routeManager, isEnvPresent, orchestratorProvider)]
-      : []),
-    orchestrationEngine(routeManager, isEnvPresent),
-    resourceManager(routeManager, isEnvPresent, orchestratorProvider),
-  ].filter(({ links }) => links.length > 0);
+  const groups = getGroups(features, routeManager, orchestratorProvider, isEnvPresent);
 
   // Helper function to check if a navigation item is active
   const isNavigationItemActive = (url: string): boolean => {

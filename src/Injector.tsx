@@ -10,7 +10,7 @@ import { UrlManagerImpl } from "@/UI/Utils";
 import { AuthContext } from "./Data/Auth";
 import { AppAlertProvider } from "./UI/Root/Components/AppAlertProvider";
 import { ModalProvider } from "./UI/Root/Components/ModalProvider";
-import { routes } from "./routes";
+import { features, routes } from "./appFeatures";
 
 /**
  * This component creates instances of managers, helpers, and resolvers, and provides them through a `DependencyProvider`.
@@ -44,6 +44,7 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
         environmentHandler,
         archiveHelper,
         authHelper,
+        features,
       }}
     >
       <AppAlertProvider>

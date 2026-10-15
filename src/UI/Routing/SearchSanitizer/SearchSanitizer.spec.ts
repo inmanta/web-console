@@ -1,5 +1,5 @@
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
-import { routes } from "@/routes";
+import { routes } from "@/appFeatures";
 import { SearchSanitizer } from "./SearchSanitizer";
 
 const sanitizer = new SearchSanitizer(PrimaryRouteManager("", routes));
