@@ -28,7 +28,7 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({ envi
       : []),
     orchestrationEngine(routeManager, isEnvPresent),
     resourceManager(routeManager, isEnvPresent, orchestratorProvider),
-  ];
+  ].filter(({ links }) => links.length > 0);
 
   // Helper function to check if a navigation item is active
   const isNavigationItemActive = (url: string): boolean => {

@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { Route, RouteKind } from "@/Core/Domain";
+import { Route } from "@/Core/Domain";
 
 export interface Page extends Route {
   element: ReactElement | null;
@@ -8,5 +8,3 @@ export interface Page extends Route {
 export interface PageManager {
   getPages(features?: string[]): Page[];
 }
-
-export type PageDictionary = Record<RouteKind, Page>;

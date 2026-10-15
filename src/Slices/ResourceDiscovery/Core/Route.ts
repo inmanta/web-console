@@ -1,5 +1,11 @@
 ﻿import { Route } from "@/Core";
 
+declare module "@/Core/Domain/Route" {
+  interface RouteRegistry {
+    DiscoveredResources: undefined;
+  }
+}
+
 export const path = "/resource-discovery";
 
 export const route = (base: string): Route<"DiscoveredResources"> => ({

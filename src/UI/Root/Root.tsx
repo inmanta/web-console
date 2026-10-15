@@ -30,7 +30,7 @@ export const Root: React.FC = () => {
   setThemePreference(themePreference || "light");
 
   const pageManager = useMemo(
-    () => new PrimaryPageManager(routeManager.getRouteDictionary()),
+    () => new PrimaryPageManager(routeManager.getRoutes()),
     [routeManager]
   );
 

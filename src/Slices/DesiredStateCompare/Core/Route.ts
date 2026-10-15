@@ -1,5 +1,11 @@
 import { Route } from "@/Core";
 
+declare module "@/Core/Domain/Route" {
+  interface RouteRegistry {
+    DesiredStateCompare: { from: string; to: string };
+  }
+}
+
 export const path = "/desiredstate/compare/:from/:to";
 
 export const route = (base: string): Route<"DesiredStateCompare"> => ({
