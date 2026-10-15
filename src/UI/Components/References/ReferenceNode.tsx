@@ -30,7 +30,7 @@ import {
   kindLabel,
   Unresolved,
   WithKindLabel,
-} from "./ArgumentKind";
+} from "./ArgumentValueParts";
 import { ReferenceChip } from "./ReferenceChip";
 
 interface ReferenceNodeProps {
