@@ -10,6 +10,7 @@ import { UrlManagerImpl } from "@/UI/Utils";
 import { AuthContext } from "./Data/Auth";
 import { AppAlertProvider } from "./UI/Root/Components/AppAlertProvider";
 import { ModalProvider } from "./UI/Root/Components/ModalProvider";
+import { routes } from "./routes";
 
 /**
  * This component creates instances of managers, helpers, and resolvers, and provides them through a `DependencyProvider`.
@@ -27,7 +28,7 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   );
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl();
-  const routeManager = PrimaryRouteManager(basePathname);
+  const routeManager = PrimaryRouteManager(basePathname, routes);
   const orchestratorProvider = OrchestratorProvider(getJsonParserId(globalThis), COMMITHASH);
   const urlManager = new UrlManagerImpl(orchestratorProvider, baseUrl);
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);

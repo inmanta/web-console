@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatEnvironment } from "@/Core";
+import { FlatEnvironment, RouteFactory } from "@/Core";
 import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth";
 import { PrimaryArchiveHelper } from "@/Data/Common";
 import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
@@ -9,12 +9,14 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { AppAlertProvider } from "@/UI/Root/Components/AppAlertProvider";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { UrlManagerImpl } from "@/UI/Utils";
+import { routes as appRoutes } from "@/routes";
 
 interface Props {
   env?: FlatEnvironment;
   authHelper?: AuthContextInterface;
   isCompiling?: boolean;
   allEnvironments?: EnvironmentPreview[];
+  routes?: RouteFactory[];
 }
 
 /**
@@ -27,10 +29,11 @@ export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> 
   authHelper = defaultAuthContext,
   isCompiling = false,
   allEnvironments = [],
+  routes = appRoutes,
   children,
 }) => {
   const baseUrl = "";
-  const routeManager = PrimaryRouteManager(baseUrl);
+  const routeManager = PrimaryRouteManager(baseUrl, routes);
   const environmentHandler = MockEnvironmentHandler(env, isCompiling, allEnvironments);
   const orchestratorProvider = new MockOrchestratorProvider();
   const urlManager = new UrlManagerImpl(orchestratorProvider, baseUrl);

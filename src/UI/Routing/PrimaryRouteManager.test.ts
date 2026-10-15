@@ -1,6 +1,9 @@
+import { routes } from "@/routes";
+import * as ServiceCatalog from "@S/ServiceCatalog/Core/Route";
+import * as ServiceInventory from "@S/ServiceInventory/Core/Route";
 import { PrimaryRouteManager } from "./PrimaryRouteManager";
 
-const routeManager = PrimaryRouteManager("");
+const routeManager = PrimaryRouteManager("", routes);
 
 test.each`
   inputUrl                                                | outputUrl
@@ -19,8 +22,12 @@ test.each`
   }
 );
 
-const { Dashboard, Catalog, Inventory, CreateInstance, Events, Diagnose } =
-  routeManager.getRouteDictionary();
+const Dashboard = routeManager.getRoute("Dashboard");
+const Catalog = routeManager.getRoute("Catalog");
+const Inventory = routeManager.getRoute("Inventory");
+const CreateInstance = routeManager.getRoute("CreateInstance");
+const Events = routeManager.getRoute("Events");
+const Diagnose = routeManager.getRoute("Diagnose");
 
 it.each`
   route             | routeTxt            | length | result                                             | resultTxt
@@ -148,4 +155,47 @@ test("GIVEN a route param containing a space WHEN building a url with getUrl and
   const instanceCrumb = crumbs.find((crumb) => crumb.kind === "InstanceDetails");
 
   expect(decodeURIComponent(instanceCrumb?.label ?? "")).toEqual("Instance Details: Parent 1");
+});
+
+describe("Given a route manager with only some routes registered", () => {
+  const partialRouteManager = PrimaryRouteManager("", [
+    ServiceCatalog.route,
+    ServiceInventory.route,
+  ]);
+
+  it("THEN has() is true for registered routes only", () => {
+    expect(partialRouteManager.has("Catalog")).toBe(true);
+    expect(partialRouteManager.has("Inventory")).toBe(true);
+    expect(partialRouteManager.has("CompileDetails")).toBe(false);
+  });
+
+  it("THEN getRoutes() only returns the registered routes", () => {
+    expect(partialRouteManager.getRoutes().map(({ kind }) => kind)).toEqual([
+      "Catalog",
+      "Inventory",
+    ]);
+  });
+
+  it("THEN getRoute() throws for an unregistered route", () => {
+    expect(() => partialRouteManager.getRoute("CompileDetails")).toThrow(
+      'Route "CompileDetails" is not registered.'
+    );
+  });
+
+  it("THEN breadcrumbs stop at the first unregistered parent", () => {
+    const crumbs = partialRouteManager.getCrumbs("/lsm/catalog/xyz/inventory");
+
+    expect(crumbs.map(({ kind }) => kind)).toEqual(["Catalog", "Inventory"]);
+  });
+
+  it("THEN compile report api uris don't resolve to a url", () => {
+    expect(partialRouteManager.getUrlForApiUri("/api/v2/compilereport/123")).toBeUndefined();
+    expect(partialRouteManager.getParamsFromUrl("/api/v2/compilereport/123")).toBeUndefined();
+  });
+});
+
+test("GIVEN a route registered twice THEN the route manager throws", () => {
+  expect(() => PrimaryRouteManager("", [ServiceCatalog.route, ServiceCatalog.route])).toThrow(
+    'Route "Catalog" is registered more than once.'
+  );
 });

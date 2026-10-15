@@ -1,4 +1,4 @@
-import { OrchestratorProvider, RouteManager } from "@/Core";
+import { OrchestratorProvider, RouteKind, RouteManager } from "@/Core";
 import { words } from "@/UI/words";
 
 /**
@@ -23,6 +23,40 @@ interface Link {
 }
 
 /**
+ * Returns the sidebar link to a route without params, as a list to spread into a group.
+ * The list is empty when the route is not registered, so the link is left out instead of broken.
+ *
+ * @param {RouteManager} routeManager
+ * @param {RouteKind} kind - the route to link to
+ * @param {boolean} isEnvPresent
+ * @param {object} options - the link id (defaults to the kind) and whether it shows a status indication
+ * @returns Link[]
+ */
+const routeLink = (
+  routeManager: RouteManager,
+  kind: RouteKind,
+  isEnvPresent: boolean,
+  { id = kind, statusIndication = false }: { id?: string; statusIndication?: boolean } = {}
+): Link[] => {
+  if (!routeManager.has(kind)) {
+    return [];
+  }
+
+  const route = routeManager.getRoute(kind);
+
+  return [
+    {
+      id,
+      label: route.generateLabel(undefined),
+      url: route.path,
+      external: false,
+      locked: !isEnvPresent,
+      statusIndication,
+    },
+  ];
+};
+
+/**
  * Returns the environment group of links
  * @param {RouteManager} routeManager
  * @param {boolean} isEnvPresent
@@ -32,22 +66,8 @@ export const envrionment = (routeManager: RouteManager, isEnvPresent: boolean): 
   id: words("navigation.environment"),
   title: words("navigation.environment"),
   links: [
-    {
-      id: "Dashboard",
-      label: routeManager.getRoute("Dashboard").generateLabel(undefined),
-      url: routeManager.getRoute("Dashboard").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
-    {
-      id: "Settings",
-      label: routeManager.getRoute("Settings").generateLabel(undefined),
-      url: routeManager.getRoute("Settings").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
+    ...routeLink(routeManager, "Dashboard", isEnvPresent),
+    ...routeLink(routeManager, "Settings", isEnvPresent),
   ],
 });
 
@@ -67,25 +87,9 @@ export const lifecycleServiceManager = (
   id: "LifecycleServiceManager",
   title: words("navigation.lifecycleServiceManager"),
   links: [
-    {
-      id: "Catalog",
-      label: routeManager.getRoute("Catalog").generateLabel(undefined),
-      url: routeManager.getRoute("Catalog").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
+    ...routeLink(routeManager, "Catalog", isEnvPresent),
     ...(orchestratorProvider.isOrderViewEnabled()
-      ? [
-          {
-            id: "Orders",
-            label: routeManager.getRoute("Orders").generateLabel(undefined),
-            url: routeManager.getRoute("Orders").path,
-            external: false,
-            locked: !isEnvPresent,
-            statusIndication: false,
-          },
-        ]
+      ? routeLink(routeManager, "Orders", isEnvPresent)
       : []),
   ],
 });
@@ -101,30 +105,9 @@ export const orchestrationEngine = (routeManager: RouteManager, isEnvPresent: bo
   id: "OrchestrationEngine",
   title: words("navigation.orchestrationEngine"),
   links: [
-    {
-      id: "DesiredState",
-      label: routeManager.getRoute("DesiredState").generateLabel(undefined),
-      url: routeManager.getRoute("DesiredState").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
-    {
-      id: "CompileReports",
-      label: routeManager.getRoute("CompileReports").generateLabel(undefined),
-      url: routeManager.getRoute("CompileReports").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: true,
-    },
-    {
-      id: "Parameters",
-      label: routeManager.getRoute("Parameters").generateLabel(undefined),
-      url: routeManager.getRoute("Parameters").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
+    ...routeLink(routeManager, "DesiredState", isEnvPresent),
+    ...routeLink(routeManager, "CompileReports", isEnvPresent, { statusIndication: true }),
+    ...routeLink(routeManager, "Parameters", isEnvPresent),
   ],
 });
 
@@ -144,41 +127,13 @@ export const resourceManager = (
   id: "ResourceManager",
   title: words("navigation.resourceManager"),
   links: [
-    {
-      id: "Resources",
-      label: routeManager.getRoute("Resources").generateLabel(undefined),
-      url: routeManager.getRoute("Resources").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
+    ...routeLink(routeManager, "Resources", isEnvPresent),
     ...(orchestratorProvider.isResourceDiscoveryEnabled()
-      ? [
-          {
-            id: "Discovered Resources",
-            label: routeManager.getRoute("DiscoveredResources").generateLabel(undefined),
-            url: routeManager.getRoute("DiscoveredResources").path,
-            external: false,
-            locked: !isEnvPresent,
-            statusIndication: false,
-          },
-        ]
+      ? routeLink(routeManager, "DiscoveredResources", isEnvPresent, {
+          id: "Discovered Resources",
+        })
       : []),
-    {
-      id: "Agents",
-      label: routeManager.getRoute("Agents").generateLabel(undefined),
-      url: routeManager.getRoute("Agents").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
-    {
-      id: "Facts",
-      label: routeManager.getRoute("Facts").generateLabel(undefined),
-      url: routeManager.getRoute("Facts").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
+    ...routeLink(routeManager, "Agents", isEnvPresent),
+    ...routeLink(routeManager, "Facts", isEnvPresent),
   ],
 });

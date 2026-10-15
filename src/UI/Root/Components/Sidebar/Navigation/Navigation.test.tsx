@@ -2,18 +2,22 @@ import { act } from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { axe } from "jest-axe";
+import { RouteFactory } from "@/Core";
 import { MockedDependencyProvider, MockOrchestratorProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
+import * as Agents from "@S/Agents/Core/Route";
+import * as Dashboard from "@S/Dashboard/Core/Route";
+import * as Resource from "@S/Resource/Core/Route";
 import { Navigation } from "./Navigation";
 
-function setup(initialEntries?: string[], isCompiling: boolean = false) {
+function setup(initialEntries?: string[], isCompiling: boolean = false, routes?: RouteFactory[]) {
   const queryClient = new QueryClient();
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={initialEntries}>
-        <MockedDependencyProvider isCompiling={isCompiling}>
+        <MockedDependencyProvider isCompiling={isCompiling} routes={routes}>
           <Navigation environment="env" />
         </MockedDependencyProvider>
       </TestMemoryRouter>
@@ -69,6 +73,27 @@ describe("Navigation", () => {
         name: words("navigation.resourceManager"),
       })
     ).toBeVisible();
+  });
+
+  test("GIVEN Navigation WHEN only some routes are registered THEN only shows links to those routes", () => {
+    const { component } = setup(undefined, false, [Dashboard.route, Resource.route, Agents.route]);
+
+    render(component);
+
+    const navigation = screen.getByRole("navigation", { name: "Global" });
+
+    expect(within(navigation).getAllByRole("region")).toHaveLength(2);
+    expect(
+      within(navigation).getByRole("region", { name: words("navigation.environment") })
+    ).toBeVisible();
+    expect(
+      within(navigation).getByRole("region", { name: words("navigation.resourceManager") })
+    ).toBeVisible();
+    expect(
+      within(navigation)
+        .getAllByRole("link")
+        .map((link) => link.textContent)
+    ).toEqual(["Dashboard", "Resources", "Agents"]);
   });
 
   test("GIVEN Navigation WHEN no features enabled THEN no extra features are not shown", () => {

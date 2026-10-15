@@ -6,6 +6,7 @@ import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { routes } from "@/routes";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
 function setup(initialEntries?: string[]) {
@@ -133,7 +134,7 @@ test("GIVEN Breadcrumbs WHEN navigating to a url built by RouteManager.getUrl fo
   // Regression test: getUrl used to encodeURIComponent params before handing them to
   // react-router's generatePath, which encodes them again internally. A value like
   // "Parent 1" would come back out as "Parent%201" in the breadcrumbs instead of "Parent 1".
-  const routeManager = PrimaryRouteManager("");
+  const routeManager = PrimaryRouteManager("", routes);
   const url = routeManager.getUrl("Inventory", { service: "Parent 1" });
   const { component } = setup([url]);
   render(component);

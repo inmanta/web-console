@@ -1,5 +1,11 @@
 import { Route } from "@/Core";
 
+declare module "@/Core/Domain/Route" {
+  interface RouteRegistry {
+    InstanceDetails: { service: string; instance: string; instanceId: string };
+  }
+}
+
 export const path = "/lsm/catalog/:service/inventory/:instance/:instanceId/details";
 
 export const route = (base: string): Route<"InstanceDetails"> => ({
