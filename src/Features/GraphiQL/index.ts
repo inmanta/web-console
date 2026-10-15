@@ -2,11 +2,13 @@ import { FeatureModule } from "@/Core";
 import * as GraphiQL from "@S/GraphiQL/Core/Route";
 
 /**
- * The GraphiQL editor for the orchestrator's GraphQL API.
+ * The GraphiQL editor for the orchestrator's GraphQL API. Its page pulls in graphiql, which is
+ * heavy and rarely opened, so it is not preloaded: it is only fetched when the route is opened.
  */
 export const graphiqlFeature: FeatureModule = {
   id: "graphiql",
   version: APP_VERSION,
+  preload: false,
   routes: [
     {
       route: GraphiQL.route,
