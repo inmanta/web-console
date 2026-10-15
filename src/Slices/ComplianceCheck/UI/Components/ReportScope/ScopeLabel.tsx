@@ -1,7 +1,7 @@
 import React from "react";
 import { Label } from "@patternfly/react-core";
-import { DryRun } from "@S/ComplianceCheck/Core/Domain";
-import { getScopeLabel, isFiltered } from "./helpers";
+import { DryRun } from "@/Core";
+import { createStatusValues, formatScopeLabel, isFiltered } from "./helpers";
 import { InstancesById } from "./types";
 import { useFilterRows } from "./useFilterRows";
 
@@ -30,14 +30,15 @@ interface Props {
  */
 export const ScopeLabel: React.FC<Props> = ({ report, instances }) => {
   const rows = useFilterRows(report, instances);
+  const statusValues = report.resource_filter ? createStatusValues(report.resource_filter) : [];
 
   return (
     <Label
       isCompact
       textMaxWidth={SCOPE_LABEL_MAX_WIDTH}
-      {...(isFiltered(rows) ? { color: "purple" } : { variant: "outline" })}
+      {...(isFiltered(rows, statusValues) ? { color: "purple" } : { variant: "outline" })}
     >
-      {getScopeLabel(rows)}
+      {formatScopeLabel(rows, statusValues)}
     </Label>
   );
 };

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { DryRun } from "@S/ComplianceCheck/Core/Domain";
-import { getFilterRows } from "./helpers";
+import { DryRun } from "@/Core";
+import { createFilterRows } from "./helpers";
 import { FilterRow, InstancesById } from "./types";
 
 /**
@@ -13,7 +13,7 @@ export const useFilterRows = (report: DryRun, instances: InstancesById): FilterR
   const resourceFilter = report.resource_filter;
 
   return useMemo(
-    () => (resourceFilter ? getFilterRows(resourceFilter, Number(report.model), instances) : []),
-    [resourceFilter, report.model, instances]
+    () => (resourceFilter ? createFilterRows(resourceFilter, instances) : []),
+    [resourceFilter, instances]
   );
 };

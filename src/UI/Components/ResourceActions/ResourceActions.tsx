@@ -29,8 +29,8 @@ import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { useNavigateTo } from "@/UI/Routing";
+import { createReportSearch } from "@/UI/Routing/ReportSearch";
 import { words } from "@/UI/words";
-import { getReportSearch } from "@S/ComplianceCheck/UI/reportSearch";
 import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
 import { ResourceActionInstance } from "./types";
 
@@ -123,7 +123,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
     navigateTo(
       "ComplianceCheck",
       { version: String(modelVersion) },
-      getReportSearch(search, dryRunId)
+      createReportSearch(search, dryRunId)
     );
 
   const notifyDryRunStarted = ({ id, modelVersion }: StartedDryRun) =>

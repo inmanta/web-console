@@ -1,6 +1,6 @@
-import { ResourceActionFilter } from "@/Core/Domain";
-import { Diff } from "@/Core/Domain/Diff";
 import { ParsedNumber } from "@/Core/Language";
+import { Diff } from "./Diff";
+import { ResourceActionFilter } from "./ResourceActionFilter";
 
 /**
  * A dry run of one model version. resource_filter is the filter it was started with through
@@ -17,7 +17,7 @@ export interface DryRun extends DryRunProgress {
 /**
  * A dry run report: the dry run itself and the diff of each resource it covered.
  */
-export interface Report {
+export interface DryRunReport {
   summary: DryRun;
   diff: Diff.Resource[];
 }

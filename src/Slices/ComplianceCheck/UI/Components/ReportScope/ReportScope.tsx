@@ -1,13 +1,11 @@
 import React, { useMemo } from "react";
 import { Alert, Card, CardBody, CardHeader, CardTitle, Flex } from "@patternfly/react-core";
-import { Diff } from "@/Core";
+import { Diff, DryRun } from "@/Core";
 import { useGetDesiredStateVersion } from "@/Data/Queries/Slices/DesiredState";
 import { DesiredStateStatusLabel } from "@/UI/Components/DesiredStateStatusLabel";
 import { words } from "@/UI/words";
-import { DryRun } from "@S/ComplianceCheck/Core/Domain";
-import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import { AppliedFilter } from "./AppliedFilter";
-import { countDiff, getModelVersionState } from "./helpers";
+import { countDiff, isKnownInactive } from "./helpers";
 import { InstancesById } from "./types";
 import { useFilterRows } from "./useFilterRows";
 
@@ -31,8 +29,8 @@ interface ScopeCount {
  * Shows what a dry run report covered, between the report picker and its diff. The scope line
  * shows the model version with its lifecycle status, and counts the resources (out of all
  * resources in the model version, for a dry run on a filter), agents and changes, so an empty diff
- * never reads as the whole model being compliant. A version that isn't active, or no longer exists,
- * gets a warning. A dry run started on a resource filter also shows that filter.
+ * never reads as the whole model being compliant. A version that isn't active gets a warning. A dry
+ * run started on a resource filter also shows that filter.
  *
  * @props {Props} props - The props of the component
  *  @prop {DryRun} report - The selected dry run report
@@ -45,16 +43,13 @@ interface ScopeCount {
  */
 export const ReportScope: React.FC<Props> = ({ report, diff, instances, onRerunStart }) => {
   const modelVersion = Number(report.model);
-  const desiredStateVersionQuery = useGetDesiredStateVersion(modelVersion);
-  const desiredStateVersion = desiredStateVersionQuery.data;
-  const modelVersionState = getModelVersionState(desiredStateVersionQuery);
+  const { data: desiredStateVersion } = useGetDesiredStateVersion(modelVersion);
+  const modelVersionStatus = desiredStateVersion?.status;
   const rows = useFilterRows(report, instances);
   const diffCounts = useMemo(() => diff && countDiff(diff), [diff]);
   const resourceFilter = report.resource_filter;
   const modelVersionText = words("modelVersion")(modelVersion);
-  const isInactive =
-    modelVersionState.state === "known" &&
-    modelVersionState.status !== DesiredStateVersionStatus.active;
+  const isInactive = isKnownInactive(modelVersionStatus);
 
   const resourceCount = Number(report.total);
   const counts: ScopeCount[] = [
@@ -85,12 +80,13 @@ export const ReportScope: React.FC<Props> = ({ report, diff, instances, onRerunS
     );
   }
 
-  const hasBody = modelVersionState.state === "missing" || isInactive || Boolean(resourceFilter);
+  const hasBody = isInactive || Boolean(resourceFilter);
 
   return (
     <Card
       component="section"
       isCompact
+      variant="secondary"
       aria-label={words("desiredState.complianceCheck.scope.title")}
     >
       <CardHeader>
@@ -114,16 +110,6 @@ export const ReportScope: React.FC<Props> = ({ report, diff, instances, onRerunS
       {hasBody && (
         <CardBody>
           <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
-            {modelVersionState.state === "missing" && (
-              <Alert
-                isInline
-                isPlain
-                variant="warning"
-                title={words("desiredState.complianceCheck.scope.missing")}
-              >
-                {words("desiredState.complianceCheck.scope.missing.description")(modelVersionText)}
-              </Alert>
-            )}
             {isInactive && (
               <Alert
                 isInline
@@ -141,7 +127,7 @@ export const ReportScope: React.FC<Props> = ({ report, diff, instances, onRerunS
                 rows={rows}
                 resourceFilter={resourceFilter}
                 modelVersion={modelVersion}
-                modelVersionState={modelVersionState}
+                modelVersionStatus={modelVersionStatus}
                 onRerunStart={onRerunStart}
               />
             )}

@@ -8,8 +8,8 @@ import {
   SelectOption,
   ToolbarGroup,
 } from "@patternfly/react-core";
+import { DryRun } from "@/Core";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 import { DryRunProgressLabel } from "./DryRunProgressLabel";
 import { ScopeLabel } from "./ReportScope";
 import { InstancesById } from "./ReportScope/types";

@@ -1,6 +1,6 @@
+import { DryRun, DryRunReport } from "@/Core";
 import { ServiceInstance } from "@/Test";
 import { resources } from "@/Test/Data/DesiredStateDiff";
-import { DryRun, Report } from "@S/ComplianceCheck/Core/Domain";
 
 export const filteredAgent = "internal";
 
@@ -57,7 +57,7 @@ export const listResponse: { data: DryRun[] } = {
   data: listOfReports,
 };
 
-export const reportResponse: { data: Report } = {
+export const reportResponse: { data: DryRunReport } = {
   data: {
     summary: a,
     diff: resources,

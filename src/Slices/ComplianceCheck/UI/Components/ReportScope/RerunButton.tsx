@@ -7,13 +7,13 @@ import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
-import { getRerunPlan } from "./helpers";
-import { ModelVersionState, RerunPlan } from "./types";
+import { createRerunPlan } from "./helpers";
+import { RerunPlan } from "./types";
 
 interface Props {
   resourceFilter: ResourceActionFilter;
   modelVersion: number;
-  modelVersionState: ModelVersionState;
+  modelVersionStatus: DesiredStateVersionStatus | undefined;
   onRerunStart: () => void;
 }
 
@@ -26,7 +26,8 @@ interface Props {
  * @props {Props} props - The props of the component
  *  @prop {ResourceActionFilter} resourceFilter - The resource filter the report was started with
  *  @prop {number} modelVersion - The model version of the report
- *  @prop {ModelVersionState} modelVersionState - What is known about that model version
+ *  @prop {DesiredStateVersionStatus | undefined} modelVersionStatus - The status of that model
+ *    version, undefined until it is known
  *  @prop {() => void} onRerunStart - Called when the re-run is started
  *
  * @returns {React.FC<Props>} The re-run button
@@ -34,7 +35,7 @@ interface Props {
 export const RerunButton: React.FC<Props> = ({
   resourceFilter,
   modelVersion,
-  modelVersionState,
+  modelVersionStatus,
   onRerunStart,
 }) => {
   const { environmentHandler } = useContext(DependencyContext);
@@ -43,28 +44,28 @@ export const RerunButton: React.FC<Props> = ({
   const dryRun = useDryRunFiltered();
 
   const rerunPlan: RerunPlan | undefined =
-    modelVersionState.state === "known"
-      ? getRerunPlan(
+    modelVersionStatus === undefined
+      ? undefined
+      : createRerunPlan(
           resourceFilter,
           modelVersion,
-          modelVersionState.status === DesiredStateVersionStatus.active
-        )
-      : undefined;
+          modelVersionStatus === DesiredStateVersionStatus.active
+        );
 
-  const getDisabledReason = (): string | undefined => {
+  const resolveDisabledReason = (): string | undefined => {
     if (isHalted) {
       return words("environment.halt.tooltip");
     }
-    if (modelVersionState.state !== "known") {
-      return words(`desiredState.complianceCheck.scope.rerun.blockedBy.${modelVersionState.state}`);
+    if (rerunPlan === undefined) {
+      return words("desiredState.complianceCheck.scope.rerun.unknownStatus");
     }
-    if (rerunPlan?.kind === "blocked") {
+    if (rerunPlan.kind === "blocked") {
       return words(`resources.resourceActions.confirm.version.blockedBy.${rerunPlan.blockedBy}`);
     }
 
     return undefined;
   };
-  const disabledReason = getDisabledReason();
+  const disabledReason = resolveDisabledReason();
 
   const onClick = () => {
     if (rerunPlan?.kind !== "ready") {

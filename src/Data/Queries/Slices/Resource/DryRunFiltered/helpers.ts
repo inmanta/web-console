@@ -1,4 +1,4 @@
-import { ResourceActionFilter } from "@/Core/Domain";
+import { ResourceActionFilter } from "@/Core";
 import { DryRunVersion, VersionSelectionBlocker } from "./types";
 
 /**

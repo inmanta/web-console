@@ -1,13 +1,12 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { Grid, PageSection } from "@patternfly/react-core";
-import { Diff } from "@/Core";
+import { Diff, DryRun } from "@/Core";
 import { useGetDryRunReport } from "@/Data/Queries/Slices/DryRun";
 import * as DiffWizard from "@/UI/Components/DiffWizard";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { words } from "@/UI/words";
-import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 import { DryRunProgressLabel, ReportScope } from "./Components";
 import { InstancesById } from "./Components/ReportScope/types";
 
@@ -91,7 +90,7 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
     [diffData, searchFilter]
   );
 
-  const getDiff = () => {
+  const renderDiff = () => {
     if (isError) {
       return (
         <ErrorView message={error.message} retry={refetch} ariaLabel="DiffPageSection-Error" />
@@ -142,7 +141,7 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
           instances={instances}
           onRerunStart={onRerunStart}
         />
-        {getDiff()}
+        {renderDiff()}
       </Grid>
     </PageSection>
   );

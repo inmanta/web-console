@@ -3,15 +3,15 @@ import { ServiceInstance } from "@/Test";
 import { words } from "@/UI/words";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
-import * as DesiredStateMock from "@S/DesiredState/Data/Mock";
 import {
   countDiff,
-  getFilterRows,
-  getInstanceIdLookup,
-  getModelVersionState,
-  getRerunPlan,
-  getScopeLabel,
-  getValueText,
+  createFilterRows,
+  createInstanceIdLookup,
+  createRerunPlan,
+  createStatusValues,
+  createVersionValues,
+  formatFilterValue,
+  formatScopeLabel,
 } from "./helpers";
 
 const modelVersion = 5;
@@ -19,14 +19,12 @@ const instance: ServiceInstanceModel = ServiceInstance.a;
 const instances = { [instance.id]: instance };
 const instanceName = instance.service_identity_attribute_value ?? instance.id;
 
-const versionRow = getFilterRows({ isOrphan: false }, modelVersion, {});
-
-describe("getInstanceIdLookup", () => {
+describe("createInstanceIdLookup", () => {
   const reportWith = (resource_filter: ResourceActionFilter) => ({ ...Mock.a, resource_filter });
 
   it("groups the instances of all reports under their entities, each id once", () => {
     expect(
-      getInstanceIdLookup([
+      createInstanceIdLookup([
         reportWith({ serviceEntity: ["lab"], serviceInstance: ["b", "a"] }),
         reportWith({ serviceEntity: ["lab"], serviceInstance: ["a", "c"] }),
         reportWith({ serviceEntity: ["vlan"], serviceInstance: ["d"] }),
@@ -36,7 +34,7 @@ describe("getInstanceIdLookup", () => {
 
   it("looks up instances without an entity on their own, unless another report groups them", () => {
     expect(
-      getInstanceIdLookup([
+      createInstanceIdLookup([
         reportWith({ serviceInstance: ["b", "a"] }),
         reportWith({ serviceEntity: ["lab"], serviceInstance: ["a"] }),
       ])
@@ -44,15 +42,15 @@ describe("getInstanceIdLookup", () => {
   });
 
   it("looks up nothing for reports without instances", () => {
-    expect(getInstanceIdLookup([Mock.a, reportWith({ serviceEntity: ["lab"] })])).toEqual({
+    expect(createInstanceIdLookup([Mock.a, reportWith({ serviceEntity: ["lab"] })])).toEqual({
       byEntity: {},
       withoutEntity: [],
     });
   });
 });
 
-describe("getFilterRows", () => {
-  it("groups the filter into service, instance, agent, type, value, version and status rows", () => {
+describe("createFilterRows", () => {
+  it("groups the filter into service, instance, agent and type rows, without version and status", () => {
     const filter: ResourceActionFilter = {
       compliance: { neq: ["NON_COMPLIANT"] },
       isOrphan: false,
@@ -63,7 +61,7 @@ describe("getFilterRows", () => {
       serviceInstance: [instance.id],
     };
 
-    expect(getFilterRows(filter, modelVersion, instances)).toEqual([
+    expect(createFilterRows(filter, instances)).toEqual([
       { key: "serviceEntity", values: [{ value: "l2Connect", kind: "serviceEntity" }] },
       {
         key: "serviceInstance",
@@ -74,67 +72,97 @@ describe("getFilterRows", () => {
       },
       { key: "agent", values: [{ value: "internal" }] },
       { key: "resourceType", values: [{ value: "File", operator: "contains" }] },
-      ...versionRow,
-      {
-        key: "status",
-        termNote: words("desiredState.complianceCheck.scope.row.status.note"),
-        isApart: true,
-        values: [{ value: "non compliant", operator: "neq" }],
-      },
     ]);
   });
 
   it("shows only what the filter holds, and an instance by id until it is looked up", () => {
-    expect(getFilterRows({ serviceInstance: [instance.id] }, modelVersion, {})).toEqual([
+    expect(createFilterRows({ serviceInstance: [instance.id] }, {})).toEqual([
       { key: "serviceInstance", values: [{ value: instance.id, kind: "serviceInstance" }] },
     ]);
     // The instance's service entity isn't in the filter, so it isn't shown.
-    expect(getFilterRows({ serviceInstance: [instance.id] }, modelVersion, instances)).toEqual([
+    expect(createFilterRows({ serviceInstance: [instance.id] }, instances)).toEqual([
       { key: "serviceInstance", values: [{ value: instanceName, kind: "serviceInstance" }] },
     ]);
   });
 
-  it("shows the active model version as latest intent, without orphans", () => {
-    expect(versionRow).toEqual([
-      {
-        key: "version",
-        values: [
-          { value: words("modelVersion")(modelVersion) },
-          {
-            value: words("desiredState.complianceCheck.scope.value.latestIntent"),
-            kind: "latestIntent",
-          },
-        ],
-        note: words("desiredState.complianceCheck.scope.value.excludesOrphans"),
-      },
+  it("keeps a contains pattern that the console didn't wrap in % as is", () => {
+    expect(createFilterRows({ resourceIdValue: { contains: ["File%"] } }, {})).toEqual([
+      { key: "resourceIdValue", values: [{ value: "File%", operator: "contains" }] },
+    ]);
+  });
+});
+
+describe("createVersionValues", () => {
+  const modelVersionValue = { value: words("modelVersion")(modelVersion) };
+
+  it.each`
+    description            | modelVersionStatus
+    ${"active"}            | ${DesiredStateVersionStatus.active}
+    ${"not looked up yet"} | ${undefined}
+  `(
+    "shows latest intent as a flag while the model version is $description",
+    ({ modelVersionStatus }) => {
+      expect(createVersionValues({ isOrphan: false }, modelVersion, modelVersionStatus)).toEqual([
+        modelVersionValue,
+        {
+          value: words("desiredState.complianceCheck.scope.value.latestIntent"),
+          kind: "latestIntent",
+        },
+      ]);
+    }
+  );
+
+  it("shows that it was latest intent once the model version is not active", () => {
+    expect(
+      createVersionValues({ isOrphan: false }, modelVersion, DesiredStateVersionStatus.retired)
+    ).toEqual([
+      modelVersionValue,
+      { value: words("desiredState.complianceCheck.scope.value.wasLatestIntent") },
     ]);
   });
 
   it("shows an instance version next to the model version it ran on", () => {
-    expect(getFilterRows({ instanceVersion: 3 }, modelVersion, {})).toEqual([
-      {
-        key: "version",
-        values: [
-          { value: words("instanceVersion")(3) },
-          { value: words("modelVersion")(modelVersion) },
-        ],
-      },
+    expect(
+      createVersionValues({ instanceVersion: 3 }, modelVersion, DesiredStateVersionStatus.active)
+    ).toEqual([{ value: words("instanceVersion")(3) }, modelVersionValue]);
+  });
+
+  it("shows nothing when the filter doesn't pick a version", () => {
+    expect(
+      createVersionValues({ agent: { eq: ["a"] } }, modelVersion, DesiredStateVersionStatus.active)
+    ).toEqual([]);
+  });
+});
+
+describe("createStatusValues", () => {
+  it("collects the conditions on the resources' status", () => {
+    expect(
+      createStatusValues({
+        compliance: { neq: ["NON_COMPLIANT"] },
+        isDeploying: true,
+        isOrphan: true,
+        agent: { eq: ["internal"] },
+      })
+    ).toEqual([
+      { value: "non compliant", operator: "neq" },
+      { value: words("desiredState.complianceCheck.scope.value.isDeploying.true") },
+      { value: words("desiredState.complianceCheck.scope.value.orphansOnly") },
     ]);
   });
 });
 
-describe("getValueText", () => {
+describe("formatFilterValue", () => {
   it("prefixes the operator", () => {
-    expect(getValueText({ value: "File", operator: "contains" })).toBe(
+    expect(formatFilterValue({ value: "File", operator: "contains" })).toBe(
       words("desiredState.complianceCheck.scope.operator.contains")("File")
     );
-    expect(getValueText({ value: "internal" })).toBe("internal");
+    expect(formatFilterValue({ value: "internal" })).toBe("internal");
   });
 });
 
-describe("getScopeLabel", () => {
+describe("formatScopeLabel", () => {
   const labelOf = (filter: ResourceActionFilter) =>
-    getScopeLabel(getFilterRows(filter, modelVersion, instances));
+    formatScopeLabel(createFilterRows(filter, instances), createStatusValues(filter));
 
   it("reads Full model when the filter only picks a version", () => {
     expect(labelOf({ isOrphan: false })).toBe(
@@ -159,6 +187,7 @@ describe("getScopeLabel", () => {
   it("shows a single condition whole", () => {
     const agent = words("desiredState.complianceCheck.scope.row.agent");
     const type = words("desiredState.complianceCheck.scope.row.resourceType");
+    const status = words("desiredState.complianceCheck.scope.row.status");
 
     expect(labelOf({ isOrphan: false, agent: { eq: ["router-east"] } })).toBe(
       `${agent} = router-east`
@@ -166,28 +195,15 @@ describe("getScopeLabel", () => {
     expect(labelOf({ isOrphan: false, resourceType: { contains: ["%File%"] } })).toBe(
       `${type} ${words("desiredState.complianceCheck.scope.operator.contains")("File")}`
     );
+    expect(labelOf({ isOrphan: false, compliance: { eq: ["NON_COMPLIANT"] } })).toBe(
+      `${status} = non compliant`
+    );
   });
 
   it("counts the conditions when there is no anchor", () => {
     expect(
       labelOf({ isOrphan: false, agent: { eq: ["a"] }, compliance: { eq: ["NON_COMPLIANT"] } })
     ).toBe(words("desiredState.complianceCheck.scope.label.conditions")(2));
-  });
-});
-
-describe("getModelVersionState", () => {
-  const [desiredStateVersion] = DesiredStateMock.response.data;
-  const retiredVersion = { ...desiredStateVersion, status: DesiredStateVersionStatus.retired };
-
-  it.each`
-    description                                  | data              | isError  | state
-    ${"still loading"}                           | ${undefined}      | ${false} | ${{ state: "loading" }}
-    ${"failed"}                                  | ${undefined}      | ${true}  | ${{ state: "failed" }}
-    ${"no longer existing"}                      | ${null}           | ${false} | ${{ state: "missing" }}
-    ${"known"}                                   | ${retiredVersion} | ${false} | ${{ state: "known", status: DesiredStateVersionStatus.retired }}
-    ${"known from before a failed later lookup"} | ${retiredVersion} | ${true}  | ${{ state: "known", status: DesiredStateVersionStatus.retired }}
-  `("reads a $description model version", ({ data, isError, state }) => {
-    expect(getModelVersionState({ data, isError })).toEqual(state);
   });
 });
 
@@ -215,7 +231,7 @@ describe("countDiff", () => {
   });
 });
 
-describe("getRerunPlan", () => {
+describe("createRerunPlan", () => {
   const activeVersionFilter: ResourceActionFilter = {
     isOrphan: false,
     agent: { eq: ["internal"] },
@@ -227,11 +243,11 @@ describe("getRerunPlan", () => {
     ${"a filter with an instance version"}            | ${{ instanceVersion: 2, serviceInstance: ["i"] }} | ${false}
     ${"an active model version filter, still active"} | ${activeVersionFilter}                            | ${true}
   `("posts $description as is", ({ filter, isActiveVersion }) => {
-    expect(getRerunPlan(filter, 3, isActiveVersion)).toEqual({ kind: "ready", filter });
+    expect(createRerunPlan(filter, 3, isActiveVersion)).toEqual({ kind: "ready", filter });
   });
 
   it("sets the report's model version once that version is no longer active", () => {
-    expect(getRerunPlan(activeVersionFilter, 3, false)).toEqual({
+    expect(createRerunPlan(activeVersionFilter, 3, false)).toEqual({
       kind: "ready",
       filter: { agent: { eq: ["internal"] }, modelVersion: 3 },
     });
@@ -240,6 +256,9 @@ describe("getRerunPlan", () => {
   it("is blocked when the filter can't target an older model version", () => {
     const filter: ResourceActionFilter = { isOrphan: false, compliance: { eq: ["NON_COMPLIANT"] } };
 
-    expect(getRerunPlan(filter, 3, false)).toEqual({ kind: "blocked", blockedBy: "statusFilter" });
+    expect(createRerunPlan(filter, 3, false)).toEqual({
+      kind: "blocked",
+      blockedBy: "statusFilter",
+    });
   });
 });

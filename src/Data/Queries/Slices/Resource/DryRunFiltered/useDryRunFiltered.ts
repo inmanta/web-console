@@ -5,7 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { ResourceActionFilter } from "@/Core/Domain";
+import { ResourceActionFilter } from "@/Core";
 import { usePost } from "@/Data/Queries/Helpers";
 import { getDryRunsKey } from "@/Data/Queries/Slices/DryRun";
 import { DependencyContext } from "@/UI/Dependency";

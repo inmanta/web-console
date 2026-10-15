@@ -15,7 +15,12 @@ import { words } from "@/UI/words";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import * as DesiredStateMock from "@S/DesiredState/Data/Mock";
-import { countDiff, getFilterRows, getScopeLabel } from "./Components/ReportScope/helpers";
+import {
+  countDiff,
+  createFilterRows,
+  createStatusValues,
+  formatScopeLabel,
+} from "./Components/ReportScope/helpers";
 import { View } from "./Page";
 
 const axe = configureAxe({
@@ -370,10 +375,9 @@ describe("ComplianceCheck page", () => {
       // Instances show by name once they are looked up. The labels themselves are tested in
       // helpers.test.ts; this checks that each option shows its own.
       const labels = Mock.listOfReports.map((report) =>
-        getScopeLabel(
-          getFilterRows(report.resource_filter ?? {}, Number(report.model), {
-            [instance.id]: instance,
-          })
+        formatScopeLabel(
+          createFilterRows(report.resource_filter ?? {}, { [instance.id]: instance }),
+          createStatusValues(report.resource_filter ?? {})
         )
       );
       const options = screen.getAllByRole("option");
@@ -565,6 +569,12 @@ describe("ComplianceCheck page", () => {
         `${DesiredStateVersionStatus.retired} ${words("modelVersion")(Number(Mock.b.model))}`
       );
       expect(
+        within(scope).getByText(words("desiredState.complianceCheck.scope.value.wasLatestIntent"))
+      ).toBeVisible();
+      expect(
+        within(scope).queryByText(words("desiredState.complianceCheck.scope.value.latestIntent"))
+      ).not.toBeInTheDocument();
+      expect(
         within(scope).getByRole("button", {
           name: words("desiredState.complianceCheck.scope.rerun"),
         })
@@ -610,7 +620,7 @@ describe("ComplianceCheck page", () => {
       ).toBeVisible();
     });
 
-    test("GIVEN a report on a model version that no longer exists THEN it warns and can't be re-run", async () => {
+    test("GIVEN the model version's status can't be looked up THEN it can't be re-run", async () => {
       server.use(http.get("/api/v2/desiredstate", () => HttpResponse.json({ data: [] })));
       const { component } = setup();
 
@@ -618,9 +628,8 @@ describe("ComplianceCheck page", () => {
 
       const scope = await findScope();
 
-      expect(
-        await within(scope).findByText(words("desiredState.complianceCheck.scope.missing"))
-      ).toBeVisible();
+      // Re-run is also disabled while the status loads, so wait for the lookup to finish.
+      await waitFor(() => expect(testClient.isFetching()).toBe(0));
       expect(
         within(scope).queryByText(words("desiredState.complianceCheck.scope.notActive"))
       ).not.toBeInTheDocument();

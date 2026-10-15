@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { PageSize, Pagination, Resource, ResourceActionFilter } from "@/Core/Domain";
+import { PageSize, Pagination, Resource, ResourceActionFilter } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { MultiSort } from "@/Data/Common";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";

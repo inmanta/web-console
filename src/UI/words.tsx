@@ -1126,9 +1126,6 @@ const dict = {
   "desiredState.complianceCheck.scope.changed": "changed",
   "desiredState.complianceCheck.scope.notActive": "This version is not active.",
   "desiredState.complianceCheck.scope.notActive.description": (modelVersion: string) =>
-    `The diff is what a deploy of ${modelVersion} would change against the live state now. Nothing is scheduled, and deploy and repair are not offered here.`,
-  "desiredState.complianceCheck.scope.missing": "This version no longer exists.",
-  "desiredState.complianceCheck.scope.missing.description": (modelVersion: string) =>
     `The diff is what a deploy of ${modelVersion} would have changed when the dry run ran.`,
   "desiredState.complianceCheck.scope.filter.title": "Applied filter",
   // A template PatternFly's LabelGroup fills in, not a JS template string.
@@ -1137,12 +1134,8 @@ const dict = {
   "desiredState.complianceCheck.scope.json.title": "Resource filter",
   "desiredState.complianceCheck.scope.rerun": "Re-run",
   "desiredState.complianceCheck.scope.rerun.failed": "Re-running the dry run failed",
-  "desiredState.complianceCheck.scope.rerun.blockedBy.loading":
-    "Checking whether this model version is still active.",
-  "desiredState.complianceCheck.scope.rerun.blockedBy.missing":
-    "This model version no longer exists, so it can't be re-run.",
-  "desiredState.complianceCheck.scope.rerun.blockedBy.failed":
-    "Couldn't check whether this model version is still active, so it can't be re-run.",
+  "desiredState.complianceCheck.scope.rerun.unknownStatus":
+    "The status of this model version is unknown, so it can't be re-run.",
   "desiredState.complianceCheck.scope.label.anchor": (names: string[]) => names.join(" › "),
   "desiredState.complianceCheck.scope.label.owned": "+owned",
   "desiredState.complianceCheck.scope.label.more": (count: number) => `+${count}`,
@@ -1165,6 +1158,7 @@ const dict = {
   "desiredState.complianceCheck.scope.row.status": "Status",
   "desiredState.complianceCheck.scope.row.status.note": "transient",
   "desiredState.complianceCheck.scope.value.latestIntent": "latest intent",
+  "desiredState.complianceCheck.scope.value.wasLatestIntent": "was latest intent",
   "desiredState.complianceCheck.scope.value.excludesOrphans": "excludes orphans",
   "desiredState.complianceCheck.scope.value.owned": "owned",
   "desiredState.complianceCheck.scope.value.lifecycleState": (state: string) => `state ${state}`,

@@ -9,7 +9,7 @@ import {
   Form,
   FormGroup,
 } from "@patternfly/react-core";
-import { ResourceActionFilter } from "@/Core/Domain";
+import { ResourceActionFilter } from "@/Core";
 import { NonEmptyArray } from "@/Core/Language";
 import {
   DryRunVersion,

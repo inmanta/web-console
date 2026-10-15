@@ -1,17 +1,9 @@
-import { Diff, Resource, ResourceActionFilter, StringMatch } from "@/Core";
+import { Diff, DryRun, Resource, ResourceActionFilter, StringMatch } from "@/Core";
 import { getVersionSelectionBlocker, withDryRunVersion } from "@/Data/Queries/Slices/Resource";
 import { InstanceIdLookup } from "@/Data/Queries/Slices/ServiceInstance";
 import { words } from "@/UI/words";
-import { DryRun } from "@S/ComplianceCheck/Core/Domain";
-import { DesiredStateVersion } from "@S/DesiredState/Core/Domain";
-import {
-  DiffCounts,
-  FilterRow,
-  FilterValue,
-  InstancesById,
-  ModelVersionState,
-  RerunPlan,
-} from "./types";
+import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
+import { DiffCounts, FilterRow, FilterValue, InstancesById, RerunPlan } from "./types";
 
 /**
  * Collects the service instances that the reports' filters name, to look them up in as few
@@ -19,9 +11,9 @@ import {
  * those entities; the others, like a Resources page filter without an entity, are looked up on
  * their own, unless another report already groups them under an entity.
  *
- * @example getInstanceIdLookup([{ resource_filter: { serviceEntity: ["lab"], serviceInstance: ["b", "a"] }, ... }, { resource_filter: { serviceInstance: ["c"] }, ... }]) // { byEntity: { lab: ["a", "b"] }, withoutEntity: ["c"] }
+ * @example createInstanceIdLookup([{ resource_filter: { serviceEntity: ["lab"], serviceInstance: ["b", "a"] }, ... }, { resource_filter: { serviceInstance: ["c"] }, ... }]) // { byEntity: { lab: ["a", "b"] }, withoutEntity: ["c"] }
  */
-export const getInstanceIdLookup = (reports: DryRun[]): InstanceIdLookup => {
+export const createInstanceIdLookup = (reports: DryRun[]): InstanceIdLookup => {
   const idsByEntity = new Map<string, Set<string>>();
   const idsWithoutEntity = new Set<string>();
 
@@ -64,22 +56,36 @@ export const isFlag = ({ kind }: FilterValue): boolean =>
   kind === "includeOwned" || kind === "latestIntent";
 
 /**
- * Drops the % wildcards the console wraps around a contains value.
+ * Whether a model version is known to be inactive: its status is known and other than active. Its
+ * status is undefined until it is looked up, which counts as not known.
+ *
+ * @example isKnownInactive(DesiredStateVersionStatus.retired) // true
+ */
+export const isKnownInactive = (
+  modelVersionStatus: DesiredStateVersionStatus | undefined
+): boolean =>
+  modelVersionStatus !== undefined && modelVersionStatus !== DesiredStateVersionStatus.active;
+
+/**
+ * Drops the pair of % wildcards the console wraps around a contains value. A value without that
+ * pair, like a pattern posted through the API, stays as is.
  *
  * @example trimWildcards("%File%") // "File"
+ * @example trimWildcards("File%") // "File%"
  */
-const trimWildcards = (value: string): string => value.replace(/^%|%$/g, "");
+const trimWildcards = (value: string): string =>
+  value.length >= 2 && value.startsWith("%") && value.endsWith("%") ? value.slice(1, -1) : value;
 
 /**
  * Turns a string match into values, one per matched value. An enum match fits too, since it is a
- * string match without the substring operators. The equality values go through format, the
+ * string match without the substring operators. The equality values go through formatValue, the
  * substring values lose their % wildcards instead.
  *
- * @example matchToValues({ eq: ["a"], contains: ["%b%"] }) // [{ value: "a" }, { value: "b", operator: "contains" }]
+ * @example createFilterValues({ eq: ["a"], contains: ["%b%"] }) // [{ value: "a" }, { value: "b", operator: "contains" }]
  */
-const matchToValues = (
+const createFilterValues = (
   match: StringMatch | undefined,
-  format: (value: string) => string = (value) => value
+  formatValue: (value: string) => string = (value) => value
 ): FilterValue[] => {
   if (match === undefined) {
     return [];
@@ -88,8 +94,8 @@ const matchToValues = (
   const { eq = [], neq = [], contains = [], notContains = [] } = match;
 
   return [
-    ...eq.map((value): FilterValue => ({ value: format(value) })),
-    ...neq.map((value): FilterValue => ({ value: format(value), operator: "neq" })),
+    ...eq.map((value): FilterValue => ({ value: formatValue(value) })),
+    ...neq.map((value): FilterValue => ({ value: formatValue(value), operator: "neq" })),
     ...contains.map((value): FilterValue => ({
       value: trimWildcards(value),
       operator: "contains",
@@ -118,59 +124,21 @@ export const getInstanceName = (instanceId: string, instances: InstancesById): s
 const formatStatusValue = (value: string): string => value.toLowerCase().replace(/_/g, " ");
 
 /**
- * Builds the version row: the version the dry run ran on, and how the filter selected it.
- *
- * @example getVersionRow({ isOrphan: false }, 214) // { key: "version", values: [{ value: "v214" }, { value: "latest intent", kind: "latestIntent" }], note: "excludes orphans" }
- */
-const getVersionRow = (
-  filter: ResourceActionFilter,
-  modelVersion: number
-): FilterRow | undefined => {
-  const modelVersionValue = { value: words("modelVersion")(modelVersion) };
-
-  if (filter.instanceVersion !== undefined) {
-    return {
-      key: "version",
-      values: [{ value: words("instanceVersion")(filter.instanceVersion) }, modelVersionValue],
-    };
-  }
-  if (filter.modelVersion !== undefined) {
-    return { key: "version", values: [modelVersionValue] };
-  }
-  if (filter.isOrphan === false) {
-    return {
-      key: "version",
-      values: [
-        modelVersionValue,
-        {
-          value: words("desiredState.complianceCheck.scope.value.latestIntent"),
-          kind: "latestIntent",
-        },
-      ],
-      note: words("desiredState.complianceCheck.scope.value.excludesOrphans"),
-    };
-  }
-
-  return undefined;
-};
-
-/**
  * Splits a dry run's resource filter into the rows of its applied filter, in display order, without
- * empty rows. The rows hold only what the filter holds; instances show by name once they are
- * loaded.
+ * empty rows. The version and status values are created apart, since they group several fields.
+ * Instances show by name once they are loaded.
  *
- * @example getFilterRows({ isOrphan: false, agent: { eq: ["internal"] } }, 5, {}) // [{ key: "agent", values: [{ value: "internal" }] }, { key: "version", ... }]
+ * @example createFilterRows({ isOrphan: false, agent: { eq: ["internal"] } }, {}) // [{ key: "agent", values: [{ value: "internal" }] }]
  */
-export const getFilterRows = (
+export const createFilterRows = (
   filter: ResourceActionFilter,
-  modelVersion: number,
   instances: InstancesById
 ): FilterRow[] => {
   const ownedValue: FilterValue = {
     value: words("desiredState.complianceCheck.scope.value.owned"),
     kind: "includeOwned",
   };
-  const rows: (FilterRow | undefined)[] = [
+  const rows: FilterRow[] = [
     {
       key: "serviceEntity",
       values: (filter.serviceEntity ?? []).map((value): FilterValue => ({
@@ -191,9 +159,9 @@ export const getFilterRows = (
         ...(filter.includeOwned ? [ownedValue] : []),
       ],
     },
-    { key: "agent", values: matchToValues(filter.agent) },
-    { key: "resourceType", values: matchToValues(filter.resourceType) },
-    { key: "resourceIdValue", values: matchToValues(filter.resourceIdValue) },
+    { key: "agent", values: createFilterValues(filter.agent) },
+    { key: "resourceType", values: createFilterValues(filter.resourceType) },
+    { key: "resourceIdValue", values: createFilterValues(filter.resourceIdValue) },
     {
       key: "purged",
       values:
@@ -201,47 +169,85 @@ export const getFilterRows = (
           ? []
           : [{ value: words(`desiredState.complianceCheck.scope.value.purged.${filter.purged}`) }],
     },
-    getVersionRow(filter, modelVersion),
-    {
-      key: "status",
-      termNote: words("desiredState.complianceCheck.scope.row.status.note"),
-      isApart: true,
-      values: [
-        ...matchToValues(filter.compliance, formatStatusValue),
-        ...matchToValues(filter.lastHandlerRun, formatStatusValue),
-        ...matchToValues(filter.blocked, formatStatusValue),
-        ...(filter.isDeploying === undefined
-          ? []
-          : [
-              {
-                value: words(
-                  `desiredState.complianceCheck.scope.value.isDeploying.${filter.isDeploying}`
-                ),
-              },
-            ]),
-        ...(filter.isOrphan
-          ? [{ value: words("desiredState.complianceCheck.scope.value.orphansOnly") }]
-          : []),
-      ],
-    },
   ];
 
-  return rows.filter((row): row is FilterRow => row !== undefined && row.values.length > 0);
+  return rows.filter(({ values }) => values.length > 0);
 };
+
+/**
+ * Creates the values of the version row: the version the dry run ran on, and how the filter
+ * selected it. Latest intent (isOrphan: false) is a flag while the model version is active or its
+ * status is unknown; once it is known to be other than active, it was only the latest intent when
+ * the dry run ran, and shows as a plain value.
+ *
+ * @example createVersionValues({ isOrphan: false }, 214, DesiredStateVersionStatus.active) // [{ value: "v214" }, { value: "latest intent", kind: "latestIntent" }]
+ */
+export const createVersionValues = (
+  filter: ResourceActionFilter,
+  modelVersion: number,
+  modelVersionStatus: DesiredStateVersionStatus | undefined
+): FilterValue[] => {
+  const modelVersionValue = { value: words("modelVersion")(modelVersion) };
+
+  if (filter.instanceVersion !== undefined) {
+    return [{ value: words("instanceVersion")(filter.instanceVersion) }, modelVersionValue];
+  }
+  if (filter.modelVersion !== undefined) {
+    return [modelVersionValue];
+  }
+  if (filter.isOrphan === false) {
+    return [
+      modelVersionValue,
+      isKnownInactive(modelVersionStatus)
+        ? { value: words("desiredState.complianceCheck.scope.value.wasLatestIntent") }
+        : {
+            value: words("desiredState.complianceCheck.scope.value.latestIntent"),
+            kind: "latestIntent",
+          },
+    ];
+  }
+
+  return [];
+};
+
+/**
+ * Creates the values of the status row: the conditions on the resources' status, which describe a
+ * moment rather than the scope.
+ *
+ * @example createStatusValues({ compliance: { neq: ["NON_COMPLIANT"] }, isDeploying: true }) // [{ value: "non compliant", operator: "neq" }, { value: "deploying" }]
+ */
+export const createStatusValues = (filter: ResourceActionFilter): FilterValue[] => [
+  ...createFilterValues(filter.compliance, formatStatusValue),
+  ...createFilterValues(filter.lastHandlerRun, formatStatusValue),
+  ...createFilterValues(filter.blocked, formatStatusValue),
+  ...(filter.isDeploying === undefined
+    ? []
+    : [
+        {
+          value: words(
+            `desiredState.complianceCheck.scope.value.isDeploying.${filter.isDeploying}`
+          ),
+        },
+      ]),
+  ...(filter.isOrphan
+    ? [{ value: words("desiredState.complianceCheck.scope.value.orphansOnly") }]
+    : []),
+];
 
 /**
  * Whether a dry run's filter narrows the resources, rather than only picking the model version.
  *
- * @example isFiltered(getFilterRows({ isOrphan: false }, 5, {})) // false
+ * @example isFiltered([], []) // false
  */
-export const isFiltered = (rows: FilterRow[]): boolean => rows.some(({ key }) => key !== "version");
+export const isFiltered = (rows: FilterRow[], statusValues: FilterValue[]): boolean =>
+  rows.length > 0 || statusValues.length > 0;
 
 /**
- * The text of a value, with its operator. A value without one shows as is.
+ * Formats a value with its operator. A value without one shows as is.
  *
- * @example getValueText({ value: "File", operator: "contains" }) // 'contains "File"'
+ * @example formatFilterValue({ value: "File", operator: "contains" }) // 'contains "File"'
  */
-export const getValueText = ({ value, operator }: FilterValue): string =>
+export const formatFilterValue = ({ value, operator }: FilterValue): string =>
   operator ? words(`desiredState.complianceCheck.scope.operator.${operator}`)(value) : value;
 
 /**
@@ -250,15 +256,14 @@ export const getValueText = ({ value, operator }: FilterValue): string =>
  * and "+N"; without an anchor, a single condition is shown whole, and more read
  * "Filtered · N conditions". A dry run that only picks a version reads "Full model".
  *
- * @example getScopeLabel([{ key: "agent", values: [{ value: "router-east" }] }, versionRow]) // "Agent = router-east"
+ * @example formatScopeLabel([{ key: "agent", values: [{ value: "router-east" }] }], []) // "Agent = router-east"
  */
-export const getScopeLabel = (rows: FilterRow[]): string => {
-  if (!isFiltered(rows)) {
+export const formatScopeLabel = (rows: FilterRow[], statusValues: FilterValue[]): string => {
+  if (!isFiltered(rows, statusValues)) {
     return words("desiredState.complianceCheck.scope.fullModel");
   }
 
-  const conditionRows = rows.filter(({ key }) => key !== "version");
-  const values = conditionRows.flatMap(({ values }) => values);
+  const values = [...rows.flatMap(({ values }) => values), ...statusValues];
   const anchorKinds: FilterValue["kind"][] = ["serviceEntity", "serviceInstance"];
   const anchorValues = anchorKinds.flatMap(
     (anchorKind) => values.find(({ kind }) => kind === anchorKind) ?? []
@@ -282,40 +287,16 @@ export const getScopeLabel = (rows: FilterRow[]): string => {
   }
 
   if (values.length === 1) {
-    const [row] = conditionRows;
     const [{ value, operator = "eq" }] = values;
+    const rowKey = rows.length > 0 ? rows[0].key : "status";
 
     return words("desiredState.complianceCheck.scope.label.condition")(
-      words(`desiredState.complianceCheck.scope.row.${row.key}`),
+      words(`desiredState.complianceCheck.scope.row.${rowKey}`),
       words(`desiredState.complianceCheck.scope.operator.${operator}`)(value)
     );
   }
 
   return words("desiredState.complianceCheck.scope.label.conditions")(values.length);
-};
-
-/**
- * Turns the lookup of a report's model version into what is known about it. The lookup holds null
- * when the version no longer exists. Data from an earlier lookup still counts when a later one
- * fails.
- *
- * @example getModelVersionState({ data: null, isError: false }) // { state: "missing" }
- */
-export const getModelVersionState = ({
-  data,
-  isError,
-}: {
-  data: DesiredStateVersion | null | undefined;
-  isError: boolean;
-}): ModelVersionState => {
-  if (data === null) {
-    return { state: "missing" };
-  }
-  if (data !== undefined) {
-    return { state: "known", status: data.status };
-  }
-
-  return { state: isError ? "failed" : "loading" };
 };
 
 /**
@@ -331,14 +312,14 @@ export const countDiff = (diff: Diff.Resource[]): DiffCounts => ({
 });
 
 /**
- * Returns how to re-run a dry run with the same scope on the same model version. A filter that
+ * Creates the plan to re-run a dry run with the same scope on the same model version. A filter that
  * already sets a model or instance version is posted as is. One that targets the active model
  * version (isOrphan: false) is posted as is while that version is still active, and otherwise gets
  * the report's model version, unless its filter blocks selecting a version.
  *
- * @example getRerunPlan({ isOrphan: false, agent: { eq: ["internal"] } }, 4, false) // { kind: "ready", filter: { agent: { eq: ["internal"] }, modelVersion: 4 } }
+ * @example createRerunPlan({ isOrphan: false, agent: { eq: ["internal"] } }, 4, false) // { kind: "ready", filter: { agent: { eq: ["internal"] }, modelVersion: 4 } }
  */
-export const getRerunPlan = (
+export const createRerunPlan = (
   resourceFilter: ResourceActionFilter,
   modelVersion: number,
   isActiveVersion: boolean

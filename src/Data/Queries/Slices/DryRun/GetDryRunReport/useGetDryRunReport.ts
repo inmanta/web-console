@@ -1,29 +1,29 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { DryRunReport } from "@/Core";
 import { useGet } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
-import { Report } from "@S/ComplianceCheck/Core/Domain";
 
 /**
  * Report interface for the dry run report API response
  */
 interface Response {
-  data: Report;
+  data: DryRunReport;
 }
 
 /**
  * Return signature of the useGetDryRunReport React Query hook
  */
 interface GetDryRunReport {
-  useOneTime: (version: string, reportId: string) => UseQueryResult<Report, Error>;
+  useOneTime: (version: string, reportId: string) => UseQueryResult<DryRunReport, Error>;
 }
 
 /**
  * React Query hook to fetch Dry Run Report
  *
  * @returns {GetDryRunReport} An object containing the available queries
- * @returns {UseQueryResult<Report, Error>} returns.useOneTime - Fetch the  dry run report with a single query
+ * @returns {UseQueryResult<DryRunReport, Error>} returns.useOneTime - Fetch the  dry run report with a single query
  */
 export const useGetDryRunReport = (): GetDryRunReport => {
   const { environmentHandler } = useContext(DependencyContext);
@@ -31,7 +31,7 @@ export const useGetDryRunReport = (): GetDryRunReport => {
   const get = useGet(env)<Response>;
 
   return {
-    useOneTime: (version: string, reportId: string): UseQueryResult<Report, Error> =>
+    useOneTime: (version: string, reportId: string): UseQueryResult<DryRunReport, Error> =>
       useQuery({
         queryKey: getDryRunReportKey.single(reportId, [{ version }, env]),
         queryFn: () => get(`/api/v2/dryrun/${version}/${encodeURIComponent(reportId)}`),

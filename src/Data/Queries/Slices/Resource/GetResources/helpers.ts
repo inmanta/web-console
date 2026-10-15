@@ -1,4 +1,4 @@
-import { Resource, ResourceActionFilter } from "@/Core/Domain";
+import { Resource, ResourceActionFilter } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage, MultiSort } from "@/Data/Common";
 import { PageInfo } from "./useGetResources";

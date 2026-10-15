@@ -5,7 +5,7 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { Resource, ResourceActionFilter } from "@/Core/Domain";
+import { Resource, ResourceActionFilter } from "@/Core";
 import { NonEmptyArray } from "@/Core/Language";
 import { getDesiredStateVersionKey } from "@/Data/Queries/Slices/DesiredState";
 import { StartedDryRun } from "@/Data/Queries/Slices/Resource";
@@ -17,6 +17,7 @@ import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
+import { routes } from "@/routes";
 import * as DesiredStatesMock from "@S/DesiredState/Data/Mock";
 import { historyData } from "@S/ServiceInstanceDetails/Test/mockData";
 import { ResourceActionScope } from "./ResourceActionConfirmModal";
@@ -501,7 +502,7 @@ describe("ResourceActions", () => {
 
       // The link keeps the environment and drops the state of the page it was started from.
       expect(JSON.parse(screen.getByTestId("location").textContent ?? "{}")).toEqual({
-        pathname: PrimaryRouteManager("").getUrl("ComplianceCheck", {
+        pathname: PrimaryRouteManager("", routes).getUrl("ComplianceCheck", {
           version: String(startedDryRun.modelVersion),
         }),
         env: EnvironmentDetails.env.id,
