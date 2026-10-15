@@ -4,13 +4,14 @@ import * as InstanceComposerEditor from "@S/InstanceComposerEditor/Core/Route";
 import * as InstanceComposerViewer from "@S/InstanceComposerViewer/Core/Route";
 
 /**
- * The Instance Composer. Its pages pull in @joint/plus, so they are only fetched when a composer
- * route is opened.
+ * The Instance Composer. Its pages pull in @joint/plus, so they are not preloaded: they are only
+ * fetched when a composer route is opened.
  */
 export const composerFeature: FeatureModule = {
   id: "composer",
   version: APP_VERSION,
   licenseFeature: "ui.ui",
+  preload: false,
   routes: [
     {
       route: InstanceComposer.route,

@@ -40,6 +40,9 @@ export const Root: React.FC = () => {
     setPages(pageManager.getPages());
   }, [pageManager]);
 
+  // Fetch the other pages in the background, so they open without a loading view.
+  useEffect(() => pageManager.preloadPages(), [pageManager]);
+
   // This is done because the StyledComponents package is not fully compatible with React 18 typing definitions.
   // https://github.com/styled-components/styled-components/issues/3738
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

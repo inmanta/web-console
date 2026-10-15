@@ -33,6 +33,13 @@ export interface FeatureModule {
   routes: FeatureRoute[];
 
   /**
+   * Whether the app fetches the pages of the feature in the background once it is idle, so they
+   * open without a loading view. Defaults to true. A feature with heavy pages that most users
+   * never open turns it off, so its code is only fetched when one of its pages is opened.
+   */
+  preload?: boolean;
+
+  /**
    * The entries the feature adds to the sidebar.
    */
   navigation?: NavigationEntry[];
