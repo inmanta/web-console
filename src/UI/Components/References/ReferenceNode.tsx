@@ -1,3 +1,7 @@
+/**
+ * ReferenceNode, ArgumentValue and ReplacementList render each other recursively, so they live
+ * in one module: split over files, they would import each other in a cycle.
+ */
 import React from "react";
 import {
   Card,
@@ -13,8 +17,7 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Reference, ResourceDetailsTab } from "@/Core/Domain";
-import { summarize } from "@/Data/Common/References";
-import { classifyValue } from "@/Data/Common/References/classifyValue";
+import { classifyValue, summarize } from "@/Data/Common/References";
 import { AttributeValue } from "@/UI/Components/AttributeList";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
 import { HoverRow, HoverRowGroup } from "@/UI/Components/RowHoverReveal";
@@ -29,9 +32,6 @@ import {
   WithKindLabel,
 } from "./ArgumentKind";
 import { ReferenceChip } from "./ReferenceChip";
-
-// ReferenceNode, ArgumentValue and ReplacementList render each other recursively, so they live
-// in one module: split over files, they would import each other in a cycle.
 
 interface ReferenceNodeProps {
   referenceId: string;

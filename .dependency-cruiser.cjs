@@ -6,8 +6,8 @@
  * gone whether or not they use the `type` keyword, and dynamic imports
  * (lazy-loaded pages) are excluded because they don't run at load time.
  *
- * The check fails on any cycle. There are none today, so fix a cycle your
- * change introduces instead of ignoring it.
+ * The check fails on any cycle, so fix a cycle your change introduces instead
+ * of ignoring it.
  *
  * @type {import('dependency-cruiser').IConfiguration}
  */
