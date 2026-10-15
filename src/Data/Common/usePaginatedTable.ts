@@ -5,7 +5,7 @@ import {
   useUrlStateWithPageSize,
   useUrlStateWithFilter,
   useUrlStateWithSort,
-} from "./";
+} from "./UrlState";
 
 interface UsePaginatedTableOptions<TFilter = undefined, TSort extends string = string> {
   route: RouteKind;

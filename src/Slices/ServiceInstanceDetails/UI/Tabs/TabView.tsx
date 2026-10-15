@@ -13,13 +13,10 @@ import { useUrlStateWithString } from "@/Data/Common";
 import { words } from "@/UI/words";
 
 import { InstanceDetailsContext } from "../../Core/Context";
-import {
-  AttributesTabContent,
-  DocAttributeDescriptors,
-  DocumentationTabContent,
-  EventsTabContent,
-  ResourcesTabContent,
-} from ".";
+import { AttributesTabContent } from "./AttributesTabContent";
+import { DocAttributeDescriptors, DocumentationTabContent } from "./DocumentationTabContent";
+import { EventsTabContent } from "./EventTabContent";
+import { ResourcesTabContent } from "./ResourcesTabContent";
 
 enum TabKeys {
   DOCUMENTATION = "Documentation",
