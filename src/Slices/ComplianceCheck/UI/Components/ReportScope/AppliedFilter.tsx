@@ -190,8 +190,10 @@ const ValueLabels: React.FC<PropsWithChildren<{ term: string; values: FilterValu
           collapsedText={words("desiredState.complianceCheck.scope.filter.more")}
           aria-label={term}
         >
-          {conditionValues.map((value) => (
-            <ValueLabel key={`${value.kind}-${formatFilterValue(value)}`} value={value} />
+          {/* Two values can show the same text (e.g. two instances with the same label), so the
+              index keeps the keys unique. The list is fixed per report. */}
+          {conditionValues.map((value, index) => (
+            <ValueLabel key={`${index}-${formatFilterValue(value)}`} value={value} />
           ))}
         </LabelGroup>
       )}

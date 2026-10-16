@@ -112,14 +112,17 @@ const LocationDisplay: React.FC = () => {
   );
 };
 
-function setup(props: React.ComponentProps<typeof ResourceActions> = { filter, tooltips }) {
+function setup(
+  props: React.ComponentProps<typeof ResourceActions> = { filter, tooltips },
+  registeredRoutes = routes
+) {
   return (
     <QueryClientProvider client={testClient}>
       {/* Starts with page state next to the environment, to check what a link keeps. */}
       <TestMemoryRouter
         initialEntries={[`/?env=${EnvironmentDetails.env.id}&state.Resources.pageSize=50`]}
       >
-        <MockedDependencyProvider env={EnvironmentDetails.env}>
+        <MockedDependencyProvider env={EnvironmentDetails.env} routes={registeredRoutes}>
           <ModalProvider>
             <Page>
               <LocationDisplay />
@@ -533,6 +536,26 @@ describe("ResourceActions", () => {
         env: EnvironmentDetails.env.id,
         state: { ComplianceCheck: { report: startedDryRun.id } },
       });
+    });
+
+    test("GIVEN the Compliance Check route is not registered WHEN a dry run starts THEN its toast has no report link", async () => {
+      render(
+        setup(
+          { filter, tooltips },
+          routes.filter((route) => route("").kind !== "ComplianceCheck")
+        )
+      );
+
+      const dialog = await openDryRun();
+
+      await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
+
+      expect(await screen.findByTestId("ToastAlert")).toHaveTextContent(
+        words("desiredState.complianceCheck.report.started")
+      );
+      expect(
+        screen.queryByRole("button", { name: words("desiredState.complianceCheck.report.view") })
+      ).not.toBeInTheDocument();
     });
 
     test("WHEN another model version is selected THEN the dry run runs against that model version", async () => {

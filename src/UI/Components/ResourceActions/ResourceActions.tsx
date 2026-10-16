@@ -71,7 +71,8 @@ type Props =
  * Deploy is the default action; the caret adds Repair and Dry run. Deploy and Repair hit the
  * deploy_filtered endpoint and Dry run hits dryrun_filtered, so one control serves a single resource,
  * the active filter, a whole environment or a service instance. Dry run always opens the dialog, to
- * select the version to preview against, and its toast links to the dry run's report. A dry run
+ * select the version to preview against, and its toast links to the dry run's report when the app
+ * has the Compliance Check page. A dry run
  * stores the labels of the service instances its filter names, so its report shows them. It
  * disables itself while the environment is halted.
  *
@@ -90,7 +91,7 @@ type Props =
 export const ResourceActions: React.FC<Props> = (props) => {
   const { disabledReason, tooltips, instance, instanceLabels } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const { environmentHandler } = useContext(DependencyContext);
+  const { environmentHandler, routeManager } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
   const isHalted = environmentHandler.useIsHalted();
   const { notifySuccess, notifyError, notifyInfo } = useAppAlert();
@@ -131,15 +132,16 @@ export const ResourceActions: React.FC<Props> = (props) => {
       createReportSearch(search, dryRunId)
     );
 
+  // Without the Compliance Check page, the toast only says the dry run started, without a broken link.
   const notifyDryRunStarted = ({ id, modelVersion }: StartedDryRun) =>
     notifyInfo({
       customIcon: <EyeIcon />,
       title: words("desiredState.complianceCheck.report.started"),
-      actionLinks: (
+      actionLinks: routeManager.has("ComplianceCheck") ? (
         <AlertActionLink onClick={() => openReport(id, modelVersion)}>
           {words("desiredState.complianceCheck.report.view")}
         </AlertActionLink>
-      ),
+      ) : undefined,
     });
 
   const run = (key: ActionKey, scopeFilter: ResourceActionFilter) => {
