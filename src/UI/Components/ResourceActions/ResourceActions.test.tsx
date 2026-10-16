@@ -767,9 +767,8 @@ describe("ResourceActions", () => {
         serviceInstance: [instance.id],
       };
       const ownedFilter: ResourceActionFilter = { ...instanceFilter, includeOwned: true };
-      const instanceContext: DryRunContext = {
-        web_instance_labels: { [instance.id]: instance.label },
-      };
+      const instanceLabels = { [instance.id]: instance.label };
+      const instanceContext: DryRunContext = { web_instance_labels: instanceLabels };
       const instanceScopes: NonEmptyArray<ResourceActionScope> = [
         {
           id: "instance",
@@ -814,7 +813,7 @@ describe("ResourceActions", () => {
       });
 
       const openInstanceDryRun = async () => {
-        render(setup({ scopes: instanceScopes, tooltips, instance }));
+        render(setup({ scopes: instanceScopes, tooltips, instance, instanceLabels }));
 
         await userEvent.click(screen.getByRole("button", { name: toggleLabel }));
         await userEvent.click(screen.getByRole("menuitem", { name: new RegExp(dryRunLabel, "i") }));

@@ -5,8 +5,7 @@ import { useGetDesiredStateVersion } from "@/Data/Queries/Slices/DesiredState";
 import { DesiredStateStatusLabel } from "@/UI/Components/DesiredStateStatusLabel";
 import { words } from "@/UI/words";
 import { AppliedFilter } from "./AppliedFilter";
-import { countDiff, getReportInstanceLabels, isKnownInactive } from "./helpers";
-import { useFilterRows } from "./useFilterRows";
+import { countDiff, createReportScopeParts, isKnownInactive } from "./helpers";
 
 interface Props {
   report: DryRun;
@@ -42,7 +41,7 @@ export const ReportScope: React.FC<Props> = ({ report, diff, onRerunStart }) => 
   const modelVersion = Number(report.model);
   const { data: desiredStateVersion } = useGetDesiredStateVersion(modelVersion);
   const modelVersionStatus = desiredStateVersion?.status;
-  const rows = useFilterRows(report);
+  const { rows, statusValues } = useMemo(() => createReportScopeParts(report), [report]);
   const diffCounts = useMemo(() => diff && countDiff(diff), [diff]);
   const resourceFilter = report.resource_filter;
   const modelVersionText = words("modelVersion")(modelVersion);
@@ -122,8 +121,9 @@ export const ReportScope: React.FC<Props> = ({ report, diff, onRerunStart }) => 
             {resourceFilter && (
               <AppliedFilter
                 rows={rows}
+                statusValues={statusValues}
                 resourceFilter={resourceFilter}
-                instanceLabels={getReportInstanceLabels(report)}
+                context={report.context}
                 modelVersion={modelVersion}
                 modelVersionStatus={modelVersionStatus}
                 onRerunStart={onRerunStart}

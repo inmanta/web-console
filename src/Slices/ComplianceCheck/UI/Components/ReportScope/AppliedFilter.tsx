@@ -16,19 +16,20 @@ import {
   ModalVariant,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Tr } from "@patternfly/react-table";
-import { ResourceActionFilter } from "@/Core";
+import { DryRunContext, ResourceActionFilter } from "@/Core";
 import { CodeEditor } from "@/UI/Components/CodeEditor";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import { RerunButton } from "./RerunButton";
-import { createStatusValues, createVersionValues, formatFilterValue, isFlag } from "./helpers";
+import { createVersionValues, formatFilterValue, isFlag } from "./helpers";
 import { FilterRow, FilterValue } from "./types";
 
 interface Props {
   rows: FilterRow[];
+  statusValues: FilterValue[];
   resourceFilter: ResourceActionFilter;
-  instanceLabels: Record<string, string>;
+  context?: DryRunContext | null;
   modelVersion: number;
   modelVersionStatus: DesiredStateVersionStatus | undefined;
   onRerunStart: () => void;
@@ -43,9 +44,10 @@ interface Props {
  *
  * @props {Props} props - The props of the component
  *  @prop {FilterRow[]} rows - The filter rows, in display order
+ *  @prop {FilterValue[]} statusValues - The values of the status row
  *  @prop {ResourceActionFilter} resourceFilter - The filter the dry run was started with
- *  @prop {Record<string, string>} instanceLabels - The labels of the filter's service instances,
- *    keyed by instance id, to store with a re-run
+ *  @prop {DryRunContext | null} [context] - The context the dry run was started with, to store
+ *    with a re-run
  *  @prop {number} modelVersion - The model version of the dry run
  *  @prop {DesiredStateVersionStatus | undefined} modelVersionStatus - The status of that model
  *    version, undefined until it is known
@@ -55,8 +57,9 @@ interface Props {
  */
 export const AppliedFilter: React.FC<Props> = ({
   rows,
+  statusValues,
   resourceFilter,
-  instanceLabels,
+  context,
   modelVersion,
   modelVersionStatus,
   onRerunStart,
@@ -68,7 +71,6 @@ export const AppliedFilter: React.FC<Props> = ({
   const versionTerm = words("desiredState.complianceCheck.scope.row.version");
   const versionValues = createVersionValues(resourceFilter, modelVersion, modelVersionStatus);
   const statusTerm = words("desiredState.complianceCheck.scope.row.status");
-  const statusValues = createStatusValues(resourceFilter);
 
   const openJSON = () =>
     triggerModal({
@@ -90,7 +92,7 @@ export const AppliedFilter: React.FC<Props> = ({
             <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
               <RerunButton
                 resourceFilter={resourceFilter}
-                instanceLabels={instanceLabels}
+                context={context}
                 modelVersion={modelVersion}
                 modelVersionStatus={modelVersionStatus}
                 onRerunStart={onRerunStart}

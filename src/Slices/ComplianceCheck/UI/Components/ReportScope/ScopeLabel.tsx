@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Label } from "@patternfly/react-core";
 import { DryRun } from "@/Core";
-import { createStatusValues, formatScopeLabel, isFiltered } from "./helpers";
-import { useFilterRows } from "./useFilterRows";
+import { createReportScopeParts } from "./helpers";
 
 /**
  * The most characters a scope label shows before it is truncated: enough for the design's longest
@@ -26,16 +25,15 @@ interface Props {
  * @returns {React.FC<Props>} The scope label
  */
 export const ScopeLabel: React.FC<Props> = ({ report }) => {
-  const rows = useFilterRows(report);
-  const statusValues = report.resource_filter ? createStatusValues(report.resource_filter) : [];
+  const { isFiltered, label } = useMemo(() => createReportScopeParts(report), [report]);
 
   return (
     <Label
       isCompact
       textMaxWidth={SCOPE_LABEL_MAX_WIDTH}
-      {...(isFiltered(rows, statusValues) ? { color: "purple" } : { variant: "outline" })}
+      {...(isFiltered ? { color: "purple" } : { variant: "outline" })}
     >
-      {formatScopeLabel(rows, statusValues)}
+      {label}
     </Label>
   );
 };

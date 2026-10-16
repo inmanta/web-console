@@ -13,11 +13,11 @@ import { StartedDryRun } from "./types";
 
 /**
  * What a filtered dry run is started with: the filter of the resources it covers, and the context
- * stored with it for its report.
+ * stored with it for its report. Without a context (null or left out), it gets none.
  */
 interface DryRunFilteredRequest {
   filter: ResourceActionFilter;
-  context: DryRunContext;
+  context?: DryRunContext | null;
 }
 
 /**

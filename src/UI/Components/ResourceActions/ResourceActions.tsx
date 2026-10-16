@@ -82,8 +82,8 @@ type Props =
  *  @prop {string} [disabledReason] - When set, disables the control and shows this as its tooltip
  *  @prop {ResourceActionInstance} [instance] - The service instance the scopes belong to; the dialog names
  *    it and a dry run can select one of its own versions
- *  @prop {Record<string, string>} [instanceLabels] - The labels of the other service instances the
- *    filters may name, keyed by instance id
+ *  @prop {Record<string, string>} [instanceLabels] - The labels of the service instances the filters
+ *    may name, keyed by instance id, to store with a dry run
  *
  * @returns {React.FC<Props>} The rendered split button
  */
@@ -151,14 +151,8 @@ export const ResourceActions: React.FC<Props> = (props) => {
       });
 
     if (key === "dryRun") {
-      const knownInstanceLabels: Record<string, string> = { ...instanceLabels };
-
-      if (instance) {
-        knownInstanceLabels[instance.id] = instance.label;
-      }
-
       dryRun.mutate(
-        { filter: scopeFilter, context: createDryRunContext(scopeFilter, knownInstanceLabels) },
+        { filter: scopeFilter, context: createDryRunContext(scopeFilter, instanceLabels ?? {}) },
         {
           onSuccess: notifyDryRunStarted,
           onError,

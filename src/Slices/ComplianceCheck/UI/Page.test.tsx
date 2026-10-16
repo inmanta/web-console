@@ -16,13 +16,7 @@ import { words } from "@/UI/words";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import * as DesiredStateMock from "@S/DesiredState/Data/Mock";
-import {
-  countDiff,
-  createFilterRows,
-  createStatusValues,
-  formatScopeLabel,
-  getReportInstanceLabels,
-} from "./Components/ReportScope/helpers";
+import { countDiff, createReportScopeParts } from "./Components/ReportScope/helpers";
 import { View } from "./Page";
 
 const axe = configureAxe({
@@ -373,15 +367,9 @@ describe("ComplianceCheck page", () => {
 
       await userEvent.click(await screen.findByRole("button", { name: "ReportListSelect" }));
 
-      // Instances show by the labels stored with each report. The scope labels themselves and
-      // getReportInstanceLabels are tested in helpers.test.ts; this checks that each option shows
-      // its own.
-      const scopeLabels = Mock.listOfReports.map((report) =>
-        formatScopeLabel(
-          createFilterRows(report.resource_filter ?? {}, getReportInstanceLabels(report)),
-          createStatusValues(report.resource_filter ?? {})
-        )
-      );
+      // Instances show by the labels stored with each report. createReportScopeParts is tested in
+      // helpers.test.ts; this checks that each option shows its own scope label.
+      const scopeLabels = Mock.listOfReports.map((report) => createReportScopeParts(report).label);
       const options = screen.getAllByRole("option");
 
       expect(
@@ -504,11 +492,15 @@ describe("ComplianceCheck page", () => {
       );
     });
 
-    test("WHEN Re-run is clicked THEN it re-posts the report's filter and instance labels and selects the new report", async () => {
+    test("WHEN Re-run is clicked THEN it re-posts the report's filter and context and selects the new report", async () => {
       const report: DryRun = {
         ...Mock.b,
         resource_filter: { ...Mock.b.resource_filter, serviceInstance: [instance.id] },
-        context: { web_instance_labels: { [instance.id]: Mock.filteredInstanceLabel } },
+        // A key another client stored, which the re-run keeps.
+        context: {
+          web_instance_labels: { [instance.id]: Mock.filteredInstanceLabel },
+          other_client_key: "kept",
+        },
       };
       let body: unknown;
       let data: { data: DryRun[] } = { data: [report] };

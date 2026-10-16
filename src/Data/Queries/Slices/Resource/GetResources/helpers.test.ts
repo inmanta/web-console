@@ -252,6 +252,17 @@ describe("getFilterInstanceLabels", () => {
     expect(getFilterInstanceLabels(filter)).toEqual({ abc: "cpe-1", def: "cpe-2" });
   });
 
+  it("leaves out an instance whose filter value carries its id as label", () => {
+    const filter = {
+      serviceInstance: [
+        Resource.encodeServiceInstanceFilterValue("abc", "cpe-1"),
+        Resource.encodeServiceInstanceFilterValue("def"),
+      ],
+    };
+
+    expect(getFilterInstanceLabels(filter)).toEqual({ abc: "cpe-1" });
+  });
+
   it("returns no labels for a filter without instances", () => {
     expect(getFilterInstanceLabels({ agent: ["internal"] })).toEqual({});
   });

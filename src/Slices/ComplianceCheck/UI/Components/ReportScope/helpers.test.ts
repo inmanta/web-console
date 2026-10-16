@@ -6,6 +6,7 @@ import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import {
   countDiff,
   createFilterRows,
+  createReportScopeParts,
   createRerunPlan,
   createStatusValues,
   createVersionValues,
@@ -27,8 +28,39 @@ describe("getReportInstanceLabels", () => {
   });
 
   it("has no labels for a report without the web-console's context", () => {
+    const { context: _context, ...reportWithoutContext } = Mock.a;
+
+    expect(getReportInstanceLabels(reportWithoutContext)).toEqual({});
     expect(getReportInstanceLabels({ ...Mock.a, context: null })).toEqual({});
     expect(getReportInstanceLabels({ ...Mock.a, context: {} })).toEqual({});
+  });
+
+  it.each`
+    description   | contextInstanceLabels
+    ${"a string"} | ${"cpe-1"}
+    ${"an array"} | ${["cpe-1"]}
+    ${"a number"} | ${7}
+  `(
+    "has no labels when another client stored $description as instance labels",
+    ({ contextInstanceLabels }) => {
+      expect(
+        getReportInstanceLabels({
+          ...Mock.a,
+          context: { web_instance_labels: contextInstanceLabels },
+        })
+      ).toEqual({});
+    }
+  );
+
+  it("keeps only the labels that are strings", () => {
+    expect(
+      getReportInstanceLabels({
+        ...Mock.a,
+        context: {
+          web_instance_labels: { ...instanceLabels, def: { name: "cpe-2" }, ghi: 7, jkl: null },
+        },
+      })
+    ).toEqual(instanceLabels);
   });
 });
 
@@ -146,12 +178,6 @@ describe("formatScopeLabel", () => {
   const labelOf = (filter: ResourceActionFilter) =>
     formatScopeLabel(createFilterRows(filter, instanceLabels), createStatusValues(filter));
 
-  it("reads Full model when the filter only picks a version", () => {
-    expect(labelOf({ isOrphan: false })).toBe(
-      words("desiredState.complianceCheck.scope.fullModel")
-    );
-  });
-
   it("leads with the service anchor and collapses the rest", () => {
     expect(
       labelOf({
@@ -186,6 +212,56 @@ describe("formatScopeLabel", () => {
     expect(
       labelOf({ isOrphan: false, agent: { eq: ["a"] }, compliance: { eq: ["NON_COMPLIANT"] } })
     ).toBe(words("desiredState.complianceCheck.scope.label.conditions")(2));
+  });
+});
+
+describe("createReportScopeParts", () => {
+  const fullModelScope = {
+    rows: [],
+    statusValues: [],
+    isFiltered: false,
+    label: words("desiredState.complianceCheck.scope.fullModel"),
+  };
+
+  it("reads Full model for a dry run on the whole model version", () => {
+    expect(createReportScopeParts({ ...Mock.a, resource_filter: null })).toEqual(fullModelScope);
+  });
+
+  it("reads Full model when the filter only picks a version", () => {
+    expect(createReportScopeParts({ ...Mock.a, resource_filter: { isOrphan: false } })).toEqual(
+      fullModelScope
+    );
+  });
+
+  it("shows the instances by the labels stored with the report", () => {
+    expect(
+      createReportScopeParts({
+        ...Mock.a,
+        resource_filter: { isOrphan: false, serviceInstance: [instance.id] },
+        context: { web_instance_labels: instanceLabels },
+      })
+    ).toEqual({
+      rows: [
+        { key: "serviceInstance", values: [{ value: instanceLabel, kind: "serviceInstance" }] },
+      ],
+      statusValues: [],
+      isFiltered: true,
+      label: instanceLabel,
+    });
+  });
+
+  it("counts a filter with only status conditions as filtered", () => {
+    expect(
+      createReportScopeParts({
+        ...Mock.a,
+        resource_filter: { isOrphan: false, compliance: { eq: ["NON_COMPLIANT"] } },
+      })
+    ).toEqual({
+      rows: [],
+      statusValues: [{ value: "non compliant" }],
+      isFiltered: true,
+      label: `${words("desiredState.complianceCheck.scope.row.status")} = non compliant`,
+    });
   });
 });
 

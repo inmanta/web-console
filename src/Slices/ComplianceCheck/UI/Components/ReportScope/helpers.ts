@@ -1,17 +1,32 @@
-import { Diff, DryRun, Resource, ResourceActionFilter, StringMatch } from "@/Core";
+import { Diff, DryRun, Resource, ResourceActionFilter, StringMatch, isObject } from "@/Core";
 import { getVersionSelectionBlocker, withDryRunVersion } from "@/Data/Queries/Slices/Resource";
 import { words } from "@/UI/words";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
-import { DiffCounts, FilterRow, FilterValue, RerunPlan } from "./types";
+import { DiffCounts, FilterRow, FilterValue, ReportScopeParts, RerunPlan } from "./types";
 
 /**
  * Gets the labels of the service instances a dry run report's filter names, keyed by instance id,
- * as the web-console stored them in its context. A report started without them has none.
+ * as the web-console stored them in its context. Any client can store anything in the context, so
+ * it keeps only the labels that are strings. A report started without them has none.
  *
- * @example getReportInstanceLabels({ context: { web_instance_labels: { abc: "cpe-1" } }, ... }) // { abc: "cpe-1" }
+ * @example getReportInstanceLabels({ context: { web_instance_labels: { abc: "cpe-1", def: 7 } }, ... }) // { abc: "cpe-1" }
  */
-export const getReportInstanceLabels = (report: DryRun): Record<string, string> =>
-  report.context?.web_instance_labels ?? {};
+export const getReportInstanceLabels = (report: DryRun): Record<string, string> => {
+  const contextInstanceLabels = report.context?.web_instance_labels;
+  const instanceLabels: Record<string, string> = {};
+
+  if (!isObject(contextInstanceLabels)) {
+    return instanceLabels;
+  }
+
+  for (const [instanceId, label] of Object.entries(contextInstanceLabels)) {
+    if (typeof label === "string") {
+      instanceLabels[instanceId] = label;
+    }
+  }
+
+  return instanceLabels;
+};
 
 /**
  * Whether a value is a flag (owned services, latest intent) rather than a condition value.
@@ -201,14 +216,6 @@ export const createStatusValues = (filter: ResourceActionFilter): FilterValue[] 
 ];
 
 /**
- * Whether a dry run's filter narrows the resources, rather than only picking the model version.
- *
- * @example isFiltered([{ key: "agent", values: [{ value: "internal" }] }], []) // true
- */
-export const isFiltered = (rows: FilterRow[], statusValues: FilterValue[]): boolean =>
-  rows.length > 0 || statusValues.length > 0;
-
-/**
  * Formats a value with its operator. A value without one shows as is.
  *
  * @example formatFilterValue({ value: "File", operator: "contains" }) // 'contains "File"'
@@ -217,18 +224,14 @@ export const formatFilterValue = ({ value, operator }: FilterValue): string =>
   operator ? words(`desiredState.complianceCheck.scope.operator.${operator}`)(value) : value;
 
 /**
- * Summarizes a dry run's applied filter in a few words, to tell reports of the same model version
- * apart. It leads with the service anchor (entity › instance) and collapses the rest into "+owned"
- * and "+N"; without an anchor, a single condition is shown whole, and more read
- * "Filtered · N conditions". A dry run that only picks a version reads "Full model".
+ * Summarizes the applied filter of a dry run that narrows the resources in a few words, to tell
+ * reports of the same model version apart. It leads with the service anchor (entity › instance)
+ * and collapses the rest into "+owned" and "+N"; without an anchor, a single condition is shown
+ * whole, and more read "Filtered · N conditions".
  *
  * @example formatScopeLabel([{ key: "agent", values: [{ value: "internal" }] }], []) // "Agent = internal"
  */
 export const formatScopeLabel = (rows: FilterRow[], statusValues: FilterValue[]): string => {
-  if (!isFiltered(rows, statusValues)) {
-    return words("desiredState.complianceCheck.scope.fullModel");
-  }
-
   const values = [...rows.flatMap(({ values }) => values), ...statusValues];
   const anchorKinds: FilterValue["kind"][] = ["serviceEntity", "serviceInstance"];
   const anchorValues = anchorKinds.flatMap(
@@ -263,6 +266,29 @@ export const formatScopeLabel = (rows: FilterRow[], statusValues: FilterValue[])
   }
 
   return words("desiredState.complianceCheck.scope.label.conditions")(values.length);
+};
+
+/**
+ * Creates a dry run report's scope from its resource filter, with its service instances shown by
+ * the labels stored with the report. A dry run on the whole model version, or one whose filter only
+ * picks the version, has no rows or status values and reads "Full model".
+ *
+ * @example createReportScopeParts({ resource_filter: { isOrphan: false, agent: { eq: ["internal"] } }, ... }) // { rows: [{ key: "agent", values: [{ value: "internal" }] }], statusValues: [], isFiltered: true, label: "Agent = internal" }
+ */
+export const createReportScopeParts = (report: DryRun): ReportScopeParts => {
+  const resourceFilter = report.resource_filter ?? {};
+  const rows = createFilterRows(resourceFilter, getReportInstanceLabels(report));
+  const statusValues = createStatusValues(resourceFilter);
+  const isFiltered = rows.length > 0 || statusValues.length > 0;
+
+  return {
+    rows,
+    statusValues,
+    isFiltered,
+    label: isFiltered
+      ? formatScopeLabel(rows, statusValues)
+      : words("desiredState.complianceCheck.scope.fullModel"),
+  };
 };
 
 /**

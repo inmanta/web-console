@@ -82,6 +82,16 @@ export const Page: React.FC = () => {
 
   const rows = useMemo(() => tablePresenter.createRows(data?.resources ?? []), [data?.resources]);
 
+  const resourceActionFilter = useMemo(
+    () => mapToResourceActionFilter(filterWithDefaults),
+    [filterWithDefaults]
+  );
+
+  const filterInstanceLabels = useMemo(
+    () => getFilterInstanceLabels(filterWithDefaults),
+    [filterWithDefaults]
+  );
+
   if (isError) {
     return <ErrorView message={error.message} ariaLabel="ResourcesPage-Error" retry={refetch} />;
   }
@@ -143,12 +153,12 @@ export const Page: React.FC = () => {
                   repair: words("resources.resourceActions.repair.tooltip.resources"),
                   dryRun: words("resources.resourceActions.dryRun.tooltip.resources"),
                 }}
-                instanceLabels={getFilterInstanceLabels(filterWithDefaults)}
+                instanceLabels={filterInstanceLabels}
                 scopes={[
                   {
                     id: "filtered",
                     title: words("resources.resourceActions.confirm.filtered.title"),
-                    filter: mapToResourceActionFilter(filterWithDefaults),
+                    filter: resourceActionFilter,
                     count: Number(data.metadata.total),
                   },
                   {

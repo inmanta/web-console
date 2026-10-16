@@ -131,18 +131,23 @@ export function mapToResourceActionFilter(filter?: Resource.Filter): ResourceAct
 
 /**
  * Gets the label of each service instance in a Resources page filter, keyed by instance id, as its
- * filter value carries it.
+ * filter value carries it. An instance without a label of its own carries its id instead, and is
+ * left out.
  *
  * @example getFilterInstanceLabels({ serviceInstance: ['{"id":"abc","label":"cpe-1"}'] }) // { abc: "cpe-1" }
  */
 export function getFilterInstanceLabels(filter?: Resource.Filter): Record<string, string> {
-  return Object.fromEntries(
-    (filter?.serviceInstance ?? []).map((value) => {
-      const { id, label } = Resource.parseServiceInstanceFilterValue(value);
+  const instanceLabels: Record<string, string> = {};
 
-      return [id, label];
-    })
-  );
+  for (const value of filter?.serviceInstance ?? []) {
+    const { id, label } = Resource.parseServiceInstanceFilterValue(value);
+
+    if (label !== id) {
+      instanceLabels[id] = label;
+    }
+  }
+
+  return instanceLabels;
 }
 
 /**

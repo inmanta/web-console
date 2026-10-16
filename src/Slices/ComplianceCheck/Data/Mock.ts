@@ -30,6 +30,7 @@ export const b: DryRun = {
   },
   context: { web_instance_labels: {} },
 };
+// A report from a server that doesn't store dry run contexts, which leaves context out.
 export const c: DryRun = {
   id: "0d88ed3a-e2ee-4590-a127-1d587f5824a3",
   environment: "040687c1-9ad6-4ebc-b146-513760ee4517",
@@ -38,7 +39,6 @@ export const c: DryRun = {
   total: 4,
   todo: 0,
   resource_filter: null,
-  context: null,
 };
 
 const d: DryRun = {

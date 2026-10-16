@@ -2,10 +2,10 @@ import { Resource, ResourceActionFilter } from "@/Core";
 import { createDryRunContext, getVersionSelectionBlocker } from "./helpers";
 
 describe("createDryRunContext", () => {
-  it("keeps the labels of the filter's instances only, and labels an unknown one by its id", () => {
+  it("keeps the known labels of the filter's instances only", () => {
     expect(
       createDryRunContext({ serviceInstance: ["abc", "def"] }, { abc: "cpe-1", xyz: "cpe-9" })
-    ).toEqual({ web_instance_labels: { abc: "cpe-1", def: "def" } });
+    ).toEqual({ web_instance_labels: { abc: "cpe-1" } });
   });
 
   it("has no labels for a filter without instances", () => {

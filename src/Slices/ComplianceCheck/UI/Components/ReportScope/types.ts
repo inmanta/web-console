@@ -38,6 +38,18 @@ export interface FilterRow {
 }
 
 /**
+ * A dry run report's scope as the page shows it: the rows of its applied filter, the values of its
+ * status row, whether its filter narrows the resources rather than only picking the model version,
+ * and the scope label that sums it up.
+ */
+export interface ReportScopeParts {
+  rows: FilterRow[];
+  statusValues: FilterValue[];
+  isFiltered: boolean;
+  label: string;
+}
+
+/**
  * How to re-run a dry run report: with this filter, or not at all because the filter can't target
  * the report's model version.
  */
