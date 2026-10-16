@@ -29,7 +29,7 @@ const setup = ({ preload, factsPage }: { preload?: boolean; factsPage?: PageLoad
   return {
     loadAgents,
     loadFacts,
-    createPageManager: () => new PrimaryPageManager(routes, [feature]),
+    createPageManager: () => PrimaryPageManager(routes, [feature]),
   };
 };
 
@@ -56,7 +56,7 @@ describe("PrimaryPageManager", () => {
 
   test("GIVEN a registered route that no feature declares WHEN getting the pages THEN its element is null", () => {
     const routes = PrimaryRouteManager("", [Facts.route]).getRoutes();
-    const pages = new PrimaryPageManager(routes, []).getPages();
+    const pages = PrimaryPageManager(routes, []).getPages();
 
     expect(pages).toHaveLength(1);
     expect(pages[0].element).toBeNull();

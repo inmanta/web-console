@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useContext, useEffect, useMemo, useState } from "react";
+import React, { lazy, Suspense, useContext, useEffect, useMemo } from "react";
 import { Route, Routes } from "react-router";
 import { LoginPage } from "@/Slices/Login";
 import { DependencyContext } from "@/UI/Dependency";
@@ -30,15 +30,11 @@ export const Root: React.FC = () => {
   setThemePreference(themePreference || "light");
 
   const pageManager = useMemo(
-    () => new PrimaryPageManager(routeManager.getRoutes(), features),
+    () => PrimaryPageManager(routeManager.getRoutes(), features),
     [routeManager, features]
   );
 
-  const [pages, setPages] = useState(pageManager.getPages());
-
-  useEffect(() => {
-    setPages(pageManager.getPages());
-  }, [pageManager]);
+  const pages = useMemo(() => pageManager.getPages(), [pageManager]);
 
   // Fetch the other pages in the background, so they open without a loading view.
   useEffect(() => pageManager.preloadPages(), [pageManager]);

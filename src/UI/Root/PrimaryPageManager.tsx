@@ -116,32 +116,26 @@ const whenIdle = (callback: () => void): (() => void) => {
 
 /**
  * Builds the pages of the registered routes from the features that declare them.
+ *
+ * @param routes - the registered routes
+ * @param features - the features the app ships
+ * @returns the page manager
  */
-export class PrimaryPageManager implements PageManager {
-  private readonly pageLoaders: Map<RouteKind, PageLoader>;
-  private readonly preloadedKinds: Set<RouteKind>;
+export function PrimaryPageManager(routes: Route[], features: FeatureModule[]): PageManager {
+  const featureRoutes = features.flatMap(({ routes, preload = true }) =>
+    routes.map(({ route, page }) => ({ kind: route("").kind, page, preload }))
+  );
 
-  /**
-   * @param routes - the registered routes
-   * @param features - the features the app ships
-   */
-  constructor(
-    private readonly routes: Route[],
-    features: FeatureModule[]
-  ) {
-    const featureRoutes = features.flatMap(({ routes, preload = true }) =>
-      routes.map(({ route, page }) => ({ kind: route("").kind, page, preload }))
-    );
+  const pageLoaders = new Map<RouteKind, PageLoader>(
+    featureRoutes.map(({ kind, page }) => [kind, page])
+  );
+  const preloadedKinds = new Set<RouteKind>(
+    featureRoutes.filter(({ preload }) => preload).map(({ kind }) => kind)
+  );
 
-    this.pageLoaders = new Map(featureRoutes.map(({ kind, page }) => [kind, page]));
-    this.preloadedKinds = new Set(
-      featureRoutes.filter(({ preload }) => preload).map(({ kind }) => kind)
-    );
-  }
-
-  getPages(): Page[] {
-    return this.routes.map((route) => {
-      const loadPage = this.pageLoaders.get(route.kind);
+  function getPages(): Page[] {
+    return routes.map((route) => {
+      const loadPage = pageLoaders.get(route.kind);
 
       return {
         ...route,
@@ -152,10 +146,10 @@ export class PrimaryPageManager implements PageManager {
     });
   }
 
-  preloadPages(): () => void {
-    const loaders = this.routes
-      .filter(({ kind }) => this.preloadedKinds.has(kind))
-      .map(({ kind }) => this.pageLoaders.get(kind))
+  function preloadPages(): () => void {
+    const loaders = routes
+      .filter(({ kind }) => preloadedKinds.has(kind))
+      .map(({ kind }) => pageLoaders.get(kind))
       .filter((loadPage): loadPage is PageLoader => loadPage !== undefined)
       .filter((loadPage) => !loadedPages.has(loadPage));
 
@@ -184,4 +178,9 @@ export class PrimaryPageManager implements PageManager {
       cancelNext();
     };
   }
+
+  return {
+    getPages,
+    preloadPages,
+  };
 }
