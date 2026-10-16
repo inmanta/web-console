@@ -1,0 +1,4 @@
+description: Raise the Dependabot open pull request limit from 1 to 5 so a single open PR no longer blocks all other dependency updates.
+change-type: patch
+destination-branches: [master]
+sections: {}
