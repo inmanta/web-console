@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @testing-library/user-event from 14.6.7 to 14.6.8
+destination-branches:
+- master
+- iso9
+sections: {}
