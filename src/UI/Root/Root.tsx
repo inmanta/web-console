@@ -1,15 +1,8 @@
-import React, { lazy, Suspense, useContext, useEffect, useMemo, useState } from "react";
-import { Route, Routes } from "react-router";
-import { LoginPage } from "@/Slices/Login";
-import { DependencyContext } from "@/UI/Dependency";
-import { SearchSanitizer, PrimaryBaseUrlManager } from "@/UI/Routing";
-import { RouteOutlet } from "@/UI/Routing/RouteOutlet";
+import React, { lazy, Suspense } from "react";
+import { Outlet } from "react-router";
+import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
-import { NotFoundPage } from "@S/NotFound/UI";
 import { getThemePreference, setThemePreference } from "../Components/DarkmodeOption";
-import { PageFrame } from "./Components";
-import { DefaultRoute } from "./Components/DefaultRoute";
-import { PrimaryPageManager } from "./PrimaryPageManager";
 
 const ReactQueryDevtools = lazy(() =>
   import("@tanstack/react-query-devtools").then((mod) => ({
@@ -17,28 +10,13 @@ const ReactQueryDevtools = lazy(() =>
   }))
 );
 
+/**
+ * The layout of the app. The matched route (see `createRootRoutes`) renders in its `Outlet`.
+ */
 export const Root: React.FC = () => {
-  const { routeManager } = useContext(DependencyContext);
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname
-  );
-  const basePathname = baseUrlManager.getBasePathname();
-
   const themePreference = getThemePreference();
 
   setThemePreference(themePreference || "light");
-
-  const pageManager = useMemo(
-    () => new PrimaryPageManager(routeManager.getRoutes()),
-    [routeManager]
-  );
-
-  const [pages, setPages] = useState(pageManager.getPages());
-
-  useEffect(() => {
-    setPages(pageManager.getPages());
-  }, [pageManager]);
 
   // This is done because the StyledComponents package is not fully compatible with React 18 typing definitions.
   // https://github.com/styled-components/styled-components/issues/3738
@@ -54,28 +32,7 @@ export const Root: React.FC = () => {
       )}
       <GlobalStyleProxy />
       <SearchSanitizer.Provider>
-        <Routes>
-          <Route path={`${basePathname}/login`} element={<LoginPage />} />
-          <Route element={<RouteOutlet />}>
-            <Route path="/" element={<DefaultRoute />} />
-            <Route path={basePathname} element={<DefaultRoute />} />
-            <Route
-              path="*"
-              element={
-                <PageFrame environmentRole="Required">
-                  <NotFoundPage />
-                </PageFrame>
-              }
-            />
-            {pages.map(({ path, kind, element, environmentRole }) => (
-              <Route
-                path={path}
-                element={<PageFrame environmentRole={environmentRole}>{element}</PageFrame>}
-                key={kind}
-              />
-            ))}
-          </Route>
-        </Routes>
+        <Outlet />
       </SearchSanitizer.Provider>
     </>
   );

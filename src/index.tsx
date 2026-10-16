@@ -7,7 +7,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as monaco from "monaco-editor";
 import { createRoot } from "react-dom/client";
 import { QueryControlProvider } from "@/Data/Queries/Helpers";
-import { Root } from "@/UI/Root";
+import { createRootRoutes, Root } from "@/UI/Root";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import { AuthProvider } from "./Data/Auth/AuthProvider";
 import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
@@ -93,20 +94,28 @@ root.render(
   <ErrorBoundary>
     <QueryControlProvider>
       <QueryClientProvider client={queryClient}>
-        <CustomRouter>
-          <AuthProvider config={globalThis && globalThis.auth}>
-            <Flex
-              flexWrap={{ default: "nowrap" }}
-              spaceItems={{ default: "spaceItemsNone" }}
-              direction={{ default: "column" }}
-              style={{ height: "100%" }}
-            >
-              <Injector>
-                <Root />
-              </Injector>
-            </Flex>
-          </AuthProvider>
-        </CustomRouter>
+        <CustomRouter
+          layout={
+            <AuthProvider config={globalThis && globalThis.auth}>
+              <Flex
+                flexWrap={{ default: "nowrap" }}
+                spaceItems={{ default: "spaceItemsNone" }}
+                direction={{ default: "column" }}
+                style={{ height: "100%" }}
+              >
+                <Injector>
+                  <Root />
+                </Injector>
+              </Flex>
+            </AuthProvider>
+          }
+          routes={createRootRoutes(
+            new PrimaryBaseUrlManager(
+              globalThis.location.origin,
+              globalThis.location.pathname
+            ).getBasePathname()
+          )}
+        />
       </QueryClientProvider>
     </QueryControlProvider>
   </ErrorBoundary>
