@@ -813,6 +813,35 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphiql/react@npm:^0.39.1":
+  version: 0.39.1
+  resolution: "@graphiql/react@npm:0.39.1"
+  dependencies:
+    "@graphiql/toolkit": "npm:^0.12.1"
+    "@radix-ui/react-dialog": "npm:^1.1"
+    "@radix-ui/react-dropdown-menu": "npm:^2.1"
+    "@radix-ui/react-tooltip": "npm:^1.2"
+    "@radix-ui/react-visually-hidden": "npm:^1.2"
+    clsx: "npm:^1.2.1"
+    framer-motion: "npm:^13.2"
+    get-value: "npm:^4.1.0"
+    graphql-language-service: "npm:^5.7.0"
+    jsonc-parser: "npm:^3.3.1"
+    markdown-it: "npm:^15.0.1"
+    monaco-editor: "npm:0.52.2"
+    monaco-graphql: "npm:^1.9.0"
+    prettier: "npm:^3.5.3"
+    react-compiler-runtime: "npm:19.1.0-rc.3"
+    set-value: "npm:^4.1.0"
+    zustand: "npm:^5"
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
+    react: ^18 || ^19
+    react-dom: ^18 || ^19
+  checksum: 10/845eb6ad73638a155d58625daf8d8e68c89608369f7cf04fcf6d40c4e4fd83cd2975b1e2e70dbe4615e3e0db7a7601225fd861636444b845318169aacf7e5b0c
+  languageName: node
+  linkType: hard
+
 "@graphiql/toolkit@npm:^0.12.0, @graphiql/toolkit@npm:^0.12.1":
   version: 0.12.1
   resolution: "@graphiql/toolkit@npm:0.12.1"
@@ -925,7 +954,7 @@ __metadata:
   resolution: "@inmanta/web-console@workspace:."
   dependencies:
     "@eslint/compat": "npm:^2.1.0"
-    "@graphiql/react": "npm:^0.37.7"
+    "@graphiql/react": "npm:^0.39.1"
     "@joint/plus": "npm:^4.3.3"
     "@loadable/component": "npm:^5.16.7"
     "@monaco-editor/react": "npm:^4.7.0"
@@ -4216,6 +4245,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"argparse@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "argparse@npm:3.0.3"
+  checksum: 10/6834e247fe8a8d21a0061dc2b7134ae79625d9ab795eca043d8ba9434be3bc1e7d049c9a4aa01bd3d6bfc145b29addfb290d17b8b3f7b11710cc52ab13629f31
+  languageName: node
+  linkType: hard
+
 "aria-hidden@npm:^1.2.4":
   version: 1.2.6
   resolution: "aria-hidden@npm:1.2.6"
@@ -5888,6 +5924,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"entities@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "entities@npm:8.1.0"
+  checksum: 10/bd2fadbcabcf2cbd5de6b8155289acec9394d004fc095b9c7b3fdb4135468d8823a6de12275b07085e5dc077a142ede24e71098ffeb064000312d2a6960330a2
+  languageName: node
+  linkType: hard
+
 "env-paths@npm:^2.2.0":
   version: 2.2.1
   resolution: "env-paths@npm:2.2.1"
@@ -6703,6 +6746,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"framer-motion@npm:^13.2":
+  version: 13.5.1
+  resolution: "framer-motion@npm:13.5.1"
+  dependencies:
+    motion-dom: "npm:13.5.1"
+    motion-utils: "npm:13.5.0"
+    tslib: "npm:^2.4.0"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    react-dom:
+      optional: true
+  checksum: 10/34e429d254361bd6ea55d61003078a4043da888899f93b4ecd444078fbe06ec7d7b9203703ac364ba6ce1cba5fe2616f47762a909f8dc8faad041bfdfb74d81f
+  languageName: node
+  linkType: hard
+
 "fs-extra@npm:^9.1.0":
   version: 9.1.0
   resolution: "fs-extra@npm:9.1.0"
@@ -6881,6 +6943,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"get-value@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "get-value@npm:4.1.0"
+  checksum: 10/b8385e2d486fda0463841842c301288257776af444893f5bceeb8ec878b6f20b1f11eee6d7290c9f3a782b34e74465b39ed2e9f84ac66abfacba2bd70bb0a922
+  languageName: node
+  linkType: hard
+
 "getpass@npm:^0.1.1":
   version: 0.1.7
   resolution: "getpass@npm:0.1.7"
@@ -6994,6 +7063,21 @@ __metadata:
   bin:
     graphql: dist/temp-bin.js
   checksum: 10/0b921718005fafdba7a2a4b269f832469ba435417526aa8993f490453e1e7f6dc1508ae49a780a40089c20a4815f1e75c6ce4e0b128daee390a7e055f0a77082
+  languageName: node
+  linkType: hard
+
+"graphql-language-service@npm:^5.7.0":
+  version: 5.7.0
+  resolution: "graphql-language-service@npm:5.7.0"
+  dependencies:
+    debounce-promise: "npm:^3.1.2"
+    nullthrows: "npm:^1.0.0"
+    vscode-languageserver-types: "npm:^3.17.1"
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
+  bin:
+    graphql: dist/temp-bin.js
+  checksum: 10/7e0620aa09910326b0ab81da54bb4571d09e5de08816efd26740f3daa977abf0cbc4ee1145d4b57f32b580be88a80fb66eebf315b7fe9e6c504bf8730843b824
   languageName: node
   linkType: hard
 
@@ -8230,7 +8314,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"linkify-it@npm:^6.0.0":
+"linkify-it@npm:^6.0.0, linkify-it@npm:^6.1.0":
   version: 6.1.0
   resolution: "linkify-it@npm:6.1.0"
   dependencies:
@@ -8427,6 +8511,22 @@ __metadata:
   bin:
     markdown-it: bin/markdown-it.mjs
   checksum: 10/192fc9332aee1d9d7e71c6bbdc52e43a7cf36a85213c01d64e32e8c8ea5efea2184c55e7298524007d2336b1e4282b31b722b41c4d69d90ba018676daadd4ab8
+  languageName: node
+  linkType: hard
+
+"markdown-it@npm:^15.0.1":
+  version: 15.0.3
+  resolution: "markdown-it@npm:15.0.3"
+  dependencies:
+    argparse: "npm:^3.0.3"
+    entities: "npm:^8.1.0"
+    linkify-it: "npm:^6.1.0"
+    mdurl: "npm:^2.1.0"
+    punycode.js: "npm:^2.3.1"
+    uc.micro: "npm:^3.0.0"
+  bin:
+    markdown-it: bin/markdown-it.mjs
+  checksum: 10/a8a9d3305dfced367cffce7cdce25ab44cfe292a7496d7956681f91648e3affe736c36f52008c93cfa9bea9597cf2ffaddee37815390998d0b6b9262639cb0b3
   languageName: node
   linkType: hard
 
@@ -8755,12 +8855,42 @@ __metadata:
   languageName: node
   linkType: hard
 
+"monaco-graphql@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "monaco-graphql@npm:1.9.0"
+  dependencies:
+    graphql-language-service: "npm:^5.7.0"
+    picomatch-browser: "npm:^2.2.6"
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
+    monaco-editor: ">= 0.20.0 < 0.53"
+    prettier: ^2.8.0 || ^3.0.0
+  checksum: 10/de73bb50507fdaf55cc537bfc6406a6ca51842c031fbb7ceab2f8ad0c3a4342456dfc0257471c6fb8d823aa21f0349b5cbb0d53f0941f21732e16df7e17fb254
+  languageName: node
+  linkType: hard
+
+"motion-dom@npm:13.5.1":
+  version: 13.5.1
+  resolution: "motion-dom@npm:13.5.1"
+  dependencies:
+    motion-utils: "npm:13.5.0"
+  checksum: 10/3be9d4dd79d6e5dc7605ae5380f08eaa90e69299c465414b6646d31d99c32452dc08e4d2ddeb0e6aa1e4df0567862bd77d68804e85bd075fff178414651125f6
+  languageName: node
+  linkType: hard
+
 "motion-dom@npm:^12.35.2":
   version: 12.35.2
   resolution: "motion-dom@npm:12.35.2"
   dependencies:
     motion-utils: "npm:^12.29.2"
   checksum: 10/dd009e58b178dd80b123a86199ae78ecd6b2fc6c8e03464b2daf43b4218dfcc36042ec0af8fad2c6c157198f56849f90dc033b58f46478b45fbaeaefcc2710ad
+  languageName: node
+  linkType: hard
+
+"motion-utils@npm:13.5.0":
+  version: 13.5.0
+  resolution: "motion-utils@npm:13.5.0"
+  checksum: 10/ccdba6179ddd7b22913bb81ca4961df5218efca2d754bfe72e63c90b50ff273666cb06d83319f2299a88263b8f5779ea45ae9e7113b7c893b3515aa2970f8fb0
   languageName: node
   linkType: hard
 
@@ -9484,6 +9614,15 @@ __metadata:
   peerDependencies:
     react: ^17.0.0 || ^18.0.0 || ^19.0.0 || ^0.0.0-experimental
   checksum: 10/f64a63f8a6eacaebf87b2065dea9b2adc90d061c94361b31233284cbacc3fcf5f7dce6b5353ac8862ca5aa0a0d92240e3d6d695afa73d6bc5ce6d347b4c66870
+  languageName: node
+  linkType: hard
+
+"react-compiler-runtime@npm:19.1.0-rc.3":
+  version: 19.1.0-rc.3
+  resolution: "react-compiler-runtime@npm:19.1.0-rc.3"
+  peerDependencies:
+    react: ^17.0.0 || ^18.0.0 || ^19.0.0 || ^0.0.0-experimental
+  checksum: 10/ee9085e070eec4135bad982f47a82a4fc28c0c6d7111b3ec93354dab61bd56f9da0bde18af2ab0ee84f5ff9e71026cbfa58513ce8ac7c0290979a84199970ab6
   languageName: node
   linkType: hard
 
