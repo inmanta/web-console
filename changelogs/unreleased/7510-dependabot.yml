@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @remix-run/router from 1.23.3 to 1.23.4
+destination-branches:
+- master
+- iso9
+sections: {}

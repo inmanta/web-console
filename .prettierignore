@@ -10,7 +10,6 @@ node_modules
 # Generated files
 *.min.js
 *.min.css
-.dependency-cruiser-known-violations.json
 
 # IDE and editor files
 .idea

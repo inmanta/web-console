@@ -60,26 +60,35 @@ export const parseMulti = <Key extends string>(value: unknown): MultiSort<Key> =
 };
 
 /**
- * Toggles a column's sort entry within a MultiSort array.
- * Cycles through three states, leaving all other entries untouched:
- *  - absent → appended as `asc`
- *  - `asc`  → updated to `desc`
- *  - `desc` → removed
+ * Toggles a column's sort entry within a MultiSort array, leaving all other entries untouched.
+ * Cycles through three states:
+ *  - absent → appended in `initialOrder`
+ *  - `initialOrder` → updated to the opposite order
+ *  - opposite order → removed
  *
  * Intended for column header click handlers in multi-sort tables.
+ *
+ * @example
+ * toggleMulti([], "isDeploying", "desc")
+ * // → [{ name: "isDeploying", order: "desc" }]
+ * toggleMulti([{ name: "isDeploying", order: "desc" }], "isDeploying", "desc")
+ * // → [{ name: "isDeploying", order: "asc" }]
  */
 export const toggleMulti = <Key extends string>(
   sorts: MultiSort<Key>,
-  name: Key
+  name: Key,
+  initialOrder: Sort.Order
 ): MultiSort<Key> => {
   const existing = sorts.find((s) => s.name === name);
 
   if (!existing) {
-    return [...sorts, { name, order: "asc" }];
+    return [...sorts, { name, order: initialOrder }];
   }
 
-  if (existing.order === "asc") {
-    return sorts.map((s) => (s.name === name ? { ...s, order: "desc" } : s));
+  if (existing.order === initialOrder) {
+    const oppositeOrder = initialOrder === "asc" ? "desc" : "asc";
+
+    return sorts.map((s) => (s.name === name ? { ...s, order: oppositeOrder } : s));
   }
 
   return sorts.filter((s) => s.name !== name);

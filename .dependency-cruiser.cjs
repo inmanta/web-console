@@ -6,13 +6,8 @@
  * gone whether or not they use the `type` keyword, and dynamic imports
  * (lazy-loaded pages) are excluded because they don't run at load time.
  *
- * The cycles that already exist are recorded in
- * .dependency-cruiser-known-violations.json and ignored, so the check fails on
- * new cycles only. Regenerate it with `yarn check-circular-deps:baseline`
- * after removing cycles or moving files that are in one. The baseline stores
- * one cycle per import, so removing an import can surface another cycle that
- * already existed: regenerating is fine then. Don't use it to accept a cycle
- * your change introduced: fix it.
+ * The check fails on any cycle, so fix a cycle your change introduces instead
+ * of ignoring it.
  *
  * @type {import('dependency-cruiser').IConfiguration}
  */

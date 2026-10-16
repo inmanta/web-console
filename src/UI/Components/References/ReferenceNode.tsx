@@ -1,3 +1,7 @@
+/**
+ * ReferenceNode, ArgumentValue and ReplacementList render each other recursively, so they live
+ * in one module: split over files, they would import each other in a cycle.
+ */
 import React from "react";
 import {
   Card,
@@ -7,17 +11,29 @@ import {
   DescriptionListTerm,
   ExpandableSection,
   Flex,
+  Label,
+  Stack,
+  StackItem,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Reference } from "@/Core/Domain";
-import { summarize } from "@/Data/Common/References";
+import { Reference, ResourceDetailsTab } from "@/Core/Domain";
+import { classifyValue, summarize } from "@/Data/Common/References";
+import { AttributeValue } from "@/UI/Components/AttributeList";
+import { ResourceLink } from "@/UI/Components/ResourceLink";
 import { HoverRow, HoverRowGroup } from "@/UI/Components/RowHoverReveal";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { words } from "@/UI/words";
-import { ArgumentValue } from "./ArgumentValue";
+import {
+  ClassifiedValue,
+  factResourceId,
+  INLINE_KINDS,
+  kindLabel,
+  Unresolved,
+  WithKindLabel,
+} from "./ArgumentValueParts";
 import { ReferenceChip } from "./ReferenceChip";
 
-interface Props {
+interface ReferenceNodeProps {
   referenceId: string;
   index: Reference.ReferenceIndex;
   isExpanded: (key: string) => boolean;
@@ -47,7 +63,7 @@ const isSelfResourceArg = (arg: Reference.Argument): boolean =>
  * @prop {string} [path] - This node's position in the tree; the expansion key.
  * @prop {React.ReactNode} [toggleLabel] - Shown next to the chip in the toggle.
  */
-export const ReferenceNode: React.FC<Props> = ({
+export const ReferenceNode: React.FC<ReferenceNodeProps> = ({
   referenceId,
   index,
   isExpanded,
@@ -136,6 +152,197 @@ export const ReferenceNode: React.FC<Props> = ({
     </ExpandableSection>
   );
 };
+
+interface ArgumentValueProps {
+  argument: Reference.Argument;
+  referenceType: string;
+  index: Reference.ReferenceIndex;
+  isExpanded: (key: string) => boolean;
+  onToggle: (key: string) => () => void;
+  ancestors: string[];
+  path: string;
+}
+
+/**
+ * Renders one normalized argument by its kind: literal/json through the shared
+ * attribute pipeline, a reference as an expandable child node, mjson with its
+ * replacements under it, a resource as a link, python_type/get as text, and unknown
+ * from its raw payload. A fact reference's `resource_id` links to that resource's
+ * Facts tab. Inline values carry a kind label behind them, a reference carries it
+ * in its toggle, and a code editor gets none. Child nodes extend `path` with the
+ * argument name so their expansion is per occurrence.
+ *
+ * @prop {Reference.Argument} argument - The normalized argument to render.
+ * @prop {string} referenceType - The type of the reference that owns the argument.
+ * @prop {Reference.ReferenceIndex} index - Lookup from reference id to normalized node.
+ * @prop {(key: string) => boolean} isExpanded - Whether the node at a path is expanded.
+ * @prop {(key: string) => () => void} onToggle - Returns the toggle handler for a path.
+ * @prop {string[]} ancestors - Reference ids on the path here, for cycle detection.
+ * @prop {string} path - The owning node's path, extended for child nodes.
+ */
+const ArgumentValue: React.FC<ArgumentValueProps> = ({
+  argument,
+  referenceType,
+  index,
+  isExpanded,
+  onToggle,
+  ancestors,
+  path,
+}) => {
+  const label = kindLabel(argument);
+
+  switch (argument.kind) {
+    case "literal":
+    case "json": {
+      const factResource = factResourceId(referenceType, argument);
+
+      if (factResource !== undefined) {
+        return (
+          <WithKindLabel label={words("references.argumentKind.resource")}>
+            <ResourceLink resourceId={factResource} tab={ResourceDetailsTab.Facts} />
+          </WithKindLabel>
+        );
+      }
+
+      return (
+        <ClassifiedValue attribute={classifyValue(argument.name, argument.value)} label={label} />
+      );
+    }
+
+    case "mjson":
+      return (
+        <Stack hasGutter>
+          <StackItem>
+            <HoverRow>
+              <ClassifiedValue
+                attribute={classifyValue(argument.name, argument.value)}
+                label={label}
+              />
+            </HoverRow>
+          </StackItem>
+          <StackItem>
+            <ReplacementList
+              replacements={argument.replacements}
+              index={index}
+              isExpanded={isExpanded}
+              onToggle={onToggle}
+              ancestors={ancestors}
+              parentPath={`${path}/${argument.name}`}
+            />
+          </StackItem>
+        </Stack>
+      );
+
+    case "reference":
+      return (
+        <ReferenceNode
+          referenceId={argument.referenceId}
+          index={index}
+          isExpanded={isExpanded}
+          onToggle={onToggle}
+          ancestors={ancestors}
+          path={`${path}/${argument.name}`}
+          toggleLabel={<Label isCompact>{label}</Label>}
+        />
+      );
+
+    case "resource":
+      return (
+        <WithKindLabel label={label}>
+          <ResourceLink resourceId={argument.resourceId} />
+        </WithKindLabel>
+      );
+
+    case "python_type":
+      return (
+        <WithKindLabel label={label}>
+          <code>{argument.value}</code>
+        </WithKindLabel>
+      );
+
+    case "get":
+      return (
+        <WithKindLabel label={label}>
+          <code>
+            {argument.expression} <Unresolved>({words("references.unresolved.marker")})</Unresolved>
+          </code>
+        </WithKindLabel>
+      );
+
+    case "unknown": {
+      // The label is the only place an unknown kind's type name shows, so it is
+      // kept even above a code editor.
+      const attribute = classifyValue(argument.name, argument.raw);
+
+      if (INLINE_KINDS.includes(attribute.kind)) {
+        return <ClassifiedValue attribute={attribute} label={label} />;
+      }
+
+      return (
+        <Stack hasGutter>
+          <StackItem>
+            <Label isCompact>{label}</Label>
+          </StackItem>
+          <StackItem>
+            <AttributeValue attribute={attribute} />
+          </StackItem>
+        </Stack>
+      );
+    }
+  }
+};
+
+interface ReplacementListProps {
+  replacements: Reference.Replacement[];
+  index: Reference.ReferenceIndex;
+  isExpanded: (key: string) => boolean;
+  onToggle: (key: string) => () => void;
+  ancestors: string[];
+  parentPath: string;
+}
+
+/**
+ * Lists the replacements under a kept value: one row per destination, naming the
+ * jsonpath it fills and the reference node that fills it. Each row extends `parentPath`
+ * with its destination so a node reused across rows keeps its own expansion state.
+ *
+ * @prop {Reference.Replacement[]} replacements - The replacements to list, one per row.
+ * @prop {Reference.ReferenceIndex} index - Lookup from reference id to normalized node.
+ * @prop {(key: string) => boolean} isExpanded - Whether the node at a path is expanded.
+ * @prop {(key: string) => () => void} onToggle - Returns the toggle handler for a path.
+ * @prop {string[]} ancestors - Reference ids on the path here, for cycle detection.
+ * @prop {string} parentPath - The owning attribute or argument's path, extended per row.
+ */
+export const ReplacementList: React.FC<ReplacementListProps> = ({
+  replacements,
+  index,
+  isExpanded,
+  onToggle,
+  ancestors,
+  parentPath,
+}) => (
+  <Stack hasGutter>
+    {replacements.map((replacement) => (
+      <StackItem key={replacement.destination}>
+        <Destination>{replacement.destination}</Destination>
+        <ReferenceNode
+          referenceId={replacement.referenceId}
+          index={index}
+          isExpanded={isExpanded}
+          onToggle={onToggle}
+          ancestors={ancestors}
+          path={`${parentPath}/${replacement.destination}`}
+        />
+      </StackItem>
+    ))}
+  </Stack>
+);
+
+const Destination = styled.div`
+  font-family: var(--pf-t--global--font--family--mono);
+  font-size: var(--pf-t--global--font--size--sm);
+  color: var(--pf-t--global--text--color--subtle);
+`;
 
 const Uuid = styled(HoverRow)`
   font-family: var(--pf-t--global--font--family--mono);
