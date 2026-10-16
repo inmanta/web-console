@@ -5,13 +5,14 @@ import { Sort, Resource as ResourceDomain } from "@/Core";
 import { createApolloClient } from "@/Data/Apollo";
 import { Resource } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { routes } from "@/routes";
 import { ResourceTableRow_Fragment } from "./ResourceTableRow";
 import { ResourcesTable } from "./ResourcesTable";
 import { createResourcesTablePresenter } from "./ResourcesTablePresenter";
 
-const routeManager = PrimaryRouteManager("");
+const routeManager = PrimaryRouteManager("", routes);
 const defaultSort: Sort.Sort<ResourceDomain.SortKey>[] = [{ name: "resource_type", order: "asc" }];
 const nodes = Resource.response.data.resources.edges.slice(0, 3).map(({ node }) => node);
 

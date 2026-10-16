@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, EmptyState, PageSection, EmptyStateFooter } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
-import { Link } from "@/UI/Components";
+import { Link } from "@/UI/Components/Link";
 import { DependencyContext } from "@/UI/Dependency";
 import { useDocumentTitle } from "@/UI/Routing";
 import { words } from "@/UI/words";

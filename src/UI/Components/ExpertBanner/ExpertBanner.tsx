@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Banner, Button, Flex } from "@patternfly/react-core";
-import { useUpdateEnvironmentSetting } from "@/Data/Queries";
-import { Spinner } from "@/UI/Components";
+import { useUpdateEnvironmentSetting } from "@/Data/Queries/Slices/Environment";
+import { Spinner } from "@/UI/Components/Spinner";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";

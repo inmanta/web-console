@@ -1,5 +1,5 @@
 import qs from "qs";
-import { urlEncodeParams } from "@/Data/Queries";
+import { urlEncodeParams } from "@/Data/Queries/Helpers";
 import { GetNotificationsParams } from "./useGetNotifications";
 
 export function getUrl(params: GetNotificationsParams): string {

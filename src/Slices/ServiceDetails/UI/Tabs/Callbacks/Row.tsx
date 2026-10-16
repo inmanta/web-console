@@ -3,7 +3,7 @@ import { Button, Content, Tooltip } from "@patternfly/react-core";
 import { AngleDownIcon, AngleUpIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import { getShortUuidFromRaw } from "@/Core";
-import { TextWithCopy } from "@/UI/Components";
+import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { words } from "@/UI/words";
 import { Callback } from "@S/ServiceDetails/Core/Callback";
 import { DeleteButton } from "./DeleteButton";

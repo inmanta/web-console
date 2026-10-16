@@ -2,7 +2,7 @@ import React from "react";
 import { ActionList, ActionListItem, Button } from "@patternfly/react-core";
 import { SaveIcon, UndoIcon } from "@patternfly/react-icons";
 import { EnvironmentSettings } from "@/Core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 
 interface Props {
   info: EnvironmentSettings.InputInfo;

@@ -6,13 +6,14 @@ import { configureAxe } from "jest-axe";
 import { delay, graphql, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { Pagination } from "@/Core/Domain";
-import { REFETCH_INTERVAL, mapStatusToGraphQLFilter } from "@/Data/Queries";
+import { REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
+import { mapStatusToGraphQLFilter } from "@/Data/Queries/Slices/Resource";
 import { response } from "@/Slices/Agents";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
 import { createMockResourceSummary } from "@/Test/Data/Resource";
-import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@/UI/words";
 import { Page } from "./Page";
 
 const axe = configureAxe({

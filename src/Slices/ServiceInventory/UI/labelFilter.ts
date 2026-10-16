@@ -3,7 +3,7 @@
  * lifecycle states that carry it, and is active when the state filter holds exactly those states.
  */
 import { StateModel } from "@/Core";
-import { SummaryLabel, summaryLabels } from "@/UI/Components";
+import { SummaryLabel, summaryLabels } from "@/UI/Components/InstanceSummaryLabels";
 
 /**
  * Gets the names of the lifecycle states that carry a label.

@@ -33,9 +33,10 @@ import {
   sortTreeRows,
   TreeRowData,
 } from "@/Slices/ServiceInstanceDetails/Utils";
-import { DependencyContext, words } from "@/UI";
 import { MultiLinkCell } from "@/UI/Components/TreeTable/TreeRow/CellWithCopy";
 import { formatReadOnly, resolveUnitField } from "@/UI/Components/UnitInput";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props {
   dropdownOptions: string[];

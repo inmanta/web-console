@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
-import { usePost } from "@/Data/Queries";
+import { usePost } from "@/Data/Queries/Helpers";
 import { CreateCallbackBody } from "@/Slices/ServiceDetails/Core/Callback";
-import { DependencyContext } from "@/UI";
+import { DependencyContext } from "@/UI/Dependency";
 
 /**
  * React Query hook for creating callback

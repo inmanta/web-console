@@ -11,7 +11,7 @@ import { LocalState } from "@apollo/client/local-state";
 import { ApolloProvider } from "@apollo/client/react";
 import { AuthContext } from "@/Data/Auth";
 import { REFETCH_INTERVAL } from "@/Data/Queries/Helpers/globals";
-import { PrimaryBaseUrlManager } from "@/UI";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import { abortSafeResponse } from "./abortSafeResponse";
 import { createLocalResolvers } from "./localResolvers";
 import { createPoll } from "./poll";

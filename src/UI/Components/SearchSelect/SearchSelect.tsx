@@ -12,7 +12,7 @@ import {
   SelectOption,
   SelectOptionProps,
 } from "@patternfly/react-core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 
 export const TEST_IDS = {
   toggle: "swm-toggle",

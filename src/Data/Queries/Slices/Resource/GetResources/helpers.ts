@@ -1,7 +1,7 @@
 import { Resource } from "@/Core/Domain";
 import { Handlers, PageInfo } from "@/Core/Domain/Pagination/Pagination";
-import { CurrentPage, MultiSort } from "@/Data";
 import { graphql } from "@/Data/Apollo/gql";
+import { CurrentPage, MultiSort } from "@/Data/Common";
 import { ResourceActionFilter } from "../ResourceActionFilter";
 
 /**

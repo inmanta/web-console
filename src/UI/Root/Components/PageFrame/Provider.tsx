@@ -1,7 +1,7 @@
 import React, { useContext, useLayoutEffect } from "react";
 import { Navigate } from "react-router";
 import { EnvironmentRole } from "@/Core";
-import { EnvironmentPreview } from "@/Data/Queries";
+import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";

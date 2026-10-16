@@ -24,7 +24,8 @@ import {
   chart_color_purple_200,
 } from "@patternfly/react-tokens";
 import { CompileStatus, DateRange, PageSize, RangeOperator } from "@/Core";
-import { useGetCompileReports, useGetMetrics } from "@/Data/Queries";
+import { useGetCompileReports } from "@/Data/Queries/Slices/Compilation";
+import { useGetMetrics } from "@/Data/Queries/Slices/Dashboard";
 import { words } from "@/UI/words";
 import dayjs from "@/dayjs";
 import {

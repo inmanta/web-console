@@ -1,6 +1,6 @@
 {
   "name": "@inmanta/web-console",
-  "version": "4.1.1",
+  "version": "4.2.0",
   "description": "Web Console for Inmanta Orchestrator",
   "exports": "./dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
@@ -8,7 +8,8 @@
   "scripts": {
     "prebuild": "yarn clean",
     "build": "vite build",
-    "build:ci": "node --max-old-space-size=6144 ./node_modules/.bin/vite build",
+    "build:ci": "node --max-old-space-size=6144 ./node_modules/.bin/vite build && yarn build:sbom",
+    "build:sbom": "yarn dlx -q @cyclonedx/yarn-plugin-cyclonedx@3.4.0 --production --output-reproducible -o dist/sbom.cdx.json",
     "start": "dotenv vite",
     "codegen": "graphql-codegen --config codegen.ts",
     "codegen:watch": "graphql-codegen --watch --config codegen.ts",
@@ -32,7 +33,7 @@
     "cypress-test:local-auth": "yarn cypress run --config-file cypress.config.local-auth.cjs",
     "cypress-test:oidc": "yarn cypress run --config-file cypress.config.oidc.cjs",
     "package-cleanup": "node clean_up_packages",
-    "check-circular-deps": "madge --circular ./src/index.tsx",
+    "check-circular-deps": "depcruise src",
     "check-no-cdn": "node scripts/check-no-cdn.js",
     "install:orchestrator:keycloak": "sh ./shell-scripts/setup-auth.sh version='oss' release='dev' branch='oss_case_1'",
     "install:orchestrator:oidc": "sh ./shell-scripts/setup-auth.sh version='oss' release='dev' branch='oss_case_1' auth='oidc'",
@@ -69,14 +70,15 @@
     "@types/jest-axe": "^3.5.9",
     "@types/loadable__component": "^5.13.10",
     "@types/markdown-it-emoji": "^3.0.1",
-    "@types/node": "^26.6.3",
+    "@types/node": "^26.6.5",
     "@types/qs": "^6.15.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "@vitejs/plugin-react": "^6.0.3",
-    "@vitest/coverage-v8": "^5.0.3",
-    "@vitest/ui": "^5.0.3",
+    "@vitest/coverage-v8": "^5.0.4",
+    "@vitest/ui": "^5.0.4",
     "cypress": "^16.1.0",
+    "dependency-cruiser": "^18.6.0",
     "dotenv": "^17.4.2",
     "dotenv-cli": "^11.0.0",
     "eslint": "^10.2.1",
@@ -87,8 +89,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-testing-library": "^7.16.2",
     "jest-axe": "^11.0.0",
-    "jsdom": "^29.1.1",
-    "madge": "^6.1.0",
+    "jsdom": "^30.1.2",
     "markdown-it-emoji": "^3.1.0",
     "msw": "^2.15.0",
     "prettier": "^3.9.6",
@@ -98,7 +99,7 @@
     "typescript-eslint": "^8.69.0",
     "vite": "^8.2.1",
     "vite-plugin-mkcert": "^2.1.0",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.4"
   },
   "browser": {
     "crypto": false
@@ -119,7 +120,7 @@
     "@patternfly/react-table": "^6.6.1",
     "@patternfly/react-tokens": "^6.6.1",
     "@react-keycloak/web": "^3.4.0",
-    "@tanstack/react-query": "^5.104.0",
+    "@tanstack/react-query": "^5.104.1",
     "bignumber.js": "^11.1.5",
     "copy-to-clipboard": "^4.0.2",
     "dayjs": "^1.11.21",
@@ -157,16 +158,6 @@
     "qs": "^6.16.0",
     "uuid@^8.3.2": "11.1.1",
     "tar": "^7.5.19"
-  },
-  "madge": {
-    "fileExtensions": [
-      "js",
-      "jsx",
-      "ts",
-      "tsx"
-    ],
-    "tsConfig": "./tsconfig.json",
-    "layout": "dot"
   },
   "browserslist": [
     "last 2 Chrome versions",

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Content, PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
 import { Diff } from "@/Core";
-import { DryRun, useGetDryRuns } from "@/Data/Queries";
-import { DiffWizard } from "@/UI/Components";
+import { DryRun, useGetDryRuns } from "@/Data/Queries/Slices/DryRun";
+import * as DiffWizard from "@/UI/Components/DiffWizard";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";

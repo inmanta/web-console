@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { FlexItem, Flex } from "@patternfly/react-core";
-import { useGetServiceModels, useGetInventoryList } from "@/Data/Queries";
-import { words } from "@/UI";
-import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+import { useGetServiceModels } from "@/Data/Queries/Slices/Service";
+import { useGetInventoryList } from "@/Data/Queries/Slices/ServiceInstance";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
+import { words } from "@/UI/words";
 import { Composer } from "../Composer";
 import { findInterServiceRelations } from "../Data/Helpers";
 import {

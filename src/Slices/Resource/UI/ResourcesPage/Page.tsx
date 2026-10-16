@@ -14,19 +14,22 @@ import {
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
-import { usePaginatedTableWithMultiSort } from "@/Data";
-import { buildHandlers, mapToResourceActionFilter, parseCurrentPage } from "@/Data/Queries";
+import { usePaginatedTableWithMultiSort } from "@/Data/Common";
 import {
-  EmptyView,
-  FilterDrawer,
-  PaginationWidget,
-  ErrorView,
+  buildHandlers,
+  mapToResourceActionFilter,
+  parseCurrentPage,
+} from "@/Data/Queries/Slices/Resource";
+import {
   CompoundResourceStatus,
   CompoundResourceStatusSkeleton,
-  Spinner,
-  countActiveFilters,
-  ResourceActions,
-} from "@/UI/Components";
+} from "@/UI/Components/CompoundResourceStatus";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
+import { PaginationWidget } from "@/UI/Components/PaginationWidget";
+import { ResourceActions } from "@/UI/Components/ResourceActions";
+import { Spinner } from "@/UI/Components/Spinner";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
@@ -205,6 +208,7 @@ export const Page: React.FC = () => {
                 tooltips={{
                   deploy: words("resources.resourceActions.deploy.tooltip.resources"),
                   repair: words("resources.resourceActions.repair.tooltip.resources"),
+                  dryRun: words("resources.resourceActions.dryRun.tooltip.resources"),
                 }}
                 scopes={[
                   {

@@ -7,16 +7,16 @@ import {
   toggleValueInList,
 } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
+import { AddableTextInput } from "@/UI/Components/AddableTextInput";
 import {
   ActiveFilterGroup,
   ActiveFilters,
-  AddableTextInput,
   FilterDrawerPanelContent,
-  IncludeExcludeSelect,
-  MultiTextSelect,
-  OptionalToggleGroup,
   getFilterActions,
-} from "@/UI/Components";
+} from "@/UI/Components/FilterDrawer";
+import { IncludeExcludeSelect } from "@/UI/Components/IncludeExcludeSelect";
+import { MultiTextSelect } from "@/UI/Components/MultiTextSelect";
+import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
 import { words } from "@/UI/words";
 
 /** The attribute sets, paired with the label shown to the user. */

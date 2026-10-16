@@ -1,9 +1,13 @@
 import { PageSize, Resource } from "@/Core/Domain";
-import { MultiSort } from "@/Data";
 import { graphql } from "@/Data/Apollo/gql";
 import type { GetResourcesQueryVariables } from "@/Data/Apollo/gql/graphql";
+import { MultiSort } from "@/Data/Common";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { mapSort, mapToResourceActionFilter, parseCurrentPage } from "@/Data/Queries";
+import {
+  mapSort,
+  mapToResourceActionFilter,
+  parseCurrentPage,
+} from "@/Data/Queries/Slices/Resource";
 
 /**
  * The query behind the resources page. The page of resources and the environment summary are each deferred,

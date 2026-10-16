@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Bullseye } from "@patternfly/react-core";
 import { useKeycloak, ReactKeycloakProvider } from "@react-keycloak/web";
 import Keycloak from "keycloak-js";
-import { Spinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components/Spinner";
 import { AuthContext } from "../AuthContext";
 import { KeycloakAuthConfig } from "../types";
 

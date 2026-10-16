@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Tooltip } from "@patternfly/react-core";
-import { usePauseAgent } from "@/Data/Queries";
+import { usePauseAgent } from "@/Data/Queries/Slices/Agents";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
 

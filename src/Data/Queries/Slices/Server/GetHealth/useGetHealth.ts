@@ -1,8 +1,8 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { REFETCH_INTERVAL } from "@/Data/Queries";
+import { REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { useFetchHelpers } from "@/Data/Queries/Helpers/useFetchHelpers";
-import { PrimaryBaseUrlManager } from "@/UI";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
 
 /**
  * Return Signature of the useGetHealth React Query

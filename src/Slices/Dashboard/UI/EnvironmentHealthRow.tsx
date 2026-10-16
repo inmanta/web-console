@@ -3,13 +3,11 @@ import { useNavigate } from "react-router";
 import { useQuery } from "@apollo/client/react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
 import { PageSize, Resource } from "@/Core/Domain";
-import {
-  useGetAgents,
-  useGetEnvironments,
-  useGetProjects,
-  useGetServerStatus,
-  useGetServiceModels,
-} from "@/Data/Queries";
+import { useGetAgents } from "@/Data/Queries/Slices/Agents";
+import { useGetEnvironments } from "@/Data/Queries/Slices/Environment";
+import { useGetProjects } from "@/Data/Queries/Slices/Project";
+import { useGetServerStatus } from "@/Data/Queries/Slices/Server";
+import { useGetServiceModels } from "@/Data/Queries/Slices/Service";
 import { AgentStatus } from "@/Slices/Agents/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { EnvironmentIcon } from "@/UI/Root/Components/Header/EnvSelector/EnvSelector";

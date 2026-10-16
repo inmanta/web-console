@@ -1,6 +1,6 @@
 import React from "react";
 import { ServiceModel } from "@/Core";
-import { TreeTable, TreeTableCellContext } from "@/UI/Components";
+import { TreeTable, TreeTableCellContext } from "@/UI/Components/TreeTable";
 import { CatalogAttributeHelper, CatalogTreeTableHelper } from "@/UI/Components/TreeTable/Catalog";
 import { PathHelper, TreeExpansionManager } from "@/UI/Components/TreeTable/Helpers";
 import { useNavigateTo } from "@/UI/Routing";

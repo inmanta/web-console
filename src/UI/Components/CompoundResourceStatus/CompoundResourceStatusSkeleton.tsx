@@ -1,6 +1,6 @@
 import { Flex, FlexItem, Skeleton } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { BAR_ITEM_HEIGHT } from "./CompoundResourceStatus";
 import { statusGroupIcons } from "./config";
 

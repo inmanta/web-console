@@ -2,12 +2,13 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
 import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
+import { routes } from "@/routes";
 import { LatestCompileReportRow } from "./LatestCompileReportRow";
 
-const routeManager = PrimaryRouteManager("");
+const routeManager = PrimaryRouteManager("", routes);
 
 function makeReport(overrides: Partial<CompileReport> = {}): CompileReport {
   return {

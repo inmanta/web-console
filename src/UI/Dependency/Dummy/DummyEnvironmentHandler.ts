@@ -1,5 +1,5 @@
 import { EnvironmentHandler } from "@/Core";
-import { EnvironmentPreview } from "@/Data/Queries";
+import type { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 
 export function DummyEnvironmentHandler(): EnvironmentHandler {
   function useId(): string {

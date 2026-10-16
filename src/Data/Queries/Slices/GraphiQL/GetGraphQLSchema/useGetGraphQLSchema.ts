@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { GraphQLSchema, buildClientSchema, IntrospectionQuery } from "graphql";
-import { CustomError, useGetWithOptionalEnv } from "@/Data/Queries";
+import { CustomError, useGetWithOptionalEnv } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 interface SchemaResponse {

@@ -1,0 +1,7 @@
+description: |
+  Sorting resources on deploying now puts the deploying resources at the top.
+issue-nr: 7436
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

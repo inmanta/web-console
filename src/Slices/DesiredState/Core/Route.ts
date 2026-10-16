@@ -1,5 +1,11 @@
 ﻿import { Route } from "@/Core";
 
+declare module "@/Core/Domain/Route" {
+  interface RouteRegistry {
+    DesiredState: undefined;
+  }
+}
+
 export const path = "/desiredstate";
 
 export const route = (base: string): Route<"DesiredState"> => ({

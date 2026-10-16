@@ -1,17 +1,16 @@
 import React, { useContext } from "react";
 import { useLocation } from "react-router";
 import { isJsonParserId, JsonParserId } from "@/Core";
-import { OrchestratorProvider, PrimaryArchiveHelper, PrimaryFileManager } from "@/Data";
-import {
-  PrimaryBaseUrlManager,
-  PrimaryRouteManager,
-  DependencyProvider,
-  EnvironmentHandlerImpl,
-  UrlManagerImpl,
-} from "@/UI";
+import { OrchestratorProvider, PrimaryArchiveHelper, PrimaryFileManager } from "@/Data/Common";
+import { DependencyProvider } from "@/UI/Dependency";
+import { EnvironmentHandlerImpl } from "@/UI/Dependency/EnvironmentHandler";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
+import { UrlManagerImpl } from "@/UI/Utils";
 import { AuthContext } from "./Data/Auth";
 import { AppAlertProvider } from "./UI/Root/Components/AppAlertProvider";
 import { ModalProvider } from "./UI/Root/Components/ModalProvider";
+import { routes } from "./routes";
 
 /**
  * This component creates instances of managers, helpers, and resolvers, and provides them through a `DependencyProvider`.
@@ -29,7 +28,7 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   );
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl();
-  const routeManager = PrimaryRouteManager(basePathname);
+  const routeManager = PrimaryRouteManager(basePathname, routes);
   const orchestratorProvider = OrchestratorProvider(getJsonParserId(globalThis), COMMITHASH);
   const urlManager = new UrlManagerImpl(orchestratorProvider, baseUrl);
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);

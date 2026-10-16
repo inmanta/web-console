@@ -10,10 +10,11 @@ import {
 import { InfoAltIcon } from "@patternfly/react-icons";
 import { Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
-import { JsonFormatter } from "@/Data";
+import { JsonFormatter } from "@/Data/Common";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
-import { CodeEditor, Toggle } from "@/UI/Components";
+import { CodeEditor } from "@/UI/Components/CodeEditor";
+import { Toggle } from "@/UI/Components/Toggle";
 import { words } from "@/UI/words";
 import { OrderDependencies } from "./OrderDependencies";
 import { OrderInstanceLink } from "./OrderInstanceLink";

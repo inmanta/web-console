@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Button, Truncate } from "@patternfly/react-core";
 import { ExpandableRowContent, Td, Tr } from "@patternfly/react-table";
-import { ClassifiedAttribute } from "@/Data";
+import { ClassifiedAttribute } from "@/Data/Common";
 import { AttributeClassifier } from "@/Data/Common/AttributeClassifier/AttributeClassifier";
 import { AttributeValue } from "./AttributeList";
 import { isEditorKind } from "./helpers";

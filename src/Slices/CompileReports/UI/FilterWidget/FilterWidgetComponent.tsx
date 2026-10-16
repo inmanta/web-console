@@ -6,10 +6,10 @@ import {
   ActiveFilterGroup,
   ActiveFilters,
   FilterDrawerPanelContent,
-  SingleTextSelect,
   getFilterActions,
-} from "@/UI/Components";
+} from "@/UI/Components/FilterDrawer";
 import { TimestampRangeFilter } from "@/UI/Components/Filters";
+import { SingleTextSelect } from "@/UI/Components/SingleTextSelect";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 

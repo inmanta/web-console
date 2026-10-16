@@ -1,6 +1,6 @@
 import React from "react";
 import { ServiceModel } from "@/Core";
-import { ServiceProvider } from "@/UI/Components";
+import { ServiceProvider } from "@/UI/Components/ServiceProvider";
 import { useRouteParams } from "@/UI/Routing";
 import { ServiceDetails } from "./ServiceDetails";
 import { Wrapper } from "./Wrapper";

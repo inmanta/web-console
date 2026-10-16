@@ -16,7 +16,7 @@ import { CubeIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { isObject, Resource } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { SearchHelper } from "@/UI/Routing/SearchHelper";
+import { SearchHelper } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { GET_DASHBOARD_RESOURCE_SUMMARY } from "../../resourceSummaryQuery";
 import { deriveResourcesHealth } from "../../resourcesHealth";

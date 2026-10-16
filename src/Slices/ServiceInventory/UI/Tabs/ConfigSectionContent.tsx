@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { useGetInstanceConfig } from "@/Data/Queries";
+import { useGetInstanceConfig } from "@/Data/Queries/Slices/ServiceInstance";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { ConfigDetails } from "./ConfigDetails";
 
 interface Props {

@@ -5,8 +5,8 @@ import {
   UseMutationOptions,
   useQueryClient,
 } from "@tanstack/react-query";
-import { usePatch } from "@/Data/Queries";
-import { DependencyContext } from "@/UI";
+import { usePatch } from "@/Data/Queries/Helpers";
+import { DependencyContext } from "@/UI/Dependency";
 import { getNotificationsKey } from "../GetNotifications";
 
 /**

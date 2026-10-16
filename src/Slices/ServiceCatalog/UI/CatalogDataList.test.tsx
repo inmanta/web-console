@@ -6,8 +6,8 @@ import { configureAxe } from "jest-axe";
 import { ServiceModel } from "@/Core";
 import { MockedDependencyProvider, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@/UI/words";
 import { CatalogDataList } from "./CatalogDataList";
 
 const axe = configureAxe({

@@ -10,8 +10,8 @@ import { cloneDeep } from "@/Core/Language/collection";
 import { getBooleanFieldOption, Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@/UI/words";
 import { Page } from "./Page";
 
 // Mock usePatch and usePut before the test

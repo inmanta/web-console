@@ -1,20 +1,23 @@
 import React from "react";
-import { FlatEnvironment } from "@/Core";
-import { AuthContextInterface, PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
+import { FlatEnvironment, RouteFactory } from "@/Core";
 import { ApolloClientProvider } from "@/Data/Apollo";
-import { EnvironmentPreview } from "@/Data/Queries";
-import { EnvironmentDetails } from "@/Test";
+import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth";
+import { PrimaryArchiveHelper } from "@/Data/Common";
+import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
+import { EnvironmentDetails } from "@/Test/Data";
 import { MockEnvironmentHandler, MockOrchestratorProvider, MockFileManager } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
 import { AppAlertProvider } from "@/UI/Root/Components/AppAlertProvider";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { UrlManagerImpl } from "@/UI/Utils";
+import { routes as appRoutes } from "@/routes";
 
 interface Props {
   env?: FlatEnvironment;
   authHelper?: AuthContextInterface;
   isCompiling?: boolean;
   allEnvironments?: EnvironmentPreview[];
+  routes?: RouteFactory[];
 }
 
 /**
@@ -27,10 +30,11 @@ export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> 
   authHelper = defaultAuthContext,
   isCompiling = false,
   allEnvironments = [],
+  routes = appRoutes,
   children,
 }) => {
   const baseUrl = "";
-  const routeManager = PrimaryRouteManager(baseUrl);
+  const routeManager = PrimaryRouteManager(baseUrl, routes);
   const environmentHandler = MockEnvironmentHandler(env, isCompiling, allEnvironments);
   const orchestratorProvider = new MockOrchestratorProvider();
   const urlManager = new UrlManagerImpl(orchestratorProvider, baseUrl);

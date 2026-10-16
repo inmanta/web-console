@@ -4,6 +4,9 @@ export class DummyRouteManager implements RouteManager {
   getCrumbs(): Crumb[] {
     throw new Error("Method not implemented.");
   }
+  has(): boolean {
+    throw new Error("Method not implemented.");
+  }
   getRoute<K extends RouteKind>(): Route<K> {
     throw new Error("Method not implemented.");
   }
@@ -29,9 +32,6 @@ export class DummyRouteManager implements RouteManager {
     throw new Error("Method not implemented.");
   }
   getRoutes(): Route[] {
-    throw new Error("Method not implemented.");
-  }
-  getRouteDictionary(): Record<RouteKind, Route> {
     throw new Error("Method not implemented.");
   }
   getParamsFromUrl(): RouteKindWithId<"CompileDetails"> | undefined {

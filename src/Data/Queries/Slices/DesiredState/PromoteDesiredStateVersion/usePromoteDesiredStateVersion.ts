@@ -5,8 +5,9 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { usePost, getDesiredStatesKey } from "@/Data/Queries";
-import { DependencyContext } from "@/UI";
+import { usePost } from "@/Data/Queries/Helpers";
+import { DependencyContext } from "@/UI/Dependency";
+import { getDesiredStatesKey } from "../GetDesiredStates/useGetDesiredStates";
 
 /**
  * React Query hook for promoting a version of desired state

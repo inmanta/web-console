@@ -12,10 +12,10 @@ import {
 import { InstanceAttributeModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { AttributeSets, getAvailableAttributesSets } from "@/Slices/ServiceInstanceDetails/Utils";
-import { words } from "@/UI";
-import { SearchSelect } from "@/UI/Components";
 import { useTheme } from "@/UI/Components/DarkmodeOption";
+import { SearchSelect } from "@/UI/Components/SearchSelect";
 import { CustomDatePresenter } from "@/UI/Utils";
+import { words } from "@/UI/words";
 
 interface Props {
   instanceLogs: InstanceLog[];

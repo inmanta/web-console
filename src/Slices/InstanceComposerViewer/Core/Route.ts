@@ -1,5 +1,11 @@
 import { Route } from "@/Core";
 
+declare module "@/Core/Domain/Route" {
+  interface RouteRegistry {
+    InstanceComposerViewer: { service: string; instance: string };
+  }
+}
+
 export const path = "/lsm/catalog/:service/inventory/:instance/composer-viewer";
 
 /**

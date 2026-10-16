@@ -3,12 +3,13 @@ import { render } from "@testing-library/react";
 import { Resource } from "@/Core";
 import { Resource as ResourceData } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as wordsModule from "@/UI/words";
+import { routes } from "@/routes";
 import { ResourceTableRowView } from "./ResourceTableRow";
 
-const routeManager = PrimaryRouteManager("");
+const routeManager = PrimaryRouteManager("", routes);
 const [{ node }] = ResourceData.response.data.resources.edges;
 
 /** A resource from the mock fixture, shaped like the row fragment. */

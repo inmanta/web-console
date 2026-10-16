@@ -1,5 +1,5 @@
-import React, { lazy, Suspense } from "react";
-import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
+import React, { lazy, ReactElement, Suspense } from "react";
+import { PageManager, Page, Route, RouteKind } from "@/Core";
 import { MarkdownPreviewerPage } from "@/Slices/MarkdownPreviewer/UI";
 import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
 import { OrdersPage } from "@/Slices/Orders/UI";
@@ -61,155 +61,73 @@ const withSuspense = (element: React.ReactElement): React.ReactElement => (
   <Suspense fallback={<LoadingView ariaLabel="LoadingComposer" />}>{element}</Suspense>
 );
 
+/**
+ * The page element of each route kind. Every declared route kind needs one, so a route can't be
+ * added without its page.
+ */
+const pageElements: Record<RouteKind, ReactElement> = {
+  /**
+   * Main
+   */
+  GraphiQL: <GraphiQLPage />,
+  CreateEnvironment: <CreateEnvironmentPage />,
+  Status: <StatusPage />,
+  Settings: <SettingsPage />,
+  NotificationCenter: <NotificationCenterPage />,
+  UserManagement: <UserManagementPage />,
+
+  /**
+   * LSM
+   */
+  Dashboard: <DashboardPage />,
+  Catalog: <ServiceCatalogPage />,
+  Orders: <OrdersPage />,
+  OrderDetails: <OrderDetailsPage />,
+  Inventory: <ServiceInventoryPage />,
+
+  ServiceDetails: <ServiceDetailsPage />,
+  InstanceDetails: <ServiceInstanceDetailsPage />,
+  InstanceComposer: withSuspense(<InstanceComposerPage />),
+  InstanceComposerEditor: withSuspense(<InstanceComposerEditorPage />),
+  InstanceComposerViewer: withSuspense(<InstanceComposerViewerPage />),
+  CreateInstance: <CreateInstancePage />,
+  EditInstance: <EditInstancePage />,
+  DuplicateInstance: <DuplicateInstancePage />,
+  Diagnose: <DiagnosePage />,
+  Events: <EventsPage />,
+
+  /**
+   * Resource Manager
+   */
+  Resources: <ResourcesPage />,
+  Agents: <AgentsPage />,
+  DiscoveredResources: <DiscoveredResourcesPage />,
+  DiscoveredResourceDetails: <DiscoveredResourceDetailsPage />,
+  Facts: <FactsPage />,
+  ResourceDetails: <ResourceDetailsPage />,
+
+  /**
+   * Orchestration Engine
+   */
+
+  CompileReports: <CompileReportsPage />,
+  CompileDetails: <CompileDetailsPage />,
+  DesiredState: <DesiredStatePage />,
+  DesiredStateDetails: <DesiredStateDetailsPage />,
+  DesiredStateResourceDetails: <DesiredStateResourceDetailsPage />,
+  DesiredStateCompare: <DesiredStateComparePage />,
+  Parameters: <ParametersPage />,
+  ComplianceCheck: <ComplianceCheckPage />,
+  MarkdownPreviewer: <MarkdownPreviewerPage />,
+};
+
+/**
+ * Builds the pages of the registered routes.
+ */
 export class PrimaryPageManager implements PageManager {
-  private pageDictionary: PageDictionary;
-
-  constructor(private readonly routeDictionary: RouteDictionary) {
-    this.pageDictionary = {
-      /**
-       * Main
-       */
-      GraphiQL: { ...this.routeDictionary.GraphiQL, element: <GraphiQLPage /> },
-      CreateEnvironment: {
-        ...this.routeDictionary.CreateEnvironment,
-        element: <CreateEnvironmentPage />,
-      },
-      Status: { ...this.routeDictionary.Status, element: <StatusPage /> },
-      Settings: { ...this.routeDictionary.Settings, element: <SettingsPage /> },
-      NotificationCenter: {
-        ...this.routeDictionary.NotificationCenter,
-        element: <NotificationCenterPage />,
-      },
-      UserManagement: {
-        ...this.routeDictionary.UserManagement,
-        element: <UserManagementPage />,
-      },
-
-      /**
-       * LSM
-       */
-      Dashboard: {
-        ...this.routeDictionary.Dashboard,
-        element: <DashboardPage />,
-      },
-      Catalog: {
-        ...this.routeDictionary.Catalog,
-        element: <ServiceCatalogPage />,
-      },
-      Orders: {
-        ...this.routeDictionary.Orders,
-        element: <OrdersPage />,
-      },
-      OrderDetails: {
-        ...this.routeDictionary.OrderDetails,
-        element: <OrderDetailsPage />,
-      },
-      Inventory: {
-        ...this.routeDictionary.Inventory,
-        element: <ServiceInventoryPage />,
-      },
-
-      ServiceDetails: {
-        ...this.routeDictionary.ServiceDetails,
-        element: <ServiceDetailsPage />,
-      },
-      InstanceDetails: {
-        ...this.routeDictionary.InstanceDetails,
-        element: <ServiceInstanceDetailsPage />,
-      },
-      InstanceComposer: {
-        ...this.routeDictionary.InstanceComposer,
-        element: withSuspense(<InstanceComposerPage />),
-      },
-      InstanceComposerEditor: {
-        ...this.routeDictionary.InstanceComposerEditor,
-        element: withSuspense(<InstanceComposerEditorPage />),
-      },
-      InstanceComposerViewer: {
-        ...this.routeDictionary.InstanceComposerViewer,
-        element: withSuspense(<InstanceComposerViewerPage />),
-      },
-      CreateInstance: {
-        ...this.routeDictionary.CreateInstance,
-        element: <CreateInstancePage />,
-      },
-      EditInstance: {
-        ...this.routeDictionary.EditInstance,
-        element: <EditInstancePage />,
-      },
-      DuplicateInstance: {
-        ...this.routeDictionary.DuplicateInstance,
-        element: <DuplicateInstancePage />,
-      },
-      Diagnose: { ...this.routeDictionary.Diagnose, element: <DiagnosePage /> },
-      Events: { ...this.routeDictionary.Events, element: <EventsPage /> },
-
-      /**
-       * Resource Manager
-       */
-      Resources: {
-        ...this.routeDictionary.Resources,
-        element: <ResourcesPage />,
-      },
-      Agents: { ...this.routeDictionary.Agents, element: <AgentsPage /> },
-      DiscoveredResources: {
-        ...this.routeDictionary.DiscoveredResources,
-        element: <DiscoveredResourcesPage />,
-      },
-      DiscoveredResourceDetails: {
-        ...this.routeDictionary.DiscoveredResourceDetails,
-        element: <DiscoveredResourceDetailsPage />,
-      },
-      Facts: { ...this.routeDictionary.Facts, element: <FactsPage /> },
-      ResourceDetails: {
-        ...this.routeDictionary.ResourceDetails,
-        element: <ResourceDetailsPage />,
-      },
-
-      /**
-       * Orchestration Engine
-       */
-
-      CompileReports: {
-        ...this.routeDictionary.CompileReports,
-        element: <CompileReportsPage />,
-      },
-      CompileDetails: {
-        ...this.routeDictionary.CompileDetails,
-        element: <CompileDetailsPage />,
-      },
-      DesiredState: {
-        ...this.routeDictionary.DesiredState,
-        element: <DesiredStatePage />,
-      },
-      DesiredStateDetails: {
-        ...this.routeDictionary.DesiredStateDetails,
-        element: <DesiredStateDetailsPage />,
-      },
-      DesiredStateResourceDetails: {
-        ...this.routeDictionary.DesiredStateResourceDetails,
-        element: <DesiredStateResourceDetailsPage />,
-      },
-      DesiredStateCompare: {
-        ...this.routeDictionary.DesiredStateCompare,
-        element: <DesiredStateComparePage />,
-      },
-      Parameters: {
-        ...this.routeDictionary.Parameters,
-        element: <ParametersPage />,
-      },
-      ComplianceCheck: {
-        ...this.routeDictionary.ComplianceCheck,
-        element: <ComplianceCheckPage />,
-      },
-      MarkdownPreviewer: {
-        ...this.routeDictionary.MarkdownPreviewer,
-        element: <MarkdownPreviewerPage />,
-      },
-    };
-  }
+  constructor(private readonly routes: Route[]) {}
 
   getPages(): Page[] {
-    return Object.values(this.pageDictionary);
+    return this.routes.map((route) => ({ ...route, element: pageElements[route.kind] }));
   }
 }
