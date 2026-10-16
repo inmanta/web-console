@@ -1,5 +1,6 @@
 import { act } from "react";
 import { render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import { FeatureModule, PageLoader } from "@/Core";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import * as Agents from "@S/Agents/Core/Route";
@@ -121,6 +122,56 @@ describe("PrimaryPageManager", () => {
 
     expect(loadAgents).not.toHaveBeenCalled();
     expect(loadFacts).not.toHaveBeenCalled();
+  });
+
+  describe("GIVEN a page that fails to open", () => {
+    const reload = vi.fn();
+
+    beforeEach(() => {
+      vi.stubGlobal("location", { ...globalThis.location, reload });
+      // React logs the errors it catches.
+      vi.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      sessionStorage.clear();
+      reload.mockReset();
+      vi.unstubAllGlobals();
+      vi.restoreAllMocks();
+    });
+
+    test("WHEN the app has not reloaded yet THEN it reloads once and keeps the loading view", async () => {
+      const { createPageManager } = setup({
+        factsPage: () => Promise.reject(new Error("Failed to fetch")),
+      });
+      const [, facts] = createPageManager().getPages();
+
+      render(facts.element);
+
+      await vi.waitFor(() => expect(reload).toHaveBeenCalledTimes(1));
+      expect(screen.queryByLabelText("PageError")).not.toBeInTheDocument();
+    });
+
+    test("WHEN the app already reloaded THEN the error is shown in place of the page and retrying opens it", async () => {
+      sessionStorage.setItem("inmanta_page_load_reload", "true");
+      const factsPage = vi
+        .fn<PageLoader>()
+        .mockRejectedValueOnce(new Error("Failed to fetch"))
+        .mockResolvedValue(FactsPage);
+      const { createPageManager } = setup({ factsPage });
+      const [, facts] = createPageManager().getPages();
+
+      render(facts.element);
+
+      expect(await screen.findByLabelText("PageError")).toHaveTextContent("Failed to fetch");
+      expect(reload).not.toHaveBeenCalled();
+
+      await userEvent.click(screen.getByRole("button", { name: "Retry" }));
+
+      expect(await screen.findByText("Facts page")).toBeVisible();
+      expect(factsPage).toHaveBeenCalledTimes(2);
+      expect(sessionStorage.getItem("inmanta_page_load_reload")).toBeNull();
+    });
   });
 
   test("GIVEN preloading is stopped WHEN the browser is idle THEN no pages are fetched", async () => {

@@ -1,5 +1,14 @@
-import React, { ComponentType, lazy, Suspense, useState } from "react";
+import React, {
+  Component,
+  ComponentType,
+  ErrorInfo,
+  lazy,
+  ReactNode,
+  Suspense,
+  useState,
+} from "react";
 import { FeatureModule, PageLoader, PageManager, Page, Route, RouteKind } from "@/Core";
+import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { Delayed } from "@/UI/Utils";
 
@@ -24,7 +33,7 @@ const lazyPages = new WeakMap<PageLoader, ComponentType>();
 
 /**
  * Loads a page once: opening the page and preloading it share the same request.
- * A failed request is forgotten, so opening the page tries again.
+ * A failed request is forgotten, so the next request for the page fetches it again.
  *
  * @param loadPage - loads the page component
  * @returns the page component
@@ -51,8 +60,49 @@ const requestPage = (loadPage: PageLoader): Promise<ComponentType> => {
 };
 
 /**
+ * Set when the app reloads because a page failed to open, and cleared once a page opens.
+ */
+const RELOADED_KEY = "inmanta_page_load_reload";
+
+/**
+ * Reloads the app once when a page fails to open. After an upgrade, the files of the pages
+ * change name, so the app that is still open asks for files that are gone; only a reload gets the
+ * new ones. When the page still fails after the reload, its error is shown instead.
+ *
+ * @returns whether the app reloads
+ */
+const reloadOnce = (): boolean => {
+  try {
+    if (sessionStorage.getItem(RELOADED_KEY) !== null) {
+      return false;
+    }
+
+    sessionStorage.setItem(RELOADED_KEY, "true");
+  } catch {
+    // Without storage, a reload could not be told apart from the next one, so don't reload.
+    return false;
+  }
+
+  globalThis.location.reload();
+
+  return true;
+};
+
+/**
+ * Forgets that the app reloaded, so the next page that fails to open may reload it again.
+ */
+const clearReload = (): void => {
+  try {
+    sessionStorage.removeItem(RELOADED_KEY);
+  } catch {
+    // Nothing to clear.
+  }
+};
+
+/**
  * Returns the lazy component of a page. It is kept per page loader: a new component for the same
- * page would remount it.
+ * page would remount it. A lazy component keeps a failed load, so it is forgotten when the page
+ * fails to open, and opening the page again tries again.
  *
  * @param loadPage - loads the page component
  * @returns the lazy page component
@@ -61,18 +111,79 @@ const getLazyPage = (loadPage: PageLoader): ComponentType => {
   let LazyPage = lazyPages.get(loadPage);
 
   if (LazyPage === undefined) {
-    LazyPage = lazy(() => requestPage(loadPage).then((page) => ({ default: page })));
+    LazyPage = lazy(() =>
+      requestPage(loadPage).then(
+        (page) => {
+          clearReload();
+
+          return { default: page };
+        },
+        (error) => {
+          lazyPages.delete(loadPage);
+
+          if (reloadOnce()) {
+            // Keep the loading view until the app reloads.
+            return new Promise<never>(() => {});
+          }
+
+          throw error;
+        }
+      )
+    );
     lazyPages.set(loadPage, LazyPage);
   }
 
   return LazyPage;
 };
 
+interface PageErrorBoundaryState {
+  error?: Error;
+}
+
+/**
+ * Shows the error of a page that fails to load or render in place of the page, so the rest of the
+ * app stays usable. Retrying renders the page again.
+ */
+class PageErrorBoundary extends Component<{ children: ReactNode }, PageErrorBoundaryState> {
+  public state: PageErrorBoundaryState = {};
+
+  public static getDerivedStateFromError(error: Error): PageErrorBoundaryState {
+    return { error };
+  }
+
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("Page error:", error, errorInfo);
+  }
+
+  public render() {
+    if (this.state.error !== undefined) {
+      return (
+        <ErrorView
+          ariaLabel="PageError"
+          message={this.state.error.message}
+          retry={() => this.setState({ error: undefined })}
+        />
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+/**
+ * Renders a page, with its errors kept to the page.
+ */
+const FeaturePage: React.FC<{ loadPage: PageLoader }> = ({ loadPage }) => (
+  <PageErrorBoundary>
+    <FeaturePageContent loadPage={loadPage} />
+  </PageErrorBoundary>
+);
+
 /**
  * Renders a page. A page that is already loaded renders right away; otherwise it is loaded first,
  * and the loading view is shown when that takes a while.
  */
-const FeaturePage: React.FC<{ loadPage: PageLoader }> = ({ loadPage }) => {
+const FeaturePageContent: React.FC<{ loadPage: PageLoader }> = ({ loadPage }) => {
   // Decided once, when the page mounts: switching from the lazy page to the loaded one later
   // would remount the page.
   const [LoadedPage] = useState(() => loadedPages.get(loadPage));
