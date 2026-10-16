@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useContext, useEffect, useMemo, useState } from "react";
+import React, { lazy, Suspense, useContext, useEffect, useMemo } from "react";
 import { Route, Routes } from "react-router";
 import { LoginPage } from "@/Slices/Login";
 import { DependencyContext } from "@/UI/Dependency";
@@ -18,7 +18,7 @@ const ReactQueryDevtools = lazy(() =>
 );
 
 export const Root: React.FC = () => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, features } = useContext(DependencyContext);
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
@@ -30,15 +30,14 @@ export const Root: React.FC = () => {
   setThemePreference(themePreference || "light");
 
   const pageManager = useMemo(
-    () => new PrimaryPageManager(routeManager.getRoutes()),
-    [routeManager]
+    () => PrimaryPageManager(routeManager.getRoutes(), features),
+    [routeManager, features]
   );
 
-  const [pages, setPages] = useState(pageManager.getPages());
+  const pages = useMemo(() => pageManager.getPages(), [pageManager]);
 
-  useEffect(() => {
-    setPages(pageManager.getPages());
-  }, [pageManager]);
+  // Fetch the other pages in the background, so they open without a loading view.
+  useEffect(() => pageManager.preloadPages(), [pageManager]);
 
   // This is done because the StyledComponents package is not fully compatible with React 18 typing definitions.
   // https://github.com/styled-components/styled-components/issues/3738

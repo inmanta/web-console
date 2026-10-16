@@ -6,7 +6,7 @@ import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 import { MockEnvironmentHandler } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
-import { routes } from "@/routes";
+import { routes } from "@/appFeatures";
 import { DefaultRoute } from "./DefaultRoute";
 
 const DashboardSentinel: React.FC = () => {

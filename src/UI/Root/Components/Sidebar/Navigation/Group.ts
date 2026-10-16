@@ -1,4 +1,10 @@
-import { OrchestratorProvider, RouteKind, RouteManager } from "@/Core";
+import {
+  FeatureModule,
+  NAVIGATION_GROUPS,
+  NavigationEntry,
+  OrchestratorProvider,
+  RouteManager,
+} from "@/Core";
 import { words } from "@/UI/words";
 
 /**
@@ -23,20 +29,18 @@ interface Link {
 }
 
 /**
- * Returns the sidebar link to a route without params, as a list to spread into a group.
+ * Returns the sidebar link of a navigation entry, as a list to spread into a group.
  * The list is empty when the route is not registered, so the link is left out instead of broken.
  *
  * @param {RouteManager} routeManager
- * @param {RouteKind} kind - the route to link to
+ * @param {NavigationEntry} entry - the navigation entry to link to
  * @param {boolean} isEnvPresent
- * @param {object} options - the link id (defaults to the kind) and whether it shows a status indication
  * @returns Link[]
  */
 const routeLink = (
   routeManager: RouteManager,
-  kind: RouteKind,
-  isEnvPresent: boolean,
-  { id = kind, statusIndication = false }: { id?: string; statusIndication?: boolean } = {}
+  { kind, statusIndication = false }: NavigationEntry,
+  isEnvPresent: boolean
 ): Link[] => {
   if (!routeManager.has(kind)) {
     return [];
@@ -46,7 +50,7 @@ const routeLink = (
 
   return [
     {
-      id,
+      id: kind,
       label: route.generateLabel(undefined),
       url: route.path,
       external: false,
@@ -57,83 +61,35 @@ const routeLink = (
 };
 
 /**
- * Returns the environment group of links
- * @param {RouteManager} routeManager
- * @param {boolean} isEnvPresent
- * @returns Group
- */
-export const envrionment = (routeManager: RouteManager, isEnvPresent: boolean): Group => ({
-  id: words("navigation.environment"),
-  title: words("navigation.environment"),
-  links: [
-    ...routeLink(routeManager, "Dashboard", isEnvPresent),
-    ...routeLink(routeManager, "Settings", isEnvPresent),
-  ],
-});
-
-/**
- * Returns the lifecycle service manager group of links
+ * Returns the groups of the sidebar, with the links the features add to them.
+ * A feature whose licensed feature is not enabled adds no links, and empty groups are left out.
  *
+ * @param {FeatureModule[]} features - the features the app ships
  * @param {RouteManager} routeManager
- * @param {boolean} isEnvPresent
  * @param {OrchestratorProvider} orchestratorProvider
- * @returns Group
+ * @param {boolean} isEnvPresent
+ * @returns Group[]
  */
-export const lifecycleServiceManager = (
+export const getGroups = (
+  features: FeatureModule[],
   routeManager: RouteManager,
-  isEnvPresent: boolean,
-  orchestratorProvider: OrchestratorProvider
-): Group => ({
-  id: "LifecycleServiceManager",
-  title: words("navigation.lifecycleServiceManager"),
-  links: [
-    ...routeLink(routeManager, "Catalog", isEnvPresent),
-    ...(orchestratorProvider.isOrderViewEnabled()
-      ? routeLink(routeManager, "Orders", isEnvPresent)
-      : []),
-  ],
-});
+  orchestratorProvider: OrchestratorProvider,
+  isEnvPresent: boolean
+): Group[] => {
+  const entries = features
+    .filter(
+      ({ licenseFeature }) =>
+        licenseFeature === undefined ||
+        orchestratorProvider.isLicencedFeatureEnabled(licenseFeature)
+    )
+    .flatMap(({ navigation = [] }) => navigation)
+    .filter(({ isVisible }) => isVisible === undefined || isVisible(orchestratorProvider));
 
-/**
- * Returns the orchestration engine group of links
- *
- * @param routeManager - RouteManager
- * @param isEnvPresent - boolean
- * @returns Group
- */
-export const orchestrationEngine = (routeManager: RouteManager, isEnvPresent: boolean): Group => ({
-  id: "OrchestrationEngine",
-  title: words("navigation.orchestrationEngine"),
-  links: [
-    ...routeLink(routeManager, "DesiredState", isEnvPresent),
-    ...routeLink(routeManager, "CompileReports", isEnvPresent, { statusIndication: true }),
-    ...routeLink(routeManager, "Parameters", isEnvPresent),
-  ],
-});
-
-/**
- * Returns the resource manager group of links
- *
- * @param {RouteManager} routeManager
- * @param {boolean } isEnvPresent
- * @param {OrchestratorProvider} orchestratorProvider
- * @returns Group
- */
-export const resourceManager = (
-  routeManager: RouteManager,
-  isEnvPresent: boolean,
-  orchestratorProvider: OrchestratorProvider
-): Group => ({
-  id: "ResourceManager",
-  title: words("navigation.resourceManager"),
-  links: [
-    ...routeLink(routeManager, "Resources", isEnvPresent),
-    ...(orchestratorProvider.isResourceDiscoveryEnabled()
-      ? routeLink(routeManager, "DiscoveredResources", isEnvPresent, {
-          id: "Discovered Resources",
-        })
-      : []),
-    ...routeLink(routeManager, "Agents", isEnvPresent),
-    ...routeLink(routeManager, "Facts", isEnvPresent),
-  ],
-});
+  return NAVIGATION_GROUPS.map((group) => ({
+    id: group,
+    title: words(`navigation.${group}`),
+    links: entries
+      .filter((entry) => entry.group === group)
+      .flatMap((entry) => routeLink(routeManager, entry, isEnvPresent)),
+  })).filter(({ links }) => links.length > 0);
+};
