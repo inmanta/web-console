@@ -990,7 +990,7 @@ __metadata:
     bignumber.js: "npm:^11.1.5"
     copy-to-clipboard: "npm:^4.0.2"
     cypress: "npm:^16.1.0"
-    dayjs: "npm:^1.11.21"
+    dayjs: "npm:^1.11.23"
     dependency-cruiser: "npm:^18.6.0"
     dotenv: "npm:^17.4.2"
     dotenv-cli: "npm:^11.0.0"
