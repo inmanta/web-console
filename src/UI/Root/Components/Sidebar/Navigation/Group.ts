@@ -2,7 +2,6 @@ import {
   FeatureModule,
   NAVIGATION_GROUPS,
   NavigationEntry,
-  NavigationGroup,
   OrchestratorProvider,
   RouteManager,
 } from "@/Core";
@@ -28,25 +27,6 @@ interface Link {
   locked: boolean;
   statusIndication: boolean;
 }
-
-/**
- * Returns the title of a sidebar group.
- *
- * @param {NavigationGroup} group
- * @returns string
- */
-const getGroupTitle = (group: NavigationGroup): string => {
-  switch (group) {
-    case "environment":
-      return words("navigation.environment");
-    case "lifecycleServiceManager":
-      return words("navigation.lifecycleServiceManager");
-    case "orchestrationEngine":
-      return words("navigation.orchestrationEngine");
-    case "resourceManager":
-      return words("navigation.resourceManager");
-  }
-};
 
 /**
  * Returns the sidebar link of a navigation entry, as a list to spread into a group.
@@ -107,7 +87,7 @@ export const getGroups = (
 
   return NAVIGATION_GROUPS.map((group) => ({
     id: group,
-    title: getGroupTitle(group),
+    title: words(`navigation.${group}`),
     links: entries
       .filter((entry) => entry.group === group)
       .flatMap((entry) => routeLink(routeManager, entry, isEnvPresent)),
