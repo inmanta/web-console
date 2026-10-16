@@ -22,7 +22,7 @@ import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { StateTransferModalContent } from "../Components/InstanceActions/Actions/StateTransferModalContent";
-import { TabContentWrapper } from ".";
+import { TabContentWrapper } from "./TabContentWrapper";
 
 // Interface representing the needed properties to display the documentation sections.
 export interface DocAttributeDescriptors {

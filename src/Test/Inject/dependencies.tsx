@@ -3,7 +3,7 @@ import { FlatEnvironment, RouteFactory } from "@/Core";
 import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth";
 import { PrimaryArchiveHelper } from "@/Data/Common";
 import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
-import { EnvironmentDetails } from "@/Test";
+import { EnvironmentDetails } from "@/Test/Data";
 import { MockEnvironmentHandler, MockOrchestratorProvider, MockFileManager } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
 import { AppAlertProvider } from "@/UI/Root/Components/AppAlertProvider";

@@ -1,6 +1,6 @@
 import { FieldLikeWithFormState, InstanceAttributeModel } from "@/Core";
 import { cloneDeep, times } from "@/Core/Language/collection";
-import { tryParseJSON } from "../Components";
+import { tryParseJSON } from "./tryParseJSON";
 
 /**
  * Create an form state based on the provided fields.

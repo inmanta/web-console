@@ -6,7 +6,7 @@ import {
   useUrlStateWithFilter,
   useUrlStateWithMultiSort,
   MultiSort,
-} from ".";
+} from "./UrlState";
 
 interface Options<TFilter, TSort extends string> {
   route: RouteKind;
