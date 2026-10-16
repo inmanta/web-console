@@ -14,9 +14,8 @@ import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
 import { usePaginatedTableWithMultiSort } from "@/Data/Common";
 import {
-  getFilterInstanceLabels,
   useGetResources,
-  mapToResourceActionFilter,
+  mapToResourceActionFilterWithInstanceLabels,
 } from "@/Data/Queries/Slices/Resource";
 import { CompoundResourceStatus } from "@/UI/Components/CompoundResourceStatus";
 import { EmptyView } from "@/UI/Components/EmptyView";
@@ -82,13 +81,8 @@ export const Page: React.FC = () => {
 
   const rows = useMemo(() => tablePresenter.createRows(data?.resources ?? []), [data?.resources]);
 
-  const resourceActionFilter = useMemo(
-    () => mapToResourceActionFilter(filterWithDefaults),
-    [filterWithDefaults]
-  );
-
-  const filterInstanceLabels = useMemo(
-    () => getFilterInstanceLabels(filterWithDefaults),
+  const { resourceActionFilter, instanceLabels: filterInstanceLabels } = useMemo(
+    () => mapToResourceActionFilterWithInstanceLabels(filterWithDefaults),
     [filterWithDefaults]
   );
 

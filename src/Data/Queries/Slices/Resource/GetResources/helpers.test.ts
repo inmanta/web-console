@@ -1,9 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { Resource } from "@/Core/Domain";
 import {
-  getFilterInstanceLabels,
   mapStatusToGraphQLFilter,
-  mapToResourceActionFilter,
+  mapToResourceActionFilterWithInstanceLabels,
   mapSort,
   parseCurrentPage,
   buildHandlers,
@@ -165,9 +164,13 @@ describe("mapStatusToGraphQLFilter", () => {
   });
 });
 
-// ─── mapToResourceActionFilter ──────────────────────────────────────────────
+// ─── mapToResourceActionFilterWithInstanceLabels ────────────────────────────
 
-describe("mapToResourceActionFilter", () => {
+describe("mapToResourceActionFilterWithInstanceLabels", () => {
+  // Most cases only check the mapped filter, not the instance labels.
+  const mapToResourceActionFilter = (filter?: Resource.Filter) =>
+    mapToResourceActionFilterWithInstanceLabels(filter).resourceActionFilter;
+
   it("returns an empty filter for undefined or empty input", () => {
     expect(mapToResourceActionFilter(undefined)).toEqual({});
     expect(mapToResourceActionFilter({})).toEqual({});
@@ -236,12 +239,8 @@ describe("mapToResourceActionFilter", () => {
 
     expect(result).toEqual({ agent: { contains: ["%internal%"] }, isOrphan: false });
   });
-});
 
-// ─── getFilterInstanceLabels ────────────────────────────────────────────────
-
-describe("getFilterInstanceLabels", () => {
-  it("keys each serviceInstance value's label by its id", () => {
+  it("returns the instance ids in the filter and keys each label by its id", () => {
     const filter = {
       serviceInstance: [
         Resource.encodeServiceInstanceFilterValue("abc", "cpe-1"),
@@ -249,10 +248,13 @@ describe("getFilterInstanceLabels", () => {
       ],
     };
 
-    expect(getFilterInstanceLabels(filter)).toEqual({ abc: "cpe-1", def: "cpe-2" });
+    expect(mapToResourceActionFilterWithInstanceLabels(filter)).toEqual({
+      resourceActionFilter: { serviceInstance: ["abc", "def"] },
+      instanceLabels: { abc: "cpe-1", def: "cpe-2" },
+    });
   });
 
-  it("leaves out an instance whose filter value carries its id as label", () => {
+  it("leaves out the label of an instance whose filter value carries its id as label", () => {
     const filter = {
       serviceInstance: [
         Resource.encodeServiceInstanceFilterValue("abc", "cpe-1"),
@@ -260,11 +262,16 @@ describe("getFilterInstanceLabels", () => {
       ],
     };
 
-    expect(getFilterInstanceLabels(filter)).toEqual({ abc: "cpe-1" });
+    expect(mapToResourceActionFilterWithInstanceLabels(filter).instanceLabels).toEqual({
+      abc: "cpe-1",
+    });
   });
 
   it("returns no labels for a filter without instances", () => {
-    expect(getFilterInstanceLabels({ agent: ["internal"] })).toEqual({});
+    expect(mapToResourceActionFilterWithInstanceLabels({ agent: ["internal"] })).toEqual({
+      resourceActionFilter: { agent: { contains: ["%internal%"] } },
+      instanceLabels: {},
+    });
   });
 });
 

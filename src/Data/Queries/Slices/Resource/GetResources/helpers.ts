@@ -93,9 +93,19 @@ export function mapStatusToGraphQLFilter(statusses?: string[]): GraphQLStateFilt
  * Maps the resources page UI filter to the GraphQL/deploy_filtered ResourceActionFilter, so the
  * list query and a filter-scoped deploy act on exactly the same set. The environment is left out;
  * the list query adds it as a variable and the deploy endpoint scopes by URL.
+ *
+ * It also returns the label of each service instance the filter names, keyed by instance id, from
+ * the same pass over its serviceInstance values. An instance without a label of its own carries
+ * its id instead, and is left out of the labels.
+ *
+ * @example mapToResourceActionFilterWithInstanceLabels({ serviceInstance: ['{"id":"abc","label":"cpe-1"}'] }) // { resourceActionFilter: { serviceInstance: ["abc"] }, instanceLabels: { abc: "cpe-1" } }
  */
-export function mapToResourceActionFilter(filter?: Resource.Filter): ResourceActionFilter {
+export function mapToResourceActionFilterWithInstanceLabels(filter?: Resource.Filter): {
+  resourceActionFilter: ResourceActionFilter;
+  instanceLabels: Record<string, string>;
+} {
   const result: ResourceActionFilter = {};
+  const instanceLabels: Record<string, string> = {};
 
   if (filter?.type?.length) {
     result.resourceType = { contains: filter.type.map((type) => `%${type}%`) };
@@ -114,9 +124,15 @@ export function mapToResourceActionFilter(filter?: Resource.Filter): ResourceAct
   }
 
   if (filter?.serviceInstance?.length) {
-    result.serviceInstance = filter.serviceInstance.map(
-      (value) => Resource.parseServiceInstanceFilterValue(value).id
-    );
+    result.serviceInstance = filter.serviceInstance.map((value) => {
+      const { id, label } = Resource.parseServiceInstanceFilterValue(value);
+
+      if (label !== id) {
+        instanceLabels[id] = label;
+      }
+
+      return id;
+    });
   }
 
   if (filter?.includeOwned) {
@@ -124,30 +140,12 @@ export function mapToResourceActionFilter(filter?: Resource.Filter): ResourceAct
   }
 
   return {
-    ...result,
-    ...mapStatusToGraphQLFilter(filter?.status),
+    resourceActionFilter: {
+      ...result,
+      ...mapStatusToGraphQLFilter(filter?.status),
+    },
+    instanceLabels,
   };
-}
-
-/**
- * Gets the label of each service instance in a Resources page filter, keyed by instance id, as its
- * filter value carries it. An instance without a label of its own carries its id instead, and is
- * left out.
- *
- * @example getFilterInstanceLabels({ serviceInstance: ['{"id":"abc","label":"cpe-1"}'] }) // { abc: "cpe-1" }
- */
-export function getFilterInstanceLabels(filter?: Resource.Filter): Record<string, string> {
-  const instanceLabels: Record<string, string> = {};
-
-  for (const value of filter?.serviceInstance ?? []) {
-    const { id, label } = Resource.parseServiceInstanceFilterValue(value);
-
-    if (label !== id) {
-      instanceLabels[id] = label;
-    }
-  }
-
-  return instanceLabels;
 }
 
 /**
