@@ -55,11 +55,15 @@ yarn run pull $VERSION $RELEASE
 
 # Optionally swap inmanta-core in the pulled image for a branch from GitHub.
 # docker-compose always starts the image tagged iso-image, so we rebuild that tag.
+# The build starts from the registry image instead of the local iso-image tag,
+# because BuildKit would try to fetch the layers of iso-image from Docker Hub.
 if [[ -n "$CORE_BRANCH" ]]
 then
-    echo "Installing inmanta-core from branch $CORE_BRANCH..."
-    docker build -t iso-image - <<EOF
-FROM iso-image
+    BASE_IMAGE=$(docker image inspect iso-image --format '{{range .RepoDigests}}{{println .}}{{end}}' | grep -v '^iso-image@' | head -n 1)
+    BASE_PLATFORM=$(docker image inspect iso-image --format '{{.Os}}/{{.Architecture}}')
+    echo "Installing inmanta-core from branch $CORE_BRANCH on $BASE_IMAGE ($BASE_PLATFORM)..."
+    docker build --platform "$BASE_PLATFORM" -t iso-image - <<EOF
+FROM $BASE_IMAGE
 USER 0
 RUN /opt/inmanta/bin/pip install https://github.com/inmanta/inmanta-core/archive/refs/heads/$CORE_BRANCH.tar.gz
 RUN /opt/inmanta/bin/inmanta --help
