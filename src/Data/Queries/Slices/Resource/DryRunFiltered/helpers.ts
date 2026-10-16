@@ -1,5 +1,25 @@
-import { ResourceActionFilter } from "@/Core";
+import { DryRunContext, ResourceActionFilter } from "@/Core";
 import { DryRunVersion, VersionSelectionBlocker } from "./types";
+
+/**
+ * Creates the context the web-console stores with a filtered dry run: the label of each service
+ * instance the filter names, so its report shows them. An instance without a known label gets its
+ * id.
+ *
+ * @example createDryRunContext({ serviceInstance: ["abc"] }, { abc: "cpe-1" }) // { web_instance_labels: { abc: "cpe-1" } }
+ */
+export const createDryRunContext = (
+  filter: ResourceActionFilter,
+  instanceLabels: Record<string, string>
+): DryRunContext => {
+  const contextInstanceLabels: Record<string, string> = {};
+
+  for (const instanceId of filter.serviceInstance ?? []) {
+    contextInstanceLabels[instanceId] = instanceLabels[instanceId] ?? instanceId;
+  }
+
+  return { web_instance_labels: contextInstanceLabels };
+};
 
 /**
  * Checks whether a filter uses a Status tab filter, which narrows on a resource's current state.

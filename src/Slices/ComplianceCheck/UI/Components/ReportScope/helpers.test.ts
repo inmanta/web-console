@@ -1,4 +1,4 @@
-import { Diff, ResourceActionFilter, ServiceInstanceModel } from "@/Core";
+import { Diff, ResourceActionFilter } from "@/Core";
 import { ServiceInstance } from "@/Test";
 import { words } from "@/UI/words";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
@@ -6,46 +6,29 @@ import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import {
   countDiff,
   createFilterRows,
-  createInstanceIdLookup,
   createRerunPlan,
   createStatusValues,
   createVersionValues,
   formatFilterValue,
   formatScopeLabel,
+  getReportInstanceLabels,
 } from "./helpers";
 
 const modelVersion = 5;
-const instance: ServiceInstanceModel = ServiceInstance.a;
-const instances = { [instance.id]: instance };
-const instanceName = instance.service_identity_attribute_value ?? instance.id;
+const instance = ServiceInstance.a;
+const instanceLabel = Mock.filteredInstanceLabel;
+const instanceLabels = { [instance.id]: instanceLabel };
 
-describe("createInstanceIdLookup", () => {
-  const reportWith = (resource_filter: ResourceActionFilter) => ({ ...Mock.a, resource_filter });
-
-  it("groups the instances of all reports under their entities, each id once", () => {
+describe("getReportInstanceLabels", () => {
+  it("reads the instance labels the web-console stored in the context", () => {
     expect(
-      createInstanceIdLookup([
-        reportWith({ serviceEntity: ["lab"], serviceInstance: ["b", "a"] }),
-        reportWith({ serviceEntity: ["lab"], serviceInstance: ["a", "c"] }),
-        reportWith({ serviceEntity: ["vlan"], serviceInstance: ["d"] }),
-      ])
-    ).toEqual({ byEntity: { lab: ["a", "b", "c"], vlan: ["d"] }, withoutEntity: [] });
+      getReportInstanceLabels({ ...Mock.a, context: { web_instance_labels: instanceLabels } })
+    ).toEqual(instanceLabels);
   });
 
-  it("looks up instances without an entity on their own, unless another report groups them", () => {
-    expect(
-      createInstanceIdLookup([
-        reportWith({ serviceInstance: ["b", "a"] }),
-        reportWith({ serviceEntity: ["lab"], serviceInstance: ["a"] }),
-      ])
-    ).toEqual({ byEntity: { lab: ["a"] }, withoutEntity: ["b"] });
-  });
-
-  it("looks up nothing for reports without instances", () => {
-    expect(createInstanceIdLookup([Mock.a, reportWith({ serviceEntity: ["lab"] })])).toEqual({
-      byEntity: {},
-      withoutEntity: [],
-    });
+  it("has no labels for a report without the web-console's context", () => {
+    expect(getReportInstanceLabels({ ...Mock.a, context: null })).toEqual({});
+    expect(getReportInstanceLabels({ ...Mock.a, context: {} })).toEqual({});
   });
 });
 
@@ -61,12 +44,12 @@ describe("createFilterRows", () => {
       serviceInstance: [instance.id],
     };
 
-    expect(createFilterRows(filter, instances)).toEqual([
+    expect(createFilterRows(filter, instanceLabels)).toEqual([
       { key: "serviceEntity", values: [{ value: "l2Connect", kind: "serviceEntity" }] },
       {
         key: "serviceInstance",
         values: [
-          { value: instanceName, kind: "serviceInstance" },
+          { value: instanceLabel, kind: "serviceInstance" },
           { value: words("desiredState.complianceCheck.scope.value.owned"), kind: "includeOwned" },
         ],
       },
@@ -75,13 +58,12 @@ describe("createFilterRows", () => {
     ]);
   });
 
-  it("shows only what the filter holds, and an instance by id until it is looked up", () => {
+  it("shows only what the filter holds, and an instance by id when it has no stored label", () => {
     expect(createFilterRows({ serviceInstance: [instance.id] }, {})).toEqual([
       { key: "serviceInstance", values: [{ value: instance.id, kind: "serviceInstance" }] },
     ]);
-    // The instance's service entity isn't in the filter, so it isn't shown.
-    expect(createFilterRows({ serviceInstance: [instance.id] }, instances)).toEqual([
-      { key: "serviceInstance", values: [{ value: instanceName, kind: "serviceInstance" }] },
+    expect(createFilterRows({ serviceInstance: [instance.id] }, instanceLabels)).toEqual([
+      { key: "serviceInstance", values: [{ value: instanceLabel, kind: "serviceInstance" }] },
     ]);
   });
 
@@ -162,7 +144,7 @@ describe("formatFilterValue", () => {
 
 describe("formatScopeLabel", () => {
   const labelOf = (filter: ResourceActionFilter) =>
-    formatScopeLabel(createFilterRows(filter, instances), createStatusValues(filter));
+    formatScopeLabel(createFilterRows(filter, instanceLabels), createStatusValues(filter));
 
   it("reads Full model when the filter only picks a version", () => {
     expect(labelOf({ isOrphan: false })).toBe(
@@ -178,10 +160,10 @@ describe("formatScopeLabel", () => {
         includeOwned: true,
         agent: { eq: ["a", "b"] },
       })
-    ).toBe(`${instanceName} ${words("desiredState.complianceCheck.scope.label.owned")} +2`);
+    ).toBe(`${instanceLabel} ${words("desiredState.complianceCheck.scope.label.owned")} +2`);
     expect(
       labelOf({ isOrphan: false, serviceEntity: ["l2Connect"], serviceInstance: [instance.id] })
-    ).toBe(`l2Connect › ${instanceName}`);
+    ).toBe(`l2Connect › ${instanceLabel}`);
   });
 
   it("shows a single condition whole", () => {

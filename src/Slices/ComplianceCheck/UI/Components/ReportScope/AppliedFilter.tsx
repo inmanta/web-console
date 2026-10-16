@@ -28,6 +28,7 @@ import { FilterRow, FilterValue } from "./types";
 interface Props {
   rows: FilterRow[];
   resourceFilter: ResourceActionFilter;
+  instanceLabels: Record<string, string>;
   modelVersion: number;
   modelVersionStatus: DesiredStateVersionStatus | undefined;
   onRerunStart: () => void;
@@ -43,6 +44,8 @@ interface Props {
  * @props {Props} props - The props of the component
  *  @prop {FilterRow[]} rows - The filter rows, in display order
  *  @prop {ResourceActionFilter} resourceFilter - The filter the dry run was started with
+ *  @prop {Record<string, string>} instanceLabels - The labels of the filter's service instances,
+ *    keyed by instance id, to store with a re-run
  *  @prop {number} modelVersion - The model version of the dry run
  *  @prop {DesiredStateVersionStatus | undefined} modelVersionStatus - The status of that model
  *    version, undefined until it is known
@@ -53,6 +56,7 @@ interface Props {
 export const AppliedFilter: React.FC<Props> = ({
   rows,
   resourceFilter,
+  instanceLabels,
   modelVersion,
   modelVersionStatus,
   onRerunStart,
@@ -86,6 +90,7 @@ export const AppliedFilter: React.FC<Props> = ({
             <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
               <RerunButton
                 resourceFilter={resourceFilter}
+                instanceLabels={instanceLabels}
                 modelVersion={modelVersion}
                 modelVersionStatus={modelVersionStatus}
                 onRerunStart={onRerunStart}

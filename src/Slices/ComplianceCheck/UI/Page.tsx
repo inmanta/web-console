@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Content,
   Flex,
@@ -12,14 +12,12 @@ import {
 import { Diff, DryRun } from "@/Core";
 import { useUrlStateWithString } from "@/Data/Common";
 import { useGetDryRuns } from "@/Data/Queries/Slices/DryRun";
-import { useGetInstancesById } from "@/Data/Queries/Slices/ServiceInstance";
 import * as DiffWizard from "@/UI/Components/DiffWizard";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { useRouteParams } from "@/UI/Routing";
 import { REPORT_URL_STATE_KEY } from "@/UI/Routing/ReportSearch";
 import { words } from "@/UI/words";
 import { SelectReportAction, TriggerDryRunAction } from "./Components";
-import { createInstanceIdLookup } from "./Components/ReportScope/helpers";
 import { DiffPageSection } from "./DiffPageSection";
 
 /**
@@ -76,11 +74,6 @@ export const View: React.FC<Props> = ({ version }) => {
   const selectedReport: DryRun | null =
     data?.find((report) => report.id === selectedReportId) ?? data?.[0] ?? null;
 
-  // The instances of all reports are looked up together, for the picker and the scope card alike:
-  // one request per service entity, and one per instance whose filter names no entity.
-  const instanceIdLookup = useMemo(() => createInstanceIdLookup(data ?? []), [data]);
-  const instances = useGetInstancesById(instanceIdLookup);
-
   useEffect(() => {
     if (isError) {
       notifyError({
@@ -118,7 +111,6 @@ export const View: React.FC<Props> = ({ version }) => {
                   setSelectedReport={(report) => setSelectedReportId(report?.id ?? "")}
                   selectedReport={selectedReport}
                   reportsData={data}
-                  instances={instances}
                 />
                 <DiffWizard.DiffPageFilter
                   statuses={statuses}
@@ -136,7 +128,6 @@ export const View: React.FC<Props> = ({ version }) => {
         version={version}
         statuses={statuses}
         searchFilter={searchFilter}
-        instances={instances}
         onRerunStart={selectNewestReport}
       />
     </>

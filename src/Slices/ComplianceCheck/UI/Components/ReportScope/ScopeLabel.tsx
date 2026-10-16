@@ -2,7 +2,6 @@ import React from "react";
 import { Label } from "@patternfly/react-core";
 import { DryRun } from "@/Core";
 import { createStatusValues, formatScopeLabel, isFiltered } from "./helpers";
-import { InstancesById } from "./types";
 import { useFilterRows } from "./useFilterRows";
 
 /**
@@ -14,7 +13,6 @@ const SCOPE_LABEL_MAX_WIDTH = "28ch";
 
 interface Props {
   report: DryRun;
-  instances: InstancesById;
 }
 
 /**
@@ -24,12 +22,11 @@ interface Props {
  *
  * @props {Props} props - The props of the component
  *  @prop {DryRun} report - The dry run report
- *  @prop {InstancesById} instances - The instances of the reports' filters, to show by name
  *
  * @returns {React.FC<Props>} The scope label
  */
-export const ScopeLabel: React.FC<Props> = ({ report, instances }) => {
-  const rows = useFilterRows(report, instances);
+export const ScopeLabel: React.FC<Props> = ({ report }) => {
+  const rows = useFilterRows(report);
   const statusValues = report.resource_filter ? createStatusValues(report.resource_filter) : [];
 
   return (

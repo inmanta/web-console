@@ -5,14 +5,12 @@ import { useGetDesiredStateVersion } from "@/Data/Queries/Slices/DesiredState";
 import { DesiredStateStatusLabel } from "@/UI/Components/DesiredStateStatusLabel";
 import { words } from "@/UI/words";
 import { AppliedFilter } from "./AppliedFilter";
-import { countDiff, isKnownInactive } from "./helpers";
-import { InstancesById } from "./types";
+import { countDiff, getReportInstanceLabels, isKnownInactive } from "./helpers";
 import { useFilterRows } from "./useFilterRows";
 
 interface Props {
   report: DryRun;
   diff: Diff.Resource[] | undefined;
-  instances: InstancesById;
   onRerunStart: () => void;
 }
 
@@ -36,16 +34,15 @@ interface ScopeCount {
  *  @prop {DryRun} report - The selected dry run report
  *  @prop {Diff.Resource[] | undefined} diff - The resources of the report, undefined while they
  *    load; the agent and change counts show once they are there
- *  @prop {InstancesById} instances - The instances of the reports' filters, to show by name
  *  @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The scope band
  */
-export const ReportScope: React.FC<Props> = ({ report, diff, instances, onRerunStart }) => {
+export const ReportScope: React.FC<Props> = ({ report, diff, onRerunStart }) => {
   const modelVersion = Number(report.model);
   const { data: desiredStateVersion } = useGetDesiredStateVersion(modelVersion);
   const modelVersionStatus = desiredStateVersion?.status;
-  const rows = useFilterRows(report, instances);
+  const rows = useFilterRows(report);
   const diffCounts = useMemo(() => diff && countDiff(diff), [diff]);
   const resourceFilter = report.resource_filter;
   const modelVersionText = words("modelVersion")(modelVersion);
@@ -126,6 +123,7 @@ export const ReportScope: React.FC<Props> = ({ report, diff, instances, onRerunS
               <AppliedFilter
                 rows={rows}
                 resourceFilter={resourceFilter}
+                instanceLabels={getReportInstanceLabels(report)}
                 modelVersion={modelVersion}
                 modelVersionStatus={modelVersionStatus}
                 onRerunStart={onRerunStart}

@@ -5,17 +5,19 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { ResourceActionFilter } from "@/Core";
+import { DryRunContext, ResourceActionFilter } from "@/Core";
 import { usePost } from "@/Data/Queries/Helpers";
 import { getDryRunsKey } from "@/Data/Queries/Slices/DryRun";
 import { DependencyContext } from "@/UI/Dependency";
 import { StartedDryRun } from "./types";
 
 /**
- * Request body for the dryrun_filtered endpoint.
+ * What a filtered dry run is started with: the filter of the resources it covers, and the context
+ * stored with it for its report.
  */
-interface Body {
+interface DryRunFilteredRequest {
   filter: ResourceActionFilter;
+  context: DryRunContext;
 }
 
 /**
@@ -31,26 +33,28 @@ interface DryRunFilteredResponse {
  * React Query hook for starting a dry run on the resources matching a filter.
  *
  * The server runs a dry run on a single model version, so the filter either sets one with
- * modelVersion or instanceVersion, or sets isOrphan: false for the active model version. It
- * resolves to the new dry run's id and model version, which locate its report. On success it
- * invalidates the dry run lists so the new report shows up in the Compliance Check page, then
- * calls the caller's own onSuccess once the lists include the new dry run.
+ * modelVersion or instanceVersion, or sets isOrphan: false for the active model version. The
+ * context is stored with the dry run and comes back with its report. It resolves to the new dry
+ * run's id and model version, which locate its report. On success it invalidates the dry run lists
+ * so the new report shows up in the Compliance Check page, then calls the caller's own onSuccess
+ * once the lists include the new dry run.
  *
  * @returns {Mutation} The mutation object for sending the request.
  */
 export const useDryRunFiltered = (
-  options?: UseMutationOptions<StartedDryRun, Error, ResourceActionFilter>
-): UseMutationResult<StartedDryRun, Error, ResourceActionFilter> => {
+  options?: UseMutationOptions<StartedDryRun, Error, DryRunFilteredRequest>
+): UseMutationResult<StartedDryRun, Error, DryRunFilteredRequest> => {
   const client = useQueryClient();
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<Body>;
+  const post = usePost(env)<DryRunFilteredRequest>;
 
   return useMutation({
-    mutationFn: async (filter) => {
-      const { data }: { data: DryRunFilteredResponse } = await post("/api/v2/dryrun_filtered", {
-        filter,
-      });
+    mutationFn: async (request) => {
+      const { data }: { data: DryRunFilteredResponse } = await post(
+        "/api/v2/dryrun_filtered",
+        request
+      );
 
       return { id: data.id, modelVersion: data.model };
     },

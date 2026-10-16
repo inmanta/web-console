@@ -21,6 +21,7 @@ import { NonEmptyArray } from "@/Core/Language";
 import { DeployAgentsAction } from "@/Data/Queries/Slices/Agents";
 import {
   StartedDryRun,
+  createDryRunContext,
   useDeployFiltered,
   useDryRunFiltered,
 } from "@/Data/Queries/Slices/Resource";
@@ -57,6 +58,7 @@ interface BaseProps {
   tooltips: ResourceActionTooltips;
   disabledReason?: string;
   instance?: ResourceActionInstance;
+  instanceLabels?: Record<string, string>;
 }
 
 type Props =
@@ -69,8 +71,9 @@ type Props =
  * Deploy is the default action; the caret adds Repair and Dry run. Deploy and Repair hit the
  * deploy_filtered endpoint and Dry run hits dryrun_filtered, so one control serves a single resource,
  * the active filter, a whole environment or a service instance. Dry run always opens the dialog, to
- * select the version to preview against, and its toast links to the dry run's report. It disables
- * itself while the environment is halted.
+ * select the version to preview against, and its toast links to the dry run's report. A dry run
+ * stores the labels of the service instances its filter names, so its report shows them. It
+ * disables itself while the environment is halted.
  *
  * @Props {Props} - The props of the component
  *  @prop {ResourceActionFilter} filter - Deploy and Repair run immediately against this filter (mutually exclusive with scopes)
@@ -79,11 +82,13 @@ type Props =
  *  @prop {string} [disabledReason] - When set, disables the control and shows this as its tooltip
  *  @prop {ResourceActionInstance} [instance] - The service instance the scopes belong to; the dialog names
  *    it and a dry run can select one of its own versions
+ *  @prop {Record<string, string>} [instanceLabels] - The labels of the other service instances the
+ *    filters may name, keyed by instance id
  *
  * @returns {React.FC<Props>} The rendered split button
  */
 export const ResourceActions: React.FC<Props> = (props) => {
-  const { disabledReason, tooltips, instance } = props;
+  const { disabledReason, tooltips, instance, instanceLabels } = props;
   const [isOpen, setIsOpen] = useState(false);
   const { environmentHandler } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
@@ -138,18 +143,27 @@ export const ResourceActions: React.FC<Props> = (props) => {
     });
 
   const run = (key: ActionKey, scopeFilter: ResourceActionFilter) => {
-    const { label } = actions[key];
+    const { label: actionLabel } = actions[key];
     const onError = (error: Error) =>
       notifyError({
-        title: words("resources.resourceActions.failed")(label),
+        title: words("resources.resourceActions.failed")(actionLabel),
         message: error.message,
       });
 
     if (key === "dryRun") {
-      dryRun.mutate(scopeFilter, {
-        onSuccess: notifyDryRunStarted,
-        onError,
-      });
+      const knownInstanceLabels: Record<string, string> = { ...instanceLabels };
+
+      if (instance) {
+        knownInstanceLabels[instance.id] = instance.label;
+      }
+
+      dryRun.mutate(
+        { filter: scopeFilter, context: createDryRunContext(scopeFilter, knownInstanceLabels) },
+        {
+          onSuccess: notifyDryRunStarted,
+          onError,
+        }
+      );
 
       return;
     }
@@ -158,7 +172,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
       { method: DeployAgentsAction[key], filter: scopeFilter },
       {
         onSuccess: () =>
-          notifySuccess({ title: words("resources.resourceActions.success")(label) }),
+          notifySuccess({ title: words("resources.resourceActions.success")(actionLabel) }),
         onError,
       }
     );
@@ -175,20 +189,20 @@ export const ResourceActions: React.FC<Props> = (props) => {
       return;
     }
 
-    const { IconComponent, label } = actions[key];
+    const { IconComponent, label: actionLabel } = actions[key];
     const scopes: NonEmptyArray<ResourceActionScope> = props.scopes
       ? props.scopes
-      : [{ id: "resource", title: label, filter: props.filter }];
+      : [{ id: "resource", title: actionLabel, filter: props.filter }];
 
     const title = () => {
       if (instance) {
-        return words("resources.resourceActions.confirm.titleFor")(label, instance.name);
+        return words("resources.resourceActions.confirm.titleFor")(actionLabel, instance.label);
       }
       if (props.scopes) {
-        return words("resources.resourceActions.confirm.title")(label);
+        return words("resources.resourceActions.confirm.title")(actionLabel);
       }
 
-      return words("resources.resourceActions.confirm.single.title")(label);
+      return words("resources.resourceActions.confirm.single.title")(actionLabel);
     };
 
     const description = () => {
@@ -211,7 +225,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
       iconVariant: IconComponent,
       content: (
         <ResourceActionConfirmModal
-          actionLabel={label}
+          actionLabel={actionLabel}
           scopes={scopes}
           showScopes={Boolean(props.scopes)}
           showVersionField={isDryRun}

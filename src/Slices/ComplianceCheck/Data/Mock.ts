@@ -3,6 +3,7 @@ import { ServiceInstance } from "@/Test";
 import { resources } from "@/Test/Data/DesiredStateDiff";
 
 export const filteredAgent = "internal";
+export const filteredInstanceLabel = "cpe-east-2";
 
 export const a: DryRun = {
   id: "3eab9e22-4166-4145-80a8-587ccee4a9fc",
@@ -12,6 +13,7 @@ export const a: DryRun = {
   total: 23,
   todo: 23,
   resource_filter: null,
+  context: null,
 };
 export const b: DryRun = {
   id: "a35064a3-42c1-4723-b60c-7e5942cad753",
@@ -26,6 +28,7 @@ export const b: DryRun = {
     resourceType: { contains: ["%File%"] },
     compliance: { eq: ["NON_COMPLIANT"] },
   },
+  context: { web_instance_labels: {} },
 };
 export const c: DryRun = {
   id: "0d88ed3a-e2ee-4590-a127-1d587f5824a3",
@@ -35,6 +38,7 @@ export const c: DryRun = {
   total: 4,
   todo: 0,
   resource_filter: null,
+  context: null,
 };
 
 const d: DryRun = {
@@ -49,6 +53,7 @@ const d: DryRun = {
     serviceEntity: [ServiceInstance.a.service_entity],
     serviceInstance: [ServiceInstance.a.id],
   },
+  context: { web_instance_labels: { [ServiceInstance.a.id]: filteredInstanceLabel } },
 };
 
 export const listOfReports = [b, c, d];

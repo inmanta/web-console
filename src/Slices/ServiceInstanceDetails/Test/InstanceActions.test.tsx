@@ -70,11 +70,7 @@ describe("Page Actions - Success", () => {
 
     await waitFor(() =>
       expect(body).toEqual({
-        filter: {
-          isOrphan: false,
-          serviceEntity: [instanceData.service_entity],
-          serviceInstance: [instanceData.id],
-        },
+        filter: { isOrphan: false, serviceInstance: [instanceData.id] },
         agent_trigger_method: "push_incremental_deploy",
       })
     );
@@ -121,12 +117,7 @@ describe("Page Actions - Success", () => {
 
     await waitFor(() =>
       expect(body).toEqual({
-        filter: {
-          isOrphan: false,
-          serviceEntity: [instanceData.service_entity],
-          serviceInstance: [instanceData.id],
-          includeOwned: true,
-        },
+        filter: { isOrphan: false, serviceInstance: [instanceData.id], includeOwned: true },
         agent_trigger_method: "push_incremental_deploy",
       })
     );

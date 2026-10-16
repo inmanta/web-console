@@ -11,33 +11,22 @@ import { words } from "@/UI/words";
  * instance's own service_entity_version. So the owned scope carries no count and only names the
  * entity types it may touch.
  *
- * Both filters also name the instance's own service entity. That doesn't narrow the scope, since
- * the entity only selects the instances themselves and owned instances are added after, but it
- * lets a dry run report look the instance up by its entity.
- *
- * @example buildInstanceResourceActionScopes({ serviceEntity: "lab", instanceId: "abc", total: 3, ownedEntities: ["l2Connect"] })
+ * @example buildInstanceResourceActionScopes({ instanceId: "abc", total: 3, ownedEntities: ["l2Connect"] })
  *   => [{ id: "instance", ... }, { id: "owned", ... }]
  */
 export function buildInstanceResourceActionScopes({
-  serviceEntity,
   instanceId,
   total,
   ownedEntities,
 }: {
-  serviceEntity: string;
   instanceId: string;
   total: ParsedNumber | null | undefined;
   ownedEntities: string[];
 }): NonEmptyArray<ResourceActionScope> {
-  const instanceFilter = {
-    isOrphan: false,
-    serviceEntity: [serviceEntity],
-    serviceInstance: [instanceId],
-  };
   const instanceScope: ResourceActionScope = {
     id: "instance",
     title: words("resources.resourceActions.confirm.instance.title"),
-    filter: instanceFilter,
+    filter: { isOrphan: false, serviceInstance: [instanceId] },
     count: total == null ? undefined : Number(total),
   };
 
@@ -50,7 +39,7 @@ export function buildInstanceResourceActionScopes({
     {
       id: "owned",
       title: words("resources.resourceActions.confirm.owned.title"),
-      filter: { ...instanceFilter, includeOwned: true },
+      filter: { isOrphan: false, serviceInstance: [instanceId], includeOwned: true },
       detail: words("resources.resourceActions.confirm.owned.description")(
         ownedEntities.join(", ")
       ),

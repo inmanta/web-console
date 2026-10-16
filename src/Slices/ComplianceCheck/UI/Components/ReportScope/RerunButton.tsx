@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
 import { ResourceActionFilter } from "@/Core";
-import { useDryRunFiltered } from "@/Data/Queries/Slices/Resource";
+import { createDryRunContext, useDryRunFiltered } from "@/Data/Queries/Slices/Resource";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
@@ -12,6 +12,7 @@ import { RerunPlan } from "./types";
 
 interface Props {
   resourceFilter: ResourceActionFilter;
+  instanceLabels: Record<string, string>;
   modelVersion: number;
   modelVersionStatus: DesiredStateVersionStatus | undefined;
   onRerunStart: () => void;
@@ -19,12 +20,15 @@ interface Props {
 
 /**
  * Starts a new dry run with the same resource filter on the same model version as a report, which
- * then gets selected, like a dry run started from the page title. It is disabled, with the reason
- * in a tooltip, while the environment is halted, until the model version's status is known, and
- * when the filter can't target that version. It is also disabled while the re-run is starting.
+ * then gets selected, like a dry run started from the page title. It stores the same instance
+ * labels, so the new report shows them too. It is disabled, with the reason in a tooltip, while
+ * the environment is halted, until the model version's status is known, and when the filter can't
+ * target that version. It is also disabled while the re-run is starting.
  *
  * @props {Props} props - The props of the component
  *  @prop {ResourceActionFilter} resourceFilter - The resource filter the report was started with
+ *  @prop {Record<string, string>} instanceLabels - The labels of the filter's service instances,
+ *    keyed by instance id, as the report stored them
  *  @prop {number} modelVersion - The model version of the report
  *  @prop {DesiredStateVersionStatus | undefined} modelVersionStatus - The status of that model
  *    version, undefined until it is known
@@ -34,6 +38,7 @@ interface Props {
  */
 export const RerunButton: React.FC<Props> = ({
   resourceFilter,
+  instanceLabels,
   modelVersion,
   modelVersionStatus,
   onRerunStart,
@@ -73,13 +78,19 @@ export const RerunButton: React.FC<Props> = ({
     }
 
     onRerunStart();
-    dryRun.mutate(rerunPlan.filter, {
-      onError: (error) =>
-        notifyError({
-          title: words("desiredState.complianceCheck.scope.rerun.failed"),
-          message: error.message,
-        }),
-    });
+    dryRun.mutate(
+      {
+        filter: rerunPlan.filter,
+        context: createDryRunContext(rerunPlan.filter, instanceLabels),
+      },
+      {
+        onError: (error) =>
+          notifyError({
+            title: words("desiredState.complianceCheck.scope.rerun.failed"),
+            message: error.message,
+          }),
+      }
+    );
   };
 
   return (

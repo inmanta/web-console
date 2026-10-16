@@ -1,51 +1,17 @@
 import { Diff, DryRun, Resource, ResourceActionFilter, StringMatch } from "@/Core";
 import { getVersionSelectionBlocker, withDryRunVersion } from "@/Data/Queries/Slices/Resource";
-import { InstanceIdLookup } from "@/Data/Queries/Slices/ServiceInstance";
 import { words } from "@/UI/words";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
-import { DiffCounts, FilterRow, FilterValue, InstancesById, RerunPlan } from "./types";
+import { DiffCounts, FilterRow, FilterValue, RerunPlan } from "./types";
 
 /**
- * Collects the service instances that the reports' filters name, to look them up in as few
- * requests as possible. Instances whose filter also names service entities are grouped under
- * those entities; the others, like a Resources page filter without an entity, are looked up on
- * their own, unless another report already groups them under an entity.
+ * Gets the labels of the service instances a dry run report's filter names, keyed by instance id,
+ * as the web-console stored them in its context. A report started without them has none.
  *
- * @example createInstanceIdLookup([{ resource_filter: { serviceEntity: ["lab"], serviceInstance: ["b", "a"] }, ... }, { resource_filter: { serviceInstance: ["c"] }, ... }]) // { byEntity: { lab: ["a", "b"] }, withoutEntity: ["c"] }
+ * @example getReportInstanceLabels({ context: { web_instance_labels: { abc: "cpe-1" } }, ... }) // { abc: "cpe-1" }
  */
-export const createInstanceIdLookup = (reports: DryRun[]): InstanceIdLookup => {
-  const idsByEntity = new Map<string, Set<string>>();
-  const idsWithoutEntity = new Set<string>();
-
-  reports.forEach(({ resource_filter }) => {
-    const instanceIds = resource_filter?.serviceInstance ?? [];
-    const serviceEntities = resource_filter?.serviceEntity ?? [];
-
-    if (serviceEntities.length === 0) {
-      instanceIds.forEach((instanceId) => idsWithoutEntity.add(instanceId));
-
-      return;
-    }
-
-    serviceEntities.forEach((serviceEntity) => {
-      const ids = idsByEntity.get(serviceEntity) ?? new Set<string>();
-
-      instanceIds.forEach((instanceId) => ids.add(instanceId));
-      idsByEntity.set(serviceEntity, ids);
-    });
-  });
-
-  const idsUnderEntity = new Set([...idsByEntity.values()].flatMap((ids) => [...ids]));
-
-  return {
-    byEntity: Object.fromEntries(
-      [...idsByEntity]
-        .filter(([, ids]) => ids.size > 0)
-        .map(([serviceEntity, ids]) => [serviceEntity, [...ids].sort()])
-    ),
-    withoutEntity: [...idsWithoutEntity].filter((id) => !idsUnderEntity.has(id)).sort(),
-  };
-};
+export const getReportInstanceLabels = (report: DryRun): Record<string, string> =>
+  report.context?.web_instance_labels ?? {};
 
 /**
  * Whether a value is a flag (owned services, latest intent) rather than a condition value.
@@ -71,7 +37,6 @@ export const isKnownInactive = (
  * pair, like a pattern posted through the API, stays as is.
  *
  * @example trimWildcards("%File%") // "File"
- * @example trimWildcards("File%") // "File%"
  */
 const trimWildcards = (value: string): string =>
   value.length >= 2 && value.startsWith("%") && value.endsWith("%") ? value.slice(1, -1) : value;
@@ -81,7 +46,7 @@ const trimWildcards = (value: string): string =>
  * string match without the substring operators. The equality values go through formatValue, the
  * substring values lose their % wildcards instead.
  *
- * @example createFilterValues({ eq: ["a"], contains: ["%b%"] }) // [{ value: "a" }, { value: "b", operator: "contains" }]
+ * @example createFilterValues({ contains: ["%File%"] }) // [{ value: "File", operator: "contains" }]
  */
 const createFilterValues = (
   match: StringMatch | undefined,
@@ -108,13 +73,14 @@ const createFilterValues = (
 };
 
 /**
- * The display name of a service instance: its identity, or its id when it has none or isn't
- * loaded.
+ * The label of a service instance: its stored label, or its id when it has none.
  *
- * @example getInstanceName("7cd8...", { "7cd8...": { service_identity_attribute_value: "cpe-east-2", ... } }) // "cpe-east-2"
+ * @example getInstanceLabel("abc", { abc: "cpe-1" }) // "cpe-1"
  */
-export const getInstanceName = (instanceId: string, instances: InstancesById): string =>
-  instances[instanceId]?.service_identity_attribute_value ?? instanceId;
+export const getInstanceLabel = (
+  instanceId: string,
+  instanceLabels: Record<string, string>
+): string => instanceLabels[instanceId] ?? instanceId;
 
 /**
  * Formats a status enum value the way it reads in a sentence.
@@ -126,13 +92,13 @@ const formatStatusValue = (value: string): string => value.toLowerCase().replace
 /**
  * Splits a dry run's resource filter into the rows of its applied filter, in display order, without
  * empty rows. The version and status values are created apart, since they group several fields.
- * Instances show by name once they are loaded.
+ * Instances show by their label in instanceLabels, or by id.
  *
  * @example createFilterRows({ isOrphan: false, agent: { eq: ["internal"] } }, {}) // [{ key: "agent", values: [{ value: "internal" }] }]
  */
 export const createFilterRows = (
   filter: ResourceActionFilter,
-  instances: InstancesById
+  instanceLabels: Record<string, string>
 ): FilterRow[] => {
   const ownedValue: FilterValue = {
     value: words("desiredState.complianceCheck.scope.value.owned"),
@@ -150,7 +116,7 @@ export const createFilterRows = (
       key: "serviceInstance",
       values: [
         ...(filter.serviceInstance ?? []).map((instanceId): FilterValue => ({
-          value: getInstanceName(instanceId, instances),
+          value: getInstanceLabel(instanceId, instanceLabels),
           kind: "serviceInstance",
         })),
         ...(filter.lifecycleState ?? []).map((state): FilterValue => ({
@@ -180,7 +146,7 @@ export const createFilterRows = (
  * status is unknown; once it is known to be other than active, it was only the latest intent when
  * the dry run ran, and shows as a plain value.
  *
- * @example createVersionValues({ isOrphan: false }, 214, DesiredStateVersionStatus.active) // [{ value: "v214" }, { value: "latest intent", kind: "latestIntent" }]
+ * @example createVersionValues({ isOrphan: false }, 5, DesiredStateVersionStatus.active) // [{ value: "v5" }, { value: "latest intent", kind: "latestIntent" }]
  */
 export const createVersionValues = (
   filter: ResourceActionFilter,
@@ -214,7 +180,7 @@ export const createVersionValues = (
  * Creates the values of the status row: the conditions on the resources' status, which describe a
  * moment rather than the scope.
  *
- * @example createStatusValues({ compliance: { neq: ["NON_COMPLIANT"] }, isDeploying: true }) // [{ value: "non compliant", operator: "neq" }, { value: "deploying" }]
+ * @example createStatusValues({ compliance: { eq: ["NON_COMPLIANT"] } }) // [{ value: "non compliant" }]
  */
 export const createStatusValues = (filter: ResourceActionFilter): FilterValue[] => [
   ...createFilterValues(filter.compliance, formatStatusValue),
@@ -237,7 +203,7 @@ export const createStatusValues = (filter: ResourceActionFilter): FilterValue[] 
 /**
  * Whether a dry run's filter narrows the resources, rather than only picking the model version.
  *
- * @example isFiltered([], []) // false
+ * @example isFiltered([{ key: "agent", values: [{ value: "internal" }] }], []) // true
  */
 export const isFiltered = (rows: FilterRow[], statusValues: FilterValue[]): boolean =>
   rows.length > 0 || statusValues.length > 0;
@@ -256,7 +222,7 @@ export const formatFilterValue = ({ value, operator }: FilterValue): string =>
  * and "+N"; without an anchor, a single condition is shown whole, and more read
  * "Filtered · N conditions". A dry run that only picks a version reads "Full model".
  *
- * @example formatScopeLabel([{ key: "agent", values: [{ value: "router-east" }] }], []) // "Agent = router-east"
+ * @example formatScopeLabel([{ key: "agent", values: [{ value: "internal" }] }], []) // "Agent = internal"
  */
 export const formatScopeLabel = (rows: FilterRow[], statusValues: FilterValue[]): string => {
   if (!isFiltered(rows, statusValues)) {

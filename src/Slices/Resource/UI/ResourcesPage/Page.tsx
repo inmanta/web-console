@@ -13,7 +13,11 @@ import {
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
 import { usePaginatedTableWithMultiSort } from "@/Data/Common";
-import { useGetResources, mapToResourceActionFilter } from "@/Data/Queries/Slices/Resource";
+import {
+  getFilterInstanceLabels,
+  useGetResources,
+  mapToResourceActionFilter,
+} from "@/Data/Queries/Slices/Resource";
 import { CompoundResourceStatus } from "@/UI/Components/CompoundResourceStatus";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { ErrorView } from "@/UI/Components/ErrorView";
@@ -139,6 +143,7 @@ export const Page: React.FC = () => {
                   repair: words("resources.resourceActions.repair.tooltip.resources"),
                   dryRun: words("resources.resourceActions.dryRun.tooltip.resources"),
                 }}
+                instanceLabels={getFilterInstanceLabels(filterWithDefaults)}
                 scopes={[
                   {
                     id: "filtered",

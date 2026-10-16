@@ -130,6 +130,22 @@ export function mapToResourceActionFilter(filter?: Resource.Filter): ResourceAct
 }
 
 /**
+ * Gets the label of each service instance in a Resources page filter, keyed by instance id, as its
+ * filter value carries it.
+ *
+ * @example getFilterInstanceLabels({ serviceInstance: ['{"id":"abc","label":"cpe-1"}'] }) // { abc: "cpe-1" }
+ */
+export function getFilterInstanceLabels(filter?: Resource.Filter): Record<string, string> {
+  return Object.fromEntries(
+    (filter?.serviceInstance ?? []).map((value) => {
+      const { id, label } = Resource.parseServiceInstanceFilterValue(value);
+
+      return [id, label];
+    })
+  );
+}
+
+/**
  * Maps sort parameters to the GraphQL orderBy format.
  * Preserves array order as sort priority.
  */

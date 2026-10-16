@@ -33,7 +33,6 @@ export const InstanceHeaderActions: React.FC = () => {
   const ownedEntities = serviceModelQuery.data?.owned_entities ?? [];
 
   const scopes = buildInstanceResourceActionScopes({
-    serviceEntity: instance.service_entity,
     instanceId: instance.id,
     total,
     ownedEntities,
@@ -78,7 +77,7 @@ export const InstanceHeaderActions: React.FC = () => {
           instance={{
             id: instance.id,
             serviceEntity: instance.service_entity,
-            name: instance.service_identity_attribute_value ?? instance.id,
+            label: instance.service_identity_attribute_value ?? instance.id,
             renderState: (state) => <StateLabel state={state} service={serviceModelQuery.data} />,
           }}
         />

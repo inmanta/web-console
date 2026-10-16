@@ -6,6 +6,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { DryRun } from "@/Core";
 import { EnvironmentDetails, MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
@@ -20,6 +21,7 @@ import {
   createFilterRows,
   createStatusValues,
   formatScopeLabel,
+  getReportInstanceLabels,
 } from "./Components/ReportScope/helpers";
 import { View } from "./Page";
 
@@ -347,18 +349,17 @@ describe("ComplianceCheck page", () => {
   describe("Report scope", () => {
     const diff = Mock.reportResponse.data.diff;
     const instance = ServiceInstance.a;
-    const instanceName = instance.service_identity_attribute_value ?? instance.id;
 
     const findScope = () =>
       screen.findByRole("region", { name: words("desiredState.complianceCheck.scope.title") });
 
-    let inventoryRequests: URL[] = [];
+    let instanceRequests: URL[] = [];
 
     beforeEach(() => {
-      inventoryRequests = [];
+      instanceRequests = [];
       server.use(
-        http.get("/lsm/v1/service_inventory/:serviceEntity", ({ request }) => {
-          inventoryRequests.push(new URL(request.url));
+        http.get("/lsm/v1/service_inventory*", ({ request }) => {
+          instanceRequests.push(new URL(request.url));
 
           return HttpResponse.json({ data: [instance] });
         })
@@ -372,44 +373,35 @@ describe("ComplianceCheck page", () => {
 
       await userEvent.click(await screen.findByRole("button", { name: "ReportListSelect" }));
 
-      // Instances show by name once they are looked up. The labels themselves are tested in
-      // helpers.test.ts; this checks that each option shows its own.
-      const labels = Mock.listOfReports.map((report) =>
+      // Instances show by the labels stored with each report. The scope labels themselves and
+      // getReportInstanceLabels are tested in helpers.test.ts; this checks that each option shows
+      // its own.
+      const scopeLabels = Mock.listOfReports.map((report) =>
         formatScopeLabel(
-          createFilterRows(report.resource_filter ?? {}, { [instance.id]: instance }),
+          createFilterRows(report.resource_filter ?? {}, getReportInstanceLabels(report)),
           createStatusValues(report.resource_filter ?? {})
         )
       );
       const options = screen.getAllByRole("option");
 
-      expect(labels.some((label) => label.includes(instanceName))).toBe(true);
-      await waitFor(() =>
-        labels.forEach((label, index) => expect(options[index]).toHaveTextContent(label))
+      expect(
+        scopeLabels.some((scopeLabel) => scopeLabel.includes(Mock.filteredInstanceLabel))
+      ).toBe(true);
+      scopeLabels.forEach((scopeLabel, index) =>
+        expect(options[index]).toHaveTextContent(scopeLabel)
       );
-      // The picker and the scope card share one lookup per service entity.
-      expect(inventoryRequests).toHaveLength(1);
-      expect(inventoryRequests[0].pathname).toBe(
-        `/lsm/v1/service_inventory/${instance.service_entity}`
-      );
-      expect(inventoryRequests[0].searchParams.getAll("filter.id_or_service_identity")).toEqual([
-        instance.id,
-      ]);
+      expect(instanceRequests).toHaveLength(0);
     });
 
-    test("GIVEN a report whose filter names no service entity THEN its instance is looked up by id", async () => {
-      let instanceRequests: URL[] = [];
-
+    test("GIVEN a report started without instance labels THEN its instance shows by id", async () => {
       server.use(
         http.get("/api/v2/dryrun/123", () =>
           HttpResponse.json({
-            data: [{ ...Mock.b, resource_filter: { serviceInstance: [instance.id] } }],
+            data: [
+              { ...Mock.b, resource_filter: { serviceInstance: [instance.id] }, context: null },
+            ],
           })
-        ),
-        http.get("/lsm/v1/service_inventory", ({ request }) => {
-          instanceRequests = [...instanceRequests, new URL(request.url)];
-
-          return HttpResponse.json({ data: instance });
-        })
+        )
       );
       const { component } = setup();
 
@@ -417,11 +409,8 @@ describe("ComplianceCheck page", () => {
 
       const picker = await screen.findByRole("button", { name: "ReportListSelect" });
 
-      await waitFor(() => expect(picker).toHaveTextContent(instanceName));
-      expect(inventoryRequests).toHaveLength(0);
-      expect(instanceRequests.map((url) => url.searchParams.get("service_id"))).toEqual([
-        instance.id,
-      ]);
+      await waitFor(() => expect(picker).toHaveTextContent(instance.id));
+      expect(instanceRequests).toHaveLength(0);
     });
 
     test("GIVEN a report started on a resource filter THEN the scope band shows what it covered", async () => {
@@ -515,15 +504,20 @@ describe("ComplianceCheck page", () => {
       );
     });
 
-    test("WHEN Re-run is clicked THEN it re-posts the report's filter and selects the new report", async () => {
+    test("WHEN Re-run is clicked THEN it re-posts the report's filter and instance labels and selects the new report", async () => {
+      const report: DryRun = {
+        ...Mock.b,
+        resource_filter: { ...Mock.b.resource_filter, serviceInstance: [instance.id] },
+        context: { web_instance_labels: { [instance.id]: Mock.filteredInstanceLabel } },
+      };
       let body: unknown;
-      let data = Mock.listResponse;
+      let data: { data: DryRun[] } = { data: [report] };
 
       server.use(
         http.get("/api/v2/dryrun/123", () => HttpResponse.json(data)),
         http.post("/api/v2/dryrun_filtered", async ({ request }) => {
           body = await request.json();
-          data = { data: [Mock.a, ...Mock.listOfReports] };
+          data = { data: [Mock.a, report] };
 
           return HttpResponse.json({ data: { id: Mock.a.id, model: Mock.a.model } });
         })
@@ -542,7 +536,9 @@ describe("ComplianceCheck page", () => {
       await waitFor(() => expect(getRerun()).toBeEnabled());
       await userEvent.click(getRerun());
 
-      await waitFor(() => expect(body).toEqual({ filter: Mock.b.resource_filter }));
+      await waitFor(() =>
+        expect(body).toEqual({ filter: report.resource_filter, context: report.context })
+      );
       await waitFor(() =>
         expect(screen.getByRole("button", { name: "ReportListSelect" })).toHaveTextContent(
           datePresenter.getFull(Mock.a.date)

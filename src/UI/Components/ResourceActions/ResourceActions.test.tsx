@@ -5,7 +5,7 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { Resource, ResourceActionFilter } from "@/Core";
+import { DryRunContext, Resource, ResourceActionFilter } from "@/Core";
 import { NonEmptyArray } from "@/Core/Language";
 import { getDesiredStateVersionKey } from "@/Data/Queries/Slices/DesiredState";
 import { StartedDryRun } from "@/Data/Queries/Slices/Resource";
@@ -440,6 +440,8 @@ describe("ResourceActions", () => {
     };
     const firstModelVersionPage = modelVersions.slice(0, MOCK_PAGE_SIZE);
     const notLoadedModelVersions = modelVersions.slice(MOCK_PAGE_SIZE);
+    // The filters below name no service instances, so the context has no labels.
+    const context: DryRunContext = { web_instance_labels: {} };
 
     beforeEach(() => {
       body = undefined;
@@ -480,7 +482,30 @@ describe("ResourceActions", () => {
 
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-      await waitFor(() => expect(body).toEqual({ filter }));
+      await waitFor(() => expect(body).toEqual({ filter, context }));
+    });
+
+    test("WHEN instance labels are given THEN the dry run stores the labels of the instances its filter names", async () => {
+      const instanceFilter: ResourceActionFilter = { isOrphan: false, serviceInstance: ["abc"] };
+
+      render(
+        setup({
+          filter: instanceFilter,
+          instanceLabels: { abc: "cpe-1", def: "cpe-2" },
+          tooltips,
+        })
+      );
+
+      const dialog = await openDryRun();
+
+      await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
+
+      await waitFor(() =>
+        expect(body).toEqual({
+          filter: instanceFilter,
+          context: { web_instance_labels: { abc: "cpe-1" } },
+        })
+      );
     });
 
     test("WHEN a dry run starts THEN its toast links to its report", async () => {
@@ -525,6 +550,7 @@ describe("ResourceActions", () => {
       await waitFor(() =>
         expect(body).toEqual({
           filter: { agent: filter.agent, modelVersion: candidateModelVersion },
+          context,
         })
       );
     });
@@ -560,7 +586,7 @@ describe("ResourceActions", () => {
 
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-      await waitFor(() => expect(body).toEqual({ filter: statusFilter }));
+      await waitFor(() => expect(body).toEqual({ filter: statusFilter, context }));
     });
 
     test("WHEN the scope leaves isOrphan unset THEN the dry run runs against the active model version", async () => {
@@ -587,7 +613,9 @@ describe("ResourceActions", () => {
 
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-      await waitFor(() => expect(body).toEqual({ filter: { ...unsetFilter, isOrphan: false } }));
+      await waitFor(() =>
+        expect(body).toEqual({ filter: { ...unsetFilter, isOrphan: false }, context })
+      );
     });
 
     test("WHEN the version select is opened with the keyboard THEN the search box has focus and Down moves to the first version", async () => {
@@ -713,7 +741,10 @@ describe("ResourceActions", () => {
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
       await waitFor(() =>
-        expect(body).toEqual({ filter: { agent: filter.agent, modelVersion: oldestModelVersion } })
+        expect(body).toEqual({
+          filter: { agent: filter.agent, modelVersion: oldestModelVersion },
+          context,
+        })
       );
     });
 
@@ -721,7 +752,7 @@ describe("ResourceActions", () => {
       const instance: ResourceActionInstance = {
         id: "abc",
         serviceEntity: "lsp",
-        name: "demo-cpe-ring",
+        label: "demo-cpe-ring",
         renderState: (state) => state,
       };
       // The history is newest first.
@@ -736,6 +767,9 @@ describe("ResourceActions", () => {
         serviceInstance: [instance.id],
       };
       const ownedFilter: ResourceActionFilter = { ...instanceFilter, includeOwned: true };
+      const instanceContext: DryRunContext = {
+        web_instance_labels: { [instance.id]: instance.label },
+      };
       const instanceScopes: NonEmptyArray<ResourceActionScope> = [
         {
           id: "instance",
@@ -808,7 +842,7 @@ describe("ResourceActions", () => {
 
         expect(
           within(dialog).getByText(
-            words("resources.resourceActions.confirm.titleFor")(dryRunLabel, instance.name)
+            words("resources.resourceActions.confirm.titleFor")(dryRunLabel, instance.label)
           )
         ).toBeVisible();
         expect(
@@ -822,7 +856,9 @@ describe("ResourceActions", () => {
 
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-        await waitFor(() => expect(body).toEqual({ filter: instanceFilter }));
+        await waitFor(() =>
+          expect(body).toEqual({ filter: instanceFilter, context: instanceContext })
+        );
       });
 
       test("WHEN an older instance version is selected THEN the dry run runs against that instance version", async () => {
@@ -840,6 +876,7 @@ describe("ResourceActions", () => {
               serviceInstance: instanceFilter.serviceInstance,
               instanceVersion: olderInstanceVersion,
             },
+            context: instanceContext,
           })
         );
       });
@@ -874,7 +911,9 @@ describe("ResourceActions", () => {
 
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-        await waitFor(() => expect(body).toEqual({ filter: instanceFilter }));
+        await waitFor(() =>
+          expect(body).toEqual({ filter: instanceFilter, context: instanceContext })
+        );
       });
 
       test("WHEN an instance version number is searched THEN only that version is listed", async () => {
@@ -936,6 +975,7 @@ describe("ResourceActions", () => {
               serviceInstance: instanceFilter.serviceInstance,
               instanceVersion: instanceVersionWithoutModelVersion,
             },
+            context: instanceContext,
           })
         );
       });
@@ -964,6 +1004,7 @@ describe("ResourceActions", () => {
               serviceInstance: instanceFilter.serviceInstance,
               modelVersion: candidateModelVersion,
             },
+            context: instanceContext,
           })
         );
       });
@@ -986,7 +1027,9 @@ describe("ResourceActions", () => {
         ).toBeVisible();
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-        await waitFor(() => expect(body).toEqual({ filter: instanceFilter }));
+        await waitFor(() =>
+          expect(body).toEqual({ filter: instanceFilter, context: instanceContext })
+        );
       });
 
       test("WHEN the owned scope is chosen THEN the version select is blocked and the dry run uses the active model version", async () => {
@@ -1009,7 +1052,9 @@ describe("ResourceActions", () => {
 
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-        await waitFor(() => expect(body).toEqual({ filter: ownedFilter }));
+        await waitFor(() =>
+          expect(body).toEqual({ filter: ownedFilter, context: instanceContext })
+        );
       });
     });
   });

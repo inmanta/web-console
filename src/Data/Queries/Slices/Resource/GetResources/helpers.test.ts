@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { Resource } from "@/Core/Domain";
 import {
+  getFilterInstanceLabels,
   mapStatusToGraphQLFilter,
   mapToResourceActionFilter,
   mapSort,
@@ -234,6 +235,25 @@ describe("mapToResourceActionFilter", () => {
     const result = mapToResourceActionFilter({ agent: ["internal"], status: ["!orphaned"] });
 
     expect(result).toEqual({ agent: { contains: ["%internal%"] }, isOrphan: false });
+  });
+});
+
+// ─── getFilterInstanceLabels ────────────────────────────────────────────────
+
+describe("getFilterInstanceLabels", () => {
+  it("keys each serviceInstance value's label by its id", () => {
+    const filter = {
+      serviceInstance: [
+        Resource.encodeServiceInstanceFilterValue("abc", "cpe-1"),
+        Resource.encodeServiceInstanceFilterValue("def", "cpe-2"),
+      ],
+    };
+
+    expect(getFilterInstanceLabels(filter)).toEqual({ abc: "cpe-1", def: "cpe-2" });
+  });
+
+  it("returns no labels for a filter without instances", () => {
+    expect(getFilterInstanceLabels({ agent: ["internal"] })).toEqual({});
   });
 });
 
