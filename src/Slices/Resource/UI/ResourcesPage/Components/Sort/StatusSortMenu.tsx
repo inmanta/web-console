@@ -83,7 +83,7 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactE
   // status sorts intentionally clears any active regular-column sort.
   const handleToggle = useCallback(
     (key: Resource.StatusSortKey) => {
-      setSort(toggleMulti(sortStatus, key));
+      setSort(toggleMulti(sortStatus, key, Resource.STATUS_SORT_INITIAL_ORDER[key]));
     },
     [setSort, sortStatus]
   );
