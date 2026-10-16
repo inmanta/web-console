@@ -1,4 +1,4 @@
-import { Resource } from "@/Core/Domain";
+import { Resource } from "./Resource";
 
 /**
  * An enum-valued field of a {@link ResourceActionFilter} (GraphQL *EnumFilter). Enum filters only
@@ -24,6 +24,9 @@ export interface StringMatch extends EnumMatch<string> {
  * which the query passes inside the filter and deploy_filtered takes from the URL, so an entry
  * point composes the scope once and the server resolves it. A single resource is expressed as a
  * filter of one, by pinning resourceType/agent/resourceIdValue with the eq operator.
+ *
+ * TODO(#7490): serviceEntity, serviceInstance and lifecycleState are lists despite their singular
+ * names (core's naming).
  *
  * @example { resourceType: { eq: ["std::File"] }, agent: { eq: ["internal"] }, resourceIdValue: { eq: ["/tmp/f"] }, isOrphan: false }
  */

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  Label,
+  Flex,
   MenuToggle,
   MenuToggleElement,
   Select,
@@ -8,10 +8,10 @@ import {
   SelectOption,
   ToolbarGroup,
 } from "@patternfly/react-core";
-import { DryRun } from "@/Data/Queries/Slices/DryRun";
-import { Spinner } from "@/UI/Components/Spinner";
+import { DryRun } from "@/Core";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { Progress as DomainProgress } from "@S/ComplianceCheck/Core/Domain";
+import { DryRunProgressLabel } from "./DryRunProgressLabel";
+import { ScopeLabel } from "./ReportScope";
 
 interface Props {
   setSelectedReport(report: DryRun | null): void;
@@ -20,6 +20,14 @@ interface Props {
 }
 
 const datePresenter = new CustomDatePresenter();
+
+/**
+ * The width of a report's line in the picker, so the toggle keeps one size and its scope label
+ * ends at the right, like in the options: the widest progress and date ("100 / 100" and a full
+ * date, about 13.5rem), the gap (1rem), the label's padding (1rem) and a scope label at its
+ * longest (28 characters, about 14rem).
+ */
+const REPORT_LABEL_WIDTH = "30rem";
 
 export const SelectReportAction: React.FC<Props> = ({
   setSelectedReport,
@@ -90,13 +98,8 @@ const Picker: React.FC<PickerProps> = ({
       onClick={() => setIsOpen(!isOpen)}
       aria-label="ReportListSelect"
       isExpanded={isOpen}
-      style={
-        {
-          width: "300px",
-        } as React.CSSProperties
-      }
     >
-      <Progress report={reportsData[0]} /> {datePresenter.getFull(selectedReport.date)}
+      <ReportLabel report={selectedReport} />
     </MenuToggle>
   );
 
@@ -108,11 +111,12 @@ const Picker: React.FC<PickerProps> = ({
       isOpen={isOpen}
       onOpenChange={(isOpen) => setIsOpen(isOpen)}
       aria-label="ReportList"
+      isScrollable
     >
       <SelectList aria-label="ReportSelectOptions">
         {reportsData.map((report) => (
           <SelectOption key={report.id} value={report.id}>
-            <Progress report={report} /> {datePresenter.getFull(report.date)}
+            <ReportLabel report={report} />
           </SelectOption>
         ))}
       </SelectList>
@@ -128,22 +132,31 @@ const DisabledToggle = () => (
 
 const EmptyPicker: React.FC = () => <Select toggle={DisabledToggle} aria-label="ReportList" />;
 
-const Progress: React.FC<{ report: DomainProgress }> = ({ report }) => {
-  const tot = Number(report.total);
-  const current = tot - Number(report.todo);
-  const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    setDone(tot === current);
-  }, [tot, current, report.total, report.todo, done]);
-
-  return done ? (
-    <Label isCompact variant="outline">
-      {current} / {tot}
-    </Label>
-  ) : (
-    <Label isCompact variant="outline" color="blue" icon={<Spinner size={8} />}>
-      {current} / {tot}
-    </Label>
-  );
-};
+/**
+ * Identifies a report in the picker: its progress and date, with a summary of its scope on the
+ * right.
+ *
+ * @props {{ report: DryRun }} props - The props of the component
+ *  @prop {DryRun} report - The dry run report
+ *
+ * @returns {React.FC<{ report: DryRun }>} The report's line
+ */
+const ReportLabel: React.FC<{ report: DryRun }> = ({ report }) => (
+  <Flex
+    justifyContent={{ default: "justifyContentSpaceBetween" }}
+    alignItems={{ default: "alignItemsCenter" }}
+    gap={{ default: "gapMd" }}
+    flexWrap={{ default: "nowrap" }}
+    style={{ width: REPORT_LABEL_WIDTH }}
+  >
+    <Flex
+      gap={{ default: "gapSm" }}
+      alignItems={{ default: "alignItemsCenter" }}
+      flexWrap={{ default: "nowrap" }}
+    >
+      <DryRunProgressLabel progress={report} />
+      {datePresenter.getFull(report.date)}
+    </Flex>
+    <ScopeLabel report={report} />
+  </Flex>
+);

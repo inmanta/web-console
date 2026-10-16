@@ -62,6 +62,9 @@ export const InstanceHeaderActions: React.FC = () => {
   };
 
   const disabledReason = resolveDisabledReason();
+  const identityAttributeValue = instance.service_identity_attribute_value;
+  const instanceLabels: Record<string, string> =
+    identityAttributeValue === undefined ? {} : { [instance.id]: identityAttributeValue };
 
   return (
     <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapMd" }}>
@@ -74,10 +77,11 @@ export const InstanceHeaderActions: React.FC = () => {
             dryRun: words("resources.resourceActions.dryRun.tooltip.instance"),
           }}
           disabledReason={disabledReason}
+          instanceLabels={instanceLabels}
           instance={{
             id: instance.id,
             serviceEntity: instance.service_entity,
-            name: instance.service_identity_attribute_value ?? instance.id,
+            label: identityAttributeValue ?? instance.id,
             renderState: (state) => <StateLabel state={state} service={serviceModelQuery.data} />,
           }}
         />

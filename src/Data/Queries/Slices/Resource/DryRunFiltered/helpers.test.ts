@@ -1,6 +1,19 @@
-import { Resource } from "@/Core/Domain";
-import { ResourceActionFilter } from "../ResourceActionFilter";
-import { getVersionSelectionBlocker } from "./helpers";
+import { Resource, ResourceActionFilter } from "@/Core";
+import { createDryRunContext, getVersionSelectionBlocker } from "./helpers";
+
+describe("createDryRunContext", () => {
+  it("keeps the known labels of the filter's instances only", () => {
+    expect(
+      createDryRunContext({ serviceInstance: ["abc", "def"] }, { abc: "cpe-1", xyz: "cpe-9" })
+    ).toEqual({ web_instance_labels: { abc: "cpe-1" } });
+  });
+
+  it("has no labels for a filter without instances", () => {
+    expect(createDryRunContext({ isOrphan: false }, { abc: "cpe-1" })).toEqual({
+      web_instance_labels: {},
+    });
+  });
+});
 
 describe("getVersionSelectionBlocker", () => {
   it.each<[string, ResourceActionFilter]>([

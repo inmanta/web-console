@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { DryRun } from "@/Core";
 import { REFETCH_INTERVAL, useGet } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
-import { DryRun } from "../GetDryRunReport";
 
 /**
  * Response interface for the dry runs API response

@@ -1,5 +1,7 @@
 import React, { useContext, useState } from "react";
+import { useLocation } from "react-router";
 import {
+  AlertActionLink,
   Content,
   Dropdown,
   DropdownItem,
@@ -14,10 +16,12 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { EyeIcon, WrenchIcon, PlayIcon } from "@patternfly/react-icons";
+import { ResourceActionFilter } from "@/Core";
 import { NonEmptyArray } from "@/Core/Language";
 import { DeployAgentsAction } from "@/Data/Queries/Slices/Agents";
 import {
-  ResourceActionFilter,
+  StartedDryRun,
+  createDryRunContext,
   useDeployFiltered,
   useDryRunFiltered,
 } from "@/Data/Queries/Slices/Resource";
@@ -25,6 +29,8 @@ import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { useNavigateTo } from "@/UI/Routing";
+import { createReportSearch } from "@/UI/Routing/ReportSearch";
 import { words } from "@/UI/words";
 import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
 import { ResourceActionInstance } from "./types";
@@ -52,6 +58,7 @@ interface BaseProps {
   tooltips: ResourceActionTooltips;
   disabledReason?: string;
   instance?: ResourceActionInstance;
+  instanceLabels?: Record<string, string>;
 }
 
 type Props =
@@ -64,7 +71,10 @@ type Props =
  * Deploy is the default action; the caret adds Repair and Dry run. Deploy and Repair hit the
  * deploy_filtered endpoint and Dry run hits dryrun_filtered, so one control serves a single resource,
  * the active filter, a whole environment or a service instance. Dry run always opens the dialog, to
- * select the version to preview against. It disables itself while the environment is halted.
+ * select the version to preview against, and its toast links to the dry run's report when the app
+ * has the Compliance Check page. A dry run
+ * stores the labels of the service instances its filter names, so its report shows them. It
+ * disables itself while the environment is halted.
  *
  * @Props {Props} - The props of the component
  *  @prop {ResourceActionFilter} filter - Deploy and Repair run immediately against this filter (mutually exclusive with scopes)
@@ -73,16 +83,20 @@ type Props =
  *  @prop {string} [disabledReason] - When set, disables the control and shows this as its tooltip
  *  @prop {ResourceActionInstance} [instance] - The service instance the scopes belong to; the dialog names
  *    it and a dry run can select one of its own versions
+ *  @prop {Record<string, string>} [instanceLabels] - The labels of the service instances the filters
+ *    may name, keyed by instance id, to store with a dry run
  *
  * @returns {React.FC<Props>} The rendered split button
  */
 export const ResourceActions: React.FC<Props> = (props) => {
-  const { disabledReason, tooltips, instance } = props;
+  const { disabledReason, tooltips, instance, instanceLabels } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const { environmentHandler } = useContext(DependencyContext);
+  const { environmentHandler, routeManager } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
   const isHalted = environmentHandler.useIsHalted();
-  const { notifySuccess, notifyError } = useAppAlert();
+  const { notifySuccess, notifyError, notifyInfo } = useAppAlert();
+  const navigateTo = useNavigateTo();
+  const { search } = useLocation();
 
   const deploy = useDeployFiltered();
   const dryRun = useDryRunFiltered();
@@ -111,24 +125,53 @@ export const ResourceActions: React.FC<Props> = (props) => {
     },
   };
 
+  const openReport = (dryRunId: string, modelVersion: number) =>
+    navigateTo(
+      "ComplianceCheck",
+      { version: String(modelVersion) },
+      createReportSearch(search, dryRunId)
+    );
+
+  // Without the Compliance Check page, the toast only says the dry run started, without a broken link.
+  const notifyDryRunStarted = ({ id, modelVersion }: StartedDryRun) =>
+    notifyInfo({
+      customIcon: <EyeIcon />,
+      title: words("desiredState.complianceCheck.report.started"),
+      actionLinks: routeManager.has("ComplianceCheck") ? (
+        <AlertActionLink onClick={() => openReport(id, modelVersion)}>
+          {words("desiredState.complianceCheck.report.view")}
+        </AlertActionLink>
+      ) : undefined,
+    });
+
   const run = (key: ActionKey, scopeFilter: ResourceActionFilter) => {
-    const { label } = actions[key];
-    const callbacks = {
-      onSuccess: () => notifySuccess({ title: words("resources.resourceActions.success")(label) }),
-      onError: (error: Error) =>
-        notifyError({
-          title: words("resources.resourceActions.failed")(label),
-          message: error.message,
-        }),
-    };
+    const { label: actionLabel } = actions[key];
+    const onError = (error: Error) =>
+      notifyError({
+        title: words("resources.resourceActions.failed")(actionLabel),
+        message: error.message,
+      });
 
     if (key === "dryRun") {
-      dryRun.mutate(scopeFilter, callbacks);
+      dryRun.mutate(
+        { filter: scopeFilter, context: createDryRunContext(scopeFilter, instanceLabels ?? {}) },
+        {
+          onSuccess: notifyDryRunStarted,
+          onError,
+        }
+      );
 
       return;
     }
 
-    deploy.mutate({ method: DeployAgentsAction[key], filter: scopeFilter }, callbacks);
+    deploy.mutate(
+      { method: DeployAgentsAction[key], filter: scopeFilter },
+      {
+        onSuccess: () =>
+          notifySuccess({ title: words("resources.resourceActions.success")(actionLabel) }),
+        onError,
+      }
+    );
   };
 
   const onAction = (key: ActionKey) => {
@@ -142,20 +185,20 @@ export const ResourceActions: React.FC<Props> = (props) => {
       return;
     }
 
-    const { IconComponent, label } = actions[key];
+    const { IconComponent, label: actionLabel } = actions[key];
     const scopes: NonEmptyArray<ResourceActionScope> = props.scopes
       ? props.scopes
-      : [{ id: "resource", title: label, filter: props.filter }];
+      : [{ id: "resource", title: actionLabel, filter: props.filter }];
 
     const title = () => {
       if (instance) {
-        return words("resources.resourceActions.confirm.titleFor")(label, instance.name);
+        return words("resources.resourceActions.confirm.titleFor")(actionLabel, instance.label);
       }
       if (props.scopes) {
-        return words("resources.resourceActions.confirm.title")(label);
+        return words("resources.resourceActions.confirm.title")(actionLabel);
       }
 
-      return words("resources.resourceActions.confirm.single.title")(label);
+      return words("resources.resourceActions.confirm.single.title")(actionLabel);
     };
 
     const description = () => {
@@ -178,7 +221,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
       iconVariant: IconComponent,
       content: (
         <ResourceActionConfirmModal
-          actionLabel={label}
+          actionLabel={actionLabel}
           scopes={scopes}
           showScopes={Boolean(props.scopes)}
           showVersionField={isDryRun}

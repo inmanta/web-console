@@ -1,19 +1,23 @@
+import { useLocation } from "react-router";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { Resource } from "@/Core/Domain";
+import { DryRunContext, Resource, ResourceActionFilter } from "@/Core";
 import { NonEmptyArray } from "@/Core/Language";
 import { getDesiredStateVersionKey } from "@/Data/Queries/Slices/DesiredState";
-import { ResourceActionFilter } from "@/Data/Queries/Slices/Resource";
+import { StartedDryRun } from "@/Data/Queries/Slices/Resource";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { SearchHelper } from "@/UI/Routing";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
+import { routes } from "@/routes";
 import * as DesiredStatesMock from "@S/DesiredState/Data/Mock";
 import { historyData } from "@S/ServiceInstanceDetails/Test/mockData";
 import { ResourceActionScope } from "./ResourceActionConfirmModal";
@@ -63,8 +67,7 @@ const versionPage = <Item,>(
 
   return { data, links: { self: url.pathname, next } };
 };
-const modelVersionLabel = (modelVersion: number) =>
-  words("resources.resourceActions.confirm.version.modelOption")(String(modelVersion));
+const modelVersionLabel = (modelVersion: number) => words("modelVersion")(String(modelVersion));
 
 const modelVersions = DesiredStatesMock.response.data;
 const activeModelVersion = modelVersions.find(
@@ -96,13 +99,33 @@ const tooltips = {
   dryRun: "dry run tooltip from page",
 };
 
-function setup(props: React.ComponentProps<typeof ResourceActions> = { filter, tooltips }) {
+const searchHelper = new SearchHelper();
+
+/**
+ * Shows the current path and parsed search, to assert where a link navigated to.
+ */
+const LocationDisplay: React.FC = () => {
+  const { pathname, search } = useLocation();
+
+  return (
+    <div data-testid="location">{JSON.stringify({ pathname, ...searchHelper.parse(search) })}</div>
+  );
+};
+
+function setup(
+  props: React.ComponentProps<typeof ResourceActions> = { filter, tooltips },
+  registeredRoutes = routes
+) {
   return (
     <QueryClientProvider client={testClient}>
-      <TestMemoryRouter>
-        <MockedDependencyProvider env={EnvironmentDetails.env}>
+      {/* Starts with page state next to the environment, to check what a link keeps. */}
+      <TestMemoryRouter
+        initialEntries={[`/?env=${EnvironmentDetails.env.id}&state.Resources.pageSize=50`]}
+      >
+        <MockedDependencyProvider env={EnvironmentDetails.env} routes={registeredRoutes}>
           <ModalProvider>
             <Page>
+              <LocationDisplay />
               <ResourceActions {...props} />
             </Page>
           </ModalProvider>
@@ -414,8 +437,14 @@ describe("ResourceActions", () => {
 
   describe("Dry run", () => {
     let body: unknown;
+    const startedDryRun: StartedDryRun = {
+      id: "dry-run-id",
+      modelVersion: activeModelVersion,
+    };
     const firstModelVersionPage = modelVersions.slice(0, MOCK_PAGE_SIZE);
     const notLoadedModelVersions = modelVersions.slice(MOCK_PAGE_SIZE);
+    // The filters below name no service instances, so the context has no labels.
+    const context: DryRunContext = { web_instance_labels: {} };
 
     beforeEach(() => {
       body = undefined;
@@ -428,7 +457,9 @@ describe("ResourceActions", () => {
         http.post("/api/v2/dryrun_filtered", async ({ request }) => {
           body = await request.json();
 
-          return HttpResponse.json({ data: "dry-run-id" });
+          return HttpResponse.json({
+            data: { id: startedDryRun.id, model: startedDryRun.modelVersion },
+          });
         })
       );
     });
@@ -454,7 +485,77 @@ describe("ResourceActions", () => {
 
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-      await waitFor(() => expect(body).toEqual({ filter }));
+      await waitFor(() => expect(body).toEqual({ filter, context }));
+    });
+
+    test("WHEN instance labels are given THEN the dry run stores the labels of the instances its filter names", async () => {
+      const instanceFilter: ResourceActionFilter = { isOrphan: false, serviceInstance: ["abc"] };
+
+      render(
+        setup({
+          filter: instanceFilter,
+          instanceLabels: { abc: "cpe-1", def: "cpe-2" },
+          tooltips,
+        })
+      );
+
+      const dialog = await openDryRun();
+
+      await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
+
+      await waitFor(() =>
+        expect(body).toEqual({
+          filter: instanceFilter,
+          context: { web_instance_labels: { abc: "cpe-1" } },
+        })
+      );
+    });
+
+    test("WHEN a dry run starts THEN its toast links to its report", async () => {
+      render(setup());
+
+      const dialog = await openDryRun();
+
+      await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
+
+      const viewReport = await screen.findByRole("button", {
+        name: words("desiredState.complianceCheck.report.view"),
+      });
+
+      expect(screen.getByTestId("ToastAlert")).toHaveTextContent(
+        words("desiredState.complianceCheck.report.started")
+      );
+
+      await userEvent.click(viewReport);
+
+      // The link keeps the environment and drops the state of the page it was started from.
+      expect(JSON.parse(screen.getByTestId("location").textContent ?? "{}")).toEqual({
+        pathname: PrimaryRouteManager("", routes).getUrl("ComplianceCheck", {
+          version: String(startedDryRun.modelVersion),
+        }),
+        env: EnvironmentDetails.env.id,
+        state: { ComplianceCheck: { report: startedDryRun.id } },
+      });
+    });
+
+    test("GIVEN the Compliance Check route is not registered WHEN a dry run starts THEN its toast has no report link", async () => {
+      render(
+        setup(
+          { filter, tooltips },
+          routes.filter((route) => route("").kind !== "ComplianceCheck")
+        )
+      );
+
+      const dialog = await openDryRun();
+
+      await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
+
+      expect(await screen.findByTestId("ToastAlert")).toHaveTextContent(
+        words("desiredState.complianceCheck.report.started")
+      );
+      expect(
+        screen.queryByRole("button", { name: words("desiredState.complianceCheck.report.view") })
+      ).not.toBeInTheDocument();
     });
 
     test("WHEN another model version is selected THEN the dry run runs against that model version", async () => {
@@ -472,6 +573,7 @@ describe("ResourceActions", () => {
       await waitFor(() =>
         expect(body).toEqual({
           filter: { agent: filter.agent, modelVersion: candidateModelVersion },
+          context,
         })
       );
     });
@@ -507,7 +609,7 @@ describe("ResourceActions", () => {
 
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-      await waitFor(() => expect(body).toEqual({ filter: statusFilter }));
+      await waitFor(() => expect(body).toEqual({ filter: statusFilter, context }));
     });
 
     test("WHEN the scope leaves isOrphan unset THEN the dry run runs against the active model version", async () => {
@@ -534,7 +636,9 @@ describe("ResourceActions", () => {
 
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-      await waitFor(() => expect(body).toEqual({ filter: { ...unsetFilter, isOrphan: false } }));
+      await waitFor(() =>
+        expect(body).toEqual({ filter: { ...unsetFilter, isOrphan: false }, context })
+      );
     });
 
     test("WHEN the version select is opened with the keyboard THEN the search box has focus and Down moves to the first version", async () => {
@@ -660,7 +764,10 @@ describe("ResourceActions", () => {
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
       await waitFor(() =>
-        expect(body).toEqual({ filter: { agent: filter.agent, modelVersion: oldestModelVersion } })
+        expect(body).toEqual({
+          filter: { agent: filter.agent, modelVersion: oldestModelVersion },
+          context,
+        })
       );
     });
 
@@ -668,7 +775,7 @@ describe("ResourceActions", () => {
       const instance: ResourceActionInstance = {
         id: "abc",
         serviceEntity: "lsp",
-        name: "demo-cpe-ring",
+        label: "demo-cpe-ring",
         renderState: (state) => state,
       };
       // The history is newest first.
@@ -683,6 +790,8 @@ describe("ResourceActions", () => {
         serviceInstance: [instance.id],
       };
       const ownedFilter: ResourceActionFilter = { ...instanceFilter, includeOwned: true };
+      const instanceLabels = { [instance.id]: instance.label };
+      const instanceContext: DryRunContext = { web_instance_labels: instanceLabels };
       const instanceScopes: NonEmptyArray<ResourceActionScope> = [
         {
           id: "instance",
@@ -697,7 +806,7 @@ describe("ResourceActions", () => {
         },
       ];
       const instanceVersionLabel = (instanceVersion: number) =>
-        words("resources.resourceActions.confirm.version.instanceOption")(String(instanceVersion));
+        words("instanceVersion")(String(instanceVersion));
       const mapsTo = words("resources.resourceActions.confirm.version.mapsTo");
 
       beforeEach(() => {
@@ -727,7 +836,7 @@ describe("ResourceActions", () => {
       });
 
       const openInstanceDryRun = async () => {
-        render(setup({ scopes: instanceScopes, tooltips, instance }));
+        render(setup({ scopes: instanceScopes, tooltips, instance, instanceLabels }));
 
         await userEvent.click(screen.getByRole("button", { name: toggleLabel }));
         await userEvent.click(screen.getByRole("menuitem", { name: new RegExp(dryRunLabel, "i") }));
@@ -755,7 +864,7 @@ describe("ResourceActions", () => {
 
         expect(
           within(dialog).getByText(
-            words("resources.resourceActions.confirm.titleFor")(dryRunLabel, instance.name)
+            words("resources.resourceActions.confirm.titleFor")(dryRunLabel, instance.label)
           )
         ).toBeVisible();
         expect(
@@ -769,7 +878,9 @@ describe("ResourceActions", () => {
 
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-        await waitFor(() => expect(body).toEqual({ filter: instanceFilter }));
+        await waitFor(() =>
+          expect(body).toEqual({ filter: instanceFilter, context: instanceContext })
+        );
       });
 
       test("WHEN an older instance version is selected THEN the dry run runs against that instance version", async () => {
@@ -787,6 +898,7 @@ describe("ResourceActions", () => {
               serviceInstance: instanceFilter.serviceInstance,
               instanceVersion: olderInstanceVersion,
             },
+            context: instanceContext,
           })
         );
       });
@@ -821,7 +933,9 @@ describe("ResourceActions", () => {
 
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-        await waitFor(() => expect(body).toEqual({ filter: instanceFilter }));
+        await waitFor(() =>
+          expect(body).toEqual({ filter: instanceFilter, context: instanceContext })
+        );
       });
 
       test("WHEN an instance version number is searched THEN only that version is listed", async () => {
@@ -883,6 +997,7 @@ describe("ResourceActions", () => {
               serviceInstance: instanceFilter.serviceInstance,
               instanceVersion: instanceVersionWithoutModelVersion,
             },
+            context: instanceContext,
           })
         );
       });
@@ -911,6 +1026,7 @@ describe("ResourceActions", () => {
               serviceInstance: instanceFilter.serviceInstance,
               modelVersion: candidateModelVersion,
             },
+            context: instanceContext,
           })
         );
       });
@@ -933,7 +1049,9 @@ describe("ResourceActions", () => {
         ).toBeVisible();
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-        await waitFor(() => expect(body).toEqual({ filter: instanceFilter }));
+        await waitFor(() =>
+          expect(body).toEqual({ filter: instanceFilter, context: instanceContext })
+        );
       });
 
       test("WHEN the owned scope is chosen THEN the version select is blocked and the dry run uses the active model version", async () => {
@@ -956,7 +1074,9 @@ describe("ResourceActions", () => {
 
         await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-        await waitFor(() => expect(body).toEqual({ filter: ownedFilter }));
+        await waitFor(() =>
+          expect(body).toEqual({ filter: ownedFilter, context: instanceContext })
+        );
       });
     });
   });
