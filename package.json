@@ -98,7 +98,7 @@
     "crypto": false
   },
   "dependencies": {
-    "@graphiql/react": "^0.37.7",
+    "@graphiql/react": "^0.39.1",
     "@joint/plus": "^4.3.3",
     "@loadable/component": "^5.16.7",
     "@monaco-editor/react": "^4.7.0",
