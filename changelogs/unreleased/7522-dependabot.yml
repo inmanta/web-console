@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump dayjs from 1.11.21 to 1.11.23
+destination-branches:
+- master
+- iso9
+sections: {}
