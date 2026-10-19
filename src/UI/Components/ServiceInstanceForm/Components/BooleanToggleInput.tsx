@@ -13,6 +13,7 @@ interface Props {
   description?: string | null;
   handleInputChange: (value, event) => void;
   shouldBeDisabled?: boolean;
+  warningMessage?: string;
 }
 
 export const BooleanToggleInput: React.FC<Props> = ({
@@ -21,6 +22,7 @@ export const BooleanToggleInput: React.FC<Props> = ({
   description,
   handleInputChange,
   shouldBeDisabled = false,
+  warningMessage,
   ...props
 }) => {
   return (
@@ -36,6 +38,13 @@ export const BooleanToggleInput: React.FC<Props> = ({
         aria-label={`Toggle-${attributeName}`}
         isDisabled={shouldBeDisabled}
       />
+      {warningMessage && (
+        <FormHelperText>
+          <HelperText>
+            <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>
+          </HelperText>
+        </FormHelperText>
+      )}
     </FormGroup>
   );
 };

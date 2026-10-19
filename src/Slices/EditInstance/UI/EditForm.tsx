@@ -2,12 +2,13 @@ import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data/Common";
+import { CustomError } from "@/Data/Queries/Helpers";
 import { usePatchAttributes, usePutAttributes } from "@/Data/Queries/Slices/ServiceInstance";
 import {
   FieldCreator,
   ServiceInstanceForm,
   EditModifierHandler,
-  parseValidationErrors,
+  isAttributeValidationFailure,
 } from "@/UI/Components/ServiceInstanceForm";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
@@ -59,10 +60,9 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   // read-only fields are visible (but disabled), matching the PUT full-attribute payload.
   const formApiVersion = isStrictEnforcement ? "v2" : "v1";
 
-  const onMutationError = (error: Error) => {
+  const onMutationError = (error: CustomError) => {
     setIsDirty(true);
-    // Attribute validation failures are shown on the form itself.
-    if (!parseValidationErrors(error)) {
+    if (!isAttributeValidationFailure(error)) {
       notifyError({
         title: words("inventory.editInstance.failed"),
         message: error.message,

@@ -1,10 +1,12 @@
 import { useContext } from "react";
 import { AuthContext } from "@/Data/Auth";
 
+/**
+ * A failed request: the HTTP `status`, and in `details` the `error_details` of the response
+ * body when the server sent them.
+ */
 export interface CustomError extends Error {
   status?: number;
-
-  /** The `error_details` of the response body, when the server sent them. */
   details?: unknown;
 }
 

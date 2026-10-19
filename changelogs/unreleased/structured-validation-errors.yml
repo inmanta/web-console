@@ -1,4 +1,4 @@
-description: Show the attributes the orchestrator rejected on the create, edit and duplicate instance forms, instead of the raw validation error.
+description: The create, edit and duplicate instance forms now mark the attributes the orchestrator rejected.
 change-type: minor
 destination-branches: [master, iso9]
 sections:

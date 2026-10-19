@@ -6,7 +6,7 @@ import { Description } from "@/UI/Components/Description";
 import {
   CreateModifierHandler,
   FieldCreator,
-  parseValidationErrors,
+  isAttributeValidationFailure,
   ServiceInstanceForm,
 } from "@/UI/Components/ServiceInstanceForm";
 import { DependencyContext } from "@/UI/Dependency";
@@ -46,8 +46,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
   const { mutate, error: submitError } = usePostInstance(serviceEntity.name, {
     onError: (error) => {
       setIsDirty(true);
-      // Attribute validation failures are shown on the form itself.
-      if (!parseValidationErrors(error)) {
+      if (!isAttributeValidationFailure(error)) {
         notifyError({
           title: words("inventory.addInstance.failed"),
           message: error.message,

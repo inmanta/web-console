@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActionList,
   ActionListItem,
@@ -39,6 +39,7 @@ import {
   createDuplicateFormState,
   createEditFormState,
   createFormState,
+  getChangedAttributeNames,
   isAtOrBelow,
   isSingleRelationTab,
   parseValidationErrors,
@@ -65,7 +66,7 @@ interface Props {
   identifyingAttributeName?: string;
   instanceId?: string;
   entityAnnotations?: EntityAnnotations;
-  submitError?: CustomError | null;
+  submitError: CustomError | null;
 }
 
 /**
@@ -108,7 +109,7 @@ const getFormState = (
  *   @prop {string} [identifyingAttributeName] - Name of the attribute designated by the service's `service_identity`, if any.
  *   @prop {string} [instanceId] - Id of the edited instance; absent when creating.
  *   @prop {EntityAnnotations} [entityAnnotations] - The service entity's annotations; a `web_tabs` catalog splits the top-level fields into tabs.
- *   @prop {CustomError | null} [submitError] - The last failed submit; attribute validation failures are shown on the form and its fields.
+ *   @prop {CustomError | null} submitError - The error of the last submit, null when it did not fail; its attribute validation errors are shown on the form and its fields.
  * @returns {React.FC<Props>} The rendered ServiceInstanceForm component.
  */
 export const ServiceInstanceForm: React.FC<Props> = ({
@@ -152,19 +153,29 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   const dependencyErrors = useMemo(() => resolveFieldDependencies(fields).errors, [fields]);
   const [activeTab, setActiveTab] = useState(formTabs.kind === "tabs" ? formTabs.defaultKey : "");
 
-  // The server's rejections of the last submit. Editing an attribute (or a list or group holding it)
-  // hides its rejection: the value it was about is gone, and list indices may have shifted.
+  // The validation errors of the last submit. Editing an attribute (or a list or group holding it)
+  // hides its validation error: the value it was about is gone, and list indices may have shifted.
+  // `editedPaths` holds the paths edited since the last submit.
   const validationReport = useMemo(
     () => (submitError ? parseValidationErrors(submitError) : null),
     [submitError]
   );
   const [editedPaths, setEditedPaths] = useState<string[]>([]);
-  const [editedSince, setEditedSince] = useState(submitError);
 
-  if (editedSince !== submitError) {
-    setEditedSince(submitError);
-    setEditedPaths([]);
-  }
+  // The JSON editor reports the whole state, so its edits are found by comparing with this one.
+  const formStateRef = useRef(formState);
+
+  useEffect(() => {
+    formStateRef.current = formState;
+  }, [formState]);
+
+  const addEditedPaths = useCallback((paths: string[]) => {
+    setEditedPaths((prev) => {
+      const newPaths = paths.filter((path) => !prev.includes(path));
+
+      return newPaths.length > 0 ? [...prev, ...newPaths] : prev;
+    });
+  }, []);
 
   const validationErrors = useMemo(
     () =>
@@ -211,7 +222,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         setIsDirty(true);
       }
 
-      setEditedPaths((prev) => (prev.includes(path) ? prev : [...prev, path]));
+      addEditedPaths([path]);
 
       if (multi) {
         setFormState((prev) => {
@@ -238,7 +249,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         });
       }
     },
-    [isDirty, setIsDirty]
+    [isDirty, setIsDirty, addEditedPaths]
   );
 
   /**
@@ -261,13 +272,14 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       try {
         const parsed = JSON.parse(value);
 
+        addEditedPaths(getChangedAttributeNames(formStateRef.current, parsed));
         setFormState(parsed);
         setIsEditorValid(isValid);
       } catch (_error) {
         setIsEditorValid(false);
       }
     },
-    [setFormState, setIsEditorValid]
+    [setFormState, setIsEditorValid, addEditedPaths]
   );
 
   /**
@@ -275,10 +287,15 @@ export const ServiceInstanceForm: React.FC<Props> = ({
    *
    * @returns {void}
    */
-  const onConfirm = () => onSubmit(formState, (value: boolean) => setIsDirty(value));
+  const onConfirm = () => {
+    setEditedPaths([]);
+    onSubmit(formState, (value: boolean) => setIsDirty(value));
+  };
 
-  const onInitialStateConfirm = (initialState: string) =>
+  const onInitialStateConfirm = (initialState: string) => {
+    setEditedPaths([]);
     onSubmit(formState, (value: boolean) => setIsDirty(value), initialState);
+  };
 
   useEffect(() => {
     if (shouldPerformCancel) {
@@ -387,7 +404,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         />
       )}
 
-      {validationErrors.length > 0 && (
+      {/* While the JSON editor lists its own schema errors, those cover the same values. */}
+      {validationErrors.length > 0 && (isForm || isEditorValid) && (
         <AppAlert
           title={words("inventory.form.validationErrors.title")(validationErrors.length)}
           message={validationReport?.summary}
@@ -398,7 +416,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           <List>
             {validationErrors.map(({ path, message }) => (
               <ListItem key={`${path}-${message}`}>
-                <strong>{path}</strong>: {message}
+                {words("inventory.form.validationErrors.item")(path, message)}
               </ListItem>
             ))}
           </List>

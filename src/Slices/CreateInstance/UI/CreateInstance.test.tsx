@@ -357,4 +357,48 @@ describe("CreateInstance", () => {
       initial_state: "state2",
     });
   });
+
+  test("Given the CreateInstance View When the submit fails attribute validation Then the form shows it instead of a toast", async () => {
+    const attributeName = Service.a.attributes[0].name;
+    const validationMessage = "Input should be a valid integer";
+
+    postMock.mockRejectedValueOnce(
+      Object.assign(new Error("Invalid request: 1 validation error for service_name_a"), {
+        details: {
+          validation_errors: [{ type: "int_type", loc: [attributeName], msg: validationMessage }],
+        },
+      })
+    );
+
+    const { component } = setup(Service.a);
+
+    render(component);
+
+    await userEvent.click(screen.getByText(words("confirm")));
+
+    const alert = await screen.findByTestId("ValidationErrors-Alert");
+
+    expect(within(alert).getByText(attributeName)).toBeVisible();
+    expect(
+      within(screen.getByRole("generic", { name: `TextFieldInput-${attributeName}` })).getByText(
+        validationMessage
+      )
+    ).toBeVisible();
+    expect(screen.queryByTestId("ToastAlert")).not.toBeInTheDocument();
+  });
+
+  test("Given the CreateInstance View When the submit fails for another reason Then a toast shows the error", async () => {
+    const errorMessage = "Invalid request: The attribute order_id is read-only";
+
+    postMock.mockRejectedValueOnce(new Error(errorMessage));
+
+    const { component } = setup(Service.a);
+
+    render(component);
+
+    await userEvent.click(screen.getByText(words("confirm")));
+
+    expect(await screen.findByTestId("ToastAlert")).toHaveTextContent(errorMessage);
+    expect(screen.queryByTestId("ValidationErrors-Alert")).not.toBeInTheDocument();
+  });
 });

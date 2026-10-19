@@ -1,4 +1,9 @@
-import { isAtOrBelow, parseValidationErrors } from "./ValidationErrors";
+import {
+  getChangedAttributeNames,
+  isAtOrBelow,
+  isAttributeValidationFailure,
+  parseValidationErrors,
+} from "./ValidationErrors";
 
 // Verbatim LSM 400 message for a create with invalid attributes (pydantic 2.13).
 const message = `Invalid request: 4 validation errors for Svc
@@ -68,6 +73,21 @@ test("GIVEN parseValidationErrors WHEN the error is not a validation failure THE
   expect(
     parseValidationErrors({ name: "Error", message: "Conflict", details: { other: 1 } })
   ).toBeNull();
+});
+
+test("GIVEN isAttributeValidationFailure THEN it is true only for attribute validation failures", () => {
+  expect(isAttributeValidationFailure(new Error(message))).toBe(true);
+  expect(
+    isAttributeValidationFailure(new Error("Invalid request: The attribute attr1 is read-only"))
+  ).toBe(false);
+});
+
+test("GIVEN getChangedAttributeNames THEN it returns the top-level attributes that differ in either state", () => {
+  const before = { vlan_id: 1, endpoint: [{ port: 1 }], removed: "a" };
+  const after = { vlan_id: 1, endpoint: [{ port: 2 }], added: "b" };
+
+  expect(getChangedAttributeNames(before, after)).toEqual(["endpoint", "removed", "added"]);
+  expect(getChangedAttributeNames(before, { ...before })).toEqual([]);
 });
 
 test("GIVEN isAtOrBelow THEN it matches the path itself and its descendants only", () => {

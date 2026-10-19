@@ -24,6 +24,7 @@ interface Props {
   handleInputChange: (value) => void;
   onSearchTextChanged?: (value: string) => void;
   multi?: boolean;
+  warningMessage?: string;
 }
 
 /**
@@ -40,6 +41,7 @@ interface Props {
  *  @prop {(value): void} handleInputChange - The function to be called when the input changes.
  *  @prop {(value: string): void} onSearchTextChanged - The function to be called when the search text changes.
  *  @prop {boolean} multi - Whether the input should allow multiple selections.
+ *  @prop {string} warningMessage - A warning shown below the input.
  *
  * @returns The rendered component.
  */
@@ -54,6 +56,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
   handleInputChange,
   onSearchTextChanged,
   multi,
+  warningMessage,
   ...props
 }) => {
   const initialOptions = options.map((option) => {
@@ -98,6 +101,13 @@ export const AutoCompleteInput: React.FC<Props> = ({
           placeholderText={words("common.serviceInstance.relation")(serviceEntity)}
           onSearchTextChanged={onSearchTextChanged}
         />
+      )}
+      {warningMessage && (
+        <FormHelperText>
+          <HelperText>
+            <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>
+          </HelperText>
+        </FormHelperText>
       )}
     </FormGroup>
   );

@@ -1,26 +1,28 @@
+import { InstanceAttributeModel } from "@/Core";
 import { CustomError } from "@/Data/Queries/Helpers";
 
 /**
- * Turns a rejected instance submit into per-attribute errors. LSM validates attributes with
- * pydantic: newer versions return the errors in `error_details.validation_errors`, older ones only
- * in the message, as pydantic's text rendering. Both carry the same location and message.
+ * Turns a failed instance submit into per-attribute validation errors. LSM validates attributes
+ * with pydantic: newer versions return the errors in `error_details.validation_errors`, older ones
+ * only in the message, as pydantic's text rendering. Both carry the same location and message.
  */
 
-/** One rejected attribute. `path` uses the form's dotted path format, e.g. `endpoint.1.port`. */
+/** One attribute validation error. `path` uses the form's dotted path format, e.g. `endpoint.1.port`. */
 export interface AttributeValidationError {
   path: string;
   message: string;
 }
 
 /**
- * The parsed rejection. `summary` is the message without pydantic's error listing, empty
- * when the message held nothing else.
+ * The parsed validation errors of a failed submit. `summary` is the message without pydantic's
+ * error listing, empty when the message held nothing else.
  */
 export interface ValidationErrorReport {
   summary: string;
   errors: AttributeValidationError[];
 }
 
+/** One entry of pydantic's error list, as LSM returns it in `error_details.validation_errors`. */
 interface PydanticError {
   loc: (string | number)[];
   msg: string;
@@ -29,11 +31,17 @@ interface PydanticError {
 const isPydanticError = (value: unknown): value is PydanticError =>
   typeof value === "object" &&
   value !== null &&
-  Array.isArray((value as PydanticError).loc) &&
-  typeof (value as PydanticError).msg === "string";
+  "loc" in value &&
+  Array.isArray(value.loc) &&
+  "msg" in value &&
+  typeof value.msg === "string";
 
 const fromDetails = (details: unknown): AttributeValidationError[] => {
-  const errors = (details as { validation_errors?: unknown } | null)?.validation_errors;
+  if (typeof details !== "object" || details === null || !("validation_errors" in details)) {
+    return [];
+  }
+
+  const errors = details.validation_errors;
 
   if (!Array.isArray(errors)) {
     return [];
@@ -44,9 +52,20 @@ const fromDetails = (details: unknown): AttributeValidationError[] => {
     .map(({ loc, msg }) => ({ path: loc.join("."), message: msg }));
 };
 
-// pydantic's text rendering: a header, then per error the location on its own line, the message
-// indented by 2 (with a trailing "[type=...]"), and optionally a URL line indented by 4.
+// An example of the message LSM returns, with pydantic's errors as text:
+//
+//   Invalid request: 1 validation error for my-service
+//   vlan_id
+//     Input should be a valid integer [type=int_type, input_value='a', input_type=str]
+//       For further information visit https://errors.pydantic.dev/2.14/v/int_type
+//
+// Each error is an attribute path, then its message indented by 2 spaces.
+// Lines indented by 4 spaces are skipped.
+
+// Matches "1 validation error for my-service".
 const HEADER = /\d+ validation errors? for [^\n]*/;
+
+// Matches "  Input should be a valid integer [type=...]" and keeps "Input should be a valid integer".
 const MESSAGE = /^ {2}(\S.*?)(?: \[type=.*\])?$/;
 
 // The core prefix and the punctuation that introduced the listing say nothing on their own.
@@ -81,11 +100,12 @@ const fromText = (text: string): ValidationErrorReport | null => {
 };
 
 /**
- * The attribute errors in a failed submit, or null when the error is not an attribute
- * validation failure.
+ * The attribute validation errors of a failed submit, or null when the error is not an attribute
+ * validation failure. Reads `error_details.validation_errors` when sent, else pydantic's text.
  *
- * @param {CustomError} error - The failed request: its message and, if sent, its `error_details`.
- * @returns {ValidationErrorReport | null}
+ * @example
+ * parseValidationErrors(new Error("Invalid request: 1 validation error for Svc\nvlan_id\n  Input should be a valid integer"))
+ * // => { summary: "", errors: [{ path: "vlan_id", message: "Input should be a valid integer" }] }
  */
 export const parseValidationErrors = ({
   message,
@@ -102,11 +122,43 @@ export const parseValidationErrors = ({
 };
 
 /**
+ * Whether a failed submit is an attribute validation failure, which the form shows on its fields
+ * instead of in a toast.
+ *
+ * @example
+ * isAttributeValidationFailure(new Error("Invalid request: The attribute attr1 is read-only")) // => false
+ */
+export const isAttributeValidationFailure = (error: CustomError): boolean =>
+  parseValidationErrors(error) !== null;
+
+/**
  * Whether `path` is `prefix` itself or lies below it.
  *
  * @example
  * isAtOrBelow("endpoint.1.port", "endpoint") // => true
- * isAtOrBelow("endpoints", "endpoint") // => false
  */
 export const isAtOrBelow = (path: string, prefix: string): boolean =>
   path === prefix || path.startsWith(`${prefix}.`);
+
+/**
+ * The names of the top-level attributes whose value differs between two form states, in either
+ * direction. Values are compared by their JSON text, as the JSON editor produces them.
+ *
+ * @example
+ * getChangedAttributeNames({ vlan_id: 1, ip: "10.0.0.1" }, { vlan_id: 2, ip: "10.0.0.1" }) // => ["vlan_id"]
+ */
+export const getChangedAttributeNames = (
+  before: InstanceAttributeModel,
+  after: InstanceAttributeModel
+): string[] => {
+  const names = new Set([...Object.keys(before), ...Object.keys(after)]);
+  const changedNames: string[] = [];
+
+  for (const name of names) {
+    if (JSON.stringify(before[name]) !== JSON.stringify(after[name])) {
+      changedNames.push(name);
+    }
+  }
+
+  return changedNames;
+};
