@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump the vitest group with 3 updates
+destination-branches:
+- master
+- iso9
+sections: {}
