@@ -7,6 +7,7 @@ import {
   FieldCreator,
   ServiceInstanceForm,
   EditModifierHandler,
+  parseValidationErrors,
 } from "@/UI/Components/ServiceInstanceForm";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
@@ -60,23 +61,26 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
 
   const onMutationError = (error: Error) => {
     setIsDirty(true);
-    notifyError({
-      title: words("inventory.editInstance.failed"),
-      message: error.message,
-    });
+    // Attribute validation failures are shown on the form itself.
+    if (!parseValidationErrors(error)) {
+      notifyError({
+        title: words("inventory.editInstance.failed"),
+        message: error.message,
+      });
+    }
   };
 
   const onMutationSuccess = () => handleRedirect();
 
   // Both hooks are always called (React rules of hooks). Only the relevant mutate is used.
-  const { mutate: patchMutate } = usePatchAttributes(
+  const { mutate: patchMutate, error: patchError } = usePatchAttributes(
     serviceEntity.name,
     instance.id,
     Number(instance.version),
     { onError: onMutationError, onSuccess: onMutationSuccess }
   );
 
-  const { mutate: putMutate } = usePutAttributes(
+  const { mutate: putMutate, error: putError } = usePutAttributes(
     serviceEntity.name,
     instance.id,
     Number(instance.version),
@@ -112,6 +116,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         identifyingAttributeName={serviceEntity.service_identity}
         instanceId={instance.id}
         entityAnnotations={serviceEntity.entity_annotations}
+        submitError={isStrictEnforcement ? putError : patchError}
       />
     </>
   );

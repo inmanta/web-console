@@ -3,6 +3,9 @@ import { AuthContext } from "@/Data/Auth";
 
 export interface CustomError extends Error {
   status?: number;
+
+  /** The `error_details` of the response body, when the server sent them. */
+  details?: unknown;
 }
 
 /**
@@ -27,6 +30,7 @@ export const useFetchHelpers = () => {
 
     if (!response.ok) {
       let message = customErrorMessage;
+      let details: unknown;
       let bodyText: string | undefined;
       try {
         bodyText = await response.text();
@@ -35,6 +39,7 @@ export const useFetchHelpers = () => {
           if (data && data.message) {
             message = data.message;
           }
+          details = data?.error_details;
         } catch {
           // If not JSON, use the text as message
           if (bodyText && !message) {
@@ -49,6 +54,7 @@ export const useFetchHelpers = () => {
       }
       const error: CustomError = new Error(message);
       error.status = response.status;
+      error.details = details;
       throw error;
     }
   }

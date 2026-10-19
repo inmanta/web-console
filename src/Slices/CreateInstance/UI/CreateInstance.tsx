@@ -6,6 +6,7 @@ import { Description } from "@/UI/Components/Description";
 import {
   CreateModifierHandler,
   FieldCreator,
+  parseValidationErrors,
   ServiceInstanceForm,
 } from "@/UI/Components/ServiceInstanceForm";
 import { DependencyContext } from "@/UI/Dependency";
@@ -42,13 +43,16 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
 
   const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
 
-  const { mutate } = usePostInstance(serviceEntity.name, {
+  const { mutate, error: submitError } = usePostInstance(serviceEntity.name, {
     onError: (error) => {
       setIsDirty(true);
-      notifyError({
-        title: words("inventory.addInstance.failed"),
-        message: error.message,
-      });
+      // Attribute validation failures are shown on the form itself.
+      if (!parseValidationErrors(error)) {
+        notifyError({
+          title: words("inventory.addInstance.failed"),
+          message: error.message,
+        });
+      }
     },
     onSuccess: ({ data }) => {
       const newUrl = routeManager.getUrl("InstanceDetails", {
@@ -87,6 +91,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
         initialStates={serviceEntity.lifecycle.alternative_initial_states}
         identifyingAttributeName={serviceEntity.service_identity}
         entityAnnotations={serviceEntity.entity_annotations}
+        submitError={submitError}
       />
     </>
   );

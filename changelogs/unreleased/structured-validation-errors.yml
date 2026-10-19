@@ -1,0 +1,5 @@
+description: Show the attributes the orchestrator rejected on the create, edit and duplicate instance forms, instead of the raw validation error.
+change-type: minor
+destination-branches: [master]
+sections:
+  feature: "{{description}}"

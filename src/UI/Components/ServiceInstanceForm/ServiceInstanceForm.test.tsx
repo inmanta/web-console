@@ -17,6 +17,7 @@ import {
   Textarea,
   UnitField,
 } from "@/Core";
+import { CustomError } from "@/Data/Queries/Helpers";
 import { SUGGESTION_NAMESPACES } from "@/Data/Queries/Slices/ServiceInstance";
 import * as Test from "@/Test";
 import { MockedDependencyProvider } from "@/Test";
@@ -41,7 +42,8 @@ const setup = (
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined,
   initialStates: string[] = [],
-  entityAnnotations: EntityAnnotations | undefined = undefined
+  entityAnnotations: EntityAnnotations | undefined = undefined,
+  submitError: CustomError | null = null
 ) => {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -62,6 +64,7 @@ const setup = (
                   setIsDirty={vi.fn()}
                   initialStates={initialStates}
                   entityAnnotations={entityAnnotations}
+                  submitError={submitError}
                 />
               }
             />
@@ -286,6 +289,54 @@ test("GIVEN ServiceInstanceForm WHEN a parameter_name depends on ${instance_id} 
   await userEvent.click(textBox);
 
   expect(screen.queryAllByRole("menuitem")).toHaveLength(0);
+});
+
+test("GIVEN ServiceInstanceForm WHEN the submit was rejected with validation errors THEN the form and the fields show them until edited", async () => {
+  const submitError: CustomError = {
+    name: "Error",
+    message: "Invalid request: 3 validation errors for service_entity ...",
+    details: {
+      validation_errors: [
+        { type: "int_type", loc: [Test.Field.text.name], msg: "Input should be a valid integer" },
+        { type: "bool_type", loc: [Test.Field.bool.name], msg: "Input should be a valid boolean" },
+        { type: "extra_forbidden", loc: ["bogus"], msg: "Extra inputs are not permitted" },
+      ],
+    },
+  };
+  const { component } = setup(
+    [Test.Field.text, Test.Field.bool],
+    undefined,
+    false,
+    undefined,
+    [],
+    undefined,
+    submitError
+  );
+
+  render(component);
+
+  const alert = screen.getByTestId("ValidationErrors-Alert");
+
+  expect(within(alert).getByText(words("inventory.form.validationErrors.title")(3))).toBeVisible();
+  expect(within(alert).getByText("bogus")).toBeVisible();
+
+  // A text input shows it in its own feedback slot, other inputs below the input.
+  expect(
+    within(
+      screen.getByRole("generic", { name: `TextFieldInput-${Test.Field.text.name}` })
+    ).getByText("Input should be a valid integer")
+  ).toBeVisible();
+  expect(screen.getByLabelText(`ValidationError-${Test.Field.bool.name}`)).toHaveTextContent(
+    "Input should be a valid boolean"
+  );
+
+  await userEvent.type(
+    screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` }),
+    "1"
+  );
+
+  expect(within(alert).getByText(words("inventory.form.validationErrors.title")(2))).toBeVisible();
+  expect(screen.queryAllByText("Input should be a valid integer")).toHaveLength(0);
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field", async () => {

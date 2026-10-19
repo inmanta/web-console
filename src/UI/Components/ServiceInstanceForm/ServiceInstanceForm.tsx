@@ -19,10 +19,13 @@ import {
   Tabs,
   TabTitleIcon,
   TabTitleText,
+  List,
+  ListItem,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { InstanceAttributeModel, EntityAnnotations, Field } from "@/Core";
 import { set as setAtPath } from "@/Core/Language/collection";
+import { CustomError } from "@/Data/Queries/Helpers";
 import { SuggestionVariables } from "@/Data/Queries/Slices/ServiceInstance";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
@@ -31,11 +34,14 @@ import { AppAlert } from "../AppAlert";
 import { DynamicFAIcon } from "../FaIcon";
 import { JSONEditor } from "../JSONEditor";
 import { FieldInput } from "./Components";
+import { ValidationErrorsContext } from "./Components/ValidationErrorsContext";
 import {
   createDuplicateFormState,
   createEditFormState,
   createFormState,
+  isAtOrBelow,
   isSingleRelationTab,
+  parseValidationErrors,
   resolveFieldDependencies,
   resolveFormTabs,
 } from "./Helpers";
@@ -59,6 +65,7 @@ interface Props {
   identifyingAttributeName?: string;
   instanceId?: string;
   entityAnnotations?: EntityAnnotations;
+  submitError?: CustomError | null;
 }
 
 /**
@@ -101,6 +108,7 @@ const getFormState = (
  *   @prop {string} [identifyingAttributeName] - Name of the attribute designated by the service's `service_identity`, if any.
  *   @prop {string} [instanceId] - Id of the edited instance; absent when creating.
  *   @prop {EntityAnnotations} [entityAnnotations] - The service entity's annotations; a `web_tabs` catalog splits the top-level fields into tabs.
+ *   @prop {CustomError | null} [submitError] - The last failed submit; attribute validation failures are shown on the form and its fields.
  * @returns {React.FC<Props>} The rendered ServiceInstanceForm component.
  */
 export const ServiceInstanceForm: React.FC<Props> = ({
@@ -118,6 +126,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   identifyingAttributeName,
   instanceId,
   entityAnnotations,
+  submitError,
 }) => {
   const [formState, setFormState] = useState(
     getFormState(fields, apiVersion, originalAttributes, isEdit)
@@ -142,6 +151,28 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   // stuck control. Derived purely from the schema, so it is stable across value edits.
   const dependencyErrors = useMemo(() => resolveFieldDependencies(fields).errors, [fields]);
   const [activeTab, setActiveTab] = useState(formTabs.kind === "tabs" ? formTabs.defaultKey : "");
+
+  // The server's rejections of the last submit. Editing an attribute (or a list or group holding it)
+  // hides its rejection: the value it was about is gone, and list indices may have shifted.
+  const validationReport = useMemo(
+    () => (submitError ? parseValidationErrors(submitError) : null),
+    [submitError]
+  );
+  const [editedPaths, setEditedPaths] = useState<string[]>([]);
+  const [editedSince, setEditedSince] = useState(submitError);
+
+  if (editedSince !== submitError) {
+    setEditedSince(submitError);
+    setEditedPaths([]);
+  }
+
+  const validationErrors = useMemo(
+    () =>
+      (validationReport?.errors ?? []).filter(
+        (error) => !editedPaths.some((path) => isAtOrBelow(error.path, path))
+      ),
+    [validationReport, editedPaths]
+  );
 
   // Values that resolve `${...}` variables in a suggestion's parameter name.
   // `identifyingAttributeName` is the name of the identifying attribute; its value
@@ -179,6 +210,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       if (!isDirty) {
         setIsDirty(true);
       }
+
+      setEditedPaths((prev) => (prev.includes(path) ? prev : [...prev, path]));
 
       if (multi) {
         setFormState((prev) => {
@@ -267,7 +300,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     />
   );
 
-  return (
+  const form = (
     <StyledForm onSubmit={preventDefault}>
       <ToggleGroup aria-label="form-editor-toggle-group">
         <ToggleGroupItem
@@ -354,6 +387,24 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         />
       )}
 
+      {validationErrors.length > 0 && (
+        <AppAlert
+          title={words("inventory.form.validationErrors.title")(validationErrors.length)}
+          message={validationReport?.summary}
+          variant={AlertVariant.warning}
+          testId="ValidationErrors-Alert"
+          isInline
+        >
+          <List>
+            {validationErrors.map(({ path, message }) => (
+              <ListItem key={`${path}-${message}`}>
+                <strong>{path}</strong>: {message}
+              </ListItem>
+            ))}
+          </List>
+        </AppAlert>
+      )}
+
       <ActionList>
         <ActionListItem>
           <ActionDisabledTooltip
@@ -430,6 +481,12 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         </ActionListItem>
       </ActionList>
     </StyledForm>
+  );
+
+  return (
+    <ValidationErrorsContext.Provider value={validationErrors}>
+      {form}
+    </ValidationErrorsContext.Provider>
   );
 };
 

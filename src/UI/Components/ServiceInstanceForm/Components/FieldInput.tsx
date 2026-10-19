@@ -36,6 +36,7 @@ import { RelatedServiceProvider } from "./RelatedServiceProvider";
 import { SelectFormInput } from "./SelectFormInput";
 import { TextFormInput } from "./TextFormInput";
 import { TextListFormInput } from "./TextListFormInput";
+import { useValidationError } from "./ValidationErrorsContext";
 
 interface Props {
   field: Field;
@@ -66,8 +67,42 @@ type GetUpdate = (path: string, value: unknown, multi?: boolean) => void;
 const makePath = (path: string | null, next: string): string =>
   path === null ? next : `${path}.${next}`;
 
+// These kinds show a warning in their own feedback slot; the others get it below the input.
+const KINDS_WITH_FEEDBACK: Field["kind"][] = ["Text", "Textarea", "TextList"];
+
 /**
- * FieldInput component for managing form input related to a specific field.
+ * A field's input, with the server's rejection of its last submitted value as a warning.
+ *
+ * @param {Props} props - Props for the FieldInput component, see `FieldControl`.
+ * @returns {React.FC<Props>} The rendered FieldInput component.
+ */
+export const FieldInput: React.FC<Props> = (props) => {
+  const isGroup = props.field.kind === "Nested" || props.field.kind === "DictList";
+  const validationError = useValidationError(makePath(props.path, props.field.name), !isGroup);
+
+  if (!validationError || KINDS_WITH_FEEDBACK.includes(props.field.kind)) {
+    return <FieldControl {...props} />;
+  }
+
+  return (
+    <>
+      <FieldControl {...props} />
+      <FormHelperText>
+        <HelperText>
+          <HelperTextItem
+            variant="warning"
+            aria-label={`ValidationError-${makePath(props.path, props.field.name)}`}
+          >
+            {validationError}
+          </HelperTextItem>
+        </HelperText>
+      </FormHelperText>
+    </>
+  );
+};
+
+/**
+ * FieldControl component for managing form input related to a specific field.
  *
  * @param {Props} props - Props for the FieldInput component.
  *   @prop {Field} field - The field associated with the input.
@@ -80,9 +115,9 @@ const makePath = (path: string | null, next: string): string =>
  *   @prop {SuggestionVariables} suggestionVariables - The form's values for `${...}` variables in a suggestion's parameter name.
  *   @prop {boolean} isFlat - Renders an embedded relation without its expandable group, for a tab that holds nothing else. Default is false.
  *
- * @returns {React.FC<Props>} The rendered FieldInput component.
+ * @returns {React.FC<Props>} The rendered FieldControl component.
  */
-export const FieldInput: React.FC<Props> = ({
+const FieldControl: React.FC<Props> = ({
   field,
   formState,
   originalState,
@@ -140,10 +175,13 @@ export const FieldInput: React.FC<Props> = ({
       (value) => !suggestionsList.some((suggestion) => suggestion.value === value)
     );
 
-  // Warning: broken annotation, then failed fetch, then a kept value no longer among the options
-  // (`notInList` suppressed on a locked field).
+  // Warning: the server rejected the submitted value, then broken annotation, then failed fetch,
+  // then a kept value no longer among the options (`notInList` suppressed on a locked field).
+  const validationError = useValidationError(makePath(path, field.name), true);
   let warningMessage: string | undefined;
-  if (modelError) {
+  if (validationError) {
+    warningMessage = validationError;
+  } else if (modelError) {
     warningMessage = modelError;
   } else if (isCascading && !!error) {
     warningMessage = words("inventory.form.suggestions.fetchError");
@@ -276,7 +314,7 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           isTextarea
-          warningMessage={modelError}
+          warningMessage={validationError ?? modelError}
         />
       );
     case "Text":
