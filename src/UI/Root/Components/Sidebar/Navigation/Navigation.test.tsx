@@ -125,7 +125,7 @@ describe("Navigation", () => {
 
     const { component } = setup(undefined, false, undefined, [
       environmentFeature,
-      { ...resourceManagerFeature, licenseFeature: "ui.ui" },
+      { ...resourceManagerFeature, licensedFeature: "ui.ui" },
     ]);
 
     render(component);

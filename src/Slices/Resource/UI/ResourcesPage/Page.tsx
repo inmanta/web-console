@@ -13,7 +13,10 @@ import {
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
 import { usePaginatedTableWithMultiSort } from "@/Data/Common";
-import { useGetResources, mapToResourceActionFilter } from "@/Data/Queries/Slices/Resource";
+import {
+  useGetResources,
+  mapToResourceActionFilterWithInstanceLabels,
+} from "@/Data/Queries/Slices/Resource";
 import { CompoundResourceStatus } from "@/UI/Components/CompoundResourceStatus";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { ErrorView } from "@/UI/Components/ErrorView";
@@ -78,6 +81,11 @@ export const Page: React.FC = () => {
 
   const rows = useMemo(() => tablePresenter.createRows(data?.resources ?? []), [data?.resources]);
 
+  const { resourceActionFilter, instanceLabels: filterInstanceLabels } = useMemo(
+    () => mapToResourceActionFilterWithInstanceLabels(filterWithDefaults),
+    [filterWithDefaults]
+  );
+
   if (isError) {
     return <ErrorView message={error.message} ariaLabel="ResourcesPage-Error" retry={refetch} />;
   }
@@ -139,11 +147,12 @@ export const Page: React.FC = () => {
                   repair: words("resources.resourceActions.repair.tooltip.resources"),
                   dryRun: words("resources.resourceActions.dryRun.tooltip.resources"),
                 }}
+                instanceLabels={filterInstanceLabels}
                 scopes={[
                   {
                     id: "filtered",
                     title: words("resources.resourceActions.confirm.filtered.title"),
-                    filter: mapToResourceActionFilter(filterWithDefaults),
+                    filter: resourceActionFilter,
                     count: Number(data.metadata.total),
                   },
                   {

@@ -1,10 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Content, PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
-import { Diff } from "@/Core";
-import { DryRun, useGetDryRuns } from "@/Data/Queries/Slices/DryRun";
+import React, { useEffect, useState } from "react";
+import {
+  Content,
+  Flex,
+  FlexItem,
+  Label,
+  PageSection,
+  Title,
+  Toolbar,
+  ToolbarContent,
+} from "@patternfly/react-core";
+import { Diff, DryRun } from "@/Core";
+import { useUrlStateWithString } from "@/Data/Common";
+import { useGetDryRuns } from "@/Data/Queries/Slices/DryRun";
 import * as DiffWizard from "@/UI/Components/DiffWizard";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { useRouteParams } from "@/UI/Routing";
+import { REPORT_URL_STATE_KEY } from "@/UI/Routing/ReportSearch";
 import { words } from "@/UI/words";
 import { SelectReportAction, TriggerDryRunAction } from "./Components";
 import { DiffPageSection } from "./DiffPageSection";
@@ -33,7 +44,7 @@ interface Props {
  *
  * This component handles the main functionality of the Compliance Check feature:
  * - Fetches and displays dry run reports for the specified version
- * - Allows selecting different reports
+ * - Allows selecting different reports, keeping the selected one in the URL so a link can open it
  * - Provides filtering by status and search text
  * - Shows error messages when data fetching fails
  *
@@ -44,12 +55,24 @@ interface Props {
  */
 
 export const View: React.FC<Props> = ({ version }) => {
-  const { data, isSuccess, isError, error } = useGetDryRuns().useContinuous(version);
+  const { data, isError, error } = useGetDryRuns().useContinuous(version);
   const [statuses, setStatuses] = useState(Diff.defaultStatuses);
-  const [selectedReport, setSelectedReport] = useState<DryRun | null>(null);
   const [searchFilter, setSearchFilter] = useState("");
-  const firstReport = useRef<DryRun | null>(null);
+  // An empty id selects the newest report.
+  const [selectedReportId, setSelectedReportId] = useUrlStateWithString<string>({
+    default: "",
+    key: REPORT_URL_STATE_KEY,
+    route: "ComplianceCheck",
+  });
+  // A new dry run becomes the newest report once the list refreshes. Selecting it when it starts,
+  // rather than once the server answers, keeps a late answer from navigating back to this page.
+  const selectNewestReport = () => setSelectedReportId("");
   const { notifyError } = useAppAlert();
+
+  // An id that isn't in the list (a deleted report, or a stale link) also shows the newest report,
+  // and the picker shows which one that is.
+  const selectedReport: DryRun | null =
+    data?.find((report) => report.id === selectedReportId) ?? data?.[0] ?? null;
 
   useEffect(() => {
     if (isError) {
@@ -60,57 +83,52 @@ export const View: React.FC<Props> = ({ version }) => {
     }
   }, [isError, error?.message, notifyError]);
 
-  /**
-   * Setting the firstReport mutable ref when data changes
-   */
-  useEffect(() => {
-    if (isSuccess) {
-      if (data.length <= 0) {
-        firstReport.current = null;
-      }
-
-      firstReport.current = data[0];
-    } else {
-      firstReport.current = null;
-    }
-  }, [data, isSuccess]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      setSelectedReport(firstReport.current);
-    }
-  }, [isSuccess, data]);
-
   return (
     <>
-      <PageSection>
-        <Content>
-          <Content component="h1">{words("desiredState.complianceCheck.title")}</Content>
-        </Content>
-      </PageSection>
+      {/* Stays in view; the report below it scrolls on its own. */}
       <PageSection hasBodyWrapper={false}>
-        <Toolbar>
-          <ToolbarContent style={{ padding: 0 }}>
-            <SelectReportAction
-              setSelectedReport={setSelectedReport}
-              selectedReport={selectedReport}
-              reportsData={data}
-            />
-            <DiffWizard.DiffPageFilter
-              statuses={statuses}
-              setStatuses={setStatuses}
-              searchFilter={searchFilter}
-              setSearchFilter={setSearchFilter}
-            />
-            <TriggerDryRunAction version={version} />
-          </ToolbarContent>
-        </Toolbar>
+        <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
+          <Flex
+            justifyContent={{ default: "justifyContentSpaceBetween" }}
+            alignItems={{ default: "alignItemsCenter" }}
+          >
+            <Flex gap={{ default: "gapMd" }} alignItems={{ default: "alignItemsCenter" }}>
+              {/* Wrapped, so the heading has no bottom margin and centers with the label. */}
+              <FlexItem>
+                <Content component="h1">{words("desiredState.complianceCheck.title")}</Content>
+              </FlexItem>
+              <Label variant="outline">{words("modelVersion")(version)}</Label>
+            </Flex>
+            <TriggerDryRunAction version={version} onDryRunStart={selectNewestReport} />
+          </Flex>
+          <Flex direction={{ default: "column" }} gap={{ default: "gapXs" }}>
+            <Title headingLevel="h2" size="md">
+              {words("desiredState.complianceCheck.report.title")}
+            </Title>
+            <Toolbar>
+              <ToolbarContent style={{ padding: 0 }}>
+                <SelectReportAction
+                  setSelectedReport={(report) => setSelectedReportId(report?.id ?? "")}
+                  selectedReport={selectedReport}
+                  reportsData={data}
+                />
+                <DiffWizard.DiffPageFilter
+                  statuses={statuses}
+                  setStatuses={setStatuses}
+                  searchFilter={searchFilter}
+                  setSearchFilter={setSearchFilter}
+                />
+              </ToolbarContent>
+            </Toolbar>
+          </Flex>
+        </Flex>
       </PageSection>
       <DiffPageSection
         report={selectedReport}
         version={version}
         statuses={statuses}
         searchFilter={searchFilter}
+        onRerunStart={selectNewestReport}
       />
     </>
   );

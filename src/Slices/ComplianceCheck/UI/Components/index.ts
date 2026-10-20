@@ -1,3 +1,4 @@
 export * from "./SelectReportAction";
 export * from "./TriggerDryRunAction";
-export * from "./LoadingIndicator";
+export * from "./DryRunProgressLabel";
+export * from "./ReportScope";

@@ -1,15 +1,19 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { PageSize, Pagination, Resource } from "@/Core/Domain";
+import { PageSize, Pagination, Resource, ResourceActionFilter } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { MultiSort } from "@/Data/Common";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGraphQLRequest, REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
-import { ResourceActionFilter } from "../ResourceActionFilter";
-import { buildHandlers, mapSort, mapToResourceActionFilter, parseCurrentPage } from "./helpers";
+import {
+  buildHandlers,
+  mapSort,
+  mapToResourceActionFilterWithInstanceLabels,
+  parseCurrentPage,
+} from "./helpers";
 
 export interface PageInfo {
   hasNextPage: boolean;
@@ -127,7 +131,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   //TODO: https://github.com/inmanta/web-console/issues/6823 => same as in ResourceFilterForm.tsx
   const graphqlFilter: ResourceActionFilter & { environment: string } = {
     environment: env,
-    ...mapToResourceActionFilter(filter),
+    ...mapToResourceActionFilterWithInstanceLabels(filter).resourceActionFilter,
   };
 
   const pageSizeNum = Number(pageSize.value);

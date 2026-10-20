@@ -78,9 +78,9 @@ export const getGroups = (
 ): Group[] => {
   const entries = features
     .filter(
-      ({ licenseFeature }) =>
-        licenseFeature === undefined ||
-        orchestratorProvider.isLicencedFeatureEnabled(licenseFeature)
+      ({ licensedFeature }) =>
+        licensedFeature === undefined ||
+        orchestratorProvider.isLicencedFeatureEnabled(licensedFeature)
     )
     .flatMap(({ navigation = [] }) => navigation)
     .filter(({ isVisible }) => isVisible === undefined || isVisible(orchestratorProvider));

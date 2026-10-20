@@ -19,3 +19,12 @@ export interface DryRunVersion {
  * Any other filter, like agent or resource type, can run against any version.
  */
 export type VersionSelectionBlocker = "ownedServices" | "statusFilter";
+
+/**
+ * A dry run that was just started: its id and the model version the server resolved the filter
+ * to, which together locate its report.
+ */
+export interface StartedDryRun {
+  id: string;
+  modelVersion: number;
+}

@@ -6,7 +6,7 @@ import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { CodeEditor } from "@/UI/Components/CodeEditor";
 import { PageContainer } from "@/UI/Components/PageContainer";
 import { words } from "@/UI/words";
-import { useDocumentationContent } from ".";
+import { useDocumentationContent } from "./DocumentationContent";
 
 interface Props {
   service: string;

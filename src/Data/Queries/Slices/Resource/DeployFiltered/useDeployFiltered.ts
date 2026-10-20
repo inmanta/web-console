@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
+import { ResourceActionFilter } from "@/Core";
 import { usePost } from "@/Data/Queries/Helpers";
 import { DeployAgentsAction } from "@/Data/Queries/Slices/Agents";
 import { DependencyContext } from "@/UI/Dependency";
-import { ResourceActionFilter } from "../ResourceActionFilter";
 
 /**
  * Request body for the deploy_filtered endpoint.

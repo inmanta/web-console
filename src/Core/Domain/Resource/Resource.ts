@@ -1,4 +1,5 @@
 import { Pagination } from "@/Core/Domain/Pagination";
+import { Order } from "@/Core/Domain/Sort";
 import { ParsedNumber } from "@/Core/Language";
 
 /**
@@ -229,6 +230,17 @@ export interface FilterWithDefaultHandling extends Filter {
 export const STATUS_SORT_KEYS = ["blocked", "compliance", "lastHandlerRun", "isDeploying"] as const;
 
 export type StatusSortKey = (typeof STATUS_SORT_KEYS)[number];
+
+/**
+ * The order each status sort starts in when it is turned on. `isDeploying` starts descending,
+ * so the deploying resources come first.
+ */
+export const STATUS_SORT_INITIAL_ORDER: Record<StatusSortKey, Order> = {
+  blocked: "asc",
+  compliance: "asc",
+  lastHandlerRun: "asc",
+  isDeploying: "desc",
+};
 
 export type SortKey = "agent" | "resource_type" | "resource_id_value" | StatusSortKey;
 

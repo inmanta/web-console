@@ -1,14 +1,9 @@
 import React, { lazy, Suspense, useContext, useEffect, useMemo } from "react";
-import { Route, Routes } from "react-router";
-import { LoginPage } from "@/Slices/Login";
+import { Outlet } from "react-router";
 import { DependencyContext } from "@/UI/Dependency";
-import { SearchSanitizer, PrimaryBaseUrlManager } from "@/UI/Routing";
-import { RouteOutlet } from "@/UI/Routing/RouteOutlet";
+import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
-import { NotFoundPage } from "@S/NotFound/UI";
 import { getThemePreference, setThemePreference } from "../Components/DarkmodeOption";
-import { PageFrame } from "./Components";
-import { DefaultRoute } from "./Components/DefaultRoute";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 const ReactQueryDevtools = lazy(() =>
@@ -17,14 +12,11 @@ const ReactQueryDevtools = lazy(() =>
   }))
 );
 
+/**
+ * The layout of the app. The matched route (see `createRootRoutes`) renders in its `Outlet`.
+ */
 export const Root: React.FC = () => {
   const { routeManager, features } = useContext(DependencyContext);
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname
-  );
-  const basePathname = baseUrlManager.getBasePathname();
-
   const themePreference = getThemePreference();
 
   setThemePreference(themePreference || "light");
@@ -33,8 +25,6 @@ export const Root: React.FC = () => {
     () => PrimaryPageManager(routeManager.getRoutes(), features),
     [routeManager, features]
   );
-
-  const pages = useMemo(() => pageManager.getPages(), [pageManager]);
 
   // Fetch the other pages in the background, so they open without a loading view.
   useEffect(() => pageManager.preloadPages(), [pageManager]);
@@ -53,28 +43,7 @@ export const Root: React.FC = () => {
       )}
       <GlobalStyleProxy />
       <SearchSanitizer.Provider>
-        <Routes>
-          <Route path={`${basePathname}/login`} element={<LoginPage />} />
-          <Route element={<RouteOutlet />}>
-            <Route path="/" element={<DefaultRoute />} />
-            <Route path={basePathname} element={<DefaultRoute />} />
-            <Route
-              path="*"
-              element={
-                <PageFrame environmentRole="Required">
-                  <NotFoundPage />
-                </PageFrame>
-              }
-            />
-            {pages.map(({ path, kind, element, environmentRole }) => (
-              <Route
-                path={path}
-                element={<PageFrame environmentRole={environmentRole}>{element}</PageFrame>}
-                key={kind}
-              />
-            ))}
-          </Route>
-        </Routes>
+        <Outlet />
       </SearchSanitizer.Provider>
     </>
   );

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Dropdown, DropdownList, MenuToggle, MenuToggleElement } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { DiscoveredResourceLink } from ".";
+import { DiscoveredResourceLink } from "./DiscoveredResourceLink";
 
 interface Props {
   managedResourceId: string | null;
