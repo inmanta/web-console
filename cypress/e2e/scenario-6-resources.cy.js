@@ -115,6 +115,10 @@ describe("Scenario 6 : Resources", () => {
 
       // Store initial resource count
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      // Wait for the resources to load, otherwise the rows are counted before they render.
+      cy.get('[aria-label="ResourcesPage-Success"], [aria-label="ResourcesPage-Empty"]').should(
+        "be.visible"
+      );
       cy.get("body").then(($body) => {
         cy.wrap($body.find('[aria-label="Resource Table Row"]').length).as("initialRowCount");
       });

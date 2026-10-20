@@ -1,4 +1,4 @@
-import { routes } from "@/routes";
+import { routes } from "@/appFeatures";
 import * as ServiceCatalog from "@S/ServiceCatalog/Core/Route";
 import * as ServiceInventory from "@S/ServiceInventory/Core/Route";
 import { PrimaryRouteManager } from "./PrimaryRouteManager";

@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router";
 import { render, screen } from "@testing-library/react";
-import { routes } from "@/routes";
+import { routes } from "@/appFeatures";
 import CustomRouter from "./CustomRouter";
 import { PrimaryRouteManager } from "./PrimaryRouteManager";
 import { useRouteParams } from "./Utils";

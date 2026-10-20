@@ -1,5 +1,5 @@
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
-import { routes } from "@/routes";
+import { routes } from "@/appFeatures";
 import { PageStateSanitizer } from "./PageStateSanitizer";
 
 const sanitizer = new PageStateSanitizer(PrimaryRouteManager("", routes));

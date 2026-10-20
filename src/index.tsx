@@ -13,6 +13,7 @@ import { AuthProvider } from "./Data/Auth/AuthProvider";
 import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
+import { features } from "./appFeatures";
 import { createMonacoWorker } from "./monaco-workers";
 
 // Monaco worker configuration. Uses getWorker (returns a Worker instance) rather than
@@ -113,7 +114,8 @@ root.render(
             new PrimaryBaseUrlManager(
               globalThis.location.origin,
               globalThis.location.pathname
-            ).getBasePathname()
+            ).getBasePathname(),
+            features
           )}
         />
       </QueryClientProvider>

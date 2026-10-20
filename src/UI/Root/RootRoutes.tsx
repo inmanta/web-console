@@ -1,9 +1,10 @@
 import React from "react";
 import { RouteObject } from "react-router";
+import { FeatureModule } from "@/Core";
 import { LoginPage } from "@/Slices/Login";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { RouteOutlet } from "@/UI/Routing/RouteOutlet";
-import { routes } from "@/routes";
+import { getFeatureRoutes } from "@/appFeatures";
 import { NotFoundPage } from "@S/NotFound/UI";
 import { PageFrame } from "./Components";
 import { DefaultRoute } from "./Components/DefaultRoute";
@@ -18,11 +19,15 @@ import { PrimaryPageManager } from "./PrimaryPageManager";
  * attribute). Param segments do match newlines, so the page routes resolve those urls.
  *
  * @param basePathname - The base pathname the app is served from, e.g. "/console".
+ * @param features - The features the app ships. The pages are built from their routes.
  * @returns The route objects of the login page, the default route, the pages and the not-found page.
  */
-export const createRootRoutes = (basePathname: string): RouteObject[] => {
-  const routeManager = PrimaryRouteManager(basePathname, routes);
-  const pages = new PrimaryPageManager(routeManager.getRoutes()).getPages();
+export const createRootRoutes = (
+  basePathname: string,
+  features: FeatureModule[]
+): RouteObject[] => {
+  const routeManager = PrimaryRouteManager(basePathname, getFeatureRoutes(features));
+  const pages = PrimaryPageManager(routeManager.getRoutes(), features).getPages();
 
   return [
     { path: `${basePathname}/login`, element: <LoginPage /> },

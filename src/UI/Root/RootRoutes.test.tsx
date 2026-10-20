@@ -1,10 +1,10 @@
 import { matchRoutes } from "react-router";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
-import { routes } from "@/routes";
+import { features, routes } from "@/appFeatures";
 import { createRootRoutes } from "./RootRoutes";
 
 const routeManager = PrimaryRouteManager("/console", routes);
-const rootRoutes = createRootRoutes("/console");
+const rootRoutes = createRootRoutes("/console", features);
 
 const matchLeaf = (url: string) => matchRoutes(rootRoutes, url)?.at(-1);
 

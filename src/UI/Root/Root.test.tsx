@@ -14,6 +14,7 @@ import {
   Project,
   ServerStatus,
 } from "@/Test";
+import { features } from "@/appFeatures";
 import { Root } from "./Root";
 import { createRootRoutes } from "./RootRoutes";
 
@@ -30,7 +31,7 @@ function setup() {
             <Root />
           </MockedDependencyProvider>
         ),
-        children: createRootRoutes(""),
+        children: createRootRoutes("", features),
       },
     ],
     { initialEntries: ["/"] }

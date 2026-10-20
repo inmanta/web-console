@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { routes } from "@/routes";
+import { routes } from "@/appFeatures";
 import { ResourceLink } from "./ResourceLink";
 
 const resourceId = "std::File[agent,path=/tmp/a]";
