@@ -13,7 +13,7 @@ import { SearchHelper } from "@/UI/Routing";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
-import { routes } from "@/routes";
+import { routes } from "@/appFeatures";
 import * as DesiredStateVersions from "@S/DesiredState/Data/Mock";
 import { Page } from "./Page";
 
