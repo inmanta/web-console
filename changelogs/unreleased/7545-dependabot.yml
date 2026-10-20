@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump mermaid from 11.17.2 to 12.2.0
+destination-branches:
+- master
+- iso9
+sections: {}
