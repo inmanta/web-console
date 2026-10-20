@@ -1,5 +1,5 @@
 import { act } from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { configureAxe } from "jest-axe";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
@@ -38,7 +38,9 @@ test("Given BlockingModal WHEN firing corresponding events THEN Modal will appea
   act(() => {
     document.dispatchEvent(new CustomEvent("close-blocking-modal"));
   });
-  expect(screen.queryByTestId("blocking-modal-message")).not.toBeInTheDocument();
+  await waitFor(() =>
+    expect(screen.queryByTestId("blocking-modal-message")).not.toBeInTheDocument()
+  );
 
   act(() => {
     document.dispatchEvent(new CustomEvent("resume-event"));
@@ -50,5 +52,7 @@ test("Given BlockingModal WHEN firing corresponding events THEN Modal will appea
   act(() => {
     document.dispatchEvent(new CustomEvent("close-blocking-modal"));
   });
-  expect(screen.queryByTestId("blocking-modal-message")).not.toBeInTheDocument();
+  await waitFor(() =>
+    expect(screen.queryByTestId("blocking-modal-message")).not.toBeInTheDocument()
+  );
 });

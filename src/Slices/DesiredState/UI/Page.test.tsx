@@ -1,6 +1,6 @@
 import { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
@@ -583,7 +583,7 @@ describe("DesiredStatesView", () => {
 
       await userEvent.click(noButton);
 
-      expect(screen.queryByText("Yes")).not.toBeInTheDocument();
+      await waitFor(() => expect(screen.queryByText("Yes")).not.toBeInTheDocument());
 
       //close by close button scenario
       await userEvent.click(
@@ -598,7 +598,7 @@ describe("DesiredStatesView", () => {
 
       await userEvent.click(closeButton);
 
-      expect(screen.queryByText("Yes")).not.toBeInTheDocument();
+      await waitFor(() => expect(screen.queryByText("Yes")).not.toBeInTheDocument());
 
       await act(async () => {
         const results = await axe(document.body);
@@ -642,7 +642,7 @@ describe("DesiredStatesView", () => {
 
       await userEvent.click(yesButton);
 
-      expect(screen.queryByText("No")).not.toBeInTheDocument();
+      await waitFor(() => expect(screen.queryByText("No")).not.toBeInTheDocument());
 
       //delete request is fired and it will retrigger the get request,
       expect(DELETERequestsFired).toBe(1);

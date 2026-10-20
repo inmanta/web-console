@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BACKDROP_CLASS, ModalContext, ModalProvider, Params } from "./ModalProvider";
 
@@ -143,7 +143,7 @@ describe("ModalProvider", () => {
 
       await userEvent.click(screen.getByLabelText("Close"));
 
-      expect(screen.queryByTestId("GlobalModal")).toBeNull();
+      await waitFor(() => expect(screen.queryByTestId("GlobalModal")).toBeNull());
       expect(cancelCb).toHaveBeenCalledTimes(1);
     });
 
@@ -156,7 +156,7 @@ describe("ModalProvider", () => {
 
       await userEvent.click(screen.getByLabelText("additionalCloseButton"));
 
-      expect(screen.queryByTestId("GlobalModal")).toBeNull();
+      await waitFor(() => expect(screen.queryByTestId("GlobalModal")).toBeNull());
       expect(cancelCb).toHaveBeenCalledTimes(1);
     });
 
@@ -167,7 +167,7 @@ describe("ModalProvider", () => {
       expect(screen.getByTestId("GlobalModal")).toBeVisible();
 
       await userEvent.click(screen.getByLabelText("Close"));
-      expect(screen.queryByTestId("GlobalModal")).toBeNull();
+      await waitFor(() => expect(screen.queryByTestId("GlobalModal")).toBeNull());
 
       await userEvent.click(screen.getByText("Click me"));
       expect(screen.getByTestId("GlobalModal")).toBeVisible();
@@ -199,7 +199,7 @@ describe("ModalProvider", () => {
 
       fireEvent.mouseDown(getBackdrop());
 
-      expect(screen.queryByTestId("GlobalModal")).toBeNull();
+      await waitFor(() => expect(screen.queryByTestId("GlobalModal")).toBeNull());
     });
 
     it("stays open when the press starts inside the dialog and ends on the backdrop", async () => {
