@@ -39,10 +39,10 @@ import {
   createDuplicateFormState,
   createEditFormState,
   createFormState,
+  getAttributeValidationErrors,
   getChangedAttributeNames,
   isAtOrBelow,
   isSingleRelationTab,
-  parseValidationErrors,
   resolveFieldDependencies,
   resolveFormTabs,
 } from "./Helpers";
@@ -156,8 +156,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   // The validation errors of the last submit. Editing an attribute (or a list or group holding it)
   // hides its validation error: the value it was about is gone, and list indices may have shifted.
   // `editedPaths` holds the paths edited since the last submit.
-  const validationReport = useMemo(
-    () => (submitError ? parseValidationErrors(submitError) : null),
+  const submitValidationErrors = useMemo(
+    () => (submitError ? getAttributeValidationErrors(submitError) : []),
     [submitError]
   );
   const [editedPaths, setEditedPaths] = useState<string[]>([]);
@@ -179,10 +179,10 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 
   const validationErrors = useMemo(
     () =>
-      (validationReport?.errors ?? []).filter(
+      submitValidationErrors.filter(
         (error) => !editedPaths.some((path) => isAtOrBelow(error.path, path))
       ),
-    [validationReport, editedPaths]
+    [submitValidationErrors, editedPaths]
   );
 
   // Values that resolve `${...}` variables in a suggestion's parameter name.
@@ -408,7 +408,6 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       {validationErrors.length > 0 && (isForm || isEditorValid) && (
         <AppAlert
           title={words("inventory.form.validationErrors.title")(validationErrors.length)}
-          message={validationReport?.summary}
           variant={AlertVariant.warning}
           testId="ValidationErrors-Alert"
           isInline

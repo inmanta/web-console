@@ -365,7 +365,9 @@ describe("CreateInstance", () => {
     postMock.mockRejectedValueOnce(
       Object.assign(new Error("Invalid request: 1 validation error for service_name_a"), {
         details: {
-          validation_errors: [{ type: "int_type", loc: [attributeName], msg: validationMessage }],
+          attribute_validation_errors: [
+            { type: "int_type", loc: [attributeName], msg: validationMessage },
+          ],
         },
       })
     );

@@ -296,7 +296,7 @@ test("GIVEN ServiceInstanceForm WHEN the submit was rejected with validation err
     name: "Error",
     message: "Invalid request: 3 validation errors for service_entity ...",
     details: {
-      validation_errors: [
+      attribute_validation_errors: [
         { type: "int_type", loc: [Test.Field.text.name], msg: "Input should be a valid integer" },
         { type: "bool_type", loc: [Test.Field.bool.name], msg: "Input should be a valid boolean" },
         { type: "extra_forbidden", loc: ["bogus"], msg: "Extra inputs are not permitted" },
@@ -348,7 +348,7 @@ test("GIVEN ServiceInstanceForm WHEN a validation error is on a list itself THEN
     name: "Error",
     message: "Invalid request: 2 validation errors for service_entity ...",
     details: {
-      validation_errors: [
+      attribute_validation_errors: [
         { type: "value_error", loc: [dictListField.name], msg: listMessage },
         {
           type: "int_type",
