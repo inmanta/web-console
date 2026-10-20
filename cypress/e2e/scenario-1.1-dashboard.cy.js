@@ -134,11 +134,13 @@ describe("1.1 Dashboard", () => {
 
   if (isIso) {
     it("1.1.7 Creating an instance with resources updates the health, resource and compile cards", () => {
+      // The card shows "—" until its data loads, so retry until the count is rendered.
       const readCardCount = (ariaLabel, pattern) =>
         cy
           .get(`[aria-label="${ariaLabel}"]`)
           .closest(".pf-v6-c-card")
           .invoke("text")
+          .should("match", pattern)
           .then((text) => Number(text.match(pattern)[1]));
 
       // Capture baseline counts before creating any resources
