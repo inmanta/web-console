@@ -9,4 +9,15 @@ describe("FaIcon", () => {
 
     expect(icon).toBeInTheDocument();
   });
+
+  it("renders the svg on the first render and keeps the same svg element on re-render", () => {
+    const { rerender } = render(<DynamicFAIcon icon="FaSearch" />);
+    const svg = screen.getByTestId("FaSearch").querySelector("svg");
+
+    expect(svg).toBeInTheDocument();
+
+    rerender(<DynamicFAIcon icon="FaSearch" />);
+
+    expect(screen.getByTestId("FaSearch").querySelector("svg")).toBe(svg);
+  });
 });
