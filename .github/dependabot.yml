@@ -35,3 +35,9 @@ updates:
           - "markdown-it"
           - "markdown-it-*"
           - "@types/markdown-it-*"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
