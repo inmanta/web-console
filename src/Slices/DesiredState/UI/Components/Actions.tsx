@@ -1,9 +1,16 @@
 import React, { useState } from "react";
-import { Dropdown, DropdownList, MenuToggle, MenuToggleElement } from "@patternfly/react-core";
+import {
+  Divider,
+  Dropdown,
+  DropdownList,
+  MenuToggle,
+  MenuToggleElement,
+} from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
 import { CompareAction } from "./CompareAction";
 import { DeleteAction } from "./DeleteAction";
+import { DryRunAction } from "./DryRunAction";
 import { PromoteAction } from "./PromoteAction";
 
 interface Props {
@@ -39,6 +46,8 @@ export const Actions: React.FC<Props> = ({ version, isPromoteDisabled }) => {
         <DeleteAction key="delete" version={version} />
         <PromoteAction key="promote" version={version} isDisabled={isPromoteDisabled} />
         <CompareAction key="compare" version={Number(version)} />
+        <Divider component="li" key="divider" />
+        <DryRunAction key="dryRun" version={version} />
       </DropdownList>
     </Dropdown>
   );

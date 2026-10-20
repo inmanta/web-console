@@ -1,0 +1,7 @@
+description: |
+  The Actions menu on the Desired State page now has Dry run, for any version.
+issue-nr: 7480
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"
