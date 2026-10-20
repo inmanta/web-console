@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { TransferModel } from "@/Core";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
@@ -69,7 +69,7 @@ describe("StateAction", () => {
     expect(item).toContainElement(screen.getByTestId("FaSlidersH"));
   });
 
-  it("applies PatternFly's danger styling to the text, plus an explicit icon color since isDanger alone leaves the icon uncolored", async () => {
+  it("applies PatternFly's danger styling to the text, plus an explicit icon color since isDanger alone leaves the icon uncolored", () => {
     renderStateAction([
       buildTarget({
         buttonLabel: "Delete everything",
@@ -85,15 +85,13 @@ describe("StateAction", () => {
     expect(listItem).toHaveClass("pf-m-danger");
     // PatternFly's Icon sets its own color default on the icon wrapper, shadowing any
     // inherited/CSS-variable color, so the icon is colored via an explicit inline
-    // style instead (the only override react-icons honors). DynamicFAIcon loads the
-    // icon lazily, so the <svg> only appears after that resolves.
-    await waitFor(() => expect(item.querySelector("svg")).not.toBeNull());
+    // style instead (the only override react-icons honors).
     const svg = item.querySelector("svg") as SVGElement;
 
     expect(svg.style.color).toBe("var(--pf-t--global--icon--color--status--danger--default)");
   });
 
-  it("colors both the icon and the text for a warning-variant transfer, unlike the design mock which only tints the icon", async () => {
+  it("colors both the icon and the text for a warning-variant transfer, unlike the design mock which only tints the icon", () => {
     renderStateAction([
       buildTarget({
         buttonLabel: "Push settings",
@@ -111,7 +109,6 @@ describe("StateAction", () => {
       "--pf-t--global--text--color--status--warning--default"
     );
     // icon color: set via the same inline-style mechanism as danger
-    await waitFor(() => expect(item.querySelector("svg")).not.toBeNull());
     const svg = item.querySelector("svg") as SVGElement;
 
     expect(svg.style.color).toBe("var(--pf-t--global--icon--color--status--warning--default)");
