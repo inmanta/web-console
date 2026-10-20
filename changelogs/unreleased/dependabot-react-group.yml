@@ -1,4 +1,4 @@
 description: Add a dependabot group for react, react-dom and their types so they are always bumped together.
 change-type: patch
-destination-branches: [master]
+destination-branches: [master, iso9]
 sections: {}
