@@ -43,11 +43,11 @@ export const Actions: React.FC<Props> = ({ version, isPromoteDisabled }) => {
       popperProps={{ position: "right" }}
     >
       <DropdownList>
-        <DeleteAction key="delete" version={version} />
-        <PromoteAction key="promote" version={version} isDisabled={isPromoteDisabled} />
-        <CompareAction key="compare" version={Number(version)} />
-        <Divider component="li" key="divider" />
-        <DryRunAction key="dryRun" version={version} />
+        <DeleteAction version={version} />
+        <PromoteAction version={version} isDisabled={isPromoteDisabled} />
+        <CompareAction version={Number(version)} />
+        <Divider component="li" />
+        <DryRunAction version={version} />
       </DropdownList>
     </Dropdown>
   );
