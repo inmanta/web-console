@@ -24,7 +24,7 @@ export interface FeatureModule {
    * sidebar entries are hidden. Its pages stay registered, so they can explain the license is
    * missing.
    */
-  licenseFeature?: Feature;
+  licensedFeature?: Feature;
 
   /**
    * The routes of the feature, each with the page it renders. A url resolves to the first

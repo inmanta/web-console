@@ -10,7 +10,7 @@ import * as InstanceComposerViewer from "@S/InstanceComposerViewer/Core/Route";
 export const composerFeature: FeatureModule = {
   id: "composer",
   version: APP_VERSION,
-  licenseFeature: "ui.ui",
+  licensedFeature: "ui.ui",
   preload: false,
   routes: [
     {
