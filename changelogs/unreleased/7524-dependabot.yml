@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump react, react-dom, @types/react and @types/react-dom
+destination-branches:
+- master
+- iso9
+sections: {}
