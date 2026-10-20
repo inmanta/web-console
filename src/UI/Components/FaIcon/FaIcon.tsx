@@ -1,8 +1,9 @@
 import React, { CSSProperties, SVGAttributes } from "react";
-import { IconContext } from "react-icons";
-import loadable from "@loadable/component";
+import { IconContext, IconType } from "react-icons";
 import { Icon } from "@patternfly/react-core";
 import * as fa from "react-icons/fa";
+
+const faIconsByName: Partial<Record<string, IconType>> = fa;
 
 interface Props {
   icon: string;
@@ -29,9 +30,7 @@ interface Props {
  * @returns A React component that renders a dynamic Font Awesome icon.
  */
 export const DynamicFAIcon = ({ ...props }: Props) => {
-  const FAIcon = loadable(() =>
-    Promise.resolve(fa[props.icon as keyof typeof fa] || fa["FaQuestionCircle"])
-  );
+  const FAIcon = faIconsByName[props.icon] ?? fa.FaQuestionCircle;
 
   const value: IconContext = {
     color: props.color,
