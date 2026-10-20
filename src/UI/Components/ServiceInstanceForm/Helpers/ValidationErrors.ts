@@ -52,6 +52,10 @@ const fromDetails = (details: unknown): AttributeValidationError[] => {
     .map(({ loc, msg }) => ({ path: loc.join("."), message: msg }));
 };
 
+// Reading the errors from the message text keeps the form compatible with orchestrators whose LSM
+// doesn't send `error_details.validation_errors` yet. LSM sends them from 7.0.0 on (ISO 10), and on
+// ISO 9 from the first LSM 6.x release that includes the backport of that change.
+//
 // An example of the message LSM returns, with pydantic's errors as text:
 //
 //   Invalid request: 1 validation error for my-service
