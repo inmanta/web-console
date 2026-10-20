@@ -1,7 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useLocation } from "react-router";
 import {
-  AlertActionLink,
   Content,
   Dropdown,
   DropdownItem,
@@ -20,7 +18,6 @@ import { ResourceActionFilter } from "@/Core";
 import { NonEmptyArray } from "@/Core/Language";
 import { DeployAgentsAction } from "@/Data/Queries/Slices/Agents";
 import {
-  StartedDryRun,
   createDryRunContext,
   useDeployFiltered,
   useDryRunFiltered,
@@ -29,11 +26,10 @@ import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { useNavigateTo } from "@/UI/Routing";
-import { createReportSearch } from "@/UI/Routing/ReportSearch";
 import { words } from "@/UI/words";
 import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
 import { ResourceActionInstance } from "./types";
+import { useNotifyDryRunStarted } from "./useNotifyDryRunStarted";
 
 const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 
@@ -91,12 +87,11 @@ type Props =
 export const ResourceActions: React.FC<Props> = (props) => {
   const { disabledReason, tooltips, instance, instanceLabels } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const { environmentHandler, routeManager } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
   const isHalted = environmentHandler.useIsHalted();
-  const { notifySuccess, notifyError, notifyInfo } = useAppAlert();
-  const navigateTo = useNavigateTo();
-  const { search } = useLocation();
+  const { notifySuccess, notifyError } = useAppAlert();
+  const notifyDryRunStarted = useNotifyDryRunStarted();
 
   const deploy = useDeployFiltered();
   const dryRun = useDryRunFiltered();
@@ -124,25 +119,6 @@ export const ResourceActions: React.FC<Props> = (props) => {
       tooltip: tooltips.dryRun,
     },
   };
-
-  const openReport = (dryRunId: string, modelVersion: number) =>
-    navigateTo(
-      "ComplianceCheck",
-      { version: String(modelVersion) },
-      createReportSearch(search, dryRunId)
-    );
-
-  // Without the Compliance Check page, the toast only says the dry run started, without a broken link.
-  const notifyDryRunStarted = ({ id, modelVersion }: StartedDryRun) =>
-    notifyInfo({
-      customIcon: <EyeIcon />,
-      title: words("desiredState.complianceCheck.report.started"),
-      actionLinks: routeManager.has("ComplianceCheck") ? (
-        <AlertActionLink onClick={() => openReport(id, modelVersion)}>
-          {words("desiredState.complianceCheck.report.view")}
-        </AlertActionLink>
-      ) : undefined,
-    });
 
   const run = (key: ActionKey, scopeFilter: ResourceActionFilter) => {
     const { label: actionLabel } = actions[key];

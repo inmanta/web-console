@@ -174,6 +174,10 @@ export function renderMermaidBlocks(
     // Only the `base` theme honours themeVariables. The PatternFly tokens already
     // resolve to the active light/dark theme, so no theme branch is needed here.
     theme: "base",
+    // Mermaid 12 switched the defaults to the ELK layout and the `neo` look.
+    // Pin the previous ones so existing service documentation renders unchanged.
+    layout: "dagre",
+    look: "classic",
     themeVariables: patternFlyThemeVariables(),
     themeCSS: patternFlyHueCss(),
   });

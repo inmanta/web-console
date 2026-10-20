@@ -1,5 +1,5 @@
 import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, RouteObject, RouterProvider } from "react-router";
 
 /**
  * CustomRouter is a wrapper component that provides the necessary router context for the usePrompt hook to function.
@@ -10,31 +10,34 @@ import { createBrowserRouter, RouterProvider } from "react-router";
  * - Prevent accidental navigation when there are unsaved changes
  * - Handle browser refresh/close events
  *
+ * The routes are registered on the data router itself, with `layout` as their pathless parent.
+ * Don't nest descendant `<Routes>` under a `/*` route instead: React Router's splat doesn't match
+ * pathnames containing a decoded newline, so those urls would never reach the descendant routes.
+ *
  * @component
- * @props {HistoryRouterProps} props - The component props
+ * @props {Props} props - The component props
  *  @prop {string} [props.basename] - The base URL for all locations. If your app is served from a sub-directory on your server, you'll want to set this to the sub-directory.
- *  @prop {React.ReactNode} [props.children] - The child components to be rendered within the router
- * @returns {JSX.Element} A RouterProvider component configured with the specified basename and children
+ *  @prop {React.ReactNode} props.layout - The element wrapping every route; it renders the matched route in an `Outlet`.
+ *  @prop {RouteObject[]} props.routes - The routes of the app
+ * @returns {JSX.Element} A RouterProvider component configured with the specified basename and routes
  *
  * @example
  * ```tsx
- * <CustomRouter basename="/app">
- *   <App />
- * </CustomRouter>
+ * <CustomRouter basename="/app" layout={<App />} routes={appRoutes} />
  * ```
  */
-function CustomRouter({ basename, children }: { basename?: string; children: React.ReactNode }) {
-  const router = createBrowserRouter(
-    [
-      {
-        path: "/*",
-        element: children,
-      },
-    ],
-    {
-      basename,
-    }
-  );
+function CustomRouter({
+  basename,
+  layout,
+  routes,
+}: {
+  basename?: string;
+  layout: React.ReactNode;
+  routes: RouteObject[];
+}) {
+  const router = createBrowserRouter([{ element: layout, children: routes }], {
+    basename,
+  });
 
   return <RouterProvider router={router} />;
 }
