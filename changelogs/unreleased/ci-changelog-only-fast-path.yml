@@ -1,0 +1,3 @@
+description: Skip the test suite in CI when only change entries changed since the last successful build.
+change-type: patch
+destination-branches: [master, iso9]
