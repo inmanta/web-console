@@ -9,7 +9,7 @@ import { instanceData } from "../../../Test/mockData";
 import { SetupWrapper } from "../../../Test/mockSetup";
 import { AttributesEditor } from "./AttributesEditor";
 
-// Monaco can't run in JSDOM, so the editor is stubbed to capture the data it receives.
+// Monaco can't run in happy-dom, so the editor is stubbed to capture the data it receives.
 const { JSONEditorMock } = vi.hoisted(() => ({
   JSONEditorMock: vi.fn(({ data }: { data: string }) => <pre>{data}</pre>),
 }));

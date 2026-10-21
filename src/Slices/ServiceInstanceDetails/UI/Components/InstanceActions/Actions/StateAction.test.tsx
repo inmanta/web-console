@@ -1,3 +1,4 @@
+import { t_global_text_color_status_warning_default } from "@patternfly/react-tokens";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { TransferModel } from "@/Core";
@@ -92,6 +93,11 @@ describe("StateAction", () => {
   });
 
   it("colors both the icon and the text for a warning-variant transfer, unlike the design mock which only tints the icon", () => {
+    // PatternFly's CSS is not loaded in tests, so define the token the text color refers to.
+    document.documentElement.style.setProperty(
+      t_global_text_color_status_warning_default.name,
+      t_global_text_color_status_warning_default.value
+    );
     renderStateAction([
       buildTarget({
         buttonLabel: "Push settings",
@@ -105,8 +111,8 @@ describe("StateAction", () => {
 
     expect(listItem).not.toHaveClass("pf-m-danger");
     // text color: no PatternFly modifier exists for warning, so it's set via our own override
-    expect(getComputedStyle(listItem).getPropertyValue("--pf-v6-c-menu__item--Color")).toContain(
-      "--pf-t--global--text--color--status--warning--default"
+    expect(getComputedStyle(listItem).getPropertyValue("--pf-v6-c-menu__item--Color")).toBe(
+      t_global_text_color_status_warning_default.value
     );
     // icon color: set via the same inline-style mechanism as danger
     const svg = item.querySelector("svg") as SVGElement;

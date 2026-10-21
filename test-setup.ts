@@ -103,12 +103,6 @@ const linkShapeMock = vi.hoisted(() => ({
 // Fix timezone to Europe/Brussels for all tests so date-related assertions are deterministic.
 vi.spyOn(dayjs.tz, "guess").mockReturnValue("Europe/Brussels");
 
-// jsdom does not implement scrollIntoView; provide a no-op so components that call it
-// (e.g. to bring a newly expanded/focused row into view) don't crash in tests.
-if (!window.HTMLElement.prototype.scrollIntoView) {
-  window.HTMLElement.prototype.scrollIntoView = vi.fn();
-}
-
 // Mock window.matchMedia
 Object.defineProperty(window, "matchMedia", {
   writable: true,
@@ -124,12 +118,19 @@ Object.defineProperty(window, "matchMedia", {
   })),
 });
 
-// JointJS mock - only define if not already defined
-if (!window.SVGAngle) {
-  Object.defineProperty(window, "SVGAngle", {
-    value: vi.fn(),
-  });
-}
+// Requests that no msw handler answers, such as query retries after a test file's server closed,
+// would reach a real server on localhost. Answer them with a network error instead.
+window.happyDOM.settings.fetch.interceptor = {
+  beforeAsyncRequest: async ({ request, window }) =>
+    request.url.startsWith("http") ? window.Response.error() : undefined,
+};
+
+// happy-dom's default stylesheet lacks two browser rules: spans get no display instead of inline,
+// and [hidden] elements stay displayed. Accessible names and axe checks rely on both.
+const userAgentStyles = document.createElement("style");
+
+userAgentStyles.textContent = "span { display: inline; } [hidden] { display: none; }";
+document.head.append(userAgentStyles);
 
 // Set window size for tests
 Object.defineProperty(window, "innerWidth", {

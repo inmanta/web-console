@@ -827,7 +827,7 @@ test("GIVEN ServiceInstanceForm WHEN list text is typed and submit is clicked wi
   const submitCb = vi.fn();
   const { component } = setup([listField], submitCb);
 
-  // jsdom reports no document focus while focus moves between elements.
+  // Keep the document focused, so a blur between elements isn't read as leaving the window.
   const hasFocus = vi.spyOn(document, "hasFocus").mockReturnValue(true);
 
   render(component);

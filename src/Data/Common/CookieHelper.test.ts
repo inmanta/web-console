@@ -17,7 +17,7 @@ describe("createCookie", () => {
 // Test cases for getCookie function
 describe("getCookie", () => {
   test("retrieves the value of the specified cookie", () => {
-    document.cookie = "testCookie=testValue";
+    document.cookie = "testCookie=testValue; Path=/";
 
     // Retrieve cookie value
     const cookieValue = getCookie("testCookie");
@@ -40,8 +40,8 @@ describe("getCookie", () => {
 // Test cases for removeCookie function
 describe("removeCookie", () => {
   test("removes the specified cookie", () => {
-    // Add a cookie first
-    document.cookie = "testCookie=testValue";
+    // Add a cookie first, on the same path createCookie uses
+    document.cookie = "testCookie=testValue; Path=/";
 
     // Remove the cookie
     removeCookie("testCookie");

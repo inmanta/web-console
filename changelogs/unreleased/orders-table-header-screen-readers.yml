@@ -1,0 +1,5 @@
+description: Screen readers can now read and use the column headers of the Orders table.
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

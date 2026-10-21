@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 /**
  * Defines objects for JointJS.
- * This function sets up mock implementations for various properties and methods used by JointJS library that aren't supported by default in the Jest environment.
+ * This function sets up mock implementations for various properties and methods used by JointJS library that happy-dom doesn't support.
  */
 export function defineObjectsForJointJS() {
   Object.defineProperty(document.documentElement, "requestFullscreen", {
@@ -128,5 +128,42 @@ export function defineObjectsForJointJS() {
   Object.defineProperty(Document.prototype, "elementFromPoint", {
     writable: true,
     value: vi.fn().mockReturnValue(null),
+  });
+
+  // happy-dom has no CDATA sections; JointJS wraps the paper's stylesheet in one.
+  Object.defineProperty(XMLDocument.prototype, "createCDATASection", {
+    writable: true,
+    value: vi.fn().mockImplementation(function (this: XMLDocument, data: string) {
+      return this.createTextNode(data);
+    }),
+  });
+
+  // happy-dom returns an empty nodeName for document fragments; JointJS reads it to tell nodes
+  // from wrappers when appending markup.
+  Object.defineProperty(DocumentFragment.prototype, "nodeName", {
+    configurable: true,
+    get: () => "#document-fragment",
+  });
+
+  // happy-dom gives SVG elements a plain string className. Browsers expose an SVGAnimatedString,
+  // which JointJS writes to through className.baseVal.
+  Object.defineProperty(global.SVGElement.prototype, "className", {
+    configurable: true,
+    get(this: SVGElement) {
+      const getClass = () => this.getAttribute("class") ?? "";
+      const setClass = (value: string) => this.setAttribute("class", value);
+
+      return {
+        get baseVal() {
+          return getClass();
+        },
+        set baseVal(value: string) {
+          setClass(value);
+        },
+        get animVal() {
+          return getClass();
+        },
+      };
+    },
   });
 }

@@ -1,6 +1,6 @@
 /**
  * Testing the Monaco Editor in Jest is hardly possible, therefore the editor will be tested in the E2E tests.
- * The JSDOM environment doesn't work with the different features of the Monaco Editor.
+ * The happy-dom environment doesn't work with the different features of the Monaco Editor.
  * Making it a requirement to mock every feature of the Monaco Editor.
  * This would defeat the purpose of the testing.
  * Only the loading and hook are tested here.
@@ -9,8 +9,10 @@
 import { act } from "react";
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router";
+import { loader } from "@monaco-editor/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
+import * as monaco from "monaco-editor";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import {
@@ -28,6 +30,10 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 import type { Mock } from "vitest";
+
+// Use the mocked monaco-editor, like the app uses its bundled copy, so the loader never fetches
+// its loader script from the CDN.
+loader.config({ monaco });
 
 const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
@@ -111,8 +117,7 @@ it("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads wit
     fireEvent.click(EditorToggle);
   });
 
-  // Expect the view to display a spinner.
-  expect(screen.getByTestId("loading-spinner")).toBeVisible();
+  expect(screen.getByTestId("JSON-Editor-Wrapper")).toBeVisible();
 
   server.close();
 });

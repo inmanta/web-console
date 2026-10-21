@@ -8,7 +8,7 @@ import { TextListFormInput } from "./TextListFormInput";
 describe("TextListInputField", () => {
   const handleClick = vi.fn();
 
-  // jsdom reports no document focus while focus moves between elements, which reads as a window blur.
+  // Keep the document focused, so a blur between elements isn't read as leaving the window.
   beforeEach(() => {
     vi.spyOn(document, "hasFocus").mockReturnValue(true);
   });
