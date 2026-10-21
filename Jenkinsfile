@@ -78,7 +78,7 @@ pipeline {
                             recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'web-console/coverage/cobertura-coverage.xml']], sourceCodeRetention: 'NEVER')
                         }
                     }
-                    archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**, coverage/**, test-results.txt', allowEmptyArchive: true, onlyIfSuccessful: false
+                    archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**, web-console/coverage/**, test-results.txt', allowEmptyArchive: true, onlyIfSuccessful: false
                 }
                 cleanup {
                     deleteDir()
