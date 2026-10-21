@@ -115,7 +115,7 @@
     "copy-to-clipboard": "^4.0.2",
     "dayjs": "^1.11.23",
     "file-saver": "^2.0.5",
-    "graphiql": "^5.2.4",
+    "graphiql": "^5.4.0",
     "graphql": "^17.0.2",
     "graphql-request": "^7.4.0",
     "highlight.js": "^11.12.0",
