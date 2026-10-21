@@ -1,5 +1,5 @@
 import { PrimaryBaseUrlManager } from "@/UI/Routing";
-import { useFetchHelpers } from "./useFetchHelpers";
+import { parseJsonResponse, useFetchHelpers } from "./useFetchHelpers";
 
 /**
  * Custom hook to perform a GET request.
@@ -29,9 +29,9 @@ export const useGet = (env: string, options?: { message?: string }) => {
         headers,
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "GET", path });
 
-      return response.json();
+      return parseJsonResponse(response);
     } catch (error) {
       throw error;
     }
@@ -67,9 +67,9 @@ export const useGetWithOptionalEnv = (env?: string, options?: { message?: string
         headers,
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "GET", path });
 
-      return response.json();
+      return parseJsonResponse(response);
     } catch (error) {
       throw error;
     }
@@ -104,9 +104,9 @@ export const useGetWithoutEnv = (options?: { message?: string }) => {
         headers,
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "GET", path });
 
-      return response.json();
+      return parseJsonResponse(response);
     } catch (error) {
       throw error;
     }
@@ -139,7 +139,7 @@ export const useGetZipWithoutEnv = (options?: { message?: string }) => {
         headers,
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "GET", path });
 
       return response.blob();
     } catch (error) {
@@ -176,13 +176,9 @@ export const usePost = (env: string, options?: { message?: string }) => {
         body: JSON.stringify(body),
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "POST", path });
 
-      const text = await response.text();
-
-      if (text) {
-        return JSON.parse(text);
-      }
+      return parseJsonResponse(response);
     } catch (error) {
       throw error;
     }
@@ -219,15 +215,9 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
         body: JSON.stringify(body),
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "POST", path });
 
-      const text = await response.text();
-
-      if (text) {
-        return JSON.parse(text);
-      }
-
-      return;
+      return parseJsonResponse(response);
     } catch (error) {
       throw error;
     }
@@ -262,13 +252,9 @@ export const usePut = (env: string, options?: { message?: string }) => {
         body: JSON.stringify(body),
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "PUT", path });
 
-      const text = await response.text();
-
-      if (text) {
-        return JSON.parse(text);
-      }
+      return parseJsonResponse(response);
     } catch (error) {
       throw error;
     }
@@ -305,13 +291,9 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
         body: JSON.stringify(body),
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "PUT", path });
 
-      const text = await response.text();
-
-      if (text) {
-        return JSON.parse(text);
-      }
+      return parseJsonResponse(response);
     } catch (error) {
       throw error;
     }
@@ -348,13 +330,9 @@ export const usePatch = (env: string, options?: { message?: string }) => {
         body: JSON.stringify(body),
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "PATCH", path });
 
-      const text = await response.text();
-
-      if (text) {
-        return JSON.parse(text);
-      }
+      return parseJsonResponse(response);
     } catch (error) {
       throw error;
     }
@@ -391,13 +369,9 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
         body: JSON.stringify(body),
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "PATCH", path });
 
-      const text = await response.text();
-
-      if (text) {
-        return JSON.parse(text);
-      }
+      return parseJsonResponse(response);
     } catch (error) {
       throw error;
     }
@@ -435,13 +409,9 @@ export const useDelete = (env: string, options?: { message?: string }) => {
         headers,
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "DELETE", path });
 
-      const text = await response.text();
-
-      if (text) {
-        return JSON.parse(text);
-      }
+      return parseJsonResponse(response);
     } catch (error) {
       throw error;
     }
@@ -475,12 +445,9 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
         headers,
       });
 
-      await handleErrors(response);
-      const text = await response.text();
+      await handleErrors(response, { method: "DELETE", path });
 
-      if (text) {
-        return JSON.parse(text);
-      }
+      return parseJsonResponse(response);
     } catch (error) {
       throw error;
     }

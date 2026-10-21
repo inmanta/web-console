@@ -2,17 +2,23 @@ import React from "react";
 import { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, graphql, http } from "msw";
 import { setupServer } from "msw/node";
+import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   EnvironmentPreviewResponse,
   GetEnvironmentPreviewKey,
 } from "@/Data/Queries/Slices/Environment";
 import { getServerStatusKey } from "@/Data/Queries/Slices/Server";
 import { MockedDependencyProvider, ServerStatus } from "@/Test";
+import { words } from "@/UI/words";
 import { Initializer } from "./Initializer";
 
 const queryBase = graphql.link("/api/v2/graphql");
+
+const accessPolicyMessage = "Request is not allowed by the access policy.";
+const proxyErrorPage = "<html><body><h1>502 Bad Gateway</h1></body></html>";
 
 function createQueryClient(): QueryClient {
   return new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -41,10 +47,10 @@ const environmentPreviewSuccess = () =>
     },
   });
 
-function setup(queryClient: QueryClient) {
+function setup(queryClient: QueryClient, authHelper: AuthContextInterface = defaultAuthContext) {
   return (
     <QueryClientProvider client={queryClient}>
-      <MockedDependencyProvider>
+      <MockedDependencyProvider authHelper={authHelper}>
         <Initializer>
           <div>shell-content</div>
         </Initializer>
@@ -104,6 +110,86 @@ describe("Initializer", () => {
 
     expect(await screen.findByRole("region", { name: "Initializer-Error" })).toBeVisible();
     expect(screen.queryByText("shell-content")).not.toBeInTheDocument();
+  });
+
+  test("GIVEN EnvironmentPreview is denied by the access policy THEN the error names the endpoint and offers Logout instead of Retry", async () => {
+    const logout = vi.fn();
+
+    server.use(
+      http.get("/api/v1/serverstatus", () => HttpResponse.json({ data: ServerStatus.withLsm })),
+      http.post("/api/v2/graphql", () =>
+        HttpResponse.json({ message: accessPolicyMessage }, { status: 403 })
+      )
+    );
+
+    render(setup(createQueryClient(), { ...defaultAuthContext, isDisabled: () => false, logout }));
+
+    expect(
+      await screen.findByText(
+        words("error.response.endpoint")(accessPolicyMessage, "POST", "/api/v2/graphql")
+      )
+    ).toBeVisible();
+    expect(screen.queryByRole("button", { name: words("retry") })).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: words("dashboard.logout") }));
+
+    expect(logout).toHaveBeenCalled();
+  });
+
+  test("GIVEN serverStatus is denied by the access policy THEN the error names the endpoint and offers Logout instead of Retry", async () => {
+    server.use(
+      http.get("/api/v1/serverstatus", () =>
+        HttpResponse.json({ message: accessPolicyMessage }, { status: 403 })
+      ),
+      queryBase.operation(environmentPreviewSuccess)
+    );
+
+    render(setup(createQueryClient(), { ...defaultAuthContext, isDisabled: () => false }));
+
+    expect(
+      await screen.findByText(
+        words("error.response.endpoint")(accessPolicyMessage, "GET", "/api/v1/serverstatus")
+      )
+    ).toBeVisible();
+    expect(screen.queryByRole("button", { name: words("retry") })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: words("dashboard.logout") })).toBeVisible();
+  });
+
+  test("GIVEN auth is disabled AND EnvironmentPreview returns a 403 THEN the error keeps Retry as the way out", async () => {
+    server.use(
+      http.get("/api/v1/serverstatus", () => HttpResponse.json({ data: ServerStatus.withLsm })),
+      http.post("/api/v2/graphql", () =>
+        HttpResponse.json({ message: accessPolicyMessage }, { status: 403 })
+      )
+    );
+
+    render(setup(createQueryClient()));
+
+    expect(
+      await screen.findByText(
+        words("error.response.endpoint")(accessPolicyMessage, "POST", "/api/v2/graphql")
+      )
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: words("retry") })).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: words("dashboard.logout") })
+    ).not.toBeInTheDocument();
+  });
+
+  test("GIVEN serverStatus returns a proxy's HTML error page THEN the error shows a status message instead of the HTML, with Retry and without Logout as auth is disabled", async () => {
+    server.use(
+      http.get("/api/v1/serverstatus", () => HttpResponse.html(proxyErrorPage, { status: 502 })),
+      queryBase.operation(environmentPreviewSuccess)
+    );
+
+    render(setup(createQueryClient()));
+
+    expect(await screen.findByText(words("error.response.unreachable")(502))).toBeVisible();
+    expect(screen.queryByText(/Bad Gateway/)).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: words("retry") })).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: words("dashboard.logout") })
+    ).not.toBeInTheDocument();
   });
 
   test("GIVEN EnvironmentPreview succeeded once THEN a later background poll failure keeps the shell rendered and signals the header status", async () => {

@@ -4,7 +4,12 @@ import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import { createCookie, removeCookie } from "@/Data/Common/CookieHelper";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { useFetchHelpers } from ".";
+import { words } from "@/UI/words";
+import { ApiEndpoint, parseJsonResponse, useFetchHelpers } from ".";
+
+const accessPolicyMessage = "Request is not allowed by the access policy.";
+const proxyErrorPage = "<html><body><h1>502 Bad Gateway</h1></body></html>";
+const graphqlEndpoint: ApiEndpoint = { method: "POST", path: "/api/v2/graphql" };
 
 const setup = () => {
   const wrapper = ({ children }) => (
@@ -82,5 +87,119 @@ describe("createHeaders", () => {
 
     expect(result.current.get("Authorization")).toEqual("Bearer token");
     removeCookie("inmanta_user");
+  });
+});
+
+describe("handleErrors", () => {
+  const renderHandleErrors = () =>
+    renderHook(() => useFetchHelpers().handleErrors, { wrapper: setup() }).result.current;
+
+  it("GIVEN a failed response with a JSON message THEN the error has that message and status", async () => {
+    const handleErrors = renderHandleErrors();
+    const response = new Response(JSON.stringify({ message: "Environment not found" }), {
+      status: 404,
+    });
+
+    await expect(
+      handleErrors(response, { method: "GET", path: "/api/v2/environment/abc" })
+    ).rejects.toMatchObject({ message: "Environment not found", status: 404 });
+  });
+
+  it("GIVEN a failed GraphQL response THEN the error has the first GraphQL error as message", async () => {
+    const handleErrors = renderHandleErrors();
+    const graphqlError = "Cannot query field 'noSuchField' on type 'Environment'.";
+    const response = new Response(
+      JSON.stringify({ data: { data: null, errors: [graphqlError], extensions: {} } }),
+      { status: 400 }
+    );
+
+    await expect(handleErrors(response, graphqlEndpoint)).rejects.toMatchObject({
+      message: graphqlError,
+      status: 400,
+    });
+  });
+
+  it("GIVEN a 403 THEN the message names the endpoint without its query string", async () => {
+    const handleErrors = renderHandleErrors();
+    const response = new Response(JSON.stringify({ message: accessPolicyMessage }), {
+      status: 403,
+    });
+
+    await expect(
+      handleErrors(response, { method: "GET", path: "/api/v2/resource?limit=20" })
+    ).rejects.toMatchObject({
+      message: words("error.response.endpoint")(accessPolicyMessage, "GET", "/api/v2/resource"),
+      status: 403,
+    });
+  });
+
+  it("GIVEN a 403 without a JSON message THEN the message is based on the status and leaves out the endpoint", async () => {
+    const handleErrors = renderHandleErrors();
+    const response = new Response("<html><body><h1>403 Forbidden</h1></body></html>", {
+      status: 403,
+      headers: { "Content-Type": "text/html" },
+    });
+
+    await expect(handleErrors(response, graphqlEndpoint)).rejects.toMatchObject({
+      message: words("error.response.unexpected")(403),
+      status: 403,
+    });
+  });
+
+  it("GIVEN a proxy's HTML error page THEN the message is based on the status instead of the HTML", async () => {
+    const handleErrors = renderHandleErrors();
+    const response = new Response(proxyErrorPage, {
+      status: 502,
+      headers: { "Content-Type": "text/html" },
+    });
+
+    await expect(handleErrors(response, graphqlEndpoint)).rejects.toMatchObject({
+      message: words("error.response.unreachable")(502),
+      status: 502,
+    });
+  });
+
+  it("GIVEN a failed response with a plain text body THEN the message says the response was unexpected", async () => {
+    const handleErrors = renderHandleErrors();
+    const response = new Response("Internal Server Error", { status: 500 });
+
+    await expect(handleErrors(response, graphqlEndpoint)).rejects.toMatchObject({
+      message: words("error.response.unexpected")(500),
+      status: 500,
+    });
+  });
+
+  it("GIVEN a 401 THEN the login flow starts", async () => {
+    const login = vi.spyOn(defaultAuthContext, "login");
+    const handleErrors = renderHandleErrors();
+    const response = new Response(JSON.stringify({ message: "Access token is expired" }), {
+      status: 401,
+    });
+
+    await expect(handleErrors(response, graphqlEndpoint)).rejects.toThrow();
+    expect(login).toHaveBeenCalled();
+  });
+
+  it("GIVEN a successful response THEN nothing is thrown", async () => {
+    const handleErrors = renderHandleErrors();
+
+    await expect(handleErrors(new Response("{}"), graphqlEndpoint)).resolves.toBeUndefined();
+  });
+});
+
+describe("parseJsonResponse", () => {
+  it("GIVEN a JSON body THEN it returns the parsed body", async () => {
+    await expect(parseJsonResponse(new Response('{"data":[]}'))).resolves.toEqual({ data: [] });
+  });
+
+  it("GIVEN an empty body THEN it returns undefined", async () => {
+    await expect(parseJsonResponse(new Response(""))).resolves.toBeUndefined();
+  });
+
+  it("GIVEN a proxy's HTML page with status 200 THEN it throws an unexpected response error", async () => {
+    await expect(parseJsonResponse(new Response("<html></html>"))).rejects.toMatchObject({
+      message: words("error.response.unexpected")(200),
+      status: 200,
+    });
   });
 });

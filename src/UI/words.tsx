@@ -105,6 +105,12 @@ const dict = {
     `The following error occured while communicating with the server: ${errorMessage}`,
   "error.authentication": (message: string) => `Authentication error: ${message}`,
   "error.authorizationFailed": "Authorization failed, please log in",
+  "error.response.unreachable": (status: number) =>
+    `The server can't be reached (status ${status}).`,
+  "error.response.unexpected": (status: number) =>
+    `The server sent an unexpected response (status ${status}).`,
+  "error.response.endpoint": (message: string, method: string, path: string) =>
+    `${message} (${method} ${path})`,
   "error.image.title": "Invalid image",
   "error.image.unknown": (name: string) => `Something went wrong with file ${name}`,
   "error.image.type": (name: string, type: string) =>

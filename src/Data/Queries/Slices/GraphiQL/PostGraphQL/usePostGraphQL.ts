@@ -48,7 +48,7 @@ export const usePostGraphQL = (
         body: JSON.stringify({ query, variables: parsedVariables }),
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "POST", path: "/api/v2/graphql" });
 
       const text = await response.text();
 
