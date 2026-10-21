@@ -69,7 +69,7 @@
     "@vitejs/plugin-react": "^6.0.3",
     "@vitest/coverage-v8": "^5.0.5",
     "@vitest/ui": "^5.0.5",
-    "cypress": "^16.1.0",
+    "cypress": "^16.2.0",
     "dependency-cruiser": "^18.6.0",
     "dotenv": "^17.4.2",
     "dotenv-cli": "^11.0.0",
