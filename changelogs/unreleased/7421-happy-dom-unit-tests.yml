@@ -1,4 +1,4 @@
-description: Run the unit tests on the faster happy-dom instead of jsdom.
+description: Unit tests now run on happy-dom instead of jsdom.
 issue-nr: 7421
 change-type: patch
 destination-branches: [master, iso9]
