@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump graphiql from 5.2.4 to 5.4.0
+destination-branches:
+- master
+- iso9
+sections: {}
