@@ -74,14 +74,21 @@ const isServiceCatalogUpdateFinished = (compileReports, catalogUpdateCompileId) 
   return true;
 };
 
+const SERVICE_CATALOG_UPDATE_MAX_POLLS = 180;
+
 /**
  * Polls the compile reports of an environment about once a second until the service catalog
- * update started by `export_service_definition` has finished. `catalogUpdateCompileId` is the
+ * update started by `export_service_definition` has finished, and fails after
+ * `SERVICE_CATALOG_UPDATE_MAX_POLLS` polls (about 3 minutes). `catalogUpdateCompileId` is the
  * compile id that endpoint returns.
  *
  * @example waitForServiceCatalogUpdate("60d7245a-f842-4af2-b296-3198c35d2b4d", "634b1a07-69c7-45e5-b797-2dd78a929625")
  */
-const waitForServiceCatalogUpdate = (environmentId, catalogUpdateCompileId) => {
+const waitForServiceCatalogUpdate = (
+  environmentId,
+  catalogUpdateCompileId,
+  remainingPolls = SERVICE_CATALOG_UPDATE_MAX_POLLS
+) => {
   cy.request({
     url: "/api/v2/compilereport?limit=10&sort=requested.desc",
     headers: { "X-Inmanta-Tid": environmentId },
@@ -90,8 +97,14 @@ const waitForServiceCatalogUpdate = (environmentId, catalogUpdateCompileId) => {
       return;
     }
 
+    if (remainingPolls <= 1) {
+      throw new Error(
+        `Service catalog update in environment ${environmentId} did not finish after ${SERVICE_CATALOG_UPDATE_MAX_POLLS} polls, waiting for compile ${catalogUpdateCompileId} and the compile that follows it`
+      );
+    }
+
     cy.wait(1000);
-    waitForServiceCatalogUpdate(environmentId, catalogUpdateCompileId);
+    waitForServiceCatalogUpdate(environmentId, catalogUpdateCompileId, remainingPolls - 1);
   });
 };
 
