@@ -60,41 +60,51 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                     }
                 }
                 stage('Build & Unit Test') {
-                    when {
-                        not { environment name: 'CHANGELOG_ONLY', value: 'true' }
-                    }
                     steps {
-                        dir('web-console'){
-                            sh '''
-                            yarn install --immutable;
-                            yarn lint;
-                            yarn format:check;
-                            yarn tsc;
-                            yarn check-circular-deps;
-                            yarn build:ci;
-                            yarn check-no-cdn;
-                            yarn test:ci'''
+                        script {
+                            if (env.CHANGELOG_ONLY == 'true') {
+                                echo 'Skipped: only change entries changed since the last successful build.'
+                                return
+                            }
+                            dir('web-console'){
+                                sh '''
+                                yarn install --immutable;
+                                yarn lint;
+                                yarn format:check;
+                                yarn tsc;
+                                yarn check-circular-deps;
+                                yarn build:ci;
+                                yarn check-no-cdn;
+                                yarn test:ci'''
+                            }
                         }
                     }
                 }
                 stage('Testing with cypress') {
-                    when {
-                        not { environment name: 'CHANGELOG_ONLY', value: 'true' }
-                    }
                     steps {
-                        timeout(time: 20, unit: 'MINUTES') {
-                            dir('web-console') {
-                                sh '''yarn build:ci;
-                                sudo systemctl restart docker && sudo docker network prune -f;
-                                yarn run install:orchestrator:ci;
-                                yarn run cypress-test:iso;'''
+                        script {
+                            if (env.CHANGELOG_ONLY == 'true') {
+                                echo 'Skipped: only change entries changed since the last successful build.'
+                                return
+                            }
+                            timeout(time: 20, unit: 'MINUTES') {
+                                dir('web-console') {
+                                    sh '''yarn build:ci;
+                                    sudo systemctl restart docker && sudo docker network prune -f;
+                                    yarn run install:orchestrator:ci;
+                                    yarn run cypress-test:iso;'''
+                                }
                             }
                         }
                     }
                     post {
                         always {
-                            dir('web-console') {
-                                sh'yarn run kill-server'
+                            script {
+                                if (env.CHANGELOG_ONLY != 'true') {
+                                    dir('web-console') {
+                                        sh'yarn run kill-server'
+                                    }
+                                }
                             }
                         }
                     }
