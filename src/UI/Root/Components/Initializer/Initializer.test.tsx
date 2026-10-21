@@ -112,7 +112,7 @@ describe("Initializer", () => {
     expect(screen.queryByText("shell-content")).not.toBeInTheDocument();
   });
 
-  test("GIVEN EnvironmentPreview is denied by the access policy THEN the error names the endpoint and offers Logout instead of Retry", async () => {
+  test("GIVEN EnvironmentPreview is denied by the access policy THEN the error names the endpoint and offers Retry and Logout", async () => {
     const logout = vi.fn();
 
     server.use(
@@ -129,14 +129,14 @@ describe("Initializer", () => {
         words("error.response.endpoint")(accessPolicyMessage, "POST", "/api/v2/graphql")
       )
     ).toBeVisible();
-    expect(screen.queryByRole("button", { name: words("retry") })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: words("retry") })).toBeVisible();
 
     await userEvent.click(screen.getByRole("button", { name: words("dashboard.logout") }));
 
     expect(logout).toHaveBeenCalled();
   });
 
-  test("GIVEN serverStatus is denied by the access policy THEN the error names the endpoint and offers Logout instead of Retry", async () => {
+  test("GIVEN serverStatus is denied by the access policy THEN the error names the endpoint and offers Retry and Logout", async () => {
     server.use(
       http.get("/api/v1/serverstatus", () =>
         HttpResponse.json({ message: accessPolicyMessage }, { status: 403 })
@@ -151,29 +151,8 @@ describe("Initializer", () => {
         words("error.response.endpoint")(accessPolicyMessage, "GET", "/api/v1/serverstatus")
       )
     ).toBeVisible();
-    expect(screen.queryByRole("button", { name: words("retry") })).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: words("dashboard.logout") })).toBeVisible();
-  });
-
-  test("GIVEN auth is disabled AND EnvironmentPreview returns a 403 THEN the error keeps Retry as the way out", async () => {
-    server.use(
-      http.get("/api/v1/serverstatus", () => HttpResponse.json({ data: ServerStatus.withLsm })),
-      http.post("/api/v2/graphql", () =>
-        HttpResponse.json({ message: accessPolicyMessage }, { status: 403 })
-      )
-    );
-
-    render(setup(createQueryClient()));
-
-    expect(
-      await screen.findByText(
-        words("error.response.endpoint")(accessPolicyMessage, "POST", "/api/v2/graphql")
-      )
-    ).toBeVisible();
     expect(screen.getByRole("button", { name: words("retry") })).toBeVisible();
-    expect(
-      screen.queryByRole("button", { name: words("dashboard.logout") })
-    ).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: words("dashboard.logout") })).toBeVisible();
   });
 
   test("GIVEN serverStatus returns a proxy's HTML error page THEN the error shows a status message instead of the HTML, with Retry and without Logout as auth is disabled", async () => {

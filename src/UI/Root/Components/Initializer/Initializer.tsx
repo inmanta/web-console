@@ -1,5 +1,4 @@
 import React, { useEffect, useContext, useState } from "react";
-import { CustomError } from "@/Data/Queries/Helpers";
 import { useGetEnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 import { useGetServerStatus } from "@/Data/Queries/Slices/Server";
 import { ErrorView } from "@/UI/Components/ErrorView";
@@ -21,7 +20,6 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
   const serverStatus = useGetServerStatus().useOneTime();
   const EnvironmentPreview = useGetEnvironmentPreview().useContinuous();
   const logout = authHelper.isDisabled() ? undefined : () => authHelper.logout();
-  const shouldOfferRetry = (error: CustomError) => error.status !== 403 || logout === undefined;
 
   useEffect(() => {
     if (serverStatus.data) {
@@ -58,14 +56,13 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
 
   // Only treat these as fatal if they have never loaded successfully. Once we have
   // last-known-good data, a later background refetch failure shouldn't blank the shell.
-  // The header with its Logout item isn't rendered yet. Retrying a 403 can't succeed, so Logout
-  // replaces Retry there, unless auth is disabled and Retry is the only way out.
+  // The header with its Logout item isn't rendered yet, so the error view offers Logout itself.
   if (serverStatus.isError && !isInitialized) {
     return (
       <ErrorView
         ariaLabel="Initializer-Error"
         message={serverStatus.error.message}
-        retry={shouldOfferRetry(serverStatus.error) ? serverStatus.refetch : undefined}
+        retry={serverStatus.refetch}
         logout={logout}
       />
     );
@@ -76,7 +73,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
       <ErrorView
         ariaLabel="Initializer-Error"
         message={EnvironmentPreview.error.message}
-        retry={shouldOfferRetry(EnvironmentPreview.error) ? EnvironmentPreview.refetch : undefined}
+        retry={EnvironmentPreview.refetch}
         logout={logout}
       />
     );

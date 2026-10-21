@@ -41,11 +41,13 @@ const getServerMessage = (bodyText: string): string | undefined => {
     const body = JSON.parse(bodyText);
     const firstGraphQLError = body?.data?.errors?.[0];
 
-    if (typeof body?.message === "string") {
+    if (typeof body?.message === "string" && body.message !== "") {
       return body.message;
     }
 
-    return typeof firstGraphQLError === "string" ? firstGraphQLError : undefined;
+    return typeof firstGraphQLError === "string" && firstGraphQLError !== ""
+      ? firstGraphQLError
+      : undefined;
   } catch {
     return undefined;
   }

@@ -159,6 +159,16 @@ describe("handleErrors", () => {
     });
   });
 
+  it("GIVEN a failed response with an empty JSON message THEN the message is based on the status", async () => {
+    const handleErrors = renderHandleErrors();
+    const response = new Response(JSON.stringify({ message: "" }), { status: 500 });
+
+    await expect(handleErrors(response, graphqlEndpoint)).rejects.toMatchObject({
+      message: words("error.response.unexpected")(500),
+      status: 500,
+    });
+  });
+
   it("GIVEN a failed response with a plain text body THEN the message says the response was unexpected", async () => {
     const handleErrors = renderHandleErrors();
     const response = new Response("Internal Server Error", { status: 500 });
