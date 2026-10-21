@@ -1,5 +1,5 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -61,7 +61,7 @@ describe("DeleteModal ", () => {
 
     await userEvent.click(noButton);
 
-    expect(screen.queryByText(words("yes"))).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText(words("yes"))).not.toBeInTheDocument());
   });
 
   it("Sends request when submitted", async () => {
