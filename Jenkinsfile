@@ -1,3 +1,6 @@
+// Coverage is only recorded for master and iso branches, other branch builds skip it.
+def vitestCoverageArgs = env.BRANCH_NAME ==~ /master|iso[0-9]+/ ? '' : '--coverage.enabled=false'
+
 pipeline {
     agent none
 
@@ -35,7 +38,7 @@ pipeline {
                         deleteDir()
                         dir('web-console'){
                             checkout scm
-                            sh '''
+                            sh """
                             yarn install --immutable;
                             yarn lint;
                             yarn format:check;
@@ -43,7 +46,7 @@ pipeline {
                             yarn check-circular-deps;
                             yarn build:ci;
                             yarn check-no-cdn;
-                            yarn test:ci'''
+                            yarn test:ci ${vitestCoverageArgs}"""
                         }
                     }
                 }
@@ -70,7 +73,11 @@ pipeline {
             post {
                 always {
                     junit 'web-console/cypress/reports/junit/*.xml'
-                    recordCoverage(tools: [[parser: 'COBERTURA']], sourceCodeRetention: 'NEVER')
+                    script {
+                        if (fileExists('web-console/coverage/cobertura-coverage.xml')) {
+                            recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'web-console/coverage/cobertura-coverage.xml']], sourceCodeRetention: 'NEVER')
+                        }
+                    }
                     archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**, coverage/**, test-results.txt', allowEmptyArchive: true, onlyIfSuccessful: false
                 }
                 cleanup {
