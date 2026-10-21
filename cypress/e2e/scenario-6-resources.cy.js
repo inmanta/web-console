@@ -637,6 +637,17 @@ describe("Scenario 6 : Resources", () => {
               clientY: startY,
             })
             .wait(1000)
+            // PatternFly's DragDropSort only activates the drag once the pointer has moved 8px,
+            // and dnd-kit ignores the coordinates of the move that crosses that threshold.
+            // Nudge past it first, so the move below is applied to an active drag.
+            .trigger("pointermove", {
+              force: true,
+              isPrimary: true,
+              button: 0,
+              clientX: startX,
+              clientY: startY - 10,
+            })
+            .wait(1000)
             .trigger("pointermove", {
               force: true,
               isPrimary: true,
