@@ -5,7 +5,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as wordsModule from "@/UI/words";
-import { routes } from "@/routes";
+import { routes } from "@/appFeatures";
 import { ResourceRow } from "./ResourceTableRow";
 import { ResourcesTable } from "./ResourcesTable";
 

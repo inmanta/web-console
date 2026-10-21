@@ -1,14 +1,19 @@
 import { act } from "react";
+import { useLocation } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider } from "@/Test";
+import { FlatEnvironment } from "@/Core";
+import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { SearchHelper } from "@/UI/Routing";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
+import { routes } from "@/appFeatures";
 import * as DesiredStateVersions from "@S/DesiredState/Data/Mock";
 import { Page } from "./Page";
 
@@ -19,7 +24,20 @@ const axe = configureAxe({
   },
 });
 
-function setup() {
+const searchHelper = new SearchHelper();
+
+/**
+ * Shows the current path and parsed search, to assert where a link navigated to.
+ */
+const LocationDisplay: React.FC = () => {
+  const { pathname, search } = useLocation();
+
+  return (
+    <div data-testid="location">{JSON.stringify({ pathname, ...searchHelper.parse(search) })}</div>
+  );
+};
+
+function setup(env?: FlatEnvironment) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -31,8 +49,9 @@ function setup() {
   const component = (
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
-        <TestMemoryRouter>
-          <MockedDependencyProvider>
+        <TestMemoryRouter initialEntries={[`/?env=${EnvironmentDetails.env.id}`]}>
+          <MockedDependencyProvider env={env}>
+            <LocationDisplay />
             <Page />
           </MockedDependencyProvider>
         </TestMemoryRouter>
@@ -509,6 +528,77 @@ describe("DesiredStatesView", () => {
     expect(await screen.findByText("something happened")).toBeVisible();
   });
 
+  describe("Dry run", () => {
+    const retiredIndex = DesiredStateVersions.response.data.findIndex(
+      ({ status }) => status === "retired"
+    );
+    const retiredVersion = DesiredStateVersions.response.data[retiredIndex].version;
+    const dryRunId = "dry-run-1";
+
+    const openActions = async (rowIndex: number) => {
+      const rows = await screen.findAllByRole("row", { name: "DesiredStates Table Row" });
+
+      await userEvent.click(within(rows[rowIndex]).getByRole("button", { name: "actions-toggle" }));
+    };
+
+    it("Given a retired version When starting a dry run Then it runs on that version and its toast links to the report", async () => {
+      let dryRunVersion: string | undefined;
+
+      server.use(
+        http.get("/api/v2/desiredstate", () => HttpResponse.json(DesiredStateVersions.response)),
+        http.post("/api/v2/dryrun/:version", ({ params }) => {
+          dryRunVersion = String(params.version);
+
+          return HttpResponse.json({ data: dryRunId });
+        })
+      );
+
+      const { component } = setup();
+
+      render(component);
+
+      await openActions(retiredIndex);
+      await userEvent.click(
+        screen.getByRole("menuitem", { name: words("resources.resourceActions.dryRun") })
+      );
+
+      const viewReport = await screen.findByRole("button", {
+        name: words("desiredState.complianceCheck.report.view"),
+      });
+
+      expect(dryRunVersion).toBe(String(retiredVersion));
+      expect(screen.getByTestId("ToastAlert")).toHaveTextContent(
+        words("desiredState.complianceCheck.report.started")
+      );
+
+      await userEvent.click(viewReport);
+
+      expect(JSON.parse(screen.getByTestId("location").textContent ?? "{}")).toEqual({
+        pathname: PrimaryRouteManager("", routes).getUrl("ComplianceCheck", {
+          version: String(retiredVersion),
+        }),
+        env: EnvironmentDetails.env.id,
+        state: { ComplianceCheck: { report: dryRunId } },
+      });
+    });
+
+    it("Given a halted environment Then the dry run is disabled", async () => {
+      server.use(
+        http.get("/api/v2/desiredstate", () => HttpResponse.json(DesiredStateVersions.response))
+      );
+
+      const { component } = setup(EnvironmentDetails.halted);
+
+      render(component);
+
+      await openActions(retiredIndex);
+
+      expect(
+        screen.getByRole("menuitem", { name: words("resources.resourceActions.dryRun") })
+      ).toBeDisabled();
+    });
+  });
+
   it("DesiredStatesView shows CompileWidget", async () => {
     server.use(
       http.get("/api/v2/desiredstate", async () => {
@@ -583,7 +673,7 @@ describe("DesiredStatesView", () => {
 
       await userEvent.click(noButton);
 
-      expect(screen.queryByText("Yes")).not.toBeInTheDocument();
+      await waitFor(() => expect(screen.queryByText("Yes")).not.toBeInTheDocument());
 
       //close by close button scenario
       await userEvent.click(
@@ -598,7 +688,7 @@ describe("DesiredStatesView", () => {
 
       await userEvent.click(closeButton);
 
-      expect(screen.queryByText("Yes")).not.toBeInTheDocument();
+      await waitFor(() => expect(screen.queryByText("Yes")).not.toBeInTheDocument());
 
       await act(async () => {
         const results = await axe(document.body);
@@ -642,7 +732,7 @@ describe("DesiredStatesView", () => {
 
       await userEvent.click(yesButton);
 
-      expect(screen.queryByText("No")).not.toBeInTheDocument();
+      await waitFor(() => expect(screen.queryByText("No")).not.toBeInTheDocument());
 
       //delete request is fired and it will retrigger the get request,
       expect(DELETERequestsFired).toBe(1);

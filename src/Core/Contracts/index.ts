@@ -1,6 +1,7 @@
 export * from "./ArchiveHelper";
 export * from "./BaseUrlManager";
 export * from "./OrchestratorProvider";
+export * from "./FeatureModule";
 export * from "./FileManager";
 export * from "./Formatter";
 export * from "./PageManager";

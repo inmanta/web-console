@@ -17,7 +17,7 @@ import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import { routes } from "@/routes";
+import { routes } from "@/appFeatures";
 import * as DesiredStatesMock from "@S/DesiredState/Data/Mock";
 import { historyData } from "@S/ServiceInstanceDetails/Test/mockData";
 import { ResourceActionScope } from "./ResourceActionConfirmModal";
