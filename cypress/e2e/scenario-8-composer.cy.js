@@ -7,7 +7,7 @@
  */
 import environmentHelpers from "../support/environmentHelpers.js";
 
-const { checkStatusCompile, selectEnvironment } = environmentHelpers;
+const { selectEnvironment, waitForServiceCatalogUpdate } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
 const PXSDC_ENV_NAME = "Test PXSDC";
@@ -63,6 +63,9 @@ if (isIso) {
       cy.get("button").contains("Submit").click();
 
       // Step 2: Update service catalog and wait until backend compile has completed.
+      cy.intercept("POST", "**/lsm/v1/exporter/export_service_definition").as(
+        "exportServiceDefinition"
+      );
       cy.get("button").contains("Update Service Catalog").click();
 
       cy.get('[data-testid="dialog-submit"]').click();
@@ -71,7 +74,9 @@ if (isIso) {
         const location = new URL(url);
         const id = location.searchParams.get("env");
 
-        return checkStatusCompile(id);
+        cy.wait("@exportServiceDefinition").then(({ response }) => {
+          waitForServiceCatalogUpdate(id, response.body.data);
+        });
       });
 
       cy.get('[aria-label="ServiceCatalog-Success"]', {
