@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump prettier from 3.9.6 to 3.9.10
+destination-branches:
+- master
+- iso9
+sections: {}
