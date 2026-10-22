@@ -164,7 +164,7 @@ export default [
         "error",
         {
           selector:
-            "CallExpression[callee.name='words']:not(:function CallExpression, ClassBody CallExpression)",
+            "CallExpression[callee.name='words']:not(:function CallExpression, PropertyDefinition[static=false] CallExpression)",
           message:
             "Don't call words() while the module loads: its messages may not be registered yet. Call it in a function, e.g. turn the constant into a getter.",
         },

@@ -164,8 +164,10 @@ export const OrchestrationEngineCard: React.FC = () => {
     filter: { requested: requestedRange, status: CompileStatus.failed },
   }).useContinuous();
 
-  const activeTab = getTabs().find((candidate) => candidate.key === tab) ?? getTabs()[0];
-  const activeRangeLabel = getRangeOptions().find((option) => option.value === days)?.label ?? "";
+  const tabs = getTabs();
+  const rangeOptions = getRangeOptions();
+  const activeTab = tabs.find((candidate) => candidate.key === tab) ?? tabs[0];
+  const activeRangeLabel = rangeOptions.find((option) => option.value === days)?.label ?? "";
   const trend = getTrendSeries(metrics, tab);
   // Tracks failures across the whole selected date range, unlike deriveCompilesHealth (latest
   // single report), so it doesn't reuse that derivation - but it does route through the same
@@ -200,7 +202,7 @@ export const OrchestrationEngineCard: React.FC = () => {
             )}
           >
             <DropdownList>
-              {getRangeOptions().map((option) => (
+              {rangeOptions.map((option) => (
                 <DropdownItem
                   key={option.value}
                   isSelected={option.value === days}
@@ -225,7 +227,7 @@ export const OrchestrationEngineCard: React.FC = () => {
               hasNoOffset: true,
               actions: (
                 <ToggleGroup aria-label={words("dashboard.orchestrationEngine.title")}>
-                  {getTabs().map((tabConfig) => (
+                  {tabs.map((tabConfig) => (
                     <ToggleGroupItem
                       key={tabConfig.key}
                       text={tabConfig.label}

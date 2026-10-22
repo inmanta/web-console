@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Table, Th, Thead, Tr } from "@patternfly/react-table";
-import { Sort, words } from "@/Core";
+import { Sort, WordKey, words } from "@/Core";
 import { Order } from "@/Core/Domain/Sort";
 import { useClassifiedRows } from "@/UI/Components/AttributeList";
-import { ColumnHead } from "@/UI/Presenters";
 import { Fact } from "@S/Facts/Core/Domain";
 import { FactsRow } from "./FactsRow";
 
@@ -13,17 +12,17 @@ interface Props {
   facts: FactRow[];
 }
 
-const getFactsColumnHeads = (): ColumnHead[] => [
-  { apiName: "name", displayName: words("name") },
-  { apiName: "updated", displayName: words("lastUpdated") },
-  { apiName: "value", displayName: words("value") },
-];
+const FACTS_COLUMNS = [
+  { apiName: "name", labelKey: "name" },
+  { apiName: "updated", labelKey: "lastUpdated" },
+  { apiName: "value", labelKey: "value" },
+] as const satisfies readonly { apiName: string; labelKey: WordKey }[];
 
 export const FactsTable: React.FC<Props> = ({ facts }) => {
   const [sort, setSort] = useState<Sort.Type>({ name: "name", order: "asc" });
   const [rows, setRows] = useState(sortFactRows(facts, sort.name, sort.order));
   const { classifiedRows, hasExpandableRows } = useClassifiedRows(rows);
-  const numberOfColumns = getFactsColumnHeads().length + (hasExpandableRows ? 1 : 0);
+  const numberOfColumns = FACTS_COLUMNS.length + (hasExpandableRows ? 1 : 0);
   const onSort = (_event, index, direction) => {
     const updatedSortColumn = indexToColumnName(index);
 
@@ -43,9 +42,9 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
       <Thead>
         <Tr>
           {hasExpandableRows && <Th screenReaderText="Row expansion" />}
-          {getFactsColumnHeads().map(({ displayName }, idx) => (
+          {FACTS_COLUMNS.map(({ apiName, labelKey }, idx) => (
             <Th
-              key={displayName}
+              key={apiName}
               sort={{
                 sortBy: {
                   index: columnNameToIndex(sort.name),
@@ -56,7 +55,7 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
                 onSort,
               }}
             >
-              {displayName}
+              {words(labelKey)}
             </Th>
           ))}
         </Tr>
@@ -76,13 +75,13 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
 };
 
 function indexToColumnName(index: number): string {
-  const columns = getFactsColumnHeads().map((head) => head.apiName);
+  const columns = FACTS_COLUMNS.map((column) => column.apiName);
 
   return columns[index];
 }
 
 function columnNameToIndex(columnName: string): number {
-  const columns = getFactsColumnHeads().map((head) => head.apiName);
+  const columns: string[] = FACTS_COLUMNS.map((column) => column.apiName);
 
   return columns.indexOf(columnName);
 }
