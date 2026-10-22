@@ -7,6 +7,7 @@ import eslintPluginReact from "eslint-plugin-react";
 import eslintPluginReactHooks from "eslint-plugin-react-hooks";
 import testingLibrary from "eslint-plugin-testing-library";
 import tseslint from "typescript-eslint";
+import { basePath, importBoundaryZones } from "./eslint.layers.js";
 
 export default [
   {
@@ -169,6 +170,25 @@ export default [
             "Don't call words() while the module loads: its messages may not be registered yet. Call it in a function, e.g. turn the constant into a getter.",
         },
       ],
+    },
+  },
+  {
+    // The layer rules of the composition architecture (#7451). Tests are left out until the test
+    // helpers move into their own package (#7462).
+    files: ["src/**/*.ts", "src/**/*.tsx"],
+    ignores: [
+      "**/*.test.ts",
+      "**/*.test.tsx",
+      "**/*.spec.ts",
+      "**/*.spec.tsx",
+      "src/Test/**",
+      "src/Slices/*/Test/**",
+      "src/**/Mock.ts",
+      "src/**/Mock/**",
+      "src/**/Spec/**",
+    ],
+    rules: {
+      "import/no-restricted-paths": ["error", { basePath, zones: importBoundaryZones }],
     },
   },
   {

@@ -1,0 +1,5 @@
+description: Enforce the import boundaries between the web-console core layer, shared components, the shell and the features with lint rules.
+issue-nr: 7460
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}
