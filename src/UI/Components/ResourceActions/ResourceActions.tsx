@@ -10,21 +10,32 @@ import {
   MenuToggle,
   MenuToggleAction,
   MenuToggleElement,
+  ModalVariant,
   Tooltip,
 } from "@patternfly/react-core";
-import { WrenchIcon, PlayIcon } from "@patternfly/react-icons";
+import { EyeIcon, WrenchIcon, PlayIcon } from "@patternfly/react-icons";
+import { ResourceActionFilter } from "@/Core";
 import { NonEmptyArray } from "@/Core/Language";
-import { DeployAgentsAction, ResourceActionFilter, useDeployFiltered } from "@/Data/Queries";
+import { DeployAgentsAction } from "@/Data/Queries/Slices/Agents";
+import {
+  createDryRunContext,
+  useDeployFiltered,
+  useDryRunFiltered,
+} from "@/Data/Queries/Slices/Resource";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
+import { ResourceActionInstance } from "./types";
+import { useNotifyDryRunStarted } from "./useNotifyDryRunStarted";
 
 const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 
-type ActionKey = keyof typeof DeployAgentsAction;
+type DeployKey = keyof typeof DeployAgentsAction;
+
+type ActionKey = DeployKey | "dryRun";
 
 /**
  * The tooltip text per action, so each page can describe what the action does in its own context.
@@ -32,7 +43,8 @@ type ActionKey = keyof typeof DeployAgentsAction;
 type ResourceActionTooltips = Record<ActionKey, string>;
 
 interface ActionConfig {
-  icon: React.ReactNode;
+  // PatternFly icons all share one component type.
+  IconComponent: typeof PlayIcon;
   label: string;
   hint: string;
   tooltip: string;
@@ -41,6 +53,8 @@ interface ActionConfig {
 interface BaseProps {
   tooltips: ResourceActionTooltips;
   disabledReason?: string;
+  instance?: ResourceActionInstance;
+  instanceLabels?: Record<string, string>;
 }
 
 type Props =
@@ -50,68 +64,88 @@ type Props =
 /**
  * ResourceActions is the shared split button for running an action on a set of resources.
  *
- * Deploy is the default action; the caret adds Repair. Both hit the deploy_filtered endpoint, so one
- * control serves a single resource, the active filter, a whole environment or a service instance. It
+ * Deploy is the default action; the caret adds Repair and Dry run. Deploy and Repair hit the
+ * deploy_filtered endpoint and Dry run hits dryrun_filtered, so one control serves a single resource,
+ * the active filter, a whole environment or a service instance. Dry run always opens the dialog, to
+ * select the version to preview against, and its toast links to the dry run's report when the app
+ * has the Compliance Check page. A dry run
+ * stores the labels of the service instances its filter names, so its report shows them. It
  * disables itself while the environment is halted.
  *
  * @Props {Props} - The props of the component
- *  @prop {ResourceActionFilter} filter - Runs immediately against this filter (mutually exclusive with scopes)
+ *  @prop {ResourceActionFilter} filter - Deploy and Repair run immediately against this filter (mutually exclusive with scopes)
  *  @prop {NonEmptyArray<ResourceActionScope>} scopes - Opens a confirm dialog offering these scopes (first is the default)
- *  @prop {ResourceActionTooltips} tooltips - The tooltip text for Deploy and Repair on this page
+ *  @prop {ResourceActionTooltips} tooltips - The tooltip text for each action on this page
  *  @prop {string} [disabledReason] - When set, disables the control and shows this as its tooltip
+ *  @prop {ResourceActionInstance} [instance] - The service instance the scopes belong to; the dialog names
+ *    it and a dry run can select one of its own versions
+ *  @prop {Record<string, string>} [instanceLabels] - The labels of the service instances the filters
+ *    may name, keyed by instance id, to store with a dry run
  *
  * @returns {React.FC<Props>} The rendered split button
  */
 export const ResourceActions: React.FC<Props> = (props) => {
-  const { disabledReason, tooltips } = props;
+  const { disabledReason, tooltips, instance, instanceLabels } = props;
   const [isOpen, setIsOpen] = useState(false);
   const { environmentHandler } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
   const isHalted = environmentHandler.useIsHalted();
   const { notifySuccess, notifyError } = useAppAlert();
+  const notifyDryRunStarted = useNotifyDryRunStarted();
 
   const deploy = useDeployFiltered();
+  const dryRun = useDryRunFiltered();
 
   const tooltip = isHalted ? words("environment.halt.tooltip") : disabledReason;
-  const isDisabled = deploy.isPending || Boolean(tooltip);
+  const isDisabled = deploy.isPending || dryRun.isPending || Boolean(tooltip);
 
   const actions: Record<ActionKey, ActionConfig> = {
     deploy: {
-      icon: (
-        <Icon size="sm">
-          <PlayIcon style={iconStyle} />
-        </Icon>
-      ),
+      IconComponent: PlayIcon,
       label: words("resources.compoundStateSummary.deploy"),
       hint: words("resources.resourceActions.deploy.hint"),
       tooltip: tooltips.deploy,
     },
     repair: {
-      icon: (
-        <Icon size="sm">
-          <WrenchIcon style={iconStyle} />
-        </Icon>
-      ),
+      IconComponent: WrenchIcon,
       label: words("resources.compoundStateSummary.repair"),
       hint: words("resources.resourceActions.repair.hint"),
       tooltip: tooltips.repair,
     },
+    dryRun: {
+      IconComponent: EyeIcon,
+      label: words("resources.resourceActions.dryRun"),
+      hint: words("resources.resourceActions.dryRun.hint"),
+      tooltip: tooltips.dryRun,
+    },
   };
 
   const run = (key: ActionKey, scopeFilter: ResourceActionFilter) => {
-    const method = DeployAgentsAction[key];
-    const { label } = actions[key];
+    const { label: actionLabel } = actions[key];
+    const onError = (error: Error) =>
+      notifyError({
+        title: words("resources.resourceActions.failed")(actionLabel),
+        message: error.message,
+      });
+
+    if (key === "dryRun") {
+      dryRun.mutate(
+        { filter: scopeFilter, context: createDryRunContext(scopeFilter, instanceLabels ?? {}) },
+        {
+          onSuccess: notifyDryRunStarted,
+          onError,
+        }
+      );
+
+      return;
+    }
 
     deploy.mutate(
-      { method, filter: scopeFilter },
+      { method: DeployAgentsAction[key], filter: scopeFilter },
       {
         onSuccess: () =>
-          notifySuccess({ title: words("resources.resourceActions.success")(label) }),
-        onError: (error) =>
-          notifyError({
-            title: words("resources.resourceActions.failed")(label),
-            message: error.message,
-          }),
+          notifySuccess({ title: words("resources.resourceActions.success")(actionLabel) }),
+        onError,
       }
     );
   };
@@ -119,21 +153,55 @@ export const ResourceActions: React.FC<Props> = (props) => {
   const onAction = (key: ActionKey) => {
     setIsOpen(false);
 
-    if (!props.scopes) {
+    const isDryRun = key === "dryRun";
+
+    if (!props.scopes && !isDryRun) {
       run(key, props.filter);
 
       return;
     }
 
-    const { scopes } = props;
+    const { IconComponent, label: actionLabel } = actions[key];
+    const scopes: NonEmptyArray<ResourceActionScope> = props.scopes
+      ? props.scopes
+      : [{ id: "resource", title: actionLabel, filter: props.filter }];
+
+    const title = () => {
+      if (instance) {
+        return words("resources.resourceActions.confirm.titleFor")(actionLabel, instance.label);
+      }
+      if (props.scopes) {
+        return words("resources.resourceActions.confirm.title")(actionLabel);
+      }
+
+      return words("resources.resourceActions.confirm.single.title")(actionLabel);
+    };
+
+    const description = () => {
+      if (!isDryRun) {
+        return words("resources.resourceActions.confirm.description");
+      }
+      if (instance) {
+        return words("resources.resourceActions.confirm.dryRun.instance.description");
+      }
+
+      return words("resources.resourceActions.confirm.dryRun.description");
+    };
 
     triggerModal({
-      title: words("resources.resourceActions.confirm.title")(actions[key].label),
-      description: words("resources.resourceActions.confirm.description"),
+      title: title(),
+      description: description(),
+      // A dry run's version select toggle holds a status, two long version numbers and a date,
+      // which only fit on one line in the wider dialog.
+      variant: isDryRun ? ModalVariant.medium : ModalVariant.small,
+      iconVariant: IconComponent,
       content: (
         <ResourceActionConfirmModal
-          actionLabel={actions[key].label}
+          actionLabel={actionLabel}
           scopes={scopes}
+          showScopes={Boolean(props.scopes)}
+          showVersionField={isDryRun}
+          instance={instance}
           onConfirm={(scopeFilter) => {
             closeModal();
             run(key, scopeFilter);
@@ -186,12 +254,16 @@ export const ResourceActions: React.FC<Props> = (props) => {
     >
       <DropdownList>
         {(Object.keys(actions) as ActionKey[]).map((key) => {
-          const { icon, label, hint, tooltip: itemTooltip } = actions[key];
+          const { IconComponent, label, hint, tooltip: itemTooltip } = actions[key];
 
           return (
             <DropdownItem
               key={key}
-              icon={icon}
+              icon={
+                <Icon size="sm">
+                  <IconComponent style={iconStyle} />
+                </Icon>
+              }
               onClick={() => onAction(key)}
               tooltipProps={{ content: itemTooltip }}
             >

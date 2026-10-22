@@ -1,17 +1,14 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { usePaginatedTable } from "@/Data";
-import { useGetAgents } from "@/Data/Queries";
+import { usePaginatedTable } from "@/Data/Common";
+import { useGetAgents } from "@/Data/Queries/Slices/Agents";
 import { Filter } from "@/Slices/Agents/Core/Types";
-import {
-  EmptyView,
-  FilterDrawer,
-  PageContainer,
-  PaginationWidget,
-  LoadingView,
-  ErrorView,
-  countActiveFilters,
-} from "@/UI/Components";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
+import { PaginationWidget } from "@/UI/Components/PaginationWidget";
 import { words } from "@/UI/words";
 import { AgentsTableControls } from "./AgentsTableControls";
 import { AgentsActionsButton } from "./Components";

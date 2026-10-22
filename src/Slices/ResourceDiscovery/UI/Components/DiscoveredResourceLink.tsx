@@ -1,7 +1,7 @@
 import React from "react";
 import { ButtonVariant } from "@patternfly/react-core";
-import { words } from "@/UI";
-import { ResourceLink } from "@/UI/Components";
+import { ResourceLink } from "@/UI/Components/ResourceLink";
+import { words } from "@/UI/words";
 
 type ResourceType = "managed" | "discovery";
 

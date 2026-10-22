@@ -1,7 +1,7 @@
 import React from "react";
 import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
-import { NotificationFilter } from "@/Data/Queries";
-import { SingleTextSelect } from "@/UI/Components";
+import { NotificationFilter } from "@/Data/Queries/Slices/Notification";
+import { SingleTextSelect } from "@/UI/Components/SingleTextSelect";
 import { words } from "@/UI/words";
 
 type Read = "read" | "unread";

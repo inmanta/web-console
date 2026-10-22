@@ -1,19 +1,31 @@
 import React from "react";
-import { FlatEnvironment } from "@/Core";
-import { AuthContextInterface, PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
-import { EnvironmentPreview } from "@/Data/Queries";
-import { EnvironmentDetails } from "@/Test";
+import { FeatureModule, FlatEnvironment, RouteFactory } from "@/Core";
+import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth";
+import { PrimaryArchiveHelper } from "@/Data/Common";
+import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
+import { EnvironmentDetails } from "@/Test/Data";
 import { MockEnvironmentHandler, MockOrchestratorProvider, MockFileManager } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
 import { AppAlertProvider } from "@/UI/Root/Components/AppAlertProvider";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { UrlManagerImpl } from "@/UI/Utils";
+import { features as appFeatures, getFeatureRoutes } from "@/appFeatures";
 
 interface Props {
   env?: FlatEnvironment;
   authHelper?: AuthContextInterface;
   isCompiling?: boolean;
   allEnvironments?: EnvironmentPreview[];
+
+  /**
+   * The features of the app. Defaults to every feature the app ships.
+   */
+  features?: FeatureModule[];
+
+  /**
+   * The registered routes. Defaults to the routes of `features`.
+   */
+  routes?: RouteFactory[];
 }
 
 /**
@@ -26,10 +38,12 @@ export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> 
   authHelper = defaultAuthContext,
   isCompiling = false,
   allEnvironments = [],
+  features = appFeatures,
+  routes = getFeatureRoutes(features),
   children,
 }) => {
   const baseUrl = "";
-  const routeManager = PrimaryRouteManager(baseUrl);
+  const routeManager = PrimaryRouteManager(baseUrl, routes);
   const environmentHandler = MockEnvironmentHandler(env, isCompiling, allEnvironments);
   const orchestratorProvider = new MockOrchestratorProvider();
   const urlManager = new UrlManagerImpl(orchestratorProvider, baseUrl);
@@ -45,6 +59,7 @@ export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> 
         environmentHandler,
         archiveHelper,
         authHelper,
+        features,
       }}
     >
       <AppAlertProvider>{children}</AppAlertProvider>

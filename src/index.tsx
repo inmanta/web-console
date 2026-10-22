@@ -6,12 +6,14 @@ import { Flex } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as monaco from "monaco-editor";
 import { createRoot } from "react-dom/client";
-import { Root } from "@/UI/Root";
+import { QueryControlProvider } from "@/Data/Queries/Helpers";
+import { createRootRoutes, Root } from "@/UI/Root";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import { AuthProvider } from "./Data/Auth/AuthProvider";
-import { QueryControlProvider } from "./Data/Queries";
 import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
+import { features } from "./appFeatures";
 import { createMonacoWorker } from "./monaco-workers";
 
 // Monaco worker configuration. Uses getWorker (returns a Worker instance) rather than
@@ -93,20 +95,29 @@ root.render(
   <ErrorBoundary>
     <QueryControlProvider>
       <QueryClientProvider client={queryClient}>
-        <CustomRouter>
-          <AuthProvider config={globalThis && globalThis.auth}>
-            <Flex
-              flexWrap={{ default: "nowrap" }}
-              spaceItems={{ default: "spaceItemsNone" }}
-              direction={{ default: "column" }}
-              style={{ height: "100%" }}
-            >
-              <Injector>
-                <Root />
-              </Injector>
-            </Flex>
-          </AuthProvider>
-        </CustomRouter>
+        <CustomRouter
+          layout={
+            <AuthProvider config={globalThis && globalThis.auth}>
+              <Flex
+                flexWrap={{ default: "nowrap" }}
+                spaceItems={{ default: "spaceItemsNone" }}
+                direction={{ default: "column" }}
+                style={{ height: "100%" }}
+              >
+                <Injector>
+                  <Root />
+                </Injector>
+              </Flex>
+            </AuthProvider>
+          }
+          routes={createRootRoutes(
+            new PrimaryBaseUrlManager(
+              globalThis.location.origin,
+              globalThis.location.pathname
+            ).getBasePathname(),
+            features
+          )}
+        />
       </QueryClientProvider>
     </QueryControlProvider>
   </ErrorBoundary>

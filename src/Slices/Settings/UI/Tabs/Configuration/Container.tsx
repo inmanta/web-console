@@ -2,8 +2,8 @@ import React from "react";
 import { AlertVariant, Stack, Title } from "@patternfly/react-core";
 import { Tbody, Table, Td, Tr } from "@patternfly/react-table";
 import { EnvironmentSettings } from "@/Core";
-import { words } from "@/UI";
-import { AppAlert } from "@/UI/Components";
+import { AppAlert } from "@/UI/Components/AppAlert";
+import { words } from "@/UI/words";
 import { InputRow } from "./Components";
 
 interface Props {

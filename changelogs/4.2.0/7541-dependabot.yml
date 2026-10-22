@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump react-is from 19.2.8 to 19.3.1
+destination-branches:
+- master
+- iso9
+sections: {}

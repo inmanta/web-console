@@ -1,15 +1,17 @@
 import React, { useContext } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { useUrlStateWithString } from "@/Data";
-import { words } from "@/UI";
-import { ResourceActions } from "@/UI/Components";
+import { useUrlStateWithString } from "@/Data/Common";
+import { ResourceActions } from "@/UI/Components/ResourceActions";
+import { words } from "@/UI/words";
 import { InstanceDetailsContext } from "../../../Core/Context";
 import { buildInstanceResourceActionScopes } from "../../../Core/resourceActionScopes";
 import { InstanceActions } from "../InstanceActions";
+import { StateLabel } from "./HistorySection";
 
 /**
- * The Service Instance Details header actions: the Deploy/Repair split button (scoped to this
+ * The Service Instance Details header actions: the Deploy/Repair/Dry run split button (scoped to this
  * instance, plus its owned services when the catalog offers them) and the InstanceActions menu.
+ * A dry run can select one of the instance's own versions, labelled with its lifecycle state.
  * Rendered only on the latest version; requires the ServiceInstanceDetails context.
  */
 export const InstanceHeaderActions: React.FC = () => {
@@ -60,6 +62,9 @@ export const InstanceHeaderActions: React.FC = () => {
   };
 
   const disabledReason = resolveDisabledReason();
+  const identityAttributeValue = instance.service_identity_attribute_value;
+  const instanceLabels: Record<string, string> =
+    identityAttributeValue === undefined ? {} : { [instance.id]: identityAttributeValue };
 
   return (
     <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapMd" }}>
@@ -69,8 +74,16 @@ export const InstanceHeaderActions: React.FC = () => {
           tooltips={{
             deploy: words("resources.resourceActions.deploy.tooltip.instance"),
             repair: words("resources.resourceActions.repair.tooltip.instance"),
+            dryRun: words("resources.resourceActions.dryRun.tooltip.instance"),
           }}
           disabledReason={disabledReason}
+          instanceLabels={instanceLabels}
+          instance={{
+            id: instance.id,
+            serviceEntity: instance.service_entity,
+            label: identityAttributeValue ?? instance.id,
+            renderState: (state) => <StateLabel state={state} service={serviceModelQuery.data} />,
+          }}
         />
       </FlexItem>
       <FlexItem>

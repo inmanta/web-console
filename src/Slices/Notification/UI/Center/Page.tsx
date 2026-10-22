@@ -1,13 +1,11 @@
 import React from "react";
-import { usePaginatedTable } from "@/Data";
-import { NotificationFilter, useGetNotifications } from "@/Data/Queries";
-import {
-  EmptyView,
-  PageContainer,
-  PaginationWidget,
-  LoadingView,
-  ErrorView,
-} from "@/UI/Components";
+import { usePaginatedTable } from "@/Data/Common";
+import { NotificationFilter, useGetNotifications } from "@/Data/Queries/Slices/Notification";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
+import { PaginationWidget } from "@/UI/Components/PaginationWidget";
 import { words } from "@/UI/words";
 import { Controls } from "./Controls";
 import { List } from "./List";

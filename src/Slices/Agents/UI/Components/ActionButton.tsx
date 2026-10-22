@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
-import { usePauseAgent } from "@/Data/Queries";
-import { DependencyContext, words } from "@/UI";
-import { ActionDisabledTooltip } from "@/UI/Components";
+import { usePauseAgent } from "@/Data/Queries/Slices/Agents";
+import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
+import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { words } from "@/UI/words";
 
 interface Props {
   name: string;

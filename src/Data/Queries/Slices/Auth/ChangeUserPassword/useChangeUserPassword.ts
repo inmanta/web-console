@@ -1,5 +1,5 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { usePatchWithoutEnv } from "@/Data/Queries";
+import { usePatchWithoutEnv } from "@/Data/Queries/Helpers";
 
 interface ChangeUserPasswordBody {
   password: string;

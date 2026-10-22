@@ -1,12 +1,12 @@
 import React from "react";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { ClassifiedAttribute } from "@/Data";
+import { ClassifiedAttribute } from "@/Data/Common";
 import {
   AttributeExpandTd,
   AttributeExpansionRow,
   AttributeValueCell,
   useAttributeExpansion,
-} from "@/UI/Components";
+} from "@/UI/Components/AttributeList";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { Fact } from "@S/Facts/Core/Domain";
 

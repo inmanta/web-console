@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { invertFilter } from "@/Core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { IncludeExcludeSelect } from "./IncludeExcludeSelect";
 
 const options = ["blocked", "not_blocked", "temporarily_blocked"];

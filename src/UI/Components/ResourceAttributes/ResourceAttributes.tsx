@@ -176,7 +176,6 @@ const AttributeCell: React.FC<{
           index={index}
           isExpanded={isExpanded}
           onToggle={onToggle}
-          depth={0}
           ancestors={[]}
           parentPath={attribute.key}
         />

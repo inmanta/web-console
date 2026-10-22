@@ -1,0 +1,7 @@
+description: |
+  Compliance Check reports now show the scope a dry run covered and can re-run it, and resource diffs are more compact.
+issue-nr: 7243
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

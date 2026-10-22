@@ -11,9 +11,9 @@ updates:
       interval: "daily"
     allow:
       - dependency-type: "direct"
-    # Serialize all Dependabot PRs to prevent merge conflicts
-    # on the package.json and yarn.lock files
-    open-pull-requests-limit: 1
+    # Dependabot rebases its own PRs on package.json/yarn.lock conflicts.
+    # A limit of 1 let a single open PR block all other updates.
+    open-pull-requests-limit: 5
     registries:
       - jointjs-registry
     ignore:
@@ -35,3 +35,9 @@ updates:
           - "markdown-it"
           - "markdown-it-*"
           - "@types/markdown-it-*"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"

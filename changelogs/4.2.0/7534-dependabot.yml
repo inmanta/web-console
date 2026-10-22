@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump markdown-it from 15.0.2 to 15.0.3 in the markdown-it group
+destination-branches:
+- master
+- iso9
+sections: {}

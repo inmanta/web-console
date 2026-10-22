@@ -1,7 +1,7 @@
 import { dia, shapes, ui } from "@joint/plus";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { ServiceModel, ServiceInstanceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Queries";
+import { InstanceWithRelations } from "@/Data/Queries/Slices/ServiceInstance";
 
 import { updateAllMissingConnectionsHighlights } from "../../UI/JointJsShapes/createHalo";
 import { defineObjectsForJointJS } from "../../testSetup";

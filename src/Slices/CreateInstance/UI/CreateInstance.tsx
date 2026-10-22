@@ -1,13 +1,14 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
-import { usePostInstance } from "@/Data/Queries/";
+import { usePostInstance } from "@/Data/Queries/Slices/ServiceInstance";
+import { Description } from "@/UI/Components/Description";
 import {
   CreateModifierHandler,
-  Description,
   FieldCreator,
+  isAttributeValidationFailure,
   ServiceInstanceForm,
-} from "@/UI/Components";
+} from "@/UI/Components/ServiceInstanceForm";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
@@ -42,13 +43,15 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
 
   const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
 
-  const { mutate } = usePostInstance(serviceEntity.name, {
+  const { mutate, error: submitError } = usePostInstance(serviceEntity.name, {
     onError: (error) => {
       setIsDirty(true);
-      notifyError({
-        title: words("inventory.addInstance.failed"),
-        message: error.message,
-      });
+      if (!isAttributeValidationFailure(error)) {
+        notifyError({
+          title: words("inventory.addInstance.failed"),
+          message: error.message,
+        });
+      }
     },
     onSuccess: ({ data }) => {
       const newUrl = routeManager.getUrl("InstanceDetails", {
@@ -87,6 +90,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
         initialStates={serviceEntity.lifecycle.alternative_initial_states}
         identifyingAttributeName={serviceEntity.service_identity}
         entityAnnotations={serviceEntity.entity_annotations}
+        submitError={submitError}
       />
     </>
   );

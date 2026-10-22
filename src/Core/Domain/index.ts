@@ -20,6 +20,8 @@ export * from "./ServiceModel";
 export * from "./LogLevel";
 export * as PageSize from "./PageSize";
 export * from "./Route";
+export * from "./ResourceActionFilter";
+export * from "./DryRun";
 export * from "./ResourceDetailsTab";
 export * from "./EnvironmentDetailsModel";
 export * from "./Uuid";

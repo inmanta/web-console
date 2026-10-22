@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActionList,
   ActionListItem,
@@ -19,11 +19,14 @@ import {
   Tabs,
   TabTitleIcon,
   TabTitleText,
+  List,
+  ListItem,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { InstanceAttributeModel, EntityAnnotations, Field } from "@/Core";
 import { set as setAtPath } from "@/Core/Language/collection";
-import { SuggestionVariables } from "@/Data/Queries";
+import { CustomError } from "@/Data/Queries/Helpers";
+import { SuggestionVariables } from "@/Data/Queries/Slices/ServiceInstance";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
@@ -31,10 +34,14 @@ import { AppAlert } from "../AppAlert";
 import { DynamicFAIcon } from "../FaIcon";
 import { JSONEditor } from "../JSONEditor";
 import { FieldInput } from "./Components";
+import { ValidationErrorsContext } from "./Components/ValidationErrorsContext";
 import {
   createDuplicateFormState,
   createEditFormState,
   createFormState,
+  getAttributeValidationErrors,
+  getChangedAttributeNames,
+  isAtOrBelow,
   isSingleRelationTab,
   resolveFieldDependencies,
   resolveFormTabs,
@@ -59,6 +66,7 @@ interface Props {
   identifyingAttributeName?: string;
   instanceId?: string;
   entityAnnotations?: EntityAnnotations;
+  submitError: CustomError | null;
 }
 
 /**
@@ -101,6 +109,7 @@ const getFormState = (
  *   @prop {string} [identifyingAttributeName] - Name of the attribute designated by the service's `service_identity`, if any.
  *   @prop {string} [instanceId] - Id of the edited instance; absent when creating.
  *   @prop {EntityAnnotations} [entityAnnotations] - The service entity's annotations; a `web_tabs` catalog splits the top-level fields into tabs.
+ *   @prop {CustomError | null} submitError - The error of the last submit, null when it did not fail; its attribute validation errors are shown on the form and its fields.
  * @returns {React.FC<Props>} The rendered ServiceInstanceForm component.
  */
 export const ServiceInstanceForm: React.FC<Props> = ({
@@ -118,6 +127,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   identifyingAttributeName,
   instanceId,
   entityAnnotations,
+  submitError,
 }) => {
   const [formState, setFormState] = useState(
     getFormState(fields, apiVersion, originalAttributes, isEdit)
@@ -142,6 +152,38 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   // stuck control. Derived purely from the schema, so it is stable across value edits.
   const dependencyErrors = useMemo(() => resolveFieldDependencies(fields).errors, [fields]);
   const [activeTab, setActiveTab] = useState(formTabs.kind === "tabs" ? formTabs.defaultKey : "");
+
+  // The validation errors of the last submit. Editing an attribute (or a list or group holding it)
+  // hides its validation error: the value it was about is gone, and list indices may have shifted.
+  // `editedPaths` holds the paths edited since the last submit.
+  const submitValidationErrors = useMemo(
+    () => (submitError ? getAttributeValidationErrors(submitError) : []),
+    [submitError]
+  );
+  const [editedPaths, setEditedPaths] = useState<string[]>([]);
+
+  // The JSON editor reports the whole state, so its edits are found by comparing with this one.
+  const formStateRef = useRef(formState);
+
+  useEffect(() => {
+    formStateRef.current = formState;
+  }, [formState]);
+
+  const addEditedPaths = useCallback((paths: string[]) => {
+    setEditedPaths((prev) => {
+      const newPaths = paths.filter((path) => !prev.includes(path));
+
+      return newPaths.length > 0 ? [...prev, ...newPaths] : prev;
+    });
+  }, []);
+
+  const validationErrors = useMemo(
+    () =>
+      submitValidationErrors.filter(
+        (error) => !editedPaths.some((path) => isAtOrBelow(error.path, path))
+      ),
+    [submitValidationErrors, editedPaths]
+  );
 
   // Values that resolve `${...}` variables in a suggestion's parameter name.
   // `identifyingAttributeName` is the name of the identifying attribute; its value
@@ -180,6 +222,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         setIsDirty(true);
       }
 
+      addEditedPaths([path]);
+
       if (multi) {
         setFormState((prev) => {
           const clone = { ...prev };
@@ -205,7 +249,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         });
       }
     },
-    [isDirty, setIsDirty]
+    [isDirty, setIsDirty, addEditedPaths]
   );
 
   /**
@@ -228,13 +272,14 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       try {
         const parsed = JSON.parse(value);
 
+        addEditedPaths(getChangedAttributeNames(formStateRef.current, parsed));
         setFormState(parsed);
         setIsEditorValid(isValid);
       } catch (_error) {
         setIsEditorValid(false);
       }
     },
-    [setFormState, setIsEditorValid]
+    [setFormState, setIsEditorValid, addEditedPaths]
   );
 
   /**
@@ -242,10 +287,15 @@ export const ServiceInstanceForm: React.FC<Props> = ({
    *
    * @returns {void}
    */
-  const onConfirm = () => onSubmit(formState, (value: boolean) => setIsDirty(value));
+  const onConfirm = () => {
+    setEditedPaths([]);
+    onSubmit(formState, (value: boolean) => setIsDirty(value));
+  };
 
-  const onInitialStateConfirm = (initialState: string) =>
+  const onInitialStateConfirm = (initialState: string) => {
+    setEditedPaths([]);
     onSubmit(formState, (value: boolean) => setIsDirty(value), initialState);
+  };
 
   useEffect(() => {
     if (shouldPerformCancel) {
@@ -267,7 +317,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     />
   );
 
-  return (
+  const form = (
     <StyledForm onSubmit={preventDefault}>
       <ToggleGroup aria-label="form-editor-toggle-group">
         <ToggleGroupItem
@@ -354,6 +404,24 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         />
       )}
 
+      {/* While the JSON editor lists its own schema errors, those cover the same values. */}
+      {validationErrors.length > 0 && (isForm || isEditorValid) && (
+        <AppAlert
+          title={words("inventory.form.validationErrors.title")(validationErrors.length)}
+          variant={AlertVariant.danger}
+          testId="ValidationErrors-Alert"
+          isInline
+        >
+          <List>
+            {validationErrors.map(({ path, message }) => (
+              <ListItem key={`${path}-${message}`}>
+                {words("inventory.form.validationErrors.item")(path, message)}
+              </ListItem>
+            ))}
+          </List>
+        </AppAlert>
+      )}
+
       <ActionList>
         <ActionListItem>
           <ActionDisabledTooltip
@@ -430,6 +498,12 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         </ActionListItem>
       </ActionList>
     </StyledForm>
+  );
+
+  return (
+    <ValidationErrorsContext.Provider value={validationErrors}>
+      {form}
+    </ValidationErrorsContext.Provider>
   );
 };
 

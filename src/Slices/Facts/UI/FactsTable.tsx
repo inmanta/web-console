@@ -2,7 +2,7 @@ import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { SortKey } from "@/Slices/Facts/Core/Types";
-import { useClassifiedRows } from "@/UI/Components";
+import { useClassifiedRows } from "@/UI/Components/AttributeList";
 import { Fact } from "@S/Facts/Core/Domain";
 import { FactsRow } from "./FactsRow";
 import { FactsTablePresenter } from "./FactsTablePresenter";

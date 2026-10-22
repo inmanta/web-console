@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServerStatus } from "@/Core";
-import { REFETCH_INTERVAL, useGetWithoutEnv } from "@/Data/Queries";
+import { REFETCH_INTERVAL, useGetWithoutEnv } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 /**

@@ -1,9 +1,14 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
-import { AttributeInputConverterImpl } from "@/Data";
-import { usePostInstance } from "@/Data/Queries";
-import { CreateModifierHandler, FieldCreator, ServiceInstanceForm } from "@/UI/Components";
+import { AttributeInputConverterImpl } from "@/Data/Common";
+import { usePostInstance } from "@/Data/Queries/Slices/ServiceInstance";
+import {
+  CreateModifierHandler,
+  FieldCreator,
+  isAttributeValidationFailure,
+  ServiceInstanceForm,
+} from "@/UI/Components/ServiceInstanceForm";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
@@ -42,13 +47,15 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const attributeInputConverter = new AttributeInputConverterImpl();
   const currentAttributes = attributeInputConverter.getCurrentAttributes(instance);
 
-  const { mutate } = usePostInstance(serviceEntity.name, {
+  const { mutate, error: submitError } = usePostInstance(serviceEntity.name, {
     onError: (error) => {
       setIsDirty(true);
-      notifyError({
-        title: words("inventory.addInstance.failed"),
-        message: error.message,
-      });
+      if (!isAttributeValidationFailure(error)) {
+        notifyError({
+          title: words("inventory.addInstance.failed"),
+          message: error.message,
+        });
+      }
     },
     onSuccess: ({ data }) => {
       const newUrl = routeManager.getUrl("InstanceDetails", {
@@ -85,6 +92,7 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         initialStates={serviceEntity.lifecycle.alternative_initial_states}
         identifyingAttributeName={serviceEntity.service_identity}
         entityAnnotations={serviceEntity.entity_annotations}
+        submitError={submitError}
       />
     </>
   );

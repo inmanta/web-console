@@ -1,6 +1,10 @@
 import React from "react";
-import { useGetInstance, useGetServiceModel } from "@/Data/Queries";
-import { Description, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+import { useGetServiceModel } from "@/Data/Queries/Slices/Service";
+import { useGetInstance } from "@/Data/Queries/Slices/ServiceInstance";
+import { Description } from "@/UI/Components/Description";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { EditForm } from "./EditForm";

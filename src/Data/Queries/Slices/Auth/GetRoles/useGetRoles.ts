@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useGetWithoutEnv } from "@/Data/Queries";
+import { useGetWithoutEnv } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 /**

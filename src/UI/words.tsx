@@ -89,6 +89,9 @@ const dict = {
   export: "Export",
   resourceId: "Resource Id",
   versionLabel: (version: string) => `Version: ${version}`,
+  modelVersion: (modelVersion: number | string) => `v${modelVersion}`,
+  instanceVersion: (instanceVersion: number | string) => `instance v${instanceVersion}`,
+  currentStateShort: "current",
 
   /**
    * Error related text
@@ -169,6 +172,14 @@ const dict = {
   "inventory.createInstance.items": (amount: number) =>
     amount === 1 ? "1 item" : `${amount} items`,
   "inventory.form.withInitialState": "With initial state",
+  "inventory.form.validationErrors.title": (count: number) =>
+    `The orchestrator rejected ${count} ${count === 1 ? "value" : "values"}`,
+  "inventory.form.validationErrors.item": (path: string, message: string) => (
+    <>
+      <b>{path}</b>: {message}
+    </>
+  ),
+  "inventory.form.validationErrors.messageSeparator": "; ",
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
   "inventory.duplicateInstance.button": "Duplicate",
@@ -752,7 +763,6 @@ const dict = {
   "references.argumentKind.resource": "resource",
   "references.argumentKind.python_type": "python type",
   "references.argumentKind.get": "dict path",
-  "references.truncated": "Reference tree truncated at 10 levels",
   "references.mutatorsNotDisplayed": (count: number) =>
     `${count} ${count === 1 ? "mutator is" : "mutators are"} not displayed`,
   "resources.logs.title": "Logs",
@@ -769,6 +779,14 @@ const dict = {
   "resources.resourceActions.toggle": "Deploy actions",
   "resources.resourceActions.deploy.hint": "default - incremental",
   "resources.resourceActions.repair.hint": "full",
+  "resources.resourceActions.dryRun": "Dry run",
+  "resources.resourceActions.dryRun.hint": "preview, no change",
+  "resources.resourceActions.dryRun.tooltip.resource":
+    "Preview what deploying this resource would change, against the version you select. Nothing is deployed.",
+  "resources.resourceActions.dryRun.tooltip.resources":
+    "Preview what deploying the resources in the chosen scope would change, against the version you select. Nothing is deployed.",
+  "resources.resourceActions.dryRun.tooltip.instance":
+    "Preview what deploying the resources in the chosen scope of this service instance would change, against the version you select. Nothing is deployed.",
   "resources.resourceActions.deploy.tooltip.resource":
     "Enforce the compliance of this resource. Does nothing if it is already compliant.",
   "resources.resourceActions.repair.tooltip.resource":
@@ -788,6 +806,39 @@ const dict = {
     `Triggering ${action.toLowerCase()} failed`,
   "resources.resourceActions.confirm.title": (action: string) => `${action} resources`,
   "resources.resourceActions.confirm.description": "Choose the scope, then confirm.",
+  "resources.resourceActions.confirm.single.title": (action: string) => `${action} this resource`,
+  "resources.resourceActions.confirm.titleFor": (action: string, subject: string) =>
+    `${action} ${subject}`,
+  "resources.resourceActions.confirm.dryRun.description": "Preview the diff. Nothing is deployed.",
+  "resources.resourceActions.confirm.dryRun.instance.description":
+    "Preview the diff for this instance's resources. Nothing is deployed.",
+  "resources.resourceActions.confirm.scope.title": "Scope",
+  "resources.resourceActions.confirm.version.title": "Against version",
+  "resources.resourceActions.confirm.version.type.title": "Version type",
+  "resources.resourceActions.confirm.version.type.instanceVersion": "Instance version",
+  "resources.resourceActions.confirm.version.type.modelVersion": "Model version",
+  "resources.resourceActions.confirm.version.arrow": "→",
+  "resources.resourceActions.confirm.version.mapsTo": (modelVersion: string) =>
+    `model v${modelVersion}`,
+  "resources.resourceActions.confirm.version.mapsTo.none": "no model version",
+  "resources.resourceActions.confirm.version.noModelVersion.selected": (instanceVersion: string) =>
+    `Instance v${instanceVersion} has no model version, so it can't be dry-run.`,
+  "resources.resourceActions.confirm.version.noModelVersion.default": (instanceVersion: string) =>
+    `Instance v${instanceVersion} has no model version yet, so the dry run uses the active model version.`,
+  "resources.resourceActions.confirm.version.placeholder": "Select a version",
+  "resources.resourceActions.confirm.version.search": "Search a version number",
+  "resources.resourceActions.confirm.version.searchHint":
+    "Scroll the list to load older versions, or type a version number to find it.",
+  "resources.resourceActions.confirm.version.noResults": "No version found",
+  "resources.resourceActions.confirm.version.lookupError": (version: string) =>
+    `Version ${version} couldn't be looked up.`,
+  "resources.resourceActions.confirm.version.moreInfo": "More info about the version",
+  "resources.resourceActions.confirm.version.blockedBy.statusFilter":
+    "Status filters only apply to the active model version.",
+  "resources.resourceActions.confirm.version.blockedBy.ownedServices":
+    "Owned services can only be previewed against the active model version.",
+  "resources.resourceActions.confirm.version.loadError":
+    "The versions couldn't be loaded, so the dry run uses the active model version.",
   "resources.resourceActions.confirm.filtered.title": "Filtered resources",
   "resources.resourceActions.confirm.environment.title": "All resources in this environment",
   "resources.resourceActions.confirm.environment.note": "Ignores the active filter",
@@ -806,7 +857,7 @@ const dict = {
   "resources.resourceActions.confirm.owned.description": (services: string) =>
     `May also act on owned services of these types: ${services}.`,
   "resources.resourceActions.confirm.orphanNote":
-    "Orphaned resources (in no released version) can't be deployed or repaired.",
+    "Orphaned resources (in no released version) can't be deployed, repaired or dry-run.",
 
   /** Discovered Resources related text */
   "discoveredResourceDetails.title": "Discovered Resource Details",
@@ -1048,6 +1099,7 @@ const dict = {
   "desiredState.compare.action.compareWithSelected": "Compare with selected",
   "desiredState.compare.action.compareWithCurrentState": "Compare with current state",
   "desiredState.compare.selectionLabel": "Selected for compare: ",
+  "desiredState.compare.changes": (resourceId: string) => `Changes of ${resourceId}`,
   "desiredState.compare.deleted": "This resource has been deleted.",
   "desiredState.compare.deleted.action": "Show attributes",
   "desiredState.compare.unmodified": "This resource has not been modified.",
@@ -1066,6 +1118,63 @@ const dict = {
   "desiredState.complianceCheck.action.dryRun": "Perform dry run",
   "desiredState.complianceCheck.action.dryRun.failed": "Triggering dryrun failed",
   "desiredState.complianceCheck.noDryRuns": "No dry runs exist",
+  "desiredState.complianceCheck.progress": (checked: number, total: number) =>
+    `${checked} / ${total}`,
+  "desiredState.complianceCheck.report.title": "Report",
+  "desiredState.complianceCheck.report.view": "View report",
+  "desiredState.complianceCheck.report.started": "Dry run started",
+  "desiredState.complianceCheck.scope.title": "Scope",
+  "desiredState.complianceCheck.scope.fullModel": "Full model",
+  "desiredState.complianceCheck.scope.resources": (count: number) =>
+    count === 1 ? "resource" : "resources",
+  "desiredState.complianceCheck.scope.resourcesOfTotal": (total: number) =>
+    total === 1 ? `of ${total} resource` : `of ${total} resources`,
+  "desiredState.complianceCheck.scope.agents": (count: number) =>
+    count === 1 ? "agent" : "agents",
+  "desiredState.complianceCheck.scope.changed": "changed",
+  "desiredState.complianceCheck.scope.notActive": "This version is not active.",
+  "desiredState.complianceCheck.scope.notActive.description": (modelVersion: string) =>
+    `The diff is what a deploy of ${modelVersion} would have changed when the dry run ran.`,
+  "desiredState.complianceCheck.scope.filter.title": "Applied filter",
+  // A template PatternFly's LabelGroup fills in, not a JS template string.
+  "desiredState.complianceCheck.scope.filter.more": "+${remaining} more",
+  "desiredState.complianceCheck.scope.json": "View JSON",
+  "desiredState.complianceCheck.scope.json.title": "Resource filter",
+  "desiredState.complianceCheck.scope.rerun": "Re-run",
+  "desiredState.complianceCheck.scope.rerun.failed": "Re-running the dry run failed",
+  "desiredState.complianceCheck.scope.rerun.unknownStatus":
+    "The status of this model version is unknown, so it can't be re-run.",
+  "desiredState.complianceCheck.scope.label.anchor": (names: string[]) => names.join(" › "),
+  "desiredState.complianceCheck.scope.label.owned": "+owned",
+  "desiredState.complianceCheck.scope.label.more": (count: number) => `+${count}`,
+  "desiredState.complianceCheck.scope.label.condition": (row: string, condition: string) =>
+    `${row} ${condition}`,
+  "desiredState.complianceCheck.scope.label.conditions": (count: number) =>
+    `Filtered · ${count} conditions`,
+  "desiredState.complianceCheck.scope.operator.eq": (value: string) => `= ${value}`,
+  "desiredState.complianceCheck.scope.operator.neq": (value: string) => `not ${value}`,
+  "desiredState.complianceCheck.scope.operator.contains": (value: string) => `contains "${value}"`,
+  "desiredState.complianceCheck.scope.operator.notContains": (value: string) =>
+    `doesn't contain "${value}"`,
+  "desiredState.complianceCheck.scope.row.serviceEntity": "Service",
+  "desiredState.complianceCheck.scope.row.serviceInstance": "Instance",
+  "desiredState.complianceCheck.scope.row.agent": "Agent",
+  "desiredState.complianceCheck.scope.row.resourceType": "Type",
+  "desiredState.complianceCheck.scope.row.resourceIdValue": "Value",
+  "desiredState.complianceCheck.scope.row.purged": "Purged",
+  "desiredState.complianceCheck.scope.row.version": "Version",
+  "desiredState.complianceCheck.scope.row.status": "Status",
+  "desiredState.complianceCheck.scope.row.status.note": "transient",
+  "desiredState.complianceCheck.scope.value.latestIntent": "latest intent",
+  "desiredState.complianceCheck.scope.value.wasLatestIntent": "was latest intent",
+  "desiredState.complianceCheck.scope.value.excludesOrphans": "excludes orphans",
+  "desiredState.complianceCheck.scope.value.owned": "owned",
+  "desiredState.complianceCheck.scope.value.lifecycleState": (state: string) => `state ${state}`,
+  "desiredState.complianceCheck.scope.value.purged.true": "purged",
+  "desiredState.complianceCheck.scope.value.purged.false": "not purged",
+  "desiredState.complianceCheck.scope.value.isDeploying.true": "deploying",
+  "desiredState.complianceCheck.scope.value.isDeploying.false": "not deploying",
+  "desiredState.complianceCheck.scope.value.orphansOnly": "orphans only",
   "desiredState.test.skippedCandidate": "skipped_candidate",
   "desiredState.test.candidate": "candidate",
 

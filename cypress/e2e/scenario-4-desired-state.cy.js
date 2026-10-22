@@ -264,8 +264,9 @@ describe("Scenario 4 Desired State", () => {
     // expect to land on compliance check page
     cy.get("h1").should("have.text", "Compliance Check");
 
-    // Expect diff-module to be empty
-    cy.get(".pf-v6-c-page__main-section").eq(1).children().should("have.length", 1);
+    // Expect no report to be shown
+    cy.get('[aria-label="Scope"]').should("not.exist");
+    cy.get('[aria-label="DiffItemList"]').should("not.exist");
 
     cy.get('[aria-label="ReportListSelect"]').contains("No Dry runs exist").should("be.visible");
 

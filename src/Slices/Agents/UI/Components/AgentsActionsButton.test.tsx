@@ -1,6 +1,6 @@
 import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
@@ -252,9 +252,11 @@ describe("AgentsActionsButton", () => {
 
     await userEvent.click(cancelButton);
 
-    expect(
-      screen.queryByText(words("agents.actions.removeAllVenvs.modal.title"))
-    ).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        screen.queryByText(words("agents.actions.removeAllVenvs.modal.title"))
+      ).not.toBeInTheDocument()
+    );
     expect(requestFired).toBeFalsy();
   });
 
@@ -284,9 +286,11 @@ describe("AgentsActionsButton", () => {
 
     expect(await screen.findByText(words("agents.actions.removeAllVenvs.requested"))).toBeVisible();
     expect(requestFired).toBeTruthy();
-    expect(
-      screen.queryByText(words("agents.actions.removeAllVenvs.modal.title"))
-    ).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        screen.queryByText(words("agents.actions.removeAllVenvs.modal.title"))
+      ).not.toBeInTheDocument()
+    );
   });
 
   test("Given the remove all agent venvs confirmation modal, when confirmed and the request fails, it should show an error toast", async () => {

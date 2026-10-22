@@ -1,5 +1,5 @@
 import { EnvironmentExpertOnly, EnvironmentModel, FlatEnvironment } from "@/Core";
-import { EnvironmentPreview } from "@/Data/Queries";
+import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 
 export const env: FlatEnvironment = {
   id: "env",

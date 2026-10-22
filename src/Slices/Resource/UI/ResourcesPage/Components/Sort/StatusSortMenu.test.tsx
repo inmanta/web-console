@@ -1,10 +1,10 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Resource } from "@/Core";
-import { MultiSort } from "@/Data";
+import { MultiSort } from "@/Data/Common";
 import { StatusSortMenu, reorderSorts } from "./StatusSortMenu";
 
-vi.mock("@/UI", () => ({
+vi.mock("@/UI/words", () => ({
   words: (key: string) => key,
 }));
 
@@ -106,6 +106,30 @@ describe("StatusSortMenu", () => {
 
       expect(setSort).toHaveBeenCalledWith([expect.objectContaining({ name: "compliance" })]);
       expect(setSort).not.toHaveBeenCalledWith([expect.objectContaining({ name: "blocked" })]);
+    });
+
+    it("adds the isDeploying sort descending, so deploying resources come first", async () => {
+      const { toggle, setSort } = setup();
+      await userEvent.click(toggle());
+      fireEvent.click(screen.getByText("resources.sort.label.isDeploying"));
+
+      expect(setSort).toHaveBeenCalledWith([{ name: "isDeploying", order: "desc" }]);
+    });
+
+    it("turns a descending isDeploying sort ascending", async () => {
+      const { toggle, setSort } = setup([{ name: "isDeploying", order: "desc" }]);
+      await userEvent.click(toggle());
+      fireEvent.click(screen.getByText("resources.sort.label.isDeploying"));
+
+      expect(setSort).toHaveBeenCalledWith([{ name: "isDeploying", order: "asc" }]);
+    });
+
+    it("removes an ascending isDeploying sort", async () => {
+      const { toggle, setSort } = setup([{ name: "isDeploying", order: "asc" }]);
+      await userEvent.click(toggle());
+      fireEvent.click(screen.getByText("resources.sort.label.isDeploying"));
+
+      expect(setSort).toHaveBeenCalledWith([]);
     });
   });
 

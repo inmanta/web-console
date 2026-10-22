@@ -2,15 +2,15 @@ import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
 import { EventType } from "@/Core";
 import { Filter } from "@/Slices/Events/Core/Types";
+import { AddableTextInput } from "@/UI/Components/AddableTextInput";
 import {
   ActiveFilterGroup,
   ActiveFilters,
-  AddableTextInput,
   FilterDrawerPanelContent,
-  MultiTextSelect,
   getFilterActions,
-} from "@/UI/Components";
+} from "@/UI/Components/FilterDrawer";
 import { TimestampRangeFilter } from "@/UI/Components/Filters";
+import { MultiTextSelect } from "@/UI/Components/MultiTextSelect";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 

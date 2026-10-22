@@ -27,7 +27,7 @@ export const APIActionsButton: React.FC = () => {
 
   const handleSelect = () => setIsOpen(false);
 
-  const graphiQLUrl = routeManager.getUrl("GraphiQL", undefined);
+  const hasGraphiQL = routeManager.has("GraphiQL");
   const graphiQLSearch = new SearchHelper().keepEnvOnly(search);
 
   const restApiUrl = authHelper.getToken()
@@ -59,11 +59,18 @@ export const APIActionsButton: React.FC = () => {
           )}
         >
           <DropdownList>
-            <DropdownItem
-              onClick={() => navigate({ pathname: graphiQLUrl, search: graphiQLSearch })}
-            >
-              {words("dashboard.apiActions.graphiql")}
-            </DropdownItem>
+            {hasGraphiQL && (
+              <DropdownItem
+                onClick={() =>
+                  navigate({
+                    pathname: routeManager.getUrl("GraphiQL", undefined),
+                    search: graphiQLSearch,
+                  })
+                }
+              >
+                {words("dashboard.apiActions.graphiql")}
+              </DropdownItem>
+            )}
             <DropdownItem to={restApiUrl} component="a" target="_blank" rel="noopener noreferrer">
               {words("dashboard.apiActions.restApi")}
             </DropdownItem>

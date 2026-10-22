@@ -14,9 +14,9 @@ import {
 import { CubeIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { isObject, Resource } from "@/Core";
-import { useGetResources } from "@/Data/Queries";
+import { useGetResources } from "@/Data/Queries/Slices/Resource";
 import { DependencyContext } from "@/UI/Dependency";
-import { SearchHelper } from "@/UI/Routing/SearchHelper";
+import { SearchHelper } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { MINIMAL_PAGE } from "../../EnvironmentHealthRow";
 import { deriveResourcesHealth } from "../../resourcesHealth";

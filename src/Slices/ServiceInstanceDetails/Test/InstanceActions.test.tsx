@@ -1,7 +1,7 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { instanceData, serviceModel } from "./mockData";
 import { defaultServer, serverFailedActions } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
@@ -289,7 +289,7 @@ describe("Page Actions - Success", () => {
 
     await userEvent.click(confirmButton);
 
-    expect(screen.queryByRole("dialog")).toBeNull();
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
   });
 
@@ -408,7 +408,7 @@ describe("Page Actions - Success", () => {
 
     await userEvent.click(confirmButton);
 
-    expect(screen.queryByRole("dialog")).toBeNull();
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
   });
 
@@ -452,7 +452,7 @@ describe("Page Actions - Success", () => {
 
     await userEvent.click(confirmButton);
 
-    expect(screen.queryByRole("dialog")).toBeNull();
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
   });
 
@@ -553,7 +553,7 @@ describe("Page Actions - Success", () => {
 
     await userEvent.click(screen.getByRole("button", { name: /yes/i }));
 
-    expect(screen.queryByRole("dialog")).toBeNull();
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
   });
 
   it("Normal Instance Actions - sends the user provided message on state transfer", async () => {
@@ -794,7 +794,7 @@ describe("Page Actions - Failed", () => {
 
     await userEvent.click(confirmButton);
 
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
     const errorToast = screen.getByTestId("error-toast-actions-error-message");
 
     expect(errorToast).toBeVisible();

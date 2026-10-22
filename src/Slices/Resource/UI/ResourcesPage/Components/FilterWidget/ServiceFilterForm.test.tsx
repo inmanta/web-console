@@ -1,16 +1,19 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Resource } from "@/Core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { ServiceFilterForm } from "./ServiceFilterForm";
 
-vi.mock("@/Data/Queries", () => ({
+vi.mock("@/Data/Queries/Slices/Service", () => ({
   useGetServiceModels: () => ({
     useOneTime: () => ({
       data: [{ name: "l2Connect" }, { name: "DirectInternetAccess" }],
       isLoading: false,
     }),
   }),
+}));
+
+vi.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
   useGetInstances: () => ({
     useInfiniteScroll: () => ({
       data: {

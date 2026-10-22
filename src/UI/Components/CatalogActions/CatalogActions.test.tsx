@@ -1,11 +1,11 @@
 import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { defaultAuthContext } from "@/Data";
+import { defaultAuthContext } from "@/Data/Auth";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
@@ -130,7 +130,7 @@ describe("CatalogActions", () => {
 
     await userEvent.click(confirmButton);
 
-    expect(confirmButton).not.toBeVisible();
+    await waitFor(() => expect(confirmButton).not.toBeVisible());
 
     expect(await screen.queryByText(words("catalog.update.success"))).toBeVisible();
   });

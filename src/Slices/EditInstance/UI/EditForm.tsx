@@ -1,9 +1,15 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
-import { AttributeInputConverterImpl } from "@/Data";
-import { usePatchAttributes, usePutAttributes } from "@/Data/Queries";
-import { FieldCreator, ServiceInstanceForm, EditModifierHandler } from "@/UI/Components";
+import { AttributeInputConverterImpl } from "@/Data/Common";
+import { CustomError } from "@/Data/Queries/Helpers";
+import { usePatchAttributes, usePutAttributes } from "@/Data/Queries/Slices/ServiceInstance";
+import {
+  FieldCreator,
+  ServiceInstanceForm,
+  EditModifierHandler,
+  isAttributeValidationFailure,
+} from "@/UI/Components/ServiceInstanceForm";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
@@ -54,25 +60,27 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   // read-only fields are visible (but disabled), matching the PUT full-attribute payload.
   const formApiVersion = isStrictEnforcement ? "v2" : "v1";
 
-  const onMutationError = (error: Error) => {
+  const onMutationError = (error: CustomError) => {
     setIsDirty(true);
-    notifyError({
-      title: words("inventory.editInstance.failed"),
-      message: error.message,
-    });
+    if (!isAttributeValidationFailure(error)) {
+      notifyError({
+        title: words("inventory.editInstance.failed"),
+        message: error.message,
+      });
+    }
   };
 
   const onMutationSuccess = () => handleRedirect();
 
   // Both hooks are always called (React rules of hooks). Only the relevant mutate is used.
-  const { mutate: patchMutate } = usePatchAttributes(
+  const { mutate: patchMutate, error: patchError } = usePatchAttributes(
     serviceEntity.name,
     instance.id,
     Number(instance.version),
     { onError: onMutationError, onSuccess: onMutationSuccess }
   );
 
-  const { mutate: putMutate } = usePutAttributes(
+  const { mutate: putMutate, error: putError } = usePutAttributes(
     serviceEntity.name,
     instance.id,
     Number(instance.version),
@@ -108,6 +116,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         identifyingAttributeName={serviceEntity.service_identity}
         instanceId={instance.id}
         entityAnnotations={serviceEntity.entity_annotations}
+        submitError={isStrictEnforcement ? putError : patchError}
       />
     </>
   );

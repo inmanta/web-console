@@ -1,8 +1,8 @@
 import React from "react";
 import { Tabs, Tab, TabContentBody } from "@patternfly/react-core";
 import { ServiceModel } from "@/Core";
-import { useUrlStateWithString } from "@/Data";
-import { stickyTabsStyle } from "@/UI/Components";
+import { useUrlStateWithString } from "@/Data/Common";
+import { stickyTabsStyle } from "@/UI/Components/IconTabs";
 import { AttributeTable } from "./AttributeTable";
 import { CallbacksView } from "./Callbacks";
 import { Config } from "./Config";

@@ -18,7 +18,7 @@ import {
   useGetNotifications,
   UpdateNotificationParams,
   useUpdateNotification,
-} from "@/Data/Queries";
+} from "@/Data/Queries/Slices/Notification";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Item, OnUpdate } from "./Item";

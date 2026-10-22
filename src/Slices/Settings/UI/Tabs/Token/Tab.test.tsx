@@ -6,7 +6,7 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { DEFAULT_EXPIRY_SECONDS } from "./ExpiryInput";
 import { Tab } from "./Tab";
 

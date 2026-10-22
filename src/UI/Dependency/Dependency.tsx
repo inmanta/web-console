@@ -5,6 +5,7 @@ import {
   EnvironmentHandler,
   OrchestratorProvider,
   ArchiveHelper,
+  FeatureModule,
 } from "@/Core";
 import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
@@ -22,6 +23,11 @@ export interface Dependencies {
   environmentHandler: EnvironmentHandler;
   archiveHelper: ArchiveHelper;
   authHelper: AuthContextInterface;
+
+  /**
+   * The features the app ships. The pages and the sidebar are built from these.
+   */
+  features: FeatureModule[];
 }
 
 export const DependencyContext = createContext<Dependencies>({
@@ -31,6 +37,7 @@ export const DependencyContext = createContext<Dependencies>({
   environmentHandler: DummyEnvironmentHandler(),
   archiveHelper: new DummyArchiveHelper(),
   authHelper: defaultAuthContext,
+  features: [],
 });
 
 export const DependencyProvider: React.FC<{
@@ -44,6 +51,7 @@ export const DependencyProvider: React.FC<{
     environmentHandler,
     archiveHelper,
     authHelper,
+    features,
   },
   children,
 }) => (
@@ -55,6 +63,7 @@ export const DependencyProvider: React.FC<{
       environmentHandler: environmentHandler || DummyEnvironmentHandler(),
       archiveHelper: archiveHelper || new DummyArchiveHelper(),
       authHelper: authHelper || defaultAuthContext,
+      features: features || [],
     }}
   >
     {children}

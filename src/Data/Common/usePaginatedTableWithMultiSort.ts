@@ -6,7 +6,7 @@ import {
   useUrlStateWithFilter,
   useUrlStateWithMultiSort,
   MultiSort,
-} from ".";
+} from "./UrlState";
 
 interface Options<TFilter, TSort extends string> {
   route: RouteKind;
@@ -32,7 +32,7 @@ interface Options<TFilter, TSort extends string> {
  *   defaultSort: [{ name: "status", order: "asc" }],
  * });
  * // Toggle a column on header click:
- * setSort(toggleMulti(sort, "status"));
+ * setSort(toggleMulti(sort, "status", "asc"));
  */
 export function usePaginatedTableWithMultiSort<TFilter = undefined, TSort extends string = string>(
   options: Options<TFilter, TSort>

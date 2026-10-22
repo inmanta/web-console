@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Title } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
 import { ClientType, toggleValueInList } from "@/Core";
-import { getTokensKey, useGenerateToken } from "@/Data/Queries";
+import { getTokensKey, useGenerateToken } from "@/Data/Queries/Slices/Environment";
 import { words } from "@/UI/words";
 import { DEFAULT_EXPIRY_SECONDS } from "./ExpiryInput";
 import { TokenForm } from "./TokenForm";

@@ -1,5 +1,11 @@
 ﻿import { Route } from "@/Core";
 
+declare module "@/Core/Domain/Route" {
+  interface RouteRegistry {
+    CreateEnvironment: undefined;
+  }
+}
+
 export const path = "/environment/create";
 
 export const route = (base: string): Route<"CreateEnvironment"> => ({

@@ -1,14 +1,14 @@
 import React, { memo } from "react";
 import { Divider, Form, Stack, StackItem, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { useUrlStateWithFilter } from "@/Data";
+import { useUrlStateWithFilter } from "@/Data/Common";
+import { AddableTextInput } from "@/UI/Components/AddableTextInput";
 import {
   ActiveFilterGroup,
   ActiveFilters,
-  AddableTextInput,
   FilterDrawerPanelContent,
   getFilterActions,
-} from "@/UI/Components";
+} from "@/UI/Components/FilterDrawer";
 import { words } from "@/UI/words";
 
 interface DesiredStateDetailsFilterWidgetProps {

@@ -95,8 +95,8 @@ if (isIso) {
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
 
-      // expect an error toast
-      cy.get(".pf-m-danger").should("be.visible");
+      // expect the rejected attribute on the form
+      cy.get('[data-testid="ValidationErrors-Alert"]').should("be.visible").and("contain", "ip_r2");
 
       // fix input that has a wrong value and submit
       cy.get("#ip_r2").clear().type("1.2.2.1");
@@ -178,10 +178,12 @@ if (isIso) {
       // check if amount of fields is lesser than create amount.
       cy.get("form").find("input").should("have.length.of.at.most", 11);
 
-      // delete first value and submit should give an error toast
+      // delete first value and submit should show the rejected attribute on the form
       cy.get("#address_r1").clear();
       cy.get("button").contains("Confirm").click();
-      cy.get(".pf-m-danger").should("be.visible");
+      cy.get('[data-testid="ValidationErrors-Alert"]')
+        .should("be.visible")
+        .and("contain", "address_r1");
 
       // Fill in first value 1.2.3.8/32 and submit
       cy.get("#address_r1").type("1.2.3.8/32");

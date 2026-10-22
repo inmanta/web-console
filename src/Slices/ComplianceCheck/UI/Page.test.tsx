@@ -1,16 +1,22 @@
-import { act } from "react";
+import { act, useState } from "react";
+import { useLocation } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { delay, HttpResponse, http } from "msw";
+import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider } from "@/Test";
+import { DryRun } from "@/Core";
+import { EnvironmentDetails, MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CustomDatePresenter } from "@/UI/Utils";
+import { words } from "@/UI/words";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
+import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
+import * as DesiredStateMock from "@S/DesiredState/Data/Mock";
+import { countDiff, createReportScopeParts } from "./Components/ReportScope/helpers";
 import { View } from "./Page";
 
 const axe = configureAxe({
@@ -22,14 +28,38 @@ const axe = configureAxe({
 
 const environment = "aaa";
 
-function setup() {
+/**
+ * The desired state lookup of the model version the mock reports ran on, with the given status.
+ */
+const modelVersionResponse = (status: DesiredStateVersionStatus) => ({
+  data: [{ ...DesiredStateMock.response.data[0], version: Number(Mock.b.model), status }],
+});
+
+/**
+ * The page with a button that leaves it, and the current search, to check what happens after the
+ * page is left.
+ */
+const LeavablePage: React.FC = () => {
+  const [isShown, setIsShown] = useState(true);
+  const { search } = useLocation();
+
+  return (
+    <>
+      <div data-testid="search">{search}</div>
+      <button onClick={() => setIsShown(false)}>Leave</button>
+      {isShown && <View version="123" />}
+    </>
+  );
+};
+
+function setup(search = "", env = EnvironmentDetails.env, page = <View version="123" />) {
   const datePresenter = new CustomDatePresenter();
 
   const component = (
-    <TestMemoryRouter initialEntries={[`/?env=${environment}`]}>
+    <TestMemoryRouter initialEntries={[`/?env=${environment}${search}`]}>
       <QueryClientProvider client={testClient}>
-        <MockedDependencyProvider>
-          <View version="123" />
+        <MockedDependencyProvider env={env}>
+          <ModalProvider>{page}</ModalProvider>
         </MockedDependencyProvider>
       </QueryClientProvider>
     </TestMemoryRouter>
@@ -43,6 +73,9 @@ describe("ComplianceCheck page", () => {
     http.get("/api/v2/dryrun/123", () => {
       return HttpResponse.json(Mock.listResponse);
     }),
+    http.get("/api/v2/desiredstate", () =>
+      HttpResponse.json(modelVersionResponse(DesiredStateVersionStatus.active))
+    ),
     http.get(`/api/v2/dryrun/123/${Mock.a.id}`, () => {
       return HttpResponse.json(Mock.reportResponse);
     }),
@@ -55,7 +88,10 @@ describe("ComplianceCheck page", () => {
   );
 
   beforeAll(() => server.listen());
-  beforeEach(() => server.restoreHandlers());
+  afterEach(() => {
+    server.resetHandlers();
+    testClient.clear();
+  });
   afterAll(() => server.close());
 
   test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async () => {
@@ -170,27 +206,23 @@ describe("ComplianceCheck page", () => {
       http.post("/api/v2/dryrun/123", () => {
         data = { data: [Mock.a, ...Mock.listOfReports] };
 
-        return HttpResponse.json(data);
+        return HttpResponse.json({ data: Mock.a.id });
       })
     );
-    const { component, datePresenter } = setup();
+    // Starts on an older report, to check that the new one replaces it.
+    const { component, datePresenter } = setup(`&state.ComplianceCheck.report=${Mock.c.id}`);
 
     render(component);
 
-    const dryRunButton = screen.getByRole("button", {
-      name: words("desiredState.complianceCheck.action.dryRun"),
-    });
-
-    await userEvent.click(dryRunButton);
-
-    await act(async () => {
-      await delay(5000);
-    });
-
     const select = await screen.findByRole("button", { name: "ReportListSelect" });
 
-    expect(select).toBeInTheDocument();
-    expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date));
+    await waitFor(() => expect(select).toHaveTextContent(datePresenter.getFull(Mock.c.date)));
+
+    await userEvent.click(
+      screen.getByRole("button", { name: words("desiredState.complianceCheck.action.dryRun") })
+    );
+
+    await waitFor(() => expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date)));
 
     await userEvent.click(select);
 
@@ -198,6 +230,34 @@ describe("ComplianceCheck page", () => {
 
     expect(options).toHaveLength(4);
     expect(options[0]).toHaveAttribute("aria-selected", "true");
+  });
+
+  test("GIVEN a dry run was started WHEN the page is left before it is done THEN it doesn't navigate back", async () => {
+    let startDryRun = () => {};
+    const isDryRunStarted = new Promise<void>((resolve) => (startDryRun = resolve));
+
+    server.use(
+      http.post("/api/v2/dryrun/123", async () => {
+        await isDryRunStarted;
+
+        return HttpResponse.json({ data: Mock.a.id });
+      })
+    );
+    const { component } = setup("", EnvironmentDetails.env, <LeavablePage />);
+
+    render(component);
+
+    await userEvent.click(
+      await screen.findByRole("button", {
+        name: words("desiredState.complianceCheck.action.dryRun"),
+      })
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Leave" }));
+    startDryRun();
+
+    await waitFor(() => expect(testClient.isMutating()).toBe(0));
+    // Selecting the report once the dry run is done would set it in the URL, and so navigate back.
+    expect(screen.getByTestId("search")).not.toHaveTextContent("report");
   });
 
   test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
@@ -277,6 +337,318 @@ describe("ComplianceCheck page", () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
+    });
+  });
+
+  describe("Report scope", () => {
+    const diff = Mock.reportResponse.data.diff;
+    const instance = ServiceInstance.a;
+
+    const findScope = () =>
+      screen.findByRole("region", { name: words("desiredState.complianceCheck.scope.title") });
+
+    let instanceRequests: URL[] = [];
+
+    beforeEach(() => {
+      instanceRequests = [];
+      server.use(
+        http.get("/lsm/v1/service_inventory*", ({ request }) => {
+          instanceRequests.push(new URL(request.url));
+
+          return HttpResponse.json({ data: [instance] });
+        })
+      );
+    });
+
+    test("GIVEN reports started on a resource filter THEN the picker summarizes each scope", async () => {
+      const { component } = setup();
+
+      render(component);
+
+      await userEvent.click(await screen.findByRole("button", { name: "ReportListSelect" }));
+
+      // Instances show by the labels stored with each report. createReportScopeParts is tested in
+      // helpers.test.ts; this checks that each option shows its own scope label.
+      const scopeLabels = Mock.listOfReports.map((report) => createReportScopeParts(report).label);
+      const options = screen.getAllByRole("option");
+
+      expect(
+        scopeLabels.some((scopeLabel) => scopeLabel.includes(Mock.filteredInstanceLabel))
+      ).toBe(true);
+      scopeLabels.forEach((scopeLabel, index) =>
+        expect(options[index]).toHaveTextContent(scopeLabel)
+      );
+      expect(instanceRequests).toHaveLength(0);
+    });
+
+    test("GIVEN a report started without instance labels THEN its instance shows by id", async () => {
+      server.use(
+        http.get("/api/v2/dryrun/123", () =>
+          HttpResponse.json({
+            data: [
+              { ...Mock.b, resource_filter: { serviceInstance: [instance.id] }, context: null },
+            ],
+          })
+        )
+      );
+      const { component } = setup();
+
+      render(component);
+
+      const picker = await screen.findByRole("button", { name: "ReportListSelect" });
+
+      await waitFor(() => expect(picker).toHaveTextContent(instance.id));
+      expect(instanceRequests).toHaveLength(0);
+    });
+
+    test("GIVEN a report started on a resource filter THEN the scope band shows what it covered", async () => {
+      const { component } = setup();
+
+      render(component);
+
+      const scope = await findScope();
+      const modelVersion = modelVersionResponse(DesiredStateVersionStatus.active).data[0];
+      const { agentCount, changedCount } = countDiff(diff);
+
+      await waitFor(() =>
+        expect(scope).toHaveTextContent(
+          `${Number(Mock.b.total)} ${words("desiredState.complianceCheck.scope.resourcesOfTotal")(Number(modelVersion.total))}`
+        )
+      );
+      expect(scope).toHaveTextContent(
+        `${agentCount} ${words("desiredState.complianceCheck.scope.agents")(agentCount)}`
+      );
+      expect(scope).toHaveTextContent(
+        `${changedCount} ${words("desiredState.complianceCheck.scope.changed")}`
+      );
+      expect(scope).toHaveTextContent(
+        `${DesiredStateVersionStatus.active} ${words("modelVersion")(Number(Mock.b.model))}`
+      );
+      expect(
+        screen.queryByText(words("desiredState.complianceCheck.scope.notActive"))
+      ).not.toBeInTheDocument();
+
+      // The applied filter shows open, with the status apart.
+      expect(
+        within(scope).getByText(words("desiredState.complianceCheck.scope.row.agent"))
+      ).toBeVisible();
+      expect(within(scope).getByText(Mock.filteredAgent)).toBeVisible();
+      expect(
+        within(scope).getByText(words("desiredState.complianceCheck.scope.row.status.note"))
+      ).toBeVisible();
+
+      await userEvent.click(
+        within(scope).getByRole("button", {
+          name: words("desiredState.complianceCheck.scope.filter.title"),
+        })
+      );
+
+      expect(
+        within(scope).queryByText(words("desiredState.complianceCheck.scope.row.agent"))
+      ).not.toBeInTheDocument();
+
+      await act(async () => {
+        const results = await axe(document.body);
+
+        expect(results).toHaveNoViolations();
+      });
+    });
+
+    test("GIVEN a report on the whole model version THEN it shows no applied filter", async () => {
+      const { component } = setup(`&state.ComplianceCheck.report=${Mock.c.id}`);
+
+      render(component);
+
+      const scope = await findScope();
+
+      expect(scope).toHaveTextContent(
+        `${Number(Mock.c.total)} ${words("desiredState.complianceCheck.scope.resources")(Number(Mock.c.total))}`
+      );
+      expect(
+        within(scope).queryByText(words("desiredState.complianceCheck.scope.filter.title"))
+      ).not.toBeInTheDocument();
+      expect(
+        within(scope).queryByRole("button", {
+          name: words("desiredState.complianceCheck.scope.rerun"),
+        })
+      ).not.toBeInTheDocument();
+    });
+
+    test("WHEN View JSON is clicked THEN it shows the exact resource filter", async () => {
+      const { component } = setup();
+
+      render(component);
+
+      await userEvent.click(
+        within(await findScope()).getByRole("button", {
+          name: words("desiredState.complianceCheck.scope.json"),
+        })
+      );
+
+      const dialog = await screen.findByRole("dialog");
+
+      expect(within(dialog).getByTestId("code-editor-content")).toHaveTextContent(
+        JSON.stringify(Mock.b.resource_filter, null, 2).replace(/\s+/g, " ")
+      );
+    });
+
+    test("WHEN Re-run is clicked THEN it re-posts the report's filter and context and selects the new report", async () => {
+      const report: DryRun = {
+        ...Mock.b,
+        resource_filter: { ...Mock.b.resource_filter, serviceInstance: [instance.id] },
+        // A key another client stored, which the re-run keeps.
+        context: {
+          web_instance_labels: { [instance.id]: Mock.filteredInstanceLabel },
+          other_client_key: "kept",
+        },
+      };
+      let body: unknown;
+      let data: { data: DryRun[] } = { data: [report] };
+
+      server.use(
+        http.get("/api/v2/dryrun/123", () => HttpResponse.json(data)),
+        http.post("/api/v2/dryrun_filtered", async ({ request }) => {
+          body = await request.json();
+          data = { data: [Mock.a, report] };
+
+          return HttpResponse.json({ data: { id: Mock.a.id, model: Mock.a.model } });
+        })
+      );
+      const { component, datePresenter } = setup();
+
+      render(component);
+
+      const scope = await findScope();
+      // Queried each time: the button is rendered anew once its disabled reason goes away.
+      const getRerun = () =>
+        within(scope).getByRole("button", {
+          name: words("desiredState.complianceCheck.scope.rerun"),
+        });
+
+      await waitFor(() => expect(getRerun()).toBeEnabled());
+      await userEvent.click(getRerun());
+
+      await waitFor(() =>
+        expect(body).toEqual({ filter: report.resource_filter, context: report.context })
+      );
+      await waitFor(() =>
+        expect(screen.getByRole("button", { name: "ReportListSelect" })).toHaveTextContent(
+          datePresenter.getFull(Mock.a.date)
+        )
+      );
+    });
+
+    test("GIVEN a report on a version that is no longer active THEN it warns and blocks a re-run its filter can't target", async () => {
+      server.use(
+        http.get("/api/v2/desiredstate", () =>
+          HttpResponse.json(modelVersionResponse(DesiredStateVersionStatus.retired))
+        )
+      );
+      const { component } = setup();
+
+      render(component);
+
+      const scope = await findScope();
+
+      expect(
+        await within(scope).findByText(words("desiredState.complianceCheck.scope.notActive"))
+      ).toBeVisible();
+      expect(scope).toHaveTextContent(
+        `${DesiredStateVersionStatus.retired} ${words("modelVersion")(Number(Mock.b.model))}`
+      );
+      expect(
+        within(scope).getByText(words("desiredState.complianceCheck.scope.value.wasLatestIntent"))
+      ).toBeVisible();
+      expect(
+        within(scope).queryByText(words("desiredState.complianceCheck.scope.value.latestIntent"))
+      ).not.toBeInTheDocument();
+      expect(
+        within(scope).getByRole("button", {
+          name: words("desiredState.complianceCheck.scope.rerun"),
+        })
+      ).toBeDisabled();
+    });
+
+    test("GIVEN a filter row with more than three values THEN the rest collapse, flags apart", async () => {
+      const agents = ["router-east", "router-west", "router-south", "router-north"];
+
+      server.use(
+        http.get("/api/v2/dryrun/123", () =>
+          HttpResponse.json({
+            data: [
+              {
+                ...Mock.b,
+                resource_filter: { isOrphan: false, includeOwned: true, agent: { eq: agents } },
+              },
+            ],
+          })
+        )
+      );
+      const { component } = setup();
+
+      render(component);
+
+      const scope = await findScope();
+      const agentRow = within(scope).getByRole("list", {
+        name: words("desiredState.complianceCheck.scope.row.agent"),
+      });
+      const shown = agents.slice(0, -1);
+      const collapsed = agents[agents.length - 1];
+
+      shown.forEach((agent) => expect(within(agentRow).getByText(agent)).toBeVisible());
+      expect(within(agentRow).queryByText(collapsed)).not.toBeInTheDocument();
+      expect(
+        within(agentRow).getByText(
+          words("desiredState.complianceCheck.scope.filter.more").replace("${remaining}", "1")
+        )
+      ).toBeVisible();
+      // The owned flag isn't one of the collapsed values, so it is always shown.
+      expect(
+        within(scope).getByText(words("desiredState.complianceCheck.scope.value.owned"))
+      ).toBeVisible();
+    });
+
+    test("GIVEN the model version's status can't be looked up THEN it can't be re-run", async () => {
+      server.use(http.get("/api/v2/desiredstate", () => HttpResponse.json({ data: [] })));
+      const { component } = setup();
+
+      render(component);
+
+      const scope = await findScope();
+
+      // Re-run is also disabled while the status loads, so wait for the lookup to finish.
+      await waitFor(() => expect(testClient.isFetching()).toBe(0));
+      expect(
+        within(scope).queryByText(words("desiredState.complianceCheck.scope.notActive"))
+      ).not.toBeInTheDocument();
+      expect(
+        within(scope).getByRole("button", {
+          name: words("desiredState.complianceCheck.scope.rerun"),
+        })
+      ).toBeDisabled();
+    });
+
+    test("GIVEN a halted environment THEN starting and re-running a dry run are disabled", async () => {
+      const { component } = setup("", { ...EnvironmentDetails.env, halted: true });
+
+      render(component);
+
+      const scope = await findScope();
+
+      // Re-run is also disabled until the model version's status is known, so wait for it.
+      await waitFor(() =>
+        expect(scope).toHaveTextContent(
+          `${DesiredStateVersionStatus.active} ${words("modelVersion")(Number(Mock.b.model))}`
+        )
+      );
+      expect(
+        screen.getByRole("button", { name: words("desiredState.complianceCheck.action.dryRun") })
+      ).toBeDisabled();
+      expect(
+        within(scope).getByRole("button", {
+          name: words("desiredState.complianceCheck.scope.rerun"),
+        })
+      ).toBeDisabled();
     });
   });
 });
