@@ -10,7 +10,7 @@ import {
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { Link } from "@/UI/Components/Link";
-import { DependencyContext } from "@/UI/Dependency";
+import { DependencyContext, useContributions } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -20,12 +20,13 @@ interface Props {
 /**
  * The AddInstanceButton component for the Service Inventory page.
  *
- * Renders the "Add instance" action. When the composer is enabled it is a split button that
- * combines the plain create route with a dropdown offering the composer route; otherwise it is
- * a plain button linking to the create route.
+ * Renders the "Add instance" action. When features contribute other ways to add an instance
+ * (the `inventory.addInstance.actions` extension point, e.g. the composer), it is a split button
+ * that combines the plain create route with a dropdown offering those; otherwise it is a plain
+ * button linking to the create route.
  *
  * @Props {Props} - Component props.
- *  @prop {string} serviceName - The name of the service, used to build the create/composer routes.
+ *  @prop {string} serviceName - The name of the service, used to build the create routes.
  *
  * @returns {React.ReactElement} The rendered add-instance action.
  */
@@ -33,7 +34,10 @@ export const AddInstanceButton: React.FC<Props> = ({ serviceName }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { routeManager, orchestratorProvider } = useContext(DependencyContext);
 
-  const composerEnabled = orchestratorProvider.isComposerEnabled();
+  const actions = useContributions("inventory.addInstance.actions").filter(
+    ({ isVisible }) => isVisible === undefined || isVisible(orchestratorProvider)
+  );
+  const context = { service: serviceName };
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
@@ -63,7 +67,7 @@ export const AddInstanceButton: React.FC<Props> = ({ serviceName }) => {
     />
   );
 
-  if (!composerEnabled) {
+  if (actions.length === 0) {
     return (
       <Link
         pathname={routeManager.getUrl("CreateInstance", {
@@ -85,18 +89,23 @@ export const AddInstanceButton: React.FC<Props> = ({ serviceName }) => {
       onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
     >
       <DropdownList>
-        <Link
-          variant="plain"
-          key="add-instance-composer-button"
-          pathname={routeManager.getUrl("InstanceComposer", {
-            service: serviceName,
-          })}
-          search={location.search}
-        >
-          <DropdownItem id="add-instance-composer-button" icon={<PlusIcon />}>
-            {words("inventory.addInstance.composerButton")}
-          </DropdownItem>
-        </Link>
+        {actions.map(({ id, label, icon: Icon, getUrl, isDisabled }) => {
+          const disabled = isDisabled?.(context) ?? false;
+
+          return (
+            <Link
+              variant="plain"
+              key={id}
+              pathname={getUrl(routeManager, context)}
+              search={location.search}
+              isDisabled={disabled}
+            >
+              <DropdownItem id={id} icon={<Icon />} isDisabled={disabled}>
+                {label}
+              </DropdownItem>
+            </Link>
+          );
+        })}
       </DropdownList>
     </Dropdown>
   );

@@ -8,7 +8,7 @@ import {
   MenuToggle,
   MenuToggleElement,
 } from "@patternfly/react-core";
-import { CopyIcon, EyeIcon, ToolsIcon } from "@patternfly/react-icons";
+import { CopyIcon, ToolsIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import {
@@ -19,7 +19,7 @@ import {
   StateTarget,
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { Link } from "@/UI/Components/Link";
-import { DependencyContext } from "@/UI/Dependency";
+import { DependencyContext, useContributions } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { DeleteAction, DestroyAction, ExpertStateTransfer, StateAction } from "./Actions";
 
@@ -27,8 +27,9 @@ import { DeleteAction, DestroyAction, ExpertStateTransfer, StateAction } from ".
  * The InstanceActions Component
  *
  * This is a dropdown component containing all the instance actions that can be performed
+ * - The links other features contribute to the `instance.actions` extension point, e.g. the
+ *   composer
  * - Edit in form
- * - Edit in Composer
  * - Delete instance
  * - If target states are available, a setState section with the available states
  *
@@ -44,6 +45,11 @@ export const InstanceActions: React.FC = () => {
     instance.deleted || isTransferDisabled(instance, "on_update", serviceModelQuery.data);
   const deleteTransfer = getTransferForType(instance, "on_delete", serviceModelQuery.data);
   const deleteDisabled = instance.deleted || deleteTransfer === undefined;
+
+  const actions = useContributions("instance.actions").filter(
+    ({ isVisible }) => isVisible === undefined || isVisible(orchestratorProvider)
+  );
+  const context = { service: instance.service_entity, instance: instance.id, editDisabled };
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isExpertDropdownOpen, setIsExpertDropdownOpen] = useState<boolean>(false);
@@ -124,41 +130,18 @@ export const InstanceActions: React.FC = () => {
         popperProps={{ position: "right" }}
       >
         <DropdownList>
-          {orchestratorProvider.isComposerEnabled() ? (
+          {actions.map(({ id, label, icon: Icon, getUrl, isDisabled }) => (
             <DropdownItem
-              key="Edit-Composer"
-              aria-label="Edit-Composer"
-              icon={<ToolsIcon />}
-              isDisabled={editDisabled}
+              key={id}
+              itemId={id}
+              icon={<Icon />}
+              isDisabled={isDisabled?.(context) ?? false}
             >
-              <Link
-                variant="plain"
-                pathname={routeManager.getUrl("InstanceComposerEditor", {
-                  service: instance.service_entity,
-                  instance: instance.id,
-                })}
-              >
-                {words("instanceComposer.editButton")}
+              <Link variant="plain" pathname={getUrl(routeManager, context)}>
+                {label}
               </Link>
             </DropdownItem>
-          ) : (
-            <DropdownItem
-              key="Show-Composer"
-              aria-label="Show-Composer"
-              icon={<EyeIcon />}
-              isDisabled={editDisabled}
-            >
-              <Link
-                variant="plain"
-                pathname={routeManager.getUrl("InstanceComposerViewer", {
-                  service: instance.service_entity,
-                  instance: instance.id,
-                })}
-              >
-                {words("instanceComposer.showButton")}
-              </Link>
-            </DropdownItem>
-          )}
+          ))}
           <DropdownItem key="Edit" isDisabled={editDisabled} icon={<ToolsIcon />}>
             <Link
               variant="plain"

@@ -2,6 +2,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { words } from "@/UI/words";
+import { features as appFeatures } from "@/appFeatures";
 import { instanceData, serviceModel } from "./mockData";
 import { defaultServer, serverFailedActions } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
@@ -410,6 +411,32 @@ describe("Page Actions - Success", () => {
 
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
+  });
+
+  it("Normal Instance Actions - without the composer feature, has no composer link", async () => {
+    render(
+      setupServiceInstanceDetails(
+        false,
+        appFeatures.filter(({ id }) => id !== "composer")
+      )
+    );
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Actions-Toggle" }));
+
+    expect(screen.getAllByRole("menuitem")).toHaveLength(5);
+    expect(
+      screen.getByRole("menuitem", { name: words("inventory.editInstance.button") })
+    ).toBeVisible();
+    expect(
+      screen.queryByRole("menuitem", { name: words("instanceComposer.editButton") })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("menuitem", { name: words("instanceComposer.showButton") })
+    ).not.toBeInTheDocument();
   });
 
   it("Normal Instance Actions Enabled - update state action", async () => {

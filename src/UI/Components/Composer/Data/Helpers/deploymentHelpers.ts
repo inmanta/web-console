@@ -1,22 +1,8 @@
 import { dia } from "@joint/plus";
 import { v4 as uuidv4 } from "uuid";
-import { InstanceAttributeModel } from "@/Core";
-import { ServiceOrderItemAction } from "@/Slices/Orders/Core/Types";
+import { ServiceOrderItemAction, ServiceOrderItemRequest } from "@/Core";
 import { ServiceEntityShape } from "../../UI";
 import { SavedCoordinates } from "./canvasLayoutUtils";
-
-/**
- * Interface for a service order item created with the composer.
- */
-export interface ComposerServiceOrderItem {
-  instance_id: string;
-  service_entity: string;
-  config: Record<string, boolean> | null;
-  action: ServiceOrderItemAction | null;
-  attributes?: InstanceAttributeModel | null;
-  edits?: [Record<string, unknown>] | null;
-  metadata?: Record<string, string> | null;
-}
 
 /**
  * Gets the coordinates of all ServiceEntityShape cells in the graph.
@@ -46,19 +32,19 @@ export const getCellsCoordinates = (graph: dia.Graph): SavedCoordinates[] => {
 };
 
 /**
- * Converts canvasState (Map of ServiceEntityShape) to serviceOrderItems (Map of ComposerServiceOrderItem)
+ * Converts canvasState (Map of ServiceEntityShape) to serviceOrderItems (Map of ServiceOrderItemRequest)
  * Each shape builds its own order item representation, including nested embedded entities and inter_service_relations.
  * Also handles delete actions for shapes that existed initially but are now missing.
  *
  * @param {Map<string, ServiceEntityShape>} canvasState - The current canvas state
  * @param {Map<string, { service_entity: string }>} initialShapeInfo - Map of initial shape IDs to their service_entity (for delete detection)
- * @returns {Map<string, ComposerServiceOrderItem>} The converted service order items
+ * @returns {Map<string, ServiceOrderItemRequest>} The converted service order items
  */
 export const canvasStateToServiceOrderItems = (
   canvasState: Map<string, ServiceEntityShape>,
   initialShapeInfo: Map<string, { service_entity: string }> = new Map()
-): Map<string, ComposerServiceOrderItem> => {
-  const serviceOrderItems = new Map<string, ComposerServiceOrderItem>();
+): Map<string, ServiceOrderItemRequest> => {
+  const serviceOrderItems = new Map<string, ServiceOrderItemRequest>();
 
   // Update all orderItems first (in case they're stale)
   canvasState.forEach((shape) => {
@@ -95,10 +81,10 @@ export const canvasStateToServiceOrderItems = (
  * Transforms a service order item for update actions by converting attributes to edits format.
  * This matches the old ComposerCanvas behavior where update actions use edits instead of attributes.
  *
- * @param {ComposerServiceOrderItem} item - The service order item to transform
- * @returns {ComposerServiceOrderItem} The transformed service order item
+ * @param {ServiceOrderItemRequest} item - The service order item to transform
+ * @returns {ServiceOrderItemRequest} The transformed service order item
  */
-const transformUpdateItem = (item: ComposerServiceOrderItem): ComposerServiceOrderItem => {
+const transformUpdateItem = (item: ServiceOrderItemRequest): ServiceOrderItemRequest => {
   // For update actions, convert attributes to edits format
   // Note: Embedded entities are nested in parent attributes, so they don't appear as separate items
   if (item.action === "update" && item.attributes && !item.edits) {
@@ -121,15 +107,15 @@ const transformUpdateItem = (item: ComposerServiceOrderItem): ComposerServiceOrd
 };
 
 /**
- * Converts a Map of ComposerServiceOrderItem to an array, filtering out items with null actions.
+ * Converts a Map of ServiceOrderItemRequest to an array, filtering out items with null actions.
  * Also transforms update items to use edits format instead of attributes.
  *
- * @param {Map<string, ComposerServiceOrderItem>} serviceOrderItems - The map of service order items
- * @returns {ComposerServiceOrderItem[]} Array of service order items with non-null actions, transformed for API
+ * @param {Map<string, ServiceOrderItemRequest>} serviceOrderItems - The map of service order items
+ * @returns {ServiceOrderItemRequest[]} Array of service order items with non-null actions, transformed for API
  */
 export const getServiceOrderItemsArray = (
-  serviceOrderItems: Map<string, ComposerServiceOrderItem>
-): ComposerServiceOrderItem[] => {
+  serviceOrderItems: Map<string, ServiceOrderItemRequest>
+): ServiceOrderItemRequest[] => {
   return Array.from(serviceOrderItems.values())
     .filter((item) => item.action !== null)
     .map(transformUpdateItem);

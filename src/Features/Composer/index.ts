@@ -1,7 +1,30 @@
-import { FeatureModule } from "@/Core";
+import { EyeIcon, PlusIcon, ToolsIcon } from "@patternfly/react-icons";
+import { FeatureModule, InstanceContext, LinkAction, OrchestratorProvider } from "@/Core";
+import { words } from "@/UI/words";
 import * as InstanceComposer from "@S/InstanceComposerCreator/Core/Route";
 import * as InstanceComposerEditor from "@S/InstanceComposerEditor/Core/Route";
 import * as InstanceComposerViewer from "@S/InstanceComposerViewer/Core/Route";
+
+const isComposerEnabled = (orchestratorProvider: OrchestratorProvider) =>
+  orchestratorProvider.isComposerEnabled();
+
+const editInComposer: LinkAction<InstanceContext> = {
+  id: "edit-composer",
+  label: words("instanceComposer.editButton"),
+  icon: ToolsIcon,
+  getUrl: (routeManager, { service, instance }) =>
+    routeManager.getUrl("InstanceComposerEditor", { service, instance }),
+  isVisible: isComposerEnabled,
+  isDisabled: ({ editDisabled }) => editDisabled,
+};
+
+const showInComposer: LinkAction<InstanceContext> = {
+  id: "show-composer",
+  label: words("instanceComposer.showButton"),
+  icon: EyeIcon,
+  getUrl: (routeManager, { service, instance }) =>
+    routeManager.getUrl("InstanceComposerViewer", { service, instance }),
+};
 
 /**
  * The Instance Composer. Its pages pull in @joint/plus, so they are not preloaded: they are only
@@ -29,4 +52,25 @@ export const composerFeature: FeatureModule = {
         import("@S/InstanceComposerViewer/UI").then((module) => module.InstanceComposerViewerPage),
     },
   ],
+  contributions: {
+    "inventory.addInstance.actions": [
+      {
+        id: "add-instance-composer-button",
+        label: words("inventory.addInstance.composerButton"),
+        icon: PlusIcon,
+        getUrl: (routeManager, { service }) => routeManager.getUrl("InstanceComposer", { service }),
+        isVisible: isComposerEnabled,
+      },
+    ],
+    "inventory.row.actions": [editInComposer, { ...showInComposer, isVisible: isComposerEnabled }],
+    // Without the composer license, the details page still offers the read-only view.
+    "instance.actions": [
+      editInComposer,
+      {
+        ...showInComposer,
+        isVisible: (orchestratorProvider) => !isComposerEnabled(orchestratorProvider),
+        isDisabled: ({ editDisabled }) => editDisabled,
+      },
+    ],
+  },
 };

@@ -7,16 +7,10 @@ import {
   DropdownList,
   DropdownItem,
 } from "@patternfly/react-core";
-import {
-  CopyIcon,
-  EllipsisVIcon,
-  EyeIcon,
-  FileMedicalAltIcon,
-  ToolsIcon,
-} from "@patternfly/react-icons";
+import { CopyIcon, EllipsisVIcon, FileMedicalAltIcon, ToolsIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
 import { Link } from "@/UI/Components/Link";
-import { DependencyContext } from "@/UI/Dependency";
+import { DependencyContext, useContributions } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { DeleteAction } from "./DeleteAction";
 
@@ -43,7 +37,10 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
 
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const composerEnabled = orchestratorProvider.isComposerEnabled();
+  const actions = useContributions("inventory.row.actions").filter(
+    ({ isVisible }) => isVisible === undefined || isVisible(orchestratorProvider)
+  );
+  const context = { service: entity, instance: instanceId, editDisabled };
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
@@ -87,33 +84,22 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
             {words("inventory.statustab.diagnose")}
           </DropdownItem>
         </Link>
-        {composerEnabled && (
-          <Link
-            variant="plain"
-            pathname={routeManager.getUrl("InstanceComposerEditor", {
-              service: entity,
-              instance: instanceId,
-            })}
-            isDisabled={editDisabled}
-          >
-            <DropdownItem itemId="edit-composer" isDisabled={editDisabled} icon={<ToolsIcon />}>
-              {words("instanceComposer.editButton")}
-            </DropdownItem>
-          </Link>
-        )}
-        {orchestratorProvider.isComposerEnabled() && (
-          <Link
-            variant="plain"
-            pathname={routeManager.getUrl("InstanceComposerViewer", {
-              service: entity,
-              instance: instanceId,
-            })}
-          >
-            <DropdownItem itemId="show-composer" icon={<EyeIcon />}>
-              {words("instanceComposer.showButton")}
-            </DropdownItem>
-          </Link>
-        )}
+        {actions.map(({ id, label, icon: Icon, getUrl, isDisabled }) => {
+          const disabled = isDisabled?.(context) ?? false;
+
+          return (
+            <Link
+              key={id}
+              variant="plain"
+              pathname={getUrl(routeManager, context)}
+              isDisabled={disabled}
+            >
+              <DropdownItem itemId={id} isDisabled={disabled} icon={<Icon />}>
+                {label}
+              </DropdownItem>
+            </Link>
+          );
+        })}
         <Link
           variant="plain"
           pathname={routeManager.getUrl("EditInstance", {

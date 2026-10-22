@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { ServiceModel } from "@/Core";
+import { ServiceModel, ServiceOrderItemRequest } from "@/Core";
 import { ServiceEntityShape } from "../../UI";
 import { canvasStateToServiceOrderItems } from "../Helpers/deploymentHelpers";
-import { ComposerServiceOrderItem } from "../Helpers/deploymentHelpers";
 
 interface UseServiceOrderItemsParams {
   canvasState: Map<string, ServiceEntityShape>;
@@ -11,7 +10,7 @@ interface UseServiceOrderItemsParams {
 }
 
 interface UseServiceOrderItemsReturn {
-  serviceOrderItems: Map<string, ComposerServiceOrderItem>;
+  serviceOrderItems: Map<string, ServiceOrderItemRequest>;
   hasValidationErrors: boolean;
 }
 
@@ -24,7 +23,7 @@ export const useServiceOrderItems = ({
   initialShapeInfoRef,
   serviceCatalog,
 }: UseServiceOrderItemsParams): UseServiceOrderItemsReturn => {
-  const [serviceOrderItems, setServiceOrderItems] = useState<Map<string, ComposerServiceOrderItem>>(
+  const [serviceOrderItems, setServiceOrderItems] = useState<Map<string, ServiceOrderItemRequest>>(
     new Map()
   );
 

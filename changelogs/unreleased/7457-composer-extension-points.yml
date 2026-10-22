@@ -1,0 +1,5 @@
+description: Added extension points to the service inventory and instance details menus, through which the composer adds its links. Nothing outside the composer imports composer code anymore.
+issue-nr: 7457
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}
