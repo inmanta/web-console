@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump jsdom from 30.1.2 to 30.1.3
+destination-branches:
+- master
+- iso9
+sections: {}

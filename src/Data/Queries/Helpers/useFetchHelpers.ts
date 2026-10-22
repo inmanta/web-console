@@ -2,8 +2,13 @@ import { useContext } from "react";
 import { AuthContext } from "@/Data/Auth";
 import { words } from "@/UI/words";
 
+/**
+ * A failed request: the HTTP `status`, and in `details` the `error_details` of the response
+ * body when the server sent them.
+ */
 export interface CustomError extends Error {
   status?: number;
+  details?: unknown;
 }
 
 /**
@@ -18,16 +23,35 @@ export interface ApiEndpoint {
 const gatewayStatuses = [502, 503, 504];
 
 /**
- * Creates an error that carries the HTTP status of the response it came from.
+ * Creates an error that carries the HTTP status of the response it came from, and the `error_details` of its body when given.
  *
  * @example createCustomError("Environment not found", 404) // Error "Environment not found" with status 404
  */
-export const createCustomError = (message: string, status: number): CustomError => {
+export const createCustomError = (
+  message: string,
+  status: number,
+  details?: unknown
+): CustomError => {
   const error: CustomError = new Error(message);
 
   error.status = status;
+  error.details = details;
 
   return error;
+};
+
+/**
+ * Gets the `error_details` of a JSON error body, like the attribute validation errors LSM sends.
+ * Returns undefined when the body is not JSON or has no details.
+ *
+ * @example getErrorDetails('{"message":"Invalid","error_details":{"attribute_validation_errors":[]}}') // { attribute_validation_errors: [] }
+ */
+const getErrorDetails = (bodyText: string): unknown => {
+  try {
+    return JSON.parse(bodyText)?.error_details;
+  } catch {
+    return undefined;
+  }
 };
 
 /**
@@ -120,17 +144,19 @@ export const useFetchHelpers = () => {
     if (!response.ok) {
       const bodyText = await response.text().catch(() => "");
       const message = getServerMessage(bodyText) ?? formatStatusMessage(response.status);
+      const details = getErrorDetails(bodyText);
 
       if (response.status === 403) {
         const [pathWithoutQuery] = endpoint.path.split("?");
 
         throw createCustomError(
           words("error.response.endpoint")(message, endpoint.method, pathWithoutQuery),
-          response.status
+          response.status,
+          details
         );
       }
 
-      throw createCustomError(message, response.status);
+      throw createCustomError(message, response.status, details);
     }
   }
 
