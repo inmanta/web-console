@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { Field, InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
-import { usePost } from "@/Data/Queries/Helpers";
+import { CustomError, usePost } from "@/Data/Queries/Helpers";
 import { DependencyContext } from "@/UI/Dependency";
 import { prepBody } from "./helper";
 
@@ -23,12 +23,12 @@ interface Response {
 /**
  * React Query hook for posting instance.
  *
- * @returns {UseMutationResult<Response, Error, Params, unknown>}- The mutation object from `useMutation` hook.
+ * @returns {UseMutationResult<Response, CustomError, Params, unknown>}- The mutation object from `useMutation` hook.
  */
 export const usePostInstance = (
   service_entity: string,
-  options?: UseMutationOptions<Response, Error, Params>
-): UseMutationResult<Response, Error, Params, unknown> => {
+  options?: UseMutationOptions<Response, CustomError, Params>
+): UseMutationResult<Response, CustomError, Params, unknown> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<Body>;
