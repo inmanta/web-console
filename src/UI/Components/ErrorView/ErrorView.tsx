@@ -58,13 +58,15 @@ export const ErrorView: React.FC<Props> = ({
         </EmptyStateBody>
         <EmptyStateFooter>
           {retry && (
-            <Button variant="primary" onClick={retry}>
-              {words("retry")}
-            </Button>
+            <EmptyStateActions>
+              <Button variant="primary" onClick={retry}>
+                {words("retry")}
+              </Button>
+            </EmptyStateActions>
           )}
           {logout && (
             <EmptyStateActions>
-              <Button variant="secondary" onClick={logout}>
+              <Button variant="link" onClick={logout}>
                 {words("dashboard.logout")}
               </Button>
             </EmptyStateActions>

@@ -133,7 +133,7 @@ describe("handleErrors", () => {
     });
   });
 
-  it("GIVEN a 403 without a JSON message THEN the message is based on the status and leaves out the endpoint", async () => {
+  it("GIVEN a 403 without a JSON message THEN the message is based on the status and names the endpoint", async () => {
     const handleErrors = renderHandleErrors();
     const response = new Response("<html><body><h1>403 Forbidden</h1></body></html>", {
       status: 403,
@@ -141,7 +141,11 @@ describe("handleErrors", () => {
     });
 
     await expect(handleErrors(response, graphqlEndpoint)).rejects.toMatchObject({
-      message: words("error.response.unexpected")(403),
+      message: words("error.response.endpoint")(
+        words("error.response.unexpected")(403),
+        graphqlEndpoint.method,
+        graphqlEndpoint.path
+      ),
       status: 403,
     });
   });
@@ -209,6 +213,17 @@ describe("parseJsonResponse", () => {
   it("GIVEN a proxy's HTML page with status 200 THEN it throws an unexpected response error", async () => {
     await expect(parseJsonResponse(new Response("<html></html>"))).rejects.toMatchObject({
       message: words("error.response.unexpected")(200),
+      status: 200,
+    });
+  });
+
+  it("GIVEN a redirected response with an HTML page THEN it throws a session expired error", async () => {
+    const response = new Response("<html></html>");
+
+    Object.defineProperty(response, "redirected", { value: true });
+
+    await expect(parseJsonResponse(response)).rejects.toMatchObject({
+      message: words("error.response.redirected"),
       status: 200,
     });
   });

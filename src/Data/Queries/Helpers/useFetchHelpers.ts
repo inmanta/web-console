@@ -22,7 +22,7 @@ const gatewayStatuses = [502, 503, 504];
  *
  * @example createCustomError("Environment not found", 404) // Error "Environment not found" with status 404
  */
-const createCustomError = (message: string, status: number): CustomError => {
+export const createCustomError = (message: string, status: number): CustomError => {
   const error: CustomError = new Error(message);
 
   error.status = status;
@@ -65,12 +65,24 @@ const formatStatusMessage = (status: number): string =>
     : words("error.response.unexpected")(status);
 
 /**
+ * Formats the message for a successful response whose body is not JSON.
+ * A redirected response is most likely a proxy's login page after its session expired.
+ *
+ * @example formatNonJsonResponseMessage(redirectedResponse) // "Your session may have expired. Reload the page to sign in again."
+ */
+const formatNonJsonResponseMessage = (response: Response): string =>
+  response.redirected
+    ? words("error.response.redirected")
+    : words("error.response.unexpected")(response.status);
+
+/**
  * Reads the body of a successful response as JSON, or undefined when the body is empty.
  * Throws a CustomError when the body is not JSON, like a proxy's login page sent with status 200.
  *
  * @example await parseJsonResponse(new Response('{"data":[]}')) // { data: [] }
  */
-export const parseJsonResponse = async (response: Response) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const parseJsonResponse = async (response: Response): Promise<any> => {
   const bodyText = await response.text();
 
   if (!bodyText) {
@@ -80,7 +92,7 @@ export const parseJsonResponse = async (response: Response) => {
   try {
     return JSON.parse(bodyText);
   } catch {
-    throw createCustomError(formatStatusMessage(response.status), response.status);
+    throw createCustomError(formatNonJsonResponseMessage(response), response.status);
   }
 };
 
@@ -94,7 +106,7 @@ export const useFetchHelpers = () => {
 
   /**
    * Throws a CustomError for a failed response and starts the login flow on a 401.
-   * Uses the server's message when the body has one, otherwise a message based on the status, and adds the endpoint to the server's message on a 403 so the denied call can be found in the access policy.
+   * Uses the server's message when the body has one, otherwise a message based on the status. Every 403 message ends with the endpoint, so the denied call can be found in the access policy: an access policy denial and a business rule 403 can only be told apart by core's message text, which isn't a stable contract.
    *
    * @example
    * await handleErrors(forbiddenResponse, { method: "POST", path: "/api/v2/graphql" })
@@ -107,22 +119,18 @@ export const useFetchHelpers = () => {
 
     if (!response.ok) {
       const bodyText = await response.text().catch(() => "");
-      const serverMessage = getServerMessage(bodyText);
-
-      if (serverMessage === undefined) {
-        throw createCustomError(formatStatusMessage(response.status), response.status);
-      }
+      const message = getServerMessage(bodyText) ?? formatStatusMessage(response.status);
 
       if (response.status === 403) {
         const [pathWithoutQuery] = endpoint.path.split("?");
 
         throw createCustomError(
-          words("error.response.endpoint")(serverMessage, endpoint.method, pathWithoutQuery),
+          words("error.response.endpoint")(message, endpoint.method, pathWithoutQuery),
           response.status
         );
       }
 
-      throw createCustomError(serverMessage, response.status);
+      throw createCustomError(message, response.status);
     }
   }
 
