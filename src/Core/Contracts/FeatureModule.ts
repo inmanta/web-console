@@ -102,8 +102,9 @@ export interface NavigationEntry {
 
 /**
  * The open registry of extension points: maps each extension point to the type of what is
- * contributed to it. The feature that owns an extension point adds it through declaration
- * merging, the same way as `RouteRegistry`.
+ * contributed to it. Extension points are added through declaration merging, the same way as
+ * `RouteRegistry`: by the feature that owns them, or in `Core/Contracts/ExtensionPoints.ts` when
+ * other features must contribute to them without importing the owner.
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ExtensionPointRegistry {}

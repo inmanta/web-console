@@ -29,6 +29,16 @@ interface Props {
 }
 
 /**
+ * Returns the features the app ships, without one of them, e.g. to test the app without the
+ * composer.
+ *
+ * @param id - the id of the feature to leave out
+ * @returns every other feature of the app
+ */
+export const withoutFeature = (id: string): FeatureModule[] =>
+  appFeatures.filter((feature) => feature.id !== id);
+
+/**
  * MockedDependencyProvider is a component that provides the dependencies for the tested component.
  *
  * @returns {React.FC<React.PropsWithChildren<Props>>}

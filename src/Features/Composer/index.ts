@@ -1,5 +1,11 @@
 import { EyeIcon, PlusIcon, ToolsIcon } from "@patternfly/react-icons";
-import { FeatureModule, InstanceContext, LinkAction, OrchestratorProvider, words } from "@/Core";
+import {
+  FeatureModule,
+  InstanceLinkContext,
+  LinkAction,
+  OrchestratorProvider,
+  words,
+} from "@/Core";
 import * as InstanceComposer from "@S/InstanceComposerCreator/Core/Route";
 import * as InstanceComposerEditor from "@S/InstanceComposerEditor/Core/Route";
 import * as InstanceComposerViewer from "@S/InstanceComposerViewer/Core/Route";
@@ -8,7 +14,7 @@ import { composerMessages } from "./messages";
 const isComposerEnabled = (orchestratorProvider: OrchestratorProvider) =>
   orchestratorProvider.isComposerEnabled();
 
-const editInComposer: LinkAction<InstanceContext> = {
+const editInComposer: LinkAction<InstanceLinkContext> = {
   id: "edit-composer",
   getLabel: () => words("instanceComposer.editButton"),
   icon: ToolsIcon,
@@ -18,7 +24,7 @@ const editInComposer: LinkAction<InstanceContext> = {
   isDisabled: ({ editDisabled }) => editDisabled,
 };
 
-const showInComposer: LinkAction<InstanceContext> = {
+const showInComposer: LinkAction<InstanceLinkContext> = {
   id: "show-composer",
   getLabel: () => words("instanceComposer.showButton"),
   icon: EyeIcon,
@@ -70,6 +76,8 @@ export const composerFeature: FeatureModule = {
       {
         ...showInComposer,
         isVisible: (orchestratorProvider) => !isComposerEnabled(orchestratorProvider),
+        // Kept from before the extension points: the read-only view is disabled whenever the
+        // instance can't be updated, unlike the one in the inventory row menu.
         isDisabled: ({ editDisabled }) => editDisabled,
       },
     ],

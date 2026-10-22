@@ -8,14 +8,19 @@ import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { FeatureModule, words } from "@/Core";
-import { Service, ServiceInstance, Pagination, MockedDependencyProvider } from "@/Test";
+import {
+  Service,
+  ServiceInstance,
+  Pagination,
+  MockedDependencyProvider,
+  withoutFeature,
+} from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { features as appFeatures } from "@/appFeatures";
 import { ServiceInventory } from "./ServiceInventory";
 
-function setup(service = Service.a, pageSize = "", features: FeatureModule[] = appFeatures) {
+function setup(service = Service.a, pageSize = "", features?: FeatureModule[]) {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[`/?env=aaa${pageSize}`]}>
@@ -312,11 +317,7 @@ describe("ServiceInventory", () => {
       })
     );
 
-    const { component } = setup(
-      Service.a,
-      "",
-      appFeatures.filter(({ id }) => id !== "composer")
-    );
+    const { component } = setup(Service.a, "", withoutFeature("composer"));
 
     render(component);
 

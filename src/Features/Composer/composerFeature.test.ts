@@ -1,4 +1,4 @@
-import { ExtensionPointRegistry, OrchestratorProvider } from "@/Core";
+import { ExtensionPointRegistry, isLinkActionVisible, OrchestratorProvider } from "@/Core";
 import { MockOrchestratorProvider } from "@/Test";
 import { composerFeature } from ".";
 
@@ -11,7 +11,7 @@ const visibleIds = (point: keyof ExtensionPointRegistry, composerEnabled: boolea
   orchestratorProvider.isComposerEnabled = () => composerEnabled;
 
   return (composerFeature.contributions?.[point] ?? [])
-    .filter(({ isVisible }) => isVisible === undefined || isVisible(orchestratorProvider))
+    .filter((action) => isLinkActionVisible(action, orchestratorProvider))
     .map(({ id }) => id);
 };
 

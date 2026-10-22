@@ -20,7 +20,7 @@ import {
   StateTarget,
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { Link } from "@/UI/Components/Link";
-import { DependencyContext, useContributions } from "@/UI/Dependency";
+import { DependencyContext, useVisibleLinkActions } from "@/UI/Dependency";
 import { DeleteAction, DestroyAction, ExpertStateTransfer, StateAction } from "./Actions";
 
 /**
@@ -39,16 +39,14 @@ import { DeleteAction, DestroyAction, ExpertStateTransfer, StateAction } from ".
  */
 export const InstanceActions: React.FC = () => {
   const { instance, serviceModelQuery } = useContext(InstanceDetailsContext);
-  const { routeManager, environmentHandler, orchestratorProvider } = useContext(DependencyContext);
+  const { routeManager, environmentHandler } = useContext(DependencyContext);
 
   const editDisabled =
     instance.deleted || isTransferDisabled(instance, "on_update", serviceModelQuery.data);
   const deleteTransfer = getTransferForType(instance, "on_delete", serviceModelQuery.data);
   const deleteDisabled = instance.deleted || deleteTransfer === undefined;
 
-  const actions = useContributions("instance.actions").filter(
-    ({ isVisible }) => isVisible === undefined || isVisible(orchestratorProvider)
-  );
+  const actions = useVisibleLinkActions("instance.actions");
   const context = { service: instance.service_entity, instance: instance.id, editDisabled };
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
