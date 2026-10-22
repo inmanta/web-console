@@ -240,7 +240,7 @@ if (isIso) {
 
       cy.get('[aria-label="instance-details-link"]').first().click();
       cy.get('[aria-label="Actions-Toggle"]', { timeout: 20000 }).click();
-      cy.get('[role="menuitem"][aria-label="Edit-Composer"]').click();
+      cy.contains('[role="menuitem"]', "Edit in Composer").click();
 
       // Step 2: Validate current inventory tab disabled state.
       cy.get("#inventory-tab", { timeout: 20000 }).click();
@@ -360,7 +360,7 @@ if (isIso) {
 
       cy.get('[aria-label="instance-details-link"]').first().click();
       cy.get('[aria-label="Actions-Toggle"]', { timeout: 20000 }).click();
-      cy.get('[role="menuitem"][aria-label="Edit-Composer"]').click();
+      cy.contains('[role="menuitem"]', "Edit in Composer").click();
 
       // Assert: Existing project and ProjectNaming nodes are present.
       cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "project", {

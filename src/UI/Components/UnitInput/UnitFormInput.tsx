@@ -39,6 +39,9 @@ interface Props {
 
   /** Fires whenever the typed entry's validity changes (e.g. to gate a form's submit button) — an empty, optional field counts as valid, matching `handleInputChange`'s own `null`. */
   onValidityChange?: (isValid: boolean) => void;
+
+  /** A validation error of the last submit (the server's validation of the submitted value), shown unless the typed entry is itself invalid. */
+  validationError?: string;
 }
 
 function initialState(
@@ -112,6 +115,7 @@ export const UnitFormInput: React.FC<Props> = ({
   shouldBeDisabled = false,
   handleInputChange,
   onValidityChange,
+  validationError,
 }) => {
   const [{ unit, typed }, setState] = useState(() => initialState(attributeValue, config));
   const editedRef = useRef(false);
@@ -174,7 +178,7 @@ export const UnitFormInput: React.FC<Props> = ({
             placeholder={isOptional ? "—" : "0"}
             isRequired={!isOptional}
             isDisabled={shouldBeDisabled}
-            validated={error ? "error" : "default"}
+            validated={error || validationError ? "error" : "default"}
             onChange={(_event, value) => commit(value, unit)}
             onWheel={preventNumberInputScroll}
           />
@@ -202,6 +206,9 @@ export const UnitFormInput: React.FC<Props> = ({
             <HelperTextItem variant="error">{errorMessage(error, config.kind)}</HelperTextItem>
           ) : (
             <>
+              {validationError && (
+                <HelperTextItem variant="error">{validationError}</HelperTextItem>
+              )}
               <HelperTextItem>
                 {validation.valid && validation.apiValue !== null
                   ? words("unitInput.helper.stored")(

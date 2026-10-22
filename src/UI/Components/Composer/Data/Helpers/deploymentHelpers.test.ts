@@ -1,11 +1,11 @@
 import { dia } from "@joint/plus";
+import { ServiceOrderItemRequest } from "@/Core";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import { defineObjectsForJointJS } from "../../testSetup";
 import {
   getCellsCoordinates,
   canvasStateToServiceOrderItems,
   getServiceOrderItemsArray,
-  ComposerServiceOrderItem,
 } from "./deploymentHelpers";
 
 describe("deploymentHelpers", () => {
@@ -16,7 +16,7 @@ describe("deploymentHelpers", () => {
   const createMockShape = (
     id: string,
     entityName: string,
-    orderItem: ComposerServiceOrderItem | null = null
+    orderItem: ServiceOrderItemRequest | null = null
   ): ServiceEntityShape => {
     return {
       id,
@@ -87,14 +87,14 @@ describe("deploymentHelpers", () => {
 
     it("should convert shapes to service order items", () => {
       const canvasState = new Map<string, ServiceEntityShape>();
-      const orderItem1: ComposerServiceOrderItem = {
+      const orderItem1: ServiceOrderItemRequest = {
         instance_id: "shape-1",
         service_entity: "ServiceA",
         config: {},
         action: "create",
         attributes: { name: "test" },
       };
-      const orderItem2: ComposerServiceOrderItem = {
+      const orderItem2: ServiceOrderItemRequest = {
         instance_id: "shape-2",
         service_entity: "ServiceB",
         config: {},
@@ -146,7 +146,7 @@ describe("deploymentHelpers", () => {
 
     it("should handle both existing and deleted shapes", () => {
       const canvasState = new Map<string, ServiceEntityShape>();
-      const orderItem: ComposerServiceOrderItem = {
+      const orderItem: ServiceOrderItemRequest = {
         instance_id: "shape-1",
         service_entity: "ServiceA",
         config: {},
@@ -180,7 +180,7 @@ describe("deploymentHelpers", () => {
 
   describe("getServiceOrderItemsArray", () => {
     it("should return empty array when map is empty", () => {
-      const serviceOrderItems = new Map<string, ComposerServiceOrderItem>();
+      const serviceOrderItems = new Map<string, ServiceOrderItemRequest>();
 
       const result = getServiceOrderItemsArray(serviceOrderItems);
 
@@ -188,7 +188,7 @@ describe("deploymentHelpers", () => {
     });
 
     it("should filter out items with null actions", () => {
-      const serviceOrderItems = new Map<string, ComposerServiceOrderItem>();
+      const serviceOrderItems = new Map<string, ServiceOrderItemRequest>();
       serviceOrderItems.set("item-1", {
         instance_id: "item-1",
         service_entity: "ServiceA",
@@ -211,7 +211,7 @@ describe("deploymentHelpers", () => {
     });
 
     it("should transform update items to use edits format", () => {
-      const serviceOrderItems = new Map<string, ComposerServiceOrderItem>();
+      const serviceOrderItems = new Map<string, ServiceOrderItemRequest>();
       serviceOrderItems.set("item-1", {
         instance_id: "item-1",
         service_entity: "ServiceA",
@@ -234,7 +234,7 @@ describe("deploymentHelpers", () => {
     });
 
     it("should not transform update items that already have edits", () => {
-      const serviceOrderItems = new Map<string, ComposerServiceOrderItem>();
+      const serviceOrderItems = new Map<string, ServiceOrderItemRequest>();
       const existingEdits = [
         {
           edit_id: "existing-edit",
@@ -260,7 +260,7 @@ describe("deploymentHelpers", () => {
     });
 
     it("should not transform non-update items", () => {
-      const serviceOrderItems = new Map<string, ComposerServiceOrderItem>();
+      const serviceOrderItems = new Map<string, ServiceOrderItemRequest>();
       serviceOrderItems.set("item-1", {
         instance_id: "item-1",
         service_entity: "ServiceA",

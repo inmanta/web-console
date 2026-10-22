@@ -20,6 +20,7 @@ interface Props {
   value: unknown;
   onChange: (value: DictValue | null) => void;
   readOnly?: boolean;
+  validationError?: string;
 }
 
 /**
@@ -35,10 +36,17 @@ interface Props {
  * @prop {unknown} value - Current value; synced into the editor when changed externally (e.g. form reset).
  * @prop {(value: DictValue | null) => void} onChange - Called with the parsed object on every valid edit.
  * @prop {boolean} [readOnly=false] - Disables editing and marks the editor with aria-disabled.
+ * @prop {string} [validationError] - A validation error of the last submit, shown below the editor.
  *
  * @returns {React.ReactElement} The rendered JSON dictionary editor field.
  */
-export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOnly = false }) => {
+export const DictFieldInput: React.FC<Props> = ({
+  field,
+  value,
+  onChange,
+  readOnly = false,
+  validationError,
+}) => {
   const [text, setText] = useState<string>(() => toText(value));
   const [isInvalid, setIsInvalid] = useState(false);
   const [height, setHeight] = useState(100);
@@ -122,6 +130,7 @@ export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOn
           <HelperTextItem variant={isInvalid ? "error" : "indeterminate"}>
             {isInvalid ? words("validation.empty") : words("inventory.form.typeHint.dict")}
           </HelperTextItem>
+          {validationError && <HelperTextItem variant="error">{validationError}</HelperTextItem>}
         </HelperText>
       </FormHelperText>
     </FormGroup>
