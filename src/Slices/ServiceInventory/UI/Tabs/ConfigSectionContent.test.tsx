@@ -13,11 +13,11 @@ import { ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { Service, ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
-import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@/UI/words";
 import { ConfigSectionContent } from "./ConfigSectionContent";
 
-// Mock useGet from @/Data/Queries
+// Mock the instance config hooks from @/Data/Queries/Slices/ServiceInstance
 const mockMutate = vi.fn();
 
 // Create mutable data that can be updated by mutations
@@ -37,12 +37,7 @@ function triggerRefetch() {
   refetchSubscribers.forEach((cb) => cb());
 }
 
-vi.mock("@/Data/Queries", () => ({
-  useGet: () => async (path: string) => {
-    const response = await fetch(path);
-
-    return response.json();
-  },
+vi.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
   useGetInstanceConfig: () => ({
     useOneTime: () => {
       const [_, setRerender] = useState({});

@@ -1,7 +1,10 @@
 import React, { PropsWithChildren, useContext } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { useGetServerStatus } from "@/Data/Queries";
-import { Description, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+import { useGetServerStatus } from "@/Data/Queries/Slices/Server";
+import { Description } from "@/UI/Components/Description";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { StatusList } from "./StatusList";

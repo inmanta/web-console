@@ -17,7 +17,8 @@ import {
   Textarea,
   UnitField,
 } from "@/Core";
-import { SUGGESTION_NAMESPACES } from "@/Data/Queries";
+import { CustomError } from "@/Data/Queries/Helpers";
+import { SUGGESTION_NAMESPACES } from "@/Data/Queries/Slices/ServiceInstance";
 import * as Test from "@/Test";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -41,7 +42,8 @@ const setup = (
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined,
   initialStates: string[] = [],
-  entityAnnotations: EntityAnnotations | undefined = undefined
+  entityAnnotations: EntityAnnotations | undefined = undefined,
+  submitError: CustomError | null = null
 ) => {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -62,6 +64,7 @@ const setup = (
                   setIsDirty={vi.fn()}
                   initialStates={initialStates}
                   entityAnnotations={entityAnnotations}
+                  submitError={submitError}
                 />
               }
             />
@@ -286,6 +289,102 @@ test("GIVEN ServiceInstanceForm WHEN a parameter_name depends on ${instance_id} 
   await userEvent.click(textBox);
 
   expect(screen.queryAllByRole("menuitem")).toHaveLength(0);
+});
+
+test("GIVEN ServiceInstanceForm WHEN the submit was rejected with validation errors THEN the form and the fields show them until edited", async () => {
+  const submitError: CustomError = {
+    name: "Error",
+    message: "Invalid request: 3 validation errors for service_entity ...",
+    details: {
+      attribute_validation_errors: [
+        { type: "int_type", loc: [Test.Field.text.name], msg: "Input should be a valid integer" },
+        { type: "bool_type", loc: [Test.Field.bool.name], msg: "Input should be a valid boolean" },
+        { type: "extra_forbidden", loc: ["bogus"], msg: "Extra inputs are not permitted" },
+      ],
+    },
+  };
+  const { component } = setup(
+    [Test.Field.text, Test.Field.bool],
+    undefined,
+    false,
+    undefined,
+    [],
+    undefined,
+    submitError
+  );
+
+  render(component);
+
+  const alert = screen.getByTestId("ValidationErrors-Alert");
+
+  expect(within(alert).getByText(words("inventory.form.validationErrors.title")(3))).toBeVisible();
+  expect(within(alert).getByText("bogus")).toBeVisible();
+
+  expect(
+    within(
+      screen.getByRole("generic", { name: `TextFieldInput-${Test.Field.text.name}` })
+    ).getByText("Input should be a valid integer")
+  ).toBeVisible();
+  expect(
+    within(
+      screen.getByRole("generic", { name: `BooleanFieldInput-${Test.Field.bool.name}` })
+    ).getByText("Input should be a valid boolean")
+  ).toBeVisible();
+
+  const textInput = screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` });
+
+  expect(textInput).toHaveAttribute("aria-invalid", "true");
+
+  await userEvent.type(textInput, "1");
+
+  expect(within(alert).getByText(words("inventory.form.validationErrors.title")(2))).toBeVisible();
+  expect(screen.queryAllByText("Input should be a valid integer")).toHaveLength(0);
+  expect(textInput).toHaveAttribute("aria-invalid", "false");
+});
+
+test("GIVEN ServiceInstanceForm WHEN a validation error is on a list itself THEN the list header shows it and its fields do not", async () => {
+  const dictListField = Test.Field.dictList([Test.Field.text]);
+  const listMessage = "Value error, Two embedded entities share the key: ('a',)";
+  const fieldMessage = "Input should be a valid integer";
+  const submitError: CustomError = {
+    name: "Error",
+    message: "Invalid request: 2 validation errors for service_entity ...",
+    details: {
+      attribute_validation_errors: [
+        { type: "value_error", loc: [dictListField.name], msg: listMessage },
+        {
+          type: "int_type",
+          loc: [dictListField.name, 0, Test.Field.text.name],
+          msg: fieldMessage,
+        },
+      ],
+    },
+  };
+  const { component } = setup(
+    [dictListField],
+    undefined,
+    false,
+    undefined,
+    [],
+    undefined,
+    submitError
+  );
+
+  render(component);
+
+  const group = screen.getByRole("group", { name: dictListField.name });
+
+  expect(within(group).getByText(listMessage)).toBeVisible();
+
+  await userEvent.click(within(group).getByRole("button", { name: dictListField.name }));
+  await userEvent.click(within(group).getByRole("button", { name: "#1" }));
+
+  const textField = screen.getByRole("generic", {
+    name: `TextFieldInput-${Test.Field.text.name}`,
+  });
+
+  expect(within(textField).getByText(fieldMessage)).toBeVisible();
+  expect(within(textField).queryByText(listMessage)).not.toBeInTheDocument();
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field", async () => {

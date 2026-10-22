@@ -18,7 +18,7 @@ import {
   TextInputGroupUtilities,
 } from "@patternfly/react-core";
 import { PlusIcon, TimesIcon } from "@patternfly/react-icons";
-import { Spinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components/Spinner";
 
 export interface AddableSelectOption {
   value: string;

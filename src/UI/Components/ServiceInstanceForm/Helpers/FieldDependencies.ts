@@ -1,5 +1,5 @@
 import { Field, JsonPath } from "@/Core";
-import { FieldReference, getFieldReferences } from "@/Data/Queries";
+import { FieldReference, getFieldReferences } from "@/Data/Queries/Slices/ServiceInstance";
 import { words } from "@/UI/words";
 
 /**

@@ -41,6 +41,13 @@ export const ResourceLink: React.FC<Props> = ({
 }) => {
   const { routeManager } = useContext(DependencyContext);
   const { search: currentSearch } = useLocation();
+  const text = linkText || resourceId;
+
+  // Without the resource details page, show the resource id as plain text instead of a broken link.
+  if (!routeManager.has("ResourceDetails")) {
+    return isInline ? <>{text}</> : <Truncate content={text} />;
+  }
+
   const pathname = routeManager.getUrl("ResourceDetails", { resourceId });
 
   const search = tab
@@ -53,7 +60,7 @@ export const ResourceLink: React.FC<Props> = ({
   if (isInline) {
     return (
       <Link pathname={pathname} search={search} envOnly fitContent>
-        {linkText ? linkText : resourceId}
+        {text}
       </Link>
     );
   }
@@ -61,7 +68,7 @@ export const ResourceLink: React.FC<Props> = ({
   return (
     <Link pathname={pathname} search={search} envOnly>
       <Button variant={variant} component="span">
-        <Truncate content={linkText ? linkText : resourceId} />
+        <Truncate content={text} />
       </Button>
     </Link>
   );

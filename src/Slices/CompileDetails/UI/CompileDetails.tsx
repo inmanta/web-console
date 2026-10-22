@@ -1,6 +1,7 @@
 import React from "react";
-import { useGetCompileDetails } from "@/Data/Queries";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { useGetCompileDetails } from "@/Data/Queries/Slices/Compilation";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { CompileDetailsSections } from "./CompileDetailsSections";
 
 interface Props {

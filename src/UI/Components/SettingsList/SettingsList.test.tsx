@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { BooleanSwitch } from "@/UI/Components";
+import { BooleanSwitch } from "@/UI/Components/BooleanSwitch";
 import { SettingsList } from "./SettingsList";
 
 test("ConfigView handles click on toggle correctly", () => {

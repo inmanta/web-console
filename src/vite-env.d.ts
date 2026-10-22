@@ -9,6 +9,7 @@ declare global {
 
   // Global constants defined in vite.config.ts
   const COMMITHASH: string;
+  const APP_VERSION: string;
 
   // vitest globals
   const vi: (typeof import("vitest"))["vi"];

@@ -1,7 +1,9 @@
 import React from "react";
-import { useGetProjects } from "@/Data/Queries";
-import { words } from "@/UI";
-import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+import { useGetProjects } from "@/Data/Queries/Slices/Project";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PageContainer } from "@/UI/Components/PageContainer";
+import { words } from "@/UI/words";
 import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
 
 /**

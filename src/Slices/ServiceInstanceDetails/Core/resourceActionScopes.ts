@@ -1,9 +1,9 @@
 import { NonEmptyArray, ParsedNumber } from "@/Core/Language";
-import { ResourceActionScope } from "@/UI/Components";
+import { ResourceActionScope } from "@/UI/Components/ResourceActions";
 import { words } from "@/UI/words";
 
 /**
- * Builds the deploy/repair scopes offered for a service instance: always the instance itself, and an
+ * Builds the deploy, repair and dry-run scopes offered for a service instance: always the instance itself, and an
  * "owned services" scope only when the service type declares owned_entities.
  *
  * The owned label is an upper bound: owned_entities is a property of the service type, not a count

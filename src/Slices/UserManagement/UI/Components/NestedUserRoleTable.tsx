@@ -13,14 +13,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Environment } from "@/Core/Domain/ProjectModel";
 import {
   UserInfo,
-  useGetEnvironments,
   useGetRoles,
   useAddRole,
   useDeleteRole,
   getUserKey,
-} from "@/Data/Queries";
-import { words } from "@/UI";
+} from "@/Data/Queries/Slices/Auth";
+import { useGetEnvironments } from "@/Data/Queries/Slices/Environment";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { words } from "@/UI/words";
 
 /**
  * A table that displays the roles of a user, for all environments.

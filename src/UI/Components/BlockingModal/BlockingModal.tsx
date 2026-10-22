@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useContext } from "react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
-import { Spinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components/Spinner";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 

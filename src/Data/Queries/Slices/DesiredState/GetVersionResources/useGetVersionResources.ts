@@ -3,7 +3,7 @@ import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-quer
 import { PageSize, Pagination } from "@/Core";
 import { Resource } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { REFETCH_INTERVAL, useGet, getPaginationHandlers } from "@/Data/Queries";
+import { REFETCH_INTERVAL, useGet, getPaginationHandlers } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { getVersionResourcesUrl } from "./getVersionResourcesUrl";

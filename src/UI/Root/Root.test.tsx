@@ -1,11 +1,12 @@
 import { act } from "react";
+import { createMemoryRouter, RouterProvider } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { HttpResponse, graphql, http } from "msw";
 import { setupServer } from "msw/node";
 import { defaultAuthContext } from "@/Data/Auth/AuthContext";
-import { EnvironmentPreviewResponse } from "@/Data/Queries";
+import { EnvironmentPreviewResponse } from "@/Data/Queries/Slices/Environment";
 import {
   Environment,
   EnvironmentSettings,
@@ -13,21 +14,32 @@ import {
   Project,
   ServerStatus,
 } from "@/Test";
-import { TestMemoryRouter } from "../Routing/TestMemoryRouter";
+import { features } from "@/appFeatures";
 import { Root } from "./Root";
+import { createRootRoutes } from "./RootRoutes";
 
 vi.spyOn(defaultAuthContext, "getToken").mockReturnValue("mocked_token");
 vi.spyOn(defaultAuthContext, "getUser").mockReturnValue("mocked_user");
 function setup() {
   const queryClient = new QueryClient();
 
+  const router = createMemoryRouter(
+    [
+      {
+        element: (
+          <MockedDependencyProvider>
+            <Root />
+          </MockedDependencyProvider>
+        ),
+        children: createRootRoutes("", features),
+      },
+    ],
+    { initialEntries: ["/"] }
+  );
+
   const component = (
     <QueryClientProvider client={queryClient}>
-      <TestMemoryRouter initialEntries={["/"]}>
-        <MockedDependencyProvider>
-          <Root />
-        </MockedDependencyProvider>
-      </TestMemoryRouter>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 

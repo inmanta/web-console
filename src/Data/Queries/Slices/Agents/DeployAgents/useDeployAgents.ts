@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
-import { usePost } from "@/Data/Queries";
-import { DependencyContext } from "@/UI";
+import { usePost } from "@/Data/Queries/Helpers";
+import { DependencyContext } from "@/UI/Dependency";
 
 /**
  * Deploy (incremental) or repair (full) action. The value is the scheduler's agent_trigger_method

@@ -1,7 +1,7 @@
 import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { MockedDependencyProvider } from "@/Test";
-import { BlockingModal } from "@/UI/Components";
+import { BlockingModal } from "@/UI/Components/BlockingModal";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { testClient } from "./react-query-setup";
 

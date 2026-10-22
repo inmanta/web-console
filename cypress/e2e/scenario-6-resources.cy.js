@@ -115,6 +115,10 @@ describe("Scenario 6 : Resources", () => {
 
       // Store initial resource count
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      // Wait for the resources to load, otherwise the rows are counted before they render.
+      cy.get('[aria-label="ResourcesPage-Success"], [aria-label="ResourcesPage-Empty"]').should(
+        "be.visible"
+      );
       cy.get("body").then(($body) => {
         cy.wrap($body.find('[aria-label="Resource Table Row"]').length).as("initialRowCount");
       });
@@ -631,6 +635,17 @@ describe("Scenario 6 : Resources", () => {
               button: 0,
               clientX: startX,
               clientY: startY,
+            })
+            .wait(1000)
+            // PatternFly's DragDropSort only activates the drag once the pointer has moved 8px,
+            // and dnd-kit ignores the coordinates of the move that crosses that threshold.
+            // Nudge past it first, so the move below is applied to an active drag.
+            .trigger("pointermove", {
+              force: true,
+              isPrimary: true,
+              button: 0,
+              clientX: startX,
+              clientY: startY - 10,
             })
             .wait(1000)
             .trigger("pointermove", {

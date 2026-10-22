@@ -1,10 +1,11 @@
 import React from "react";
 import { Tooltip } from "@patternfly/react-core";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { DateWithTooltip } from "@/UI/Components";
+import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
+import { DesiredStateStatusLabel } from "@/UI/Components/DesiredStateStatusLabel";
 import { words } from "@/UI/words";
 import { DesiredStateVersion, DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
-import { Actions, ResourcesLink, DesiredStateStatusLabel } from "./Components";
+import { Actions, ResourcesLink } from "./Components";
 
 interface Props {
   row: DesiredStateVersion;

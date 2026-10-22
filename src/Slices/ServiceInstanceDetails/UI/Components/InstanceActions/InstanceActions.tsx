@@ -18,8 +18,9 @@ import {
   isTransferDisabled,
   StateTarget,
 } from "@/Slices/ServiceInstanceDetails/Utils";
-import { DependencyContext, words } from "@/UI";
-import { Link } from "@/UI/Components";
+import { Link } from "@/UI/Components/Link";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 import { DeleteAction, DestroyAction, ExpertStateTransfer, StateAction } from "./Actions";
 
 /**

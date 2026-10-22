@@ -1,7 +1,7 @@
 import React from "react";
 import { HelperText, HelperTextItem } from "@patternfly/react-core";
 import { EnvironmentSettings } from "@/Core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 
 interface Props {
   info: EnvironmentSettings.InputInfo;

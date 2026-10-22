@@ -1,15 +1,16 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Content, PageSection, Stack, StackItem } from "@patternfly/react-core";
-import { usePaginatedTable } from "@/Data";
-import { Filter, SortKey, useGetDiscoveredResources } from "@/Data/Queries";
+import { usePaginatedTable } from "@/Data/Common";
 import {
-  EmptyView,
-  FilterDrawer,
-  PaginationWidget,
-  LoadingView,
-  ErrorView,
-  countActiveFilters,
-} from "@/UI/Components";
+  Filter,
+  SortKey,
+  useGetDiscoveredResources,
+} from "@/Data/Queries/Slices/DiscoveredResources";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PaginationWidget } from "@/UI/Components/PaginationWidget";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { DiscoveredResourcesFilterWidget } from "./Components";

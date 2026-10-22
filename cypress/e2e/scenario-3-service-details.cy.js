@@ -164,6 +164,11 @@ if (isIso) {
       // click on Show Inventory on basic-service
       cy.get("#basic-service", { timeout: 60000 }).contains("Show inventory").click();
 
+      // Wait for the inventory to load, otherwise the rows are counted before they render.
+      cy.get(
+        '[aria-label="ServiceInventory-Success"], [aria-label="ServiceInventory-Empty"]'
+      ).should("be.visible");
+
       cy.get("body").then(($body) => {
         const count = $body.find('[aria-label="InstanceRow-Intro"]').length;
         cy.wrap(count).as("previousCount");

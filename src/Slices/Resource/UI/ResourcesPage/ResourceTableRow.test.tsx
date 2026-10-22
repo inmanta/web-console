@@ -1,12 +1,13 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as wordsModule from "@/UI/words";
+import { routes } from "@/appFeatures";
 import { ResourceRow, ResourceTableRow } from "./ResourceTableRow";
 
-const routeManager = PrimaryRouteManager("");
+const routeManager = PrimaryRouteManager("", routes);
 
 function makeRow(id: string, overrides: Partial<ResourceRow> = {}): ResourceRow {
   return {

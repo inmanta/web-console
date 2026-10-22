@@ -1,5 +1,5 @@
 import { request } from "graphql-request";
-import { PrimaryBaseUrlManager } from "@/UI";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import { useFetchHelpers } from "./useFetchHelpers";
 
 /**

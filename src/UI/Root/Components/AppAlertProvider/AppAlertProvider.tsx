@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, PropsWithChildren } from "react";
 import { AlertGroup, AlertVariant, AlertProps } from "@patternfly/react-core";
 import { v4 as uuidv4 } from "uuid";
-import { AppAlert as AppAlertComponent } from "@/UI/Components";
+import { AppAlert as AppAlertComponent } from "@/UI/Components/AppAlert";
 
 interface NotifyOptions extends AlertProps {
   /** Alert message */

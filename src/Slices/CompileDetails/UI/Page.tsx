@@ -1,5 +1,5 @@
 import React from "react";
-import { PageContainer } from "@/UI/Components";
+import { PageContainer } from "@/UI/Components/PageContainer";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { CompileDetails } from "./CompileDetails";

@@ -1,7 +1,7 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 import { dia, ui } from "@joint/plus";
 import { ServiceModel } from "@/Core";
-import { Inventories } from "@/Data/Queries";
+import { Inventories } from "@/Data/Queries/Slices/ServiceInstance";
 import { ServiceEntityShape } from "../UI";
 import { ComposerServiceOrderItem } from "./Helpers/deploymentHelpers";
 import { CanvasHandlers, RelationsDictionary } from ".";

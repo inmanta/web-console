@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Token } from "@/Core/Domain";
-import { useGet } from "@/Data/Queries";
+import { useGet } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
-import { DependencyContext } from "@/UI";
+import { DependencyContext } from "@/UI/Dependency";
 
 export const getTokensKey = new KeyFactory(SliceKeys.environment, "get_tokens");
 

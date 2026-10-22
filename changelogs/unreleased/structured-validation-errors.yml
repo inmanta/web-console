@@ -1,0 +1,5 @@
+description: The create, edit and duplicate instance forms now mark the attributes the orchestrator rejected.
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

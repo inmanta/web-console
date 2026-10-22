@@ -2,10 +2,11 @@ import React from "react";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { RouteKind } from "@/Core";
+import { routes } from "@/appFeatures";
 import { PrimaryRouteManager } from "./PrimaryRouteManager";
 import { useRouteParams } from "./Utils";
 
-const routeManager = PrimaryRouteManager("");
+const routeManager = PrimaryRouteManager("", routes);
 
 function makeProbe<K extends RouteKind>() {
   return function ParamsProbe() {

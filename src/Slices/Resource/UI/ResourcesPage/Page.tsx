@@ -12,19 +12,19 @@ import {
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
-import { usePaginatedTableWithMultiSort } from "@/Data";
-import { useGetResources, mapToResourceActionFilter } from "@/Data/Queries";
+import { usePaginatedTableWithMultiSort } from "@/Data/Common";
 import {
-  EmptyView,
-  FilterDrawer,
-  PaginationWidget,
-  ErrorView,
-  LoadingView,
-  CompoundResourceStatus,
-  Spinner,
-  countActiveFilters,
-  ResourceActions,
-} from "@/UI/Components";
+  useGetResources,
+  mapToResourceActionFilterWithInstanceLabels,
+} from "@/Data/Queries/Slices/Resource";
+import { CompoundResourceStatus } from "@/UI/Components/CompoundResourceStatus";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { PaginationWidget } from "@/UI/Components/PaginationWidget";
+import { ResourceActions } from "@/UI/Components/ResourceActions";
+import { Spinner } from "@/UI/Components/Spinner";
 import { words } from "@/UI/words";
 import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
 import { ResourcesTable } from "./ResourcesTable";
@@ -80,6 +80,11 @@ export const Page: React.FC = () => {
   };
 
   const rows = useMemo(() => tablePresenter.createRows(data?.resources ?? []), [data?.resources]);
+
+  const { resourceActionFilter, instanceLabels: filterInstanceLabels } = useMemo(
+    () => mapToResourceActionFilterWithInstanceLabels(filterWithDefaults),
+    [filterWithDefaults]
+  );
 
   if (isError) {
     return <ErrorView message={error.message} ariaLabel="ResourcesPage-Error" retry={refetch} />;
@@ -140,12 +145,14 @@ export const Page: React.FC = () => {
                 tooltips={{
                   deploy: words("resources.resourceActions.deploy.tooltip.resources"),
                   repair: words("resources.resourceActions.repair.tooltip.resources"),
+                  dryRun: words("resources.resourceActions.dryRun.tooltip.resources"),
                 }}
+                instanceLabels={filterInstanceLabels}
                 scopes={[
                   {
                     id: "filtered",
                     title: words("resources.resourceActions.confirm.filtered.title"),
-                    filter: mapToResourceActionFilter(filterWithDefaults),
+                    filter: resourceActionFilter,
                     count: Number(data.metadata.total),
                   },
                   {

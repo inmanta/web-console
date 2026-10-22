@@ -5,7 +5,8 @@ import { CheckCircleIcon, InfoAltIcon, TimesCircleIcon } from "@patternfly/react
 import { CompileStatus } from "@/Core/Domain";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
 import { getStatusFromReport } from "@/Slices/CompileReports/UI/CompileReportsTablePresenter";
-import { DateWithTooltip, Spinner } from "@/UI/Components";
+import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
+import { Spinner } from "@/UI/Components/Spinner";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";

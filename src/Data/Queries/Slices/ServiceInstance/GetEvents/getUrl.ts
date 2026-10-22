@@ -1,6 +1,6 @@
 import qs from "qs";
 import { RangeOperator } from "@/Core";
-import { urlEncodeParams } from "@/Data/Queries";
+import { urlEncodeParams } from "@/Data/Queries/Helpers";
 import dayjs from "@/dayjs";
 import { Filter, GetInstanceEventParams } from "./useGetEvents";
 

@@ -2,7 +2,11 @@ import React, { useCallback, useContext } from "react";
 import "@rappidcss";
 import { useLocation, useNavigate } from "react-router";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
-import { usePostOrder, usePostMetadata, useGetInstanceWithRelations } from "@/Data/Queries";
+import { usePostOrder } from "@/Data/Queries/Slices/Order";
+import {
+  usePostMetadata,
+  useGetInstanceWithRelations,
+} from "@/Data/Queries/Slices/ServiceInstance";
 import { ServiceOrder } from "@/Slices/Orders/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";

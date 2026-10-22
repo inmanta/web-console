@@ -1,5 +1,5 @@
-import { PrimaryBaseUrlManager } from "@/UI";
-import { useFetchHelpers } from ".";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
+import { useFetchHelpers } from "./useFetchHelpers";
 
 /**
  * Custom hook to perform a GET request.

@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useUrlStateWithFilter } from "@/Data";
+import { useUrlStateWithFilter } from "@/Data/Common";
 import { Filter } from "@/Slices/Events/Core/Types";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 

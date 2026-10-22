@@ -1,5 +1,5 @@
 import { UseMutationResult, UseMutationOptions, useMutation } from "@tanstack/react-query";
-import { useDeleteWithoutEnv } from "@/Data/Queries";
+import { useDeleteWithoutEnv } from "@/Data/Queries/Helpers";
 
 /**
  * Deletes a role from a user, for a specific environment.

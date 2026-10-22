@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { DiscoveredResource } from "@/Data/Queries";
+import { DiscoveredResource } from "@/Data/Queries/Slices/DiscoveredResources";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ActionsDropdown } from "./Components";

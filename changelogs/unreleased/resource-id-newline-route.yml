@@ -1,0 +1,5 @@
+description: Fixed a "404 Not Found" error page when opening the details page of a resource whose id contains a newline, such as an `exec::Run` with a multi-line command.
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump dotenv from 17.4.2 to 18.0.8
+destination-branches:
+- master
+- iso9
+sections: {}

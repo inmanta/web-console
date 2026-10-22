@@ -8,11 +8,12 @@ import {
   MenuToggle,
   MenuToggleElement,
 } from "@patternfly/react-core";
-import { AgentsBulkAction, useAgentsAction } from "@/Data/Queries";
-import { DependencyContext, words } from "@/UI";
-import { ConfirmUserActionForm } from "@/UI/Components";
+import { AgentsBulkAction, useAgentsAction } from "@/Data/Queries/Slices/Agents";
+import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
+import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { words } from "@/UI/words";
 
 interface Props {
   /** Disables the whole dropdown, e.g. when there are no agents to act on. */

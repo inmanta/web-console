@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@patternfly/react-core";
-import { useGetServiceModel } from "@/Data/Queries";
+import { useGetServiceModel } from "@/Data/Queries/Slices/Service";
 import { words } from "@/UI/words";
 import { AppAlert } from "../../AppAlert";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
@@ -15,6 +15,7 @@ interface Props {
   handleInputChange: (value) => void;
   alreadySelected: string[];
   multi?: boolean;
+  validationError?: string;
 }
 
 /**
@@ -29,6 +30,7 @@ interface Props {
  * @prop {(value): void} handleInputChange - The function to handle input changes.
  * @prop {string[]} alreadySelected - The already selected options.
  * @prop {boolean} multi - Whether multiple options can be selected.
+ * @prop {string} validationError - A validation error of the last submit, shown below the input.
  *
  * @returns {React.FC<Props>| null} The rendered input with fetched related services, null if the data is not yet available or Alert if the fetching failed.
  */
@@ -42,6 +44,7 @@ export const RelatedServiceProvider: React.FC<Props> = ({
   handleInputChange,
   alreadySelected,
   multi,
+  validationError,
 }) => {
   const { isError, error, isSuccess, refetch } = useGetServiceModel(serviceName).useContinuous();
 
@@ -67,6 +70,7 @@ export const RelatedServiceProvider: React.FC<Props> = ({
         isDisabled={isDisabled}
         serviceName={serviceName}
         multi={multi}
+        validationError={validationError}
       />
     );
   }

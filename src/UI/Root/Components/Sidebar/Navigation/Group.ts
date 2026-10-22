@@ -1,4 +1,10 @@
-import { OrchestratorProvider, RouteManager } from "@/Core";
+import {
+  FeatureModule,
+  NAVIGATION_GROUPS,
+  NavigationEntry,
+  OrchestratorProvider,
+  RouteManager,
+} from "@/Core";
 import { words } from "@/UI/words";
 
 /**
@@ -23,162 +29,67 @@ interface Link {
 }
 
 /**
- * Returns the environment group of links
+ * Returns the sidebar link of a navigation entry, as a list to spread into a group.
+ * The list is empty when the route is not registered, so the link is left out instead of broken.
+ *
  * @param {RouteManager} routeManager
+ * @param {NavigationEntry} entry - the navigation entry to link to
  * @param {boolean} isEnvPresent
- * @returns Group
+ * @returns Link[]
  */
-export const envrionment = (routeManager: RouteManager, isEnvPresent: boolean): Group => ({
-  id: words("navigation.environment"),
-  title: words("navigation.environment"),
-  links: [
+const routeLink = (
+  routeManager: RouteManager,
+  { kind, statusIndication = false }: NavigationEntry,
+  isEnvPresent: boolean
+): Link[] => {
+  if (!routeManager.has(kind)) {
+    return [];
+  }
+
+  const route = routeManager.getRoute(kind);
+
+  return [
     {
-      id: "Dashboard",
-      label: routeManager.getRoute("Dashboard").generateLabel(undefined),
-      url: routeManager.getRoute("Dashboard").path,
+      id: kind,
+      label: route.generateLabel(undefined),
+      url: route.path,
       external: false,
       locked: !isEnvPresent,
-      statusIndication: false,
+      statusIndication,
     },
-    {
-      id: "Settings",
-      label: routeManager.getRoute("Settings").generateLabel(undefined),
-      url: routeManager.getRoute("Settings").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
-  ],
-});
+  ];
+};
 
 /**
- * Returns the lifecycle service manager group of links
+ * Returns the groups of the sidebar, with the links the features add to them.
+ * A feature whose licensed feature is not enabled adds no links, and empty groups are left out.
  *
+ * @param {FeatureModule[]} features - the features the app ships
  * @param {RouteManager} routeManager
+ * @param {OrchestratorProvider} orchestratorProvider
  * @param {boolean} isEnvPresent
- * @param {OrchestratorProvider} orchestratorProvider
- * @returns Group
+ * @returns Group[]
  */
-export const lifecycleServiceManager = (
+export const getGroups = (
+  features: FeatureModule[],
   routeManager: RouteManager,
-  isEnvPresent: boolean,
-  orchestratorProvider: OrchestratorProvider
-): Group => ({
-  id: "LifecycleServiceManager",
-  title: words("navigation.lifecycleServiceManager"),
-  links: [
-    {
-      id: "Catalog",
-      label: routeManager.getRoute("Catalog").generateLabel(undefined),
-      url: routeManager.getRoute("Catalog").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
-    ...(orchestratorProvider.isOrderViewEnabled()
-      ? [
-          {
-            id: "Orders",
-            label: routeManager.getRoute("Orders").generateLabel(undefined),
-            url: routeManager.getRoute("Orders").path,
-            external: false,
-            locked: !isEnvPresent,
-            statusIndication: false,
-          },
-        ]
-      : []),
-  ],
-});
+  orchestratorProvider: OrchestratorProvider,
+  isEnvPresent: boolean
+): Group[] => {
+  const entries = features
+    .filter(
+      ({ licensedFeature }) =>
+        licensedFeature === undefined ||
+        orchestratorProvider.isLicencedFeatureEnabled(licensedFeature)
+    )
+    .flatMap(({ navigation = [] }) => navigation)
+    .filter(({ isVisible }) => isVisible === undefined || isVisible(orchestratorProvider));
 
-/**
- * Returns the orchestration engine group of links
- *
- * @param routeManager - RouteManager
- * @param isEnvPresent - boolean
- * @returns Group
- */
-export const orchestrationEngine = (routeManager: RouteManager, isEnvPresent: boolean): Group => ({
-  id: "OrchestrationEngine",
-  title: words("navigation.orchestrationEngine"),
-  links: [
-    {
-      id: "DesiredState",
-      label: routeManager.getRoute("DesiredState").generateLabel(undefined),
-      url: routeManager.getRoute("DesiredState").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
-    {
-      id: "CompileReports",
-      label: routeManager.getRoute("CompileReports").generateLabel(undefined),
-      url: routeManager.getRoute("CompileReports").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: true,
-    },
-    {
-      id: "Parameters",
-      label: routeManager.getRoute("Parameters").generateLabel(undefined),
-      url: routeManager.getRoute("Parameters").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
-  ],
-});
-
-/**
- * Returns the resource manager group of links
- *
- * @param {RouteManager} routeManager
- * @param {boolean } isEnvPresent
- * @param {OrchestratorProvider} orchestratorProvider
- * @returns Group
- */
-export const resourceManager = (
-  routeManager: RouteManager,
-  isEnvPresent: boolean,
-  orchestratorProvider: OrchestratorProvider
-): Group => ({
-  id: "ResourceManager",
-  title: words("navigation.resourceManager"),
-  links: [
-    {
-      id: "Resources",
-      label: routeManager.getRoute("Resources").generateLabel(undefined),
-      url: routeManager.getRoute("Resources").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
-    ...(orchestratorProvider.isResourceDiscoveryEnabled()
-      ? [
-          {
-            id: "Discovered Resources",
-            label: routeManager.getRoute("DiscoveredResources").generateLabel(undefined),
-            url: routeManager.getRoute("DiscoveredResources").path,
-            external: false,
-            locked: !isEnvPresent,
-            statusIndication: false,
-          },
-        ]
-      : []),
-    {
-      id: "Agents",
-      label: routeManager.getRoute("Agents").generateLabel(undefined),
-      url: routeManager.getRoute("Agents").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
-    {
-      id: "Facts",
-      label: routeManager.getRoute("Facts").generateLabel(undefined),
-      url: routeManager.getRoute("Facts").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
-  ],
-});
+  return NAVIGATION_GROUPS.map((group) => ({
+    id: group,
+    title: words(`navigation.${group}`),
+    links: entries
+      .filter((entry) => entry.group === group)
+      .flatMap((entry) => routeLink(routeManager, entry, isEnvPresent)),
+  })).filter(({ links }) => links.length > 0);
+};

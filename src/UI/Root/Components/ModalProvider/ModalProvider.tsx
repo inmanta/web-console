@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, createContext, useEffect, useState } from "react";
 import { Modal, ModalVariant, ModalBody, ModalFooter, ModalHeader } from "@patternfly/react-core";
 
-type IconVariant = "success" | "danger" | "warning" | "info" | "custom";
+type IconVariant = "success" | "danger" | "warning" | "info" | "custom" | React.ComponentType;
 
 /**
  * Our own class on the modal backdrop so the outside-press handler can detect
@@ -20,7 +20,7 @@ export const BACKDROP_CLASS = "global-modal-backdrop";
  * @param {React.ReactNode} content - The content of the modal.
  * @param {React.ReactNode | undefined} [actions] - The actions of the modal.
  * @param {ModalVariant} [variant] - The variant of the modal.
- * @param {IconVariant} [iconVariant] - The variant of the icon in the modal title.
+ * @param {IconVariant} [iconVariant] - The variant of the icon in the modal title, or an icon component.
  * @param {() => void} [cancelCb] - Optional callback invoked when the modal is closed.
  * @param {boolean} [showClose] - Whether to show the close button in the modal header.
  */
@@ -111,7 +111,7 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
    * @param {React.ReactNode} params.content - The content of the modal.
    * @param {React.ReactNode | undefined} [params.actions] - *optional* The actions of the modal.
    * @param {ModalVariant} [params.variant] - *optional* The variant of the modal.
-   * @param {IconVariant} [params.iconVariant] - *optional* The variant of the icon in the modal title.
+   * @param {IconVariant} [params.iconVariant] - *optional* The variant of the icon in the modal title, or an icon component.
    * @param {() => void} [params.cancelCb] - *optional* Callback invoked when the modal is closed.
    * @param {boolean} [params.showClose] - *optional* Whether to show the close button in the modal header.
    */
@@ -138,7 +138,8 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
     setIsOpen(true);
     setAction(actions);
     setVariant(variant);
-    setIconVariant(iconVariant);
+    // An icon component is a function, which setState would call as an updater, so it's wrapped.
+    setIconVariant(() => iconVariant);
     setShowClose(showClose);
   };
 
