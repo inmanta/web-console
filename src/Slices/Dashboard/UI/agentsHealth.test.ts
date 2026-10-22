@@ -1,4 +1,4 @@
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 import { deriveAgentsHealth } from "./agentsHealth";
 
 describe("deriveAgentsHealth", () => {

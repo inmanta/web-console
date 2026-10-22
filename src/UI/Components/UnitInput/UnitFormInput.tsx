@@ -11,8 +11,8 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import styled from "styled-components";
+import { words } from "@/Core";
 import { preventNumberInputScroll } from "@/UI/Utils";
-import { words } from "@/UI/words";
 import { toSubmittableNumber } from "./convert";
 import { otherScaleCandidates, selectDisplayUnit } from "./display";
 import { familyOf } from "./units";
@@ -62,7 +62,7 @@ const UnitSelect = styled(FormSelect)<{ $isDuration?: boolean }>`
 `;
 
 // Duration codes read better spelled out than as the catalogue's terse ("min", "h", "d") codes.
-const DURATION_UNIT_LABELS: Record<string, string> = {
+const getDurationUnitLabels = (): Record<string, string> => ({
   ns: words("unitInput.durationUnit.ns"),
   us: words("unitInput.durationUnit.us"),
   ms: words("unitInput.durationUnit.ms"),
@@ -70,10 +70,10 @@ const DURATION_UNIT_LABELS: Record<string, string> = {
   min: words("unitInput.durationUnit.min"),
   h: words("unitInput.durationUnit.h"),
   d: words("unitInput.durationUnit.d"),
-};
+});
 
 function unitLabel(kind: UnitConfig["kind"], code: string): string {
-  return kind === "duration" ? (DURATION_UNIT_LABELS[code] ?? code) : code;
+  return kind === "duration" ? (getDurationUnitLabels()[code] ?? code) : code;
 }
 
 function errorMessage(error: UnitValidationError, kind: UnitConfig["kind"]): string {

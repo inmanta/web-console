@@ -1,6 +1,6 @@
 import { UseBaseMutationResult, useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { words } from "@/Core";
 import { usePostWithoutEnv } from "@/Data/Queries/Helpers";
-import { words } from "@/UI/words";
 
 interface Body {
   update: boolean;

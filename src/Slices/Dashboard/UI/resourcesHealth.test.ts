@@ -1,5 +1,5 @@
+import { words } from "@/Core";
 import { createMockResourceSummary } from "@/Test/Data/Resource";
-import { words } from "@/UI/words";
 import { deriveResourcesHealth } from "./resourcesHealth";
 
 describe("deriveResourcesHealth", () => {

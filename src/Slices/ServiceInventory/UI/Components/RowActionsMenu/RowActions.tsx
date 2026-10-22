@@ -8,10 +8,9 @@ import {
   DropdownItem,
 } from "@patternfly/react-core";
 import { CopyIcon, EllipsisVIcon, FileMedicalAltIcon, ToolsIcon } from "@patternfly/react-icons";
-import { ParsedNumber } from "@/Core";
+import { ParsedNumber, words } from "@/Core";
 import { Link } from "@/UI/Components/Link";
 import { DependencyContext, useContributions } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { DeleteAction } from "./DeleteAction";
 
 interface InstanceActionsProps {
@@ -84,7 +83,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
             {words("inventory.statustab.diagnose")}
           </DropdownItem>
         </Link>
-        {actions.map(({ id, label, icon: Icon, getUrl, isDisabled }) => {
+        {actions.map(({ id, getLabel, icon: Icon, getUrl, isDisabled }) => {
           const disabled = isDisabled?.(context) ?? false;
 
           return (
@@ -95,7 +94,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
               isDisabled={disabled}
             >
               <DropdownItem itemId={id} isDisabled={disabled} icon={<Icon />}>
-                {label}
+                {getLabel()}
               </DropdownItem>
             </Link>
           );

@@ -5,11 +5,11 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { graphql, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { MockedDependencyProvider } from "@/Test";
 import { createMockResourceSummary } from "@/Test/Data/Resource";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { words } from "@/UI/words";
 import { ResourcesCard } from "./ResourcesCard";
 
 const server = setupServer();

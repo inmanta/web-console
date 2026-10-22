@@ -1,5 +1,6 @@
 import React from "react";
 import { Divider, Form, Stack, StackItem } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { Filter } from "@/Slices/Parameters/Core/Types";
 import { AddableTextInput } from "@/UI/Components/AddableTextInput";
 import {
@@ -10,7 +11,6 @@ import {
 } from "@/UI/Components/FilterDrawer";
 import { TimestampRangeFilter } from "@/UI/Components/Filters";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
 
 const datePresenter = new CustomDatePresenter();
 

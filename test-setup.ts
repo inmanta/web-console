@@ -1,8 +1,15 @@
 import "@testing-library/jest-dom/vitest";
 import React from "react";
+import { Messages, registerMessages } from "@/Core/I18n/Words";
 import dayjs from "@/dayjs";
 
 import "jest-axe/extend-expect";
+
+// Register the English messages of every layer and feature, as the shell does when the app starts.
+const messageModules = import.meta.glob<Record<string, Messages>>("./src/**/messages.{ts,tsx}", {
+  eager: true,
+});
+Object.values(messageModules).forEach((module) => Object.values(module).forEach(registerMessages));
 
 // Define mocks using vi.hoisted to ensure they're available during hoisting
 const logViewerMock = vi.hoisted(() => ({

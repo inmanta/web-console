@@ -1,5 +1,5 @@
+import { words } from "@/Core";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
 import { Agent, AgentRow } from "@S/Agents/Core/Domain";
 
 /**

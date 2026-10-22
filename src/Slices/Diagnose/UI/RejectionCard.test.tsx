@@ -2,10 +2,9 @@ import { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { CompileError } from "@/Core";
+import { CompileError, words } from "@/Core";
 import { MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { words } from "@/UI/words";
 import { Rejection } from "@S/Diagnose/Core/Domain";
 import { formatLocation, RejectionCard } from "./RejectionCard";
 

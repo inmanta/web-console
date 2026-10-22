@@ -1,8 +1,8 @@
 import React from "react";
+import { words } from "@/Core";
 import { Description } from "@/UI/Components/Description";
 import { PageContainer } from "@/UI/Components/PageContainer";
 import { useRouteParams } from "@/UI/Routing";
-import { words } from "@/UI/words";
 import { DetailsProvider } from "./DetailsProvider";
 
 export const Page: React.FC = () => {

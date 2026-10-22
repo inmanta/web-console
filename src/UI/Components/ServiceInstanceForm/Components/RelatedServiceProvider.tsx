@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { useGetServiceModel } from "@/Data/Queries/Slices/Service";
-import { words } from "@/UI/words";
 import { AppAlert } from "../../AppAlert";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 

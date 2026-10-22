@@ -14,11 +14,11 @@ import {
   FlexItem,
   Content,
 } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { DeploymentProgressBar } from "@/Slices/ServiceInventory/UI/Components";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { HoverRowGroup } from "@/UI/Components/RowHoverReveal";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
-import { words } from "@/UI/words";
 import { InstanceDetailsContext } from "../../../Core/Context";
 
 /**

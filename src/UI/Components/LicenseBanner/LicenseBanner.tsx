@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Banner, Flex } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 
 /**
  * @returns Either a banner informing the user his/her license has expired.

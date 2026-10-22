@@ -21,12 +21,11 @@ import {
   TabTitleText,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { InstanceAttributeModel, EntityAnnotations, Field } from "@/Core";
+import { InstanceAttributeModel, EntityAnnotations, Field, words } from "@/Core";
 import { set as setAtPath } from "@/Core/Language/collection";
 import { SuggestionVariables } from "@/Data/Queries/Slices/ServiceInstance";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
-import { words } from "@/UI/words";
 import { AppAlert } from "../AppAlert";
 import { DynamicFAIcon } from "../FaIcon";
 import { JSONEditor } from "../JSONEditor";

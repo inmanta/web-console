@@ -2,6 +2,7 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { words } from "@/Core";
 import { Reference, ResourceDetailsTab } from "@/Core/Domain";
 import { indexReferences } from "@/Data/Common/References";
 import {
@@ -14,7 +15,6 @@ import { useExpansion } from "@/Data/Common/useExpansion";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { words } from "@/UI/words";
 import { ReferenceNode } from "./ReferenceNode";
 
 /** A node driven by the real expansion hook, so a click actually expands it. */

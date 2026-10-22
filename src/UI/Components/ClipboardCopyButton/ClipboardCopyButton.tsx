@@ -3,7 +3,7 @@ import { Button, Tooltip, ButtonProps } from "@patternfly/react-core";
 import { CopyIcon } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
 import styled from "styled-components";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 
 interface Props {
   value: string;

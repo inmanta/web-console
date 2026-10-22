@@ -1,5 +1,5 @@
+import { words } from "@/Core";
 import { ServerStatus } from "@/Core/Domain/ServerStatus";
-import { words } from "@/UI/words";
 import { ChecklistItem } from "./Components/EnvironmentHealth/OrchestratorCard";
 
 export interface OrchestratorHealth {

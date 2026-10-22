@@ -9,9 +9,9 @@ import {
   MenuToggleElement,
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { Link } from "@/UI/Components/Link";
 import { DependencyContext, useContributions } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 
 interface Props {
   serviceName: string;
@@ -89,7 +89,7 @@ export const AddInstanceButton: React.FC<Props> = ({ serviceName }) => {
       onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
     >
       <DropdownList>
-        {actions.map(({ id, label, icon: Icon, getUrl, isDisabled }) => {
+        {actions.map(({ id, getLabel, icon: Icon, getUrl, isDisabled }) => {
           const disabled = isDisabled?.(context) ?? false;
 
           return (
@@ -101,7 +101,7 @@ export const AddInstanceButton: React.FC<Props> = ({ serviceName }) => {
               isDisabled={disabled}
             >
               <DropdownItem id={id} icon={<Icon />} isDisabled={disabled}>
-                {label}
+                {getLabel()}
               </DropdownItem>
             </Link>
           );

@@ -5,9 +5,9 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse, delay } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { words } from "@/UI/words";
 import * as Mock from "@S/CompileReports/Core/Mock";
 import { Page } from "./Page";
 

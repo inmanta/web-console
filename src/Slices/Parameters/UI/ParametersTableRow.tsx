@@ -1,6 +1,6 @@
 import React from "react";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { Parameter } from "@/Core";
+import { Parameter, words } from "@/Core";
 import { ClassifiedAttribute } from "@/Data/Common";
 import {
   AttributeExpandTd,
@@ -9,7 +9,6 @@ import {
   useAttributeExpansion,
 } from "@/UI/Components/AttributeList";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
-import { words } from "@/UI/words";
 
 interface Props {
   row: Parameter;

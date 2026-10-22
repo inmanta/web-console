@@ -3,12 +3,11 @@ import { TextInput, Button, SelectOptionProps } from "@patternfly/react-core";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
-import { LogLevelsList, EventTypesList, LogLevelString, EventType } from "@/Core";
+import { LogLevelsList, EventTypesList, LogLevelString, EventType, words } from "@/Core";
 import { useCreateCallback, getCallbackKey } from "@/Data/Queries/Slices/Callback";
 import { AppAlert } from "@/UI/Components/AppAlert";
 import { MultiTextSelect } from "@/UI/Components/MultiTextSelect";
 import { SingleTextSelect } from "@/UI/Components/SingleTextSelect";
-import { words } from "@/UI/words";
 
 interface Props {
   service_entity: string;

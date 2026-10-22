@@ -12,9 +12,8 @@ import {
   TextInputTypes,
 } from "@patternfly/react-core";
 import { HelpIcon } from "@patternfly/react-icons";
-import { SuggestionValue } from "@/Core";
+import { SuggestionValue, words } from "@/Core";
 import { preventNumberInputScroll } from "@/UI/Utils";
-import { words } from "@/UI/words";
 import { SuggestionsPopover } from "./SuggestionsPopover";
 import { resolveLabel, resolveValue } from "./suggestionResolvers";
 import { useStableFeedback } from "./useStableFeedback";

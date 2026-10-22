@@ -1,16 +1,16 @@
 import { EyeIcon, PlusIcon, ToolsIcon } from "@patternfly/react-icons";
-import { FeatureModule, InstanceContext, LinkAction, OrchestratorProvider } from "@/Core";
-import { words } from "@/UI/words";
+import { FeatureModule, InstanceContext, LinkAction, OrchestratorProvider, words } from "@/Core";
 import * as InstanceComposer from "@S/InstanceComposerCreator/Core/Route";
 import * as InstanceComposerEditor from "@S/InstanceComposerEditor/Core/Route";
 import * as InstanceComposerViewer from "@S/InstanceComposerViewer/Core/Route";
+import { composerMessages } from "./messages";
 
 const isComposerEnabled = (orchestratorProvider: OrchestratorProvider) =>
   orchestratorProvider.isComposerEnabled();
 
 const editInComposer: LinkAction<InstanceContext> = {
   id: "edit-composer",
-  label: words("instanceComposer.editButton"),
+  getLabel: () => words("instanceComposer.editButton"),
   icon: ToolsIcon,
   getUrl: (routeManager, { service, instance }) =>
     routeManager.getUrl("InstanceComposerEditor", { service, instance }),
@@ -20,7 +20,7 @@ const editInComposer: LinkAction<InstanceContext> = {
 
 const showInComposer: LinkAction<InstanceContext> = {
   id: "show-composer",
-  label: words("instanceComposer.showButton"),
+  getLabel: () => words("instanceComposer.showButton"),
   icon: EyeIcon,
   getUrl: (routeManager, { service, instance }) =>
     routeManager.getUrl("InstanceComposerViewer", { service, instance }),
@@ -33,6 +33,7 @@ const showInComposer: LinkAction<InstanceContext> = {
 export const composerFeature: FeatureModule = {
   id: "composer",
   version: APP_VERSION,
+  translations: composerMessages,
   licensedFeature: "ui.ui",
   preload: false,
   routes: [
@@ -56,7 +57,7 @@ export const composerFeature: FeatureModule = {
     "inventory.addInstance.actions": [
       {
         id: "add-instance-composer-button",
-        label: words("inventory.addInstance.composerButton"),
+        getLabel: () => words("inventory.addInstance.composerButton"),
         icon: PlusIcon,
         getUrl: (routeManager, { service }) => routeManager.getUrl("InstanceComposer", { service }),
         isVisible: isComposerEnabled,

@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 import { Divider, Form, Stack, StackItem, Title } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { useUrlStateWithFilter } from "@/Data/Common";
 import { Filter } from "@/Data/Queries/Slices/DiscoveredResources";
 import { AddableTextInput } from "@/UI/Components/AddableTextInput";
@@ -9,7 +10,6 @@ import {
   FilterDrawerPanelContent,
   getFilterActions,
 } from "@/UI/Components/FilterDrawer";
-import { words } from "@/UI/words";
 
 interface DiscoveredResourcesFilterWidgetProps {
   onClose: () => void;
@@ -19,7 +19,7 @@ type DiscoveredResourcesFilter = Omit<Filter, "name" | "discovered_resource_id">
 
 type TextFilterKey = "type" | "agent" | "value";
 
-const FIELDS: { key: TextFilterKey; label: string; placeholder: string }[] = [
+const getFields = (): { key: TextFilterKey; label: string; placeholder: string }[] => [
   {
     key: "type",
     label: words("type"),
@@ -59,7 +59,7 @@ export const DiscoveredResourcesFilterWidget: React.FC<DiscoveredResourcesFilter
 
     const { addString, removeStringChip, clearStringGroup } = getFilterActions(filter, setFilter);
 
-    const hasActiveFilters = FIELDS.some(({ key }) => (filter[key]?.length ?? 0) > 0);
+    const hasActiveFilters = getFields().some(({ key }) => (filter[key]?.length ?? 0) > 0);
 
     return (
       <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
@@ -70,7 +70,7 @@ export const DiscoveredResourcesFilterWidget: React.FC<DiscoveredResourcesFilter
                 {words("resourceId")}
               </Title>
             </StackItem>
-            {FIELDS.map(({ key, label, placeholder }) => (
+            {getFields().map(({ key, label, placeholder }) => (
               <StackItem key={key}>
                 <AddableTextInput
                   label={label}
@@ -84,7 +84,7 @@ export const DiscoveredResourcesFilterWidget: React.FC<DiscoveredResourcesFilter
           <Divider />
 
           <ActiveFilters hasActiveFilters={hasActiveFilters} onClear={() => setFilter({})}>
-            {FIELDS.map(({ key, label }) =>
+            {getFields().map(({ key, label }) =>
               (filter[key]?.length ?? 0) > 0 ? (
                 <StackItem key={key}>
                   <ActiveFilterGroup

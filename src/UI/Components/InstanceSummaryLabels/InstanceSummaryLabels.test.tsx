@@ -1,7 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { InstancesByLabel } from "@/Core";
-import { words } from "@/UI/words";
+import { InstancesByLabel, words } from "@/Core";
 import { InstanceSummaryLabels } from "./InstanceSummaryLabels";
 
 const byLabel: InstancesByLabel = { danger: 3, warning: 0, success: 116, info: 0, no_label: 4 };

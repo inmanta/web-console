@@ -17,8 +17,7 @@ import {
 } from "@patternfly/react-core";
 
 import { HelpIcon, TimesIcon } from "@patternfly/react-icons";
-import { SuggestionValue } from "@/Core";
-import { words } from "@/UI/words";
+import { SuggestionValue, words } from "@/Core";
 import { SuggestionsPopover } from "./SuggestionsPopover";
 import { resolveLabel, resolveValue } from "./suggestionResolvers";
 import { useStableFeedback } from "./useStableFeedback";

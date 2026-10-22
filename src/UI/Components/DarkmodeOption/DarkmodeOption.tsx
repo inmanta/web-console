@@ -1,7 +1,7 @@
 import React from "react";
 import { MenuItem } from "@patternfly/react-core";
 import { MoonIcon, SunIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 import { useTheme } from "./useTheme";
 
 /**

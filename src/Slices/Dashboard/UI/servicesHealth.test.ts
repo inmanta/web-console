@@ -1,5 +1,5 @@
+import { words } from "@/Core";
 import { InstanceSummary, ServiceModel } from "@/Core/Domain/ServiceModel";
-import { words } from "@/UI/words";
 import { aggregateServicesHealth } from "./servicesHealth";
 
 function makeServiceModel(instanceSummary: InstanceSummary | null): ServiceModel {

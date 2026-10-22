@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
-import { DryRunContext, ResourceActionFilter } from "@/Core";
+import { DryRunContext, ResourceActionFilter, words } from "@/Core";
 import { useDryRunFiltered } from "@/Data/Queries/Slices/Resource";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { words } from "@/UI/words";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import { createRerunPlan } from "./helpers";
 import { RerunPlan } from "./types";

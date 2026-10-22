@@ -5,7 +5,7 @@ import {
   t_global_text_color_regular,
 } from "@patternfly/react-tokens";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 import { MarkdownContainer } from "./MarkdownContainer";
 import type { Mock } from "vitest";
 

@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { usePaginatedTable } from "@/Data/Common";
 import { useGetOrders } from "@/Data/Queries/Slices/Order";
 import { EmptyView } from "@/UI/Components/EmptyView";
@@ -8,7 +9,6 @@ import { LoadingView } from "@/UI/Components/LoadingView";
 import { PageContainer } from "@/UI/Components/PageContainer";
 import { PaginationWidget } from "@/UI/Components/PaginationWidget";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { SortKey } from "../Core/Types";
 import { OrdersTable } from "./OrdersTable";
 import { createOrdersTablePresenter } from "./OrdersTablePresenter";

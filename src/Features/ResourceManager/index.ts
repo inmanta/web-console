@@ -5,6 +5,7 @@ import * as Resource from "@S/Resource/Core/Route";
 import * as ResourceDetails from "@S/ResourceDetails/Core/Route";
 import * as DiscoveredResources from "@S/ResourceDiscovery/Core/Route";
 import * as DiscoveredResourceDetails from "@S/ResourceDiscoveryDetails/Core/Route";
+import { resourceManagerMessages } from "./messages";
 
 /**
  * The Resource Manager: resources, discovered resources, agents and facts.
@@ -12,6 +13,7 @@ import * as DiscoveredResourceDetails from "@S/ResourceDiscoveryDetails/Core/Rou
 export const resourceManagerFeature: FeatureModule = {
   id: "resource-manager",
   version: APP_VERSION,
+  translations: resourceManagerMessages,
   routes: [
     {
       route: Agents.route,

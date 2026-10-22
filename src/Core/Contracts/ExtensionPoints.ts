@@ -13,7 +13,7 @@ export interface LinkAction<Context> {
    * Unique within the extension point. Used as the id of the menu item.
    */
   id: string;
-  label: string;
+  getLabel: () => string;
   icon: ComponentType;
   getUrl: (routeManager: RouteManager, context: Context) => string;
 

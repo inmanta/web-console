@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { Content, TabContent, TabContentBody } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { useGetInstanceResources } from "@/Data/Queries/Slices/ServiceInstance";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { ResourceTable } from "@/UI/Components/ResourceTable";
-import { words } from "@/UI/words";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { TabContentWrapper } from "./TabContentWrapper";
 

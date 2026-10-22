@@ -10,8 +10,7 @@ import {
   SelectList,
   SelectOption,
 } from "@patternfly/react-core";
-import { ParsedNumber } from "@/Core";
-import { words } from "@/UI/words";
+import { ParsedNumber, words } from "@/Core";
 
 interface Props {
   options: Record<string, string | ParsedNumber>;

@@ -11,6 +11,7 @@ import * as ServiceCatalog from "@S/ServiceCatalog/Core/Route";
 import * as ServiceDetails from "@S/ServiceDetails/Core/Route";
 import * as InstanceDetails from "@S/ServiceInstanceDetails/Core/Route";
 import * as ServiceInventory from "@S/ServiceInventory/Core/Route";
+import { lsmMessages } from "./messages";
 
 /**
  * The Lifecycle Service Manager: the service catalog, the inventory and its instances, and orders.
@@ -18,6 +19,7 @@ import * as ServiceInventory from "@S/ServiceInventory/Core/Route";
 export const lsmFeature: FeatureModule = {
   id: "lsm",
   version: APP_VERSION,
+  translations: lsmMessages,
   routes: [
     {
       route: ServiceCatalog.route,

@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
-import { Resource } from "@/Core";
+import { Resource, words } from "@/Core";
 import { usePaginatedTableWithMultiSort } from "@/Data/Common";
 import {
   useGetResources,
@@ -25,14 +25,12 @@ import { LoadingView } from "@/UI/Components/LoadingView";
 import { PaginationWidget } from "@/UI/Components/PaginationWidget";
 import { ResourceActions } from "@/UI/Components/ResourceActions";
 import { Spinner } from "@/UI/Components/Spinner";
-import { words } from "@/UI/words";
 import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
 import { ResourcesTable } from "./ResourcesTable";
 import { createResourcesTablePresenter } from "./ResourcesTablePresenter";
 
-const tablePresenter = createResourcesTablePresenter();
-
 export const Page: React.FC = () => {
+  const tablePresenter = useMemo(createResourcesTablePresenter, []);
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
   const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
     usePaginatedTableWithMultiSort<Resource.FilterWithDefaultHandling, Resource.SortKey>({
@@ -79,7 +77,10 @@ export const Page: React.FC = () => {
     });
   };
 
-  const rows = useMemo(() => tablePresenter.createRows(data?.resources ?? []), [data?.resources]);
+  const rows = useMemo(
+    () => tablePresenter.createRows(data?.resources ?? []),
+    [data?.resources, tablePresenter]
+  );
 
   const { resourceActionFilter, instanceLabels: filterInstanceLabels } = useMemo(
     () => mapToResourceActionFilterWithInstanceLabels(filterWithDefaults),

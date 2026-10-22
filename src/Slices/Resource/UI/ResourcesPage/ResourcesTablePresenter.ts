@@ -1,9 +1,8 @@
-import { Resource } from "@/Core";
+import { Resource, words } from "@/Core";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
 import { ResourceRow } from "./ResourceTableRow";
 
-const columnHeads: ColumnHead[] = [
+const getColumnHeads = (): ColumnHead[] => [
   { displayName: words("type"), apiName: "resource_type" },
   { displayName: words("agent"), apiName: "agent" },
   { displayName: words("value"), apiName: "resource_id_value" },
@@ -17,7 +16,7 @@ const columnHeads: ColumnHead[] = [
  */
 export const createResourcesTablePresenter = () =>
   createTablePresenter<Resource.Resource, ResourceRow>({
-    columnHeads,
+    columnHeads: getColumnHeads(),
     sortableColumns: ["resource_type", "agent", "resource_id_value"],
     createRows: (resources) =>
       resources.map((resource) => ({

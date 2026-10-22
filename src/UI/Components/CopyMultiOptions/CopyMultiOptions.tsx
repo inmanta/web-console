@@ -10,8 +10,8 @@ import {
 } from "@patternfly/react-core";
 import { CopyIcon } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
+import { words } from "@/Core";
 import { RowHoverReveal } from "@/UI/Components/RowHoverReveal";
-import { words } from "@/UI/words";
 
 interface Props {
   text?: string;

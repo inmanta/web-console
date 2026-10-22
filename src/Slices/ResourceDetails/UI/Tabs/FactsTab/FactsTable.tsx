@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Table, Th, Thead, Tr } from "@patternfly/react-table";
-import { Sort } from "@/Core";
+import { Sort, words } from "@/Core";
 import { Order } from "@/Core/Domain/Sort";
 import { useClassifiedRows } from "@/UI/Components/AttributeList";
 import { ColumnHead } from "@/UI/Presenters";
-import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";
 import { FactsRow } from "./FactsRow";
 
@@ -14,7 +13,7 @@ interface Props {
   facts: FactRow[];
 }
 
-const factsColumnHeads: ColumnHead[] = [
+const getFactsColumnHeads = (): ColumnHead[] => [
   { apiName: "name", displayName: words("name") },
   { apiName: "updated", displayName: words("lastUpdated") },
   { apiName: "value", displayName: words("value") },
@@ -24,7 +23,7 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
   const [sort, setSort] = useState<Sort.Type>({ name: "name", order: "asc" });
   const [rows, setRows] = useState(sortFactRows(facts, sort.name, sort.order));
   const { classifiedRows, hasExpandableRows } = useClassifiedRows(rows);
-  const numberOfColumns = factsColumnHeads.length + (hasExpandableRows ? 1 : 0);
+  const numberOfColumns = getFactsColumnHeads().length + (hasExpandableRows ? 1 : 0);
   const onSort = (_event, index, direction) => {
     const updatedSortColumn = indexToColumnName(index);
 
@@ -44,7 +43,7 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
       <Thead>
         <Tr>
           {hasExpandableRows && <Th screenReaderText="Row expansion" />}
-          {factsColumnHeads.map(({ displayName }, idx) => (
+          {getFactsColumnHeads().map(({ displayName }, idx) => (
             <Th
               key={displayName}
               sort={{
@@ -77,13 +76,13 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
 };
 
 function indexToColumnName(index: number): string {
-  const columns = factsColumnHeads.map((head) => head.apiName);
+  const columns = getFactsColumnHeads().map((head) => head.apiName);
 
   return columns[index];
 }
 
 function columnNameToIndex(columnName: string): number {
-  const columns = factsColumnHeads.map((head) => head.apiName);
+  const columns = getFactsColumnHeads().map((head) => head.apiName);
 
   return columns.indexOf(columnName);
 }

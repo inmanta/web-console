@@ -1,8 +1,8 @@
 import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { configureAxe } from "jest-axe";
+import { words } from "@/Core";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
 import { BlockingModal } from "./BlockingModal";
 
 const axe = configureAxe({

@@ -8,8 +8,7 @@ import {
   MenuList,
   Popper,
 } from "@patternfly/react-core";
-import { SuggestionValue } from "@/Core";
-import { words } from "@/UI/words";
+import { SuggestionValue, words } from "@/Core";
 
 export const MAX_VISIBLE_SUGGESTIONS = 50;
 

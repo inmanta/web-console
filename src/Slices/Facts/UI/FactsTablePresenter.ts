@@ -1,8 +1,8 @@
+import { words } from "@/Core";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";
 
-const columnHeads: ColumnHead[] = [
+const getColumnHeads = (): ColumnHead[] => [
   { displayName: words("name"), apiName: "name" },
   { displayName: words("updated"), apiName: "updated" },
   { displayName: words("value"), apiName: "value" },
@@ -16,7 +16,7 @@ const columnHeads: ColumnHead[] = [
  */
 export const createFactsTablePresenter = () =>
   createTablePresenter<Fact, Fact>({
-    columnHeads,
+    columnHeads: getColumnHeads(),
     sortableColumns: ["name", "resource_id"],
     createRows: (facts) => facts,
   });

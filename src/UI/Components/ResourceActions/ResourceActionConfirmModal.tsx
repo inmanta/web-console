@@ -9,7 +9,7 @@ import {
   Form,
   FormGroup,
 } from "@patternfly/react-core";
-import { ResourceActionFilter } from "@/Core";
+import { ResourceActionFilter, words } from "@/Core";
 import { NonEmptyArray } from "@/Core/Language";
 import {
   DryRunVersion,
@@ -18,7 +18,6 @@ import {
   withActiveModelVersion,
   withDryRunVersion,
 } from "@/Data/Queries/Slices/Resource";
-import { words } from "@/UI/words";
 import { DryRunVersionField } from "./DryRunVersionField";
 import { ResourceActionInstance } from "./types";
 

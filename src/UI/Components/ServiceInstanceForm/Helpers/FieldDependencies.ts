@@ -1,6 +1,5 @@
-import { Field, JsonPath } from "@/Core";
+import { Field, JsonPath, words } from "@/Core";
 import { FieldReference, getFieldReferences } from "@/Data/Queries/Slices/ServiceInstance";
-import { words } from "@/UI/words";
 
 /**
  * Static validation of the cascading field-dependency graph, built from the schema before any

@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
-import { Config } from "@/Core";
+import { Config, words } from "@/Core";
 import { usePostServiceConfig } from "@/Data/Queries/Slices/Service";
 import { BooleanSwitch } from "@/UI/Components/BooleanSwitch";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { SettingsList } from "@/UI/Components/SettingsList";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 
 interface Props {
   config: Config;

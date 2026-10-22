@@ -1,6 +1,6 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
-import { LogLevelsList } from "@/Core";
+import { LogLevelsList, words } from "@/Core";
 import { AddableTextInput } from "@/UI/Components/AddableTextInput";
 import {
   ActiveFilterGroup,
@@ -12,7 +12,6 @@ import { TimestampRangeFilter } from "@/UI/Components/Filters";
 import { MultiTextSelect } from "@/UI/Components/MultiTextSelect";
 import { SingleTextSelect } from "@/UI/Components/SingleTextSelect";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
 import { ResourceLogFilter, actionTypes } from "@S/ResourceDetails/Core/ResourceLog";
 
 const datePresenter = new CustomDatePresenter();

@@ -1,13 +1,12 @@
 import React, { useRef, useState } from "react";
 import { Content, PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
-import { Diff } from "@/Core";
+import { Diff, words } from "@/Core";
 import { useGetDesiredStateDiff } from "@/Data/Queries/Slices/DesiredState";
 import * as DiffWizard from "@/UI/Components/DiffWizard";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { useRouteParams } from "@/UI/Routing";
-import { words } from "@/UI/words";
 
 export const Page: React.FC = () => {
   const { from, to } = useRouteParams<"DesiredStateCompare">();

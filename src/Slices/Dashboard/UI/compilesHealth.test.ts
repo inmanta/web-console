@@ -1,5 +1,5 @@
+import { words } from "@/Core";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
-import { words } from "@/UI/words";
 import { deriveCompilesHealth } from "./compilesHealth";
 
 function makeReport(overrides: Partial<CompileReport> = {}): CompileReport {

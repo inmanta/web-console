@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
+import { words } from "@/Core";
 import { ComposerEditorProvider } from "@/UI/Components/Composer/Providers";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
-import { words } from "@/UI/words";
 
 /**
  * Renders the Page component for the Instance Composer Editor Page.

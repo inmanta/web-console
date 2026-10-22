@@ -1,7 +1,6 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
-import { Sort } from "@/Core";
-import { words } from "@/UI/words";
+import { Sort, words } from "@/Core";
 import { ServiceOrder, SortKey } from "../Core/Types";
 import { OrdersRow } from "./OrdersRow";
 import { OrdersTablePresenter } from "./OrdersTablePresenter";

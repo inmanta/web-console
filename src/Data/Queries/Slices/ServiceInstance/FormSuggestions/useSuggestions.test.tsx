@@ -3,10 +3,9 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { FormSuggestion } from "@/Core";
+import { FormSuggestion, words } from "@/Core";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI/words";
 import { SUGGESTION_NAMESPACES } from "./suggestionVariables";
 import { useSuggestedValues } from "./useSuggestions";
 

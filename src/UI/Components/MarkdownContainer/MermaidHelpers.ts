@@ -1,7 +1,7 @@
 // Mermaid is a js library and doesn't have official Typescript support.
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Mermaid from "mermaid";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 import { patternFlyHueCss, patternFlyThemeVariables } from "./MermaidTheme";
 
 /**

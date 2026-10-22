@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Language } from "@patternfly/react-code-editor";
 import { Flex, FlexItem, Hint, HintTitle, HintBody, Button } from "@patternfly/react-core";
 import { CloseIcon } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { CodeEditor } from "@/UI/Components/CodeEditor";
 import { PageContainer } from "@/UI/Components/PageContainer";
-import { words } from "@/UI/words";
 import { useDocumentationContent } from "./DocumentationContent";
 
 interface Props {

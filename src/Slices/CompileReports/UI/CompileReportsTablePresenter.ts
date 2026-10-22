@@ -1,12 +1,11 @@
-import { CompileStatus } from "@/Core";
+import { CompileStatus, words } from "@/Core";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
 import { CompileReport, CompileReportRow } from "@S/CompileReports/Core/Domain";
 
 const defaultDatePresenter = new CustomDatePresenter();
 
-const columnHeads: readonly ColumnHead[] = [
+const getColumnHeads = (): readonly ColumnHead[] => [
   { displayName: words("compileReports.columns.requested"), apiName: "requested" },
   { displayName: words("status"), apiName: "status" },
   { displayName: words("message"), apiName: "message" },
@@ -48,7 +47,7 @@ export const createCompileReportsTablePresenter = (
   datePresenter: CustomDatePresenter = defaultDatePresenter
 ) =>
   createTablePresenter<CompileReport, CompileReportRow>({
-    columnHeads,
+    columnHeads: getColumnHeads(),
     createRows: (reports) =>
       reports.map((report) => ({
         id: report.id,

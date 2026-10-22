@@ -2,8 +2,8 @@ import React from "react";
 import { Button, EmptyState, EmptyStateBody, EmptyStateFooter } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
+import { words } from "@/Core";
 import { Delayed } from "@/UI/Utils";
-import { words } from "@/UI/words";
 
 interface Props {
   message: string;

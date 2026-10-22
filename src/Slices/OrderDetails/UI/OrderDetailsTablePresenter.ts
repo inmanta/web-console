@@ -1,8 +1,8 @@
+import { words } from "@/Core";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
 
-const columnHeads: ColumnHead[] = [
+const getColumnHeads = (): ColumnHead[] => [
   { displayName: words("orders.column.instance"), apiName: "instance" },
   { displayName: words("orders.column.serviceEntity"), apiName: "service_entity" },
   { displayName: words("orders.column.action"), apiName: "action" },
@@ -16,7 +16,7 @@ const columnHeads: ColumnHead[] = [
  */
 export const createOrderDetailsTablePresenter = () =>
   createTablePresenter<ServiceOrderItem, ServiceOrderItem>({
-    columnHeads,
+    columnHeads: getColumnHeads(),
     extraColumns: 1,
     createRows: (items) => items,
   });

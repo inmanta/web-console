@@ -1,7 +1,7 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { FilterToggleButton } from "@/UI/Components/FilterDrawer";
-import { words } from "@/UI/words";
 
 interface Props {
   paginationWidget: React.ReactNode;

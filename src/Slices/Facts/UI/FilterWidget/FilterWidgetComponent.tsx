@@ -1,5 +1,6 @@
 import React from "react";
 import { Divider, Form, Stack, StackItem } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { Filter } from "@/Slices/Facts/Core/Types";
 import { AddableTextInput } from "@/UI/Components/AddableTextInput";
 import {
@@ -8,7 +9,6 @@ import {
   FilterDrawerPanelContent,
   getFilterActions,
 } from "@/UI/Components/FilterDrawer";
-import { words } from "@/UI/words";
 
 interface Props {
   filter: Filter;

@@ -1,4 +1,4 @@
-import { isObjectEmpty } from "@/Core";
+import { isObjectEmpty, words } from "@/Core";
 import {
   AttributeHelper,
   PathHelper,
@@ -6,7 +6,6 @@ import {
 } from "@/UI/Components/TreeTable/Helpers";
 import { extractInventoryValues } from "@/UI/Components/TreeTable/TreeRow";
 import { InventoryAttributeTree } from "@/UI/Components/TreeTable/types";
-import { words } from "@/UI/words";
 import { BaseTreeTableHelper } from "../Helpers/BaseTreeTableHelper";
 
 export class InventoryTreeTableHelper extends BaseTreeTableHelper<InventoryAttributeTree> {

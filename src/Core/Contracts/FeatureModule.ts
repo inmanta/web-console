@@ -1,5 +1,6 @@
 import { ComponentType } from "react";
 import { RouteFactory, RouteKind } from "@/Core/Domain";
+import { Messages } from "@/Core/I18n";
 import { Feature, OrchestratorProvider } from "./OrchestratorProvider";
 
 /**
@@ -50,9 +51,11 @@ export interface FeatureModule {
   contributions?: Partial<Contributions>;
 
   /**
-   * The messages of the feature, merged into the words registry.
+   * The English messages of the feature, registered with `registerMessages` when the app starts.
+   * English is the default language and the fallback of every other one. Their keys are added to
+   * `WordsRegistry` next to the messages.
    */
-  translations?: Translations;
+  translations?: Messages;
 }
 
 /**
@@ -108,8 +111,3 @@ export interface ExtensionPointRegistry {}
 export type Contributions = {
   [K in keyof ExtensionPointRegistry]: ExtensionPointRegistry[K][];
 };
-
-/**
- * Messages by key. A message is a string, or a function that returns one.
- */
-export type Translations = Record<string, string | ((...args: never[]) => string)>;

@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 import { Button, Icon, Tooltip } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
 import { CopyMultiOptions } from "@/UI/Components/CopyMultiOptions";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { getInstanceDisplayName } from "./getInstanceDisplayName";
 
 interface Props {

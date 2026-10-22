@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from "react";
 import { Language } from "@patternfly/react-code-editor";
 import { Flex, ToggleGroup, ToggleGroupItem } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { AttributeClassifier } from "@/Data/Common/AttributeClassifier";
 import { CodeEditor } from "@/UI/Components/CodeEditor";
-import { words } from "@/UI/words";
 import { ResourceAttributes } from "./ResourceAttributes";
 
 type ViewMode = "structured" | "json";

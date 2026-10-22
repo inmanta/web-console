@@ -1,8 +1,7 @@
-import { EventRow, InstanceEvent } from "@/Core";
+import { EventRow, InstanceEvent, words } from "@/Core";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
 
-const columnHeads: ColumnHead[] = [
+const getColumnHeads = (): ColumnHead[] => [
   { displayName: words("events.column.eventType"), apiName: "event_type" },
   { displayName: words("date"), apiName: "timestamp" },
   { displayName: words("events.column.instanceVersion"), apiName: "service_instance_version" },
@@ -34,7 +33,7 @@ const eventToRow = (event: InstanceEvent): EventRow => ({
  */
 export const createEventsTablePresenter = () =>
   createTablePresenter<InstanceEvent, EventRow>({
-    columnHeads,
+    columnHeads: getColumnHeads(),
     extraColumns: 1,
     createRows: (events) => events.map(eventToRow),
   });

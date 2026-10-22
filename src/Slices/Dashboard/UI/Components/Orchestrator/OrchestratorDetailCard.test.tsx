@@ -3,11 +3,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { ServerStatus as ServerStatusType } from "@/Core/Domain";
 import { MockedDependencyProvider, ServerStatus } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
 import { OrchestratorDetailCard } from "./OrchestratorDetailCard";
 
 const datePresenter = new CustomDatePresenter();

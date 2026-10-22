@@ -1,6 +1,6 @@
 import React from "react";
 import { Label, LabelGroup } from "@patternfly/react-core";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 
 export interface ActiveFilterGroupProps {
   title: string;

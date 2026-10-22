@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@patternfly/react-core";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 
 export type Phase = "Default" | "Downloading";
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const DownloadButton: React.FC<Props> = ({ isPending, onClick }) => {
-  const label = isPending ? phaseLabelRecord["Downloading"] : phaseLabelRecord["Default"];
+  const label = isPending ? getPhaseLabelRecord()["Downloading"] : getPhaseLabelRecord()["Default"];
 
   return (
     <Button
@@ -26,7 +26,7 @@ export const DownloadButton: React.FC<Props> = ({ isPending, onClick }) => {
   );
 };
 
-const phaseLabelRecord: Record<Phase, string> = {
+const getPhaseLabelRecord = (): Record<Phase, string> => ({
   Default: words("status.supportArchive.action.download"),
   Downloading: words("status.supportArchive.action.downloading"),
-};
+});

@@ -6,11 +6,11 @@ import {
   DescriptionListDescription,
 } from "@patternfly/react-core";
 import styled from "styled-components";
+import { words } from "@/Core";
 import { ServiceOrder } from "@/Slices/Orders/Core/Types";
 import { OrderProgressBar } from "@/Slices/Orders/UI/OrderProgressBar";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
-import { words } from "@/UI/words";
 
 interface Props {
   serviceOrder: ServiceOrder;

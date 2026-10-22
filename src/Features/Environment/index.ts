@@ -2,6 +2,7 @@ import { FeatureModule } from "@/Core";
 import * as CreateEnvironment from "@S/CreateEnvironment/Core/Route";
 import * as Dashboard from "@S/Dashboard/Core/Route";
 import * as Settings from "@S/Settings/Core/Route";
+import { environmentMessages } from "./messages";
 
 /**
  * The environment pages: the dashboard, the environment settings and creating an environment.
@@ -11,6 +12,7 @@ import * as Settings from "@S/Settings/Core/Route";
 export const environmentFeature: FeatureModule = {
   id: "environment",
   version: APP_VERSION,
+  translations: environmentMessages,
   routes: [
     {
       route: CreateEnvironment.route,

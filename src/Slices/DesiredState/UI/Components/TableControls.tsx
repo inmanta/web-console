@@ -1,8 +1,8 @@
 import React from "react";
 import { Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { CompileWidget } from "@/UI/Components/CompileWidget";
 import { FilterToggleButton } from "@/UI/Components/FilterDrawer";
-import { words } from "@/UI/words";
 import { CompareSelectionWidget } from "./CompareSelectionWidget";
 
 interface Props {

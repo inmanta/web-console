@@ -1,8 +1,8 @@
+import { words } from "@/Core";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
 import { ResourceHistory, ResourceHistoryRow } from "@S/ResourceDetails/Core/ResourceHistory";
 
-const columnHeads: ColumnHead[] = [
+const getColumnHeads = (): ColumnHead[] => [
   { displayName: words("date"), apiName: "date" },
   { displayName: words("requires"), apiName: "requires" },
 ];
@@ -14,7 +14,7 @@ const columnHeads: ColumnHead[] = [
  */
 export const createResourceHistoryTablePresenter = () =>
   createTablePresenter<ResourceHistory, ResourceHistoryRow>({
-    columnHeads,
+    columnHeads: getColumnHeads(),
     sortableColumns: ["date"],
     extraColumns: 1,
     createRows: (history) =>

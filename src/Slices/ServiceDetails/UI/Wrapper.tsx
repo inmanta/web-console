@@ -1,6 +1,6 @@
 import React from "react";
+import { words } from "@/Core";
 import { PageContainer } from "@/UI/Components/PageContainer";
-import { words } from "@/UI/words";
 
 interface Props {
   name: string;
