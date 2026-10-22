@@ -24,6 +24,7 @@ interface Props {
   handleInputChange: (value) => void;
   onSearchTextChanged?: (value: string) => void;
   multi?: boolean;
+  validationError?: string;
 }
 
 /**
@@ -40,6 +41,7 @@ interface Props {
  *  @prop {(value): void} handleInputChange - The function to be called when the input changes.
  *  @prop {(value: string): void} onSearchTextChanged - The function to be called when the search text changes.
  *  @prop {boolean} multi - Whether the input should allow multiple selections.
+ *  @prop {string} validationError - A validation error of the last submit, shown below the input.
  *
  * @returns The rendered component.
  */
@@ -54,6 +56,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
   handleInputChange,
   onSearchTextChanged,
   multi,
+  validationError,
   ...props
 }) => {
   const initialOptions = options.map((option) => {
@@ -98,6 +101,13 @@ export const AutoCompleteInput: React.FC<Props> = ({
           placeholderText={words("common.serviceInstance.relation")(serviceEntity)}
           onSearchTextChanged={onSearchTextChanged}
         />
+      )}
+      {validationError && (
+        <FormHelperText>
+          <HelperText>
+            <HelperTextItem variant="error">{validationError}</HelperTextItem>
+          </HelperText>
+        </FormHelperText>
       )}
     </FormGroup>
   );
