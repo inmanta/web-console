@@ -15,7 +15,7 @@ interface Props {
   handleInputChange: (value) => void;
   alreadySelected: string[];
   multi?: boolean;
-  warningMessage?: string;
+  validationError?: string;
 }
 
 /**
@@ -30,7 +30,7 @@ interface Props {
  * @prop {(value): void} handleInputChange - The function to handle input changes.
  * @prop {string[]} alreadySelected - The already selected options.
  * @prop {boolean} multi - Whether multiple options can be selected.
- * @prop {string} warningMessage - A warning shown below the input.
+ * @prop {string} validationError - A validation error of the last submit, shown below the input.
  *
  * @returns {React.FC<Props>| null} The rendered input with fetched related services, null if the data is not yet available or Alert if the fetching failed.
  */
@@ -44,7 +44,7 @@ export const RelatedServiceProvider: React.FC<Props> = ({
   handleInputChange,
   alreadySelected,
   multi,
-  warningMessage,
+  validationError,
 }) => {
   const { isError, error, isSuccess, refetch } = useGetServiceModel(serviceName).useContinuous();
 
@@ -70,7 +70,7 @@ export const RelatedServiceProvider: React.FC<Props> = ({
         isDisabled={isDisabled}
         serviceName={serviceName}
         multi={multi}
-        warningMessage={warningMessage}
+        validationError={validationError}
       />
     );
   }

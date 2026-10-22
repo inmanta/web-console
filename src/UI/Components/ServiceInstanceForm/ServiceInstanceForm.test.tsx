@@ -331,13 +331,15 @@ test("GIVEN ServiceInstanceForm WHEN the submit was rejected with validation err
     ).getByText("Input should be a valid boolean")
   ).toBeVisible();
 
-  await userEvent.type(
-    screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` }),
-    "1"
-  );
+  const textInput = screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` });
+
+  expect(textInput).toHaveAttribute("aria-invalid", "true");
+
+  await userEvent.type(textInput, "1");
 
   expect(within(alert).getByText(words("inventory.form.validationErrors.title")(2))).toBeVisible();
   expect(screen.queryAllByText("Input should be a valid integer")).toHaveLength(0);
+  expect(textInput).toHaveAttribute("aria-invalid", "false");
 });
 
 test("GIVEN ServiceInstanceForm WHEN a validation error is on a list itself THEN the list header shows it and its fields do not", async () => {

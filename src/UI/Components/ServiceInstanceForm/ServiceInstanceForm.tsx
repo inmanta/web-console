@@ -408,7 +408,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       {validationErrors.length > 0 && (isForm || isEditorValid) && (
         <AppAlert
           title={words("inventory.form.validationErrors.title")(validationErrors.length)}
-          variant={AlertVariant.warning}
+          variant={AlertVariant.danger}
           testId="ValidationErrors-Alert"
           isInline
         >

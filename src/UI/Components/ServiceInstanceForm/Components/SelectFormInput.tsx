@@ -21,7 +21,7 @@ interface Props {
   isOptional: boolean;
   shouldBeDisabled?: boolean;
   handleInputChange: (value) => void;
-  warningMessage?: string;
+  validationError?: string;
 }
 
 /**
@@ -36,7 +36,7 @@ interface Props {
  *  @prop {boolean} isOptional - Whether the attribute is optional.
  *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
  *  @prop {function} handleInputChange - The callback for handling input changes.
- *  @prop {string} warningMessage - A warning shown below the select, which is then marked as a warning.
+ *  @prop {string} validationError - A validation error of the last submit, shown below the select, which is then marked as invalid.
  *
  * @returns {React.FC<Props>} The SelectFormInput component.
  */
@@ -48,7 +48,7 @@ export const SelectFormInput: React.FC<Props> = ({
   isOptional,
   shouldBeDisabled = false,
   handleInputChange,
-  warningMessage,
+  validationError,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -101,7 +101,7 @@ export const SelectFormInput: React.FC<Props> = ({
       onClick={onToggleClick}
       isExpanded={isOpen}
       isDisabled={shouldBeDisabled}
-      status={warningMessage ? "warning" : undefined}
+      status={validationError ? "danger" : undefined}
       style={
         {
           width: "100%",
@@ -140,10 +140,10 @@ export const SelectFormInput: React.FC<Props> = ({
           ))}
         </SelectList>
       </Select>
-      {warningMessage && (
+      {validationError && (
         <FormHelperText>
           <HelperText>
-            <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>
+            <HelperTextItem variant="error">{validationError}</HelperTextItem>
           </HelperText>
         </FormHelperText>
       )}

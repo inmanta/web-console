@@ -56,7 +56,8 @@ export const getAttributeValidationErrors = ({
 
 /**
  * Whether a failed submit is an attribute validation failure, which the form shows on its fields
- * instead of in a toast.
+ * instead of in a toast. The error's `message` is then not shown at all: it repeats the same
+ * validation errors as pydantic's raw text.
  *
  * @example
  * isAttributeValidationFailure(new Error("Invalid request: The attribute attr1 is read-only")) // => false

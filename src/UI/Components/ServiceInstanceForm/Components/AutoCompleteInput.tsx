@@ -24,7 +24,7 @@ interface Props {
   handleInputChange: (value) => void;
   onSearchTextChanged?: (value: string) => void;
   multi?: boolean;
-  warningMessage?: string;
+  validationError?: string;
 }
 
 /**
@@ -41,7 +41,7 @@ interface Props {
  *  @prop {(value): void} handleInputChange - The function to be called when the input changes.
  *  @prop {(value: string): void} onSearchTextChanged - The function to be called when the search text changes.
  *  @prop {boolean} multi - Whether the input should allow multiple selections.
- *  @prop {string} warningMessage - A warning shown below the input.
+ *  @prop {string} validationError - A validation error of the last submit, shown below the input.
  *
  * @returns The rendered component.
  */
@@ -56,7 +56,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
   handleInputChange,
   onSearchTextChanged,
   multi,
-  warningMessage,
+  validationError,
   ...props
 }) => {
   const initialOptions = options.map((option) => {
@@ -102,10 +102,10 @@ export const AutoCompleteInput: React.FC<Props> = ({
           onSearchTextChanged={onSearchTextChanged}
         />
       )}
-      {warningMessage && (
+      {validationError && (
         <FormHelperText>
           <HelperText>
-            <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>
+            <HelperTextItem variant="error">{validationError}</HelperTextItem>
           </HelperText>
         </FormHelperText>
       )}

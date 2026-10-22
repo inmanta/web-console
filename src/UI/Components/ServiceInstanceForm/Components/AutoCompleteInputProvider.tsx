@@ -15,7 +15,7 @@ interface Props {
   handleInputChange: (value) => void;
   alreadySelected: string[] | null;
   multi?: boolean;
-  warningMessage?: string;
+  validationError?: string;
 }
 
 /**
@@ -31,7 +31,7 @@ interface Props {
  * @prop {(value): void;} handleInputChange - The function to handle input changes.
  * @prop {string[]} alreadySelected - The already selected options.
  * @prop {boolean} multi - Whether multiple options can be selected.
- * @prop {string} warningMessage - A warning shown below the input.
+ * @prop {string} validationError - A validation error of the last submit, shown below the input.
  *
  * @returns {React.FC<Props> | null} The rendered autocomplete input field or null if the data is not yet available or fetching failed.
  */
@@ -45,7 +45,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
   handleInputChange,
   alreadySelected,
   multi,
-  warningMessage,
+  validationError,
   ...props
 }) => {
   const [searchText, setSearchText] = useState("");
@@ -76,7 +76,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
         handleInputChange={handleInputChange}
         onSearchTextChanged={onSearchTextChanged}
         multi={multi}
-        warningMessage={warningMessage}
+        validationError={validationError}
         {...props}
       />
     );
@@ -107,7 +107,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
         handleInputChange={handleInputChange}
         onSearchTextChanged={onSearchTextChanged}
         multi={multi}
-        warningMessage={warningMessage}
+        validationError={validationError}
         {...props}
       />
     );
