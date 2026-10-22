@@ -57,9 +57,9 @@ export const OrdersTable: React.FC<Props> = ({ tablePresenter, rows, sort, setSo
   return (
     <Table {...props} variant={TableVariant.compact} isStickyHeader>
       <Thead>
-        <Tr aria-hidden>
+        <Tr>
           {heads}
-          <Th aria-hidden screenReaderText={words("common.emptyColumnHeader")} />
+          <Th screenReaderText={words("common.emptyColumnHeader")} />
         </Tr>
       </Thead>
       {rows.map((row) => (
