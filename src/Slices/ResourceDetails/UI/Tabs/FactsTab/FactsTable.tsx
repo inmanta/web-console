@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Table, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort, WordKey, words } from "@/Core";
+import { Fact } from "@/Core/Domain/Fact";
 import { Order } from "@/Core/Domain/Sort";
 import { useClassifiedRows } from "@/UI/Components/AttributeList";
-import { Fact } from "@S/Facts/Core/Domain";
 import { FactsRow } from "./FactsRow";
 
 type FactRow = Pick<Fact, "id" | "name" | "updated" | "value">;

@@ -4,8 +4,8 @@ import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { AuthContext } from "@/Data/Auth/AuthContext";
-import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import * as CookieHelper from "@/Data/Common/CookieHelper";
+import { AuthProvider } from "@/UI/Root/Auth/AuthProvider";
 
 const mockedUsedNavigate = vi.hoisted(() => vi.fn());
 

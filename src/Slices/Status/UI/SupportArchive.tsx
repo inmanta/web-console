@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { words } from "@/Core";
 import { useCreateSupportArchive } from "@/Data/Queries/Slices/Server";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 import { DownloadButton } from "./Components";
 
 /**

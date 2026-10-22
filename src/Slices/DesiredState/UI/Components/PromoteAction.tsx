@@ -4,7 +4,7 @@ import { ParsedNumber, words } from "@/Core";
 import { usePromoteDesiredStateVersion } from "@/Data/Queries/Slices/DesiredState";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 
 interface Props {
   version: ParsedNumber;

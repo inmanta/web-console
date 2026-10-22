@@ -1,5 +1,5 @@
 import { ParsedNumber } from "@/Core/Language";
-import { CompileError } from "../../../Core/Domain/CompileError";
+import { CompileError } from "./CompileError";
 
 export interface Diagnostics {
   rejections: Rejection[];

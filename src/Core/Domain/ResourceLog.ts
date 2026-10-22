@@ -1,4 +1,5 @@
-import { DateRange, LogLevelString } from "@/Core/Domain";
+import * as DateRange from "./DateRange";
+import { LogLevelString } from "./LogLevel";
 
 export interface ResourceLog {
   level: LogLevelString;

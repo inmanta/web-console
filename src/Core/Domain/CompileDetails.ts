@@ -1,6 +1,6 @@
-import { CompileError } from "@/Core/Domain";
 import { ParsedNumber } from "@/Core/Language";
-import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
+import { CompileError } from "./CompileError";
+import { CompileReport } from "./CompileReport";
 
 export interface CompileDetails extends CompileReport {
   compile_data?: CompileData | null;

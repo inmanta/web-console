@@ -1,10 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
 import { words } from "@/Core";
+import { ResourceHistoryRow } from "@/Core/Domain/ResourceHistory";
 import { useExpansion } from "@/Data/Common";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { scrollRowIntoView } from "@/UI/Utils";
-import { ResourceHistoryRow } from "@S/ResourceDetails/Core/ResourceHistory";
 import { TabKey, Tabs } from "./Tabs";
 
 interface Props {

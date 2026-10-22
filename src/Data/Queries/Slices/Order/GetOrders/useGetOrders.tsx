@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination, Sort } from "@/Core";
+import { ServiceOrder, SortKey } from "@/Core/Domain/ServiceOrderModel";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   CustomError,
@@ -9,7 +10,6 @@ import {
   getPaginationHandlers,
 } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
-import { ServiceOrder, SortKey } from "@/Slices/Orders/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
 

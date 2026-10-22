@@ -3,10 +3,10 @@ import { AuthProvider as OidcContextProvider, useAuth } from "react-oidc-context
 import { useLocation, useNavigate } from "react-router";
 import { Bullseye, Button, Content, Stack, StackItem, Title } from "@patternfly/react-core";
 import { words } from "@/Core";
+import { AuthContext } from "@/Data/Auth/AuthContext";
+import { OidcAuthConfig } from "@/Data/Auth/types";
 import { Spinner } from "@/UI/Components/Spinner";
 import { PrimaryBaseUrlManager } from "@/UI/Routing";
-import { AuthContext } from "../AuthContext";
-import { OidcAuthConfig } from "../types";
 import { clearLocalToken, getLocalToken, getLocalUsername, setLocalToken } from "./localToken";
 
 interface OidcFallbackChooserProps {

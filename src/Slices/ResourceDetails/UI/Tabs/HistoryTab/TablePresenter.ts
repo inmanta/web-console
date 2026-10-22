@@ -1,6 +1,6 @@
 import { words } from "@/Core";
+import { ResourceHistory, ResourceHistoryRow } from "@/Core/Domain/ResourceHistory";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { ResourceHistory, ResourceHistoryRow } from "@S/ResourceDetails/Core/ResourceHistory";
 
 const getColumnHeads = (): ColumnHead[] => [
   { displayName: words("date"), apiName: "date" },

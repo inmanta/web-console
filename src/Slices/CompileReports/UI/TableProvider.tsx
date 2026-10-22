@@ -1,6 +1,6 @@
 import React from "react";
 import { Sort } from "@/Core";
-import { CompileReport } from "@S/CompileReports/Core/Domain";
+import { CompileReport } from "@/Core/Domain/CompileReport";
 import { CompileReportsTable } from "./CompileReportsTable";
 import { createCompileReportsTablePresenter } from "./CompileReportsTablePresenter";
 

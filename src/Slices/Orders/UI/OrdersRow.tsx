@@ -3,9 +3,9 @@ import { Link } from "react-router";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import { words } from "@/Core";
+import { ServiceOrder } from "@/Core/Domain/ServiceOrderModel";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { DependencyContext } from "@/UI/Dependency";
-import { ServiceOrder } from "../Core/Types";
 import { OrderProgressBar } from "./OrderProgressBar";
 import { OrderStatusLabel } from "./OrderStatusLabel";
 

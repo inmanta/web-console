@@ -1,4 +1,4 @@
-import { DateRange } from "@/Core/Domain";
+import * as DateRange from "./DateRange";
 
 /**
  * Interface that represents a filter for parameters.

@@ -1,5 +1,5 @@
 import { LogLevelString } from "@/Core";
-import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
+import { ResourceLog } from "@/Core/Domain/ResourceLog";
 
 const a: ResourceLog = {
   level: LogLevelString.ERROR,

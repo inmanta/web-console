@@ -11,8 +11,8 @@ import {
   FlexItem,
 } from "@patternfly/react-core";
 import { words } from "@/Core";
+import { CompileDetails } from "@/Core/Domain/CompileDetails";
 import { Timeline } from "@/UI/Components/Timeline";
-import { CompileDetails } from "@S/CompileDetails/Core/Domain";
 
 interface Props {
   compileDetails: Pick<

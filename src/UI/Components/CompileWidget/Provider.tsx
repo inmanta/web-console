@@ -4,7 +4,7 @@ import { words } from "@/Core";
 import { useTriggerCompile } from "@/Data/Queries/Slices/Compilation";
 import { GetEnvironmentPreviewKey } from "@/Data/Queries/Slices/Environment";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 import { CompileWidget } from "./CompileWidget";
 
 interface Props {

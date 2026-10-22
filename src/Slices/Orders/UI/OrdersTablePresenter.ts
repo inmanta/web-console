@@ -1,6 +1,6 @@
 import { words } from "@/Core";
+import { ServiceOrder } from "@/Core/Domain/ServiceOrderModel";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { ServiceOrder } from "../Core/Types";
 
 const getColumnHeads = (): ColumnHead[] => [
   { displayName: words("orders.column.created_at"), apiName: "created_at" },

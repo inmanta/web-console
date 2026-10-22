@@ -12,13 +12,13 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { WordKey, words } from "@/Core";
+import { toSubmittableNumber } from "@/Core/Domain/Unit/convert";
+import { otherScaleCandidates, selectDisplayUnit } from "@/Core/Domain/Unit/display";
+import type { UnitConfig } from "@/Core/Domain/Unit/resolveUnitConfig";
+import { familyOf } from "@/Core/Domain/Unit/units";
+import { validateUnitInput } from "@/Core/Domain/Unit/validate";
+import type { UnitBounds, UnitValidationError } from "@/Core/Domain/Unit/validate";
 import { preventNumberInputScroll } from "@/UI/Utils";
-import { toSubmittableNumber } from "./convert";
-import { otherScaleCandidates, selectDisplayUnit } from "./display";
-import { familyOf } from "./units";
-import { validateUnitInput } from "./validate";
-import type { UnitConfig } from "./resolveUnitConfig";
-import type { UnitBounds, UnitValidationError } from "./validate";
 
 interface Props {
   attributeName: string;

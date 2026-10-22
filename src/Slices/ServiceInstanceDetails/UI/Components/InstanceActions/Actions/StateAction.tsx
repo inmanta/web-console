@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 import { ParsedNumber, words } from "@/Core";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { iconColorFor } from "@/UI/Utils";
 import { StateTransferModalContent } from "./StateTransferModalContent";
 

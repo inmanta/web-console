@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
 import { words } from "@/Core";
 import { Spinner } from "@/UI/Components/Spinner";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 const SpinnerContent = ({ message }: { message: string }) => (
   <Flex

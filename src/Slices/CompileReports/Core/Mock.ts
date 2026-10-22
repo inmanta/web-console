@@ -1,4 +1,4 @@
-import { CompileReport } from "./Domain";
+import { CompileReport } from "@/Core/Domain/CompileReport";
 
 const data: CompileReport[] = [
   {

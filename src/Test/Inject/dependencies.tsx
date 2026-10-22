@@ -1,5 +1,5 @@
 import React from "react";
-import { FeatureModule, FlatEnvironment, RouteFactory } from "@/Core";
+import { FeatureModule, FlatEnvironment, getFeatureRoutes, RouteFactory } from "@/Core";
 import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth";
 import { PrimaryArchiveHelper } from "@/Data/Common";
 import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
@@ -9,7 +9,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { AppAlertProvider } from "@/UI/Root/Components/AppAlertProvider";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { UrlManagerImpl } from "@/UI/Utils";
-import { features as appFeatures, getFeatureRoutes } from "@/appFeatures";
+import { features as appFeatures } from "@/appFeatures";
 
 interface Props {
   env?: FlatEnvironment;

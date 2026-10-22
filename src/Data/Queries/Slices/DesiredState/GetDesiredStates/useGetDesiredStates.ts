@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { DateRange, IntRange, PageSize, Pagination } from "@/Core";
+import { DesiredStateVersion, DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   CustomError,
@@ -9,7 +10,6 @@ import {
   getPaginationHandlers,
 } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
-import { DesiredStateVersion, DesiredStateVersionStatus } from "@/Slices/DesiredState/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { getDesiredStatesUrl } from "./getDesiredStatesUrl";
 

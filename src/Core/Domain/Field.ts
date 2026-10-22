@@ -1,7 +1,7 @@
 import { TextInputTypes } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core/Language";
-import type { UnitBounds, UnitConfig } from "@/UI/Components/UnitInput";
 import { FormSuggestion } from "./ServiceInstanceModel";
+import type { UnitBounds, UnitConfig } from "./Unit";
 
 /**
  * A field contains all the information required to setup a form field for an AttributeModel.

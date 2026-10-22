@@ -1,7 +1,7 @@
 import { ParsedNumber } from "@/Core/Language";
-import { SeverityText } from "@/Slices/Notification/Core/Domain";
 import { EventType } from "./EventType";
 import { LogLevelNumber } from "./LogLevel";
+import { SeverityText } from "./Notification";
 
 export interface InstanceEvent {
   id: string;

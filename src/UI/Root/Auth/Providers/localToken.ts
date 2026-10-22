@@ -1,4 +1,4 @@
-import { createCookie, getCookie, removeCookie } from "../../Common/CookieHelper";
+import { createCookie, getCookie, removeCookie } from "@/Data/Common/CookieHelper";
 
 /**
  * Shared storage for a database (local) login session.

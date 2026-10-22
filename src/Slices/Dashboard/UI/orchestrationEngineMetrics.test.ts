@@ -1,4 +1,4 @@
-import { BackendMetricData } from "@/Slices/Dashboard/Core/Domain";
+import { BackendMetricData } from "@/Core/Domain/Metrics";
 import { average, deriveNbDatapoints, getTrendSeries } from "./orchestrationEngineMetrics";
 
 const metrics: BackendMetricData = {

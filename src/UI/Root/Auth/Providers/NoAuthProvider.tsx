@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../AuthContext";
+import { AuthContext } from "@/Data/Auth/AuthContext";
 
 /**
  * Component that implements a null authentication provider when no authentication is enabled.

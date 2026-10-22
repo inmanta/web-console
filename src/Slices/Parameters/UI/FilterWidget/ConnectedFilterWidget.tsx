@@ -1,6 +1,6 @@
 import React, { memo } from "react";
+import { Filter } from "@/Core/Domain/ParameterFilter";
 import { useUrlStateWithFilter } from "@/Data/Common";
-import { Filter } from "@/Slices/Parameters/Core/Types";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
 interface Props {

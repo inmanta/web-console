@@ -1,6 +1,6 @@
 import React from "react";
+import { CompileStageReport } from "@/Core/Domain/CompileDetails";
 import { LogViewerComponent, LogViewerData } from "@/UI/Components/LogViewer";
-import { CompileStageReport } from "@S/CompileDetails/Core/Domain";
 
 interface Props {
   reports: CompileStageReport[];

@@ -17,7 +17,7 @@ import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { SetStateButtonDefaults } from "@/UI/Components/MarkdownContainer";
 import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider/ModalProvider";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { useNavigateTo } from "@/UI/Routing";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { StateTransferModalContent } from "../Components/InstanceActions/Actions/StateTransferModalContent";

@@ -7,15 +7,15 @@ import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { KeycloakAuthConfig, LocalConfig } from "@/Data/Auth";
-import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import { EnvironmentPreview, useGetEnvironments } from "@/Data/Queries/Slices/Environment";
 import { useGetProjects } from "@/Data/Queries/Slices/Project";
 import { AuthTestWrapper, Environment, MockedDependencyProvider, Project } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
+import { EnvSelectorOpenContext } from "@/UI/Dependency/EnvSelectorOpenContext";
+import { AuthProvider } from "@/UI/Root/Auth/AuthProvider";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
-import { EnvSelectorOpenContext } from "./EnvSelectorOpenContext";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 

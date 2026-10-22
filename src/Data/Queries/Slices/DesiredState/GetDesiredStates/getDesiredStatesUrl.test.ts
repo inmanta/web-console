@@ -1,5 +1,5 @@
 import { PageSize } from "@/Core";
-import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
+import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
 import { getDesiredStatesUrl } from "./getDesiredStatesUrl";
 import { GetDesiredStatesParams } from "./useGetDesiredStates";
 

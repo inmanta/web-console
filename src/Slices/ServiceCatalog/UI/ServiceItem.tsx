@@ -22,8 +22,8 @@ import { useDeleteService } from "@/Data/Queries/Slices/Service";
 import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
 import { InstanceSummaryLabels } from "@/UI/Components/InstanceSummaryLabels";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 interface Props {
   service: ServiceModel;

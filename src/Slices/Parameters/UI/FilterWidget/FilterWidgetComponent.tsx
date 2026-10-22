@@ -1,7 +1,7 @@
 import React from "react";
 import { Divider, Form, Stack, StackItem } from "@patternfly/react-core";
 import { words } from "@/Core";
-import { Filter } from "@/Slices/Parameters/Core/Types";
+import { Filter } from "@/Core/Domain/ParameterFilter";
 import { AddableTextInput } from "@/UI/Components/AddableTextInput";
 import {
   ActiveFilterGroup,

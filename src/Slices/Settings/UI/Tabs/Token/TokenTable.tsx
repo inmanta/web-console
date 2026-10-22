@@ -7,7 +7,7 @@ import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 /**
  * Lists the registered (revocable) tokens of the current environment and allows revoking them.

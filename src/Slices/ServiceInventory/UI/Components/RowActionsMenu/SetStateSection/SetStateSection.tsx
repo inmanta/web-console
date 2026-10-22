@@ -7,8 +7,8 @@ import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { iconColorFor } from "@/UI/Utils";
 
 interface Props extends VersionedServiceInstanceIdentifier {

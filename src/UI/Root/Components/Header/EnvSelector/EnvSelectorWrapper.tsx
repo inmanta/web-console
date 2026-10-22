@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
+import { EnvSelectorOpenContext } from "@/UI/Dependency/EnvSelectorOpenContext";
 import { EnvSelector } from "./EnvSelector";
-import { EnvSelectorOpenContext } from "./EnvSelectorOpenContext";
 
 interface Props {
   selectorItems: EnvironmentSelectorItem[];

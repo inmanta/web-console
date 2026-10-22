@@ -17,7 +17,7 @@ import { ExclamationCircleIcon, EyeIcon, EyeSlashIcon } from "@patternfly/react-
 import { words } from "@/Core";
 import { useAddUser } from "@/Data/Queries/Slices/Auth";
 import { Spinner } from "@/UI/Components/Spinner";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 interface UserCredentialsFormProps {
   submitButtonText: string;

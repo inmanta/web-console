@@ -2,9 +2,9 @@ import React, { memo, useRef } from "react";
 import { Bullseye, Button, Flex, FlexItem, Popover } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import { Resource, words } from "@/Core";
+import { BlinkingDot } from "@/UI/Components/BlinkingDot";
 import { statusGroupIcons } from "@/UI/Components/CompoundResourceStatus";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
-import { BlinkingDot } from "./Components";
 import { ResourceStateInfo } from "./ResourceStateInfo";
 
 export interface ResourceRow {

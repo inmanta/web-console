@@ -1,53 +1,12 @@
-import React, { createContext, useContext, useState, useCallback, PropsWithChildren } from "react";
-import { AlertGroup, AlertVariant, AlertProps } from "@patternfly/react-core";
+import React, { useState, useCallback, PropsWithChildren } from "react";
+import { AlertGroup, AlertVariant } from "@patternfly/react-core";
 import { v4 as uuidv4 } from "uuid";
 import { AppAlert as AppAlertComponent } from "@/UI/Components/AppAlert";
-
-interface NotifyOptions extends AlertProps {
-  /** Alert message */
-  message?: string;
-
-  /** Optional data-testid for testing */
-  testId?: string;
-}
-
-type NotifyShorthandOptions = Omit<NotifyOptions, "variant">;
-
-interface AppAlertContextProps {
-  notify: (options: NotifyOptions) => void;
-  notifySuccess: (options: NotifyShorthandOptions) => void;
-  notifyError: (options: NotifyShorthandOptions) => void;
-  notifyInfo: (options: NotifyShorthandOptions) => void;
-}
-
-const defaultContext: AppAlertContextProps = {
-  notify: () => {
-    if (import.meta.env.DEV) {
-      console.warn("AppAlertContext.notify called outside AppAlertProvider");
-    }
-  },
-  notifySuccess: () => {
-    if (import.meta.env.DEV) {
-      console.warn("AppAlertContext.notifySuccess called outside AppAlertProvider");
-    }
-  },
-  notifyError: () => {
-    if (import.meta.env.DEV) {
-      console.warn("AppAlertContext.notifyError called outside AppAlertProvider");
-    }
-  },
-  notifyInfo: () => {
-    if (import.meta.env.DEV) {
-      console.warn("AppAlertContext.notifyInfo called outside AppAlertProvider");
-    }
-  },
-};
-
-const AppAlertContext = createContext<AppAlertContextProps>(defaultContext);
-
-export const useAppAlert = (): AppAlertContextProps => {
-  return useContext(AppAlertContext);
-};
+import {
+  AppAlertContext,
+  NotifyOptions,
+  NotifyShorthandOptions,
+} from "@/UI/Dependency/AppAlertContext";
 
 export const AppAlertProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [alerts, setAlerts] = useState<NotifyOptions[]>([]);

@@ -1,6 +1,6 @@
 import { words } from "@/Core";
+import { Fact } from "@/Core/Domain/Fact";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { Fact } from "@S/Facts/Core/Domain";
 
 const getColumnHeads = (): ColumnHead[] => [
   { displayName: words("name"), apiName: "name" },

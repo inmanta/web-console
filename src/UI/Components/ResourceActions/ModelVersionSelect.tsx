@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { words } from "@/Core";
+import { DesiredStateVersion, DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
 import {
   useGetDesiredStateVersion,
   useGetDesiredStateVersions,
 } from "@/Data/Queries/Slices/DesiredState";
 import { DesiredStateStatusLabel } from "@/UI/Components/DesiredStateStatusLabel";
-import { DesiredStateVersion, DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import { VersionSelectNotice, VersionSelectOption, VersionSelect } from "./VersionSelect";
 import { useVersionSearch } from "./useVersionSearch";
 

@@ -12,7 +12,7 @@ import {
 import { InfoAltIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { words } from "@/Core";
-import { ServiceOrderItemStatus } from "@/Slices/Orders/Core/Types";
+import { ServiceOrderItemStatus } from "@/Core/Domain/ServiceOrderModel";
 import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {

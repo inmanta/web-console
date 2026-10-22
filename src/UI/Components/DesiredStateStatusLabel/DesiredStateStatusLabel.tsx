@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { Label, LabelProps } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
-import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
+import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
 
 /**
  * The color and icon of the label for each status of a desired state version.

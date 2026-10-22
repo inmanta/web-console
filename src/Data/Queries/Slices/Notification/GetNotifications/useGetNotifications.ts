@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
+import { Notification, Severity } from "@/Core/Domain/Notification";
+import { Origin } from "@/Core/Domain/NotificationOrigin";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   CustomError,
@@ -10,8 +12,6 @@ import {
 } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
-import { Notification, Severity } from "@S/Notification/Core/Domain";
-import { Origin } from "@S/Notification/Core/Utils";
 import { getUrl } from "./getUrl";
 
 /**

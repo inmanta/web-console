@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { NavLink } from "react-router";
 import { Label, NavItem, Tooltip } from "@patternfly/react-core";
 import { LockIcon } from "@patternfly/react-icons";
-import { BlinkingDot } from "@/Slices/Resource/UI/ResourcesPage/Components";
+import { BlinkingDot } from "@/UI/Components/BlinkingDot";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchHelper } from "@/UI/Routing";
 

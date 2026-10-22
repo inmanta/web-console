@@ -1,8 +1,8 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort, words } from "@/Core";
+import { CompileReport, CompileReportRow } from "@/Core/Domain/CompileReport";
 import { TablePresenter } from "@/UI/Presenters";
-import { CompileReport, CompileReportRow } from "@S/CompileReports/Core/Domain";
 import { CompileReportsTableRow } from "./CompileReportsTableRow";
 
 interface Props {

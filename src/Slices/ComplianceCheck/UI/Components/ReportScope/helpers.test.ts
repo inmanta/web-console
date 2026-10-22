@@ -1,7 +1,7 @@
 import { Diff, ResourceActionFilter, words } from "@/Core";
+import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
 import { ServiceInstance } from "@/Test";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
-import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import {
   countDiff,
   createFilterRows,

@@ -6,7 +6,7 @@ import {
   PartialNotification,
 } from "@/Data/Queries/Slices/Notification";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 
 /**
  * Notification badge component that displays a visual indicator for notifications.

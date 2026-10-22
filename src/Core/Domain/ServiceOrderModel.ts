@@ -1,4 +1,4 @@
-import type { ServiceOrderItemAction } from "@/Core";
+import type { ServiceOrderItemAction } from "./ServiceOrder";
 
 export interface ServiceOrder {
   description?: string;

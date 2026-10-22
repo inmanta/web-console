@@ -4,8 +4,8 @@ import { Button, Content, Flex, FlexItem, Truncate } from "@patternfly/react-cor
 import { CheckCircleIcon, InfoAltIcon, TimesCircleIcon } from "@patternfly/react-icons";
 import { words } from "@/Core";
 import { CompileStatus } from "@/Core/Domain";
-import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
-import { getStatusFromReport } from "@/Slices/CompileReports/UI/CompileReportsTablePresenter";
+import { CompileReport } from "@/Core/Domain/CompileReport";
+import { getStatusFromReport } from "@/Core/Domain/CompileReport";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { Spinner } from "@/UI/Components/Spinner";
 import { DependencyContext } from "@/UI/Dependency";
