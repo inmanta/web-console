@@ -10,31 +10,62 @@ import { RouteManager } from "./RouteManager";
  */
 export interface LinkAction<Context> {
   /**
-   * Unique within the extension point. Used as the id of the menu item.
+   * Identifies the menu item, e.g. as its React key. A menu may also use it as the item's DOM id,
+   * so it must be unique within the extension point.
    */
   id: string;
+
+  /**
+   * The text of the menu item.
+   */
   label: string;
+
+  /**
+   * The icon shown before the label.
+   */
   icon: ComponentType;
+
+  /**
+   * Returns the pathname the link opens, e.g. with `routeManager.getUrl`. The link keeps the
+   * current query string, so the environment stays selected.
+   */
   getUrl: (routeManager: RouteManager, context: Context) => string;
 
   /**
    * Hides the link when it returns false, e.g. when the license doesn't include the feature.
    */
   isVisible?: (orchestratorProvider: OrchestratorProvider) => boolean;
+
+  /**
+   * Disables the link when it returns true: it is still shown, but greyed out and not clickable.
+   */
   isDisabled?: (context: Context) => boolean;
 }
 
 /**
- * The context of the "Add instance" button of the service inventory.
+ * Whether a link is shown, according to its `isVisible`. A link without `isVisible` is always
+ * shown.
+ *
+ * @param action - the link
+ * @param orchestratorProvider - the features and license of the orchestrator
+ * @returns true when the link is shown
  */
-export interface ServiceContext {
+export const isLinkActionVisible = (
+  { isVisible }: Pick<LinkAction<never>, "isVisible">,
+  orchestratorProvider: OrchestratorProvider
+): boolean => isVisible === undefined || isVisible(orchestratorProvider);
+
+/**
+ * What the links of the "Add instance" button of the service inventory are about.
+ */
+export interface ServiceLinkContext {
   service: string;
 }
 
 /**
- * The context of the action menus of a service instance.
+ * What the links of the action menus of a service instance are about.
  */
-export interface InstanceContext {
+export interface InstanceLinkContext {
   service: string;
   instance: string;
 
@@ -55,16 +86,16 @@ declare module "@/Core/Contracts/FeatureModule" {
      * Extra ways to add an instance on the service inventory. When there are any, the "Add
      * instance" button becomes a split button with these links in its dropdown.
      */
-    "inventory.addInstance.actions": LinkAction<ServiceContext>;
+    "inventory.addInstance.actions": LinkAction<ServiceLinkContext>;
 
     /**
      * Links in the row menu of an instance in the service inventory.
      */
-    "inventory.row.actions": LinkAction<InstanceContext>;
+    "inventory.row.actions": LinkAction<InstanceLinkContext>;
 
     /**
      * Links at the top of the Actions menu on the instance details page.
      */
-    "instance.actions": LinkAction<InstanceContext>;
+    "instance.actions": LinkAction<InstanceLinkContext>;
   }
 }
