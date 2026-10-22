@@ -10,10 +10,16 @@ import {
   t_global_font_size_body_default,
   t_global_font_size_body_lg,
 } from "@patternfly/react-tokens";
-import { EmbeddedEntity, Field, InstanceAttributeModel, ServiceModel } from "@/Core";
+import {
+  EmbeddedEntity,
+  Field,
+  InstanceAttributeModel,
+  ServiceModel,
+  ServiceOrderItemAction,
+  ServiceOrderItemRequest,
+} from "@/Core";
 import { sanitizeAttributes } from "@/Data/Common";
 import { SuggestionVariables } from "@/Data/Queries/Slices/ServiceInstance";
-import { ServiceOrderItemAction } from "@/Slices/Orders/Core/Types";
 import { CreateModifierHandler, FieldCreator } from "@/UI/Components/ServiceInstanceForm";
 import { RelationsDictionary } from "../../Data";
 import {
@@ -22,7 +28,6 @@ import {
   getEmbeddedEntityMissingConnections,
   getInterServiceRelationMissingConnections,
 } from "../../Data/Helpers/connectionValidationUtils";
-import { ComposerServiceOrderItem } from "../../Data/Helpers/deploymentHelpers";
 import { findTopRootInstance } from "../../Data/Helpers/findTopRootInstance";
 import { getEmbeddedEntityKey } from "../../Data/Helpers/shapeUtils";
 
@@ -76,7 +81,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   isNew: boolean;
   lockedOnCanvas: boolean;
   entityType: EntityShapeType;
-  orderItem: ComposerServiceOrderItem | null;
+  orderItem: ServiceOrderItemRequest | null;
   hasAttributeValidationErrors: boolean;
   isLayersCollapsed: boolean;
   parentIds: Set<string>;
@@ -1067,11 +1072,9 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
    * Returns null for embedded entities (they should be nested in their parent's attributes).
    *
    * @param canvasState - The full canvas state map to resolve connected shapes
-   * @returns ComposerServiceOrderItem or null for embedded entities
+   * @returns ServiceOrderItemRequest or null for embedded entities
    */
-  toServiceOrderItem(
-    canvasState: Map<string, ServiceEntityShape>
-  ): ComposerServiceOrderItem | null {
+  toServiceOrderItem(canvasState: Map<string, ServiceEntityShape>): ServiceOrderItemRequest | null {
     if (this.orderItem === null) {
       this.updateOrderItem(canvasState);
     }

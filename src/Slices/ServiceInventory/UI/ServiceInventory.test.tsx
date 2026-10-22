@@ -7,18 +7,25 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { Service, ServiceInstance, Pagination, MockedDependencyProvider } from "@/Test";
+import { FeatureModule } from "@/Core";
+import {
+  Service,
+  ServiceInstance,
+  Pagination,
+  MockedDependencyProvider,
+  withoutFeature,
+} from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { ServiceInventory } from "./ServiceInventory";
 
-function setup(service = Service.a, pageSize = "") {
+function setup(service = Service.a, pageSize = "", features?: FeatureModule[]) {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[`/?env=aaa${pageSize}`]}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider features={features}>
           <ModalProvider>
             <Page>
               <ServiceInventory serviceName={service.name} service={service} />
@@ -298,6 +305,33 @@ describe("ServiceInventory", () => {
     expect(await screen.findByText("Show in Composer")).toBeEnabled();
 
     expect(screen.getByText("Edit in Composer")).toBeInTheDocument();
+  });
+
+  test("ServiceInventory without the composer feature shows a plain add button and no composer actions", async () => {
+    server.use(
+      http.get("/lsm/v1/service_inventory/service_name_a", () => {
+        return HttpResponse.json({
+          data: [{ ...ServiceInstance.a, id: "a" }],
+          links: Pagination.links,
+          metadata: Pagination.metadata,
+        });
+      })
+    );
+
+    const { component } = setup(Service.a, "", withoutFeature("composer"));
+
+    render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: "row actions toggle" }));
+
+    expect(await screen.findByText(words("inventory.editInstance.button"))).toBeVisible();
+    expect(screen.queryByText(words("instanceComposer.editButton"))).not.toBeInTheDocument();
+    expect(screen.queryByText(words("instanceComposer.showButton"))).not.toBeInTheDocument();
+
+    expect(screen.queryByRole("button", { name: "AddInstanceToggle" })).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: words("inventory.addInstance.button") })
+    ).toBeVisible();
   });
 
   test("GIVEN ServiceInventory WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
