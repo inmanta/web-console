@@ -54,6 +54,7 @@ const setup = (
                   isDirty={false}
                   setIsDirty={vi.fn()}
                   initialStates={initialStates}
+                  submitError={null}
                 />
               }
             />

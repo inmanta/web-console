@@ -36,6 +36,7 @@ import { RelatedServiceProvider } from "./RelatedServiceProvider";
 import { SelectFormInput } from "./SelectFormInput";
 import { TextFormInput } from "./TextFormInput";
 import { TextListFormInput } from "./TextListFormInput";
+import { useValidationError } from "./ValidationErrorsContext";
 
 interface Props {
   field: Field;
@@ -67,7 +68,8 @@ const makePath = (path: string | null, next: string): string =>
   path === null ? next : `${path}.${next}`;
 
 /**
- * FieldInput component for managing form input related to a specific field.
+ * FieldInput component for managing form input related to a specific field. A validation error
+ * from the last submit shows as an error on the input.
  *
  * @param {Props} props - Props for the FieldInput component.
  *   @prop {Field} field - The field associated with the input.
@@ -140,6 +142,10 @@ export const FieldInput: React.FC<Props> = ({
       (value) => !suggestionsList.some((suggestion) => suggestion.value === value)
     );
 
+  // A group only shows the validation errors on itself; its fields show the ones below it.
+  const isGroup = field.kind === "Nested" || field.kind === "DictList";
+  const validationError = useValidationError(makePath(path, field.name), !isGroup);
+
   // Warning: broken annotation, then failed fetch, then a kept value no longer among the options
   // (`notInList` suppressed on a locked field).
   let warningMessage: string | undefined;
@@ -167,6 +173,7 @@ export const FieldInput: React.FC<Props> = ({
     warningMessage,
     hint: suggestionHint,
     loading: isLoadingSuggestions,
+    validationError,
   };
 
   // Get the controlled value for the field
@@ -207,6 +214,7 @@ export const FieldInput: React.FC<Props> = ({
             shouldBeDisabled={
               field.isDisabled && get(originalState, booleanPath) !== undefined && !isNew
             }
+            validationError={validationError}
           />
         );
       }
@@ -236,6 +244,13 @@ export const FieldInput: React.FC<Props> = ({
               { value: false, buttonId: `${field.name}-false`, label: words("false") },
             ]}
           />
+          {validationError && (
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem variant="error">{validationError}</HelperTextItem>
+              </HelperText>
+            </FormHelperText>
+          )}
         </FormGroup>
       );
     }
@@ -277,6 +292,7 @@ export const FieldInput: React.FC<Props> = ({
           key={field.id || field.name}
           isTextarea
           warningMessage={modelError}
+          validationError={validationError}
         />
       );
     case "Text":
@@ -316,6 +332,7 @@ export const FieldInput: React.FC<Props> = ({
             getUpdate(makePath(path, field.name), value);
           }}
           key={field.id || field.name}
+          validationError={validationError}
         />
       );
     case "Dict":
@@ -332,6 +349,7 @@ export const FieldInput: React.FC<Props> = ({
           onChange={(value) => {
             getUpdate(makePath(path, field.name), value);
           }}
+          validationError={validationError}
         />
       );
     case "InterServiceRelation":
@@ -346,6 +364,7 @@ export const FieldInput: React.FC<Props> = ({
           isOptional={field.isOptional}
           isDisabled={!isNew && field.isDisabled}
           handleInputChange={(value) => getUpdate(makePath(path, field.name), value)}
+          validationError={validationError}
         />
       );
     case "Enum":
@@ -364,6 +383,7 @@ export const FieldInput: React.FC<Props> = ({
             get(originalState, makePath(path, field.name)) !== undefined &&
             !isNew
           }
+          validationError={validationError}
         />
       );
     case "Nested":
@@ -377,6 +397,7 @@ export const FieldInput: React.FC<Props> = ({
           isNew={isNew}
           suggestionVariables={suggestionVariables}
           isFlat={isFlat}
+          validationError={validationError}
         />
       );
     case "DictList":
@@ -390,6 +411,7 @@ export const FieldInput: React.FC<Props> = ({
           isNew={isNew}
           suggestionVariables={suggestionVariables}
           isFlat={isFlat}
+          validationError={validationError}
         />
       );
     case "RelationList":
@@ -407,6 +429,7 @@ export const FieldInput: React.FC<Props> = ({
             getUpdate(makePath(path, field.name), value, true);
           }}
           multi={true}
+          validationError={validationError}
         />
       );
   }
@@ -457,7 +480,30 @@ interface NestedProps {
   isNew?: boolean;
   suggestionVariables?: SuggestionVariables;
   isFlat?: boolean;
+  validationError?: string;
 }
+
+/**
+ * The header description of a field group, with the group's validation error below it.
+ *
+ * @example
+ * renderGroupDescription("The endpoints", "List should have at least 1 item")
+ * // => the description, then an error helper text with the message
+ */
+const renderGroupDescription = (description: React.ReactNode, validationError?: string) => {
+  if (!validationError) {
+    return description;
+  }
+
+  return (
+    <>
+      {description}
+      <HelperText>
+        <HelperTextItem variant="error">{validationError}</HelperTextItem>
+      </HelperText>
+    </>
+  );
+};
 
 /**
  * NestedFieldInput component with inner state for managing nested field input.
@@ -468,6 +514,7 @@ interface NestedProps {
  *   @prop {OriginalState} originalState - The original state of the nested field.
  *   @prop {Function} getUpdate - Function to update and get updates for the nested field.
  *   @prop {string} path - The path of the nested field.
+ *   @prop {string} validationError - A validation error on the nested field itself, shown in its header.
  * @returns {React.FC<NestedProps>} The rendered NestedFieldInput component.
  */
 const NestedFieldInput: React.FC<NestedProps> = ({
@@ -479,6 +526,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   isNew = false,
   suggestionVariables,
   isFlat = false,
+  validationError,
 }) => {
   const [showList, setShowList] = useState(
     !field.isOptional || get(formState, makePath(path, field.name)) != null
@@ -509,7 +557,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
               id: `NestedFieldInput-${makePath(path, field.name)}`,
             }
       }
-      titleDescription={field.description}
+      titleDescription={renderGroupDescription(field.description, validationError)}
       actions={
         field.isOptional && (
           <>
@@ -585,6 +633,7 @@ interface DictListProps {
   isNew?: boolean;
   suggestionVariables?: SuggestionVariables;
   isFlat?: boolean;
+  validationError?: string;
 }
 
 /**
@@ -596,6 +645,7 @@ interface DictListProps {
  *   @prop {OriginalState} originalState - The original state of the dictionary list field.
  *   @prop {Function} getUpdate - Function to update and get updates for the dictionary list field.
  *   @prop {string} path - The path of the dictionary list field.
+ *   @prop {string} validationError - A validation error on the list itself, shown in its header.
  * @returns {React.FC<DictListProps>} The rendered DictListFieldInput component.
  */
 const DictListFieldInput: React.FC<DictListProps> = ({
@@ -607,6 +657,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   isNew = false,
   suggestionVariables,
   isFlat = false,
+  validationError,
 }) => {
   const list = useMemo(
     () => get<Array<unknown>>(formState, makePath(path, field.name), []) ?? [],
@@ -685,9 +736,12 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               id: `DictListFieldInput-${makePath(path, field.name)}`,
             }
       }
-      titleDescription={`${
-        field.description !== null ? field.description : ""
-      } (${words("inventory.createInstance.items")(list.length)})`}
+      titleDescription={renderGroupDescription(
+        `${field.description !== null ? field.description : ""} (${words(
+          "inventory.createInstance.items"
+        )(list.length)})`,
+        validationError
+      )}
       actions={
         <Button
           variant="link"
