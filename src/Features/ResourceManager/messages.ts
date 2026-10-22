@@ -37,11 +37,6 @@ export const resourceManagerMessages = {
   "resources.filters.status.compliance.placeholder": "Filter by compliance state",
   "resources.filters.status.lastHandlerRun.label": "Handler run state(s)",
   "resources.filters.status.lastHandlerRun.placeholder": "Filter by handler run state",
-  "resources.filters.agent.placeholder": "Agent...",
-  "resources.filters.value.placeholder": "Value...",
-  "resources.filters.type.placeholder": "Type...",
-  "resources.filters.reset": "Reset filters",
-  "resources.filters.filter": "Add filter",
   "resources.filters.tabs.resource": "Resource",
   "resources.filters.tabs.service": "Service",
   "resources.filters.service.sectionTitle": "Service",
@@ -113,15 +108,12 @@ export const resourceManagerMessages = {
   "discoveredResourceDetails.empty": "No discovered resource details found",
   "discovered.column.discovery_resource": "Discovery resource",
   "discovered_resources.title": "Discovered Resources",
-  "discovered_resources.values": "values",
   "discovered_resources.show_resource.managed": "Show managed resource",
   "discovered_resources.show_resource.discovery": "Show discovery resource",
 
   /** Agents */
   "agents.title": "Agents",
   "agents.empty.message": "No agents found",
-  "agents.columns.process": "Process",
-  "agents.columns.failover": "Last failover",
   "agents.columns.unpause": "On resume",
   "agents.actions.failed": "Agent action failed",
   "agents.actions.pause": "Pause",
@@ -150,7 +142,6 @@ export const resourceManagerMessages = {
     "As such, a long deploy operation might delay the removal of the venvs considerably.",
   "agents.filters.status.placeholder": "Select status...",
   "agents.filters.name.placeholder": "Filter by name",
-  "agents.filters.processName.placeholder": "Filter by process name",
 
   /** Facts */
   "facts.title": "Facts",

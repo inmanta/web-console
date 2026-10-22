@@ -58,11 +58,7 @@ export const shellMessages = {
   "home.manageProjects.close.button": "Close",
   "home.noEnvironments.toast.title": "No environments available",
   "home.noEnvironments.toast.message": "You were redirected to create an environment.",
-  "home.empty.message": "No environments found",
-  "home.create.env.desciption": "Create new environment",
   "home.environment.selector": "Environments",
-  "home.filters.project.placeholder": "Filter by project",
-  "home.filters.env.placeholder": "Filter by name",
 
   /**
    * Navigation related text

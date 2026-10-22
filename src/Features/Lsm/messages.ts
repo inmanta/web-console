@@ -24,33 +24,17 @@ export const lsmMessages = {
    */
   "id.copy": "Copy full service instance id to clipboard",
   "serviceIdentity.copy": "Copy identifier to clipboard",
-  "attributes.active": "Active Attributes",
-  "attributes.candidate": "Candidate Attributes",
-  "attributes.rollback": "Rollback Attributes",
-  "inventory.intro": (service: string) => `Showing instances of ${service}`,
   "inventory.title": (name: string) => `Service Inventory: ${name}`,
   "inventory.empty.message": (service: string) => `No instances found for service ${service}`,
   "inventory.column.state": "State",
   "inventory.collumn.deploymentProgress": "Deployment Progress",
-  "inventory.actions.drilldown": "More actions",
-  "inventory.statustab.expertActions": "Expert Actions",
   "inventory.statustab.diagnose": "Diagnose",
-  "inventory.statustab.details": "Instance Details",
   "inventory.statustab.setInstanceState": "Set state to",
   "inventory.statustab.confirmTitle": "Confirm set state transfer",
   "inventory.statustab.confirmMessage": (name: string, state: string) =>
     `Are you sure you want to set state of instance ${name} to ${state}?`,
-  "inventory.statustab.forceState": "Force state to",
-  "inventory.statustab.forceState.confirmTitle": "Confirm force state transfer",
-  "inventory.statustab.forceState.message": (name: string, state: string) =>
-    `Are you sure you want to force the state of instance ${name} to ${state}? `,
-  "inventory.statustab.forceState.confirmMessage":
-    "Forcing a state might corrupt the service and the orchestrated resources",
-  "inventory.statustab.forceState.confirmQuestion": "Are you sure you want to continue?",
   "inventory.resourcesTab.empty.title": "No resources found",
   "inventory.resourcesTab.empty.body": "No resources could be found for this instance.",
-  "inventory.resourcesTab.failed.title": "Something went wrong",
-  "inventory.resourcesTab.detailsLink": "Jump to Details",
   "inventory.deploymentProgress.waiting": "In Progress",
   "inventory.deploymentProgress.failed": "Failed",
   "inventory.deploymentProgress.deployed": "Ready",
@@ -65,9 +49,6 @@ export const lsmMessages = {
   "inventory.duplicateInstance.button": "Duplicate",
   "inventory.duplicateInstance.title": "Duplicate instance",
   "inventory.editInstance.failed": "Editing instance failed",
-  "inventory.addInstance.unselectedEntity": "Please select an entity to fill attributes values",
-  "inventory.editInstance.header": (instanceId: string) =>
-    `Change attributes of instance ${instanceId}`,
   "inventory.duplicateInstance.header": (instanceId: string) =>
     `Create an instance based of instance ${instanceId}`,
   "inventory.deleteInstance.failed": "Deleting instance failed",
@@ -80,7 +61,6 @@ export const lsmMessages = {
   "inventory.destroyInstance.header": (instanceName: string, serviceName: string) =>
     `Are you absolutely sure you want to permanently destroy instance ${instanceName} of service entity ${serviceName}?`,
   "inventory.destroyInstance.text": "This action cannot be undone.",
-  "inventory.deleteVersion.failed": "Deleting version failed",
   "inventory.filters.state.label": "State",
   "inventory.filters.state.placeholder": "Select a state...",
   "inventory.filters.id.label": "Id / Service identity",
@@ -98,17 +78,10 @@ export const lsmMessages = {
   "inventory.filters.deleted.only.description": "Only show deleted instances",
   "ServiceDetails.title": (name: string) => `Service Details: ${name}`,
   "inventory.test.creating": "creating",
-  "inventory.editAttribute.placeholder": "New Attribute",
-  "inventory.editAttribute.failed": "Setting new attribute failed",
-  "inventory.editAttribute.header": "Update Attribute",
-  "inventory.editAttribute.text": (oldValue: string, newValue: string) =>
-    `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can corrupt the instance.`,
-  "inventory.error.mermaid": "Error rendering Mermaid diagram",
 
   /**
    * Service Instance Details text
    */
-  "instanceDetails.title.next": "Latest Version",
   "instanceDetails.button": "Show instance",
   "instanceDetails.page.errorFallback": "Something went wrong retrieving the instance details",
   "instanceDetails.page.errorFallback.title": "Error",
@@ -140,14 +113,11 @@ export const lsmMessages = {
   "instanceDetails.forceState.label": "Force state",
   "instanceDetails.stateTransfer.confirmTitle": "Confirm set state transfer",
   "instanceDetails.expertActions": "Expert Actions",
-  "instanceDetails.expert.transfer.options": "Select Operation",
   "instanceDetails.expert.editModal.title": "Confirm Attributes update",
   "instanceDetails.expert.editModal.message": (selectedSet) => `
   You are performing an update on the ${selectedSet} in expert mode, are you certain you want to proceed?
   `,
   "instanceDetails.expert.confirm.warning": "DANGER: This is an irreversible action!",
-  "instanceDetails.expert.confirm.state.message": (instance, state) =>
-    `\n   Are you certain you want to FORCE update the state to : ${state} for ${instance}?\n  `,
   "instanceDetails.expert.forceUpdate": "Force Update",
   "instanceDetails.expert.editModal.success": "Attributes updated successfully",
   "instanceDetails.API.message.update": (username) =>
@@ -156,23 +126,19 @@ export const lsmMessages = {
   "instanceDetails.operation.selectLabel": "Select an operation",
   "instanceDetails.events.column.eventType": "Event type",
   "instanceDetails.events.column.report": "Compile Report",
-  "instanceDetails.events.rowDetails.details": "Event details",
   "instanceDetails.events.validationReport": "Validation",
   "instanceDetails.events.seeAll": "See all events",
 
   /**
    * Config related text
    */
-  "config.title": "Config",
   "config.reset": "Reset",
   "config.reset.description": "Reset to service defaults",
   "config.empty": "No settings found",
-  "config.disabled": "Configuration is not available",
 
   /**
    * Events related text
    */
-  "events.column.id": "Event id",
   "events.empty.title": "No events found",
   "events.empty.body": "No events could be found for this instance and the specified filters",
   "events.title": "Service Instance Events",
@@ -221,7 +187,6 @@ export const lsmMessages = {
   "orders.column.instance": "Instance",
   "orders.row.dependencies": "Dependencies",
   "orders.row.config": "Config",
-  "orders.row.state": "State",
   "orders.row.failureType": "Failure Type",
   "orders.row.reason": "Reason",
   "orders.row.compilerReport": "Show Compile Report",
