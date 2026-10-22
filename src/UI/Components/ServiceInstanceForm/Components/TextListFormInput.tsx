@@ -39,6 +39,7 @@ interface Props {
   warningMessage?: string | null;
   hint?: string | null;
   loading?: boolean;
+  validationError?: string;
 }
 
 /**
@@ -59,6 +60,7 @@ interface Props {
  *  @prop {string} placeholder - The placeholder for the input field.
  *  @prop {function} handleInputChange - The callback for handling input changes.
  *  @prop {SuggestionValue[]} suggestions - The suggestions for the input field; selecting one stores its `value` and displays its `label`.
+ *  @prop {string} validationError - A validation error of the last submit, shown above the warning or hint.
  *
  *  @returns {React.FC<Props>} The TextListFormInput component.
  */
@@ -74,6 +76,7 @@ export const TextListFormInput: React.FC<Props> = ({
   warningMessage,
   hint,
   loading = false,
+  validationError,
   ...props
 }) => {
   const [inputValue, setInputValue] = React.useState("");
@@ -275,12 +278,15 @@ export const TextListFormInput: React.FC<Props> = ({
           />
         </TextInputGroupUtilities>
       </TextInputGroup>
-      {feedback && (
+      {(validationError || feedback) && (
         <FormHelperText>
           <HelperText>
-            <HelperTextItem variant={feedback.isWarning ? "warning" : "default"}>
-              {feedback.message}
-            </HelperTextItem>
+            {validationError && <HelperTextItem variant="error">{validationError}</HelperTextItem>}
+            {feedback && (
+              <HelperTextItem variant={feedback.isWarning ? "warning" : "default"}>
+                {feedback.message}
+              </HelperTextItem>
+            )}
           </HelperText>
         </FormHelperText>
       )}

@@ -34,12 +34,14 @@ interface Props {
   warningMessage?: string | null;
   hint?: string | null;
   loading?: boolean;
+  validationError?: string;
 }
 
 /**
  * A text/textarea form input. With suggestions it behaves as a typeahead: the
  * field shows a suggestion's `label` but submits its `value`, free typing still
- * works, and a stored value is mapped back to its label on load.
+ * works, and a stored value is mapped back to its label on load. A validation error
+ * of the last submit marks the input as invalid and shows above the warning or hint.
  */
 export const TextFormInput: React.FC<Props> = ({
   attributeName,
@@ -56,6 +58,7 @@ export const TextFormInput: React.FC<Props> = ({
   warningMessage,
   hint,
   loading = false,
+  validationError,
   ...props
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -112,6 +115,13 @@ export const TextFormInput: React.FC<Props> = ({
   // swaps in place instead of blanking out and shifting the layout while new data loads.
   const feedback = useStableFeedback(warningMessage, hint, loading);
 
+  let validated: "error" | "warning" | "default" = "default";
+  if (validationError) {
+    validated = "error";
+  } else if (feedback?.isWarning) {
+    validated = "warning";
+  }
+
   return (
     <FormGroup
       {...props}
@@ -148,7 +158,7 @@ export const TextFormInput: React.FC<Props> = ({
           placeholder={placeholder}
           isRequired={!isOptional}
           isDisabled={shouldBeDisabled}
-          validated={feedback?.isWarning ? "warning" : "default"}
+          validated={validated}
           aria-describedby={`${attributeName}-helper`}
           aria-label={`TextareaInput-${attributeName}`}
         />
@@ -172,7 +182,7 @@ export const TextFormInput: React.FC<Props> = ({
             onChange={(_event, value) => handleType(value)}
             onWheel={preventNumberInputScroll}
             isDisabled={shouldBeDisabled}
-            validated={feedback?.isWarning ? "warning" : "default"}
+            validated={validated}
             onFocus={() => hasSuggestions && setIsOpen(true)}
             onBlur={handleBlur}
             customIcon={
@@ -193,12 +203,15 @@ export const TextFormInput: React.FC<Props> = ({
           )}
         </>
       )}
-      {feedback && (
+      {(validationError || feedback) && (
         <FormHelperText>
           <HelperText>
-            <HelperTextItem variant={feedback.isWarning ? "warning" : "default"}>
-              {feedback.message}
-            </HelperTextItem>
+            {validationError && <HelperTextItem variant="error">{validationError}</HelperTextItem>}
+            {feedback && (
+              <HelperTextItem variant={feedback.isWarning ? "warning" : "default"}>
+                {feedback.message}
+              </HelperTextItem>
+            )}
           </HelperText>
         </FormHelperText>
       )}
