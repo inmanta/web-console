@@ -208,7 +208,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.12.18, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.9.0":
+"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.9.0":
   version: 7.29.7
   resolution: "@babel/runtime@npm:7.29.7"
   checksum: 10/9883b4951787779fd382b121f22f92966d85f19434841f65fb00b2dfec232107e139683f47c6f252891826ad8ee18317b46c3a0e4819116a9885f47b46d7126a
@@ -952,7 +952,6 @@ __metadata:
     "@eslint/compat": "npm:^2.1.0"
     "@graphiql/react": "npm:^0.37.7"
     "@joint/plus": "npm:^4.3.3"
-    "@loadable/component": "npm:^5.16.7"
     "@monaco-editor/react": "npm:^4.7.0"
     "@patternfly/react-charts": "npm:^8.6.1"
     "@patternfly/react-code-editor": "npm:^6.6.1"
@@ -974,7 +973,6 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.7"
     "@types/file-saver": "npm:^2.0.7"
     "@types/jest-axe": "npm:^3.5.9"
-    "@types/loadable__component": "npm:^5.13.10"
     "@types/markdown-it-emoji": "npm:^3.0.1"
     "@types/node": "npm:^26.6.3"
     "@types/qs": "npm:^6.15.1"
@@ -1301,19 +1299,6 @@ __metadata:
   peerDependencies:
     solid-js: ^1.8.8
   checksum: 10/8c958589e42e5905487a6e878abe97f10da33e19e428cedeee2019cbbd6b025d8ccc30a64a1beb23389e900ce60639675d7925b80db8b5d6a0757e052c72908c
-  languageName: node
-  linkType: hard
-
-"@loadable/component@npm:^5.16.7":
-  version: 5.16.7
-  resolution: "@loadable/component@npm:5.16.7"
-  dependencies:
-    "@babel/runtime": "npm:^7.12.18"
-    hoist-non-react-statics: "npm:^3.3.1"
-    react-is: "npm:^16.12.0"
-  peerDependencies:
-    react: ^16.3.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10/2ddec033ae94b9411dcc34a8ef2e08c338e6f887ae3e426af8c726be4f9f7cc64e4379fce6a96bf50611e4e557f848e3c15b6947a731a363bb44a7a0aea62af1
   languageName: node
   linkType: hard
 
@@ -3271,15 +3256,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/loadable__component@npm:^5.13.10":
-  version: 5.13.10
-  resolution: "@types/loadable__component@npm:5.13.10"
-  dependencies:
-    "@types/react": "npm:*"
-  checksum: 10/f467735a236478394ea21626dde4230dc63836fc9bbc7d5cae4fde9e0951658cb58f541401e3337b5e5e39cbc9acb7ab706179828930b9be3852db14f8d27b6b
-  languageName: node
-  linkType: hard
-
 "@types/markdown-it-emoji@npm:^3.0.1":
   version: 3.0.1
   resolution: "@types/markdown-it-emoji@npm:3.0.1"
@@ -3344,15 +3320,6 @@ __metadata:
   peerDependencies:
     "@types/react": ^19.2.0
   checksum: 10/e6b752ad923b70638a44bb537d2866bed98f08bba973bc2199365875c003abe1e5f0e5a6d73ba8778e97f13eca36fdb2ab47f530793238eff92e4df04df18f70
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:*":
-  version: 19.2.17
-  resolution: "@types/react@npm:19.2.17"
-  dependencies:
-    csstype: "npm:^3.2.2"
-  checksum: 10/8debb092bd0bb9c99176a31824c7587c27c775a6526b60060e7b9e8dc2af53aee2ffadc7a1e3845953792437db5699d34a9054e198c9d4e54a74728ff47c6725
   languageName: node
   linkType: hard
 
@@ -7646,7 +7613,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.3.1, hoist-non-react-statics@npm:^3.3.2":
+"hoist-non-react-statics@npm:^3.3.2":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
   dependencies:
@@ -10362,7 +10329,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.12.0, react-is@npm:^16.13.1, react-is@npm:^16.7.0":
+"react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: 10/5aa564a1cde7d391ac980bedee21202fc90bdea3b399952117f54fb71a932af1e5902020144fb354b4690b2414a0c7aafe798eb617b76a3d441d956db7726fdf
