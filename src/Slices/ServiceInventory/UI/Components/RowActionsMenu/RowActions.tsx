@@ -10,7 +10,7 @@ import {
 import { CopyIcon, EllipsisVIcon, FileMedicalAltIcon, ToolsIcon } from "@patternfly/react-icons";
 import { ParsedNumber, words } from "@/Core";
 import { Link } from "@/UI/Components/Link";
-import { DependencyContext, useContributions } from "@/UI/Dependency";
+import { DependencyContext, useVisibleLinkActions } from "@/UI/Dependency";
 import { DeleteAction } from "./DeleteAction";
 
 interface InstanceActionsProps {
@@ -32,13 +32,11 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   diagnoseDisabled,
   version,
 }) => {
-  const { routeManager, orchestratorProvider } = useContext(DependencyContext);
+  const { routeManager } = useContext(DependencyContext);
 
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const actions = useContributions("inventory.row.actions").filter(
-    ({ isVisible }) => isVisible === undefined || isVisible(orchestratorProvider)
-  );
+  const actions = useVisibleLinkActions("inventory.row.actions");
   const context = { service: entity, instance: instanceId, editDisabled };
 
   const onToggleClick = () => {

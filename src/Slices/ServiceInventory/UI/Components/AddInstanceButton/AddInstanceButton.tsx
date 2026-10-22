@@ -11,7 +11,7 @@ import {
 import { PlusIcon } from "@patternfly/react-icons";
 import { words } from "@/Core";
 import { Link } from "@/UI/Components/Link";
-import { DependencyContext, useContributions } from "@/UI/Dependency";
+import { DependencyContext, useVisibleLinkActions } from "@/UI/Dependency";
 
 interface Props {
   serviceName: string;
@@ -32,11 +32,9 @@ interface Props {
  */
 export const AddInstanceButton: React.FC<Props> = ({ serviceName }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { routeManager, orchestratorProvider } = useContext(DependencyContext);
+  const { routeManager } = useContext(DependencyContext);
 
-  const actions = useContributions("inventory.addInstance.actions").filter(
-    ({ isVisible }) => isVisible === undefined || isVisible(orchestratorProvider)
-  );
+  const actions = useVisibleLinkActions("inventory.addInstance.actions");
   const context = { service: serviceName };
 
   const onToggleClick = () => {
