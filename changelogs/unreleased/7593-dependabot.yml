@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @vitejs/plugin-react from 6.0.3 to 6.1.2
+destination-branches:
+- master
+- iso9
+sections: {}
