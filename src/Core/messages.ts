@@ -27,19 +27,6 @@ export const coreMessages = {
     `Unsupported jsonpath in a cascading field reference: ${paths}. Only navigational paths (member access, array index, equality-filter selection) are supported.`,
 
   /**
-   * Instance Composer text
-   */
-  "instanceComposer.orderDescription": "Requested with Instance Composer",
-
-  /** Compile report related text */
-  "compileReports.columns.messageValue": (update: boolean, reinstall: boolean) =>
-    update
-      ? "Compile triggered from the console with an update to the project configuration"
-      : reinstall
-        ? "Compile triggered from the console with a cleanup and reinstall of the project and python virtual environments"
-        : "Compile triggered from the console",
-
-  /**
    * Login
    */
   "login.title": "Log in to your account",

@@ -1,5 +1,4 @@
 import { UseBaseMutationResult, useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { words } from "@/Core";
 import { usePostWithoutEnv } from "@/Data/Queries/Helpers";
 
 interface Body {
@@ -18,6 +17,21 @@ interface Params {
 }
 
 /**
+ * The message the compile is stored with. It is data the orchestrator keeps and shows to every
+ * user, so it is not translated.
+ *
+ * @param update - whether the compile updates the project configuration
+ * @param reinstall - whether the compile cleans up and reinstalls the project and its virtual environments
+ * @returns the message of the compile
+ */
+const getCompileMessage = (update: boolean, reinstall: boolean): string =>
+  update
+    ? "Compile triggered from the console with an update to the project configuration"
+    : reinstall
+      ? "Compile triggered from the console with a cleanup and reinstall of the project and python virtual environments"
+      : "Compile triggered from the console";
+
+/**
  * React Query hook to trigger a compile
  *
  * @returns {TriggerCompile} An object containing the trigger function
@@ -34,7 +48,7 @@ export const useTriggerCompile = (
         update,
         metadata: {
           type: "console",
-          message: words("compileReports.columns.messageValue")(update, reinstall),
+          message: getCompileMessage(update, reinstall),
         },
         reinstall,
       }),

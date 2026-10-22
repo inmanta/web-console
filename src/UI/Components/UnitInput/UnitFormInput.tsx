@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { words } from "@/Core";
+import { WordKey, words } from "@/Core";
 import { preventNumberInputScroll } from "@/UI/Utils";
 import { toSubmittableNumber } from "./convert";
 import { otherScaleCandidates, selectDisplayUnit } from "./display";
@@ -62,18 +62,22 @@ const UnitSelect = styled(FormSelect)<{ $isDuration?: boolean }>`
 `;
 
 // Duration codes read better spelled out than as the catalogue's terse ("min", "h", "d") codes.
-const getDurationUnitLabels = (): Record<string, string> => ({
-  ns: words("unitInput.durationUnit.ns"),
-  us: words("unitInput.durationUnit.us"),
-  ms: words("unitInput.durationUnit.ms"),
-  s: words("unitInput.durationUnit.s"),
-  min: words("unitInput.durationUnit.min"),
-  h: words("unitInput.durationUnit.h"),
-  d: words("unitInput.durationUnit.d"),
-});
+const DURATION_UNIT_LABEL_KEY = {
+  ns: "unitInput.durationUnit.ns",
+  us: "unitInput.durationUnit.us",
+  ms: "unitInput.durationUnit.ms",
+  s: "unitInput.durationUnit.s",
+  min: "unitInput.durationUnit.min",
+  h: "unitInput.durationUnit.h",
+  d: "unitInput.durationUnit.d",
+} as const satisfies Record<string, WordKey>;
 
 function unitLabel(kind: UnitConfig["kind"], code: string): string {
-  return kind === "duration" ? (getDurationUnitLabels()[code] ?? code) : code;
+  if (kind !== "duration" || !Object.hasOwn(DURATION_UNIT_LABEL_KEY, code)) {
+    return code;
+  }
+
+  return words(DURATION_UNIT_LABEL_KEY[code as keyof typeof DURATION_UNIT_LABEL_KEY]);
 }
 
 function errorMessage(error: UnitValidationError, kind: UnitConfig["kind"]): string {

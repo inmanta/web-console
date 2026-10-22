@@ -17,12 +17,19 @@ export type Messages = Record<string, Message>;
  * declaration merging, next to their messages:
  *
  * ```ts
- * export const lsmMessages = { ... } satisfies Messages;
+ * export const lsmMessages = { ... };
+ *
+ * type LsmMessages = typeof lsmMessages;
  *
  * declare module "@/Core/I18n/Words" {
+ *   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
  *   interface WordsRegistry extends LsmMessages {}
  * }
  * ```
+ *
+ * The messages objects don't use `satisfies Messages`: it would type the parameters of a message
+ * without a type annotation as `never`. They are checked against `Messages` where they are
+ * registered instead.
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface WordsRegistry {}
@@ -65,6 +72,7 @@ export const registerMessages = (messages: Messages): void => {
 
 /**
  * Adds the messages of another language. Registering a language twice merges its messages.
+ * Like the English messages, register it before the first render.
  *
  * @param localeModule - the language and its messages
  */
@@ -73,7 +81,9 @@ export const registerLocale = ({ locale, messages }: LocaleModule): void => {
 };
 
 /**
- * Sets the language `words` returns messages in.
+ * Sets the language `words` returns messages in. The app chooses its language when it starts, so
+ * call it before the first render: components don't re-render when it changes, and some keep a
+ * message they looked up once. Switching the language later means reloading the app.
  *
  * @param locale - the BCP 47 tag of a registered language, or "en"
  */

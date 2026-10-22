@@ -56,7 +56,8 @@ export const DesiredStateDetailsFilterWidget: React.FC<DesiredStateDetailsFilter
 
     const { addString, removeStringChip, clearStringGroup } = getFilterActions(filter, setFilter);
 
-    const hasActiveFilters = getFields().some(({ key }) => (filter[key]?.length ?? 0) > 0);
+    const fields = getFields();
+    const hasActiveFilters = fields.some(({ key }) => (filter[key]?.length ?? 0) > 0);
 
     return (
       <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
@@ -67,7 +68,7 @@ export const DesiredStateDetailsFilterWidget: React.FC<DesiredStateDetailsFilter
                 {words("resourceId")}
               </Title>
             </StackItem>
-            {getFields().map(({ key, label, placeholder }) => (
+            {fields.map(({ key, label, placeholder }) => (
               <StackItem key={key}>
                 <AddableTextInput
                   label={label}
@@ -81,7 +82,7 @@ export const DesiredStateDetailsFilterWidget: React.FC<DesiredStateDetailsFilter
           <Divider />
 
           <ActiveFilters hasActiveFilters={hasActiveFilters} onClear={() => setFilter({})}>
-            {getFields().map(({ key, label }) =>
+            {fields.map(({ key, label }) =>
               (filter[key]?.length ?? 0) > 0 ? (
                 <StackItem key={key}>
                   <ActiveFilterGroup
