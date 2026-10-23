@@ -640,7 +640,7 @@ describe("useComposerGraph", () => {
     // The init effect registers a one-shot 'render:done' handler instead of a
     // setTimeout; simulate the async paper finishing its render batch. The event
     // carries an update-stats object; priority >= 2 keeps the PaperScroller's own
-    // onPaperRenderDone from running its DOM-touching adjustPaper in jsdom.
+    // onPaperRenderDone from running its DOM-touching adjustPaper in happy-dom.
     act(() => {
       result.current.paper.trigger("render:done", { priority: 2 });
     });

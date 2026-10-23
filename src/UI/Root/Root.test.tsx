@@ -18,6 +18,10 @@ import { features } from "@/appFeatures";
 import { Root } from "./Root";
 import { createRootRoutes } from "./RootRoutes";
 
+// The header only shows once the whole app has rendered, which can take over the default 1 s on
+// slow CI runners. findBy still resolves as soon as the header is there.
+const appHeaderTimeout = { timeout: 5000 };
+
 vi.spyOn(defaultAuthContext, "getToken").mockReturnValue("mocked_token");
 vi.spyOn(defaultAuthContext, "getUser").mockReturnValue("mocked_user");
 function setup() {
@@ -112,7 +116,9 @@ describe("Root", () => {
 
     render(component);
 
-    expect(await screen.findByRole("button", { name: "Main Navigation" })).toBeVisible();
+    expect(
+      await screen.findByRole("button", { name: "Main Navigation" }, appHeaderTimeout)
+    ).toBeVisible();
   });
 
   test("GIVEN the app THEN the documentation link should be visible", async () => {
@@ -120,7 +126,9 @@ describe("Root", () => {
 
     render(component);
 
-    expect(await screen.findByRole("button", { name: "documentation link" })).toBeVisible();
+    expect(
+      await screen.findByRole("button", { name: "documentation link" }, appHeaderTimeout)
+    ).toBeVisible();
   });
 
   test("GIVEN the app THEN the API actions button should be visible", async () => {
@@ -128,6 +136,8 @@ describe("Root", () => {
 
     render(component);
 
-    expect(await screen.findByRole("button", { name: "Developer Tools" })).toBeVisible();
+    expect(
+      await screen.findByRole("button", { name: "Developer Tools" }, appHeaderTimeout)
+    ).toBeVisible();
   });
 });

@@ -4,10 +4,10 @@
 
 ## ARIA role `cell` vs `gridcell`
 
-When querying the **DOM** during testing with **jsdom**, it is sometimes not obvious what `role` is assigned to an element.  
+When querying the **DOM** during testing with **happy-dom**, it is sometimes not obvious what `role` is assigned to an element.  
 Usually we use Chrome Devtools to lookup an element and find its `role`.  
 For the `td` element, the `role` assigned to it by Chrome was `gridcell`.  
-But in **jsdom** the `role` assigned to the element was `cell`.
+But in **happy-dom** the `role` assigned to the element was `cell`.
 This might save some time and frustrations in the future.
 
 ## Bypass CORS issues
@@ -33,11 +33,10 @@ You can list the unused exports by running:
 yarn ts-prune
 ```
 
+## happy-dom & screen width
 
-## JSDOM & screen width
-
-Jest uses JSDOM. JSDOM defines the window innerWidth and innerHeight to be 1024 x 768 by default.
-So during a test, the application is basically rendered in memory in a window with dimensions 1024 x 768.
+Vitest runs the unit tests in happy-dom. `test-setup.ts` sets the window innerWidth and innerHeight to 1300 x 800.
+So during a test, the application is basically rendered in memory in a window with dimensions 1300 x 800.
 When writing a test for a component that behaves diffently based on screen width, remember the default dimensions.
 You can change the dimensions by setting the window properties and triggering a resize event.
 
@@ -48,6 +47,12 @@ window = Object.assign(window, { innerWidth: 500 });
 // Trigger the window resize event.
 window.dispatchEvent(new Event("resize"));
 ```
+
+## happy-dom & styles
+
+PatternFly's CSS isn't loaded in unit tests, so a `var(--pf-t--…)` token resolves to nothing. When a test asserts on a style that uses a token, call `definePatternFlyToken(token)` from `src/Test/Utils` at the start of the test.
+
+`expect(el).not.toHaveStyle(...)` passes on its own when happy-dom's CSS parser drops the expected declaration. Always pair a negative style assertion with a positive one on the same value, as `StatusButton.test.tsx` does.
 
 ## Minimum browser versions
 
