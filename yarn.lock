@@ -887,9 +887,8 @@ __metadata:
     copy-to-clipboard: "npm:^4.0.2"
     cypress: "npm:^16.2.0"
     dayjs: "npm:^1.11.23"
-    dependency-cruiser: "npm:^18.6.0"
+    dependency-cruiser: "npm:^18.7.0"
     dotenv: "npm:^18.0.8"
-    dotenv-cli: "npm:^11.0.0"
     eslint: "npm:^10.2.1"
     eslint-import-resolver-typescript: "npm:^4.4.5"
     eslint-plugin-import: "npm:^2.32.0"
@@ -901,7 +900,7 @@ __metadata:
     graphiql: "npm:^5.4.0"
     graphql: "npm:^17.0.2"
     graphql-request: "npm:^7.4.0"
-    happy-dom: "npm:^20.14.5"
+    happy-dom: "npm:^21.0.3"
     highlight.js: "npm:^11.12.0"
     jest-axe: "npm:^11.0.0"
     jsonpathly: "npm:^3.0.1"
@@ -928,7 +927,7 @@ __metadata:
     typescript: "npm:@typescript/typescript6@^6.0.2"
     typescript-7: "npm:typescript@^7.0.2"
     typescript-eslint: "npm:^8.71.2"
-    uuid: "npm:^14.0.2"
+    uuid: "npm:^14.0.3"
     victory: "npm:^37.3.6"
     vite: "npm:^8.3.4"
     vite-plugin-mkcert: "npm:^2.1.0"
@@ -5578,9 +5577,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dependency-cruiser@npm:^18.6.0":
-  version: 18.6.0
-  resolution: "dependency-cruiser@npm:18.6.0"
+"dependency-cruiser@npm:^18.7.0":
+  version: 18.7.0
+  resolution: "dependency-cruiser@npm:18.7.0"
   dependencies:
     acorn: "npm:8.19.0"
     acorn-jsx: "npm:5.3.2"
@@ -5607,7 +5606,7 @@ __metadata:
     depcruise-wrap-stream-in-html: bin/wrap-stream-in-html.mjs
     dependency-cruise: bin/dependency-cruiser.mjs
     dependency-cruiser: bin/dependency-cruiser.mjs
-  checksum: 10/95f119e73ddb71670cc4d389bd67447be3a73548f55ad15d26bf9a30054092b2537a326babd81196952adb47e8e180a601f620459977a8d71f99806078bb4e0b
+  checksum: 10/c848b5d28de3e639374e9b5943d370c24914bfe9b03c718c15bdf50f31094431433541e99af5a860e032c76e0f8c81d76e9045132ca45e48cc967563d74c776f
   languageName: node
   linkType: hard
 
@@ -5671,43 +5670,6 @@ __metadata:
     "@types/trusted-types":
       optional: true
   checksum: 10/ae03c068bd351d1201a24a9667cb302c65939f45a0c357edec8b84133108e19ac74f355c2d8b0f30baadadd7f0be2db300d269aa80d3ee15872712ca9ff4e1a8
-  languageName: node
-  linkType: hard
-
-"dotenv-cli@npm:^11.0.0":
-  version: 11.0.0
-  resolution: "dotenv-cli@npm:11.0.0"
-  dependencies:
-    cross-spawn: "npm:^7.0.6"
-    dotenv: "npm:^17.1.0"
-    dotenv-expand: "npm:^12.0.0"
-    minimist: "npm:^1.2.6"
-  bin:
-    dotenv: cli.js
-  checksum: 10/0dab973aa8d94163f9b17f7452f9c9b567baf67e6551c3d883f3ea1df9edbd69a9ea55cbc8e020026c9e8d8f01056087526d011c1829924483c8c72f9c17c79a
-  languageName: node
-  linkType: hard
-
-"dotenv-expand@npm:^12.0.0":
-  version: 12.0.3
-  resolution: "dotenv-expand@npm:12.0.3"
-  dependencies:
-    dotenv: "npm:^16.4.5"
-  checksum: 10/d9aaf051805c8fa64e7e3620936ecb38229a93f5603883e53856d6f57cd4ae93fb74baefdf0b03b1c0608bc3eefbbcb23912972d7303b6191a5c0e1688a8652f
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^16.4.5":
-  version: 16.6.1
-  resolution: "dotenv@npm:16.6.1"
-  checksum: 10/1d1897144344447ffe62aa1a6d664f4cd2e0784e0aff787eeeec1940ded32f8e4b5b506d665134fc87157baa086fce07ec6383970a2b6d2e7985beaed6a4cc14
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^17.1.0":
-  version: 17.4.2
-  resolution: "dotenv@npm:17.4.2"
-  checksum: 10/ca1b6f54d58e39914901e1518958e86083aca8deb5aa2e7f2a51acd53291d97852479b0ab26ed949b6a45a0e9adcc7b0d1c3c72375e8ea670f7005e341c6daba
   languageName: node
   linkType: hard
 
@@ -6966,9 +6928,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"happy-dom@npm:^20.14.5":
-  version: 20.14.5
-  resolution: "happy-dom@npm:20.14.5"
+"happy-dom@npm:^21.0.3":
+  version: 21.0.3
+  resolution: "happy-dom@npm:21.0.3"
   dependencies:
     "@types/node": "npm:>=20.0.0"
     "@types/whatwg-mimetype": "npm:^3.0.2"
@@ -6977,7 +6939,7 @@ __metadata:
     entities: "npm:^7.0.1"
     whatwg-mimetype: "npm:^3.0.0"
     ws: "npm:^8.21.0"
-  checksum: 10/5a1f177622e7d08d0ee27b2bdd4d2c86365989e04342c67b6afd623da968ace87d551fb9ea60085159d4d9174db040cd9b5320a430a0b899a06fbbfd1acf2374
+  checksum: 10/18e49eee5d09978c53e23c1e0a656bafcdadadc90d13c954aa92403e131d47ad0ad0b5308ad82ac0a76357f13ea9d64eacca370520d30b31250f2cc6ea5ddfdc
   languageName: node
   linkType: hard
 
@@ -11288,12 +11250,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^14.0.2":
-  version: 14.0.2
-  resolution: "uuid@npm:14.0.2"
+"uuid@npm:^14.0.3":
+  version: 14.0.3
+  resolution: "uuid@npm:14.0.3"
   bin:
     uuid: dist-node/bin/uuid
-  checksum: 10/e8263a76ad7b2d1f246df5a48a5bdf30d886eedbb1d3d74c75356d02b2966f5fffd7790b85afdb3682e4e732d13fca7974626419814f45de6847f78ce03c745e
+  checksum: 10/a6ab4e6ef84ff77b574846215c425c915de035395710e09f083f3bc1d4744df63db78598da0d04619a0a60a15a9cce2bc7c1ef10bf302349e761838816d798a7
   languageName: node
   linkType: hard
 
