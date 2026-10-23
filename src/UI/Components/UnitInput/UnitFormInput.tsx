@@ -59,7 +59,7 @@ function initialState(
 
 // Fixed rather than `width: auto` so the control doesn't resize as the user switches between a
 // short code ("B") and the catalogue's longest ones ("Kibit/s", "Gibit/s", "Tibit/s" — 7 chars).
-// Duration units are spelled out in full (see DURATION_UNIT_LABELS) and need more room to match.
+// Duration units are spelled out in full (see DURATION_UNIT_LABEL_KEY) and need more room to match.
 const UnitSelect = styled(FormSelect)<{ $isDuration?: boolean }>`
   width: ${(props) => (props.$isDuration ? "9rem" : "6.5rem")};
 `;
@@ -73,14 +73,17 @@ const DURATION_UNIT_LABEL_KEY = {
   min: "unitInput.durationUnit.min",
   h: "unitInput.durationUnit.h",
   d: "unitInput.durationUnit.d",
-} as const satisfies Record<string, WordKey>;
+} satisfies Record<string, WordKey>;
+
+const isDurationUnitCode = (code: string): code is keyof typeof DURATION_UNIT_LABEL_KEY =>
+  Object.hasOwn(DURATION_UNIT_LABEL_KEY, code);
 
 function unitLabel(kind: UnitConfig["kind"], code: string): string {
-  if (kind !== "duration" || !Object.hasOwn(DURATION_UNIT_LABEL_KEY, code)) {
+  if (kind !== "duration" || !isDurationUnitCode(code)) {
     return code;
   }
 
-  return words(DURATION_UNIT_LABEL_KEY[code as keyof typeof DURATION_UNIT_LABEL_KEY]);
+  return words(DURATION_UNIT_LABEL_KEY[code]);
 }
 
 function errorMessage(error: UnitValidationError, kind: UnitConfig["kind"]): string {

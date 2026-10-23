@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { FetcherParams, SyncExecutionResult } from "@graphiql/toolkit";
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
-import { useFetchHelpers } from "@/Data/Queries/Helpers/useFetchHelpers";
+import { parseJsonResponse, useFetchHelpers } from "@/Data/Queries/Helpers/useFetchHelpers";
 import { PrimaryBaseUrlManager } from "@/UI/Routing";
 
 /**
@@ -48,11 +48,9 @@ export const usePostGraphQL = (
         body: JSON.stringify({ query, variables: parsedVariables }),
       });
 
-      await handleErrors(response);
+      await handleErrors(response, { method: "POST", path: "/api/v2/graphql" });
 
-      const text = await response.text();
-
-      return text.trim() ? JSON.parse(text) : {};
+      return (await parseJsonResponse(response)) ?? {};
     },
   });
 };

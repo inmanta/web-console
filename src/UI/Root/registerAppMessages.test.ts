@@ -23,8 +23,6 @@ it("registers the messages of every layer and feature the app ships", () => {
 
   expect(keys.length).toBeGreaterThan(0);
   expect(keys.filter((key) => !registered.has(key))).toEqual([]);
-
-  registerMessages.mockRestore();
 });
 
 it("declares every key in one messages file only", () => {

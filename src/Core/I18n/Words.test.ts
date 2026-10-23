@@ -16,10 +16,12 @@ describe("words", () => {
     expect(words("instanceComposer.editButton")).toBe("Edit in Composer");
   });
 
-  it("throws for a key without a registered message", async () => {
+  it("logs an error and returns the key for a key without a registered message", async () => {
     const { words } = await loadRegistry();
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    expect(() => words("instanceComposer.editButton")).toThrow(
+    expect(words("instanceComposer.editButton")).toBe("instanceComposer.editButton");
+    expect(consoleError).toHaveBeenCalledWith(
       'No message is registered for "instanceComposer.editButton".'
     );
   });

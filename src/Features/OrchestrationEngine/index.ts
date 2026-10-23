@@ -15,7 +15,7 @@ import { orchestrationEngineMessages } from "./messages";
 export const orchestrationEngineFeature: FeatureModule = {
   id: "orchestration-engine",
   version: APP_VERSION,
-  translations: orchestrationEngineMessages,
+  messages: orchestrationEngineMessages,
   routes: [
     {
       route: CompileDetails.route,

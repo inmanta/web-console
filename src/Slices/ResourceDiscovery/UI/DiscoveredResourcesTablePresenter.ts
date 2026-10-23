@@ -1,12 +1,6 @@
 import { words } from "@/Core";
 import { DiscoveredResource } from "@/Data/Queries/Slices/DiscoveredResources";
-import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-
-const getColumnHeads = (): ColumnHead[] => [
-  { displayName: words("type"), apiName: "type" },
-  { displayName: words("agent"), apiName: "agent" },
-  { displayName: words("value"), apiName: "value" },
-];
+import { createTablePresenter } from "@/UI/Presenters";
 
 /**
  * Table presenter for the discovered resources view. Rows are the resources
@@ -16,7 +10,11 @@ const getColumnHeads = (): ColumnHead[] => [
  */
 export const createDiscoveredResourcesTablePresenter = () =>
   createTablePresenter<DiscoveredResource, DiscoveredResource>({
-    columnHeads: getColumnHeads(),
+    columnHeads: [
+      { displayName: words("type"), apiName: "type" },
+      { displayName: words("agent"), apiName: "agent" },
+      { displayName: words("value"), apiName: "value" },
+    ],
     createRows: (resources) => resources,
   });
 

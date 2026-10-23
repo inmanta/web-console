@@ -16,9 +16,9 @@ const server = setupServer();
 const queryLink = graphql.link("/api/v2/graphql");
 const searchHelper = new SearchHelper();
 
-// graphql-request's request() unwraps one "data" envelope, and useGetResources's `select`
+// useGraphQLRequest returns the body's outer "data", and useGetResources's `select`
 // destructures a further `data.data` - so the mocked body needs a second, outer "data" wrapper
-// to end up matching ResourcesGraphQLResponse once request() strips its own layer (same
+// to end up matching ResourcesGraphQLResponse once useGraphQLRequest strips its own layer (same
 // double-wrap convention as Resource/UI/ResourcesPage/Page.test.tsx's toGqlResponse usage).
 function toGqlResponse(resourceSummary: ReturnType<typeof createMockResourceSummary>) {
   return {

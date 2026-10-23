@@ -11,6 +11,13 @@ export const coreMessages = {
    * Error related text
    */
   "error.authentication": (message: string) => `Authentication error: ${message}`,
+  "error.response.unreachable": (status: number) =>
+    `The server can't be reached (status ${status}).`,
+  "error.response.unexpected": (status: number) =>
+    `The server sent an unexpected response (status ${status}).`,
+  "error.response.redirected": "Your session may have expired. Reload the page to sign in again.",
+  "error.response.endpoint": (message: string, method: string, path: string) =>
+    `${message} (${method} ${path})`,
 
   /**
    * Inventory related text

@@ -12,7 +12,7 @@ import { environmentMessages } from "./messages";
 export const environmentFeature: FeatureModule = {
   id: "environment",
   version: APP_VERSION,
-  translations: environmentMessages,
+  messages: environmentMessages,
   routes: [
     {
       route: CreateEnvironment.route,

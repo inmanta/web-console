@@ -12,5 +12,5 @@ import { uiMessages } from "@/UI/Components/messages";
 export const registerAppMessages = (features: FeatureModule[]): void => {
   registerMessages(coreMessages);
   registerMessages(uiMessages);
-  features.forEach(({ translations }) => translations && registerMessages(translations));
+  features.forEach(({ messages }) => messages && registerMessages(messages));
 };

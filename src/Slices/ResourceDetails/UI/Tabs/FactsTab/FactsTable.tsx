@@ -16,7 +16,7 @@ const FACTS_COLUMNS = [
   { apiName: "name", labelKey: "name" },
   { apiName: "updated", labelKey: "lastUpdated" },
   { apiName: "value", labelKey: "value" },
-] as const satisfies readonly { apiName: string; labelKey: WordKey }[];
+] satisfies { apiName: string; labelKey: WordKey }[];
 
 export const FactsTable: React.FC<Props> = ({ facts }) => {
   const [sort, setSort] = useState<Sort.Type>({ name: "name", order: "asc" });
@@ -81,7 +81,7 @@ function indexToColumnName(index: number): string {
 }
 
 function columnNameToIndex(columnName: string): number {
-  const columns: string[] = FACTS_COLUMNS.map((column) => column.apiName);
+  const columns = FACTS_COLUMNS.map((column) => column.apiName);
 
   return columns.indexOf(columnName);
 }
