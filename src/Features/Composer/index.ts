@@ -39,7 +39,7 @@ const showInComposer: LinkAction<InstanceLinkContext> = {
 export const composerFeature: FeatureModule = {
   id: "composer",
   version: APP_VERSION,
-  translations: composerMessages,
+  messages: composerMessages,
   licensedFeature: "ui.ui",
   preload: false,
   routes: [

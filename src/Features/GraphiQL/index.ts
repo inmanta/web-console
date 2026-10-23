@@ -9,7 +9,7 @@ import { graphiqlMessages } from "./messages";
 export const graphiqlFeature: FeatureModule = {
   id: "graphiql",
   version: APP_VERSION,
-  translations: graphiqlMessages,
+  messages: graphiqlMessages,
   preload: false,
   routes: [
     {

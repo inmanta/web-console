@@ -55,7 +55,7 @@ export interface FeatureModule {
    * English is the default language and the fallback of every other one. Their keys are added to
    * `WordsRegistry` next to the messages.
    */
-  translations?: Messages;
+  messages?: Messages;
 }
 
 /**

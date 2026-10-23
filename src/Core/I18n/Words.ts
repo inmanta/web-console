@@ -55,8 +55,8 @@ export interface LocaleModule {
 
 const DEFAULT_LOCALE = "en";
 
-const english: Partial<Record<string, Message>> = {};
-const locales = new Map<string, Partial<Record<string, Message>>>();
+const english: Partial<WordsRegistry> = {};
+const locales = new Map<string, Partial<WordsRegistry>>();
 let activeLocale = DEFAULT_LOCALE;
 
 /**
@@ -77,7 +77,7 @@ export const registerMessages = (messages: Messages): void => {
  * @param localeModule - the language and its messages
  */
 export const registerLocale = ({ locale, messages }: LocaleModule): void => {
-  locales.set(locale, { ...locales.get(locale), ...(messages as Messages) });
+  locales.set(locale, { ...locales.get(locale), ...messages });
 };
 
 /**
@@ -98,15 +98,19 @@ export const setLocale = (locale: string): void => {
  * once the app starts, and features loaded as a plugin even later.
  *
  * @param key - the key of the message
- * @returns the message: a string, or a function that builds one
- * @throws when no message is registered for the key, e.g. because its feature is not registered
+ * @returns the message: a string, or a function that builds one. When no message is registered for
+ * the key, e.g. because its feature is not registered, it logs an error and returns the key.
  */
 export const words = <K extends WordKey>(key: K): WordsRegistry[K] => {
   const message = locales.get(activeLocale)?.[key] ?? english[key];
 
   if (message === undefined) {
-    throw new Error(`No message is registered for "${key}".`);
+    console.error(`No message is registered for "${key}".`);
+
+    // Shows the key instead of breaking the page. A caller of a function message still fails when
+    // it calls the key, as there is no message to tell whether it expects a string or a function.
+    return key as unknown as WordsRegistry[K];
   }
 
-  return message as WordsRegistry[K];
+  return message;
 };

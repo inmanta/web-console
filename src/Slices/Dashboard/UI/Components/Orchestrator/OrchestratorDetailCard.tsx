@@ -77,7 +77,7 @@ const SEVERITY_LABEL_KEY = {
   success: "dashboard.environmentHealth.operational",
   warning: "dashboard.environmentHealth.status.attention",
   danger: "dashboard.environmentHealth.status.danger",
-} as const satisfies Record<Severity, WordKey>;
+} satisfies Record<Severity, WordKey>;
 
 /**
  * Card-level severity: "danger" if any of the server/database/scheduler checks (the same

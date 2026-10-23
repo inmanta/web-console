@@ -1,12 +1,5 @@
 import { Parameter, words } from "@/Core";
-import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-
-const getColumnHeads = (): ColumnHead[] => [
-  { displayName: words("name"), apiName: "name" },
-  { displayName: words("lastUpdated"), apiName: "updated" },
-  { displayName: words("parameters.columns.source"), apiName: "source" },
-  { displayName: words("value"), apiName: "value" },
-];
+import { createTablePresenter } from "@/UI/Presenters";
 
 /**
  * Table presenter for the parameters view. Rows are the parameters unchanged.
@@ -15,7 +8,12 @@ const getColumnHeads = (): ColumnHead[] => [
  */
 export const createParametersTablePresenter = () =>
   createTablePresenter<Parameter, Parameter>({
-    columnHeads: getColumnHeads(),
+    columnHeads: [
+      { displayName: words("name"), apiName: "name" },
+      { displayName: words("lastUpdated"), apiName: "updated" },
+      { displayName: words("parameters.columns.source"), apiName: "source" },
+      { displayName: words("value"), apiName: "value" },
+    ],
     sortableColumns: ["name", "source", "updated"],
     createRows: (parameters) => parameters,
   });
