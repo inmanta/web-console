@@ -133,3 +133,17 @@ test("GIVEN '/resources/123' THEN breadcrumbs should be ['Home', 'Resources', 'R
     },
   ]);
 });
+
+test.each`
+  resourceId                                                   | encodedId
+  ${"std::File[agent1,path=/tmp/file]"}                        | ${"std%3A%3AFile%5Bagent1%2Cpath%3D%2Ftmp%2Ffile%5D"}
+  ${'exec::Run[agent1,command=sh -c "a\n/usr/bin/true\r\nb"]'} | ${"exec%3A%3ARun%5Bagent1%2Ccommand%3Dsh%20-c%20%22a%0A%2Fusr%2Fbin%2Ftrue%0D%0Ab%22%5D"}
+`(
+  "GIVEN resource id $resourceId WHEN getting the url and its breadcrumbs THEN the id is encoded once",
+  ({ resourceId, encodedId }) => {
+    const url = routeManager.getUrl("ResourceDetails", { resourceId });
+
+    expect(url).toEqual(`/resources/${encodedId}`);
+    expect(routeManager.getCrumbs(url).at(-1)?.url).toEqual(url);
+  }
+);
