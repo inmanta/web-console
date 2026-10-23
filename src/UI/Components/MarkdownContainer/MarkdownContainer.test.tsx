@@ -141,7 +141,7 @@ describe("MarkdownContainer", () => {
   });
 
   it("drops every token-based override when PatternFly tokens are missing", async () => {
-    // PatternFly's CSS isn't loaded under jsdom, so every token reads empty
+    // PatternFly's CSS isn't loaded under happy-dom, so every token reads empty
     // and only the fixed pie opacity remains.
     // Import the mermaid mock and set up spies before rendering
     const mermaidMock = await import("mermaid");
@@ -247,7 +247,7 @@ describe("MarkdownContainer", () => {
     const MERMAID_MD = "```mermaid\ngraph LR\n  A --> B\n```";
 
     beforeEach(() => {
-      // jsdom does not implement these Blob URL helpers, so provide stubs.
+      // Stub the Blob URL helpers so the download gets a predictable URL.
       global.URL.createObjectURL = vi.fn().mockReturnValue("blob:mock-url");
       global.URL.revokeObjectURL = vi.fn();
     });
