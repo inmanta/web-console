@@ -1,5 +1,6 @@
 import { words } from "@/Core";
-import { ResourceHistory, ResourceHistoryRow } from "@/Core/Domain/ResourceHistory";
+import { ResourceHistory } from "@/Core/Domain/ResourceHistory";
+import { ResourceHistoryRow } from "@/Slices/ResourceDetails/Core/Types";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
 
 const getColumnHeads = (): ColumnHead[] => [

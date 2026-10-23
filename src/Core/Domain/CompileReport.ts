@@ -16,19 +16,8 @@ export interface CompileReport {
   version: ParsedNumber;
 }
 
-export interface CompileReportRow {
-  id: string;
-  requested: string;
-  completed?: string | null;
-  message: string;
-  waitTime: string;
-  compileTime: string;
-  status: CompileStatus;
-}
-
 /**
- * Derives a compile's status from its timestamps and success flag. Shared so the Dashboard
- * compiles-health tile derives the status exactly the way the compile reports table does.
+ * Derives a compile's status from its timestamps and success flag.
  *
  * @example getStatusFromReport({ started: null, ... }) // CompileStatus.queued
  */

@@ -7,6 +7,11 @@ const pendingAnimation = keyframes`
  100% { opacity: .2}
 `;
 
+/**
+ * A small blue dot that pulses, to show that something is pending or in progress.
+ *
+ * @prop {number} [$size=8] - The width and height of the dot in pixels.
+ */
 export const BlinkingDot = styled.span<{
   $size?: number;
 }>`
