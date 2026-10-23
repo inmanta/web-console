@@ -38,7 +38,7 @@ describe("StatusButton", () => {
     const icon = await screen.findByLabelText("ServerStatus action");
 
     await waitFor(() => {
-      expect(icon.querySelector("svg")).not.toHaveStyle("color: rgb(255, 0, 0)");
+      expect(icon.querySelector("svg")).not.toHaveStyle("color: red");
     });
   });
 
@@ -54,7 +54,7 @@ describe("StatusButton", () => {
     const icon = await screen.findByLabelText("ServerStatus action");
 
     await waitFor(() => {
-      expect(icon.querySelector("svg")).toHaveStyle("color: rgb(255, 0, 0)");
+      expect(icon.querySelector("svg")).toHaveStyle("color: red");
     });
   });
 
@@ -70,13 +70,13 @@ describe("StatusButton", () => {
     const icon = await screen.findByLabelText("ServerStatus action");
 
     await waitFor(() => {
-      expect(icon.querySelector("svg")).not.toHaveStyle("color: rgb(255, 0, 0)");
+      expect(icon.querySelector("svg")).not.toHaveStyle("color: red");
     });
 
     document.dispatchEvent(new CustomEvent("status-down"));
 
     await waitFor(() => {
-      expect(icon.querySelector("svg")).toHaveStyle("color: rgb(255, 0, 0)");
+      expect(icon.querySelector("svg")).toHaveStyle("color: red");
     });
   });
 });

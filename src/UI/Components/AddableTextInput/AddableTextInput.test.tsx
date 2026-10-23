@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { AddableTextInput } from "./AddableTextInput";
 
@@ -33,7 +33,7 @@ describe("AddableTextInput", () => {
 
     expect(screen.getByTestId("add-button")).toBeDisabled();
 
-    fireEvent.keyPress(input, { key: "Enter", code: "Enter", charCode: 13 });
+    await userEvent.keyboard("{Enter}");
 
     expect(handleAdd).not.toHaveBeenCalled();
     expect(input).toHaveValue("   ");
@@ -48,11 +48,7 @@ describe("AddableTextInput", () => {
 
     await userEvent.type(input, "to-add");
 
-    fireEvent.keyPress(input, {
-      key: "Enter",
-      code: "Enter",
-      charCode: 13,
-    });
+    await userEvent.keyboard("{Enter}");
 
     expect(handleAdd).toHaveBeenCalledWith("to-add");
     expect(input).toHaveValue("");

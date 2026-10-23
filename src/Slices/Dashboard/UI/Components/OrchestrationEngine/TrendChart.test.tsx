@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { TrendChart } from "./TrendChart";
 
-// jsdom reports 0 for layout measurements, and the chart only renders once its container has a
+// happy-dom reports 0 for layout measurements, and the chart only renders once its container has a
 // measured width (see the resize-driven `width` state in TrendChart) - stub it so the chart
 // actually mounts, matching how the old Dashboard's LineChart.test.tsx-equivalent (GraphCard)
 // exercises a real Victory chart rather than mocking the library away.

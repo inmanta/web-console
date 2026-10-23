@@ -3,9 +3,10 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { delay, http, HttpResponse } from "msw";
+import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { InstanceEvent } from "@/Core";
+import { REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
 import { MockedDependencyProvider, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -58,6 +59,10 @@ describe("Events Page", () => {
   });
   beforeEach(() => {
     server.resetHandlers();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    testClient.clear();
   });
   afterAll(() => {
     server.close();
@@ -146,6 +151,7 @@ describe("Events Page", () => {
   });
 
   test("EventsView shows updated table", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     let counter = 0;
     server.use(
       http.get(
@@ -174,9 +180,7 @@ describe("Events Page", () => {
 
     expect(await screen.findByRole("generic", { name: "EventTable-Empty" })).toBeInTheDocument();
 
-    await act(async () => {
-      await delay(5000);
-    });
+    await act(() => vi.advanceTimersByTimeAsync(REFETCH_INTERVAL));
 
     expect(await screen.findByRole("grid", { name: "EventTable-Success" })).toBeInTheDocument();
 

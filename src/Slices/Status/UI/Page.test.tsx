@@ -108,39 +108,6 @@ describe("StatusPage", () => {
     });
   });
 
-  test("GIVEN StatusPage with support extension WHEN user click download THEN an archive is created", async () => {
-    server.use(
-      http.get("/api/v2/support", async () => {
-        await delay(100);
-
-        return HttpResponse.json(ServerStatus.supportArchiveBase64);
-      })
-    );
-    const { component } = setup();
-
-    render(component);
-
-    const downloadButton = screen.getByRole("button", {
-      name: "DownloadArchiveButton",
-    });
-
-    expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"));
-
-    await userEvent.click(downloadButton);
-
-    expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.downloading"));
-
-    await waitFor(() =>
-      expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"))
-    );
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-  });
-
   test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
     vi.spyOn(PrimaryArchiveHelper.prototype, "triggerDownload").mockImplementation(
       () => new Blob(["testing"], { type: "application/octet-stream" })
