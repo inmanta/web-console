@@ -115,8 +115,10 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                     script {
                         if (env.CHANGELOG_ONLY != 'true') {
                             junit 'web-console/cypress/reports/junit/*.xml'
-                            recordCoverage(tools: [[parser: 'COBERTURA']], sourceCodeRetention: 'NEVER')
-                            archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**, coverage/**, test-results.txt', allowEmptyArchive: true, onlyIfSuccessful: false
+                            if (fileExists('web-console/coverage/cobertura-coverage.xml')) {
+                                recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'web-console/coverage/cobertura-coverage.xml']], sourceCodeRetention: 'NEVER')
+                            }
+                            archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**, web-console/coverage/**, test-results.txt', allowEmptyArchive: true, onlyIfSuccessful: false
                         }
                     }
                 }
