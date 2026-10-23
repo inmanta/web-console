@@ -208,7 +208,7 @@
     "ws": "^8.22.0",
     "@babel/runtime": "^7.26.10",
     "webpack-dev-middleware": "^5.3.4",
-    "http-proxy-middleware": "^2.0.8"
+    "http-proxy-middleware": "^2.0.10"
   },
   "madge": {
     "fileExtensions": [
