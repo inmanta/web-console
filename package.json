@@ -187,7 +187,7 @@
     "xml-formatter": "^3.7.0"
   },
   "resolutions": {
-    "browserslist": "^4.16.5",
+    "browserslist": "^4.29.4",
     "cookie": "^0.7.0",
     "follow-redirects": "^1.15.4",
     "glob-parent": "^5.1.2",
