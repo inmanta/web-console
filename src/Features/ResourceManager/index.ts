@@ -13,7 +13,7 @@ import { resourceManagerMessages } from "./messages";
 export const resourceManagerFeature: FeatureModule = {
   id: "resource-manager",
   version: APP_VERSION,
-  translations: resourceManagerMessages,
+  messages: resourceManagerMessages,
   routes: [
     {
       route: Agents.route,

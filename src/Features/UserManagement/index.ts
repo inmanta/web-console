@@ -8,7 +8,7 @@ import { userManagementMessages } from "./messages";
 export const userManagementFeature: FeatureModule = {
   id: "user-management",
   version: APP_VERSION,
-  translations: userManagementMessages,
+  messages: userManagementMessages,
   routes: [
     {
       route: UserManagement.route,

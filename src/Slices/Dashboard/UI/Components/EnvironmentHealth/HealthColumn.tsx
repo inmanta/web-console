@@ -1,14 +1,8 @@
 import React from "react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
-import { WordKey, words } from "@/Core";
+import { words } from "@/Core";
 import { ClickableCard } from "./ClickableCard";
 import { HealthStatus, StatusIndicator } from "./StatusIndicator";
-
-const STATUS_LABEL_KEY = {
-  healthy: "dashboard.environmentHealth.status.healthy",
-  attention: "dashboard.environmentHealth.status.attention",
-  danger: "dashboard.environmentHealth.status.danger",
-} as const satisfies Record<HealthStatus, WordKey>;
 
 const STATUS_TEXT_COLOR: Record<HealthStatus, string> = {
   healthy: "var(--pf-t--global--text--color--status--success--default)",
@@ -39,7 +33,7 @@ export const HealthColumn: React.FC<Props> = ({ title, status, statLines, onClic
       </FlexItem>
       <FlexItem>
         <Content component="h4" style={{ color: STATUS_TEXT_COLOR[status] }}>
-          {words(STATUS_LABEL_KEY[status])}
+          {words(`dashboard.environmentHealth.status.${status}`)}
         </Content>
       </FlexItem>
       {statLines.map((line) => (
