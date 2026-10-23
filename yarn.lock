@@ -1646,7 +1646,7 @@ __metadata:
     webpack-dev-server: "npm:^5.2.2"
     webpack-merge: "npm:^6.0.1"
     webpack-version-file: "npm:^0.1.7"
-    xml-formatter: "npm:^3.6.2"
+    xml-formatter: "npm:^3.7.0"
   languageName: unknown
   linkType: soft
 
@@ -17983,12 +17983,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"xml-formatter@npm:^3.6.2":
-  version: 3.6.2
-  resolution: "xml-formatter@npm:3.6.2"
+"xml-formatter@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "xml-formatter@npm:3.7.0"
   dependencies:
-    xml-parser-xo: "npm:^4.1.0"
-  checksum: 10/d5413b5b6c24a45998e680dc6e05b885b2754b5511c4d4dae9ba1392cf95082ce88c11ee8f77738c1193c985e6ec4404c542565fd8d5fd60ed35676a93614100
+    xml-parser-xo: "npm:^4.1.5"
+  checksum: 10/8ddbd08e483d2a93a59c4a6f8b4845230bdea184f0e2d356d1dd11833738d2107cf43fae213f7ab8bb650da388916224887a1e846778bf3afbee9d3bbf05383a
   languageName: node
   linkType: hard
 
@@ -17999,10 +17999,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"xml-parser-xo@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "xml-parser-xo@npm:4.1.0"
-  checksum: 10/7a858c0030d2dfb24d19dfd7ae4e3855cad69ce9771ca4cb85b648742e84753dedf44dc704020a54780a341709a004477fca2ade5cbb2ba2b47ea528d8f8a18f
+"xml-parser-xo@npm:^4.1.5":
+  version: 4.1.6
+  resolution: "xml-parser-xo@npm:4.1.6"
+  checksum: 10/ff035a42d87c636051fcbdb47c0ed07056be92cd5e079f9e52dc79cc749ffc2ba63ccc08eeec3f5814c3e67bb299680a02430c15d0e315f559c7eb5b1ef239da
   languageName: node
   linkType: hard
 
