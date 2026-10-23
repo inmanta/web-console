@@ -19,7 +19,7 @@ import { lsmMessages } from "./messages";
 export const lsmFeature: FeatureModule = {
   id: "lsm",
   version: APP_VERSION,
-  translations: lsmMessages,
+  messages: lsmMessages,
   routes: [
     {
       route: ServiceCatalog.route,

@@ -10,7 +10,7 @@ import { shellMessages } from "./messages";
 export const shellFeature: FeatureModule = {
   id: "shell",
   version: APP_VERSION,
-  translations: shellMessages,
+  messages: shellMessages,
   routes: [
     {
       route: Notification.route,

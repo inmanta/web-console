@@ -1,18 +1,10 @@
 import { words } from "@/Core";
 import { CompileReport, getStatusFromReport } from "@/Core/Domain/CompileReport";
 import { CompileReportRow } from "@/Slices/CompileReports/Core/Types";
-import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
+import { createTablePresenter } from "@/UI/Presenters";
 import { CustomDatePresenter } from "@/UI/Utils";
 
 const defaultDatePresenter = new CustomDatePresenter();
-
-const getColumnHeads = (): readonly ColumnHead[] => [
-  { displayName: words("compileReports.columns.requested"), apiName: "requested" },
-  { displayName: words("status"), apiName: "status" },
-  { displayName: words("message"), apiName: "message" },
-  { displayName: words("compileReports.columns.waitTime"), apiName: "wait_time" },
-  { displayName: words("compileReports.columns.compileTime"), apiName: "compile_time" },
-];
 
 /**
  * Table presenter for the compile reports view. Derives wait and compile times
@@ -24,7 +16,13 @@ export const createCompileReportsTablePresenter = (
   datePresenter: CustomDatePresenter = defaultDatePresenter
 ) =>
   createTablePresenter<CompileReport, CompileReportRow>({
-    columnHeads: getColumnHeads(),
+    columnHeads: [
+      { displayName: words("compileReports.columns.requested"), apiName: "requested" },
+      { displayName: words("status"), apiName: "status" },
+      { displayName: words("message"), apiName: "message" },
+      { displayName: words("compileReports.columns.waitTime"), apiName: "wait_time" },
+      { displayName: words("compileReports.columns.compileTime"), apiName: "compile_time" },
+    ],
     createRows: (reports) =>
       reports.map((report) => ({
         id: report.id,

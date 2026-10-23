@@ -1,0 +1,4 @@
+description: Fixed `yarn start`, which broke after dotenv 18 added its own `dotenv` command.
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

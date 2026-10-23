@@ -1,13 +1,6 @@
 import { Resource, words } from "@/Core";
-import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
+import { createTablePresenter } from "@/UI/Presenters";
 import { RowFromVersion } from "./Row";
-
-const getColumnHeads = (): ColumnHead[] => [
-  { displayName: words("type"), apiName: "resource_type" },
-  { displayName: words("agent"), apiName: "agent" },
-  { displayName: words("value"), apiName: "resource_id_value" },
-  { displayName: words("requires"), apiName: "requires" },
-];
 
 /**
  * Table presenter for the resources of a desired state version.
@@ -16,7 +9,12 @@ const getColumnHeads = (): ColumnHead[] => [
  */
 export const createVersionResourceTablePresenter = () =>
   createTablePresenter<Resource.FromVersionResource, RowFromVersion>({
-    columnHeads: getColumnHeads(),
+    columnHeads: [
+      { displayName: words("type"), apiName: "resource_type" },
+      { displayName: words("agent"), apiName: "agent" },
+      { displayName: words("value"), apiName: "resource_id_value" },
+      { displayName: words("requires"), apiName: "requires" },
+    ],
     sortableColumns: ["resource_type", "agent", "resource_id_value"],
     createRows: (resources) =>
       resources.map((resource) => ({
