@@ -116,7 +116,7 @@
     "mochawesome-report-generator": "^6.2.0",
     "moment-locales-webpack-plugin": "^1.2.0",
     "moment-timezone-data-webpack-plugin": "^1.5.1",
-    "monaco-editor-webpack-plugin": "^7.1.0",
+    "monaco-editor-webpack-plugin": "^7.1.1",
     "prettier": "^3.3.3",
     "react-svg-loader": "^3.0.3",
     "regenerator-runtime": "^0.14.1",
