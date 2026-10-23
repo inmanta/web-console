@@ -1522,7 +1522,7 @@ __metadata:
     "@patternfly/react-code-editor": "npm:^6.7.0"
     "@patternfly/react-core": "npm:^6.7.0"
     "@patternfly/react-icons": "npm:^6.7.0"
-    "@patternfly/react-log-viewer": "npm:^6.2.0"
+    "@patternfly/react-log-viewer": "npm:^6.5.0"
     "@patternfly/react-styles": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
@@ -2305,18 +2305,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-log-viewer@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "@patternfly/react-log-viewer@npm:6.2.0"
+"@patternfly/react-log-viewer@npm:^6.5.0":
+  version: 6.5.0
+  resolution: "@patternfly/react-log-viewer@npm:6.5.0"
   dependencies:
     "@patternfly/react-core": "npm:^6.0.0"
     "@patternfly/react-icons": "npm:^6.0.0"
     "@patternfly/react-styles": "npm:^6.0.0"
     memoize-one: "npm:^5.1.0"
   peerDependencies:
-    react: ^17 || ^18
-    react-dom: ^17 || ^18
-  checksum: 10/d5d107e140de5503b5b31b4b7b9af3bc22901271b363a2e62b8e622c1d01231d3bd571516213a55f3eeb00fae59ddcdaa43901763afb042e74ec2082834061c2
+    react: ^17 || ^18 || ^19
+    react-dom: ^17 || ^18 || ^19
+  checksum: 10/16dcf72dddecf7c2b8161440ae2e923466b5e8780ee6e0edfada5f6a2ad78acecca0fd09e2f78cab0ee2b69dd9d2806d6d7ad0091f88141e00b2aff331720537
   languageName: node
   linkType: hard
 
