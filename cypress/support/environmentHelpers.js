@@ -57,9 +57,9 @@ const clearEnvironment = (nameEnvironment = getDefaultEnvName()) => {
  *
  * @example isServiceCatalogUpdateFinished([{ remote_id: "634b1a07", completed: "2026-10-21T14:04:32", success: false }], "634b1a07") returns true
  */
-const isServiceCatalogUpdateFinished = (compileReports, catalogUpdateCompileId) => {
+const isServiceCatalogUpdateFinished = (compileReports, catalogUpdateRemoteId) => {
   const catalogUpdateCompile = compileReports.find(
-    (report) => report.remote_id === catalogUpdateCompileId
+    (report) => report.remote_id === catalogUpdateRemoteId
   );
   const newestCompile = compileReports[0];
 
@@ -79,32 +79,32 @@ const SERVICE_CATALOG_UPDATE_MAX_POLLS = 180;
 /**
  * Polls the compile reports of an environment about once a second until the service catalog
  * update started by `export_service_definition` has finished, and fails after
- * `SERVICE_CATALOG_UPDATE_MAX_POLLS` polls (about 3 minutes). `catalogUpdateCompileId` is the
- * compile id that endpoint returns.
+ * `SERVICE_CATALOG_UPDATE_MAX_POLLS` polls (about 3 minutes). `catalogUpdateRemoteId` is the
+ * value that endpoint returns: the `remote_id` of the compile it requests, not the compile's own `id`.
  *
  * @example waitForServiceCatalogUpdate("60d7245a-f842-4af2-b296-3198c35d2b4d", "634b1a07-69c7-45e5-b797-2dd78a929625")
  */
 const waitForServiceCatalogUpdate = (
   environmentId,
-  catalogUpdateCompileId,
+  catalogUpdateRemoteId,
   remainingPolls = SERVICE_CATALOG_UPDATE_MAX_POLLS
 ) => {
   cy.request({
     url: "/api/v2/compilereport?limit=10&sort=requested.desc",
     headers: { "X-Inmanta-Tid": environmentId },
   }).then((response) => {
-    if (isServiceCatalogUpdateFinished(response.body.data, catalogUpdateCompileId)) {
+    if (isServiceCatalogUpdateFinished(response.body.data, catalogUpdateRemoteId)) {
       return;
     }
 
     if (remainingPolls <= 1) {
       throw new Error(
-        `Service catalog update in environment ${environmentId} did not finish after ${SERVICE_CATALOG_UPDATE_MAX_POLLS} polls, waiting for compile ${catalogUpdateCompileId} and the compile that follows it`
+        `Service catalog update in environment ${environmentId} did not finish after ${SERVICE_CATALOG_UPDATE_MAX_POLLS} polls, waiting for the compile with remote id ${catalogUpdateRemoteId} and the compile that follows it`
       );
     }
 
     cy.wait(1000);
-    waitForServiceCatalogUpdate(environmentId, catalogUpdateCompileId, remainingPolls - 1);
+    waitForServiceCatalogUpdate(environmentId, catalogUpdateRemoteId, remainingPolls - 1);
   });
 };
 

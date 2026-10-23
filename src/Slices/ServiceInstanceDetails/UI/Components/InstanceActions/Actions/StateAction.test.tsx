@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { TransferModel } from "@/Core";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
+import { definePatternFlyToken } from "@/Test/Utils/definePatternFlyToken";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { StateAction } from "./StateAction";
 
@@ -93,16 +94,7 @@ describe("StateAction", () => {
   });
 
   it("colors both the icon and the text for a warning-variant transfer, unlike the design mock which only tints the icon", () => {
-    // PatternFly's CSS is not loaded in tests, so define the token the text color refers to.
-    document.documentElement.style.setProperty(
-      t_global_text_color_status_warning_default.name,
-      t_global_text_color_status_warning_default.value
-    );
-    onTestFinished(() => {
-      document.documentElement.style.removeProperty(
-        t_global_text_color_status_warning_default.name
-      );
-    });
+    definePatternFlyToken(t_global_text_color_status_warning_default);
     renderStateAction([
       buildTarget({
         buttonLabel: "Push settings",

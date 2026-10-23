@@ -50,7 +50,7 @@ window.dispatchEvent(new Event("resize"));
 
 ## happy-dom & styles
 
-PatternFly's CSS isn't loaded in unit tests, so a `var(--pf-t--…)` token resolves to nothing. When a test asserts on a style that uses a token, define the token on `document.documentElement` in the test and remove it again when the test finishes (see `AttributeList.test.tsx`).
+PatternFly's CSS isn't loaded in unit tests, so a `var(--pf-t--…)` token resolves to nothing. When a test asserts on a style that uses a token, call `definePatternFlyToken(token)` from `src/Test/Utils` at the start of the test.
 
 `expect(el).not.toHaveStyle(...)` passes on its own when happy-dom's CSS parser drops the expected declaration. Always pair a negative style assertion with a positive one on the same value, as `StatusButton.test.tsx` does.
 

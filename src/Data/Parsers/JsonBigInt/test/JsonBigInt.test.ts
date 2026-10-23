@@ -138,7 +138,7 @@ describe("__proto__ and constructor assignment", () => {
   });
 
   it("should throw an exception if constructorAction set to error and there is constructor property", () => {
-    const JSONbig = getJSONbig({ protoAction: "error" });
+    const JSONbig = getJSONbig({ constructorAction: "error" });
     expect(() => JSONbig.parse('{ "constructor": 1000000000000000 }')).toThrow(
       "Object contains forbidden constructor property"
     );
