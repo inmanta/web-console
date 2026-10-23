@@ -9,7 +9,7 @@ module.exports = defineConfig({
   },
   expose: {
     edition: "oss",
-    keycloack: true,
+    keycloak: true,
   },
   video: false,
   reporter: "junit",

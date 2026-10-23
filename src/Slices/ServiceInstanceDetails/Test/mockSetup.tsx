@@ -2,7 +2,6 @@ import React, { PropsWithChildren } from "react";
 import { loader } from "@monaco-editor/react";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import * as monaco from "monaco-editor";
 import { FeatureModule } from "@/Core";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
@@ -62,7 +61,6 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
     },
   });
 
-  loader.config({ monaco });
   loader.init();
 
   return (
