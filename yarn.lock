@@ -1521,7 +1521,7 @@ __metadata:
     "@patternfly/react-charts": "npm:^7.2.2"
     "@patternfly/react-code-editor": "npm:^6.1.0"
     "@patternfly/react-core": "npm:^6.0.0"
-    "@patternfly/react-icons": "npm:^6.0.0"
+    "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-log-viewer": "npm:^6.2.0"
     "@patternfly/react-styles": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.0.0"
@@ -2310,23 +2310,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-icons@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "@patternfly/react-icons@npm:6.0.0"
+"@patternfly/react-icons@npm:^6.0.0, @patternfly/react-icons@npm:^6.2.2, @patternfly/react-icons@npm:^6.7.0":
+  version: 6.7.0
+  resolution: "@patternfly/react-icons@npm:6.7.0"
+  dependencies:
+    tslib: "npm:^2.8.1"
   peerDependencies:
-    react: ^17 || ^18
-    react-dom: ^17 || ^18
-  checksum: 10/e3e4ed0ad9bb66a2a03f14911eb292c5ea97b2bec8d24d7acca8db83ea52aab1a1013af6cd90dd7d48c6d2426e59de78d5aab7f5ff3286062cd4b5ea7f264c57
-  languageName: node
-  linkType: hard
-
-"@patternfly/react-icons@npm:^6.2.2":
-  version: 6.2.2
-  resolution: "@patternfly/react-icons@npm:6.2.2"
-  peerDependencies:
-    react: ^17 || ^18
-    react-dom: ^17 || ^18
-  checksum: 10/24c37285185eb5db7a584b4468efd562685b72976f0077f68e01675f9ec16999ce686526c1e15385a7e6cc9fb11c495ab2bd06b7fa77375e48ebf7f15133b90b
+    react: ^17 || ^18 || ^19
+    react-dom: ^17 || ^18 || ^19
+  checksum: 10/cf91cf7de332f09e6f97c0fb59d62f6cf5e55e3541aaf5a2f08f8884ec8e48d2ef4f326bb62a6e837fb4cf44297b515f0f1f6088798cd0a269822147576be4aa
   languageName: node
   linkType: hard
 
