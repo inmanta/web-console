@@ -9,9 +9,10 @@ import { words } from "@/UI/words";
  * The presenters contain all the needed data-transformation methods to create a table for the OrderDetailView.
  *
  */
-export class OrderDetailsTablePresenter
-  implements TablePresenter<ServiceOrderItem, ServiceOrderItem>
-{
+export class OrderDetailsTablePresenter implements TablePresenter<
+  ServiceOrderItem,
+  ServiceOrderItem
+> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 

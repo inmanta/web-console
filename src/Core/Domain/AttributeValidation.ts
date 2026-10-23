@@ -1,11 +1,7 @@
 import { ParsedNumber } from "@/Core/Language";
 
 export type AttributeValidation =
-  | EnumValidation
-  | NoValidation
-  | StringValidation
-  | IntValidation
-  | IpValidation;
+  EnumValidation | NoValidation | StringValidation | IntValidation | IpValidation;
 
 interface EnumValidation {
   validation_type: "enum" | "enum?";
