@@ -160,7 +160,7 @@
     "@types/react": "^18.3.31",
     "bignumber.js": "^9.3.1",
     "copy-to-clipboard": "^3.3.3",
-    "easy-peasy": "^6.0.4",
+    "easy-peasy": "^6.1.1",
     "file-saver": "^2.0.5",
     "highlight.js": "^11.11.1",
     "keycloak-js": "^25.0.5",
