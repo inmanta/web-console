@@ -257,7 +257,7 @@ describe("useSuggestedValues graphql flavor", () => {
 
       sentQueries.push(body.query);
 
-      // The endpoint double-wraps: graphql-request's request() strips the outer
+      // The endpoint double-wraps: useGraphQLRequest strips the outer
       // `data`, leaving the `{ data: { <root> }, errors, extensions }` envelope
       // that consumers (and extractNodes) read via `.data`.
       const envelope = {

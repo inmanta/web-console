@@ -5,6 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { baseSetup } from "@/Test/Utils/base-setup";
 import { emptyResponse, orderResponse } from "../Data/Mock";
 import { OrdersPage } from ".";
@@ -182,7 +183,7 @@ describe("Order Page", () => {
     expect(nextPageRows).toHaveLength(2);
 
     //sort on the second page
-    await userEvent.click(screen.getByText("Created at"));
+    await userEvent.click(screen.getByRole("button", { name: words("orders.column.created_at") }));
 
     const firstPageRows = await screen.findAllByRole("row", {
       name: "ServiceOrderRow",
