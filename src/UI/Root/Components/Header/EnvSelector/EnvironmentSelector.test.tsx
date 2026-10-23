@@ -444,7 +444,9 @@ describe("EnvironmentSelector", () => {
 
     await userEvent.click(toggle);
 
-    expect(screen.getByTestId("manage-projects-menu-item")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByTestId("manage-projects-menu-item")).toBeVisible();
+    });
     expect(screen.getByText("Manage projects")).toBeVisible();
   });
 

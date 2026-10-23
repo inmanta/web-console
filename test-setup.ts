@@ -2,7 +2,9 @@ import "@testing-library/jest-dom/vitest";
 import React from "react";
 import { loader } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
+import { getResponse, RequestHandler } from "msw";
 import dayjs from "@/dayjs";
+import type { SetupServer } from "msw/node";
 
 import "jest-axe/extend-expect";
 
@@ -101,6 +103,52 @@ const linkShapeMock = vi.hoisted(() => ({
     };
   }),
 }));
+
+// The msw servers that test files currently have listening.
+const listeningMswServers = vi.hoisted(() => new Set<SetupServer>());
+
+vi.mock("msw/node", async (importOriginal) => {
+  const mswNode = await importOriginal<typeof import("msw/node")>();
+
+  return {
+    ...mswNode,
+    setupServer: (...handlers: Parameters<typeof mswNode.setupServer>) => {
+      const server = mswNode.setupServer(...handlers);
+      const { listen, close } = server;
+
+      server.listen = (options) => {
+        listen(options);
+        listeningMswServers.add(server);
+      };
+      server.close = () => {
+        listeningMswServers.delete(server);
+        close();
+      };
+
+      return server;
+    },
+  };
+});
+
+// msw intercepts below happy-dom's fetch, so happy-dom would do real networking and log every
+// failed request. Answer each fetch from the listening msw handlers instead, and any request they
+// don't handle with a network error.
+globalThis.fetch = async (input, init) => {
+  const request = new Request(input, init);
+
+  for (const server of listeningMswServers) {
+    const requestHandlers = server
+      .listHandlers()
+      .filter((handler) => handler instanceof RequestHandler);
+    const response = await getResponse(requestHandlers, request);
+
+    if (response) {
+      return response;
+    }
+  }
+
+  return Response.error();
+};
 
 // Give the Monaco loader the mocked monaco-editor, like src/index.tsx gives it the bundled copy,
 // so editors load without fetching the loader script from the CDN.
