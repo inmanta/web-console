@@ -1523,7 +1523,7 @@ __metadata:
     "@patternfly/react-core": "npm:^6.0.0"
     "@patternfly/react-icons": "npm:^6.0.0"
     "@patternfly/react-log-viewer": "npm:^6.2.0"
-    "@patternfly/react-styles": "npm:^6.0.0"
+    "@patternfly/react-styles": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.0.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
     "@react-keycloak/web": "npm:^3.4.0"
@@ -2352,17 +2352,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-styles@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "@patternfly/react-styles@npm:6.0.0"
-  checksum: 10/ddf5cd5364f55ba009878c2761362a52c896e14d6785525019fc3bd840c90add5b1bb2be0217f9aaaa92616ed68885d68cecff8c62760d8a5240b31cc040258b
-  languageName: node
-  linkType: hard
-
-"@patternfly/react-styles@npm:^6.2.2":
-  version: 6.2.2
-  resolution: "@patternfly/react-styles@npm:6.2.2"
-  checksum: 10/060cea589933778af3920171ba6c34b3e532c1706aa8a20fb7486645755c131f5cd5c160d32f789c48f1e63d141585b2bfe4ad982d27ccb43bb0de4642989162
+"@patternfly/react-styles@npm:^6.0.0, @patternfly/react-styles@npm:^6.2.2, @patternfly/react-styles@npm:^6.7.0":
+  version: 6.7.0
+  resolution: "@patternfly/react-styles@npm:6.7.0"
+  checksum: 10/2481f7260ddbd5a26bd4e7f8ed121a78a3cede6a65a312a6e01f9887f61ffa224a8b794e7b661e67cc5dd96cd181f8ba0c8f19d91fa48aaf2b6782e4fb09c88c
   languageName: node
   linkType: hard
 
