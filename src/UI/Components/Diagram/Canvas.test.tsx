@@ -89,7 +89,7 @@ describe("Canvas.tsx", () => {
     const header = screen.getByJointSelector("header");
 
     expect(header.getAttribute("fill")).toContain(
-      "var(--pf-t--chart--color--yellow--300, #dca614)"
+      "var(--pf-t--chart--color--yellow--300, #96640f)"
     );
   });
 

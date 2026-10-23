@@ -44,7 +44,7 @@ import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
 import { UserManagement } from "@S/UserManagement";
-import { encodeParams } from "./Utils";
+import { decodeParams } from "./Utils";
 
 export function PrimaryRouteManager(baseUrl: string): RouteManager {
   const routeDictionary: RouteDictionary = {
@@ -155,7 +155,8 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   function getUrl<K extends RouteKind>(kind: K, params: RouteParams<K>): string {
     const route = getRoute(kind);
 
-    return generatePath(route.path, params === undefined ? params : encodeParams(params));
+    // generatePath percent-encodes the param values itself.
+    return generatePath(route.path, params);
   }
 
   function getUrlForApiUri(uri: string): string | undefined {
@@ -211,7 +212,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   function useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
     const { search } = useLocation();
     const route = getRoute(kind);
-    const path = generatePath(route.path, params === undefined ? params : encodeParams(params));
+    const path = generatePath(route.path, params);
 
     return `${path}${search}`;
   }
@@ -227,7 +228,8 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     return lineage.map(({ kind, generateLabel, path }, idx) => ({
       kind,
       label: generateLabel(params),
-      url: generatePath(path, params),
+      // The params are matched on the encoded url, decode them as generatePath encodes them again.
+      url: generatePath(path, params === undefined ? params : decodeParams(params)),
       active: idx === lineage.length - 1,
     }));
   }

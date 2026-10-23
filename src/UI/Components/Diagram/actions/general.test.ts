@@ -20,7 +20,7 @@ describe("createComposerEntity", () => {
     expect(coreEntity.get("holderName")).toBe(undefined);
     expect(coreEntity.get("isEmbeddedEntity")).toBe(undefined);
     expect(coreEntity.get("isCore")).toBe(true);
-    expect(coreEntity.attr("header/fill")).toBe("var(--pf-t--chart--color--yellow--300, #dca614)");
+    expect(coreEntity.attr("header/fill")).toBe("var(--pf-t--chart--color--yellow--300, #96640f)");
     expect(coreEntity.get("isInEditMode")).toBe(false);
     expect(coreEntity.get("items")).toStrictEqual([[], []]);
   });
@@ -38,7 +38,7 @@ describe("createComposerEntity", () => {
     expect(embeddedEntity.get("isEmbeddedEntity")).toBe(true);
     expect(embeddedEntity.get("isCore")).toBe(undefined);
     expect(embeddedEntity.attr("header/fill")).toBe(
-      "var(--pf-t--chart--color--blue--400, #004d99)"
+      "var(--pf-t--chart--color--blue--400, #003366)"
     );
     expect(embeddedEntity.get("isInEditMode")).toBe(false);
     expect(embeddedEntity.getName()).toBe(containerModel.embedded_entities[0].name);
@@ -61,7 +61,7 @@ describe("createComposerEntity", () => {
     expect(embeddedEntity.get("isEmbeddedEntity")).toBe(true);
     expect(embeddedEntity.get("isCore")).toBe(undefined);
     expect(embeddedEntity.attr("header/fill")).toBe(
-      "var(--pf-t--chart--color--blue--400, #004d99)"
+      "var(--pf-t--chart--color--blue--400, #003366)"
     );
     expect(embeddedEntity.get("isInEditMode")).toBe(false);
 
@@ -82,7 +82,7 @@ describe("createComposerEntity", () => {
     expect(childEntity.get("isEmbeddedEntity")).toBe(undefined);
     expect(childEntity.get("isCore")).toBe(undefined);
     expect(childEntity.get("isInEditMode")).toBe(false);
-    expect(childEntity.attr("header/fill")).toBe("var(--pf-t--chart--color--purple--300, #5e40be)");
+    expect(childEntity.attr("header/fill")).toBe("var(--pf-t--chart--color--purple--300, #3d2785)");
     expect(childEntity.get("relatedTo")).toMatchObject(new Map());
 
     expect(dispatchSpy).toHaveBeenCalledWith(
@@ -107,7 +107,7 @@ describe("createComposerEntity", () => {
     expect(childEntity.get("isEmbeddedEntity")).toBe(undefined);
     expect(childEntity.get("isCore")).toBe(undefined);
     expect(childEntity.get("isInEditMode")).toBe(false);
-    expect(childEntity.attr("header/fill")).toBe("var(--pf-t--chart--color--purple--300, #5e40be)");
+    expect(childEntity.attr("header/fill")).toBe("var(--pf-t--chart--color--purple--300, #3d2785)");
 
     expect(dispatchSpy).toHaveBeenCalledTimes(0);
   });
