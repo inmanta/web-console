@@ -1361,7 +1361,7 @@ __metadata:
     eslint: "npm:^9.39.5"
     eslint-config-prettier: "npm:^9.1.2"
     eslint-import-resolver-typescript: "npm:^4.4.5"
-    eslint-import-resolver-webpack: "npm:^0.13.10"
+    eslint-import-resolver-webpack: "npm:^0.13.11"
     eslint-plugin-import: "npm:^2.31.0"
     eslint-plugin-jest-dom: "npm:^5.5.0"
     eslint-plugin-prettier: "npm:5.4.1"
@@ -8232,24 +8232,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-import-resolver-webpack@npm:^0.13.10":
-  version: 0.13.10
-  resolution: "eslint-import-resolver-webpack@npm:0.13.10"
+"eslint-import-resolver-webpack@npm:^0.13.11":
+  version: 0.13.11
+  resolution: "eslint-import-resolver-webpack@npm:0.13.11"
   dependencies:
     debug: "npm:^3.2.7"
     enhanced-resolve: "npm:^0.9.1"
     find-root: "npm:^1.1.0"
     hasown: "npm:^2.0.2"
     interpret: "npm:^1.4.0"
-    is-core-module: "npm:^2.15.1"
-    is-regex: "npm:^1.2.0"
-    lodash: "npm:^4.17.21"
-    resolve: "npm:^2.0.0-next.5"
+    is-core-module: "npm:^2.16.1"
+    is-regex: "npm:^1.2.1"
+    lodash: "npm:^4.18.1"
+    resolve: "npm:^2.0.0-next.6"
     semver: "npm:^5.7.2"
   peerDependencies:
     eslint-plugin-import: ">=1.4.0"
     webpack: ">=1.11.0"
-  checksum: 10/7d317bc96b2590ba83f0f2af2e64f67693452756bc95ffd77381e8177365ac10c2fb288776fc6620376d7fc811902a7efe4932010bc250a1ac5fd4171e2402fb
+  checksum: 10/7c209d046e5e79abd5b7759736ddb53f7af7474c18ad23a6f92ca146a4c3959c505e3ffb3fe12f2d4d2e1dfc55ece01d2cb7eff7ecf1823ebdab908a6235d4b0
   languageName: node
   linkType: hard
 
@@ -9782,6 +9782,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hasown@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "hasown@npm:2.0.4"
+  dependencies:
+    function-bind: "npm:^1.1.2"
+  checksum: 10/13823863ae48161068b4c51606a3128451c66f14545a5169d667fe9fca168dcd38c27570c7a299e32ef844b8da3d55def7fe88602f8970d4311fb543ee88001a
+  languageName: node
+  linkType: hard
+
 "he@npm:^1.2.0":
   version: 1.2.0
   resolution: "he@npm:1.2.0"
@@ -10370,6 +10379,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-core-module@npm:^2.16.1, is-core-module@npm:^2.16.2":
+  version: 2.17.0
+  resolution: "is-core-module@npm:2.17.0"
+  dependencies:
+    hasown: "npm:^2.0.4"
+  checksum: 10/0020f71b7eb525ccd684012cd1cfba235e7596e0addbc993732f7d8faff7ccd3a399e16dac7eb317b63459ea23f97efd661d6bf32584f6bf1d0a607fd8e21a6b
+  languageName: node
+  linkType: hard
+
 "is-data-view@npm:^1.0.1":
   version: 1.0.1
   resolution: "is-data-view@npm:1.0.1"
@@ -10650,7 +10668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-regex@npm:^1.2.0, is-regex@npm:^1.2.1":
+"is-regex@npm:^1.2.1":
   version: 1.2.1
   resolution: "is-regex@npm:1.2.1"
   dependencies:
@@ -12965,6 +12983,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-exports-info@npm:^1.6.0":
+  version: 1.6.2
+  resolution: "node-exports-info@npm:1.6.2"
+  dependencies:
+    array.prototype.flatmap: "npm:^1.3.3"
+    es-errors: "npm:^1.3.0"
+    object.entries: "npm:^1.1.9"
+    semver: "npm:^6.3.1"
+  checksum: 10/6c9593094b3dd9b8a338f31490c0bad6da886a964b1bc6d95416dfe83810d4ab3493e53290b951d131a3148bf529f33bd908302aa4fd57c45c7b3d55e2cff848
+  languageName: node
+  linkType: hard
+
 "node-fetch@npm:2.6.7":
   version: 2.6.7
   resolution: "node-fetch@npm:2.6.7"
@@ -14941,6 +14971,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"resolve@npm:^2.0.0-next.6":
+  version: 2.0.0-next.7
+  resolution: "resolve@npm:2.0.0-next.7"
+  dependencies:
+    es-errors: "npm:^1.3.0"
+    is-core-module: "npm:^2.16.2"
+    node-exports-info: "npm:^1.6.0"
+    object-keys: "npm:^1.1.1"
+    path-parse: "npm:^1.0.7"
+    supports-preserve-symlinks-flag: "npm:^1.0.0"
+  bin:
+    resolve: bin/resolve
+  checksum: 10/0a6fbd452518c128355a72e3773e65d047128bbc5045d954eca7f911683abfb1b0177494ff8734ca74f2a7a4e3a6bfad9cd6d19a2bde0fe9851025a2734d4a0f
+  languageName: node
+  linkType: hard
+
 "resolve@patch:resolve@npm%3A^1.19.0#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.20.0#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.21.0#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.22.4#optional!builtin<compat/resolve>":
   version: 1.22.8
   resolution: "resolve@patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d"
@@ -14964,6 +15010,22 @@ __metadata:
   bin:
     resolve: bin/resolve
   checksum: 10/05fa778de9d0347c8b889eb7a18f1f06bf0f801b0eb4610b4871a4b2f22e220900cf0ad525e94f990bb8d8921c07754ab2122c0c225ab4cdcea98f36e64fa4c2
+  languageName: node
+  linkType: hard
+
+"resolve@patch:resolve@npm%3A^2.0.0-next.6#optional!builtin<compat/resolve>":
+  version: 2.0.0-next.7
+  resolution: "resolve@patch:resolve@npm%3A2.0.0-next.7#optional!builtin<compat/resolve>::version=2.0.0-next.7&hash=c3c19d"
+  dependencies:
+    es-errors: "npm:^1.3.0"
+    is-core-module: "npm:^2.16.2"
+    node-exports-info: "npm:^1.6.0"
+    object-keys: "npm:^1.1.1"
+    path-parse: "npm:^1.0.7"
+    supports-preserve-symlinks-flag: "npm:^1.0.0"
+  bin:
+    resolve: bin/resolve
+  checksum: 10/2c6dd4194c8aa900db299020fcad253239c670ea82a65c8387f1d2885e8dcf6742b64c439e3c811e046a5252eba94f2092b7867e34b7f895e733be48d575192b
   languageName: node
   linkType: hard
 
