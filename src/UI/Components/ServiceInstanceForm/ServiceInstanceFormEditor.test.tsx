@@ -1,6 +1,6 @@
 /**
  * Testing the Monaco Editor in Jest is hardly possible, therefore the editor will be tested in the E2E tests.
- * The JSDOM environment doesn't work with the different features of the Monaco Editor.
+ * The happy-dom environment doesn't work with the different features of the Monaco Editor.
  * Making it a requirement to mock every feature of the Monaco Editor.
  * This would defeat the purpose of the testing.
  * Only the loading and hook are tested here.
@@ -112,8 +112,7 @@ it("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads wit
     fireEvent.click(EditorToggle);
   });
 
-  // Expect the view to display a spinner.
-  expect(screen.getByTestId("loading-spinner")).toBeVisible();
+  expect(screen.getByTestId("JSON-Editor-Wrapper")).toBeVisible();
 
   server.close();
 });

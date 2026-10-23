@@ -5,7 +5,10 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
 import { baseSetup } from "@/Test/Utils/base-setup";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { words } from "@/UI/words";
 import { emptyResponse, orderResponse } from "../Data/Mock";
 import { OrdersPage } from ".";
 
@@ -23,6 +26,10 @@ describe("Order Page", () => {
   });
   beforeEach(() => {
     server.resetHandlers();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    testClient.clear();
   });
   afterAll(() => {
     server.close();
@@ -97,6 +104,7 @@ describe("Order Page", () => {
   });
 
   test("OrdersView shows updated table", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     let counter = 0;
     server.use(
       http.get("/lsm/v2/order", () => {
@@ -116,9 +124,7 @@ describe("Order Page", () => {
 
     expect(await screen.findByRole("generic", { name: "OrdersView-Empty" })).toBeInTheDocument();
 
-    await act(async () => {
-      await delay(5000);
-    });
+    await act(() => vi.advanceTimersByTimeAsync(REFETCH_INTERVAL));
 
     expect(await screen.findByRole("generic", { name: "OrdersView-Success" })).toBeInTheDocument();
 
@@ -182,7 +188,7 @@ describe("Order Page", () => {
     expect(nextPageRows).toHaveLength(2);
 
     //sort on the second page
-    await userEvent.click(screen.getByText("Created at"));
+    await userEvent.click(screen.getByRole("button", { name: words("orders.column.created_at") }));
 
     const firstPageRows = await screen.findAllByRole("row", {
       name: "ServiceOrderRow",

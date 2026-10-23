@@ -1,3 +1,5 @@
+import type { ServiceOrderItemAction } from "@/Core";
+
 export interface ServiceOrder {
   description?: string;
   id: string;
@@ -50,6 +52,5 @@ type FailureType =
   | "EXECUTION_FAILED"
   | "EXECUTION_SKIPPED"
   | "INCONCLUSIVE";
-export type ServiceOrderItemAction = "delete" | "create" | "update";
 
 export type SortKey = "created_at";

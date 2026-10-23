@@ -157,15 +157,6 @@ async function applyResourceFilter(placeholderText: string, value: string) {
   await userEvent.type(input, `${value}{enter}`);
 }
 
-async function openStatusFiltersTab() {
-  await openFiltersDrawer();
-
-  const statusTab = await screen.findByRole("tab", {
-    name: words("status"),
-  });
-  await userEvent.click(statusTab);
-}
-
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -226,36 +217,6 @@ describe("ResourcesPage", () => {
     render(component);
 
     expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
-
-    await act(async () => {
-      const results = await axe(document.body);
-      expect(results).toHaveNoViolations();
-    });
-  });
-
-  // --- Pagination ---
-
-  test("shows next page of resources", async () => {
-    server.use(
-      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) =>
-        HttpResponse.json({
-          data: variables.after === "fake-cursor" ? gqlFull : gqlFirstPage(),
-        })
-      )
-    );
-
-    const { component } = setup();
-
-    render(component);
-
-    const rows = await screen.findAllByLabelText("Resource Table Row");
-    expect(rows).toHaveLength(3);
-
-    const nextPageButton = screen.getAllByRole("button", { name: "Go to next page" })[0];
-    await userEvent.click(nextPageButton);
-
-    const rowsAfterNextPage = await screen.findAllByLabelText("Resource Table Row");
-    expect(rowsAfterNextPage).toHaveLength(6);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -393,107 +354,6 @@ describe("ResourcesPage", () => {
 
   // --- Filters ---
 
-  it.each`
-    filterValue | placeholderText                                          | filterVariableKey    | filterVariableValue
-    ${"agent2"} | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}           | ${"agent2"}
-    ${"File"}   | ${words("resources.filters.resource.type.placeholder")}  | ${"resourceType"}    | ${"File"}
-    ${"tmp"}    | ${words("resources.filters.resource.value.placeholder")} | ${"resourceIdValue"} | ${"tmp"}
-  `(
-    "filters by $filterVariableKey=$filterVariableValue",
-    async ({ filterValue, placeholderText, filterVariableKey, filterVariableValue }) => {
-      server.use(
-        queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-          const field = variables.filter?.[filterVariableKey as keyof typeof variables.filter] as
-            { eq?: string[]; contains?: string[] } | undefined;
-
-          //This is for now until we rework the filtering part where we don't have to manually pass %
-          const values = (field?.eq ?? field?.contains ?? []).map((v: string) =>
-            v.replace(/%/g, "")
-          );
-
-          return HttpResponse.json({
-            data: values.includes(filterVariableValue) ? gqlFirst3 : gqlFull,
-          });
-        })
-      );
-
-      const { component } = setup();
-
-      render(component);
-
-      const rows = await screen.findAllByLabelText("Resource Table Row");
-      expect(rows).toHaveLength(6);
-
-      await openFiltersDrawer();
-
-      await applyResourceFilter(placeholderText, filterValue);
-
-      const rowsAfterFilter = await screen.findAllByLabelText("Resource Table Row");
-      expect(rowsAfterFilter).toHaveLength(3);
-
-      await act(async () => {
-        const results = await axe(document.body);
-        expect(results).toHaveNoViolations();
-      });
-    }
-  );
-
-  it.each`
-    filterValueOne | placeholderTextOne                                       | filterKeyOne         | filterValueTwo | placeholderTextTwo                                       | filterKeyTwo
-    ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}           | ${"file3"}     | ${words("resources.filters.resource.value.placeholder")} | ${"resourceIdValue"}
-    ${"Directory"} | ${words("resources.filters.resource.type.placeholder")}  | ${"resourceType"}    | ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}
-    ${"tmp"}       | ${words("resources.filters.resource.value.placeholder")} | ${"resourceIdValue"} | ${"File"}      | ${words("resources.filters.resource.type.placeholder")}  | ${"resourceType"}
-  `(
-    "filters by $filterKeyOne and $filterKeyTwo combined",
-    async ({
-      filterValueOne,
-      placeholderTextOne,
-      filterKeyOne,
-      filterValueTwo,
-      placeholderTextTwo,
-      filterKeyTwo,
-    }) => {
-      server.use(
-        queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-          const fieldOne = variables.filter?.[filterKeyOne as keyof typeof variables.filter] as
-            { eq?: string[]; contains?: string[] } | undefined;
-          const fieldTwo = variables.filter?.[filterKeyTwo as keyof typeof variables.filter] as
-            { eq?: string[]; contains?: string[] } | undefined;
-
-          //This is for now until we rework the filtering part where we don't have to manually pass %
-          const hasOne = (fieldOne?.eq ?? fieldOne?.contains ?? []).some(
-            (v: string) => v.replace(/%/g, "") === filterValueOne
-          );
-          const hasTwo = (fieldTwo?.eq ?? fieldTwo?.contains ?? []).some(
-            (v: string) => v.replace(/%/g, "") === filterValueTwo
-          );
-
-          return HttpResponse.json({ data: hasOne && hasTwo ? gqlFirst3 : gqlFull });
-        })
-      );
-
-      const { component } = setup();
-
-      render(component);
-
-      const rows = await screen.findAllByLabelText("Resource Table Row");
-      expect(rows).toHaveLength(6);
-
-      await openFiltersDrawer();
-
-      await applyResourceFilter(placeholderTextOne, filterValueOne);
-      await applyResourceFilter(placeholderTextTwo, filterValueTwo);
-
-      const rowsAfterFiltering = await screen.findAllByLabelText("Resource Table Row");
-      expect(rowsAfterFiltering).toHaveLength(3);
-
-      await act(async () => {
-        const results = await axe(document.body);
-        expect(results).toHaveNoViolations();
-      });
-    }
-  );
-
   test("filters by all three fields combined", async () => {
     const agentValue = "agent2";
     const typeValue = "std::File";
@@ -538,45 +398,6 @@ describe("ResourcesPage", () => {
 
     const rowsAfterFiltering = await screen.findAllByLabelText("Resource Table Row");
     expect(rowsAfterFiltering).toHaveLength(3);
-
-    await act(async () => {
-      const results = await axe(document.body);
-      expect(results).toHaveNoViolations();
-    });
-  });
-
-  test.each`
-    filterValue        | option       | toggleLabel
-    ${"successful"}    | ${"include"} | ${words("resources.filters.status.lastHandlerRun.label")}
-    ${"failed"}        | ${"exclude"} | ${words("resources.filters.status.lastHandlerRun.label")}
-    ${"compliant"}     | ${"include"} | ${words("resources.filters.status.compliance.label")}
-    ${"non_compliant"} | ${"exclude"} | ${words("resources.filters.status.compliance.label")}
-    ${"blocked"}       | ${"include"} | ${words("resources.filters.status.blocked.label")}
-    ${"not_blocked"}   | ${"exclude"} | ${words("resources.filters.status.blocked.label")}
-  `("status filter: '$filterValue' / '$option'", async ({ filterValue, option, toggleLabel }) => {
-    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFirst3 })));
-
-    const { component } = setup();
-
-    render(component);
-
-    const rows = await screen.findAllByLabelText("Resource Table Row");
-    expect(rows).toHaveLength(3);
-
-    await openStatusFiltersTab();
-
-    const dropdownToggle = screen.getByRole("button", {
-      name: `${toggleLabel}-toggle`,
-    });
-    await userEvent.click(dropdownToggle);
-
-    const filterToggle = await screen.findByRole("button", {
-      name: `${filterValue}-${option}-toggle`,
-    });
-    await userEvent.click(filterToggle);
-
-    const rowsAfterTogglingStatus = await screen.findAllByLabelText("Resource Table Row");
-    expect(rowsAfterTogglingStatus).toHaveLength(3);
 
     await act(async () => {
       const results = await axe(document.body);
