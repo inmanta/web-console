@@ -22,7 +22,6 @@ export const uiMessages = {
   jumpTo: "Jump to",
   hideAll: "Hide All",
   showAll: "Show All",
-  back: "Back",
   edit: "Edit",
   details: "Details",
   remove: "Remove",
@@ -74,9 +73,6 @@ export const uiMessages = {
   "error.unknown": "Unknown error",
   "error.general": (message: string) => `The following error occured: ${message}`,
   "error.environment.missing": "Environment is missing",
-  "error.server.intro": (errorMessage: string) =>
-    `The following error occured while communicating with the server: ${errorMessage}`,
-  "error.authorizationFailed": "Authorization failed, please log in",
   "error.image.title": "Invalid image",
   "error.image.unknown": (name: string) => `Something went wrong with file ${name}`,
   "error.image.type": (name: string, type: string) =>
@@ -164,13 +160,6 @@ export const uiMessages = {
   "events.column.eventType": "Event Type",
   "events.details.compileReport": "Open compile report",
   "events.details.title": "Event details",
-
-  /**
-   * History related text
-   */
-  "history.title": "Service Instance History",
-  "history.missing": (instanceId: string) => `No history could be found for instance ${instanceId}`,
-  "history.caption": (instanceId: string) => `Showing history for instance ${instanceId}`,
 
   /**
    * Catalog related text
@@ -300,7 +289,6 @@ export const uiMessages = {
     "Orphaned resources (in no released version) can't be deployed, repaired or dry-run.",
 
   /** Agents */
-  "agent.tests.processName": "Process Name",
   "agent.tests.up": "up",
 
   /** Desired State Details */
@@ -345,10 +333,8 @@ export const uiMessages = {
   "common.compileWidget.recompile": "Recompile",
   "common.compileWidget.toast": (update: boolean, reinstall) =>
     `${update ? "Update and " : reinstall ? "Cleanup and " : ""}Recompile triggered`,
-  "common.compileWidget.toastTitle": "Recompile Info",
   "common.compileWidget.updateAndRecompile": "Update project & recompile",
   "common.compileWidget.cleanupAndRecompile": "Cleanup project & recompile",
-  "common.compileWidget.compiling": "Compiling",
   "common.compileWidget.compilationDisabled.hint":
     "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",
   "common.emptyColumnHeader": "Column header for collapsible-expandable action",

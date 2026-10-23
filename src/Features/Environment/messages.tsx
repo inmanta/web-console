@@ -13,9 +13,6 @@ export const environmentMessages = {
    * Dashboard
    */
   "dashboard.title": "Environment Health",
-  "dashboard.API.tooltip": "REST API",
-  "dashboard.graphiql.tooltip": "GraphiQL",
-  "dashboard.setting.tooltip": "Settings",
   "dashboard.environmentHealth.subtitle":
     "Live status across orchestration, resources, compiles and services",
   "dashboard.environmentHealth.switch": "Switch",

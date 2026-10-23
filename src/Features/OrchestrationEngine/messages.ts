@@ -22,29 +22,17 @@ export const orchestrationEngineMessages = {
   "compileReports.columns.requested": "Requested",
   "compileReports.columns.waitTime": "Wait Time",
   "compileReports.columns.compileTime": "Compile Time",
-  "compileReports.columns.inProgress": "In Progress",
   "compileReports.filters.status.placeholder": "Select compile status...",
-  "compileReports.filters.result.placeholder": "Select result...",
-  "compileReports.filters.result.success": "Successful",
-  "compileReports.filters.result.failed": "Failed",
   "compileReports.filters.test.success": "success",
   "compileReports.tests.filters.result.inProgress": "in progress",
 
   /** Compile details related text */
   "compileDetails.title": "Compile Details",
   "compileDetails.status.update": "Update",
-  "compileDetails.status.success": "Success",
   "compileDetails.status.trigger": "Trigger",
   "compileDetails.status.envVars": "Environment Variables",
   "compileDetails.errors.title": "Errors",
   "compileDetails.stages.title": "Stages",
-  "compileDetails.stages.columns.command": "Command",
-  "compileDetails.stages.columns.delay": "Stage start delay",
-  "compileDetails.stages.columns.duration": "Duration",
-  "compileDetails.stages.columns.returnCode": "Return Code",
-  "compileDetails.stages.columns.outstream": "Output Stream",
-  "compileDetails.stages.columns.errstream": "Error Stream",
-  "compileDetails.stages.copy": "Copy full command to clipboard",
 
   /** Desired State */
   "desiredState.title": "Desired State",
@@ -56,8 +44,6 @@ export const orchestrationEngineMessages = {
   "desiredState.actions.promote.failed": "Promoting desired state version failed",
   "desiredState.actions.promote.disabledTooltip": "Promoting this version is not allowed",
   "desiredState.filters.status.placeholder": "Select status...",
-  "desiredState.filters.version.placeholder": "Filter by version",
-  "desiredState.filters.date.placeholder": "Filter by date",
 
   /** Desired State Details */
   "desiredState.resourceDetails.title": "Resource Details",
@@ -71,7 +57,6 @@ export const orchestrationEngineMessages = {
   "desiredState.complianceCheck.failed": "Getting list of dryruns failed",
   "desiredState.complianceCheck.action.dryRun": "Perform dry run",
   "desiredState.complianceCheck.action.dryRun.failed": "Triggering dryrun failed",
-  "desiredState.complianceCheck.noDryRuns": "No dry runs exist",
   "desiredState.complianceCheck.progress": (checked: number, total: number) =>
     `${checked} / ${total}`,
   "desiredState.complianceCheck.report.title": "Report",
