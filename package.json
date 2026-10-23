@@ -162,7 +162,7 @@
     "copy-to-clipboard": "^3.3.3",
     "easy-peasy": "^6.1.1",
     "file-saver": "^2.0.5",
-    "highlight.js": "^11.11.1",
+    "highlight.js": "^11.12.0",
     "keycloak-js": "^25.0.5",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
