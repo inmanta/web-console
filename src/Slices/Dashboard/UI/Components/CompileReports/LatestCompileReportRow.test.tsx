@@ -50,7 +50,7 @@ describe("LatestCompileReportRow", () => {
     });
 
     // The details link is built from the global `location.search`, not the router's own
-    // location (see LatestCompileReportRow.tsx), which jsdom defaults to empty in tests.
+    // location (see LatestCompileReportRow.tsx), which happy-dom defaults to empty in tests.
     expect(link).toHaveAttribute("href", "/compilereports/report-1");
   });
 
@@ -75,7 +75,7 @@ describe("LatestCompileReportRow", () => {
     });
 
     // The details link is built from the global `location.search`, not the router's own
-    // location (see LatestCompileReportRow.tsx), which jsdom defaults to empty in tests.
+    // location (see LatestCompileReportRow.tsx), which happy-dom defaults to empty in tests.
     expect(link).toHaveAttribute("href", "/compilereports/report-1");
   });
 

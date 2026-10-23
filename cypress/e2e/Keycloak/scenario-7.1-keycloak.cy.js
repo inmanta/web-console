@@ -1,6 +1,6 @@
-const keyCloack = Cypress.expose("keycloak");
+const isKeycloak = Cypress.expose("keycloak");
 
-if (keyCloack) {
+if (isKeycloak) {
   it("should be able to login and logout", () => {
     cy.visit("/console/");
 
