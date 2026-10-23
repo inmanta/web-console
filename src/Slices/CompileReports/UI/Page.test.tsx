@@ -3,8 +3,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { http, HttpResponse, delay } from "msw";
+import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
@@ -49,7 +50,10 @@ function setup(serverCompileEnabled: boolean = false) {
 
 describe("CompileReports", () => {
   beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
+  afterEach(() => {
+    vi.useRealTimers();
+    server.resetHandlers();
+  });
   afterAll(() => {
     vi.clearAllMocks();
     server.close();
@@ -140,6 +144,7 @@ describe("CompileReports", () => {
   });
 
   test("CompileReportsView shows updated table", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     let counter = 0;
 
     server.use(
@@ -162,17 +167,13 @@ describe("CompileReports", () => {
 
     render(component);
 
-    expect(
-      await screen.findByRole("region", { name: "CompileReportsView-Loading" })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "CompileReportsView-Loading" })).toBeInTheDocument();
 
     expect(
       await screen.findByRole("generic", { name: "CompileReportsView-Empty" })
     ).toBeInTheDocument();
 
-    await act(async () => {
-      await delay(5000);
-    });
+    await act(() => vi.advanceTimersByTimeAsync(REFETCH_INTERVAL));
 
     expect(
       await screen.findByRole("grid", { name: "CompileReportsView-Success" })

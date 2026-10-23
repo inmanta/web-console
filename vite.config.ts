@@ -349,7 +349,13 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    environment: "jsdom",
+    environment: "happy-dom",
+    environmentOptions: {
+      happyDOM: {
+        // Never fetch scripts or stylesheets that the page links to; tests have no server for them.
+        settings: { disableJavaScriptFileLoading: true, disableCSSFileLoading: true },
+      },
+    },
     setupFiles: ["./test-setup.ts"],
     restoreMocks: true,
     dir: "./src",

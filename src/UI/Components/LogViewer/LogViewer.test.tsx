@@ -93,8 +93,8 @@ describe("LogViewerComponent", () => {
 
   it("handles download functionality", async () => {
     /**
-     * Testing file downloads in JSDOM requires mocking because:
-     * 1. JSDOM doesn't support actual file downloads
+     * Testing file downloads in happy-dom requires mocking because:
+     * 1. happy-dom doesn't support actual file downloads
      * 2. The download process creates a temporary <a> element
      * 3. URL.createObjectURL is used to create a blob URL
      *
