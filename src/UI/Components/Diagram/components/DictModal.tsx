@@ -52,7 +52,6 @@ const ModalContent: React.FC<{ dictToDisplay: DictDialogData }> = ({ dictToDispl
         <CodeBlockAction>
           <ClipboardCopyButton
             id="basic-copy-button"
-            textId="copy-to-clipboard"
             aria-label="Copy to clipboard"
             onClick={() => navigator.clipboard.writeText(JSON.stringify(dictToDisplay.value))}
             exitDelay={copied ? 1500 : 600}

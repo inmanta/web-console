@@ -33,7 +33,7 @@ describe("createStencilElement", () => {
     });
 
     expect(embeddedElementWithModel.attributes.attrs?.body?.fill).toEqual(
-      "var(--pf-t--chart--color--blue--400, #004d99)"
+      "var(--pf-t--chart--color--blue--400, #003366)"
     );
     expect(embeddedElementWithModel.attributes.attrs?.body?.["aria-labelledby"]).toEqual(
       "body_default"
@@ -58,7 +58,7 @@ describe("createStencilElement", () => {
     });
 
     expect(nonEmbedded.attributes.attrs?.body?.fill).toEqual(
-      "var(--pf-t--chart--color--purple--300, #5e40be)"
+      "var(--pf-t--chart--color--purple--300, #3d2785)"
     );
     expect(nonEmbedded.attributes.attrs?.body?.["aria-labelledby"]).toEqual("body_nonEmbedded");
     expect(nonEmbedded.attributes.attrs?.borderTop?.height).toEqual(0);
