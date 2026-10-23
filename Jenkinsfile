@@ -1,5 +1,6 @@
 // Coverage is only recorded for master and iso branches, other branch builds skip it.
-def vitestCoverageArgs = env.BRANCH_NAME ==~ /master|iso[0-9]+/ ? '' : '--coverage.enabled=false'
+def isCoverageBuild = env.BRANCH_NAME ==~ /master|iso[0-9]+/
+def vitestCoverageArgs = isCoverageBuild ? '' : '--coverage.enabled=false'
 
 pipeline {
     agent none
@@ -120,6 +121,9 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                             junit 'web-console/cypress/reports/junit/*.xml'
                             if (fileExists('web-console/coverage/cobertura-coverage.xml')) {
                                 recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'web-console/coverage/cobertura-coverage.xml']], sourceCodeRetention: 'NEVER')
+                            } else if (isCoverageBuild) {
+                                // Marks the build unstable, unless an earlier stage already failed it.
+                                unstable('No unit test coverage report at web-console/coverage/cobertura-coverage.xml')
                             }
                             archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**, web-console/coverage/**, test-results.txt', allowEmptyArchive: true, onlyIfSuccessful: false
                         }

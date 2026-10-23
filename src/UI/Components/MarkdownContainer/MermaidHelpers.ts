@@ -33,7 +33,7 @@ export function downloadAsSvg(block: HTMLElement): void {
  * Renders the first `<svg>` found in `block` onto a 2× off-screen canvas and
  * triggers a browser download of the result as `mermaid-diagram.png`.
  * The 2× scale produces a high-DPI image suitable for HiDPI/Retina displays.
- * Falls back to 800×600 when the SVG reports zero dimensions (e.g. in jsdom).
+ * Falls back to 800×600 when the SVG reports zero dimensions (e.g. in happy-dom).
  * No-ops when no SVG or 2D canvas context is available.
  *
  * @param block - The rendered mermaid `<pre>` element containing the SVG.

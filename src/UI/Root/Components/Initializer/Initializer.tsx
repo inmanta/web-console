@@ -16,9 +16,10 @@ import { DependencyContext } from "@/UI/Dependency";
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isEnvironmentPreviewInitialized, setIsEnvironmentPreviewInitialized] = useState(false);
-  const { environmentHandler, orchestratorProvider } = useContext(DependencyContext);
+  const { environmentHandler, orchestratorProvider, authHelper } = useContext(DependencyContext);
   const serverStatus = useGetServerStatus().useOneTime();
   const EnvironmentPreview = useGetEnvironmentPreview().useContinuous();
+  const logout = authHelper.isDisabled() ? undefined : () => authHelper.logout();
 
   useEffect(() => {
     if (serverStatus.data) {
@@ -55,12 +56,14 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
 
   // Only treat these as fatal if they have never loaded successfully. Once we have
   // last-known-good data, a later background refetch failure shouldn't blank the shell.
+  // The header with its Logout item isn't rendered yet, so the error view offers Logout itself.
   if (serverStatus.isError && !isInitialized) {
     return (
       <ErrorView
         ariaLabel="Initializer-Error"
         message={serverStatus.error.message}
         retry={serverStatus.refetch}
+        logout={logout}
       />
     );
   }
@@ -71,6 +74,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
         ariaLabel="Initializer-Error"
         message={EnvironmentPreview.error.message}
         retry={EnvironmentPreview.refetch}
+        logout={logout}
       />
     );
   }
