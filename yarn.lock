@@ -1525,7 +1525,7 @@ __metadata:
     "@patternfly/react-log-viewer": "npm:^6.2.0"
     "@patternfly/react-styles": "npm:^6.0.0"
     "@patternfly/react-table": "npm:^6.0.0"
-    "@patternfly/react-tokens": "npm:^6.0.0"
+    "@patternfly/react-tokens": "npm:^6.7.0"
     "@react-keycloak/web": "npm:^3.4.0"
     "@remix-run/router": "npm:^1.23.4"
     "@stylistic/eslint-plugin-ts": "npm:^2.6.1"
@@ -2390,17 +2390,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-tokens@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "@patternfly/react-tokens@npm:6.0.0"
-  checksum: 10/70023d0f54e7c5178910dce93827aa5940572e6ecf9d658fe47df4dc9298bf96844f86caa4943fc2aede000470625130321dad21fe872079be8bd432f6063a42
-  languageName: node
-  linkType: hard
-
-"@patternfly/react-tokens@npm:^6.2.2":
-  version: 6.2.2
-  resolution: "@patternfly/react-tokens@npm:6.2.2"
-  checksum: 10/1066728401f6a51e65342881e46ac6b2ead11cf1d59d94b205ccf81defff9c8e5dc770d119deeab7e6f7ff6418787ae887f59039f89f2746df4c4b7ebca06ebb
+"@patternfly/react-tokens@npm:^6.0.0, @patternfly/react-tokens@npm:^6.2.2, @patternfly/react-tokens@npm:^6.7.0":
+  version: 6.7.0
+  resolution: "@patternfly/react-tokens@npm:6.7.0"
+  checksum: 10/ed2e9db8b9b0bf1d4ea833737d2f82286b52e2efc27d7fd7c998601c49a60252f7dde88eb8ac9b3822ba3d708234c7ab6367336481b1792ef1795d8618245f17
   languageName: node
   linkType: hard
 
