@@ -1537,7 +1537,7 @@ __metadata:
     "@patternfly/react-table": "npm:^6.0.0"
     "@patternfly/react-tokens": "npm:^6.0.0"
     "@react-keycloak/web": "npm:^3.4.0"
-    "@remix-run/router": "npm:^1.15.0"
+    "@remix-run/router": "npm:^1.23.4"
     "@stylistic/eslint-plugin-ts": "npm:^2.6.1"
     "@tanstack/react-query": "npm:^5.56.2"
     "@tanstack/react-query-devtools": "npm:^5.56.2"
@@ -2417,10 +2417,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/router@npm:^1.15.0":
-  version: 1.23.0
-  resolution: "@remix-run/router@npm:1.23.0"
-  checksum: 10/0a9f02c26c150d8210b05927c43d2f57ee8b7f812c81abb76df1721c7367ef692e54f4044981e756ce13d0619fb3c6a9b1514524d69aea9b32bfaf565299a8c7
+"@remix-run/router@npm:^1.23.4":
+  version: 1.23.4
+  resolution: "@remix-run/router@npm:1.23.4"
+  checksum: 10/1b7dd04465a542a8110ee398195ac4b9ac1de5521312f9953041874f0295bf64ff224a0ff88ff36a91c88004529667f566b95fdf94b35fc26b17b1f0d61f03d8
   languageName: node
   linkType: hard
 
