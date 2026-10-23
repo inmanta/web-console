@@ -205,7 +205,7 @@
     "simple-git": "^3.5.0",
     "undici": "^5.29.0",
     "word-wrap": "^1.2.4",
-    "ws": "^8.17.1",
+    "ws": "^8.22.0",
     "@babel/runtime": "^7.26.10",
     "webpack-dev-middleware": "^5.3.4",
     "http-proxy-middleware": "^2.0.8"
