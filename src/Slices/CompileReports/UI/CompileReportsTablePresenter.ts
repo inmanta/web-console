@@ -1,33 +1,10 @@
-import { CompileStatus, words } from "@/Core";
+import { words } from "@/Core";
+import { CompileReport, getStatusFromReport } from "@/Core/Domain/CompileReport";
+import { CompileReportRow } from "@/Slices/CompileReports/Core/Types";
 import { createTablePresenter } from "@/UI/Presenters";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { CompileReport, CompileReportRow } from "@S/CompileReports/Core/Domain";
 
 const defaultDatePresenter = new CustomDatePresenter();
-
-/**
- * Derives a compile's status from its timestamps and success flag. Exported so the Dashboard
- * compiles-health tile derives the status exactly the way this table does.
- *
- * @example getStatusFromReport({ started: null, ... }) // CompileStatus.queued
- */
-export const getStatusFromReport = ({
-  completed,
-  success,
-  started,
-}: CompileReport): CompileStatus => {
-  if (!started) {
-    return CompileStatus.queued;
-  }
-  if (!completed) {
-    return CompileStatus.inprogress;
-  }
-  if (success) {
-    return CompileStatus.success;
-  }
-
-  return CompileStatus.failed;
-};
 
 /**
  * Table presenter for the compile reports view. Derives wait and compile times

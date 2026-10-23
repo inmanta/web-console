@@ -12,10 +12,10 @@ import {
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { words } from "@/Core";
+import { Failure } from "@/Core/Domain/Diagnostics";
 import { Link } from "@/UI/Components/Link";
 import { DependencyContext } from "@/UI/Dependency";
 import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
-import { Failure } from "@S/Diagnose/Core/Domain";
 import { Pre } from "./Pre";
 
 interface Props {

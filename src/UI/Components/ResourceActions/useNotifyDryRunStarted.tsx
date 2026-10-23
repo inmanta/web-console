@@ -5,7 +5,7 @@ import { EyeIcon } from "@patternfly/react-icons";
 import { words } from "@/Core";
 import { StartedDryRun } from "@/Data/Queries/Slices/Resource";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 import { useNavigateTo } from "@/UI/Routing";
 import { createReportSearch } from "@/UI/Routing/ReportSearch";
 

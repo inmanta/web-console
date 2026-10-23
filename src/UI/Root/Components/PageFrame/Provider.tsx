@@ -3,7 +3,7 @@ import { Navigate } from "react-router";
 import { EnvironmentRole, words } from "@/Core";
 import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 import { PageFrame } from "./PageFrame";
 
 interface Props {

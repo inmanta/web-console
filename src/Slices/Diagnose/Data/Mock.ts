@@ -1,4 +1,4 @@
-import { Diagnostics } from "@S/Diagnose/Core/Domain";
+import { Diagnostics } from "@/Core/Domain/Diagnostics";
 
 const failure: Diagnostics = {
   failures: [

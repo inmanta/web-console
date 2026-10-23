@@ -1,5 +1,5 @@
 import { words } from "@/Core";
-import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
+import { ServiceOrderItem } from "@/Core/Domain/ServiceOrderModel";
 import { createTablePresenter } from "@/UI/Presenters";
 
 /**

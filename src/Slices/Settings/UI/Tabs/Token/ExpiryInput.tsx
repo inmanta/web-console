@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Flex, FlexItem, FormGroup, FormSelect, FormSelectOption } from "@patternfly/react-core";
 import styled from "styled-components";
 import { words } from "@/Core";
-import { resolveUnitConfig, UnitFormInput } from "@/UI/Components/UnitInput";
+import { resolveUnitConfig } from "@/Core/Domain/Unit";
+import { UnitFormInput } from "@/UI/Components/UnitInput";
 
 const ONE_HOUR_SECONDS = 60 * 60;
 const ONE_DAY_SECONDS = 24 * ONE_HOUR_SECONDS;

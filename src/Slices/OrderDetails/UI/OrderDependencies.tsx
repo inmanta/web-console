@@ -4,7 +4,7 @@ import { InfoAltIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
 import { words } from "@/Core";
-import { ServiceOrderItem, ServiceOrderItemDependencies } from "@/Slices/Orders/Core/Types";
+import { ServiceOrderItem, ServiceOrderItemDependencies } from "@/Core/Domain/ServiceOrderModel";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { CopyMultiOptions } from "@/UI/Components/CopyMultiOptions";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";

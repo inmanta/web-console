@@ -3,9 +3,9 @@ import { Link } from "react-router";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
 import { words } from "@/Core";
+import { CompileReportRow } from "@/Slices/CompileReports/Core/Types";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { DependencyContext } from "@/UI/Dependency";
-import { CompileReportRow } from "@S/CompileReports/Core/Domain";
 import { CompileStatusLabel } from "./Components";
 
 interface Props {

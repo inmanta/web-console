@@ -1,11 +1,11 @@
 import { useContext, useMemo } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { FormSuggestion, words } from "@/Core";
+import { useDebounce } from "@/Data/Common/useDebounce";
 import { useGet, useGraphQLRequest } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { getParametersKey } from "@/Data/Queries/Slices/Parameters";
 import { DependencyContext } from "@/UI/Dependency";
-import { useDebounce } from "@/UI/Utils";
 import {
   FieldScopes,
   collectSuggestionReferences,

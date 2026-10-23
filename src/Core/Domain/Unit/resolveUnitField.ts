@@ -1,6 +1,6 @@
-import type { AttributeModel } from "@/Core";
 import { resolveUnitConfig, UnitConfig } from "./resolveUnitConfig";
 import { UnitBounds } from "./validate";
+import type { AttributeModel } from "../ServiceModel";
 
 const VALID_UNIT_SCALES = new Set(["metric", "iec", "both"]);
 

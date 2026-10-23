@@ -1,6 +1,6 @@
 import { words } from "@/Core";
+import { Fact } from "@/Core/Domain/Fact";
 import { createTablePresenter } from "@/UI/Presenters";
-import { Fact } from "@S/Facts/Core/Domain";
 
 /**
  * Table presenter for the Facts view. Rows are the facts unchanged.

@@ -11,7 +11,7 @@ import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { HoverRowGroup } from "@/UI/Components/RowHoverReveal";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { ConfirmationForm } from "./ConfirmationForm";
 
 export type EnvActions = "delete" | "clear";

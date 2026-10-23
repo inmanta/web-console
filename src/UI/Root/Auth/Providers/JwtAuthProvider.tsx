@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
+import { AuthContext } from "@/Data/Auth/AuthContext";
 import { useGetCurrentUser } from "@/Data/Queries/Slices/Auth";
-import { AuthContext } from "../AuthContext";
 import { getLocalToken, getLocalUsername, setLocalToken } from "./localToken";
 
 /**

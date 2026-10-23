@@ -1,4 +1,4 @@
-import { ServiceOrder } from "../Core/Types";
+import { ServiceOrder } from "@/Core/Domain/ServiceOrderModel";
 
 const orderData: ServiceOrder[] = [
   {

@@ -1,8 +1,8 @@
 import React from "react";
 import { OnSort, Table, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort, words } from "@/Core";
+import { ResourceLog } from "@/Core/Domain/ResourceLog";
 import { useUrlStateWithExpansion } from "@/Data/Common";
-import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
 import { Row } from "./Row";
 import { ToggleActionType } from "./RowOptions";
 

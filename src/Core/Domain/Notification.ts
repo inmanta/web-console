@@ -20,4 +20,7 @@ interface Flags {
   cleared: boolean;
 }
 
+/** Where notifications are listed: the header's notification drawer or the notification center page. */
+export type NotificationOrigin = "drawer" | "center";
+
 export type Body = Pick<Flags, "read"> | Pick<Flags, "cleared"> | Flags;

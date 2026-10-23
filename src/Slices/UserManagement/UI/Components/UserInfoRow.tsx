@@ -6,8 +6,8 @@ import { words } from "@/Core";
 import { useRemoveUser, UserInfo } from "@/Data/Queries/Slices/Auth";
 import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { ChangePasswordForm } from "./ChangePasswordForm";
 import { NestedUserRoleTable } from "./NestedUserRoleTable";
 

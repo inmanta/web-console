@@ -6,10 +6,10 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import { isObjectEmpty } from "@/Core";
+import { ResourceLog } from "@/Core/Domain/ResourceLog";
 import { AttributeClassifier } from "@/Data/Common";
 import { AttributeList } from "@/UI/Components/AttributeList";
 import { CodeText } from "@/UI/Components/CodeText";
-import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
 
 interface Props {
   log: ResourceLog;

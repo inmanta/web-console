@@ -5,7 +5,7 @@ import { useTriggerDryRun } from "@/Data/Queries/Slices/DryRun";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { useNotifyDryRunStarted } from "@/UI/Components/ResourceActions";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 
 interface Props {
   version: ParsedNumber;

@@ -5,8 +5,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { words } from "@/Core";
 import { useQueryControl } from "@/Data/Queries/Helpers";
 import { useHaltEnvironment } from "@/Data/Queries/Slices/Environment";
-import { useAppAlert } from "../../AppAlertProvider";
-import { ModalContext } from "../../ModalProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 /**
  * `HaltButton` is a React functional component that renders a button with a tooltip.

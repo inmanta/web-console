@@ -20,7 +20,7 @@ import {
   getUserKey,
 } from "@/Data/Queries/Slices/Auth";
 import { useGetEnvironments } from "@/Data/Queries/Slices/Environment";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 
 /**
  * A table that displays the roles of a user, for all environments.

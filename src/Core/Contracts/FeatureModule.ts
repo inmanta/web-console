@@ -112,3 +112,12 @@ export interface ExtensionPointRegistry {}
 export type Contributions = {
   [K in keyof ExtensionPointRegistry]: ExtensionPointRegistry[K][];
 };
+
+/**
+ * Returns the routes of the given features, in order.
+ *
+ * @param features - the features to take the routes of
+ * @returns the route factories of every route of these features
+ */
+export const getFeatureRoutes = (features: FeatureModule[]): RouteFactory[] =>
+  features.flatMap((feature) => feature.routes.map(({ route }) => route));

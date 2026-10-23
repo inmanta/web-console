@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
 import { words } from "@/Core";
+import { Filter, SortKey } from "@/Core/Domain/ParameterFilter";
 import { usePaginatedTable } from "@/Data/Common";
 import { useGetParameters } from "@/Data/Queries/Slices/Parameters";
-import { Filter, SortKey } from "@/Slices/Parameters/Core/Types";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
+import { CreateCallbackBody } from "@/Core/Domain/Callback";
 import { usePost } from "@/Data/Queries/Helpers";
-import { CreateCallbackBody } from "@/Slices/ServiceDetails/Core/Callback";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**

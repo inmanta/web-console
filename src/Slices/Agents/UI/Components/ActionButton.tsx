@@ -4,7 +4,7 @@ import { words } from "@/Core";
 import { usePauseAgent } from "@/Data/Queries/Slices/Agents";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 
 interface Props {
   name: string;

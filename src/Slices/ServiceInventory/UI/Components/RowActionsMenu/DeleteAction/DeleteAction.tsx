@@ -7,8 +7,8 @@ import { useDeleteInstance, getInstanceKey } from "@/Data/Queries/Slices/Service
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;

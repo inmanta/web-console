@@ -4,7 +4,7 @@ import { words } from "@/Core";
 import { useUpdateEnvironmentSetting } from "@/Data/Queries/Slices/Environment";
 import { Spinner } from "@/UI/Components/Spinner";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 
 /**
  * A React component that displays a banner when the expert mode is enabled.

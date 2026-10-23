@@ -1,6 +1,7 @@
 import { words } from "@/Core";
+import { ResourceHistory } from "@/Core/Domain/ResourceHistory";
+import { ResourceHistoryRow } from "@/Slices/ResourceDetails/Core/Types";
 import { createTablePresenter } from "@/UI/Presenters";
-import { ResourceHistory, ResourceHistoryRow } from "@S/ResourceDetails/Core/ResourceHistory";
 
 /**
  * Table presenter for the resource history tab. Only the date column is sortable.

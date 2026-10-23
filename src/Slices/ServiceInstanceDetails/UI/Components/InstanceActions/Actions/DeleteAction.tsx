@@ -4,8 +4,8 @@ import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber, words } from "@/Core";
 import { useDeleteInstance } from "@/Data/Queries/Slices/ServiceInstance";
 import { Spinner } from "@/UI/Components/Spinner";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 interface Props {
   isDisabled: boolean;

@@ -8,8 +8,8 @@ import {
   RelationAttribute,
   UnitField,
 } from "@/Core";
+import { resolveUnitField } from "@/Core/Domain/Unit";
 import { AttributeInputConverterImpl } from "@/Data/Common";
-import { resolveUnitField } from "@/UI/Components/UnitInput";
 import { ModifierHandler } from "./ModifierHandler";
 
 /**

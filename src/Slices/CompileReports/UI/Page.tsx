@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
 import { words } from "@/Core";
+import { Filter } from "@/Core/Domain/CompileReportFilter";
 import { usePaginatedTable } from "@/Data/Common";
 import { useGetCompileReports } from "@/Data/Queries/Slices/Compilation";
-import { Filter } from "@/Slices/CompileReports/Core/Types";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";

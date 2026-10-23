@@ -20,7 +20,7 @@ import {
 } from "@/Data/Queries/Slices/Environment";
 import { AppAlert } from "@/UI/Components/AppAlert";
 import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { useNavigateTo } from "@/UI/Routing";
 import { EnvActions } from "./Actions";
 

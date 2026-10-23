@@ -2,7 +2,7 @@ import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort, words } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data/Common";
-import { ResourceHistoryRow } from "@S/ResourceDetails/Core/ResourceHistory";
+import { ResourceHistoryRow } from "@/Slices/ResourceDetails/Core/Types";
 import { ResourceHistoryTableRow } from "./ResourceHistoryTableRow";
 import { ResourceHistoryTablePresenter } from "./TablePresenter";
 

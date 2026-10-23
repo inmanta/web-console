@@ -1,6 +1,7 @@
 import { render, screen, cleanup, waitFor, act, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { AppAlertProvider, useAppAlert } from "./AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { AppAlertProvider } from "./AppAlertProvider";
 
 const MockedAppAlertUser = () => {
   const { notify, notifySuccess, notifyError, notifyInfo } = useAppAlert();

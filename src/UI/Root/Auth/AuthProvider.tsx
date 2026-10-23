@@ -1,10 +1,10 @@
 import React from "react";
+import { KeycloakAuthConfig, LocalConfig, OidcAuthConfig } from "@/Data/Auth/types";
 import { DatabaseAuthProvider } from "./Providers/DatabaseAuthProvider";
 import { JwtAuthProvider } from "./Providers/JwtAuthProvider";
 import { KeycloakAuthProvider } from "./Providers/KeycloakAuthProvider";
 import { NoAuthProvider } from "./Providers/NoAuthProvider";
 import { OidcAuthProvider } from "./Providers/OidcAuthProvider";
-import { KeycloakAuthConfig, LocalConfig, OidcAuthConfig } from "./types";
 
 interface Props {
   config: undefined | KeycloakAuthConfig | OidcAuthConfig | LocalConfig;

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
+import { AuthContext } from "@/Data/Auth/AuthContext";
 import { PrimaryBaseUrlManager } from "@/UI/Routing";
-import { AuthContext } from "../AuthContext";
 import { clearLocalToken, getLocalToken, getLocalUsername, setLocalToken } from "./localToken";
 
 /** Persisted expiry (absolute epoch ms) of the current session token, used to schedule renewal. */

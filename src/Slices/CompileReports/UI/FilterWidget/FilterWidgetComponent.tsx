@@ -1,7 +1,7 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
 import { CompileStatus, words } from "@/Core";
-import { Filter } from "@/Slices/CompileReports/Core/Types";
+import { Filter } from "@/Core/Domain/CompileReportFilter";
 import {
   ActiveFilterGroup,
   ActiveFilters,

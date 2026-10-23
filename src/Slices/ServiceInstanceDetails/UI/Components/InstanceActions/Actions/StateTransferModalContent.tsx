@@ -4,8 +4,8 @@ import { ParsedNumber, words } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Queries/Slices/ServiceInstance";
 import { Spinner } from "@/UI/Components/Spinner";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 export interface StateTransferModalContentProps {
   instance_id: string;

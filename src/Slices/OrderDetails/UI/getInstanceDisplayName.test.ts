@@ -1,4 +1,4 @@
-import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
+import { ServiceOrderItem } from "@/Core/Domain/ServiceOrderModel";
 import { getInstanceDisplayName } from "./getInstanceDisplayName";
 
 const baseRow: ServiceOrderItem = {

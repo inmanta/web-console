@@ -1,14 +1,13 @@
 import React from "react";
 import { RouteObject } from "react-router";
-import { FeatureModule } from "@/Core";
+import { FeatureModule, getFeatureRoutes } from "@/Core";
 import { LoginPage } from "@/Slices/Login";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
-import { RouteOutlet } from "@/UI/Routing/RouteOutlet";
-import { getFeatureRoutes } from "@/appFeatures";
 import { NotFoundPage } from "@S/NotFound/UI";
 import { PageFrame } from "./Components";
 import { DefaultRoute } from "./Components/DefaultRoute";
 import { PrimaryPageManager } from "./PrimaryPageManager";
+import { RouteOutlet } from "./RouteOutlet";
 
 /**
  * Builds the route objects of the app, to be rendered inside the `Root` layout.

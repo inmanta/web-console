@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { words } from "@/Core";
-import { DesiredStateVersion } from "@S/DesiredState/Core/Domain";
+import { DesiredStateVersion } from "@/Core/Domain/DesiredStateVersion";
 import { DesiredStatesTableRow } from "./DesiredStatesTableRow";
 
 interface Props {

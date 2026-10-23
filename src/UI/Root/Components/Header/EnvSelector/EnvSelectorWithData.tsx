@@ -4,7 +4,7 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { Environment, FlatEnvironment, ProjectModel, words } from "@/Core";
 import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 import { Spinner } from "@/UI/Components/Spinner";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 import { EnvironmentSelectorItem, EnvSelectorWrapper } from "./EnvSelectorWrapper";
 
 interface Props {

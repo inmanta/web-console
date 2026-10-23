@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { DesiredStateVersion } from "@/Core/Domain/DesiredStateVersion";
 import { useGet } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
-import { DesiredStateVersion } from "@/Slices/DesiredState/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**

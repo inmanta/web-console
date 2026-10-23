@@ -1,4 +1,4 @@
-import { AgentStatus } from "./Domain";
+import { AgentStatus } from "@/Core/Domain/Agent";
 
 export interface Filter {
   name?: string[];

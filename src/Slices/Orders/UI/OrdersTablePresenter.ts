@@ -1,6 +1,6 @@
 import { words } from "@/Core";
+import { ServiceOrder } from "@/Core/Domain/ServiceOrderModel";
 import { createTablePresenter } from "@/UI/Presenters";
-import { ServiceOrder } from "../Core/Types";
 
 /**
  * Table presenter for the orders view. Rows are the orders unchanged.

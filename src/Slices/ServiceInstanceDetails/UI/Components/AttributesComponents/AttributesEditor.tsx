@@ -19,8 +19,8 @@ import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { JSONEditor } from "@/UI/Components/JSONEditor";
 import { Spinner } from "@/UI/Components/Spinner";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 interface Props {
   dropdownOptions: string[];
   attributeSets: Partial<Record<AttributeSets, InstanceAttributeModel>>;
