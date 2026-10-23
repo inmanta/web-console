@@ -1595,7 +1595,7 @@ __metadata:
     jest-environment-jsdom: "npm:^29.7.0"
     jest-fetch-mock: "npm:^3.0.3"
     jest-junit: "npm:^16.0.0"
-    keycloak-js: "npm:^25.0.5"
+    keycloak-js: "npm:^25.0.6"
     lint-staged: "npm:^15.2.10"
     lodash: "npm:^4.17.21"
     lodash-es: "npm:^4.17.21"
@@ -11512,13 +11512,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"keycloak-js@npm:^25.0.5":
-  version: 25.0.5
-  resolution: "keycloak-js@npm:25.0.5"
+"keycloak-js@npm:^25.0.6":
+  version: 25.0.6
+  resolution: "keycloak-js@npm:25.0.6"
   dependencies:
     js-sha256: "npm:^0.11.0"
     jwt-decode: "npm:^4.0.0"
-  checksum: 10/9472a191dd6ed18b8504e507bdee0cfe5bad5407a4f09588aca0063d726124f7b64e3e4b8b7b96f6de86a1aa212ed633cd9eadd5d7b1e945f6fb3e669dc1722a
+  checksum: 10/6c1eab9006305c4b2d5c303350241360db7b5e91f59d74748399cd3128197c99f27243f02265a061e9d5371d0945ef96514d566e51199d0e7801a468ad4de878
   languageName: node
   linkType: hard
 
