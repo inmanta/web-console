@@ -9,7 +9,7 @@ import {
   StackItem,
   Title,
 } from "@patternfly/react-core";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 
 interface ActiveFiltersProps {
   hasActiveFilters: boolean;

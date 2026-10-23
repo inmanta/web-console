@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import { words } from "@/Core";
 import {
   useGetDesiredStateVersion,
   useGetDesiredStateVersions,
 } from "@/Data/Queries/Slices/DesiredState";
 import { DesiredStateStatusLabel } from "@/UI/Components/DesiredStateStatusLabel";
-import { words } from "@/UI/words";
 import { DesiredStateVersion, DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import { VersionSelectNotice, VersionSelectOption, VersionSelect } from "./VersionSelect";
 import { useVersionSearch } from "./useVersionSearch";

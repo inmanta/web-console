@@ -1,12 +1,11 @@
 import React, { useCallback, useContext, useState } from "react";
 import { Content, Button, Flex, FlexItem, Form, FormGroup, TextArea } from "@patternfly/react-core";
-import { ParsedNumber } from "@/Core";
+import { ParsedNumber, words } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Queries/Slices/ServiceInstance";
 import { Spinner } from "@/UI/Components/Spinner";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
 
 export interface StateTransferModalContentProps {
   instance_id: string;

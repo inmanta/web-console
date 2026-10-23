@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { PageSize } from "@/Core/Domain";
 import { useGetAgents } from "@/Data/Queries/Slices/Agents";
 import { useGetEnvironments } from "@/Data/Queries/Slices/Environment";
@@ -12,7 +13,6 @@ import { AgentStatus } from "@/Slices/Agents/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { EnvironmentIcon } from "@/UI/Root/Components/Header/EnvSelector/EnvSelector";
 import { EnvSelectorOpenContext } from "@/UI/Root/Components/Header/EnvSelector/EnvSelectorOpenContext";
-import { words } from "@/UI/words";
 import { HealthCardGrid } from "./Components/EnvironmentHealth/HealthCardGrid";
 import { HealthColumn } from "./Components/EnvironmentHealth/HealthColumn";
 import { OrchestratorCard } from "./Components/EnvironmentHealth/OrchestratorCard";

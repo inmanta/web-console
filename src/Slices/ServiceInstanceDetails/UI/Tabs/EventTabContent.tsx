@@ -10,7 +10,7 @@ import {
   TabContent,
 } from "@patternfly/react-core";
 import { ExpandableRowContent, Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { InstanceEvent } from "@/Core";
+import { InstanceEvent, words } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { DateWithTimeDiffTooltip } from "@/UI/Components/DateWithTimeDiffTooltip";
 import { ErrorView } from "@/UI/Components/ErrorView";
@@ -18,7 +18,6 @@ import { EventIcon } from "@/UI/Components/EventIcon";
 import { Link } from "@/UI/Components/Link";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { CompileReportLink } from "../Components/CompileReportLink";
 import { TabContentWrapper } from "./TabContentWrapper";

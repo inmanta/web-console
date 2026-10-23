@@ -1,7 +1,7 @@
 import React from "react";
+import { words } from "@/Core";
 import { NotificationFilter } from "@/Data/Queries/Slices/Notification";
 import { FreeTextFilter } from "@/UI/Components/Filters";
-import { words } from "@/UI/words";
 
 /**
  * Props for the TitleFilter component.

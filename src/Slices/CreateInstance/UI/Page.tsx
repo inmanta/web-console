@@ -1,10 +1,10 @@
 import React from "react";
+import { words } from "@/Core";
 import { useGetServiceModel } from "@/Data/Queries/Slices/Service";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { PageContainer } from "@/UI/Components/PageContainer";
 import { useRouteParams } from "@/UI/Routing";
-import { words } from "@/UI/words";
 import { CreateInstance } from "./CreateInstance";
 
 export const Page: React.FC = () => {

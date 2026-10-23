@@ -1,5 +1,5 @@
+import { words } from "@/Core";
 import { ServiceModel } from "@/Core/Domain/ServiceModel";
-import { words } from "@/UI/words";
 import { HealthStatus } from "./Components/EnvironmentHealth/StatusIndicator";
 
 export interface ServicesHealth {

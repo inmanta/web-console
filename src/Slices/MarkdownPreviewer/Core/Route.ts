@@ -1,5 +1,4 @@
-import { Route } from "@/Core";
-import { words } from "@/UI/words";
+import { Route, words } from "@/Core";
 
 declare module "@/Core/Domain/Route" {
   interface RouteRegistry {

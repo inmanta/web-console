@@ -7,8 +7,7 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import { CompileError } from "@/Core";
-import { words } from "@/UI/words";
+import { CompileError, words } from "@/Core";
 
 interface Props {
   errors: CompileError[];

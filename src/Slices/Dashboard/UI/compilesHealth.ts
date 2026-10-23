@@ -1,7 +1,7 @@
+import { words } from "@/Core";
 import { CompileStatus } from "@/Core/Domain/CompileStatus";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
 import { getStatusFromReport } from "@/Slices/CompileReports/UI/CompileReportsTablePresenter";
-import { words } from "@/UI/words";
 import { HealthStatus } from "./Components/EnvironmentHealth/StatusIndicator";
 
 export interface CompilesHealth {

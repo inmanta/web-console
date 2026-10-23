@@ -9,7 +9,7 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
-import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
+import { InstanceAttributeModel, ServiceInstanceModel, words } from "@/Core";
 import {
   ExpertPatchAttributes,
   usePatchAttributesExpert,
@@ -21,7 +21,6 @@ import { Spinner } from "@/UI/Components/Spinner";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
 interface Props {
   dropdownOptions: string[];
   attributeSets: Partial<Record<AttributeSets, InstanceAttributeModel>>;

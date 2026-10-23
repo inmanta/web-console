@@ -1,5 +1,5 @@
+import { words } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI/Routing";
-import { words } from "@/UI/words";
 import { createCustomError, parseJsonResponse, useFetchHelpers } from "./useFetchHelpers";
 
 /**

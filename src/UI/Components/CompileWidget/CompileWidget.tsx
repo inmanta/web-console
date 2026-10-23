@@ -8,7 +8,7 @@ import {
   MenuToggleElement,
   DropdownItem,
 } from "@patternfly/react-core";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 
 interface Props {
   onRecompile(): void;

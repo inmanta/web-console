@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
-import { Environment, ProjectModel } from "@/Core";
+import { Environment, ProjectModel, words } from "@/Core";
 import {
   useCreateEnvironment,
   getEnvironmentsKey,
@@ -13,7 +13,6 @@ import { AppAlert } from "@/UI/Components/AppAlert";
 import { CreatableSelectInput } from "@/UI/Components/InlineEditable";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
-import { words } from "@/UI/words";
 import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentParams";
 import { ImageField } from "./ImageField";
 import { TextAreaField } from "./TextAreaField";

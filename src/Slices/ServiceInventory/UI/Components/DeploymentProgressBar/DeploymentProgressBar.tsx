@@ -4,9 +4,8 @@ import {
   t_global_color_status_danger_default,
   chart_color_blue_300,
 } from "@patternfly/react-tokens";
-import { DeploymentProgress } from "@/Core";
+import { DeploymentProgress, words } from "@/Core";
 import { LegendBar, LegendItemDetails } from "@/UI/Components/LegendBar";
-import { words } from "@/UI/words";
 
 type Progress = Omit<DeploymentProgress, "total"> | undefined | null;
 

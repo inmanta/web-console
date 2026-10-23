@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 import { AttributeValidationError, isAtOrBelow } from "../Helpers";
 
 /** The validation errors of the last submit whose attributes the user has not edited since. */

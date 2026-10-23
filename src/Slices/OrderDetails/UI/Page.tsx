@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { words } from "@/Core";
 import { useGetOrderDetails } from "@/Data/Queries/Slices/Order";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { ErrorView } from "@/UI/Components/ErrorView";
@@ -6,7 +7,6 @@ import { LoadingView } from "@/UI/Components/LoadingView";
 import { PageContainer } from "@/UI/Components/PageContainer";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
-import { words } from "@/UI/words";
 import { OrderDetailsHeading } from "./OrderDetailsHeading";
 import { OrderDetailsTable } from "./OrderDetailsTable";
 import { createOrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";

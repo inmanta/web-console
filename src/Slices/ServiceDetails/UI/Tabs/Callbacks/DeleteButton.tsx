@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { useDeleteCallback } from "@/Data/Queries/Slices/Callback";
 import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
 import { Callback } from "@S/ServiceDetails/Core/Callback";
 
 interface Props {

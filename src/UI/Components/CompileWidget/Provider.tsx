@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { words } from "@/Core";
 import { useTriggerCompile } from "@/Data/Queries/Slices/Compilation";
 import { GetEnvironmentPreviewKey } from "@/Data/Queries/Slices/Environment";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { words } from "@/UI/words";
 import { CompileWidget } from "./CompileWidget";
 
 interface Props {

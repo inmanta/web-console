@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { useGetServiceModels } from "@/Data/Queries/Slices/Service";
 import {
   useGetInstanceWithRelations,
@@ -8,7 +9,6 @@ import {
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { PageContainer } from "@/UI/Components/PageContainer";
-import { words } from "@/UI/words";
 import { Composer } from "../Composer";
 import { findInterServiceRelations } from "../Data/Helpers";
 import {

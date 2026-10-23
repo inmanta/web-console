@@ -1,9 +1,8 @@
 import { useContext, useState } from "react";
 import { Divider, Form, Stack, StackItem, Tab, TabTitleText, Tabs } from "@patternfly/react-core";
-import { Resource } from "@/Core";
+import { Resource, words } from "@/Core";
 import { FilterDrawerPanelContent, getFilterActions } from "@/UI/Components/FilterDrawer";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { ActiveFiltersSection } from "./ActiveFiltersSection";
 import { ResourceFilterForm } from "./ResourceFilterForm";
 import { ServiceFilterForm } from "./ServiceFilterForm";

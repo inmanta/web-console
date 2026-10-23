@@ -11,7 +11,7 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
-import { ServiceModel } from "@/Core";
+import { ServiceModel, words } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { useUrlStateWithString } from "@/Data/Common";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
@@ -20,7 +20,6 @@ import { InstanceStateLabel } from "@/UI/Components/InstanceState";
 import { Link } from "@/UI/Components/Link";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { InstanceDetailsContext } from "../../../Core/Context";
 
 /**

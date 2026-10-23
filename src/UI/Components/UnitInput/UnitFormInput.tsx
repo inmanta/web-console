@@ -11,8 +11,8 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import styled from "styled-components";
+import { WordKey, words } from "@/Core";
 import { preventNumberInputScroll } from "@/UI/Utils";
-import { words } from "@/UI/words";
 import { toSubmittableNumber } from "./convert";
 import { otherScaleCandidates, selectDisplayUnit } from "./display";
 import { familyOf } from "./units";
@@ -59,24 +59,31 @@ function initialState(
 
 // Fixed rather than `width: auto` so the control doesn't resize as the user switches between a
 // short code ("B") and the catalogue's longest ones ("Kibit/s", "Gibit/s", "Tibit/s" — 7 chars).
-// Duration units are spelled out in full (see DURATION_UNIT_LABELS) and need more room to match.
+// Duration units are spelled out in full (see DURATION_UNIT_LABEL_KEY) and need more room to match.
 const UnitSelect = styled(FormSelect)<{ $isDuration?: boolean }>`
   width: ${(props) => (props.$isDuration ? "9rem" : "6.5rem")};
 `;
 
 // Duration codes read better spelled out than as the catalogue's terse ("min", "h", "d") codes.
-const DURATION_UNIT_LABELS: Record<string, string> = {
-  ns: words("unitInput.durationUnit.ns"),
-  us: words("unitInput.durationUnit.us"),
-  ms: words("unitInput.durationUnit.ms"),
-  s: words("unitInput.durationUnit.s"),
-  min: words("unitInput.durationUnit.min"),
-  h: words("unitInput.durationUnit.h"),
-  d: words("unitInput.durationUnit.d"),
-};
+const DURATION_UNIT_LABEL_KEY = {
+  ns: "unitInput.durationUnit.ns",
+  us: "unitInput.durationUnit.us",
+  ms: "unitInput.durationUnit.ms",
+  s: "unitInput.durationUnit.s",
+  min: "unitInput.durationUnit.min",
+  h: "unitInput.durationUnit.h",
+  d: "unitInput.durationUnit.d",
+} satisfies Record<string, WordKey>;
+
+const isDurationUnitCode = (code: string): code is keyof typeof DURATION_UNIT_LABEL_KEY =>
+  Object.hasOwn(DURATION_UNIT_LABEL_KEY, code);
 
 function unitLabel(kind: UnitConfig["kind"], code: string): string {
-  return kind === "duration" ? (DURATION_UNIT_LABELS[code] ?? code) : code;
+  if (kind !== "duration" || !isDurationUnitCode(code)) {
+    return code;
+  }
+
+  return words(DURATION_UNIT_LABEL_KEY[code]);
 }
 
 function errorMessage(error: UnitValidationError, kind: UnitConfig["kind"]): string {

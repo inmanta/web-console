@@ -8,9 +8,8 @@ import {
   Tabs,
   Tooltip,
 } from "@patternfly/react-core";
-import { ServiceModel } from "@/Core";
+import { ServiceModel, words } from "@/Core";
 import { useUrlStateWithString } from "@/Data/Common";
-import { words } from "@/UI/words";
 
 import { InstanceDetailsContext } from "../../Core/Context";
 import { AttributesTabContent } from "./AttributesTabContent";

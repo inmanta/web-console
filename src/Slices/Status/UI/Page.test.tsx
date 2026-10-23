@@ -6,10 +6,10 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { PrimaryArchiveHelper } from "@/Data/Common/PrimaryArchiveHelper";
 import { MockedDependencyProvider, MockOrchestratorProvider, ServerStatus } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI/words";
 import { StatusPage } from ".";
 
 function setup() {

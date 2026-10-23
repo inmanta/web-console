@@ -5,9 +5,9 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { Details } from "@/Core/Domain/Resource/Resource";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
 
 interface Props {
   details: Details;

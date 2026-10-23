@@ -30,10 +30,10 @@ import {
   UserCircleIcon,
   UsersIcon,
 } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { DarkmodeOption } from "@/UI/Components/DarkmodeOption";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider/ModalProvider";
-import { words } from "@/UI/words";
 import fallBackImage from "@images/inmanta-wings.svg";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 import { ManageProjectsModal } from "./ManageProjectsModal";

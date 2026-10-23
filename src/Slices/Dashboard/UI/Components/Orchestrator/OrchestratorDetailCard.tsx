@@ -14,11 +14,10 @@ import {
   Label,
 } from "@patternfly/react-core";
 import { CheckIcon, ExclamationCircleIcon, ExclamationTriangleIcon } from "@patternfly/react-icons";
-import { ServerStatus, StatusLicense } from "@/Core";
+import { ServerStatus, StatusLicense, WordKey, words } from "@/Core";
 import { useGetServerStatus } from "@/Data/Queries/Slices/Server";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
 import { deriveOrchestratorHealth } from "../../orchestratorHealth";
 import { IconBadge } from "../IconBadge";
 
@@ -74,11 +73,11 @@ const SEVERITY_LABEL_COLOR: Record<Severity, "green" | "orange" | "red"> = {
   danger: "red",
 };
 
-const SEVERITY_LABEL_TEXT: Record<Severity, string> = {
-  success: words("dashboard.environmentHealth.operational"),
-  warning: words("dashboard.environmentHealth.status.attention"),
-  danger: words("dashboard.environmentHealth.status.danger"),
-};
+const SEVERITY_LABEL_KEY = {
+  success: "dashboard.environmentHealth.operational",
+  warning: "dashboard.environmentHealth.status.attention",
+  danger: "dashboard.environmentHealth.status.danger",
+} satisfies Record<Severity, WordKey>;
 
 /**
  * Card-level severity: "danger" if any of the server/database/scheduler checks (the same
@@ -142,7 +141,7 @@ export const OrchestratorDetailCard: React.FC = () => {
           hasNoOffset: true,
           actions: (
             <Label color={SEVERITY_LABEL_COLOR[severity]} isCompact>
-              {SEVERITY_LABEL_TEXT[severity]}
+              {words(SEVERITY_LABEL_KEY[severity])}
             </Label>
           ),
         }}

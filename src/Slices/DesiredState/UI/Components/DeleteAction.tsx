@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { DropdownItem } from "@patternfly/react-core";
-import { ParsedNumber } from "@/Core";
-import { words } from "@/UI/words";
+import { ParsedNumber, words } from "@/Core";
 import { GetDesiredStatesContext } from "../GetDesiredStatesContext";
 
 interface Props {

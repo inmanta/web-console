@@ -16,6 +16,7 @@ import {
   TextField,
   Textarea,
   UnitField,
+  words,
 } from "@/Core";
 import { CustomError } from "@/Data/Queries/Helpers";
 import { SUGGESTION_NAMESPACES } from "@/Data/Queries/Slices/ServiceInstance";
@@ -23,7 +24,6 @@ import * as Test from "@/Test";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { words } from "@/UI/words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 import type { Mock } from "vitest";
 

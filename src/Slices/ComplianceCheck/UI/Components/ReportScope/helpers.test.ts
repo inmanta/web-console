@@ -1,6 +1,5 @@
-import { Diff, ResourceActionFilter } from "@/Core";
+import { Diff, ResourceActionFilter, words } from "@/Core";
 import { ServiceInstance } from "@/Test";
-import { words } from "@/UI/words";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import {

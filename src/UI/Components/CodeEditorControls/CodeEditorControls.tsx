@@ -2,7 +2,7 @@ import React from "react";
 import { CodeEditorControl } from "@patternfly/react-code-editor";
 import { CopyIcon, OutlinedCopyIcon, ExpandIcon, CompressIcon } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 
 interface CopyControlProps {
   value: string;

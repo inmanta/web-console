@@ -1,6 +1,5 @@
 import { Content, Flex, FlexItem, Popover } from "@patternfly/react-core";
-import { Resource } from "@/Core";
-import { words } from "@/UI/words";
+import { Resource, words } from "@/Core";
 import { LegendBar } from "../LegendBar";
 import { colorConfig, statusGroupIcons, statusMapping, statusPriority } from "./config";
 

@@ -6,11 +6,11 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { DefaultBodyType, HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { UserInfo } from "@/Data/Queries/Slices/Auth";
 import { MockedDependencyProvider } from "@/Test";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { words } from "@/UI/words";
 import { UserManagementPage } from "./Page";
 
 const setup = () => {

@@ -2,6 +2,7 @@ import React, { useCallback, useContext } from "react";
 import "@rappidcss";
 import { useLocation, useNavigate } from "react-router";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { usePostOrder } from "@/Data/Queries/Slices/Order";
 import {
   usePostMetadata,
@@ -10,7 +11,6 @@ import {
 import { ServiceOrder } from "@/Slices/Orders/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { words } from "@/UI/words";
 import { ComposerContext } from "../Data/Context";
 import { getServiceOrderItemsArray, SavedCoordinates } from "../Data/Helpers";
 

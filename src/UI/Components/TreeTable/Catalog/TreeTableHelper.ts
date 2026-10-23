@@ -1,9 +1,9 @@
+import { words } from "@/Core";
 import { AttributeHelper } from "@/UI/Components/TreeTable/Helpers/AttributeHelper";
 import { PathHelper } from "@/UI/Components/TreeTable/Helpers/PathHelper";
 import { TreeExpansionManager } from "@/UI/Components/TreeTable/Helpers/TreeExpansionManager";
 import { extractCatalogValues } from "@/UI/Components/TreeTable/TreeRow/TreeRowCreator";
 import { CatalogAttributeTree } from "@/UI/Components/TreeTable/types";
-import { words } from "@/UI/words";
 import { BaseTreeTableHelper } from "../Helpers/BaseTreeTableHelper";
 
 export class CatalogTreeTableHelper extends BaseTreeTableHelper<CatalogAttributeTree> {

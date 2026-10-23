@@ -1,6 +1,5 @@
-import { DictListField, Field, FormSuggestion, TextField } from "@/Core";
+import { DictListField, Field, FormSuggestion, TextField, words } from "@/Core";
 import * as Test from "@/Test";
-import { words } from "@/UI/words";
 import { resolveFieldDependencies } from "./FieldDependencies";
 
 const textField = (name: string, suggestion: FormSuggestion | null = null): TextField => ({

@@ -1,7 +1,6 @@
 import React from "react";
-import { Uuid } from "@/Core";
+import { Uuid, words } from "@/Core";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
-import { words } from "@/UI/words";
 
 interface Props {
   uuid: Uuid;

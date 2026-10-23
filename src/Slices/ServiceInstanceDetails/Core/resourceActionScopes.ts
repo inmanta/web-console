@@ -1,6 +1,6 @@
+import { words } from "@/Core";
 import { NonEmptyArray, ParsedNumber } from "@/Core/Language";
 import { ResourceActionScope } from "@/UI/Components/ResourceActions";
-import { words } from "@/UI/words";
 
 /**
  * Builds the deploy, repair and dry-run scopes offered for a service instance: always the instance itself, and an

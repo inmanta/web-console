@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { ServiceModel, ServiceInstanceParams } from "@/Core";
+import { ServiceModel, ServiceInstanceParams, words } from "@/Core";
 import { usePaginatedTable } from "@/Data/Common";
 import { useGetInstances } from "@/Data/Queries/Slices/ServiceInstance";
 import { EmptyView } from "@/UI/Components/EmptyView";
@@ -9,7 +9,6 @@ import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
 import { InstanceCounts, SummaryLabel } from "@/UI/Components/InstanceSummaryLabels";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { PaginationWidget } from "@/UI/Components/PaginationWidget";
-import { words } from "@/UI/words";
 import { ConnectedFilterWidget, TableControls } from "./Components";
 import { TableProvider } from "./TableProvider";
 import { Wrapper } from "./Wrapper";

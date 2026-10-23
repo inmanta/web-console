@@ -1,11 +1,6 @@
-import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
+import { createTablePresenter } from "@/UI/Presenters";
 import { ResourceHistory, ResourceHistoryRow } from "@S/ResourceDetails/Core/ResourceHistory";
-
-const columnHeads: ColumnHead[] = [
-  { displayName: words("date"), apiName: "date" },
-  { displayName: words("requires"), apiName: "requires" },
-];
 
 /**
  * Table presenter for the resource history tab. Only the date column is sortable.
@@ -14,7 +9,10 @@ const columnHeads: ColumnHead[] = [
  */
 export const createResourceHistoryTablePresenter = () =>
   createTablePresenter<ResourceHistory, ResourceHistoryRow>({
-    columnHeads,
+    columnHeads: [
+      { displayName: words("date"), apiName: "date" },
+      { displayName: words("requires"), apiName: "requires" },
+    ],
     sortableColumns: ["date"],
     extraColumns: 1,
     createRows: (history) =>

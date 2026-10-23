@@ -1,4 +1,4 @@
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 import { HealthStatus } from "./Components/EnvironmentHealth/StatusIndicator";
 
 export interface AgentsHealth {

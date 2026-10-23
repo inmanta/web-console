@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AlertVariant, FlexItem, Form } from "@patternfly/react-core";
 import { v4 as uuidv4 } from "uuid";
-import { Field, InstanceAttributeModel } from "@/Core";
+import { Field, InstanceAttributeModel, words } from "@/Core";
 import { set } from "@/Core/Language/collection";
 import { sanitizeAttributes } from "@/Data/Common";
 import { SuggestionVariables } from "@/Data/Queries/Slices/ServiceInstance";
@@ -11,7 +11,6 @@ import {
   FieldCreator,
 } from "@/UI/Components/ServiceInstanceForm";
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
-import { words } from "@/UI/words";
 import { AppAlert } from "../../AppAlert";
 import { ComposerContext } from "../Data/Context";
 import { ServiceEntityShape } from "./JointJsShapes/ServiceEntityShape";

@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
 import { EyeIcon } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { useTriggerDryRun } from "@/Data/Queries/Slices/DryRun";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { words } from "@/UI/words";
 
 interface Props {
   version: string;

@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { InstanceAttributeModel, ServiceModel } from "@/Core";
+import { InstanceAttributeModel, ServiceModel, words } from "@/Core";
 import { usePostInstance } from "@/Data/Queries/Slices/ServiceInstance";
 import { Description } from "@/UI/Components/Description";
 import {
@@ -11,7 +11,6 @@ import {
 } from "@/UI/Components/ServiceInstanceForm";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { words } from "@/UI/words";
 
 interface Props {
   serviceEntity: ServiceModel;

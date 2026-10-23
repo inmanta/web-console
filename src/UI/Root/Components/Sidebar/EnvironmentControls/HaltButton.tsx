@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
 import { StopIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
+import { words } from "@/Core";
 import { useQueryControl } from "@/Data/Queries/Helpers";
 import { useHaltEnvironment } from "@/Data/Queries/Slices/Environment";
-import { words } from "@/UI/words";
 import { useAppAlert } from "../../AppAlertProvider";
 import { ModalContext } from "../../ModalProvider";
 

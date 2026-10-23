@@ -1,8 +1,8 @@
 import React from "react";
 import { Switch, Tooltip } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { usePauseAgent } from "@/Data/Queries/Slices/Agents";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { words } from "@/UI/words";
 
 interface Props {
   name: string;

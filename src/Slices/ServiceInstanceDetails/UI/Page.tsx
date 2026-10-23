@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { words } from "@/Core";
 import { useUrlStateWithString } from "@/Data/Common";
 import { useGetServiceModel } from "@/Data/Queries/Slices/Service";
 import { useGetInstance, useGetInstanceLogs } from "@/Data/Queries/Slices/ServiceInstance";
@@ -6,7 +7,6 @@ import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { PageContainer } from "@/UI/Components/PageContainer";
 import { useRouteParams } from "@/UI/Routing";
-import { words } from "@/UI/words";
 import { InstanceDetailsContext } from "../Core/Context";
 import { InstanceHeaderActions, VersionedPageTitle } from "./Components/Sections";
 import { ServiceInstanceDetailsLayout } from "./ServiceInstanceDetailsLayout";

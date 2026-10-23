@@ -1,11 +1,11 @@
 import { t_global_font_family_mono } from "@patternfly/react-tokens";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
+import { words } from "@/Core";
 import { attributes, classified } from "@/Data/Common/AttributeClassifier/Mock";
 import { MockedDependencyProvider } from "@/Test";
 import { definePatternFlyToken } from "@/Test/Utils/definePatternFlyToken";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI/words";
 import { AttributeList } from "./AttributeList";
 
 test("Given the AttributeList component When rendered with the monospace variant Then the font-family is correct", async () => {

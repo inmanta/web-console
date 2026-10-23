@@ -1,5 +1,6 @@
 import { FeatureModule } from "@/Core";
 import * as GraphiQL from "@S/GraphiQL/Core/Route";
+import { graphiqlMessages } from "./messages";
 
 /**
  * The GraphiQL editor for the orchestrator's GraphQL API. Its page pulls in graphiql, which is
@@ -8,6 +9,7 @@ import * as GraphiQL from "@S/GraphiQL/Core/Route";
 export const graphiqlFeature: FeatureModule = {
   id: "graphiql",
   version: APP_VERSION,
+  messages: graphiqlMessages,
   preload: false,
   routes: [
     {

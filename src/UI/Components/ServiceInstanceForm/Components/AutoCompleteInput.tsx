@@ -1,6 +1,6 @@
 import React from "react";
 import { FormGroup, FormHelperText, HelperText, HelperTextItem } from "@patternfly/react-core";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 import { MultiTextSelect } from "../../MultiTextSelect";
 import { SingleTextSelect } from "../../SingleTextSelect";
 

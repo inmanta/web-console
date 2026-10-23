@@ -1,8 +1,8 @@
 import React from "react";
 import { EmptyState, Title } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { Spinner } from "@/UI/Components/Spinner";
 import { Delayed } from "@/UI/Utils";
-import { words } from "@/UI/words";
 
 interface Props {
   instant?: boolean;

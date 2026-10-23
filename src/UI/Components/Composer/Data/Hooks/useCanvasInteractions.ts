@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
 import { dia, ui } from "@joint/plus";
-import { InstanceAttributeModel } from "@/Core";
+import { InstanceAttributeModel, words } from "@/Core";
 import { ServiceModel } from "@/Core";
-import { words } from "@/UI/words";
 import { ServiceEntityShape } from "../../UI";
 import { createHalo, revealDirectChildren } from "../../UI/JointJsShapes/createHalo";
 import { RelationsDictionary } from "../Helpers";

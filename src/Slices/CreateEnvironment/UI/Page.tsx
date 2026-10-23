@@ -1,9 +1,9 @@
 import React from "react";
+import { words } from "@/Core";
 import { useGetProjects } from "@/Data/Queries/Slices/Project";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { PageContainer } from "@/UI/Components/PageContainer";
-import { words } from "@/UI/words";
 import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
 
 /**

@@ -1,5 +1,5 @@
+import { words } from "@/Core";
 import { ServerStatus as ServerStatusType } from "@/Core/Domain/ServerStatus";
-import { words } from "@/UI/words";
 import { deriveOrchestratorHealth } from "./orchestratorHealth";
 
 function makeServerStatus(

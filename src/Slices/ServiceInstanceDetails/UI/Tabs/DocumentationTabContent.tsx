@@ -8,7 +8,7 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
+import { InstanceAttributeModel, ServiceInstanceModel, words } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { getAvailableStateTargets, StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
@@ -19,7 +19,6 @@ import { SetStateButtonDefaults } from "@/UI/Components/MarkdownContainer";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider/ModalProvider";
 import { useNavigateTo } from "@/UI/Routing";
-import { words } from "@/UI/words";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { StateTransferModalContent } from "../Components/InstanceActions/Actions/StateTransferModalContent";
 import { TabContentWrapper } from "./TabContentWrapper";

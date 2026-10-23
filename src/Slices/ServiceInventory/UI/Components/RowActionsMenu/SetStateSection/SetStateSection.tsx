@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button, MenuItem, Content } from "@patternfly/react-core";
 import styled, { css } from "styled-components";
-import { VersionedServiceInstanceIdentifier } from "@/Core";
+import { VersionedServiceInstanceIdentifier, words } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Queries/Slices/ServiceInstance";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
@@ -10,7 +10,6 @@ import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { iconColorFor } from "@/UI/Utils";
-import { words } from "@/UI/words";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   targets: StateTarget[] | null;

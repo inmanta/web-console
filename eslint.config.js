@@ -155,6 +155,23 @@ export default [
     },
   },
   {
+    // The messages are registered when the app starts, after its modules have loaded, and the
+    // messages of a feature loaded as a plugin even later.
+    files: ["src/**/*.ts", "src/**/*.tsx"],
+    ignores: ["**/*.test.ts", "**/*.test.tsx"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "CallExpression[callee.name='words']:not(:function CallExpression, PropertyDefinition[static=false] CallExpression)",
+          message:
+            "Don't call words() while the module loads: its messages may not be registered yet. Call it in a function, e.g. turn the constant into a getter.",
+        },
+      ],
+    },
+  },
+  {
     files: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "cypress/**/*"],
     rules: {
       "@stylistic/quotes": ["warn", "double", { avoidEscape: true }],

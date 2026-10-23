@@ -7,6 +7,7 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { Details } from "@/Core/Domain/Resource/Resource";
 import { usePaginatedTable } from "@/Data/Common";
 import { useGetResourceHistory } from "@/Data/Queries/Slices/Resource";
@@ -14,7 +15,6 @@ import { EmptyView } from "@/UI/Components/EmptyView";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { PaginationWidget } from "@/UI/Components/PaginationWidget";
-import { words } from "@/UI/words";
 import { ResourceHistoryTable } from "./ResourceHistoryTable";
 import { ResourceTemporalData } from "./ResourceTemporalData";
 import { createResourceHistoryTablePresenter } from "./TablePresenter";

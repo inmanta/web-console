@@ -1,7 +1,7 @@
 import React from "react";
 import { Tooltip } from "@patternfly/react-core";
 import styled from "styled-components";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 
 interface Props {
   isDisabled?: boolean;

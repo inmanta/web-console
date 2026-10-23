@@ -7,10 +7,10 @@ import {
 } from "@patternfly/react-core";
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
+import { words } from "@/Core";
 import { ClassifiedAttribute } from "@/Data/Common";
 import { HoverRowGroup } from "@/UI/Components/RowHoverReveal";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
-import { words } from "@/UI/words";
 import { CodeEditor } from "../CodeEditor";
 import { FileBlock } from "./FileBlock";
 import { WithSuffix } from "./WithSuffix";

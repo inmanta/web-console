@@ -1,6 +1,6 @@
 import { useContext } from "react";
+import { words } from "@/Core";
 import { AuthContext } from "@/Data/Auth";
-import { words } from "@/UI/words";
 
 /**
  * A failed request: the HTTP `status`, and in `details` the `error_details` of the response

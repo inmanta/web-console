@@ -8,13 +8,12 @@ import {
   Title,
   Tooltip,
 } from "@patternfly/react-core";
-import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
+import { Config, VersionedServiceInstanceIdentifier, words } from "@/Core";
 import { usePostInstanceConfig } from "@/Data/Queries/Slices/ServiceInstance";
 import { DefaultSwitch } from "@/UI/Components/DefaultSwitch";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { SettingsList } from "@/UI/Components/SettingsList";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 
 interface Props {
   config: Config;

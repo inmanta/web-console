@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Card, CardBody, Content, Flex, FlexItem, Label } from "@patternfly/react-core";
 import { CheckIcon, ExclamationIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 import { IconBadge, TONE_COLOR } from "../IconBadge";
 import { Dot } from "./Dot";
 

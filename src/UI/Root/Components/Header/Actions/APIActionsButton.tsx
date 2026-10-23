@@ -10,9 +10,9 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { CodeIcon } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchHelper } from "@/UI/Routing";
-import { words } from "@/UI/words";
 
 /**
  * A single icon-button dropdown in the header that groups the GraphiQL

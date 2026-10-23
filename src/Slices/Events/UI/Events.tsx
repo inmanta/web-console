@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { ServiceModel } from "@/Core";
+import { ServiceModel, words } from "@/Core";
 import { usePaginatedTable } from "@/Data/Common";
 import { useGetInstanceEvents } from "@/Data/Queries/Slices/ServiceInstance";
 import { Filter } from "@/Slices/Events/Core/Types";
@@ -13,7 +13,6 @@ import {
 import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { PaginationWidget } from "@/UI/Components/PaginationWidget";
-import { words } from "@/UI/words";
 import { EventsTableControls } from "./EventsTableControls";
 import { ConnectedFilterWidget } from "./FilterWidget";
 

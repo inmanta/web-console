@@ -1,8 +1,8 @@
 import React from "react";
+import { words } from "@/Core";
 import { Details } from "@/Core/Domain/Resource/Resource";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { RequiresTable } from "@/UI/Components/RequiresTable";
-import { words } from "@/UI/words";
 
 interface Props {
   details: Details;

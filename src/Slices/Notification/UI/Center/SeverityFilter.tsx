@@ -1,8 +1,8 @@
 import React from "react";
 import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { NotificationFilter } from "@/Data/Queries/Slices/Notification";
 import { SingleTextSelect } from "@/UI/Components/SingleTextSelect";
-import { words } from "@/UI/words";
 import { severityList } from "@S/Notification/Core/Domain";
 
 interface Props {

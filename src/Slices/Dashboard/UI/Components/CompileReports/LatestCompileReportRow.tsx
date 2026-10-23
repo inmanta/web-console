@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router";
 import { Button, Content, Flex, FlexItem, Truncate } from "@patternfly/react-core";
 import { CheckCircleIcon, InfoAltIcon, TimesCircleIcon } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { CompileStatus } from "@/Core/Domain";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
 import { getStatusFromReport } from "@/Slices/CompileReports/UI/CompileReportsTablePresenter";
@@ -9,7 +10,6 @@ import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { Spinner } from "@/UI/Components/Spinner";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
 import { IconBadge } from "../IconBadge";
 
 const datePresenter = new CustomDatePresenter();

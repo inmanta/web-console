@@ -2,7 +2,7 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import * as fa from "react-icons/fa";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 import type { ButtonProps } from "@patternfly/react-core";
 import type { MarkdownIt } from "markdown-it";
 

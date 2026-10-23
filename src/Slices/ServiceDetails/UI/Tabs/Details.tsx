@@ -1,9 +1,8 @@
 import React from "react";
 import { Flex, FlexItem, Title } from "@patternfly/react-core";
-import { InstanceSummary } from "@/Core";
+import { InstanceSummary, words } from "@/Core";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { InstanceCounts } from "@/UI/Components/InstanceSummaryLabels";
-import { words } from "@/UI/words";
 
 interface Props {
   instanceSummary?: InstanceSummary | null;

@@ -19,9 +19,9 @@ import {
 } from "@patternfly/react-core";
 import { t_global_text_color_disabled, t_global_text_color_subtle } from "@patternfly/react-tokens";
 import styled from "styled-components";
+import { words } from "@/Core";
 import { Spinner } from "@/UI/Components/Spinner";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
 
 const datePresenter = new CustomDatePresenter();
 
