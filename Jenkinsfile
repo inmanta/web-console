@@ -33,38 +33,81 @@ pipeline {
                 }
             }
             stages {
-                stage('Build & Unit Test') {
+                stage('Checkout') {
                     steps {
                         deleteDir()
                         dir('web-console'){
-                            checkout scm
-                            sh """
-                            yarn install --immutable;
-                            yarn lint;
-                            yarn format:check;
-                            yarn tsc;
-                            yarn check-circular-deps;
-                            yarn build:ci;
-                            yarn check-no-cdn;
-                            yarn test:ci ${vitestCoverageArgs}"""
+                            script {
+                                def scmVars = checkout scm
+                                env.CHANGELOG_ONLY = isChangelogOnly(scmVars.GIT_PREVIOUS_SUCCESSFUL_COMMIT).toString()
+                                if (env.CHANGELOG_ONLY == 'true') {
+                                    echo 'Only change entries changed since the last successful build, skipping the tests.'
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('Validate change entries') {
+                    steps {
+                        dir('web-console'){
+                            sh '''
+                            /opt/irt/bin/python3 -c '
+import os
+from irt.changelog import CHANGE_ENTRIES_PATH, parse_change_entry
+for name in os.listdir(CHANGE_ENTRIES_PATH):
+    if name != ".gitkeep":
+        parse_change_entry(os.path.join(CHANGE_ENTRIES_PATH, name))
+'
+                            '''
+                        }
+                    }
+                }
+                stage('Build & Unit Test') {
+                    steps {
+                        script {
+                            if (env.CHANGELOG_ONLY == 'true') {
+                                echo 'Skipped: only change entries changed since the last successful build.'
+                                return
+                            }
+                            dir('web-console'){
+                                sh """
+                                yarn install --immutable;
+                                yarn lint;
+                                yarn format:check;
+                                yarn tsc;
+                                yarn check-circular-deps;
+                                yarn build:ci;
+                                yarn check-no-cdn;
+                                yarn test:ci ${vitestCoverageArgs}"""
+                            }
                         }
                     }
                 }
                 stage('Testing with cypress') {
                     steps {
-                        timeout(time: 20, unit: 'MINUTES') {
-                            dir('web-console') {
-                                sh '''yarn build:ci;
-                                sudo systemctl restart docker && sudo docker network prune -f;
-                                yarn run install:orchestrator:ci;
-                                yarn run cypress-test:iso;'''
+                        script {
+                            if (env.CHANGELOG_ONLY == 'true') {
+                                echo 'Skipped: only change entries changed since the last successful build.'
+                                return
+                            }
+                            timeout(time: 20, unit: 'MINUTES') {
+                                dir('web-console') {
+                                    sh '''yarn build:ci;
+                                    sudo systemctl restart docker && sudo docker network prune -f;
+                                    yarn run install:orchestrator:ci;
+                                    yarn run cypress-test:iso;'''
+                                }
                             }
                         }
                     }
                     post {
                         always {
-                            dir('web-console') {
-                                sh'yarn run kill-server'
+                            script {
+                                if (env.CHANGELOG_ONLY != 'true') {
+                                    dir('web-console') {
+                                        sh'yarn run kill-server'
+                                    }
+                                }
                             }
                         }
                     }
@@ -72,13 +115,15 @@ pipeline {
             }
             post {
                 always {
-                    junit 'web-console/cypress/reports/junit/*.xml'
                     script {
-                        if (fileExists('web-console/coverage/cobertura-coverage.xml')) {
-                            recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'web-console/coverage/cobertura-coverage.xml']], sourceCodeRetention: 'NEVER')
+                        if (env.CHANGELOG_ONLY != 'true') {
+                            junit 'web-console/cypress/reports/junit/*.xml'
+                            if (fileExists('web-console/coverage/cobertura-coverage.xml')) {
+                                recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'web-console/coverage/cobertura-coverage.xml']], sourceCodeRetention: 'NEVER')
+                            }
+                            archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**, web-console/coverage/**, test-results.txt', allowEmptyArchive: true, onlyIfSuccessful: false
                         }
                     }
-                    archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**, web-console/coverage/**, test-results.txt', allowEmptyArchive: true, onlyIfSuccessful: false
                 }
                 cleanup {
                     deleteDir()
@@ -87,4 +132,19 @@ pipeline {
         }
     }
 
+}
+
+/**
+ * True iff every change since the last successful build of this branch is an added or modified change entry.
+ * Release branches and rewritten history always get a full build.
+ */
+def isChangelogOnly(String previousSuccessfulCommit) {
+    if (previousSuccessfulCommit == null || env.BRANCH_NAME ==~ /master|iso[0-9]+(-(next|stable))?/) {
+        return false
+    }
+    if (sh(returnStatus: true, script: "git merge-base --is-ancestor ${previousSuccessfulCommit} HEAD") != 0) {
+        return false
+    }
+    def changes = sh(returnStdout: true, script: "git diff --name-status --no-renames ${previousSuccessfulCommit} HEAD").trim()
+    return changes && changes.readLines().every { it ==~ /[AM]\tchangelogs\/unreleased\/[^\/]+\.yml/ }
 }

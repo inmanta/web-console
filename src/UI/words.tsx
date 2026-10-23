@@ -172,6 +172,14 @@ const dict = {
   "inventory.createInstance.items": (amount: number) =>
     amount === 1 ? "1 item" : `${amount} items`,
   "inventory.form.withInitialState": "With initial state",
+  "inventory.form.validationErrors.title": (count: number) =>
+    `The orchestrator rejected ${count} ${count === 1 ? "value" : "values"}`,
+  "inventory.form.validationErrors.item": (path: string, message: string) => (
+    <>
+      <b>{path}</b>: {message}
+    </>
+  ),
+  "inventory.form.validationErrors.messageSeparator": "; ",
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
   "inventory.duplicateInstance.button": "Duplicate",

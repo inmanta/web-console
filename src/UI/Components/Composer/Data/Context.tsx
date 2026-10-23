@@ -1,9 +1,8 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 import { dia, ui } from "@joint/plus";
-import { ServiceModel } from "@/Core";
+import { ServiceModel, ServiceOrderItemRequest } from "@/Core";
 import { Inventories } from "@/Data/Queries/Slices/ServiceInstance";
 import { ServiceEntityShape } from "../UI";
-import { ComposerServiceOrderItem } from "./Helpers/deploymentHelpers";
 import { CanvasHandlers, RelationsDictionary } from ".";
 
 /**
@@ -23,7 +22,7 @@ interface ComposerContextInterface {
   paper: dia.Paper | null;
   graph: dia.Graph | null;
   editable: boolean;
-  serviceOrderItems: Map<string, ComposerServiceOrderItem>;
+  serviceOrderItems: Map<string, ServiceOrderItemRequest>;
   hasValidationErrors: boolean;
 }
 
