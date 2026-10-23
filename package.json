@@ -73,7 +73,7 @@
     "@types/markdown-it-emoji": "^3",
     "@types/node": "^22.20.5",
     "@types/qs": "^6.15.1",
-    "@types/react-dom": "^18.3.5",
+    "@types/react-dom": "^18.3.7",
     "@types/styled-components": "^5.1.26",
     "@types/uuid": "^10",
     "@types/webpack": "^5.28.5",
