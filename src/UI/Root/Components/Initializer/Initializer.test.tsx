@@ -3,7 +3,8 @@ import { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { HttpResponse, graphql, http } from "msw";
+import { HttpResponse, http } from "msw";
+import { graphql } from "msw/graphql";
 import { setupServer } from "msw/node";
 import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {

@@ -69,24 +69,30 @@ describe("DesiredStatesView", () => {
 
   const server = setupServer();
 
-  server.events.on("request:start", async ({ request }) => {
-    switch (request.method) {
-      case "GET":
-        GETRequestsFired++;
-        break;
-      case "POST":
-        POSTRequestsFired++;
-        break;
-      case "DELETE":
-        DELETERequestsFired++;
-        break;
-      default:
-        break;
-    }
-  });
-
   beforeAll(() => {
     server.listen();
+  });
+
+  beforeEach(() => {
+    const unspiedFetch = globalThis.fetch;
+
+    vi.spyOn(globalThis, "fetch").mockImplementation((input, init) => {
+      switch (init?.method ?? "GET") {
+        case "GET":
+          GETRequestsFired++;
+          break;
+        case "POST":
+          POSTRequestsFired++;
+          break;
+        case "DELETE":
+          DELETERequestsFired++;
+          break;
+        default:
+          break;
+      }
+
+      return unspiedFetch(input, init);
+    });
   });
 
   afterEach(() => {
