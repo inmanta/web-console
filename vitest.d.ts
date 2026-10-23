@@ -1,14 +1,4 @@
 import "vitest";
-import type { DetachedWindowAPI } from "happy-dom";
-
-declare global {
-  /**
-   * happy-dom exposes its settings and control API on the test window as `window.happyDOM`.
-   */
-  interface Window {
-    happyDOM: DetachedWindowAPI;
-  }
-}
 
 interface CustomMatchers<R = unknown> {
   toHaveNoViolations: () => R;

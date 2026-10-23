@@ -124,13 +124,6 @@ Object.defineProperty(window, "matchMedia", {
   })),
 });
 
-// Requests that no msw handler answers, such as query retries after a test file's server closed,
-// would reach a real server on localhost. Answer them with a network error instead.
-window.happyDOM.settings.fetch.interceptor = {
-  beforeAsyncRequest: async ({ request, window }) =>
-    request.url.startsWith("http") ? window.Response.error() : undefined,
-};
-
 // happy-dom's default stylesheet lacks two browser rules: spans get no display instead of inline,
 // and [hidden] elements stay displayed. Accessible names and axe checks rely on both.
 const userAgentStyles = document.createElement("style");

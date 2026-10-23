@@ -352,6 +352,9 @@ export default defineConfig({
     environment: "happy-dom",
     environmentOptions: {
       happyDOM: {
+        // A reserved origin that never resolves, so requests that no msw handler answers fail with
+        // a network error instead of reaching a real server on localhost.
+        url: "http://web-console.invalid",
         // Never fetch scripts or stylesheets that the page links to; tests have no server for them.
         settings: { disableJavaScriptFileLoading: true, disableCSSFileLoading: true },
       },
