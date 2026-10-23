@@ -1,5 +1,7 @@
 import "@testing-library/jest-dom/vitest";
 import React from "react";
+import { loader } from "@monaco-editor/react";
+import * as monaco from "monaco-editor";
 import dayjs from "@/dayjs";
 
 import "jest-axe/extend-expect";
@@ -99,6 +101,10 @@ const linkShapeMock = vi.hoisted(() => ({
     };
   }),
 }));
+
+// Give the Monaco loader the mocked monaco-editor, like src/index.tsx gives it the bundled copy,
+// so editors load without fetching the loader script from the CDN.
+loader.config({ monaco });
 
 // Fix timezone to Europe/Brussels for all tests so date-related assertions are deterministic.
 vi.spyOn(dayjs.tz, "guess").mockReturnValue("Europe/Brussels");

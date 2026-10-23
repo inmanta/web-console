@@ -13,6 +13,9 @@ test("Given the AttributeList component When rendered with the monospace variant
     t_global_font_family_mono.name,
     t_global_font_family_mono.value
   );
+  onTestFinished(() => {
+    document.documentElement.style.removeProperty(t_global_font_family_mono.name);
+  });
   const component = (
     <QueryClientProvider client={testClient}>
       <MockedDependencyProvider>

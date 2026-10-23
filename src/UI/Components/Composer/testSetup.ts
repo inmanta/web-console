@@ -130,6 +130,9 @@ export function defineObjectsForJointJS() {
     value: vi.fn().mockReturnValue(null),
   });
 
+  // The shims below only keep JointJS from crashing. Unit tests don't assert on SVG classes or
+  // the paper's styles; Cypress covers the real rendering.
+
   // happy-dom has no CDATA sections; JointJS wraps the paper's stylesheet in one.
   Object.defineProperty(XMLDocument.prototype, "createCDATASection", {
     writable: true,
