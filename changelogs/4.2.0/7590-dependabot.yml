@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @testing-library/jest-dom from 6.9.1 to 7.0.1
+destination-branches:
+- master
+- iso9
+sections: {}

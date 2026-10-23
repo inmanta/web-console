@@ -1,8 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
-import { Notification, Severity } from "@/Core/Domain/Notification";
-import { Origin } from "@/Core/Domain/NotificationOrigin";
+import { Notification, NotificationOrigin, Severity } from "@/Core/Domain/Notification";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   CustomError,
@@ -31,7 +30,7 @@ export interface NotificationFilter {
 export interface GetNotificationsParams {
   filter?: NotificationFilter;
   pageSize: PageSize.PageSize;
-  origin: Origin;
+  origin: NotificationOrigin;
   currentPage: CurrentPage;
 }
 

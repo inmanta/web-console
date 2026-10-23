@@ -1,5 +1,11 @@
 import React from "react";
-import { Button, EmptyState, EmptyStateBody, EmptyStateFooter } from "@patternfly/react-core";
+import {
+  Button,
+  EmptyState,
+  EmptyStateActions,
+  EmptyStateBody,
+  EmptyStateFooter,
+} from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { words } from "@/Core";
@@ -10,13 +16,28 @@ interface Props {
   ariaLabel?: string;
   title?: string;
   retry?: () => void;
+  logout?: () => void;
   delay?: number;
 }
 
+/**
+ * Shows an error message in an empty state, with optional Retry and Logout buttons.
+ *
+ * @props {Props} props - The props of the component.
+ *  @prop {string} message - The error message to show.
+ *  @prop {string} [ariaLabel] - The aria label of the empty state.
+ *  @prop {string} [title] - The title, defaults to a generic error title.
+ *  @prop {() => void} [retry] - Shows a Retry button that calls this function.
+ *  @prop {() => void} [logout] - Shows a Logout button that calls this function.
+ *  @prop {number} [delay] - Delay in milliseconds before the view shows.
+ *
+ * @returns {React.FC<Props>} The error view
+ */
 export const ErrorView: React.FC<Props> = ({
   message,
   title,
   retry,
+  logout,
   delay,
   ariaLabel,
   ...props
@@ -37,9 +58,18 @@ export const ErrorView: React.FC<Props> = ({
         </EmptyStateBody>
         <EmptyStateFooter>
           {retry && (
-            <Button variant="primary" onClick={retry}>
-              {words("retry")}
-            </Button>
+            <EmptyStateActions>
+              <Button variant="primary" onClick={retry}>
+                {words("retry")}
+              </Button>
+            </EmptyStateActions>
+          )}
+          {logout && (
+            <EmptyStateActions>
+              <Button variant="link" onClick={logout}>
+                {words("dashboard.logout")}
+              </Button>
+            </EmptyStateActions>
           )}
         </EmptyStateFooter>
       </EmptyState>

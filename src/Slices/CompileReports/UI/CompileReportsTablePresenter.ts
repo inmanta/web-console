@@ -1,5 +1,6 @@
 import { words } from "@/Core";
-import { CompileReport, CompileReportRow, getStatusFromReport } from "@/Core/Domain/CompileReport";
+import { CompileReport, getStatusFromReport } from "@/Core/Domain/CompileReport";
+import { CompileReportRow } from "@/Slices/CompileReports/Core/Types";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
 import { CustomDatePresenter } from "@/UI/Utils";
 

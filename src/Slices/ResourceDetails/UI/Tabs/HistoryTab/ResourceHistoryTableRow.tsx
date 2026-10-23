@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
 import { words } from "@/Core";
-import { ResourceHistoryRow } from "@/Core/Domain/ResourceHistory";
 import { useExpansion } from "@/Data/Common";
+import { ResourceHistoryRow } from "@/Slices/ResourceDetails/Core/Types";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { TabKey, Tabs } from "./Tabs";

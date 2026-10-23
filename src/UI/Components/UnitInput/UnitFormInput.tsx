@@ -12,12 +12,14 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { WordKey, words } from "@/Core";
-import { toSubmittableNumber } from "@/Core/Domain/Unit/convert";
-import { otherScaleCandidates, selectDisplayUnit } from "@/Core/Domain/Unit/display";
-import type { UnitConfig } from "@/Core/Domain/Unit/resolveUnitConfig";
-import { familyOf } from "@/Core/Domain/Unit/units";
-import { validateUnitInput } from "@/Core/Domain/Unit/validate";
-import type { UnitBounds, UnitValidationError } from "@/Core/Domain/Unit/validate";
+import {
+  familyOf,
+  otherScaleCandidates,
+  selectDisplayUnit,
+  toSubmittableNumber,
+  validateUnitInput,
+} from "@/Core/Domain/Unit";
+import type { UnitBounds, UnitConfig, UnitValidationError } from "@/Core/Domain/Unit";
 import { preventNumberInputScroll } from "@/UI/Utils";
 
 interface Props {
@@ -39,6 +41,9 @@ interface Props {
 
   /** Fires whenever the typed entry's validity changes (e.g. to gate a form's submit button) — an empty, optional field counts as valid, matching `handleInputChange`'s own `null`. */
   onValidityChange?: (isValid: boolean) => void;
+
+  /** A validation error of the last submit (the server's validation of the submitted value), shown unless the typed entry is itself invalid. */
+  validationError?: string;
 }
 
 function initialState(
@@ -116,6 +121,7 @@ export const UnitFormInput: React.FC<Props> = ({
   shouldBeDisabled = false,
   handleInputChange,
   onValidityChange,
+  validationError,
 }) => {
   const [{ unit, typed }, setState] = useState(() => initialState(attributeValue, config));
   const editedRef = useRef(false);
@@ -178,7 +184,7 @@ export const UnitFormInput: React.FC<Props> = ({
             placeholder={isOptional ? "—" : "0"}
             isRequired={!isOptional}
             isDisabled={shouldBeDisabled}
-            validated={error ? "error" : "default"}
+            validated={error || validationError ? "error" : "default"}
             onChange={(_event, value) => commit(value, unit)}
             onWheel={preventNumberInputScroll}
           />
@@ -206,6 +212,9 @@ export const UnitFormInput: React.FC<Props> = ({
             <HelperTextItem variant="error">{errorMessage(error, config.kind)}</HelperTextItem>
           ) : (
             <>
+              {validationError && (
+                <HelperTextItem variant="error">{validationError}</HelperTextItem>
+              )}
               <HelperTextItem>
                 {validation.valid && validation.apiValue !== null
                   ? words("unitInput.helper.stored")(

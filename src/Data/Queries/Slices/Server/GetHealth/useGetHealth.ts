@@ -30,7 +30,7 @@ export const useGetHealth = (): GetHealth => {
       headers: createHeaders(),
     });
 
-    await handleErrors(response);
+    await handleErrors(response, { method: "GET", path: "/api/v2/health" });
 
     return true;
   };

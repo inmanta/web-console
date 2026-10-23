@@ -6,6 +6,7 @@ import { usePostInstance } from "@/Data/Queries/Slices/ServiceInstance";
 import {
   CreateModifierHandler,
   FieldCreator,
+  isAttributeValidationFailure,
   ServiceInstanceForm,
 } from "@/UI/Components/ServiceInstanceForm";
 import { DependencyContext } from "@/UI/Dependency";
@@ -45,13 +46,15 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const attributeInputConverter = new AttributeInputConverterImpl();
   const currentAttributes = attributeInputConverter.getCurrentAttributes(instance);
 
-  const { mutate } = usePostInstance(serviceEntity.name, {
+  const { mutate, error: submitError } = usePostInstance(serviceEntity.name, {
     onError: (error) => {
       setIsDirty(true);
-      notifyError({
-        title: words("inventory.addInstance.failed"),
-        message: error.message,
-      });
+      if (!isAttributeValidationFailure(error)) {
+        notifyError({
+          title: words("inventory.addInstance.failed"),
+          message: error.message,
+        });
+      }
     },
     onSuccess: ({ data }) => {
       const newUrl = routeManager.getUrl("InstanceDetails", {
@@ -88,6 +91,7 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         initialStates={serviceEntity.lifecycle.alternative_initial_states}
         identifyingAttributeName={serviceEntity.service_identity}
         entityAnnotations={serviceEntity.entity_annotations}
+        submitError={submitError}
       />
     </>
   );

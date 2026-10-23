@@ -1,11 +1,6 @@
 import { createContext, useContext } from "react";
 import { AlertProps } from "@patternfly/react-core";
 
-/**
- * The app-wide toast alerts. The shell renders them with `AppAlertProvider`; any part of the app
- * raises one through `useAppAlert`.
- */
-
 export interface NotifyOptions extends AlertProps {
   /** Alert message */
   message?: string;
@@ -46,8 +41,18 @@ const defaultContext: AppAlertContextProps = {
   },
 };
 
+/**
+ * The context behind `useAppAlert`. Only the shell's `AppAlertProvider` provides it; outside the
+ * provider, the default only warns in development.
+ */
 export const AppAlertContext = createContext<AppAlertContextProps>(defaultContext);
 
+/**
+ * Raises the app-wide toast alerts. The shell renders them with `AppAlertProvider`; any part of
+ * the app can raise one through this hook.
+ *
+ * @returns {AppAlertContextProps} the functions that raise an alert of a given variant
+ */
 export const useAppAlert = (): AppAlertContextProps => {
   return useContext(AppAlertContext);
 };

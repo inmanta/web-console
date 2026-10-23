@@ -20,6 +20,7 @@ interface Props {
   isOptional: boolean;
   shouldBeDisabled?: boolean;
   handleInputChange: (value) => void;
+  validationError?: string;
 }
 
 /**
@@ -34,6 +35,7 @@ interface Props {
  *  @prop {boolean} isOptional - Whether the attribute is optional.
  *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
  *  @prop {function} handleInputChange - The callback for handling input changes.
+ *  @prop {string} validationError - A validation error of the last submit, shown below the select, which is then marked as invalid.
  *
  * @returns {React.FC<Props>} The SelectFormInput component.
  */
@@ -45,6 +47,7 @@ export const SelectFormInput: React.FC<Props> = ({
   isOptional,
   shouldBeDisabled = false,
   handleInputChange,
+  validationError,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -97,6 +100,7 @@ export const SelectFormInput: React.FC<Props> = ({
       onClick={onToggleClick}
       isExpanded={isOpen}
       isDisabled={shouldBeDisabled}
+      status={validationError ? "danger" : undefined}
       style={
         {
           width: "100%",
@@ -135,6 +139,13 @@ export const SelectFormInput: React.FC<Props> = ({
           ))}
         </SelectList>
       </Select>
+      {validationError && (
+        <FormHelperText>
+          <HelperText>
+            <HelperTextItem variant="error">{validationError}</HelperTextItem>
+          </HelperText>
+        </FormHelperText>
+      )}
     </FormGroup>
   );
 };

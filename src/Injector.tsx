@@ -11,6 +11,10 @@ import { AuthContext } from "./Data/Auth";
 import { AppAlertProvider } from "./UI/Root/Components/AppAlertProvider";
 import { ModalProvider } from "./UI/Root/Components/ModalProvider";
 
+interface Props {
+  features: FeatureModule[];
+}
+
 /**
  * This component creates instances of managers, helpers, and resolvers, and provides them through a `DependencyProvider`.
  * It also contains `ModalProvider` and `AppAlertProvider`.
@@ -20,10 +24,6 @@ import { ModalProvider } from "./UI/Root/Components/ModalProvider";
  * @prop {React.ReactNode} children - The children to be rendered within the Injector.
  * @returns {React.FC<React.PropsWithChildren<Props>>} A `DependencyProvider` that wraps a `ModalProvider` and the children.
  */
-interface Props {
-  features: FeatureModule[];
-}
-
 export const Injector: React.FC<React.PropsWithChildren<Props>> = ({ features, children }) => {
   const authHelper = useContext(AuthContext);
   const baseUrlManager = new PrimaryBaseUrlManager(
