@@ -1,11 +1,12 @@
-import { request } from "graphql-request";
 import { PrimaryBaseUrlManager } from "@/UI/Routing";
-import { useFetchHelpers } from "./useFetchHelpers";
+import { words } from "@/UI/words";
+import { createCustomError, parseJsonResponse, useFetchHelpers } from "./useFetchHelpers";
 
 /**
  * Hook that provides GraphQL request functionality.
  *
- * This hook creates a GraphQL request with proper headers and base URL configuration.
+ * This hook posts the query to /api/v2/graphql with the same headers and error handling as the REST requests.
+ * The promise resolves to the `data` of the server's response envelope, and rejects when the body is empty.
  *
  * @param {string} query - The GraphQL query string to be executed
  * @param {Record<string, unknown>} [variables] - Optional GraphQL variables
@@ -40,8 +41,26 @@ export function useGraphQLRequest<Type>(
     globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl();
-  const { createHeaders } = useFetchHelpers();
+  const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders();
 
-  return () => request(baseUrl + "/api/v2/graphql", query, variables, headers);
+  headers.set("Content-Type", "application/json");
+
+  return async () => {
+    const response = await fetch(`${baseUrl}/api/v2/graphql`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ query, variables }),
+    });
+
+    await handleErrors(response, { method: "POST", path: "/api/v2/graphql" });
+
+    const body: { data: Type } | undefined = await parseJsonResponse(response);
+
+    if (body === undefined) {
+      throw createCustomError(words("error.response.unexpected")(response.status), response.status);
+    }
+
+    return body.data;
+  };
 }

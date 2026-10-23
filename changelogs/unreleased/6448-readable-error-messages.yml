@@ -1,0 +1,7 @@
+description: |
+  Errors now show a short message instead of raw HTML or GraphQL output, and the start-up error screen has a Logout button when login is enabled.
+issue-nr: 6448
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"
