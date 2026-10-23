@@ -112,7 +112,7 @@
     "mini-css-extract-plugin": "^2.10.2",
     "mocha": "^10.8.2",
     "mocha-junit-reporter": "^2.2.1",
-    "mochawesome": "^7.1.3",
+    "mochawesome": "^7.1.4",
     "mochawesome-report-generator": "^6.2.0",
     "moment-locales-webpack-plugin": "^1.2.0",
     "moment-timezone-data-webpack-plugin": "^1.5.1",
