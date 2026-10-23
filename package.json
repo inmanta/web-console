@@ -169,7 +169,7 @@
     "markdown-it": "^14.1.0",
     "mermaid": "^11.4.1",
     "moment": "^2.31.0",
-    "moment-timezone": "^0.5.45",
+    "moment-timezone": "^0.5.48",
     "monaco-editor": "^0.52.0",
     "msw": "^2.3.2",
     "process": "^0.11.10",
