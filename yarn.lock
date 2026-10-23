@@ -887,7 +887,7 @@ __metadata:
     copy-to-clipboard: "npm:^4.0.2"
     cypress: "npm:^16.2.0"
     dayjs: "npm:^1.11.23"
-    dependency-cruiser: "npm:^18.6.0"
+    dependency-cruiser: "npm:^18.7.0"
     dotenv: "npm:^18.0.8"
     eslint: "npm:^10.2.1"
     eslint-import-resolver-typescript: "npm:^4.4.5"
@@ -5577,9 +5577,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dependency-cruiser@npm:^18.6.0":
-  version: 18.6.0
-  resolution: "dependency-cruiser@npm:18.6.0"
+"dependency-cruiser@npm:^18.7.0":
+  version: 18.7.0
+  resolution: "dependency-cruiser@npm:18.7.0"
   dependencies:
     acorn: "npm:8.19.0"
     acorn-jsx: "npm:5.3.2"
@@ -5606,7 +5606,7 @@ __metadata:
     depcruise-wrap-stream-in-html: bin/wrap-stream-in-html.mjs
     dependency-cruise: bin/dependency-cruiser.mjs
     dependency-cruiser: bin/dependency-cruiser.mjs
-  checksum: 10/95f119e73ddb71670cc4d389bd67447be3a73548f55ad15d26bf9a30054092b2537a326babd81196952adb47e8e180a601f620459977a8d71f99806078bb4e0b
+  checksum: 10/c848b5d28de3e639374e9b5943d370c24914bfe9b03c718c15bdf50f31094431433541e99af5a860e032c76e0f8c81d76e9045132ca45e48cc967563d74c776f
   languageName: node
   linkType: hard
 
