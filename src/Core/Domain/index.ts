@@ -15,6 +15,7 @@ export * from "./InventoryTable";
 export * from "./ProjectModel";
 export * from "./InstanceResourceModel";
 export * from "./ServiceInstanceModel";
+export * from "./ServiceOrder";
 export * as ServiceInstanceParams from "./ServiceInstanceParams";
 export * from "./ServiceModel";
 export * from "./LogLevel";
