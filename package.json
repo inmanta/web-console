@@ -124,7 +124,7 @@
     "style-loader": "^4.0.0",
     "svg-url-loader": "^8.1.0",
     "ts-jest": "^29.1.4",
-    "ts-loader": "^9.5.1",
+    "ts-loader": "^9.6.2",
     "ts-prune": "^0.10.3",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^5.9.3",
