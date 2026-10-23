@@ -189,7 +189,7 @@
   "resolutions": {
     "browserslist": "^4.29.4",
     "cookie": "^0.7.0",
-    "follow-redirects": "^1.15.4",
+    "follow-redirects": "^1.16.1",
     "glob-parent": "^5.1.2",
     "json-schema": "^0.4.0",
     "json5": "^2.2.2",
