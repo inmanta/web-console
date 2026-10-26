@@ -165,9 +165,11 @@ describe("1.1 Dashboard", () => {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Dashboard").click();
 
       // Environment Health row: Resources/Services counts move by the exact known amounts.
+      // The resources only exist once the "creating" compile is done, which can take well over
+      // 10s. `.should()` only retries for the last query's timeout, so it goes on `closest`.
       cy.get("@initialResources").then((initial) => {
-        cy.get('[aria-label="View Resources details"]', { timeout: 30000 })
-          .closest(".pf-v6-c-card")
+        cy.get('[aria-label="View Resources details"]')
+          .closest(".pf-v6-c-card", { timeout: 90000 })
           .should((card) => {
             expect(Number(card.text().match(/(\d+) resources/)[1])).to.eq(initial + 26);
           });
@@ -194,7 +196,7 @@ describe("1.1 Dashboard", () => {
 
       // Resource Manager card: same underlying total, surfaced via a different component
       cy.get("@initialResources").then((initial) => {
-        cy.contains("h3", "Resource Manager", { timeout: 30000 })
+        cy.contains("h3", "Resource Manager")
           .closest(".pf-v6-c-card")
           .should((card) => {
             expect(Number(card.text().match(/(\d+) resources/)[1])).to.eq(initial + 26);
@@ -208,9 +210,10 @@ describe("1.1 Dashboard", () => {
         .closest('[aria-label="InstanceRow-Intro"]')
         .as("liveCheckRow");
       // Wait for the instance to reach the "up" state before deleting, otherwise the delete can
-      // race the creating/validating transitions and flake.
-      cy.get("@liveCheckRow", { timeout: 30000 })
-        .find('[data-label="State"]')
+      // race the creating/validating transitions and flake. After the "creating" compile, LSM
+      // can take another 15s or more before it moves the instance to "up".
+      cy.get("@liveCheckRow")
+        .find('[data-label="State"]', { timeout: 90000 })
         .should("have.text", "up");
       cy.get("@liveCheckRow").find('[aria-label="row actions toggle"]').click();
       cy.get('[role="menuitem"]').contains("Delete").click();

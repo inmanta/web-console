@@ -1,0 +1,4 @@
+description: Fixed the flaky dashboard e2e test that waits for a new instance to be up.
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}
