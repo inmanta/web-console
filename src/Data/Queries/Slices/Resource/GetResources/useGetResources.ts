@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
-import { gql } from "graphql-request";
 import { PageSize, Pagination, Resource, ResourceActionFilter } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { MultiSort } from "@/Data/Common";
@@ -61,7 +60,7 @@ interface GetResourcesParams {
   currentPage: CurrentPage;
 }
 
-const GET_RESOURCES_QUERY = gql`
+const GET_RESOURCES_QUERY = /* GraphQL */ `
   query GetResources(
     $filter: ResourceFilter!
     $environment: String!
