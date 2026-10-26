@@ -246,6 +246,7 @@ export const uiMessages = {
   "resources.resourceActions.dryRun": "Dry run",
   "resources.resourceActions.dryRun.hint": "preview, no change",
   "resources.resourceActions.success": (action: string) => `${action} triggered`,
+  "resources.resourceActions.pending": (action: string) => `${action} is starting`,
   "resources.resourceActions.failed": (action: string) =>
     `Triggering ${action.toLowerCase()} failed`,
   "resources.resourceActions.confirm.title": (action: string) => `${action} resources`,
