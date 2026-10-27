@@ -34,7 +34,7 @@ packages/
     Slices/ - The shell's own pages: login, not found, notifications, status
   test-utils/src/ - @inmanta/web-console-test-utils, common test data, mock implementations, testing utilities, test setup
 apps/
-  web-console/src/ - The app: its entry (index.tsx), the features it ships (appFeatures.ts), its config.js and app-level tests
+  web-console/src/ - The app: its composition (app.ts: createApp with the features it ships and the shell options), its entry (index.tsx), Monaco setup, config.js and app-level tests
 src/
   Features/ - The FeatureModule of each feature
   UI/

@@ -54,6 +54,27 @@ PatternFly's CSS isn't loaded in unit tests, so a `var(--pf-t--…)` token resol
 
 `expect(el).not.toHaveStyle(...)` passes on its own when happy-dom's CSS parser drops the expected declaration. Always pair a negative style assertion with a positive one on the same value, as `StatusButton.test.tsx` does.
 
+## Composing an app
+
+An app is the shell plus a list of features, composed with `createApp` from `@inmanta/web-console-shell` (see `apps/web-console/src/app.ts`):
+
+```ts
+export const app = createApp({
+  features: [environmentFeature, lsmFeature, resourceManagerFeature],
+  shell: {
+    // How users log in. Defaults to "from-config": window.auth from config.js.
+    auth: "from-config",
+    sidebar: {
+      order: ["resourceManager"], // groups shown first; the others follow in their default order
+      hide: ["Agents"], // entries left out of the sidebar; their pages stay reachable
+      links: [{ group: "environment", label: "Documentation", href: "https://docs.inmanta.com" }],
+    },
+  },
+});
+```
+
+`createApp` adds the shell's own pages (status, notifications) in front of the features and builds the routes, pages and sidebar from them. Nothing starts until `app.render(element)` is called, so tests can look at `app.features` and `app.routes` without starting the app. Leaving `shell` out gives today's web console.
+
 ## Features and routes in tests
 
 Tests follow the same import boundaries as the code they test (see `eslint.layers.js`), and may also import `@inmanta/web-console-test-utils`. A feature's tests only depend on that feature:
@@ -62,7 +83,7 @@ Tests follow the same import boundaries as the code they test (see `eslint.layer
 - For a link to a page of another feature or of the shell, add a stub route: `routes={[...getFeatureRoutes([lsmFeature]), stubRoute("CompileDetails")]}`. Its path and parent come from `stubbedRoutes` in `test-utils`, which `apps/web-console/src/appStubRoutes.test.ts` checks against the app's routes. Add a route there when a test needs one that isn't listed.
 - Get the shell's `ModalProvider` and `AppAlertProvider` from `@inmanta/web-console-test-utils`.
 - Mock data that several features use lives in `@inmanta/web-console-test-utils/Data`.
-- A test that needs several features together, like the composer's actions on lsm's pages, is an app-level test next to `apps/web-console/src/appFeatures.ts`.
+- A test that needs several features together, like the composer's actions on lsm's pages, is an app-level test next to `apps/web-console/src/app.ts`.
 - The lint rule only sees `import` statements. Keep the paths in `vi.mock`, `vi.importActual` and `typeof import()` within the same boundaries.
 
 `apps/web-console/src/test-setup.ts` holds the setup that depends on the app's features, like registering every feature's messages. A feature's own global mocks go in a setup file of that feature, like the composer's `globalTestMocks.ts`.

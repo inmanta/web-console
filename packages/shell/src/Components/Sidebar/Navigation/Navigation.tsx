@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { useLocation } from "react-router";
 import { Nav, NavGroup } from "@patternfly/react-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { ShellOptionsContext } from "../../../ShellOptions";
 import { getGroups } from "./Group";
 import { NavigationItem } from "./NavigationItem";
 
@@ -13,10 +14,11 @@ import { NavigationItem } from "./NavigationItem";
  */
 export const Navigation: React.FC<{ environment: string | undefined }> = ({ environment }) => {
   const { orchestratorProvider, routeManager, features } = useContext(DependencyContext);
+  const { sidebar } = useContext(ShellOptionsContext);
   const { pathname } = useLocation();
 
   const isEnvPresent = typeof environment !== "undefined";
-  const groups = getGroups(features, routeManager, orchestratorProvider, isEnvPresent);
+  const groups = getGroups(features, routeManager, orchestratorProvider, isEnvPresent, sidebar);
 
   // Helper function to check if a navigation item is active
   const isNavigationItemActive = (url: string): boolean => {

@@ -1,6 +1,6 @@
 import * as WordsModule from "@inmanta/web-console-core/I18n/Words";
 import { registerAppMessages } from "@inmanta/web-console-shell/registerAppMessages";
-import { features } from "./appFeatures";
+import { app } from "./app";
 
 const messageModules = import.meta.glob<Record<string, WordsModule.Messages>>(
   ["/src/**/messages.{ts,tsx}", "/packages/**/messages.{ts,tsx}"],
@@ -15,7 +15,7 @@ it("registers the messages of every layer and feature the app ships", () => {
   // The test setup registers every message, so look at what the app itself registers.
   const registerMessages = vi.spyOn(WordsModule, "registerMessages");
 
-  registerAppMessages(features);
+  registerAppMessages(app.features);
 
   const registered = new Set(
     registerMessages.mock.calls.flatMap(([messages]) => Object.keys(messages))
