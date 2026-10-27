@@ -14,7 +14,7 @@ import { fileURLToPath } from "node:url";
  * | features | core, ui, their own files         |
  * | app      | everything (it composes the rest) |
  *
- * Every slice and every folder in `src/Features` belongs to exactly one feature or to the shell.
+ * Every slice and every folder in `src/Features` belongs to exactly one feature.
  * A new one has to be added here, or linting fails.
  */
 
@@ -28,9 +28,9 @@ const inRoot = (path) => resolve(basePath, path);
 const core = ["./packages/core"];
 
 /**
- * The components left in `src/UI/Components` belong to one feature or to the shell, and move
- * there with it (#7463 to #7470). Until then they count as shared components, but
- * `packages/ui` doesn't import them.
+ * The components left in `src/UI/Components` belong to one feature, and move there with it
+ * (#7464 to #7470). Until then they count as shared components, but `packages/ui` doesn't
+ * import them.
  */
 const componentsToMove = readdirSync(inRoot("./src/UI/Components"), { withFileTypes: true })
   .filter((entry) => entry.name !== "Composer")
@@ -38,15 +38,9 @@ const componentsToMove = readdirSync(inRoot("./src/UI/Components"), { withFileTy
 
 const ui = ["./packages/ui", ...componentsToMove];
 
-const shellSlices = ["Login", "NotFound", "Notification", "Status"];
+const shell = ["./packages/shell"];
 
-const shell = [
-  "./src/UI/Root",
-  "./src/Injector.tsx",
-  ...shellSlices.map((slice) => `./src/Slices/${slice}`),
-];
-
-const app = ["./src/index.tsx", "./src/appFeatures.ts", "./src/test-setup.ts"];
+const app = ["./apps/web-console"];
 
 /**
  * The folders of each feature: its slices, its folder in `src/Features` and any other folder it
@@ -132,10 +126,10 @@ const assertAllAssigned = (directory, assigned) => {
   }
 };
 
-assertAllAssigned("./src/Slices", [
-  ...shellSlices,
-  ...Object.values(features).flatMap(({ slices }) => slices),
-]);
+assertAllAssigned(
+  "./src/Slices",
+  Object.values(features).flatMap(({ slices }) => slices)
+);
 assertAllAssigned(
   "./src/Features",
   Object.values(features).map(({ folder }) => folder)

@@ -13,15 +13,15 @@ import { basePath, importBoundaryZones, testImportBoundaryZones } from "./eslint
  * Tests and the helpers that only tests use.
  */
 const testFiles = [
-  "{src,packages}/**/*.test.ts",
-  "{src,packages}/**/*.test.tsx",
-  "{src,packages}/**/*.spec.ts",
-  "{src,packages}/**/*.spec.tsx",
+  "{src,packages,apps}/**/*.test.ts",
+  "{src,packages,apps}/**/*.test.tsx",
+  "{src,packages,apps}/**/*.spec.ts",
+  "{src,packages,apps}/**/*.spec.tsx",
   "packages/test-utils/**/*.{ts,tsx}",
   "src/Slices/*/Test/**/*.{ts,tsx}",
-  "{src,packages}/**/Mock.ts",
-  "{src,packages}/**/Mock/**/*.{ts,tsx}",
-  "{src,packages}/**/Spec/**/*.{ts,tsx}",
+  "{src,packages,apps}/**/Mock.ts",
+  "{src,packages,apps}/**/Mock/**/*.{ts,tsx}",
+  "{src,packages,apps}/**/Spec/**/*.{ts,tsx}",
 ];
 
 export default [
@@ -177,7 +177,7 @@ export default [
   {
     // The messages are registered when the app starts, after its modules have loaded, and the
     // messages of a feature loaded as a plugin even later.
-    files: ["{src,packages}/**/*.ts", "{src,packages}/**/*.tsx"],
+    files: ["{src,packages,apps}/**/*.ts", "{src,packages,apps}/**/*.tsx"],
     ignores: ["**/*.test.ts", "**/*.test.tsx"],
     rules: {
       "no-restricted-syntax": [
@@ -193,7 +193,7 @@ export default [
   },
   {
     // The layer rules of the composition architecture (#7451) for the code that ships.
-    files: ["{src,packages}/**/*.ts", "{src,packages}/**/*.tsx"],
+    files: ["{src,packages,apps}/**/*.ts", "{src,packages,apps}/**/*.tsx"],
     ignores: testFiles,
     rules: {
       "import/no-restricted-paths": ["error", { basePath, zones: importBoundaryZones }],

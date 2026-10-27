@@ -41,7 +41,7 @@ The frontend uses (Patternfly)[https://www.patternfly.org/] for its UI component
 | `cypress-test:keycloak`         | runs the Cypress tests headless for OSS + Keycloak (requires `install:orchestrator:keycloak`)                                                                                                                         |
 | `cypress-test:local-auth`       | runs the Cypress tests headless for OSS with local authentication (requires `install:orchestrator:local-auth`)                                                                                                        |
 | `package-cleanup`               | runs `node clean_up_packages`                                                                                                                                                                                         |
-| `check-circular-deps`           | runs `depcruise src packages`, which fails on any circular dependency in `src/` and `packages/`                                                                                                                       |
+| `check-circular-deps`           | runs `depcruise src packages apps`, which fails on any circular dependency in `src/`, `packages/` and `apps/`                                                                                                        |
 | `install:orchestrator:keycloak` | creates a Docker container with an OSS orchestrator configured with Keycloak                                                                                                                                          |
 | `install:orchestrator`          | base command to install more specific versions of the orchestrator. The different arguments are: `version` `release` `branch`. For more details, see (local-setup repo)[https://code.inmanta.com/inmanta/local-setup] |
 | `install:orchestrator:iso`      | creates a Docker container with the latest ISO orchestrator                                                                                                                                                           |
@@ -67,7 +67,7 @@ To enable authentication with keycloak, you can use environment variables, e.g. 
     VITE_SHOULD_USE_AUTH=true
 
 
-The keycloak parameters need to be specified in an external file in the production environment, called config.js, following the example src/config.js file.
+The keycloak parameters need to be specified in an external file in the production environment, called config.js, following the example apps/web-console/src/config.js file.
 
 The base url of the backend services can also be specified here, e.g.:
 
