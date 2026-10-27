@@ -14,9 +14,9 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { BarsIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
 import { Badge } from "@/Slices/Notification/UI/Badge";
-import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { APIActionsButton } from "./Actions/APIActionsButton";
 import { DocumentationLinks } from "./Actions/DocumentationLinks";
 import { StatusButton } from "./Actions/StatusButton";

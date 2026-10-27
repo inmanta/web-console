@@ -3,7 +3,7 @@ import { InventoryAttributeHelper } from "./AttributeHelper";
 import { InventoryTreeTableHelper } from "./TreeTableHelper";
 import type { Mock } from "vitest";
 //mock is to avoid TypeError - Temporary workaround - to be removed - https://github.com/inmanta/web-console/issues/6194
-vi.mock("@/Data/Queries/Slices/ServiceInstance");
+vi.mock("@inmanta/web-console-core/Queries/Slices/ServiceInstance");
 
 test("TreeTableHelper getExpansionState returns correct expansionState", () => {
   // Arrange

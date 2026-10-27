@@ -1,6 +1,6 @@
 import React from "react";
 import { Label } from "@patternfly/react-core";
-import { AgentStatus } from "@/Core/Domain/Agent";
+import { AgentStatus } from "@inmanta/web-console-core/Domain/Agent";
 
 export const AgentStatusLabel: React.FC<{ status: AgentStatus }> = ({ status }) => {
   switch (status) {

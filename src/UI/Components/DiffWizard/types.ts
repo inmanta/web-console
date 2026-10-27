@@ -1,4 +1,4 @@
-import { Diff } from "@/Core";
+import { Diff } from "@inmanta/web-console-core";
 
 export interface Item {
   id: string;

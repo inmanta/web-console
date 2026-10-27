@@ -6,15 +6,19 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { DryRun, words } from "@/Core";
-import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
-import { EnvironmentDetails, MockedDependencyProvider, ServiceInstance } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { CustomDatePresenter } from "@/UI/Utils";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import * as DesiredStateMock from "@S/DesiredState/Data/Mock";
+import { DryRun, words } from "@inmanta/web-console-core";
+import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
+import {
+  EnvironmentDetails,
+  MockedDependencyProvider,
+  ServiceInstance,
+} from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import { countDiff, createReportScopeParts } from "./Components/ReportScope/helpers";
 import { View } from "./Page";
 

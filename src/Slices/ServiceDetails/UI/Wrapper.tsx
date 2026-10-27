@@ -1,6 +1,6 @@
 import React from "react";
-import { words } from "@/Core";
-import { PageContainer } from "@/UI/Components/PageContainer";
+import { words } from "@inmanta/web-console-core";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 
 interface Props {
   name: string;

@@ -1,9 +1,9 @@
 import React from "react";
 import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { severityList } from "@/Core/Domain/Notification";
-import { NotificationFilter } from "@/Data/Queries/Slices/Notification";
-import { SingleTextSelect } from "@/UI/Components/SingleTextSelect";
+import { words } from "@inmanta/web-console-core";
+import { severityList } from "@inmanta/web-console-core/Domain/Notification";
+import { NotificationFilter } from "@inmanta/web-console-core/Queries/Slices/Notification";
+import { SingleTextSelect } from "@inmanta/web-console-ui/Components/SingleTextSelect";
 
 interface Props {
   filter: NotificationFilter;

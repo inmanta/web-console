@@ -1,6 +1,17 @@
-import { Diff, DryRun, Resource, ResourceActionFilter, StringMatch, isObject, words } from "@/Core";
-import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
-import { getVersionSelectionBlocker, withDryRunVersion } from "@/Data/Queries/Slices/Resource";
+import {
+  Diff,
+  DryRun,
+  Resource,
+  ResourceActionFilter,
+  StringMatch,
+  isObject,
+  words,
+} from "@inmanta/web-console-core";
+import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
+import {
+  getVersionSelectionBlocker,
+  withDryRunVersion,
+} from "@inmanta/web-console-core/Queries/Slices/Resource";
 import { DiffCounts, FilterRow, FilterValue, ReportScopeParts, RerunPlan } from "./types";
 
 /**

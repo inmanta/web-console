@@ -1,14 +1,22 @@
 import React from "react";
 import { Content, Flex, FlexItem, PageSection } from "@patternfly/react-core";
-import { Resource, ResourceActionFilter, ResourceDetailsTab, words } from "@/Core";
-import { useUrlStateWithString } from "@/Data/Common";
-import { useGetResourceDetails } from "@/Data/Queries/Slices/Resource";
-import { Description } from "@/UI/Components/Description";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PageContainer } from "@/UI/Components/PageContainer";
 import { ResourceActions } from "@/UI/Components/ResourceActions";
-import { labelColorConfig, ResourceStatusLabel } from "@/UI/Components/ResourceStatus";
+import {
+  Resource,
+  ResourceActionFilter,
+  ResourceDetailsTab,
+  words,
+} from "@inmanta/web-console-core";
+import { useUrlStateWithString } from "@inmanta/web-console-core/Common";
+import { useGetResourceDetails } from "@inmanta/web-console-core/Queries/Slices/Resource";
+import { Description } from "@inmanta/web-console-ui/Components/Description";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
+import {
+  labelColorConfig,
+  ResourceStatusLabel,
+} from "@inmanta/web-console-ui/Components/ResourceStatus";
 import { Tabs } from "./Tabs";
 
 interface Props {

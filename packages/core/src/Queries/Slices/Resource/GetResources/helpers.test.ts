@@ -1,0 +1,459 @@
+import { describe, it, expect } from "vitest";
+import { Resource } from "@inmanta/web-console-core/Domain";
+import {
+  mapStatusToGraphQLFilter,
+  mapToResourceActionFilterWithInstanceLabels,
+  mapSort,
+  parseCurrentPage,
+  buildHandlers,
+} from "./helpers";
+
+// ─── mapStatusToGraphQLFilter ───────────────────────────────────────────────
+
+describe("mapStatusToGraphQLFilter", () => {
+  it("returns empty object when status is undefined", () => {
+    const result = mapStatusToGraphQLFilter(undefined);
+
+    expect(result).toEqual({});
+  });
+
+  it("returns empty object when status is an empty array", () => {
+    const result = mapStatusToGraphQLFilter([]);
+
+    expect(result).toEqual({});
+  });
+
+  it("maps 'orphaned' to isOrphan: true", () => {
+    const result = mapStatusToGraphQLFilter(["orphaned"]);
+
+    expect(result).toEqual({ isOrphan: true });
+  });
+
+  it("maps '!orphaned' to isOrphan: false", () => {
+    const result = mapStatusToGraphQLFilter(["!orphaned"]);
+
+    expect(result).toEqual({ isOrphan: false });
+  });
+
+  it("maps 'purged' to purged: true", () => {
+    const result = mapStatusToGraphQLFilter(["purged"]);
+
+    expect(result).toEqual({ purged: true });
+  });
+
+  it("maps lastHandlerRun statuses correctly", () => {
+    const result = mapStatusToGraphQLFilter(["failed", "skipped"]);
+
+    expect(result).toEqual({
+      lastHandlerRun: { eq: ["FAILED", "SKIPPED"] },
+    });
+  });
+
+  it("maps compliance statuses correctly", () => {
+    const result = mapStatusToGraphQLFilter(["compliant", "non_compliant"]);
+
+    expect(result).toEqual({
+      compliance: { eq: ["COMPLIANT", "NON_COMPLIANT"] },
+    });
+  });
+
+  it("maps blocked statuses correctly", () => {
+    const result = mapStatusToGraphQLFilter(["blocked", "temporarily_blocked"]);
+
+    expect(result).toEqual({
+      blocked: { eq: ["BLOCKED", "TEMPORARILY_BLOCKED"] },
+    });
+  });
+
+  it("handles a mix of compound states across multiple fields", () => {
+    const result = mapStatusToGraphQLFilter(["failed", "compliant", "not_blocked"]);
+
+    expect(result).toEqual({
+      lastHandlerRun: { eq: ["FAILED"] },
+      compliance: { eq: ["COMPLIANT"] },
+      blocked: { eq: ["NOT_BLOCKED"] },
+    });
+  });
+
+  it("silently ignores unknown status values", () => {
+    const result = mapStatusToGraphQLFilter(["unknown_status"]);
+
+    expect(result).toEqual({});
+  });
+
+  it("handles all statuses together without collisions", () => {
+    const result = mapStatusToGraphQLFilter([
+      "orphaned",
+      "purged",
+      "failed",
+      "compliant",
+      "blocked",
+    ]);
+
+    expect(result).toEqual({
+      isOrphan: true,
+      purged: true,
+      lastHandlerRun: { eq: ["FAILED"] },
+      compliance: { eq: ["COMPLIANT"] },
+      blocked: { eq: ["BLOCKED"] },
+    });
+  });
+
+  it("maps 'isDeploying' to isDeploying: true", () => {
+    const result = mapStatusToGraphQLFilter(["isDeploying"]);
+
+    expect(result).toEqual({ isDeploying: true });
+  });
+
+  it("maps '!isDeploying' to isDeploying: false", () => {
+    const result = mapStatusToGraphQLFilter(["!isDeploying"]);
+
+    expect(result).toEqual({ isDeploying: false });
+  });
+
+  it("maps negated lastHandlerRun statuses to neq", () => {
+    const result = mapStatusToGraphQLFilter(["!failed", "!skipped"]);
+
+    expect(result).toEqual({
+      lastHandlerRun: { neq: ["FAILED", "SKIPPED"] },
+    });
+  });
+
+  it("maps mixed eq and neq for the same field", () => {
+    const result = mapStatusToGraphQLFilter(["failed", "!skipped"]);
+
+    expect(result).toEqual({
+      lastHandlerRun: { eq: ["FAILED"], neq: ["SKIPPED"] },
+    });
+  });
+
+  it("maps negated compliance statuses to neq", () => {
+    const result = mapStatusToGraphQLFilter(["!compliant", "!non_compliant"]);
+
+    expect(result).toEqual({
+      compliance: { neq: ["COMPLIANT", "NON_COMPLIANT"] },
+    });
+  });
+
+  it("maps negated blocked statuses to neq", () => {
+    const result = mapStatusToGraphQLFilter(["!blocked"]);
+
+    expect(result).toEqual({
+      blocked: { neq: ["BLOCKED"] },
+    });
+  });
+
+  it("handles all negated and non-negated statuses together", () => {
+    const result = mapStatusToGraphQLFilter([
+      "isDeploying",
+      "!orphaned",
+      "!purged",
+      "failed",
+      "!compliant",
+      "!blocked",
+    ]);
+
+    expect(result).toEqual({
+      isDeploying: true,
+      isOrphan: false,
+      purged: false,
+      lastHandlerRun: { eq: ["FAILED"] },
+      compliance: { neq: ["COMPLIANT"] },
+      blocked: { neq: ["BLOCKED"] },
+    });
+  });
+});
+
+// ─── mapToResourceActionFilterWithInstanceLabels ────────────────────────────
+
+describe("mapToResourceActionFilterWithInstanceLabels", () => {
+  // Most cases only check the mapped filter, not the instance labels.
+  const mapToResourceActionFilter = (filter?: Resource.Filter) =>
+    mapToResourceActionFilterWithInstanceLabels(filter).resourceActionFilter;
+
+  it("returns an empty filter for undefined or empty input", () => {
+    expect(mapToResourceActionFilter(undefined)).toEqual({});
+    expect(mapToResourceActionFilter({})).toEqual({});
+  });
+
+  it("wraps type, agent and value in a contains match with %…% markers", () => {
+    const result = mapToResourceActionFilter({
+      type: ["std::File"],
+      agent: ["internal"],
+      value: ["/tmp/f"],
+    });
+
+    expect(result).toEqual({
+      resourceType: { contains: ["%std::File%"] },
+      agent: { contains: ["%internal%"] },
+      resourceIdValue: { contains: ["%/tmp/f%"] },
+    });
+  });
+
+  it("keeps every value of a multi-value field", () => {
+    const result = mapToResourceActionFilter({ type: ["a", "b"] });
+
+    expect(result).toEqual({ resourceType: { contains: ["%a%", "%b%"] } });
+  });
+
+  it("passes serviceEntity through untouched", () => {
+    expect(mapToResourceActionFilter({ serviceEntity: ["vlan"] })).toEqual({
+      serviceEntity: ["vlan"],
+    });
+  });
+
+  it("projects each serviceInstance value to its parsed id", () => {
+    const value = Resource.encodeServiceInstanceFilterValue("abc", "cpe-1");
+
+    expect(mapToResourceActionFilter({ serviceInstance: [value] })).toEqual({
+      serviceInstance: ["abc"],
+    });
+  });
+
+  it("maps includeOwned only when truthy", () => {
+    expect(mapToResourceActionFilter({ includeOwned: true })).toEqual({ includeOwned: true });
+    expect(mapToResourceActionFilter({ includeOwned: false })).toEqual({});
+  });
+
+  it("folds the status filter in via mapStatusToGraphQLFilter", () => {
+    expect(mapToResourceActionFilter({ status: ["orphaned"] })).toEqual({ isOrphan: true });
+    expect(mapToResourceActionFilter({ status: ["!orphaned"] })).toEqual({ isOrphan: false });
+  });
+
+  it("leaves isOrphan unset when no status is given, so the deploy matches the listed set", () => {
+    // Regression guard: a status-less filter must not inject isOrphan, or the deployed set would
+    // silently diverge from the count derived from the same filter.
+    const result = mapToResourceActionFilter({ type: ["std::File"] });
+
+    expect(result.isOrphan).toBeUndefined();
+  });
+
+  it("never emits an environment field", () => {
+    const result = mapToResourceActionFilter({ type: ["std::File"], status: ["orphaned"] });
+
+    expect(result).not.toHaveProperty("environment");
+  });
+
+  it("combines match fields and status into one filter", () => {
+    const result = mapToResourceActionFilter({ agent: ["internal"], status: ["!orphaned"] });
+
+    expect(result).toEqual({ agent: { contains: ["%internal%"] }, isOrphan: false });
+  });
+
+  it("returns the instance ids in the filter and keys each label by its id", () => {
+    const filter = {
+      serviceInstance: [
+        Resource.encodeServiceInstanceFilterValue("abc", "cpe-1"),
+        Resource.encodeServiceInstanceFilterValue("def", "cpe-2"),
+      ],
+    };
+
+    expect(mapToResourceActionFilterWithInstanceLabels(filter)).toEqual({
+      resourceActionFilter: { serviceInstance: ["abc", "def"] },
+      instanceLabels: { abc: "cpe-1", def: "cpe-2" },
+    });
+  });
+
+  it("leaves out the label of an instance whose filter value carries its id as label", () => {
+    const filter = {
+      serviceInstance: [
+        Resource.encodeServiceInstanceFilterValue("abc", "cpe-1"),
+        Resource.encodeServiceInstanceFilterValue("def"),
+      ],
+    };
+
+    expect(mapToResourceActionFilterWithInstanceLabels(filter).instanceLabels).toEqual({
+      abc: "cpe-1",
+    });
+  });
+
+  it("returns no labels for a filter without instances", () => {
+    expect(mapToResourceActionFilterWithInstanceLabels({ agent: ["internal"] })).toEqual({
+      resourceActionFilter: { agent: { contains: ["%internal%"] } },
+      instanceLabels: {},
+    });
+  });
+});
+
+// ─── mapSort ────────────────────────────────────────────────────────────────
+
+describe("mapSort", () => {
+  it("returns an empty array when given an empty array", () => {
+    const result = mapSort([]);
+
+    expect(result).toEqual([]);
+  });
+
+  it("maps a single sort entry to the GraphQL orderBy format", () => {
+    const result = mapSort([{ name: "resource_type", order: "asc" }]);
+
+    expect(result).toEqual([{ key: "resource_type", order: "asc" }]);
+  });
+
+  it("maps descending sort correctly", () => {
+    const result = mapSort([{ name: "agent", order: "desc" }]);
+
+    expect(result).toEqual([{ key: "agent", order: "desc" }]);
+  });
+
+  it("maps multiple sort entries preserving priority order", () => {
+    const result = mapSort([
+      { name: "resource_type", order: "asc" },
+      { name: "agent", order: "desc" },
+    ]);
+
+    expect(result).toEqual([
+      { key: "resource_type", order: "asc" },
+      { key: "agent", order: "desc" },
+    ]);
+  });
+});
+
+// ─── parseCurrentPage ───────────────────────────────────────────────────────
+
+describe("parseCurrentPage", () => {
+  it("returns empty values for an empty currentPage value", () => {
+    const result = parseCurrentPage({ kind: "CurrentPage", value: "" });
+
+    expect(result).toEqual({
+      after: undefined,
+      before: undefined,
+      beforeCount: 0,
+    });
+  });
+
+  it("parses a forward pagination cursor correctly", () => {
+    const result = parseCurrentPage({
+      kind: "CurrentPage",
+      value: "after=someCursor&beforeCount=50",
+    });
+
+    expect(result).toEqual({
+      after: "someCursor",
+      before: undefined,
+      beforeCount: 50,
+    });
+  });
+
+  it("parses a backward pagination cursor correctly", () => {
+    const result = parseCurrentPage({
+      kind: "CurrentPage",
+      value: "before=someCursor&beforeCount=50",
+    });
+
+    expect(result).toEqual({
+      after: undefined,
+      before: "someCursor",
+      beforeCount: 50,
+    });
+  });
+
+  it("defaults beforeCount to 0 when not present", () => {
+    const result = parseCurrentPage({ kind: "CurrentPage", value: "after=someCursor" });
+
+    expect(result.beforeCount).toBe(0);
+  });
+
+  it("decodes a percent-encoded base64 cursor correctly", () => {
+    const cursor = "abc+def==";
+    const value = `after=${encodeURIComponent(cursor)}&beforeCount=10`;
+    const result = parseCurrentPage({ kind: "CurrentPage", value });
+
+    expect(result.after).toBe(cursor);
+  });
+});
+
+// ─── buildHandlers ──────────────────────────────────────────────────────────
+
+describe("buildHandlers", () => {
+  it("returns undefined for both handlers when there are no adjacent pages", () => {
+    const pageInfo = {
+      hasNextPage: false,
+      hasPreviousPage: false,
+      endCursor: null,
+      startCursor: null,
+    };
+    const result = buildHandlers(pageInfo, 0, 50);
+
+    expect(result).toEqual({ next: undefined, prev: undefined });
+  });
+
+  it("builds a next handler when hasNextPage is true", () => {
+    const pageInfo = {
+      hasNextPage: true,
+      hasPreviousPage: false,
+      endCursor: "endCursor123",
+      startCursor: null,
+    };
+    const { next } = buildHandlers(pageInfo, 0, 50);
+    const params = new URLSearchParams(next!);
+
+    expect(params.get("after")).toBe("endCursor123");
+    expect(params.get("beforeCount")).toBe("50");
+  });
+
+  it("builds a prev handler when hasPreviousPage is true", () => {
+    const pageInfo = {
+      hasNextPage: false,
+      hasPreviousPage: true,
+      endCursor: null,
+      startCursor: "startCursor123",
+    };
+    const { prev } = buildHandlers(pageInfo, 50, 50);
+    const params = new URLSearchParams(prev!);
+
+    expect(params.get("before")).toBe("startCursor123");
+    expect(params.get("beforeCount")).toBe("0");
+  });
+
+  it("does not produce a next handler when endCursor is null", () => {
+    const pageInfo = {
+      hasNextPage: true,
+      hasPreviousPage: false,
+      endCursor: null,
+      startCursor: null,
+    };
+    const { next } = buildHandlers(pageInfo, 0, 50);
+
+    expect(next).toBeUndefined();
+  });
+
+  it("does not produce a prev handler when startCursor is null", () => {
+    const pageInfo = {
+      hasNextPage: false,
+      hasPreviousPage: true,
+      endCursor: null,
+      startCursor: null,
+    };
+    const { prev } = buildHandlers(pageInfo, 50, 50);
+
+    expect(prev).toBeUndefined();
+  });
+
+  it("clamps prevBeforeCount to 0 when currentBeforeCount is less than pageSize", () => {
+    const pageInfo = {
+      hasNextPage: false,
+      hasPreviousPage: true,
+      endCursor: null,
+      startCursor: "startCursor",
+    };
+    const { prev } = buildHandlers(pageInfo, 10, 50);
+    const params = new URLSearchParams(prev!);
+
+    expect(params.get("beforeCount")).toBe("0");
+  });
+
+  it("encodes cursors containing base64 special characters", () => {
+    const cursor = "abc+def/ghi==";
+    const pageInfo = {
+      hasNextPage: true,
+      hasPreviousPage: true,
+      endCursor: cursor,
+      startCursor: cursor,
+    };
+    const { next, prev } = buildHandlers(pageInfo, 50, 50);
+
+    expect(new URLSearchParams(next!).get("after")).toBe(cursor);
+    expect(new URLSearchParams(prev!).get("before")).toBe(cursor);
+  });
+});

@@ -1,15 +1,15 @@
 import React, { useContext } from "react";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
-import { words } from "@/Core";
-import { useGetUsers } from "@/Data/Queries/Slices/Auth";
 import { UserCredentialsForm } from "@/Slices/UserManagement/UI/Components/AddUserForm";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PageContainer } from "@/UI/Components/PageContainer";
-import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { useGetUsers } from "@inmanta/web-console-core/Queries/Slices/Auth";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { UserInfoRow } from "./Components/UserInfoRow";
 
 /**

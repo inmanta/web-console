@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "@/Data/Auth/AuthContext";
-import { useGetCurrentUser } from "@/Data/Queries/Slices/Auth";
+import { AuthContext } from "@inmanta/web-console-core/Auth/AuthContext";
+import { useGetCurrentUser } from "@inmanta/web-console-core/Queries/Slices/Auth";
 import { getLocalToken, getLocalUsername, setLocalToken } from "./localToken";
 
 /**

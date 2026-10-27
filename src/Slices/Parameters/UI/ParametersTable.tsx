@@ -1,8 +1,8 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
-import { Sort, Parameter } from "@/Core";
-import { SortKey } from "@/Core/Domain/ParameterFilter";
-import { useClassifiedRows } from "@/UI/Components/AttributeList";
+import { Sort, Parameter } from "@inmanta/web-console-core";
+import { SortKey } from "@inmanta/web-console-core/Domain/ParameterFilter";
+import { useClassifiedRows } from "@inmanta/web-console-ui/Components/AttributeList";
 import { ParametersTablePresenter } from "./ParametersTablePresenter";
 import { ParametersTableRow } from "./ParametersTableRow";
 

@@ -1,15 +1,15 @@
 import React, { memo } from "react";
 import { Divider, Form, Stack, StackItem, Title } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { useUrlStateWithFilter } from "@/Data/Common";
-import { Filter } from "@/Data/Queries/Slices/DiscoveredResources";
-import { AddableTextInput } from "@/UI/Components/AddableTextInput";
+import { words } from "@inmanta/web-console-core";
+import { useUrlStateWithFilter } from "@inmanta/web-console-core/Common";
+import { Filter } from "@inmanta/web-console-core/Queries/Slices/DiscoveredResources";
+import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
 import {
   ActiveFilterGroup,
   ActiveFilters,
   FilterDrawerPanelContent,
   getFilterActions,
-} from "@/UI/Components/FilterDrawer";
+} from "@inmanta/web-console-ui/Components/FilterDrawer";
 
 interface DiscoveredResourcesFilterWidgetProps {
   onClose: () => void;

@@ -1,7 +1,7 @@
-import { words } from "@/Core";
-import { CompileReport } from "@/Core/Domain/CompileReport";
-import { getStatusFromReport } from "@/Core/Domain/CompileReport";
-import { CompileStatus } from "@/Core/Domain/CompileStatus";
+import { words } from "@inmanta/web-console-core";
+import { CompileReport } from "@inmanta/web-console-core/Domain/CompileReport";
+import { getStatusFromReport } from "@inmanta/web-console-core/Domain/CompileReport";
+import { CompileStatus } from "@inmanta/web-console-core/Domain/CompileStatus";
 import { HealthStatus } from "./Components/EnvironmentHealth/StatusIndicator";
 
 export interface CompilesHealth {

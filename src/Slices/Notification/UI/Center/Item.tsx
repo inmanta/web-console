@@ -8,13 +8,13 @@ import {
   variantIcons,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Notification, Severity } from "@/Core/Domain/Notification";
-import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import {
   getColorForVisualSeverity,
   getSeverityForNotification,
   VisualSeverity,
 } from "@S/Notification/UI/Utils";
+import { Notification, Severity } from "@inmanta/web-console-core/Domain/Notification";
+import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
 import { ActionList } from "./ActionList";
 
 interface Props {

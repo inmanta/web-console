@@ -1,4 +1,4 @@
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 import { HealthStatus } from "./Components/EnvironmentHealth/StatusIndicator";
 
 export interface AgentsHealth {

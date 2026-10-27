@@ -1,6 +1,6 @@
 import React from "react";
 import { Language } from "@patternfly/react-code-editor";
-import { CodeEditor } from "@/UI/Components/CodeEditor";
+import { CodeEditor } from "@inmanta/web-console-ui/Components/CodeEditor";
 
 /**
  * A component that displays a traceback.

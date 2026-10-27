@@ -1,10 +1,10 @@
 import React, { useContext, useRef } from "react";
 import { TabContentBody, Tooltip } from "@patternfly/react-core";
 import { CogIcon, InfoCircleIcon, KeyIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { IconTabs, TabDescriptor } from "@/UI/Components/IconTabs";
-import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { IconTabs, TabDescriptor } from "@inmanta/web-console-ui/Components/IconTabs";
 import { ConfigurationTab } from "./Configuration";
 import { EnvironmentTab } from "./Environment";
 import { TokenTab } from "./Token";

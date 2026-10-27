@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { words } from "@/Core";
-import { useGetServiceModel } from "@/Data/Queries/Slices/Service";
-import { useGetInstance } from "@/Data/Queries/Slices/ServiceInstance";
+import { words } from "@inmanta/web-console-core";
+import { useGetServiceModel } from "@inmanta/web-console-core/Queries/Slices/Service";
+import { useGetInstance } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 
 /**
  * Props interface for the useDocumentationContent hook

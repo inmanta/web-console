@@ -1,4 +1,4 @@
-import { BackendMetricData } from "@/Core/Domain/Metrics";
+import { BackendMetricData } from "@inmanta/web-console-core/Domain/Metrics";
 
 export const mockedMetrics: BackendMetricData = {
   start: "2023-01-25T15:05:56.261000",

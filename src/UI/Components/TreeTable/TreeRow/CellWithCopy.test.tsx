@@ -4,10 +4,10 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider, ServiceInstance } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { MockedDependencyProvider, ServiceInstance } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { CellWithCopy } from "./CellWithCopy";
 
 function setup(props) {

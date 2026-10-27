@@ -1,4 +1,4 @@
-import { Notification } from "@/Core/Domain/Notification";
+import { Notification } from "@inmanta/web-console-core/Domain/Notification";
 
 export const unread: Notification = {
   environment: "env",

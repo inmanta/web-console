@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import { dia, mvc, ui } from "@joint/plus";
 import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
-import { ServiceInstanceModel, ServiceModel } from "@/Core";
-import { Inventories } from "@/Data/Queries/Slices/ServiceInstance";
+import { ServiceInstanceModel, ServiceModel } from "@inmanta/web-console-core";
+import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { RelationsDictionary } from "../../Data";
 import {
   toggleDisabledSidebarItem,

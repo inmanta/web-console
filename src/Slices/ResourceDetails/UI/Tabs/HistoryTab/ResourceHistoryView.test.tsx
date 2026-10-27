@@ -4,12 +4,15 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http, delay } from "msw";
 import { setupServer } from "msw/node";
-import { environmentReferences, referenceAttributes } from "@/Data/Common/References/Mock";
-import { MockedDependencyProvider } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ResourceHistory } from "@S/ResourceDetails/Data/Mock";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
+import {
+  environmentReferences,
+  referenceAttributes,
+} from "@inmanta/web-console-core/Common/References/Mock";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ResourceHistoryView } from "./ResourceHistoryView";
 
 function setup() {

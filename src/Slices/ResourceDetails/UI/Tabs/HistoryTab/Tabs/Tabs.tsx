@@ -1,10 +1,10 @@
 import React from "react";
 import { ListIcon, ModuleIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { words } from "@/Core";
-import { AttributeClassifier } from "@/Data/Common";
-import { IconTabs, TabDescriptor } from "@/UI/Components/IconTabs";
-import { ResourceAttributes } from "@/UI/Components/ResourceAttributes";
+import { words } from "@inmanta/web-console-core";
+import { AttributeClassifier } from "@inmanta/web-console-core/Common";
+import { IconTabs, TabDescriptor } from "@inmanta/web-console-ui/Components/IconTabs";
+import { ResourceAttributes } from "@inmanta/web-console-ui/Components/ResourceAttributes";
 
 const classifier = new AttributeClassifier();
 

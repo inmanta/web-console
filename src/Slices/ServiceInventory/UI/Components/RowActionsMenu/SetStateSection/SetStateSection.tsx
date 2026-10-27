@@ -1,15 +1,15 @@
 import React, { useContext } from "react";
 import { Button, MenuItem, Content } from "@patternfly/react-core";
 import styled, { css } from "styled-components";
-import { VersionedServiceInstanceIdentifier, words } from "@/Core";
-import { usePostStateTransfer } from "@/Data/Queries/Slices/ServiceInstance";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
-import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
-import { iconColorFor } from "@/UI/Utils";
+import { VersionedServiceInstanceIdentifier, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { usePostStateTransfer } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
+import { iconColorFor } from "@inmanta/web-console-ui/Utils";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   targets: StateTarget[] | null;

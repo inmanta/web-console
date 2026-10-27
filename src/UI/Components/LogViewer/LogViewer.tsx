@@ -17,7 +17,7 @@ import {
 } from "@patternfly/react-core";
 import { DownloadIcon, ExclamationCircleIcon, PauseIcon, PlayIcon } from "@patternfly/react-icons";
 import { LogViewerSearch, LogViewer as PFLogViewer } from "@patternfly/react-log-viewer";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 
 export interface LogViewerData {
   data: string[];

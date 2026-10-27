@@ -1,13 +1,13 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { words } from "@/Core";
 import { instanceData } from "@/Slices/ServiceInstanceDetails/Test/mockData";
 import { defaultServer } from "@/Slices/ServiceInstanceDetails/Test/mockServer";
 import { SetupWrapper } from "@/Slices/ServiceInstanceDetails/Test/mockSetup";
-import { useTheme } from "@/UI/Components/DarkmodeOption";
+import { words } from "@inmanta/web-console-core";
+import { useTheme } from "@inmanta/web-console-ui/Components/DarkmodeOption";
 import { MarkdownPreviewer } from "./MarkdownPreviewer";
 
 // Mock the theme hook
-vi.mock("@/UI/Components/DarkmodeOption", () => ({
+vi.mock("@inmanta/web-console-ui/Components/DarkmodeOption", () => ({
   useTheme: vi.fn(() => ({ isDark: false, theme: "light", setTheme: vi.fn() })),
 }));
 

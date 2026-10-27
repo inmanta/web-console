@@ -1,14 +1,14 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { toggleValueInList, words } from "@/Core";
-import { ResourceLogFilter } from "@/Core/Domain/ResourceLog";
-import { usePaginatedTable } from "@/Data/Common";
-import { useGetResourceLogs } from "@/Data/Queries/Slices/Resource";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PaginationWidget } from "@/UI/Components/PaginationWidget";
+import { toggleValueInList, words } from "@inmanta/web-console-core";
+import { usePaginatedTable } from "@inmanta/web-console-core/Common";
+import { ResourceLogFilter } from "@inmanta/web-console-core/Domain/ResourceLog";
+import { useGetResourceLogs } from "@inmanta/web-console-core/Queries/Slices/Resource";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { FilterDrawer, countActiveFilters } from "@inmanta/web-console-ui/Components/FilterDrawer";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PaginationWidget } from "@inmanta/web-console-ui/Components/PaginationWidget";
 import { ConnectedFilterWidget, Controls } from "./Controls";
 import { ResourceLogsTable } from "./ResourceLogsTable";
 

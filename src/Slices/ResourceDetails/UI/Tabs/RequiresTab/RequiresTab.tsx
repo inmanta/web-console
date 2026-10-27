@@ -1,8 +1,8 @@
 import React from "react";
-import { words } from "@/Core";
-import { Details } from "@/Core/Domain/Resource/Resource";
-import { EmptyView } from "@/UI/Components/EmptyView";
 import { RequiresTable } from "@/UI/Components/RequiresTable";
+import { words } from "@inmanta/web-console-core";
+import { Details } from "@inmanta/web-console-core/Domain/Resource/Resource";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
 
 interface Props {
   details: Details;

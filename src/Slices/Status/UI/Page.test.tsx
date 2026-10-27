@@ -6,10 +6,14 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { PrimaryArchiveHelper } from "@/Data/Common/PrimaryArchiveHelper";
-import { MockedDependencyProvider, MockOrchestratorProvider, ServerStatus } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
+import { words } from "@inmanta/web-console-core";
+import { PrimaryArchiveHelper } from "@inmanta/web-console-core/Common/PrimaryArchiveHelper";
+import {
+  MockedDependencyProvider,
+  MockOrchestratorProvider,
+  ServerStatus,
+} from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { StatusPage } from ".";
 
 function setup() {

@@ -1,4 +1,4 @@
-import { Attributes, EntityLike } from "@/Core";
+import { Attributes, EntityLike } from "@inmanta/web-console-core";
 import { CatalogAttributes, InventoryAttributes } from "./Helpers/AttributeNode";
 
 export type AttributeTree = InventoryAttributeTree | CatalogAttributeTree;

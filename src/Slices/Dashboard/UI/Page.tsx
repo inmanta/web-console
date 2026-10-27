@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { words } from "@/Core";
-import { useGetEnvironmentDetails } from "@/Data/Queries/Slices/Environment";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PageContainer } from "@/UI/Components/PageContainer";
-import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useGetEnvironmentDetails } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { Dashboard } from "./Dashboard";
 
 /**

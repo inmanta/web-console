@@ -1,5 +1,5 @@
 import markdownit, { type MarkdownIt } from "markdown-it";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 import stateTransferPlugin, { SetStateButtonDefaults } from "./StateTransferPlugin";
 
 describe("StateTransferPlugin", () => {

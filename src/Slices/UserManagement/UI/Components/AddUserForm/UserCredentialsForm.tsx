@@ -14,10 +14,10 @@ import {
   Flex,
 } from "@patternfly/react-core";
 import { ExclamationCircleIcon, EyeIcon, EyeSlashIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
-import { useAddUser } from "@/Data/Queries/Slices/Auth";
-import { Spinner } from "@/UI/Components/Spinner";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { words } from "@inmanta/web-console-core";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { useAddUser } from "@inmanta/web-console-core/Queries/Slices/Auth";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 
 interface UserCredentialsFormProps {
   submitButtonText: string;

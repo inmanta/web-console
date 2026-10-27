@@ -1,7 +1,7 @@
 import React from "react";
-import { EventRow, InstanceEvent, RouteKind } from "@/Core";
-import { useUrlStateWithExpansion } from "@/Data/Common";
-import { TablePresenter } from "@/UI/Presenters";
+import { EventRow, InstanceEvent, RouteKind } from "@inmanta/web-console-core";
+import { useUrlStateWithExpansion } from "@inmanta/web-console-core/Common";
+import { TablePresenter } from "@inmanta/web-console-ui/Presenters";
 import { EventsTableRow } from "./EventsTableRow";
 
 interface Props {

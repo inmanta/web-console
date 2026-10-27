@@ -2,10 +2,10 @@ import React, { PropsWithChildren } from "react";
 import { loader } from "@monaco-editor/react";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { FeatureModule } from "@/Core";
-import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { FeatureModule } from "@inmanta/web-console-core";
+import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { ServiceInstanceDetails } from "../UI/Page";
 
 /**

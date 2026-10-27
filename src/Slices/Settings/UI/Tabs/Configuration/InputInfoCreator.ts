@@ -1,4 +1,4 @@
-import { EnvironmentSettings } from "@/Core";
+import { EnvironmentSettings } from "@inmanta/web-console-core";
 import {
   BooleanDefinition,
   DictDefinition,
@@ -7,8 +7,8 @@ import {
   PositiveFloatDefinition,
   StrDefinition,
   UnknownDefinition,
-} from "@/Core/Domain/EnvironmentSettings";
-import { groupBy, isEqual } from "@/Core/Language/collection";
+} from "@inmanta/web-console-core/Domain/EnvironmentSettings";
+import { groupBy, isEqual } from "@inmanta/web-console-core/Language/collection";
 
 type Update = (id: string, value: EnvironmentSettings.Value) => void;
 

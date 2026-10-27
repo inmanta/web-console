@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { dia } from "@joint/plus";
-import { ServiceModel } from "@/Core";
+import { ServiceModel } from "@inmanta/web-console-core";
 import { ServiceEntityShape } from "../../UI";
 import { updateAllMissingConnectionsHighlights } from "../../UI/JointJsShapes/createHalo";
 import { CanvasHandlers } from "../CanvasHandlers";

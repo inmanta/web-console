@@ -1,5 +1,5 @@
-import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
+import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
 
 export type CompareSelection = number | undefined;
 

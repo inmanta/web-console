@@ -1,9 +1,5 @@
 import React, { useContext, useState } from "react";
 import { DescriptionList } from "@patternfly/react-core";
-import { FlatEnvironment, ProjectModel, words } from "@/Core";
-import { useModifyEnvironment } from "@/Data/Queries/Slices/Environment";
-import { useCreateProject } from "@/Data/Queries/Slices/Project";
-import { AppAlert } from "@/UI/Components/AppAlert";
 import {
   EditableTextField,
   EditableMultiTextField,
@@ -11,7 +7,11 @@ import {
   EditableImageField,
   EditableTextAreaField,
 } from "@/UI/Components/InlineEditable";
-import { DependencyContext } from "@/UI/Dependency";
+import { FlatEnvironment, ProjectModel, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useModifyEnvironment } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { useCreateProject } from "@inmanta/web-console-core/Queries/Slices/Project";
+import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
 import { Actions } from "./Components";
 
 interface Props {

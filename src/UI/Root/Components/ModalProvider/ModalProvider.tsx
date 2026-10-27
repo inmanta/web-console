@@ -1,6 +1,10 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import { Modal, ModalVariant, ModalBody, ModalFooter, ModalHeader } from "@patternfly/react-core";
-import { IconVariant, ModalContext, Params } from "@/UI/Dependency/ModalContext";
+import {
+  IconVariant,
+  ModalContext,
+  Params,
+} from "@inmanta/web-console-core/Dependency/ModalContext";
 
 /**
  * Our own class on the modal backdrop so the outside-press handler can detect

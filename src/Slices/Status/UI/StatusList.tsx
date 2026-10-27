@@ -7,8 +7,8 @@ import {
   ModuleIcon,
   TagIcon,
 } from "@patternfly/react-icons";
-import { ServerStatus } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
+import { ServerStatus } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { StatusItem } from "./StatusItem";
 
 interface Props {

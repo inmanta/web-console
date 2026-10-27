@@ -2,8 +2,8 @@ import React, { useState, MouseEvent, useContext } from "react";
 import { Button, Flex, FlexItem, Popover } from "@patternfly/react-core";
 import { Td } from "@patternfly/react-table";
 import styled from "styled-components";
-import { words } from "@/Core";
-import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
+import { words } from "@inmanta/web-console-core";
+import { ClipboardCopyButton } from "@inmanta/web-console-ui/Components/ClipboardCopyButton";
 import { TreeTableCellContext } from "../RowReferenceContext";
 import { InstanceCellButton } from "./InstanceCellButton";
 

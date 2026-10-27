@@ -29,11 +29,11 @@ import {
   UserCircleIcon,
   UsersIcon,
 } from "@patternfly/react-icons";
-import { words } from "@/Core";
-import { DarkmodeOption } from "@/UI/Components/DarkmodeOption";
-import { EnvironmentIcon } from "@/UI/Components/EnvironmentIcon";
-import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { DarkmodeOption } from "@inmanta/web-console-ui/Components/DarkmodeOption";
+import { EnvironmentIcon } from "@inmanta/web-console-ui/Components/EnvironmentIcon";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 import { ManageProjectsModal } from "./ManageProjectsModal";
 

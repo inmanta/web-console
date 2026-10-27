@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import { Alert, Card, CardBody, CardHeader, CardTitle, Flex } from "@patternfly/react-core";
-import { Diff, DryRun, words } from "@/Core";
-import { useGetDesiredStateVersion } from "@/Data/Queries/Slices/DesiredState";
-import { DesiredStateStatusLabel } from "@/UI/Components/DesiredStateStatusLabel";
+import { Diff, DryRun, words } from "@inmanta/web-console-core";
+import { useGetDesiredStateVersion } from "@inmanta/web-console-core/Queries/Slices/DesiredState";
+import { DesiredStateStatusLabel } from "@inmanta/web-console-ui/Components/DesiredStateStatusLabel";
 import { AppliedFilter } from "./AppliedFilter";
 import { countDiff, createReportScopeParts, isKnownInactive } from "./helpers";
 

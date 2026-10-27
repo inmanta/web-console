@@ -24,10 +24,10 @@ import {
   MenuToggleElement,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { CompileError, CompileErrorLocation, words } from "@/Core";
-import { Rejection } from "@/Core/Domain/Diagnostics";
-import { Link } from "@/UI/Components/Link";
-import { DependencyContext } from "@/UI/Dependency";
+import { CompileError, CompileErrorLocation, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { Rejection } from "@inmanta/web-console-core/Domain/Diagnostics";
+import { Link } from "@inmanta/web-console-ui/Components/Link";
 import { Traceback } from "./Traceback";
 
 interface Props {

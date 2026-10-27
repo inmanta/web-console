@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, FlexItem, SelectOptionProps } from "@patternfly/react-core";
-import { EnvironmentSettings } from "@/Core";
-import { SingleTextSelect } from "@/UI/Components/SingleTextSelect";
+import { EnvironmentSettings } from "@inmanta/web-console-core";
+import { SingleTextSelect } from "@inmanta/web-console-ui/Components/SingleTextSelect";
 import { Warning } from "./Warning";
 
 interface Props {

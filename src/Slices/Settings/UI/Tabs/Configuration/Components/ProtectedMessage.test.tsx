@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { EnvironmentSettings, words } from "@/Core";
+import { EnvironmentSettings, words } from "@inmanta/web-console-core";
 import { ProtectedMessage } from "./ProtectedMessage";
 
 // Helper function to create mock InputInfo

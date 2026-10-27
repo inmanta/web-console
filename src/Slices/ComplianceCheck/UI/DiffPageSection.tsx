@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { Grid, PageSection } from "@patternfly/react-core";
-import { Diff, DryRun, words } from "@/Core";
-import { useGetDryRunReport } from "@/Data/Queries/Slices/DryRun";
 import * as DiffWizard from "@/UI/Components/DiffWizard";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
+import { Diff, DryRun, words } from "@inmanta/web-console-core";
+import { useGetDryRunReport } from "@inmanta/web-console-core/Queries/Slices/DryRun";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { DryRunProgressLabel, ReportScope } from "./Components";
 
 interface Props {

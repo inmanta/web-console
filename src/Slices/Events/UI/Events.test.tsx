@@ -5,11 +5,11 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { InstanceEvent } from "@/Core";
-import { REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
-import { MockedDependencyProvider, Service } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { InstanceEvent } from "@inmanta/web-console-core";
+import { REFETCH_INTERVAL } from "@inmanta/web-console-core/Queries/Helpers";
+import { MockedDependencyProvider, Service } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Events } from "./Events";
 
 const axe = configureAxe({

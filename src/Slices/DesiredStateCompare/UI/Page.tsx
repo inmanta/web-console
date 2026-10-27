@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
 import { Content, PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
-import { Diff, words } from "@/Core";
-import { useGetDesiredStateDiff } from "@/Data/Queries/Slices/DesiredState";
 import * as DiffWizard from "@/UI/Components/DiffWizard";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { useRouteParams } from "@/UI/Routing";
+import { Diff, words } from "@inmanta/web-console-core";
+import { useGetDesiredStateDiff } from "@inmanta/web-console-core/Queries/Slices/DesiredState";
+import { useRouteParams } from "@inmanta/web-console-core/Routing";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 
 export const Page: React.FC = () => {
   const { from, to } = useRouteParams<"DesiredStateCompare">();

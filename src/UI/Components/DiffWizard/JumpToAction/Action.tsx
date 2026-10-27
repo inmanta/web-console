@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Dropdown, MenuToggle, MenuToggleElement } from "@patternfly/react-core";
 
-import { words } from "@/Core";
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
+import { words } from "@inmanta/web-console-core";
 import { SummaryList } from "./SummaryList";
 
 interface Props {

@@ -1,9 +1,9 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import * as Service from "@/Test/Data/Service";
-import * as State from "@/Test/Data/Service/State";
-import * as Transfer from "@/Test/Data/Service/Transfer";
+import * as Service from "@inmanta/web-console-test-utils/Data/Service";
+import * as State from "@inmanta/web-console-test-utils/Data/Service/State";
+import * as Transfer from "@inmanta/web-console-test-utils/Data/Service/Transfer";
 import { LifecycleTable } from "./LifecycleTable";
 
 test("GIVEN LifecycleTable WHEN a transfer targets a state without annotations THEN the raw state name is shown", () => {

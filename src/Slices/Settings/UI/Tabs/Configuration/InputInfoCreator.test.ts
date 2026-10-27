@@ -1,4 +1,4 @@
-import { EnvironmentSettings } from "@/Core";
+import { EnvironmentSettings } from "@inmanta/web-console-core";
 import { InputInfoCreator } from "./InputInfoCreator";
 import type { Mock } from "vitest";
 

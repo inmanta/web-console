@@ -1,16 +1,16 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { InstanceAttributeModel, ServiceModel, words } from "@/Core";
-import { usePostInstance } from "@/Data/Queries/Slices/ServiceInstance";
-import { Description } from "@/UI/Components/Description";
+import { ServiceInstanceForm } from "@/UI/Components/ServiceInstanceForm";
+import { InstanceAttributeModel, ServiceModel, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import {
   CreateModifierHandler,
   FieldCreator,
   isAttributeValidationFailure,
-  ServiceInstanceForm,
-} from "@/UI/Components/ServiceInstanceForm";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+} from "@inmanta/web-console-core/FormState";
+import { usePostInstance } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { Description } from "@inmanta/web-console-ui/Components/Description";
 
 interface Props {
   serviceEntity: ServiceModel;

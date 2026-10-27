@@ -2,12 +2,12 @@ import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { UserShieldIcon } from "@patternfly/react-icons";
 import { Td, Tr } from "@patternfly/react-table";
-import { words } from "@/Core";
-import { useRemoveUser, UserInfo } from "@/Data/Queries/Slices/Auth";
-import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { useRemoveUser, UserInfo } from "@inmanta/web-console-core/Queries/Slices/Auth";
+import { ConfirmUserActionForm } from "@inmanta/web-console-ui/Components/ConfirmUserActionForm";
 import { ChangePasswordForm } from "./ChangePasswordForm";
 import { NestedUserRoleTable } from "./NestedUserRoleTable";
 

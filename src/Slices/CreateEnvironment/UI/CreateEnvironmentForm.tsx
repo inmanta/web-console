@@ -1,19 +1,19 @@
 import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
-import { Environment, ProjectModel, words } from "@/Core";
+import { CreatableSelectInput } from "@/UI/Components/InlineEditable";
+import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentParams";
+import { Environment, ProjectModel, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import {
   useCreateEnvironment,
   getEnvironmentsKey,
   GetEnvironmentPreviewKey,
   EnvironmentPreviewResponse,
-} from "@/Data/Queries/Slices/Environment";
-import { useCreateProject } from "@/Data/Queries/Slices/Project";
-import { AppAlert } from "@/UI/Components/AppAlert";
-import { CreatableSelectInput } from "@/UI/Components/InlineEditable";
-import { DependencyContext } from "@/UI/Dependency";
-import { useNavigateTo } from "@/UI/Routing";
-import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentParams";
+} from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { useCreateProject } from "@inmanta/web-console-core/Queries/Slices/Project";
+import { useNavigateTo } from "@inmanta/web-console-core/Routing";
+import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
 import { ImageField } from "./ImageField";
 import { TextAreaField } from "./TextAreaField";
 import { TextField } from "./TextField";
