@@ -29,7 +29,7 @@ packages/
     Components/
     Presenters/, Styles/, Utils/
   shell/src/ - @inmanta/web-console-shell, the app frame: header, sidebar, breadcrumbs, global providers, auth, startup
-    Components/ - The components that are always visible, and independent of the current page (sidebar)
+    Components/ - The app frame and global providers (header, sidebar, breadcrumbs, banners, alerts, modals, initializer)
     Auth/ - The auth providers
     Slices/ - The shell's own pages: login, not found, notifications, status
   test-utils/src/ - @inmanta/web-console-test-utils, common test data, mock implementations, testing utilities, test setup
