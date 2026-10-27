@@ -15,11 +15,30 @@ import {
   DragDropSortDragEndEvent,
   DraggableObject,
 } from "@patternfly/react-drag-drop";
-import { SortAmountDownIcon, SortAmountUpIcon } from "@patternfly/react-icons";
-import { Resource, words } from "@/Core";
+import {
+  RhMicronsArrowDownIcon,
+  RhMicronsArrowUpIcon,
+  RhUiArrowUpDownIcon,
+} from "@patternfly/react-icons";
+import { t_global_color_brand_clicked, t_global_icon_color_subtle } from "@patternfly/react-tokens";
+import { Resource, Sort, words } from "@/Core";
 import { MultiSort, toggleMulti } from "@/Data/Common";
 
 const getLabel = (key: Resource.StatusSortKey) => words(`resources.sort.label.${key}`);
+
+/**
+ * Renders the sort icon a sortable table column header shows: up or down arrow for the active sort order, an up-down arrow when the status is not sorted.
+ */
+const renderSortIcon = (order: Sort.Order | undefined): React.ReactElement => {
+  switch (order) {
+    case "asc":
+      return <RhMicronsArrowUpIcon />;
+    case "desc":
+      return <RhMicronsArrowDownIcon />;
+    default:
+      return <RhUiArrowUpDownIcon />;
+  }
+};
 
 /**
  * Reorders active status sorts to match a new key order (e.g. after drag-and-drop).
@@ -105,6 +124,10 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactE
     return itemOrder.map((key) => {
       const activeEntry = sortStatus.find((entry) => entry.name === key);
       const isActive = Boolean(activeEntry);
+      const onClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        handleToggle(key);
+      };
 
       return {
         id: key,
@@ -117,35 +140,31 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactE
             dataListCells={[
               <DataListCell
                 key={`label-${key}`}
-                style={{ cursor: "pointer" }}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  handleToggle(key);
+                style={{
+                  cursor: "pointer",
+                  color: isActive ? t_global_color_brand_clicked.var : undefined,
                 }}
+                onClick={onClick}
               >
                 {getLabel(key)}
               </DataListCell>,
-              ...(isActive
-                ? [
-                    <DataListCell
-                      key={`sort-icon-${key}`}
-                      isFilled={false}
-                      style={{ cursor: "pointer" }}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        handleToggle(key);
-                      }}
-                    >
-                      <Icon status="info" isInline>
-                        {activeEntry?.order === "desc" ? (
-                          <SortAmountDownIcon />
-                        ) : (
-                          <SortAmountUpIcon />
-                        )}
-                      </Icon>
-                    </DataListCell>,
-                  ]
-                : []),
+              <DataListCell
+                key={`sort-icon-${key}`}
+                isFilled={false}
+                style={{ cursor: "pointer" }}
+                onClick={onClick}
+              >
+                <Icon
+                  isInline
+                  style={{
+                    color: isActive
+                      ? t_global_color_brand_clicked.var
+                      : t_global_icon_color_subtle.var,
+                  }}
+                >
+                  {renderSortIcon(activeEntry?.order)}
+                </Icon>
+              </DataListCell>,
             ]}
           />
         ),
