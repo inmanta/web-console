@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump happy-dom from 21.0.3 to 21.0.4
+destination-branches:
+- master
+- iso9
+sections: {}
