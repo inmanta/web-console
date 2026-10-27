@@ -50,6 +50,12 @@
       "@inmanta/web-console-ui/*": [
         "./packages/ui/src/*"
       ],
+      "@inmanta/web-console-shell": [
+        "./packages/shell/src"
+      ],
+      "@inmanta/web-console-shell/*": [
+        "./packages/shell/src/*"
+      ],
       "@inmanta/web-console-test-utils": [
         "./packages/test-utils/src"
       ],

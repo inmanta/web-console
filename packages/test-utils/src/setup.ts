@@ -88,8 +88,8 @@ const codeEditorMock = vi.hoisted(() => ({
   },
 }));
 
-// Give the Monaco loader the mocked monaco-editor, like src/index.tsx gives it the bundled copy,
-// so editors load without fetching the loader script from the CDN.
+// Give the Monaco loader the mocked monaco-editor, like apps/web-console/src/index.tsx gives it the
+// bundled copy, so editors load without fetching the loader script from the CDN.
 loader.config({ monaco });
 
 // Fix timezone to Europe/Brussels for all tests so date-related assertions are deterministic.

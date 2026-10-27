@@ -28,12 +28,17 @@ packages/
   ui/src/ - @inmanta/web-console-ui, components used by more than one feature (or a feature and the shell)
     Components/
     Presenters/, Styles/, Utils/
+  shell/src/ - @inmanta/web-console-shell, the app frame: header, sidebar, breadcrumbs, global providers, auth, startup
+    Components/ - The app frame and global providers (header, sidebar, breadcrumbs, banners, alerts, modals, initializer)
+    Auth/ - The auth providers
+    Slices/ - The shell's own pages: login, not found, notifications, status
   test-utils/src/ - @inmanta/web-console-test-utils, common test data, mock implementations, testing utilities, test setup
+apps/
+  web-console/src/ - The app: its entry (index.tsx), the features it ships (appFeatures.ts), its config.js and app-level tests
 src/
   Features/ - The FeatureModule of each feature
   UI/
-    Components/ - Components that only one feature or the shell uses, waiting to move there
-    Root/ - The shell: the components that are always visible, and independent of the current page (sidebar)
+    Components/ - Components that only one feature uses, waiting to move there
   Slices/ (repeat the 3 layers for each slice)
     <SliceName>
         Core (slice specific)

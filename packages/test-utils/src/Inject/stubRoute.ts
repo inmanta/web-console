@@ -8,7 +8,7 @@ import {
 
 /**
  * The path and parent of the routes that tests stub, as the features declare them.
- * `src/appStubRoutes.test.ts` checks them against the app's real routes.
+ * `apps/web-console/src/appStubRoutes.test.ts` checks them against the app's real routes.
  */
 export const stubbedRoutes = {
   Dashboard: { path: "/dashboard" },

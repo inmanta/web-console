@@ -59,7 +59,7 @@ function copyConfigPlugin() {
     name: "copy-config",
     closeBundle() {
       const distDir = resolve(__dirname, "dist");
-      const configSource = resolve(__dirname, "src/config.js");
+      const configSource = resolve(__dirname, "apps/web-console/src/config.js");
       const configDest = resolve(distDir, "config.js");
       const htmlFile = resolve(distDir, "index.html");
       // Copy favicon.ico from public/images/ to dist/
@@ -215,6 +215,10 @@ export default defineConfig({
       },
       { find: "@inmanta/web-console-ui", replacement: resolve(__dirname, "./packages/ui/src") },
       {
+        find: "@inmanta/web-console-shell",
+        replacement: resolve(__dirname, "./packages/shell/src"),
+      },
+      {
         find: "@inmanta/web-console-test-utils",
         replacement: resolve(__dirname, "./packages/test-utils/src"),
       },
@@ -368,11 +372,11 @@ export default defineConfig({
     },
     setupFiles: [
       "./packages/test-utils/src/setup.ts",
-      "./src/test-setup.ts",
+      "./apps/web-console/src/test-setup.ts",
       "./src/UI/Components/Composer/globalTestMocks.ts",
     ],
     restoreMocks: true,
-    include: ["{src,packages}/**/*.{test,spec}.?(c|m)[jt]s?(x)"],
+    include: ["{src,packages,apps}/**/*.{test,spec}.?(c|m)[jt]s?(x)"],
     coverage: {
       provider: "v8",
       enabled: process.env.CI ? true : false,
@@ -381,7 +385,7 @@ export default defineConfig({
         ["cobertura", { file: "cobertura-coverage.xml" }],
       ],
       exclude: ["node_modules/", "**/*.d.ts", "**/*.config.*", "**/__mocks__/**"],
-      include: ["src/**/*", "packages/**/*"],
+      include: ["src/**/*", "packages/**/*", "apps/**/*"],
       maxThreads: process.env.CI ? 2 : 0,
     },
     deps: {
