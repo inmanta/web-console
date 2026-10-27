@@ -121,7 +121,7 @@
     "keycloak-js": "^26.2.4",
     "markdown-it": "^15.0.3",
     "mermaid": "^12.2.0",
-    "monaco-editor": "^0.52.2",
+    "monaco-editor": "^0.57.0",
     "monaco-graphql": "^1.9.0",
     "oidc-client-ts": "^3.5.0",
     "process": "^0.11.10",

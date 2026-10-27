@@ -898,7 +898,7 @@ __metadata:
     markdown-it: "npm:^15.0.3"
     markdown-it-emoji: "npm:^3.1.0"
     mermaid: "npm:^12.2.0"
-    monaco-editor: "npm:^0.52.2"
+    monaco-editor: "npm:^0.57.0"
     monaco-graphql: "npm:^1.9.0"
     msw: "npm:^2.15.0"
     oidc-client-ts: "npm:^3.5.0"
@@ -5648,6 +5648,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dompurify@npm:3.4.15":
+  version: 3.4.15
+  resolution: "dompurify@npm:3.4.15"
+  dependencies:
+    "@types/trusted-types": "npm:^2.0.7"
+  dependenciesMeta:
+    "@types/trusted-types":
+      optional: true
+  checksum: 10/159f592307578405c5217ba40ab467d4ac35f23eb20abc7f32b85698b8c1aff92f71b00c80779f891a8e463edafab05d9a4db53052d5c67005240ac4fff7fc72
+  languageName: node
+  linkType: hard
+
 "dompurify@npm:^3.4.12":
   version: 3.4.17
   resolution: "dompurify@npm:3.4.17"
@@ -8240,6 +8252,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"marked@npm:14.0.0":
+  version: 14.0.0
+  resolution: "marked@npm:14.0.0"
+  bin:
+    marked: bin/marked.js
+  checksum: 10/5f69e58e177bde75fb6145127c939c096d05494c5dff92d73af8a550097d6631c82e919f8a375e3743379a2623418151086b925a902a2be123590b887716f2bb
+  languageName: node
+  linkType: hard
+
 "marked@npm:^16.3.0":
   version: 16.4.2
   resolution: "marked@npm:16.4.2"
@@ -8515,10 +8536,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"monaco-editor@npm:0.52.2, monaco-editor@npm:^0.52.2":
+"monaco-editor@npm:0.52.2":
   version: 0.52.2
   resolution: "monaco-editor@npm:0.52.2"
   checksum: 10/0d4962d69ffa0a8df040faa9c582cef1893fa3fb617feca8f1425c5e670e74c2856104b9a2b01cbda0103a5e5f92f58843206bc9a0e070471c0c1270d7f52a96
+  languageName: node
+  linkType: hard
+
+"monaco-editor@npm:^0.57.0":
+  version: 0.57.0
+  resolution: "monaco-editor@npm:0.57.0"
+  dependencies:
+    dompurify: "npm:3.4.15"
+    marked: "npm:14.0.0"
+  checksum: 10/190a681cb01c8b862875803ca4fedcd6a945c90c09dad3c8c8932d37b9510ccb82991cab0177b8c98be7deb74d49e4727fb6d43c2fc6ed94f712beb9fb1ccec3
   languageName: node
   linkType: hard
 
