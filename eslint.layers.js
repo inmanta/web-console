@@ -168,7 +168,7 @@ const layerZones = (forTests) => {
       target: ["./packages/ui"],
       from: componentsToMove,
       message:
-        "The components left in src/UI/Components move to a feature or the shell, so packages/ui doesn't import them.",
+        "The components left in src/UI/Components move to a feature, so packages/ui doesn't import them.",
     },
     {
       target: shell,
