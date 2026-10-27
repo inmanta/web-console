@@ -31,10 +31,7 @@ function setup() {
       <QueryClientProvider client={testClient}>
         <MockedDependencyProvider
           features={[orchestrationEngineFeature]}
-          routes={[
-            ...getFeatureRoutes([orchestrationEngineFeature]),
-            stubRoute("ResourceDetails", "/resources/:resourceId"),
-          ]}
+          routes={[...getFeatureRoutes([orchestrationEngineFeature]), stubRoute("ResourceDetails")]}
         >
           <View from="123" to="456" />
         </MockedDependencyProvider>

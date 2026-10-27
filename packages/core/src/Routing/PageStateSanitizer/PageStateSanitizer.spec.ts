@@ -1,13 +1,9 @@
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
-import { stubRoute } from "@inmanta/web-console-test-utils";
+import { stubRoute } from "@inmanta/web-console-test-utils/Inject/stubRoute";
 import { PageStateSanitizer } from "./PageStateSanitizer";
 
 const sanitizer = new PageStateSanitizer(
-  PrimaryRouteManager("", [
-    stubRoute("Dashboard", "/dashboard"),
-    stubRoute("Catalog", "/lsm/catalog", { parent: "Dashboard" }),
-    stubRoute("Inventory", "/lsm/catalog/:service/inventory", { parent: "Catalog" }),
-  ])
+  PrimaryRouteManager("", [stubRoute("Dashboard"), stubRoute("Catalog"), stubRoute("Inventory")])
 );
 
 test("GIVEN sanitizer.isSanitized WHEN clean pageState THEN returns true", () => {

@@ -24,8 +24,8 @@ function setup() {
           features={[environmentFeature]}
           routes={[
             ...getFeatureRoutes([environmentFeature]),
-            stubRoute("CompileReports", "/compilereports"),
-            stubRoute("CompileDetails", "/compilereports/:id"),
+            stubRoute("CompileReports"),
+            stubRoute("CompileDetails"),
           ]}
         >
           <LatestCompileReportsPanel />

@@ -8,7 +8,7 @@ import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { lsmFeature } from "@/Features/Lsm";
-import { FeatureModule, words } from "@inmanta/web-console-core";
+import { words } from "@inmanta/web-console-core";
 import {
   Service,
   ServiceInstance,
@@ -20,11 +20,11 @@ import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemo
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ServiceInventory } from "./ServiceInventory";
 
-function setup(service = Service.a, pageSize = "", features: FeatureModule[] = [lsmFeature]) {
+function setup(service = Service.a, pageSize = "") {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[`/?env=aaa${pageSize}`]}>
-        <MockedDependencyProvider features={features}>
+        <MockedDependencyProvider features={[lsmFeature]}>
           <ModalProvider>
             <Page>
               <ServiceInventory serviceName={service.name} service={service} />
@@ -257,8 +257,8 @@ describe("ServiceInventory", () => {
     await userEvent.click(await screen.findByRole("button", { name: "row actions toggle" }));
 
     expect(await screen.findByText(words("inventory.editInstance.button"))).toBeVisible();
-    expect(screen.queryByText(words("instanceComposer.editButton"))).not.toBeInTheDocument();
-    expect(screen.queryByText(words("instanceComposer.showButton"))).not.toBeInTheDocument();
+    expect(screen.queryByText("Edit in Composer")).not.toBeInTheDocument();
+    expect(screen.queryByText("Show in Composer")).not.toBeInTheDocument();
 
     expect(screen.queryByRole("button", { name: "AddInstanceToggle" })).not.toBeInTheDocument();
     expect(

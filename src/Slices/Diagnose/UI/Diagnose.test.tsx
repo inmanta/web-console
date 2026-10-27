@@ -27,9 +27,9 @@ function setup() {
           features={[lsmFeature]}
           routes={[
             ...getFeatureRoutes([lsmFeature]),
-            stubRoute("ResourceDetails", "/resources/:resourceId"),
-            stubRoute("CompileDetails", "/compilereports/:id"),
-            stubRoute("DesiredStateDetails", "/desiredstate/:version"),
+            stubRoute("ResourceDetails"),
+            stubRoute("CompileDetails"),
+            stubRoute("DesiredStateDetails"),
           ]}
         >
           <Diagnose

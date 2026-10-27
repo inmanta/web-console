@@ -25,7 +25,7 @@ function setup() {
       <TestMemoryRouter initialEntries={["/?env=aaa"]}>
         <MockedDependencyProvider
           features={[environmentFeature]}
-          routes={[...getFeatureRoutes([environmentFeature]), stubRoute("Status", "/status")]}
+          routes={[...getFeatureRoutes([environmentFeature]), stubRoute("Status")]}
         >
           <OrchestratorDetailCard />
         </MockedDependencyProvider>

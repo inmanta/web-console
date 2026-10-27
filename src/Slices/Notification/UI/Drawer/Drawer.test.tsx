@@ -40,10 +40,7 @@ function setup() {
       <Router location={history.location} navigator={history}>
         <MockedDependencyProvider
           features={[shellFeature]}
-          routes={[
-            ...getFeatureRoutes([shellFeature]),
-            stubRoute("CompileDetails", "/compilereports/:id"),
-          ]}
+          routes={[...getFeatureRoutes([shellFeature]), stubRoute("CompileDetails")]}
         >
           <Page
             notificationDrawer={

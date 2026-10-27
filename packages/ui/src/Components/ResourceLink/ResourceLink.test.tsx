@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { MockedDependencyProvider, stubRoute } from "@inmanta/web-console-test-utils";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { stubRoute } from "@inmanta/web-console-test-utils/Inject/stubRoute";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { ResourceLink } from "./ResourceLink";
 
@@ -9,7 +10,7 @@ describe("ResourceLink", () => {
   test("GIVEN the resource details route is registered THEN renders a link to it", () => {
     render(
       <TestMemoryRouter>
-        <MockedDependencyProvider routes={[stubRoute("ResourceDetails", "/resources/:resourceId")]}>
+        <MockedDependencyProvider routes={[stubRoute("ResourceDetails")]}>
           <ResourceLink resourceId={resourceId} isInline />
         </MockedDependencyProvider>
       </TestMemoryRouter>

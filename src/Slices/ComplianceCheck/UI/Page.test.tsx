@@ -65,10 +65,7 @@ function setup(search = "", env = EnvironmentDetails.env, page = <View version="
       <QueryClientProvider client={testClient}>
         <MockedDependencyProvider
           features={[orchestrationEngineFeature]}
-          routes={[
-            ...getFeatureRoutes([orchestrationEngineFeature]),
-            stubRoute("ResourceDetails", "/resources/:resourceId"),
-          ]}
+          routes={[...getFeatureRoutes([orchestrationEngineFeature]), stubRoute("ResourceDetails")]}
           env={env}
         >
           <ModalProvider>{page}</ModalProvider>

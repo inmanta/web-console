@@ -4,7 +4,7 @@ import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRo
 import { stubRoute } from "@inmanta/web-console-test-utils";
 import { createRootRoutes } from "./RootRoutes";
 
-const resourceDetailsRoute = stubRoute("ResourceDetails", "/resources/:resourceId");
+const resourceDetailsRoute = stubRoute("ResourceDetails");
 const feature: FeatureModule = {
   id: "test",
   version: "1.0.0",

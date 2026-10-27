@@ -59,12 +59,13 @@ PatternFly's CSS isn't loaded in unit tests, so a `var(--pf-t--…)` token resol
 Tests follow the same import boundaries as the code they test (see `eslint.layers.js`), and may also import `@inmanta/web-console-test-utils`. A feature's tests only depend on that feature:
 
 - `MockedDependencyProvider` registers no features by default. Pass the test's own feature, e.g. `features={[lsmFeature]}`.
-- For a link to a page of another feature or of the shell, add a stub route: `routes={[...getFeatureRoutes([lsmFeature]), stubRoute("CompileDetails", "/compilereports/:id")]}`.
+- For a link to a page of another feature or of the shell, add a stub route: `routes={[...getFeatureRoutes([lsmFeature]), stubRoute("CompileDetails")]}`. Its path and parent come from `stubbedRoutes` in `test-utils`, which `src/appStubRoutes.test.ts` checks against the app's routes. Add a route there when a test needs one that isn't listed.
 - Get the shell's `ModalProvider` and `AppAlertProvider` from `@inmanta/web-console-test-utils`.
 - Mock data that several features use lives in `@inmanta/web-console-test-utils/Data`.
-- A test that needs several features together, like the composer's actions in the lsm inventory, is an app-level test next to `src/appFeatures.ts`.
+- A test that needs several features together, like the composer's actions on lsm's pages, is an app-level test next to `src/appFeatures.ts`.
+- The lint rule only sees `import` statements. Keep the paths in `vi.mock`, `vi.importActual` and `typeof import()` within the same boundaries.
 
-`src/test-setup.ts` holds the setup that depends on the app's features, like registering every feature's messages.
+`src/test-setup.ts` holds the setup that depends on the app's features, like registering every feature's messages. A feature's own global mocks go in a setup file of that feature, like the composer's `globalTestMocks.ts`.
 
 ## Minimum browser versions
 

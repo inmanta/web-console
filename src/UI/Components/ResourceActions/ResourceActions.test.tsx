@@ -115,7 +115,7 @@ const LocationDisplay: React.FC = () => {
 };
 
 // The page the dry-run toast links to, in the orchestration-engine feature.
-const complianceCheckRoute = stubRoute("ComplianceCheck", "/desiredstate/:version/compliancecheck");
+const complianceCheckRoute = stubRoute("ComplianceCheck");
 
 function setup(
   props: React.ComponentProps<typeof ResourceActions> = { filter, tooltips },

@@ -72,7 +72,7 @@ function setup() {
       <TestMemoryRouter initialEntries={["/?env=aaa"]}>
         <MockedDependencyProvider
           features={[environmentFeature]}
-          routes={[...getFeatureRoutes([environmentFeature]), stubRoute("Resources", "/resources")]}
+          routes={[...getFeatureRoutes([environmentFeature]), stubRoute("Resources")]}
         >
           <LocationDisplay />
           <ResourcesCard />

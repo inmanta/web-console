@@ -396,7 +396,7 @@ describe("Page Actions - Success", () => {
     });
 
     // delete instance
-    await userEvent.click(actions[2]);
+    await userEvent.click(screen.getByRole("menuitem", { name: words("delete") }));
 
     // the on_delete transfer carries a web_confirm annotation, which replaces the default prompt
     expect(
@@ -425,12 +425,8 @@ describe("Page Actions - Success", () => {
     expect(
       screen.getByRole("menuitem", { name: words("inventory.editInstance.button") })
     ).toBeVisible();
-    expect(
-      screen.queryByRole("menuitem", { name: words("instanceComposer.editButton") })
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("menuitem", { name: words("instanceComposer.showButton") })
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: "Edit in Composer" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: "Show in Composer" })).not.toBeInTheDocument();
   });
 
   it("Normal Instance Actions Enabled - update state action", async () => {
@@ -803,7 +799,7 @@ describe("Page Actions - Failed", () => {
     });
 
     // delete instance
-    await userEvent.click(actions[2]);
+    await userEvent.click(screen.getByRole("menuitem", { name: words("delete") }));
 
     // the on_delete transfer carries a web_confirm annotation, which replaces the default prompt
     expect(

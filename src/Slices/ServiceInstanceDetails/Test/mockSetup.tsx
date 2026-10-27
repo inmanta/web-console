@@ -78,10 +78,7 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
         <MockedDependencyProvider
           env={{ ...EnvironmentDetails.a, settings: { enable_lsm_expert_mode: expertMode } }}
           features={features}
-          routes={[
-            ...getFeatureRoutes(features),
-            stubRoute("CompileDetails", "/compilereports/:id"),
-          ]}
+          routes={[...getFeatureRoutes(features), stubRoute("CompileDetails")]}
         >
           <ModalProvider>{children}</ModalProvider>
         </MockedDependencyProvider>

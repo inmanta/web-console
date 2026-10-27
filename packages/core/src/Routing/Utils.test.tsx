@@ -2,14 +2,14 @@ import React from "react";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { RouteKind } from "@inmanta/web-console-core";
-import { stubRoute } from "@inmanta/web-console-test-utils";
+import { stubRoute } from "@inmanta/web-console-test-utils/Inject/stubRoute";
 import { PrimaryRouteManager } from "./PrimaryRouteManager";
 import { useRouteParams } from "./Utils";
 
 const routeManager = PrimaryRouteManager("", [
-  stubRoute("InstanceDetails", "/lsm/catalog/:service/inventory/:instance/:instanceId/details"),
-  stubRoute("ResourceDetails", "/resources/:resourceId"),
-  stubRoute("DesiredStateResourceDetails", "/desiredstate/:version/resource/:resourceId"),
+  stubRoute("InstanceDetails"),
+  stubRoute("ResourceDetails"),
+  stubRoute("DesiredStateResourceDetails"),
 ]);
 
 function makeProbe<K extends RouteKind>() {

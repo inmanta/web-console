@@ -34,10 +34,7 @@ const DetailsPage = (
   </Page>
 );
 
-const routes = [
-  ...getFeatureRoutes([lsmFeature]),
-  stubRoute("CompileDetails", "/compilereports/:id"),
-];
+const routes = [...getFeatureRoutes([lsmFeature]), stubRoute("CompileDetails")];
 
 describe("Order Details", () => {
   const server = setupServer();

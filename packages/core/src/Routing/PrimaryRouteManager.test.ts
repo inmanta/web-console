@@ -1,42 +1,32 @@
-import { stubRoute } from "@inmanta/web-console-test-utils";
+import { stubRoute } from "@inmanta/web-console-test-utils/Inject/stubRoute";
 import { PrimaryRouteManager } from "./PrimaryRouteManager";
 
-const catalogRoute = stubRoute("Catalog", "/lsm/catalog", {
-  parent: "Dashboard",
+const catalogRoute = stubRoute("Catalog", {
   label: () => "Service Catalog",
 });
-const inventoryRoute = stubRoute("Inventory", "/lsm/catalog/:service/inventory", {
-  parent: "Catalog",
+const inventoryRoute = stubRoute("Inventory", {
   label: ({ service }) => `Service Inventory: ${service}`,
 });
 
 // A part of the app's route table, as the features declare it.
 const routes = [
-  stubRoute("Dashboard", "/dashboard", { label: () => "Dashboard" }),
+  stubRoute("Dashboard", { label: () => "Dashboard" }),
   catalogRoute,
   inventoryRoute,
-  stubRoute("CreateInstance", "/lsm/catalog/:service/inventory/add", { parent: "Inventory" }),
-  stubRoute("EditInstance", "/lsm/catalog/:service/inventory/:instance/edit", {
-    parent: "Inventory",
-  }),
-  stubRoute("Events", "/lsm/catalog/:service/inventory/:instance/events", {
-    parent: "Inventory",
-  }),
-  stubRoute("Diagnose", "/lsm/catalog/:service/inventory/:instance/diagnose", {
-    parent: "Inventory",
-  }),
-  stubRoute("InstanceDetails", "/lsm/catalog/:service/inventory/:instance/:instanceId/details", {
-    parent: "Inventory",
+  stubRoute("CreateInstance"),
+  stubRoute("EditInstance"),
+  stubRoute("Events"),
+  stubRoute("Diagnose"),
+  stubRoute("InstanceDetails", {
     label: ({ instance }) => `Instance Details: ${instance}`,
   }),
-  stubRoute("Resources", "/resources", { parent: "Dashboard", label: () => "Resources" }),
-  stubRoute("ResourceDetails", "/resources/:resourceId", {
-    parent: "Resources",
+  stubRoute("Resources", { label: () => "Resources" }),
+  stubRoute("ResourceDetails", {
     label: () => "Resource Details",
   }),
-  stubRoute("CompileReports", "/compilereports", { parent: "Dashboard" }),
-  stubRoute("CompileDetails", "/compilereports/:id", { parent: "CompileReports" }),
-  stubRoute("Settings", "/settings", { parent: "Dashboard" }),
+  stubRoute("CompileReports"),
+  stubRoute("CompileDetails"),
+  stubRoute("Settings"),
 ];
 
 const routeManager = PrimaryRouteManager("", routes);

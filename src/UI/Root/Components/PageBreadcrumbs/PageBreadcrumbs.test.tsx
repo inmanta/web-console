@@ -11,20 +11,17 @@ import { PageBreadcrumbs } from "./PageBreadcrumbs";
 const required = { environmentRole: "Required" } as const;
 
 const routes = [
-  stubRoute("Dashboard", "/dashboard", { ...required, label: () => "Dashboard" }),
-  stubRoute("Catalog", "/lsm/catalog", {
+  stubRoute("Dashboard", { ...required, label: () => "Dashboard" }),
+  stubRoute("Catalog", {
     ...required,
-    parent: "Dashboard",
     label: () => "Service Catalog",
   }),
-  stubRoute("Inventory", "/lsm/catalog/:service/inventory", {
+  stubRoute("Inventory", {
     ...required,
-    parent: "Catalog",
     label: ({ service }) => `Service Inventory: ${service}`,
   }),
-  stubRoute("CreateInstance", "/lsm/catalog/:service/inventory/add", {
+  stubRoute("CreateInstance", {
     ...required,
-    parent: "Inventory",
     label: () => "Create Instance",
   }),
 ];

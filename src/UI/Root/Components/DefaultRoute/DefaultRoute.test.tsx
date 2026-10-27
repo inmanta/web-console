@@ -43,8 +43,8 @@ const setup = ({
   const queryClient = new QueryClient();
   const baseUrl = "";
   const routeManager = PrimaryRouteManager(baseUrl, [
-    stubRoute("Dashboard", "/dashboard", { environmentRole: "Required" }),
-    stubRoute("CreateEnvironment", "/environment/create", { environmentRole: "Forbidden" }),
+    stubRoute("Dashboard", { environmentRole: "Required" }),
+    stubRoute("CreateEnvironment", { environmentRole: "Forbidden" }),
   ]);
 
   const environmentHandler = {

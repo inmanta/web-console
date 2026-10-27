@@ -6,8 +6,8 @@ import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRo
 import { stubRoute } from "@inmanta/web-console-test-utils";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
-const Agents = { route: stubRoute("Agents", "/agents") };
-const Facts = { route: stubRoute("Facts", "/facts") };
+const Agents = { route: stubRoute("Agents") };
+const Facts = { route: stubRoute("Facts") };
 
 const AgentsPage = () => <div>Agents page</div>;
 const FactsPage = () => <div>Facts page</div>;

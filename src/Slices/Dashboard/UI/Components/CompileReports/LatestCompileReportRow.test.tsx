@@ -8,7 +8,7 @@ import { stubRoute } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { LatestCompileReportRow } from "./LatestCompileReportRow";
 
-const routeManager = PrimaryRouteManager("", [stubRoute("CompileDetails", "/compilereports/:id")]);
+const routeManager = PrimaryRouteManager("", [stubRoute("CompileDetails")]);
 
 function makeReport(overrides: Partial<CompileReport> = {}): CompileReport {
   return {

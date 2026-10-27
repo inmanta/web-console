@@ -6,6 +6,8 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { composerFeature } from "@/Features/Composer";
 import { lsmFeature } from "@/Features/Lsm";
+import { defaultServer } from "@S/ServiceInstanceDetails/Test/mockServer";
+import { setupServiceInstanceDetails } from "@S/ServiceInstanceDetails/Test/mockSetup";
 import { ServiceInventory } from "@S/ServiceInventory/UI/ServiceInventory";
 import { ServiceModel } from "@inmanta/web-console-core";
 import {
@@ -19,8 +21,8 @@ import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemo
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 
 /**
- * The composer adds its actions to the service inventory of lsm. Neither feature imports the
- * other, so this app-level test checks that they work together.
+ * The composer adds its actions to the pages of lsm. Neither feature imports the other, so these
+ * app-level tests check that they work together.
  */
 function setup(service: ServiceModel = Service.a) {
   return (
@@ -90,5 +92,26 @@ describe("ServiceInventory with the composer", () => {
     expect(await screen.findByText("Show in Composer")).toBeEnabled();
 
     expect(screen.getByText("Edit in Composer")).toBeInTheDocument();
+  });
+});
+
+describe("Instance details with the composer", () => {
+  const server = defaultServer;
+
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+
+  test("GIVEN the instance details page WHEN opening its actions THEN the composer's action is one of them", async () => {
+    render(setupServiceInstanceDetails(false, [lsmFeature, composerFeature]));
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Actions-Toggle" }));
+
+    expect(screen.getAllByRole("menuitem")).toHaveLength(6);
+    expect(screen.getByRole("menuitem", { name: "Edit in Composer" })).toBeEnabled();
   });
 });
