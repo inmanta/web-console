@@ -5,9 +5,9 @@ import {
   t_global_icon_color_status_success_default,
   t_chart_color_blue_100,
 } from "@patternfly/react-tokens";
-import { words } from "@/Core";
-import { ServiceOrderItem } from "@/Core/Domain/ServiceOrderModel";
-import { LegendBar, LegendItemDetails } from "@/UI/Components/LegendBar";
+import { words } from "@inmanta/web-console-core";
+import { ServiceOrderItem } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
+import { LegendBar, LegendItemDetails } from "@inmanta/web-console-ui/Components/LegendBar";
 
 interface Props {
   serviceOrderItems: ServiceOrderItem[];

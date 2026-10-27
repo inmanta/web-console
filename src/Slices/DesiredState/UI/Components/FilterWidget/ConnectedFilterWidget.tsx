@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from "react";
-import { useUrlStateWithFilter } from "@/Data/Common";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
 import { applyFilterDefaults } from "@S/DesiredState/UI/Utils";
+import { useUrlStateWithFilter } from "@inmanta/web-console-core/Common";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
 interface Props {

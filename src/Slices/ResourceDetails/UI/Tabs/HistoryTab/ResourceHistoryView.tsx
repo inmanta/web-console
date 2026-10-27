@@ -7,14 +7,14 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { Details } from "@/Core/Domain/Resource/Resource";
-import { usePaginatedTable } from "@/Data/Common";
-import { useGetResourceHistory } from "@/Data/Queries/Slices/Resource";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PaginationWidget } from "@/UI/Components/PaginationWidget";
+import { words } from "@inmanta/web-console-core";
+import { usePaginatedTable } from "@inmanta/web-console-core/Common";
+import { Details } from "@inmanta/web-console-core/Domain/Resource/Resource";
+import { useGetResourceHistory } from "@inmanta/web-console-core/Queries/Slices/Resource";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PaginationWidget } from "@inmanta/web-console-ui/Components/PaginationWidget";
 import { ResourceHistoryTable } from "./ResourceHistoryTable";
 import { ResourceTemporalData } from "./ResourceTemporalData";
 import { createResourceHistoryTablePresenter } from "./TablePresenter";

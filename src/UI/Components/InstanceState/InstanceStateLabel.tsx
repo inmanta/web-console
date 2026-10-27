@@ -1,7 +1,7 @@
 import React from "react";
 import { Content, Label, Tooltip } from "@patternfly/react-core";
-import { State } from "@/Core";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
+import { State } from "@inmanta/web-console-core";
 
 /**
  * The InstanceStateLabel Component

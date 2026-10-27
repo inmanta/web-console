@@ -1,5 +1,5 @@
-import { words } from "@/Core";
-import { ServerStatus as ServerStatusType } from "@/Core/Domain/ServerStatus";
+import { words } from "@inmanta/web-console-core";
+import { ServerStatus as ServerStatusType } from "@inmanta/web-console-core/Domain/ServerStatus";
 import { deriveOrchestratorHealth } from "./orchestratorHealth";
 
 function makeServerStatus(

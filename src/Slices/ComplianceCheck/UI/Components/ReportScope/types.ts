@@ -1,5 +1,5 @@
-import { ResourceActionFilter, StringMatch } from "@/Core";
-import { VersionSelectionBlocker } from "@/Data/Queries/Slices/Resource";
+import { ResourceActionFilter, StringMatch } from "@inmanta/web-console-core";
+import { VersionSelectionBlocker } from "@inmanta/web-console-core/Queries/Slices/Resource";
 
 /**
  * The filter fields that get a row of their own in the applied filter, under the same name. The

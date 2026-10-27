@@ -1,4 +1,4 @@
-import { ParsedNumber } from "@/Core/Language";
+import { ParsedNumber } from "@inmanta/web-console-core/Language";
 
 export interface ResourceHistoryRow {
   id: string;

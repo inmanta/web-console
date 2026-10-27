@@ -6,14 +6,14 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { MockedDependencyProvider } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Mock } from "@S/Facts/Test";
+import { words } from "@inmanta/web-console-core";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { FactsPage } from ".";
 
-// The code editor is mocked globally in test-setup.ts; no local mock needed.
+// The code editor is mocked globally in the test setup; no local mock needed.
 
 const valueOf = (name: string) => Mock.list.find((f) => f.name === name)?.value ?? "";
 

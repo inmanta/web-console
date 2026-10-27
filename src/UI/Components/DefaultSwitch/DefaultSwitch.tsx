@@ -1,6 +1,6 @@
 import React from "react";
-import { Config, words } from "@/Core";
 import { BooleanSwitch } from "@/UI/Components/BooleanSwitch";
+import { Config, words } from "@inmanta/web-console-core";
 
 interface Props {
   name: string;

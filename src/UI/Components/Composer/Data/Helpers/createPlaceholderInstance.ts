@@ -5,8 +5,8 @@ import {
   InterServiceRelation,
   InstanceAttributeModel,
   ServiceInstanceModel,
-} from "@/Core";
-import { InstanceWithRelations } from "@/Data/Queries/Slices/ServiceInstance";
+} from "@inmanta/web-console-core";
+import { InstanceWithRelations } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { convertLowerLimitToNumber } from "./shapeUtils";
 
 /**

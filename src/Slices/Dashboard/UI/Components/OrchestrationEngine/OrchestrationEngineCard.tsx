@@ -23,10 +23,16 @@ import {
   chart_color_orange_300,
   chart_color_purple_200,
 } from "@patternfly/react-tokens";
-import { CompileStatus, DateRange, PageSize, RangeOperator, words } from "@/Core";
-import { useGetCompileReports } from "@/Data/Queries/Slices/Compilation";
-import { useGetMetrics } from "@/Data/Queries/Slices/Dashboard";
-import dayjs from "@/dayjs";
+import {
+  CompileStatus,
+  DateRange,
+  PageSize,
+  RangeOperator,
+  words,
+} from "@inmanta/web-console-core";
+import { useGetCompileReports } from "@inmanta/web-console-core/Queries/Slices/Compilation";
+import { useGetMetrics } from "@inmanta/web-console-core/Queries/Slices/Dashboard";
+import dayjs from "@inmanta/web-console-core/dayjs";
 import {
   average,
   deriveNbDatapoints,

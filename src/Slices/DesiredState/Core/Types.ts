@@ -1,5 +1,5 @@
-import { DateRange, IntRange } from "@/Core/Domain";
-import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
+import { DateRange, IntRange } from "@inmanta/web-console-core/Domain";
+import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
 
 export interface Filter {
   version?: IntRange.IntRange[];

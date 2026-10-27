@@ -1,14 +1,14 @@
 import React from "react";
 import { ButtonVariant, Flex, FlexItem } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { useGetDiscoveredResourceDetails } from "@/Data/Queries/Slices/DiscoveredResources/useGetDiscoveredResourceDetails";
 import { DiscoveredResourceLink } from "@/Slices/ResourceDiscovery/UI/Components";
-import { Description } from "@/UI/Components/Description";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PageContainer } from "@/UI/Components/PageContainer";
-import { useRouteParams } from "@/UI/Routing";
+import { words } from "@inmanta/web-console-core";
+import { useGetDiscoveredResourceDetails } from "@inmanta/web-console-core/Queries/Slices/DiscoveredResources/useGetDiscoveredResourceDetails";
+import { useRouteParams } from "@inmanta/web-console-core/Routing";
+import { Description } from "@inmanta/web-console-ui/Components/Description";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { AttributesCard } from "./AttributesCard";
 
 // The wrapper is purely meant to extract the logic from the routing,

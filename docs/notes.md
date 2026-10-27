@@ -35,7 +35,7 @@ yarn ts-prune
 
 ## happy-dom & screen width
 
-Vitest runs the unit tests in happy-dom. `test-setup.ts` sets the window innerWidth and innerHeight to 1300 x 800.
+Vitest runs the unit tests in happy-dom. `packages/test-utils/src/setup.ts` sets the window innerWidth and innerHeight to 1300 x 800.
 So during a test, the application is basically rendered in memory in a window with dimensions 1300 x 800.
 When writing a test for a component that behaves diffently based on screen width, remember the default dimensions.
 You can change the dimensions by setting the window properties and triggering a resize event.
@@ -50,7 +50,7 @@ window.dispatchEvent(new Event("resize"));
 
 ## happy-dom & styles
 
-PatternFly's CSS isn't loaded in unit tests, so a `var(--pf-t--…)` token resolves to nothing. When a test asserts on a style that uses a token, call `definePatternFlyToken(token)` from `src/Test/Utils` at the start of the test.
+PatternFly's CSS isn't loaded in unit tests, so a `var(--pf-t--…)` token resolves to nothing. When a test asserts on a style that uses a token, call `definePatternFlyToken(token)` from `@inmanta/web-console-test-utils/Utils` at the start of the test.
 
 `expect(el).not.toHaveStyle(...)` passes on its own when happy-dom's CSS parser drops the expected declaration. Always pair a negative style assertion with a positive one on the same value, as `StatusButton.test.tsx` does.
 

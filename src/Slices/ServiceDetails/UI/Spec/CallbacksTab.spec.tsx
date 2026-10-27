@@ -4,11 +4,11 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, delay, http } from "msw";
 import { setupServer } from "msw/node";
-import { getShortUuidFromRaw } from "@/Core";
-import { Service, Callback, MockedDependencyProvider } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "@S/ServiceDetails/UI/Page";
+import { getShortUuidFromRaw } from "@inmanta/web-console-core";
+import { Service, Callback, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 
 const server = setupServer();
 

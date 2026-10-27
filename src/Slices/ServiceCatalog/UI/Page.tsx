@@ -1,11 +1,11 @@
 import React from "react";
-import { words } from "@/Core";
-import { useGetServiceModels } from "@/Data/Queries/Slices/Service";
 import { CatalogActions } from "@/UI/Components/CatalogActions";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PageContainer } from "@/UI/Components/PageContainer";
+import { words } from "@inmanta/web-console-core";
+import { useGetServiceModels } from "@inmanta/web-console-core/Queries/Slices/Service";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { CatalogDataList } from "./CatalogDataList";
 
 export const Page: React.FC = () => {

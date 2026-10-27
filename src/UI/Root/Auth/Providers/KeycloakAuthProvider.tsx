@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { Bullseye } from "@patternfly/react-core";
 import { useKeycloak, ReactKeycloakProvider } from "@react-keycloak/web";
 import Keycloak from "keycloak-js";
-import { AuthContext } from "@/Data/Auth/AuthContext";
-import { KeycloakAuthConfig } from "@/Data/Auth/types";
-import { Spinner } from "@/UI/Components/Spinner";
+import { AuthContext } from "@inmanta/web-console-core/Auth/AuthContext";
+import { KeycloakAuthConfig } from "@inmanta/web-console-core/Auth/types";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 
 /**
  * KeycloakProvider component provides authentication functionality using Keycloak, by using Instance provider by 3rd party library and passing it to  our auth context implementation.

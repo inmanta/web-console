@@ -5,11 +5,11 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import { isObjectEmpty } from "@/Core";
-import { ResourceLog } from "@/Core/Domain/ResourceLog";
-import { AttributeClassifier } from "@/Data/Common";
-import { AttributeList } from "@/UI/Components/AttributeList";
 import { CodeText } from "@/UI/Components/CodeText";
+import { isObjectEmpty } from "@inmanta/web-console-core";
+import { AttributeClassifier } from "@inmanta/web-console-core/Common";
+import { ResourceLog } from "@inmanta/web-console-core/Domain/ResourceLog";
+import { AttributeList } from "@inmanta/web-console-ui/Components/AttributeList";
 
 interface Props {
   log: ResourceLog;

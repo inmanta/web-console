@@ -1,18 +1,18 @@
 import React, { memo, useContext } from "react";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { words } from "@/Core";
-import { Fact } from "@/Core/Domain/Fact";
-import { ClassifiedAttribute } from "@/Data/Common";
+import { words } from "@inmanta/web-console-core";
+import { ClassifiedAttribute } from "@inmanta/web-console-core/Common";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { Fact } from "@inmanta/web-console-core/Domain/Fact";
 import {
   AttributeExpandTd,
   AttributeExpansionRow,
   AttributeValueCell,
   useAttributeExpansion,
-} from "@/UI/Components/AttributeList";
-import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
-import { Link } from "@/UI/Components/Link";
-import { DependencyContext } from "@/UI/Dependency";
+} from "@inmanta/web-console-ui/Components/AttributeList";
+import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
+import { Link } from "@inmanta/web-console-ui/Components/Link";
 
 interface Props {
   row: Pick<Fact, "name" | "updated" | "value" | "resource_id">;

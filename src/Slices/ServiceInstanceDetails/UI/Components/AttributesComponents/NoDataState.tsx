@@ -1,6 +1,6 @@
 import React from "react";
-import { words } from "@/Core";
-import { ErrorView } from "@/UI/Components/ErrorView";
+import { words } from "@inmanta/web-console-core";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 
 /**
  * React Component containing the errorView that is shared

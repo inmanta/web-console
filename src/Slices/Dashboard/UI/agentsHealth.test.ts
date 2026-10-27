@@ -1,4 +1,4 @@
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 import { deriveAgentsHealth } from "./agentsHealth";
 
 describe("deriveAgentsHealth", () => {

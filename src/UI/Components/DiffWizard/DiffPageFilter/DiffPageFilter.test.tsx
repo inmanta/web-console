@@ -1,5 +1,5 @@
 import { render, fireEvent, screen } from "@testing-library/react";
-import { Diff } from "@/Core";
+import { Diff } from "@inmanta/web-console-core";
 import { DiffPageFilter } from "./DiffPageFilter";
 
 const mockStatuses: Diff.Status[] = ["added", "modified", "deleted"];

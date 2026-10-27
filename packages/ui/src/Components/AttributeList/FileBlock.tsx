@@ -1,0 +1,93 @@
+import React, { useState, useEffect } from "react";
+import { Button, Flex } from "@patternfly/react-core";
+import { DownloadIcon } from "@patternfly/react-icons";
+import { words } from "@inmanta/web-console-core";
+import { useGetFile } from "@inmanta/web-console-core/Queries/Slices/Server";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
+import { TextWithCopy } from "@inmanta/web-console-ui/Components/TextWithCopy";
+import { Delayed } from "@inmanta/web-console-ui/Utils";
+import { AppAlert } from "../AppAlert";
+import { CodeEditor } from "../CodeEditor";
+
+interface Props {
+  hash: string;
+}
+
+/**
+ * FileBlock component
+ *
+ * @param {string} hash - The hash of the file to display
+ * @returns {React.FC<Props>} - The FileBlock component
+ */
+export const FileBlock: React.FC<Props> = ({ hash }) => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { mutate, data, error, isError, isSuccess, isPending } = useGetFile(hash);
+
+  const close = () => setErrorMessage(null);
+
+  useEffect(() => {
+    if (isError) {
+      setErrorMessage(error.message);
+    }
+  }, [isError, error]);
+
+  // The copy button goes last, so the hash and the get button stay together while it is hidden.
+  const copyAndButton = (
+    <TextWithCopy value={hash} tooltipContent={words("copy.clipboard")}>
+      <Flex
+        display={{ default: "inlineFlex" }}
+        flexWrap={{ default: "wrap" }}
+        gap={{ default: "gapSm" }}
+        alignItems={{ default: "alignItemsCenter" }}
+      >
+        {hash}
+        <Button
+          variant="link"
+          icon={<DownloadIcon />}
+          onClick={() => mutate()}
+          isDisabled={isPending || isSuccess}
+        >
+          {words("resources.file.get")}
+        </Button>
+      </Flex>
+    </TextWithCopy>
+  );
+
+  if (errorMessage) {
+    return (
+      <>
+        {copyAndButton}
+        <AppAlert
+          title={words("resources.file.error")}
+          message={errorMessage}
+          onClose={close}
+          isInline
+        />
+      </>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <>
+        {copyAndButton}
+        <CodeEditor code={data} height="300px" isCopyEnabled={false} />
+      </>
+    );
+  }
+
+  if (isPending) {
+    return (
+      <>
+        {copyAndButton}
+        <Delayed delay={500}>
+          <div>
+            <Spinner />
+          </div>
+        </Delayed>
+      </>
+    );
+  }
+
+  return copyAndButton;
+};

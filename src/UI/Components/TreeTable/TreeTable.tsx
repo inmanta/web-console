@@ -8,7 +8,7 @@ import {
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { Tbody, Thead, Tr, Th, Table } from "@patternfly/react-table";
-import { ParsedNumber, words } from "@/Core";
+import { ParsedNumber, words } from "@inmanta/web-console-core";
 import { ColumnHeaders } from "./ColumnHeaders";
 import { TreeTableHelper } from "./Helpers/TreeTableHelper";
 import { TreeRowView, Indent } from "./TreeRow";

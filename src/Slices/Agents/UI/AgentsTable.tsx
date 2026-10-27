@@ -1,7 +1,7 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
-import { Sort, words } from "@/Core";
-import { AgentRow } from "@/Core/Domain/Agent";
+import { Sort, words } from "@inmanta/web-console-core";
+import { AgentRow } from "@inmanta/web-console-core/Domain/Agent";
 import { AgentsTablePresenter } from "./AgentsTablePresenter";
 import { AgentsTableRow } from "./AgentsTableRow";
 

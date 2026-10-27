@@ -1,5 +1,5 @@
-import { words } from "@/Core";
-import { ServerStatus } from "@/Core/Domain/ServerStatus";
+import { words } from "@inmanta/web-console-core";
+import { ServerStatus } from "@inmanta/web-console-core/Domain/ServerStatus";
 import { ChecklistItem } from "./Components/EnvironmentHealth/OrchestratorCard";
 
 export interface OrchestratorHealth {

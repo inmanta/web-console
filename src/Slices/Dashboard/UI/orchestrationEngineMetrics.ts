@@ -1,4 +1,4 @@
-import { BackendMetricData } from "@/Core/Domain/Metrics";
+import { BackendMetricData } from "@inmanta/web-console-core/Domain/Metrics";
 
 export type OrchestrationEngineTab = "rate" | "time" | "waiting";
 

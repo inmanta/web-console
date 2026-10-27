@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FormGroup } from "@patternfly/react-core";
 import { UseMutationResult } from "@tanstack/react-query";
-import { CreateProjectParams, CreateProjectResponse } from "@/Data/Queries/Slices/Project";
-import { AppAlert } from "../AppAlert";
-import { SingleTextSelect } from "../SingleTextSelect";
+import {
+  CreateProjectParams,
+  CreateProjectResponse,
+} from "@inmanta/web-console-core/Queries/Slices/Project";
+import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
+import { SingleTextSelect } from "@inmanta/web-console-ui/Components/SingleTextSelect";
 
 interface Props {
   label: string;

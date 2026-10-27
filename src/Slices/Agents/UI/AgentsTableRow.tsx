@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { words } from "@/Core";
-import { AgentRow } from "@/Core/Domain/Agent";
-import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { AgentRow } from "@inmanta/web-console-core/Domain/Agent";
 import { ActionButton, AgentStatusLabel, KebabDropdown, OnResumeToggle } from "./Components";
 
 interface Props {

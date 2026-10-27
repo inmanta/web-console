@@ -1,5 +1,9 @@
-import { ExtensionPointRegistry, isLinkActionVisible, OrchestratorProvider } from "@/Core";
-import { MockOrchestratorProvider } from "@/Test";
+import {
+  ExtensionPointRegistry,
+  isLinkActionVisible,
+  OrchestratorProvider,
+} from "@inmanta/web-console-core";
+import { MockOrchestratorProvider } from "@inmanta/web-console-test-utils";
 import { composerFeature } from ".";
 
 /**

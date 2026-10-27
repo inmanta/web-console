@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { Table, TableVariant, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
-import { words } from "@/Core";
-import { ServiceOrderItem } from "@/Core/Domain/ServiceOrderModel";
-import { useExpansion } from "@/Data/Common";
+import { words } from "@inmanta/web-console-core";
+import { useExpansion } from "@inmanta/web-console-core/Common";
+import { ServiceOrderItem } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
 import { OrderDetailsRow } from "./OrderDetailsRow";
 import { OrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";
 

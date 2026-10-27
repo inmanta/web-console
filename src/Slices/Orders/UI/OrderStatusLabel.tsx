@@ -1,8 +1,11 @@
 import React from "react";
 import { Label } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { ServiceOrderItemState, ServiceOrderState } from "@/Core/Domain/ServiceOrderModel";
-import { Spinner } from "@/UI/Components/Spinner";
+import { words } from "@inmanta/web-console-core";
+import {
+  ServiceOrderItemState,
+  ServiceOrderState,
+} from "@inmanta/web-console-core/Domain/ServiceOrderModel";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 
 /**
  * Custom label tag for orders and serviceOrderItems

@@ -1,5 +1,3 @@
-import { AttributeAnnotations } from "@/Core";
-import { Attributes } from "@/Core/Domain/InventoryTable";
 import {
   CatalogAttributes,
   InventoryAttributes,
@@ -7,6 +5,8 @@ import {
 } from "@/UI/Components/TreeTable/Helpers/AttributeNode";
 import { PathHelper } from "@/UI/Components/TreeTable/Helpers/PathHelper";
 import { AttributeTree } from "@/UI/Components/TreeTable/types";
+import { AttributeAnnotations } from "@inmanta/web-console-core";
+import { Attributes } from "@inmanta/web-console-core/Domain/InventoryTable";
 import { Cell, TreeRow } from "./TreeRow";
 
 export class TreeRowCreator<T extends AttributeTree["target"]> {

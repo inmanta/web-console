@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Resource, words } from "@/Core";
+import { Resource, words } from "@inmanta/web-console-core";
 import { ServiceFilterForm } from "./ServiceFilterForm";
 
-vi.mock("@/Data/Queries/Slices/Service", () => ({
+vi.mock("@inmanta/web-console-core/Queries/Slices/Service", () => ({
   useGetServiceModels: () => ({
     useOneTime: () => ({
       data: [{ name: "l2Connect" }, { name: "DirectInternetAccess" }],
@@ -12,7 +12,7 @@ vi.mock("@/Data/Queries/Slices/Service", () => ({
   }),
 }));
 
-vi.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
+vi.mock("@inmanta/web-console-core/Queries/Slices/ServiceInstance", () => ({
   useGetInstances: () => ({
     useInfiniteScroll: () => ({
       data: {

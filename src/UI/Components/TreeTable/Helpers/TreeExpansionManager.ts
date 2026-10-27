@@ -1,4 +1,4 @@
-import { fromEntries } from "@/Core";
+import { fromEntries } from "@inmanta/web-console-core";
 
 export interface ExpansionState {
   [id: string]: boolean;

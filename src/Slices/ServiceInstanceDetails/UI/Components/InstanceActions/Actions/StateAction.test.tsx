@@ -1,10 +1,10 @@
 import { t_global_text_color_status_warning_default } from "@patternfly/react-tokens";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { TransferModel } from "@/Core";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
-import { definePatternFlyToken } from "@/Test/Utils/definePatternFlyToken";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { TransferModel } from "@inmanta/web-console-core";
+import { definePatternFlyToken } from "@inmanta/web-console-test-utils/Utils/definePatternFlyToken";
 import { StateAction } from "./StateAction";
 
 const baseTransfer: TransferModel = {

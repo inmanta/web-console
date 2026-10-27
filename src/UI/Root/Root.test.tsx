@@ -5,16 +5,16 @@ import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { HttpResponse, graphql, http } from "msw";
 import { setupServer } from "msw/node";
-import { defaultAuthContext } from "@/Data/Auth/AuthContext";
-import { EnvironmentPreviewResponse } from "@/Data/Queries/Slices/Environment";
+import { features } from "@/appFeatures";
+import { defaultAuthContext } from "@inmanta/web-console-core/Auth/AuthContext";
+import { EnvironmentPreviewResponse } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import {
   Environment,
   EnvironmentSettings,
   MockedDependencyProvider,
   Project,
   ServerStatus,
-} from "@/Test";
-import { features } from "@/appFeatures";
+} from "@inmanta/web-console-test-utils";
 import { Root } from "./Root";
 import { createRootRoutes } from "./RootRoutes";
 

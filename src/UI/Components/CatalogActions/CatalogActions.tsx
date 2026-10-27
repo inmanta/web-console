@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { Button, Content, Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
-import { useExportCatalog } from "@/Data/Queries/Slices/Service";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
-import { ConfirmUserActionForm } from "../ConfirmUserActionForm";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { useExportCatalog } from "@inmanta/web-console-core/Queries/Slices/Service";
+import { ConfirmUserActionForm } from "@inmanta/web-console-ui/Components/ConfirmUserActionForm";
 
 /**
  * This component will trigger an update of the Service Catalog.

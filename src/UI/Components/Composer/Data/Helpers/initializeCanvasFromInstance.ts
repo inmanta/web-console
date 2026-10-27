@@ -1,7 +1,7 @@
 import { dia } from "@joint/plus";
 import { v4 as uuidv4 } from "uuid";
-import { ServiceModel, ServiceInstanceModel, EmbeddedEntity } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Queries/Slices/ServiceInstance";
+import { ServiceModel, ServiceInstanceModel, EmbeddedEntity } from "@inmanta/web-console-core";
+import { InstanceWithRelations } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { LinkShape } from "../../UI/JointJsShapes/LinkShape";
 import {
   ServiceEntityShape,

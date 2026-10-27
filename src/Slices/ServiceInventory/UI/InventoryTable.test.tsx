@@ -2,10 +2,15 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Row, Service, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import {
+  Row,
+  Service,
+  MockedDependencyProvider,
+  EnvironmentDetails,
+} from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { InventoryTable } from "./InventoryTable";
 import { createInventoryTablePresenter } from "./Presenters";
 

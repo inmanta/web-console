@@ -1,5 +1,5 @@
 import React from "react";
-import { EnvironmentSettings } from "@/Core";
+import { EnvironmentSettings } from "@inmanta/web-console-core";
 import { BooleanInput } from "./BooleanInput";
 import { DictInputWithRow } from "./DictInput";
 import { EnumInput } from "./EnumInput";

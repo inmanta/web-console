@@ -1,5 +1,5 @@
-import { Parameter, words } from "@/Core";
-import { createTablePresenter } from "@/UI/Presenters";
+import { Parameter, words } from "@inmanta/web-console-core";
+import { createTablePresenter } from "@inmanta/web-console-ui/Presenters";
 
 /**
  * Table presenter for the parameters view. Rows are the parameters unchanged.

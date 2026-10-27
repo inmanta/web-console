@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import { Link } from "react-router";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { words } from "@/Core";
 import { CompileReportRow } from "@/Slices/CompileReports/Core/Types";
-import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
-import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
 import { CompileStatusLabel } from "./Components";
 
 interface Props {

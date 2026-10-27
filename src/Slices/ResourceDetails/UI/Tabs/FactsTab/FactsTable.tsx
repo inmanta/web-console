@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Table, Th, Thead, Tr } from "@patternfly/react-table";
-import { Sort, WordKey, words } from "@/Core";
-import { Fact } from "@/Core/Domain/Fact";
-import { Order } from "@/Core/Domain/Sort";
-import { useClassifiedRows } from "@/UI/Components/AttributeList";
+import { Sort, WordKey, words } from "@inmanta/web-console-core";
+import { Fact } from "@inmanta/web-console-core/Domain/Fact";
+import { Order } from "@inmanta/web-console-core/Domain/Sort";
+import { useClassifiedRows } from "@inmanta/web-console-ui/Components/AttributeList";
 import { FactsRow } from "./FactsRow";
 
 type FactRow = Pick<Fact, "id" | "name" | "updated" | "value">;

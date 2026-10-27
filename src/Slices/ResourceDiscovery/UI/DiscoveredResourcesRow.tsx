@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import { Link } from "react-router";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { words } from "@/Core";
-import { DiscoveredResource } from "@/Data/Queries/Slices/DiscoveredResources";
-import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { DiscoveredResource } from "@inmanta/web-console-core/Queries/Slices/DiscoveredResources";
 import { ActionsDropdown } from "./Components";
 
 interface Props {

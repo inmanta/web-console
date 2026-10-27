@@ -1,5 +1,5 @@
-import { LogLevelString } from "@/Core";
-import { ResourceLog } from "@/Core/Domain/ResourceLog";
+import { LogLevelString } from "@inmanta/web-console-core";
+import { ResourceLog } from "@inmanta/web-console-core/Domain/ResourceLog";
 
 const a: ResourceLog = {
   level: LogLevelString.ERROR,

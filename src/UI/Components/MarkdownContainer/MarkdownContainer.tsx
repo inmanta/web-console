@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import hljs from "highlight.js";
 import markdownit from "markdown-it";
 import { full } from "markdown-it-emoji";
-import { useTheme } from "../DarkmodeOption";
+import { useTheme } from "@inmanta/web-console-ui/Components/DarkmodeOption";
 import { renderMermaidBlocks } from "./MermaidHelpers";
 import mermaidPlugin from "./MermaidPlugin";
 import patternFlyTablePlugin from "./PatternFlyTablePlugin";

@@ -1,6 +1,6 @@
 import React from "react";
 import { Content, ContentVariants, Flex, FlexItem } from "@patternfly/react-core";
-import { InstanceSummary, words } from "@/Core";
+import { InstanceSummary, words } from "@inmanta/web-console-core";
 import { InstanceSummaryLabels, LabelFiltering } from "./InstanceSummaryLabels";
 
 interface Props {

@@ -7,7 +7,7 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import { CompileError, words } from "@/Core";
+import { CompileError, words } from "@inmanta/web-console-core";
 
 interface Props {
   errors: CompileError[];

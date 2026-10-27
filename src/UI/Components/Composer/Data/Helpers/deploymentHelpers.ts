@@ -1,6 +1,6 @@
 import { dia } from "@joint/plus";
 import { v4 as uuidv4 } from "uuid";
-import { ServiceOrderItemAction, ServiceOrderItemRequest } from "@/Core";
+import { ServiceOrderItemAction, ServiceOrderItemRequest } from "@inmanta/web-console-core";
 import { ServiceEntityShape } from "../../UI";
 import { SavedCoordinates } from "./canvasLayoutUtils";
 

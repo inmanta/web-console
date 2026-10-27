@@ -11,15 +11,15 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
-import { ServiceModel, words } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { useUrlStateWithString } from "@/Data/Common";
-import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
-import { ErrorView } from "@/UI/Components/ErrorView";
 import { InstanceStateLabel } from "@/UI/Components/InstanceState";
-import { Link } from "@/UI/Components/Link";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { DependencyContext } from "@/UI/Dependency";
+import { ServiceModel, words } from "@inmanta/web-console-core";
+import { useUrlStateWithString } from "@inmanta/web-console-core/Common";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
+import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { Link } from "@inmanta/web-console-ui/Components/Link";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { InstanceDetailsContext } from "../../../Core/Context";
 
 /**

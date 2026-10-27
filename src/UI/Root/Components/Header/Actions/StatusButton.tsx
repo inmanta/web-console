@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button, ToolbarItem, Tooltip } from "@patternfly/react-core";
 import { PortIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { words } from "@/Core";
-import { useGetHealth } from "@/Data/Queries/Slices/Server";
-import { Link } from "@/UI/Components/Link";
-import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useGetHealth } from "@inmanta/web-console-core/Queries/Slices/Server";
+import { Link } from "@inmanta/web-console-ui/Components/Link";
 
 export const StatusButton: React.FC = () => {
   const [isEnvironmentDown, setIsEnvironmentDown] = useState(false);

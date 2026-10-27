@@ -1,15 +1,15 @@
 import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { Environment, MockedDependencyProvider, Project } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import * as routing from "@/UI/Routing/Utils";
+import { words } from "@inmanta/web-console-core";
+import * as routing from "@inmanta/web-console-core/Routing/Utils";
+import { Environment, MockedDependencyProvider, Project } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Page } from "./Page";
 
 const axe = configureAxe({
@@ -309,6 +309,51 @@ describe("CreateEnvironmentForm", () => {
     await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
     expect(mockFn).toHaveBeenCalledWith("Catalog", undefined, "?env=environment_id_a");
+  });
+
+  test("Given CreateEnvironmentForm When a new project is created Then submit stays disabled until the refetched projects include it", async () => {
+    const newProject = { name: "refetched-project", id: "proj-id-refetched", environments: [] };
+    let releaseProjectsRefetch: () => void = () => {};
+    const projectsRefetchReleased = new Promise<void>((resolve) => {
+      releaseProjectsRefetch = resolve;
+    });
+    let projectsRequestCount = 0;
+
+    server.use(
+      http.get("/api/v2/project", async () => {
+        projectsRequestCount += 1;
+
+        if (projectsRequestCount === 1) {
+          return HttpResponse.json({ data: Project.filterable });
+        }
+        await projectsRefetchReleased;
+
+        return HttpResponse.json({ data: [...Project.filterable, newProject] });
+      }),
+      http.put("/api/v2/project", () => HttpResponse.json({ data: newProject }))
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    const projectInput = await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
+    });
+
+    await userEvent.click(projectInput);
+    await userEvent.type(projectInput, newProject.name);
+    await userEvent.click(
+      await screen.findByRole("option", { name: `Create "${newProject.name}"` })
+    );
+    await userEvent.type(await screen.findByRole("textbox", { name: "Name-input" }), "dev");
+
+    await waitFor(() => expect(projectsRequestCount).toBe(2));
+    expect(screen.getByRole("button", { name: "submit" })).toBeDisabled();
+
+    releaseProjectsRefetch();
+
+    await waitFor(() => expect(screen.getByRole("button", { name: "submit" })).toBeEnabled());
   });
 
   test("Given CreateEnvironmentForm When creating a new project is not successful Then shows error message", async () => {

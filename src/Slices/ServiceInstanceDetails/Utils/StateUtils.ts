@@ -4,7 +4,7 @@ import {
   StateModel,
   TransferAnnotations,
   TransferModel,
-} from "@/Core";
+} from "@inmanta/web-console-core";
 
 /**
  * A target state reachable from the current state, paired with the transfer that

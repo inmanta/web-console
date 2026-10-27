@@ -1,6 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { InstancesByLabel, words } from "@/Core";
+import { InstancesByLabel, words } from "@inmanta/web-console-core";
 import { InstanceSummaryLabels } from "./InstanceSummaryLabels";
 
 const byLabel: InstancesByLabel = { danger: 3, warning: 0, success: 116, info: 0, no_label: 4 };

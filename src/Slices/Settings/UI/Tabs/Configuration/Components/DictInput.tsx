@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { EnvironmentSettings } from "@/Core";
 import { DictEditor, Entry, Dict } from "@/UI/Components/DictEditor";
+import { EnvironmentSettings } from "@inmanta/web-console-core";
 import { Row } from "./Row";
 import { Warning } from "./Warning";
 

@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { AuthProvider as OidcContextProvider, useAuth } from "react-oidc-context";
 import { useLocation, useNavigate } from "react-router";
 import { Bullseye, Button, Content, Stack, StackItem, Title } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { AuthContext } from "@/Data/Auth/AuthContext";
-import { OidcAuthConfig } from "@/Data/Auth/types";
-import { Spinner } from "@/UI/Components/Spinner";
-import { PrimaryBaseUrlManager } from "@/UI/Routing";
+import { words } from "@inmanta/web-console-core";
+import { AuthContext } from "@inmanta/web-console-core/Auth/AuthContext";
+import { OidcAuthConfig } from "@inmanta/web-console-core/Auth/types";
+import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 import { clearLocalToken, getLocalToken, getLocalUsername, setLocalToken } from "./localToken";
 
 interface OidcFallbackChooserProps {

@@ -1,5 +1,5 @@
-import { Attributes } from "@/Core";
 import { TreeRow } from "@/UI/Components/TreeTable/TreeRow";
+import { Attributes } from "@inmanta/web-console-core";
 import { ExpansionState } from "./TreeExpansionManager";
 
 export interface TreeTableHelper {

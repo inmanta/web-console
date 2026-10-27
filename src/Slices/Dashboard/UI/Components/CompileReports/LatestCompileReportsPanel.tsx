@@ -12,8 +12,8 @@ import {
   FlexItem,
 } from "@patternfly/react-core";
 import { CodeIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { deriveCompilesHealth } from "../../compilesHealth";
 import { useLatestCompileReports } from "../../useLatestCompileReports";
 import { HEALTH_TONE, IconBadge } from "../IconBadge";

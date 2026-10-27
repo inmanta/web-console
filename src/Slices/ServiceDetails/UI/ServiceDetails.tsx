@@ -1,5 +1,5 @@
 import React from "react";
-import { ServiceModel } from "@/Core";
+import { ServiceModel } from "@inmanta/web-console-core";
 
 import { CatalogTabs } from "./Tabs";
 import { Wrapper } from "./Wrapper";

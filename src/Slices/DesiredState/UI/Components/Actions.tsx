@@ -7,7 +7,7 @@ import {
   MenuToggleElement,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { ParsedNumber } from "@/Core";
+import { ParsedNumber } from "@inmanta/web-console-core";
 import { CompareAction } from "./CompareAction";
 import { DeleteAction } from "./DeleteAction";
 import { DryRunAction } from "./DryRunAction";

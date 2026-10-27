@@ -1,4 +1,4 @@
-import { Agent, AgentStatus } from "@/Core/Domain/Agent";
+import { Agent, AgentStatus } from "@inmanta/web-console-core/Domain/Agent";
 
 const data: Agent[] = [
   {

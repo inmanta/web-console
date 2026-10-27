@@ -1,6 +1,6 @@
 import React from "react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 import { ClickableCard } from "./ClickableCard";
 import { HealthStatus, StatusIndicator } from "./StatusIndicator";
 

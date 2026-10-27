@@ -1,6 +1,6 @@
 import React from "react";
 import { Label, LabelGroup } from "@patternfly/react-core";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 import { CompareSelection } from "../Utils";
 
 interface Props {

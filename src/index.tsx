@@ -1,19 +1,19 @@
 import "@patternfly/react-core/dist/styles/base.css";
 import "monaco-editor/min/vs/editor/editor.main.css";
-import "@/Core/Language/Extensions";
+import "@inmanta/web-console-core/Language/Extensions";
 import { loader } from "@monaco-editor/react";
 import { Flex } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as monaco from "monaco-editor";
 import { createRoot } from "react-dom/client";
-import { QueryControlProvider } from "@/Data/Queries/Helpers";
 import { createRootRoutes, Root } from "@/UI/Root";
 import { AuthProvider } from "@/UI/Root/Auth/AuthProvider";
 import { registerAppMessages } from "@/UI/Root/registerAppMessages";
-import { PrimaryBaseUrlManager } from "@/UI/Routing";
+import { QueryControlProvider } from "@inmanta/web-console-core/Queries/Helpers";
+import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
+import CustomRouter from "@inmanta/web-console-core/Routing/CustomRouter";
+import ErrorBoundary from "@inmanta/web-console-ui/Utils/ErrorBoundary";
 import { Injector } from "./Injector";
-import CustomRouter from "./UI/Routing/CustomRouter";
-import ErrorBoundary from "./UI/Utils/ErrorBoundary";
 import { features } from "./appFeatures";
 import { createMonacoWorker } from "./monaco-workers";
 

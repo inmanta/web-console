@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import { Button, Label } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { words } from "@/Core";
-import { useGetTokens, useRevokeToken } from "@/Data/Queries/Slices/Environment";
-import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { words } from "@inmanta/web-console-core";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { useGetTokens, useRevokeToken } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 
 /**
  * Lists the registered (revocable) tokens of the current environment and allows revoking them.

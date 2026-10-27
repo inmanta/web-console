@@ -1,6 +1,6 @@
-import { words } from "@/Core";
-import { DiscoveredResource } from "@/Data/Queries/Slices/DiscoveredResources";
-import { createTablePresenter } from "@/UI/Presenters";
+import { words } from "@inmanta/web-console-core";
+import { DiscoveredResource } from "@inmanta/web-console-core/Queries/Slices/DiscoveredResources";
+import { createTablePresenter } from "@inmanta/web-console-ui/Presenters";
 
 /**
  * Table presenter for the discovered resources view. Rows are the resources

@@ -1,4 +1,4 @@
-import { Attributes } from "@/Core";
+import { Attributes } from "@inmanta/web-console-core";
 import { ExpansionState } from "../Helpers/TreeExpansionManager";
 import { TreeRow } from "../TreeRow/TreeRow";
 

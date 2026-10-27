@@ -1,5 +1,5 @@
-import { EventRow, InstanceEvent, words } from "@/Core";
-import { createTablePresenter } from "@/UI/Presenters";
+import { EventRow, InstanceEvent, words } from "@inmanta/web-console-core";
+import { createTablePresenter } from "@inmanta/web-console-ui/Presenters";
 
 const eventToRow = (event: InstanceEvent): EventRow => ({
   id: event.id,

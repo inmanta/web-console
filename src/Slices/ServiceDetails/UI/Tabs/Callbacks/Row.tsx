@@ -2,9 +2,9 @@ import React from "react";
 import { Button, Content, Tooltip } from "@patternfly/react-core";
 import { AngleDownIcon, AngleUpIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
-import { getShortUuidFromRaw, words } from "@/Core";
-import { Callback } from "@/Core/Domain/Callback";
-import { TextWithCopy } from "@/UI/Components/TextWithCopy";
+import { getShortUuidFromRaw, words } from "@inmanta/web-console-core";
+import { Callback } from "@inmanta/web-console-core/Domain/Callback";
+import { TextWithCopy } from "@inmanta/web-console-ui/Components/TextWithCopy";
 import { DeleteButton } from "./DeleteButton";
 import { Details } from "./Details";
 

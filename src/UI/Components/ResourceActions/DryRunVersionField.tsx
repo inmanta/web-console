@@ -9,9 +9,12 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { useGetDesiredStateVersions } from "@/Data/Queries/Slices/DesiredState";
-import { DryRunVersion, DryRunVersionType } from "@/Data/Queries/Slices/Resource";
+import { words } from "@inmanta/web-console-core";
+import { useGetDesiredStateVersions } from "@inmanta/web-console-core/Queries/Slices/DesiredState";
+import {
+  DryRunVersion,
+  DryRunVersionType,
+} from "@inmanta/web-console-core/Queries/Slices/Resource";
 import { InstanceVersionSelect } from "./InstanceVersionSelect";
 import { ModelVersionSelect } from "./ModelVersionSelect";
 import { ResourceActionInstance } from "./types";

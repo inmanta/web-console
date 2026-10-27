@@ -1,5 +1,5 @@
-import { words } from "@/Core";
-import { CompileReport } from "@/Core/Domain/CompileReport";
+import { words } from "@inmanta/web-console-core";
+import { CompileReport } from "@inmanta/web-console-core/Domain/CompileReport";
 import { deriveCompilesHealth } from "./compilesHealth";
 
 function makeReport(overrides: Partial<CompileReport> = {}): CompileReport {

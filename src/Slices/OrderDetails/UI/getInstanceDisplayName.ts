@@ -1,4 +1,4 @@
-import { ServiceOrderItem } from "@/Core/Domain/ServiceOrderModel";
+import { ServiceOrderItem } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
 
 /**
  * Returns the service identity display name or attribute value for an order item,

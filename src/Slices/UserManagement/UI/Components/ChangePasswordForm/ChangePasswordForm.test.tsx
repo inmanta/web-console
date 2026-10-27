@@ -4,8 +4,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth";
-import { MockedDependencyProvider } from "@/Test";
+import { AuthContextInterface, defaultAuthContext } from "@inmanta/web-console-core/Auth";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { ChangePasswordForm } from "./ChangePasswordForm";
 
 function setup(user: string, authHelper: AuthContextInterface = defaultAuthContext) {

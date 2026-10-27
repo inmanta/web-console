@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { useGetInstanceConfig } from "@/Data/Queries/Slices/ServiceInstance";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
+import { VersionedServiceInstanceIdentifier } from "@inmanta/web-console-core";
+import { useGetInstanceConfig } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { ConfigDetails } from "./ConfigDetails";
 
 interface Props {

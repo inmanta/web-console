@@ -1,12 +1,12 @@
 import React, { PropsWithChildren, useContext } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { useGetServerStatus } from "@/Data/Queries/Slices/Server";
-import { Description } from "@/UI/Components/Description";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PageContainer } from "@/UI/Components/PageContainer";
-import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useGetServerStatus } from "@inmanta/web-console-core/Queries/Slices/Server";
+import { Description } from "@inmanta/web-console-ui/Components/Description";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { StatusList } from "./StatusList";
 import { SupportArchive } from "./SupportArchive";
 
