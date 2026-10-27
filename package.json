@@ -116,7 +116,6 @@
     "file-saver": "^2.0.5",
     "graphiql": "^5.4.0",
     "graphql": "^17.0.2",
-    "graphql-request": "^7.4.0",
     "highlight.js": "^11.12.0",
     "jsonpathly": "^3.0.1",
     "keycloak-js": "^26.2.4",

@@ -4,7 +4,7 @@ import { SubstitutionValues, substituteVariables } from "./suggestionVariables";
 
 /**
  * The `graphql` suggestion flavor: its query is generated from annotation data at runtime
- * rather than a static `gql`. Two languages meet - `filter` keys are camelCase GraphQL fields
+ * rather than a static query string. Two languages meet - `filter` keys are camelCase GraphQL fields
  * (sent to the server); `label`/`value` are jsonpath projections into each returned node
  * (evaluated client-side).
  *

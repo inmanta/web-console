@@ -1,5 +1,4 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { gql } from "graphql-request";
 import { Notification } from "@/Core/Domain/Notification";
 import { CustomError, REFETCH_INTERVAL, useGraphQLRequest } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
@@ -78,7 +77,7 @@ export const useGetPartialNotifications = ({
 }: Props): GetNotifications => {
   const orderByString = formatOrderBy(orderBy);
 
-  const query = gql`
+  const query = /* GraphQL */ `
     query {
       notifications(
         filter: { cleared: ${cleared}, environment: "${envID}" }
