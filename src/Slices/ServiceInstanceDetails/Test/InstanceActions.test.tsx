@@ -268,7 +268,7 @@ describe("Page Actions - Failed", () => {
     await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
-    const errorToast = screen.getByTestId("error-toast-actions-error-message");
+    const errorToast = await screen.findByTestId("error-toast-actions-error-message");
 
     expect(errorToast).toBeVisible();
   });
@@ -306,7 +306,7 @@ describe("Page Actions - Failed", () => {
     await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
-    const errorToast = screen.getByTestId("error-toast-actions-error-message");
+    const errorToast = await screen.findByTestId("error-toast-actions-error-message");
 
     expect(errorToast).toBeVisible();
 
@@ -359,7 +359,7 @@ describe("Page Actions - Failed", () => {
     await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
-    const errorToast = screen.getByTestId("error-toast-actions-error-message");
+    const errorToast = await screen.findByTestId("error-toast-actions-error-message");
 
     expect(errorToast).toBeVisible();
   });
@@ -403,7 +403,7 @@ describe("Page Actions - Failed", () => {
 
     await userEvent.click(confirmButton);
 
-    const errorToast = screen.getByTestId("error-toast-actions-error-message");
+    const errorToast = await screen.findByTestId("error-toast-actions-error-message");
 
     expect(errorToast).toBeVisible();
   });

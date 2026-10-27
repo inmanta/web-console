@@ -21,11 +21,7 @@ export interface AttributeInputConverter {
     inputType: InputType,
     defaultValueSet: boolean,
     defaultValue:
-      | string
-      | null
-      | boolean
-      | string[]
-      | { [x: string]: string | null | boolean | string[] }
+      string | null | boolean | string[] | { [x: string]: string | null | boolean | string[] }
   ):
     | string
     | null

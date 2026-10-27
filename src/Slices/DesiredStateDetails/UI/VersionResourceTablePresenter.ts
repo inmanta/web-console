@@ -2,9 +2,10 @@ import { Resource } from "@/Core";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 
-export class VersionResourceTablePresenter
-  implements TablePresenter<Resource.FromVersion, Resource.RowFromVersion>
-{
+export class VersionResourceTablePresenter implements TablePresenter<
+  Resource.FromVersion,
+  Resource.RowFromVersion
+> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 

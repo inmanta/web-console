@@ -13,11 +13,7 @@ export type AttributeModel = AttributeValidation & {
   description?: string | null;
   modifier: string;
   default_value:
-    | string
-    | null
-    | boolean
-    | string[]
-    | { [x: string]: string | null | boolean | string[] };
+    string | null | boolean | string[] | { [x: string]: string | null | boolean | string[] };
   default_value_set: boolean;
   attribute_annotations?: AttributeAnnotations;
 };

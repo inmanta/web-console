@@ -20,7 +20,11 @@ module.exports = merge(common, {
     historyApiFallback: true,
     hot: true,
     client: {
-      overlay: true,
+      overlay: {
+        // Benign browser notification, see cypress/support/e2e.js. The function is serialized
+        // into the client bundle, so it must be self-contained.
+        runtimeErrors: (error) => !error.message.includes("ResizeObserver loop"),
+      },
     },
     static: {
       directory: path.resolve(__dirname, "dist"),

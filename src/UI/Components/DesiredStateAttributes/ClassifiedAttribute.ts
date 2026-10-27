@@ -3,15 +3,7 @@
  * based on their content type.
  */
 export type ClassifiedAttribute =
-  | Undefined
-  | SingleLine
-  | MultiLine
-  | Password
-  | File
-  | Json
-  | Xml
-  | Python
-  | Code;
+  Undefined | SingleLine | MultiLine | Password | File | Json | Xml | Python | Code;
 
 /**
  * Base interface for attribute types that have a key-value structure
