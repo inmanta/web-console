@@ -197,7 +197,7 @@ describe("ResourceActions", () => {
     await userEvent.click(screen.getByRole("button", { name: toggleLabel }));
     await userEvent.click(screen.getByRole("menuitem", { name: new RegExp(repairLabel, "i") }));
 
-    const pendingLabel = words("resources.resourceActions.pending")(repairLabel);
+    const pendingLabel = words("resources.resourceActions.success")(repairLabel);
 
     expect(await screen.findByRole("progressbar", { name: pendingLabel })).toBeVisible();
     expect(screen.getByRole("button", { name: toggleLabel })).toBeDisabled();
@@ -585,7 +585,7 @@ describe("ResourceActions", () => {
 
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-      const pendingLabel = words("resources.resourceActions.pending")(dryRunLabel);
+      const pendingLabel = words("resources.resourceActions.success")(dryRunLabel);
 
       expect(await screen.findByRole("progressbar", { name: pendingLabel })).toBeVisible();
 

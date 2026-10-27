@@ -254,7 +254,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
                 progressIcon={
                   pendingActionKey && (
                     <Spinner
-                      aria-label={words("resources.resourceActions.pending")(
+                      aria-label={words("resources.resourceActions.success")(
                         actions[pendingActionKey].label
                       )}
                     />
