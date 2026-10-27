@@ -1,4 +1,10 @@
-import { EnvironmentRole, Route, RouteFactory, RouteKind } from "@inmanta/web-console-core";
+import {
+  EnvironmentRole,
+  Route,
+  RouteFactory,
+  RouteKind,
+  RouteParams,
+} from "@inmanta/web-console-core";
 
 /**
  * The path and parent of the routes that tests stub, as the features declare them.
@@ -36,7 +42,7 @@ export const stubbedRoutes = {
 
 export type StubbedRouteKind = keyof typeof stubbedRoutes;
 
-interface StubRouteOptions {
+interface StubRouteOptions<K extends StubbedRouteKind> {
   /**
    * Whether the page needs an environment. Defaults to "Optional".
    */
@@ -45,7 +51,7 @@ interface StubRouteOptions {
   /**
    * The label of the page, e.g. in breadcrumbs. Defaults to the kind.
    */
-  label?: (params: Record<string, string>) => string;
+  label?: (params: RouteParams<K>) => string;
 }
 
 /**
@@ -61,18 +67,18 @@ interface StubRouteOptions {
  * @returns a route factory to pass to `MockedDependencyProvider` in its `routes`
  */
 export const stubRoute =
-  (
-    kind: StubbedRouteKind,
-    { environmentRole = "Optional", label = () => kind }: StubRouteOptions = {}
+  <K extends StubbedRouteKind>(
+    kind: K,
+    { environmentRole = "Optional", label = () => kind }: StubRouteOptions<K> = {}
   ): RouteFactory =>
-  (base) => {
+  (base): Route<K> => {
     const stubbed: { path: string; parent?: RouteKind } = stubbedRoutes[kind];
 
     return {
       kind,
       parent: stubbed.parent,
       path: `${base}${stubbed.path}`,
-      generateLabel: label as Route["generateLabel"],
+      generateLabel: label,
       environmentRole,
     };
   };
