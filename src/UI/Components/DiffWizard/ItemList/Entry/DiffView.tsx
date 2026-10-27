@@ -1,6 +1,6 @@
 import React from "react";
 import _ReactDiffViewer, { DiffMethod } from "react-diff-viewer-continued";
-import { Diff } from "@/Core";
+import { Diff } from "@inmanta/web-console-core";
 
 // react-diff-viewer-continued is a CJS-only package (no ESM entry). Vite 8 /
 // rolldown pre-bundles it as `export default require_src()`, where require_src()

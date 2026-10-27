@@ -4,10 +4,10 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { MockedDependencyProvider } from "@/Test";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { mockedMetrics } from "@S/Dashboard/Core/Mock";
+import { words } from "@inmanta/web-console-core";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { OrchestrationEngineCard } from "./OrchestrationEngineCard";
 
 const server = setupServer();

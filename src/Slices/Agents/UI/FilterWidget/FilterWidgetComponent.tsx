@@ -1,16 +1,16 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { AgentStatus } from "@/Core/Domain/Agent";
 import { Filter } from "@/Slices/Agents/Core/Types";
-import { AddableTextInput } from "@/UI/Components/AddableTextInput";
+import { words } from "@inmanta/web-console-core";
+import { AgentStatus } from "@inmanta/web-console-core/Domain/Agent";
+import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
 import {
   ActiveFilterGroup,
   ActiveFilters,
   FilterDrawerPanelContent,
   getFilterActions,
-} from "@/UI/Components/FilterDrawer";
-import { MultiTextSelect } from "@/UI/Components/MultiTextSelect";
+} from "@inmanta/web-console-ui/Components/FilterDrawer";
+import { MultiTextSelect } from "@inmanta/web-console-ui/Components/MultiTextSelect";
 
 interface Props {
   filter: Filter;

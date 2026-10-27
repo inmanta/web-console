@@ -1,5 +1,5 @@
 import React from "react";
-import { useRouteParams } from "@/UI/Routing";
+import { useRouteParams } from "@inmanta/web-console-core/Routing";
 import { View } from "./View";
 
 /**

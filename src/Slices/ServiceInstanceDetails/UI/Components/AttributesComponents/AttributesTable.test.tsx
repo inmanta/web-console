@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
+import { InstanceAttributeModel, ServiceModel } from "@inmanta/web-console-core";
 import { instanceData, serviceModel } from "../../../Test/mockData";
 import { SetupWrapper } from "../../../Test/mockSetup";
 import { AttributesTable } from "./AttributesTable";

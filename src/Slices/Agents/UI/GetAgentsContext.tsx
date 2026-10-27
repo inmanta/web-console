@@ -1,7 +1,10 @@
 import { createContext } from "react";
-import { PageSize, Sort } from "@/Core";
-import { CurrentPage, initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { Filter } from "@/Slices/Agents/Core/Types";
+import { PageSize, Sort } from "@inmanta/web-console-core";
+import {
+  CurrentPage,
+  initialCurrentPage,
+} from "@inmanta/web-console-core/Common/UrlState/useUrlStateWithCurrentPage";
 
 interface GetAgentsProvider {
   filter: Filter;

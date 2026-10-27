@@ -1,6 +1,6 @@
 import React from "react";
-import { CompileStageReport } from "@/Core/Domain/CompileDetails";
 import { LogViewerComponent, LogViewerData } from "@/UI/Components/LogViewer";
+import { CompileStageReport } from "@inmanta/web-console-core/Domain/CompileDetails";
 
 interface Props {
   reports: CompileStageReport[];

@@ -1,6 +1,6 @@
-import { words } from "@/Core";
-import { ServiceOrder } from "@/Core/Domain/ServiceOrderModel";
-import { createTablePresenter } from "@/UI/Presenters";
+import { words } from "@inmanta/web-console-core";
+import { ServiceOrder } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
+import { createTablePresenter } from "@inmanta/web-console-ui/Presenters";
 
 /**
  * Table presenter for the orders view. Rows are the orders unchanged.

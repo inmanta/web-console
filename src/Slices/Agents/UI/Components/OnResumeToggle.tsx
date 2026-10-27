@@ -1,8 +1,8 @@
 import React from "react";
 import { Switch, Tooltip } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { usePauseAgent } from "@/Data/Queries/Slices/Agents";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { words } from "@inmanta/web-console-core";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { usePauseAgent } from "@inmanta/web-console-core/Queries/Slices/Agents";
 
 interface Props {
   name: string;

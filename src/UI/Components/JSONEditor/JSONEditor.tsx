@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
-import { words } from "@/Core";
-import { useGetJSONSchema } from "@/Data/Queries/Slices/ServiceInstance";
-import { Spinner } from "@/UI/Components/Spinner";
-import { useTheme } from "../DarkmodeOption";
+import { words } from "@inmanta/web-console-core";
+import { useGetJSONSchema } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { useTheme } from "@inmanta/web-console-ui/Components/DarkmodeOption";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 import { ErrorMessageContainer } from "../ErrorMessageContainer";
 
 interface Props {

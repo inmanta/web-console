@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FileUpload, FileUploadProps } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { ImageHelper } from "@/Data/Common";
-import { AppAlert } from "../AppAlert";
+import { words } from "@inmanta/web-console-core";
+import { ImageHelper } from "@inmanta/web-console-core/Common";
+import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
 import { ImagePreview } from "./ImagePreview";
 
 // Derive the dropzone callback types from PatternFly so we stay in sync with the

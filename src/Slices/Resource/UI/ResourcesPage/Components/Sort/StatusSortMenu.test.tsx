@@ -1,10 +1,10 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Resource } from "@/Core";
-import { MultiSort } from "@/Data/Common";
+import { Resource } from "@inmanta/web-console-core";
+import { MultiSort } from "@inmanta/web-console-core/Common";
 import { StatusSortMenu, reorderSorts } from "./StatusSortMenu";
 
-vi.mock("@/Core/I18n/Words", () => ({
+vi.mock("@inmanta/web-console-core/I18n/Words", () => ({
   words: (key: string) => key,
 }));
 

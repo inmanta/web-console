@@ -3,11 +3,14 @@ import { Button, Card, Label } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
-import { words } from "@/Core";
-import { ServiceOrderItem, ServiceOrderItemDependencies } from "@/Core/Domain/ServiceOrderModel";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { CopyMultiOptions } from "@/UI/Components/CopyMultiOptions";
-import { TextWithCopy } from "@/UI/Components/TextWithCopy";
+import { words } from "@inmanta/web-console-core";
+import {
+  ServiceOrderItem,
+  ServiceOrderItemDependencies,
+} from "@inmanta/web-console-core/Domain/ServiceOrderModel";
+import { TextWithCopy } from "@inmanta/web-console-ui/Components/TextWithCopy";
 import { getInstanceDisplayName } from "./getInstanceDisplayName";
 
 interface Props {

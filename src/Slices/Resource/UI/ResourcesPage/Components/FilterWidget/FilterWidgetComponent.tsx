@@ -1,8 +1,11 @@
 import { useContext, useState } from "react";
 import { Divider, Form, Stack, StackItem, Tab, TabTitleText, Tabs } from "@patternfly/react-core";
-import { Resource, words } from "@/Core";
-import { FilterDrawerPanelContent, getFilterActions } from "@/UI/Components/FilterDrawer";
-import { DependencyContext } from "@/UI/Dependency";
+import { Resource, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import {
+  FilterDrawerPanelContent,
+  getFilterActions,
+} from "@inmanta/web-console-ui/Components/FilterDrawer";
 import { ActiveFiltersSection } from "./ActiveFiltersSection";
 import { ResourceFilterForm } from "./ResourceFilterForm";
 import { ServiceFilterForm } from "./ServiceFilterForm";

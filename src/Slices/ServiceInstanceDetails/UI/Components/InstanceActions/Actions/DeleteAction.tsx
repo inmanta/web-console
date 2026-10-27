@@ -1,11 +1,11 @@
 import React, { useCallback, useContext } from "react";
 import { DropdownItem, Content, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
-import { ParsedNumber, words } from "@/Core";
-import { useDeleteInstance } from "@/Data/Queries/Slices/ServiceInstance";
-import { Spinner } from "@/UI/Components/Spinner";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { ParsedNumber, words } from "@inmanta/web-console-core";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { useDeleteInstance } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 
 interface Props {
   isDisabled: boolean;

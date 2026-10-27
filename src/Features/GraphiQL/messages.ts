@@ -10,7 +10,7 @@ export const graphiqlMessages = {
 
 type GraphiqlMessages = typeof graphiqlMessages;
 
-declare module "@/Core/I18n/Words" {
+declare module "@inmanta/web-console-core/I18n/Words" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface WordsRegistry extends GraphiqlMessages {}
 }

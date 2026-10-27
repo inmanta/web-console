@@ -1,4 +1,4 @@
-import { TreeNode } from "@/Core";
+import { TreeNode } from "@inmanta/web-console-core";
 
 type AttributeNode = TreeNode<unknown>;
 

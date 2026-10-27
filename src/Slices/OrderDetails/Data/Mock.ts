@@ -1,4 +1,4 @@
-import { ServiceOrder } from "@/Core/Domain/ServiceOrderModel";
+import { ServiceOrder } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
 
 export const responseOrderFailed: ServiceOrder = {
   description: "Failed CREATE order",

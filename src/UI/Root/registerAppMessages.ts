@@ -1,6 +1,6 @@
-import { FeatureModule, registerMessages } from "@/Core";
-import { coreMessages } from "@/Core/messages";
-import { uiMessages } from "@/UI/Components/messages";
+import { FeatureModule, registerMessages } from "@inmanta/web-console-core";
+import { coreMessages } from "@inmanta/web-console-core/messages";
+import { uiMessages } from "@inmanta/web-console-ui/messages";
 
 /**
  * Registers the English messages of the web-console core layer, the shared components and the

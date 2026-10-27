@@ -3,11 +3,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { AttributeModel, ServiceModel } from "@/Core";
-import { MockedDependencyProvider, Service } from "@/Test";
-import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { AttributeModel, ServiceModel } from "@inmanta/web-console-core";
+import { MockedDependencyProvider, Service } from "@inmanta/web-console-test-utils";
+import { multiNestedEditable } from "@inmanta/web-console-test-utils/Data/Service/EmbeddedEntity";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { AttributeTable } from "./AttributeTable";
 
 const axe = configureAxe({

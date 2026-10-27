@@ -33,7 +33,7 @@ export const userManagementMessages = {
 
 type UserManagementMessages = typeof userManagementMessages;
 
-declare module "@/Core/I18n/Words" {
+declare module "@inmanta/web-console-core/I18n/Words" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface WordsRegistry extends UserManagementMessages {}
 }

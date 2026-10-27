@@ -1,14 +1,14 @@
 import React from "react";
 import { Divider, Form, Stack, StackItem } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { Filter } from "@/Core/Domain/FactFilter";
-import { AddableTextInput } from "@/UI/Components/AddableTextInput";
+import { words } from "@inmanta/web-console-core";
+import { Filter } from "@inmanta/web-console-core/Domain/FactFilter";
+import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
 import {
   ActiveFilterGroup,
   ActiveFilters,
   FilterDrawerPanelContent,
   getFilterActions,
-} from "@/UI/Components/FilterDrawer";
+} from "@inmanta/web-console-ui/Components/FilterDrawer";
 
 interface Props {
   filter: Filter;

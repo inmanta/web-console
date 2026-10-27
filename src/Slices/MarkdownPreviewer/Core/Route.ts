@@ -1,6 +1,6 @@
-import { Route, words } from "@/Core";
+import { Route, words } from "@inmanta/web-console-core";
 
-declare module "@/Core/Domain/Route" {
+declare module "@inmanta/web-console-core/Domain/Route" {
   interface RouteRegistry {
     MarkdownPreviewer: { service: string; instance: string; instanceId: string };
   }

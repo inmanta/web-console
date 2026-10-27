@@ -6,11 +6,11 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { MockedDependencyProvider } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as Parameters from "@S/Parameters/Data/Mock";
+import { words } from "@inmanta/web-console-core";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ParametersPage } from ".";
 
 function setup() {
@@ -258,7 +258,7 @@ describe("ParametersPage", () => {
 
     // A long value is now classified as expandable: the cell renders a preview
     // button (rather than the previous plain truncated cell) that reveals the
-    // value in the mocked code editor (test-setup.ts). The button label is a
+    // value in the mocked code editor (the test setup). The button label is a
     // middle-truncated form of the value, so match on its distinctive tail.
     const [preview] = await screen.findAllByRole("button", { name: /long value$/ });
 

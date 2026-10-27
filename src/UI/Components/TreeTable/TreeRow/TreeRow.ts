@@ -1,4 +1,4 @@
-import { AttributeAnnotations } from "@/Core";
+import { AttributeAnnotations } from "@inmanta/web-console-core";
 
 export type TreeRow = Flat | Root | Branch | Leaf;
 

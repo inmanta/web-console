@@ -3,7 +3,7 @@ import { Button, TextInput } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
-import { ParsedNumber } from "@/Core";
+import { ParsedNumber } from "@inmanta/web-console-core";
 
 export type Dict = Record<string, string | ParsedNumber | boolean>;
 export type Entry = [string, string];

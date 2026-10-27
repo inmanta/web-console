@@ -1,14 +1,14 @@
 import React from "react";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { Parameter, words } from "@/Core";
-import { ClassifiedAttribute } from "@/Data/Common";
+import { Parameter, words } from "@inmanta/web-console-core";
+import { ClassifiedAttribute } from "@inmanta/web-console-core/Common";
 import {
   AttributeExpandTd,
   AttributeExpansionRow,
   AttributeValueCell,
   useAttributeExpansion,
-} from "@/UI/Components/AttributeList";
-import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
+} from "@inmanta/web-console-ui/Components/AttributeList";
+import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
 
 interface Props {
   row: Parameter;

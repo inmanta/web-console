@@ -1,6 +1,6 @@
 import { matchRoutes } from "react-router";
-import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { features, routes } from "@/appFeatures";
+import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
 import { createRootRoutes } from "./RootRoutes";
 
 const routeManager = PrimaryRouteManager("/console", routes);

@@ -1,4 +1,9 @@
-import { ServiceInstanceModel, ServiceModel, StateModel, TransferModel } from "@/Core";
+import {
+  ServiceInstanceModel,
+  ServiceModel,
+  StateModel,
+  TransferModel,
+} from "@inmanta/web-console-core";
 import { getAvailableStateTargets, getExpertStateTargets, isTransferDisabled } from "./StateUtils";
 
 // Helper to create transfer objects with minimal properties

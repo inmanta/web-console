@@ -7,10 +7,17 @@ import React, {
   Suspense,
   useState,
 } from "react";
-import { FeatureModule, PageLoader, PageManager, Page, Route, RouteKind } from "@/Core";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { Delayed } from "@/UI/Utils";
+import {
+  FeatureModule,
+  PageLoader,
+  PageManager,
+  Page,
+  Route,
+  RouteKind,
+} from "@inmanta/web-console-core";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { Delayed } from "@inmanta/web-console-ui/Utils";
 
 /**
  * How long a page may take to load before the loading view is shown, in ms. Most pages load

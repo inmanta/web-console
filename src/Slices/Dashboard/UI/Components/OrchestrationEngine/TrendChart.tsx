@@ -5,7 +5,7 @@ import {
   ChartAxis,
   ChartVoronoiContainer,
 } from "@patternfly/react-charts/victory";
-import { CustomDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 
 const datePresenter = new CustomDatePresenter();
 

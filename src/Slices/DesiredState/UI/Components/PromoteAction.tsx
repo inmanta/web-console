@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { DropdownItem } from "@patternfly/react-core";
-import { ParsedNumber, words } from "@/Core";
-import { usePromoteDesiredStateVersion } from "@/Data/Queries/Slices/DesiredState";
-import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ParsedNumber, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { usePromoteDesiredStateVersion } from "@inmanta/web-console-core/Queries/Slices/DesiredState";
+import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
 
 interface Props {
   version: ParsedNumber;

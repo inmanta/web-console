@@ -41,6 +41,21 @@
       "@S/*": [
         "./src/Slices/*"
       ],
+      "@inmanta/web-console-core": [
+        "./packages/core/src"
+      ],
+      "@inmanta/web-console-core/*": [
+        "./packages/core/src/*"
+      ],
+      "@inmanta/web-console-ui/*": [
+        "./packages/ui/src/*"
+      ],
+      "@inmanta/web-console-test-utils": [
+        "./packages/test-utils/src"
+      ],
+      "@inmanta/web-console-test-utils/*": [
+        "./packages/test-utils/src/*"
+      ],
       "@images/*": [
         "./public/images/*"
       ],
@@ -55,8 +70,8 @@
     "**/*.tsx",
     "**/*.jsx",
     "cypress/support/e2e.js",
-    "./test-setup.ts",
-    "./vitest.d.ts"
+    "./packages/test-utils/src/setup.ts",
+    "./packages/test-utils/src/vitest.d.ts"
   ],
   "exclude": [
     "node_modules",

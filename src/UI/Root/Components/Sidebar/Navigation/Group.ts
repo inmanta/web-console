@@ -5,7 +5,7 @@ import {
   OrchestratorProvider,
   RouteManager,
   words,
-} from "@/Core";
+} from "@inmanta/web-console-core";
 
 /**
  * Interface that represents a Group of links in the sidebar navigation

@@ -9,7 +9,7 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { FilterIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 
 interface Props {
   paginationWidget: React.ReactNode;

@@ -1,5 +1,5 @@
 import { dia } from "@joint/plus";
-import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@/Core";
+import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@inmanta/web-console-core";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import { RelationsDictionary, Rules } from "./createRelationsDictionary";
 

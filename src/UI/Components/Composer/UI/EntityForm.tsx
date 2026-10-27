@@ -1,17 +1,17 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AlertVariant, FlexItem, Form } from "@patternfly/react-core";
 import { v4 as uuidv4 } from "uuid";
-import { Field, InstanceAttributeModel, words } from "@/Core";
-import { set } from "@/Core/Language/collection";
-import { sanitizeAttributes } from "@/Data/Common";
-import { SuggestionVariables } from "@/Data/Queries/Slices/ServiceInstance";
+import { Field, InstanceAttributeModel, words } from "@inmanta/web-console-core";
+import { sanitizeAttributes } from "@inmanta/web-console-core/Common";
 import {
   createFormState,
   CreateModifierHandler,
   FieldCreator,
-} from "@/UI/Components/ServiceInstanceForm";
-import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
-import { AppAlert } from "../../AppAlert";
+} from "@inmanta/web-console-core/FormState";
+import { set } from "@inmanta/web-console-core/Language/collection";
+import { SuggestionVariables } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
+import { FieldInput } from "@inmanta/web-console-ui/Components/FieldInputs";
 import { ComposerContext } from "../Data/Context";
 import { ServiceEntityShape } from "./JointJsShapes/ServiceEntityShape";
 import { updateAllMissingConnectionsHighlights } from "./JointJsShapes/createHalo";

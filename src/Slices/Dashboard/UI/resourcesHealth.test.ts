@@ -1,5 +1,5 @@
-import { words } from "@/Core";
-import { createMockResourceSummary } from "@/Test/Data/Resource";
+import { words } from "@inmanta/web-console-core";
+import { createMockResourceSummary } from "@inmanta/web-console-test-utils/Data/Resource";
 import { deriveResourcesHealth } from "./resourcesHealth";
 
 describe("deriveResourcesHealth", () => {

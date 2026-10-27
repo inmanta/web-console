@@ -1,7 +1,7 @@
 import React from "react";
-import { words } from "@/Core";
-import { PageContainer } from "@/UI/Components/PageContainer";
-import { useRouteParams } from "@/UI/Routing";
+import { words } from "@inmanta/web-console-core";
+import { useRouteParams } from "@inmanta/web-console-core/Routing";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { CompileDetails } from "./CompileDetails";
 
 export const Page: React.FC = () => {

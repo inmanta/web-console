@@ -1,7 +1,7 @@
 import React from "react";
-import { words } from "@/Core";
-import { CompileDetails } from "@/Core/Domain/CompileDetails";
 import { PageSectionWithTitle } from "@/UI/Components/PageSectionWithTitle";
+import { words } from "@inmanta/web-console-core";
+import { CompileDetails } from "@inmanta/web-console-core/Domain/CompileDetails";
 import { CompileErrorsSection } from "./CompileErrorsSection";
 import { CompileStageReportTable } from "./CompileStageReportTable";
 import { StatusSection } from "./StatusSection";

@@ -12,10 +12,10 @@ import {
   DescriptionList,
   Flex,
 } from "@patternfly/react-core";
-import { Resource, words } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { Classification, Item, Refs } from "@/UI/Components/DiffWizard/types";
-import { ResourceLink } from "@/UI/Components/ResourceLink";
+import { Resource, words } from "@inmanta/web-console-core";
+import { ResourceLink } from "@inmanta/web-console-ui/Components/ResourceLink";
 import { Entry } from "./Entry/Entry";
 
 type Classify = (title: string, entryTitle: string, from: string, to: string) => Classification;

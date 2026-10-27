@@ -1,4 +1,4 @@
-import { ParsedNumber } from "@/Core";
+import { ParsedNumber } from "@inmanta/web-console-core";
 
 /**
  * The English messages of the orchestration engine feature.
@@ -125,7 +125,7 @@ export const orchestrationEngineMessages = {
 
 type OrchestrationEngineMessages = typeof orchestrationEngineMessages;
 
-declare module "@/Core/I18n/Words" {
+declare module "@inmanta/web-console-core/I18n/Words" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface WordsRegistry extends OrchestrationEngineMessages {}
 }

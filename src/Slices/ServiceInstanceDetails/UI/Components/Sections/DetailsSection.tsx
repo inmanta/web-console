@@ -14,11 +14,11 @@ import {
   FlexItem,
   Content,
 } from "@patternfly/react-core";
-import { words } from "@/Core";
 import { DeploymentProgressBar } from "@/Slices/ServiceInventory/UI/Components";
-import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
-import { HoverRowGroup } from "@/UI/Components/RowHoverReveal";
-import { TextWithCopy } from "@/UI/Components/TextWithCopy";
+import { words } from "@inmanta/web-console-core";
+import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
+import { HoverRowGroup } from "@inmanta/web-console-ui/Components/RowHoverReveal";
+import { TextWithCopy } from "@inmanta/web-console-ui/Components/TextWithCopy";
 import { InstanceDetailsContext } from "../../../Core/Context";
 
 /**

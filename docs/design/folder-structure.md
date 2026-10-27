@@ -10,34 +10,37 @@ If a domain type or query is used by multiple slices, it should either be moved 
 So a slice is not necessarily a single page (it might be a smaller or larger unit as well).
 A slice also doesn't necessarily has to have all of the { Core, Data, UI} folders.
 
+The code is moving into packages, one layer at a time (composition architecture, #7451). A package is imported by its package name, e.g. `@inmanta/web-console-core/Queries/Slices/Resource`.
+
 ```
-src/
-  Core/ - Common data structures and interfaces
-    Query/ - Query definitions
-    Command/ - Command definitions
-    Contracts/ - All interfaces that represent a contract
+packages/
+  core/src/ - @inmanta/web-console-core, the web-console core layer (no components)
+    Contracts/ - All interfaces that represent a contract, including FeatureModule
     Domain/ - Entities
+    I18n/ - The words registry
     Language/ - Language extensions & isolated implementations
-  Data/ - common classes related to the Data Layer
-    API/ - Classes for communicating with the REST API (based on Fetch API)
-    Auth/ - Auth related classes
-    Managers/ - Implementations for data contracts for the domain entities
-    Store/ - Redux store slices for common entities
-  Test/ - common test data, mock implementations, testing utilities
-  UI/ (common) Components
-    Components/ - React Components used by multiple pages
-    Root/ - The components that are always visible, and independent of the current page (sidebar)
+    Auth/ - The auth context and types
+    Common/ - Shared data helpers (url state, attribute converters, ...)
+    Queries/ - React Query hooks and their helpers
+    Dependency/ - The dependency context and its default implementations
     Routing/ - Code related to routing and urls
+    FormState/ - Helpers that turn service attributes into form fields
+  ui/src/ - @inmanta/web-console-ui, components used by more than one feature (or a feature and the shell)
+    Components/
+    Presenters/, Styles/, Utils/
+  test-utils/src/ - @inmanta/web-console-test-utils, common test data, mock implementations, testing utilities, test setup
+src/
+  Features/ - The FeatureModule of each feature
+  UI/
+    Components/ - Components that only one feature or the shell uses, waiting to move there
+    Root/ - The shell: the components that are always visible, and independent of the current page (sidebar)
   Slices/ (repeat the 3 layers for each slice)
     <SliceName>
         Core (slice specific)
-            Query & Command
             any types or contracts
         Data (slice specific)
-            Managers
             transformations
             implementations
-            store slice definition
         UI (slice specific)
             Components
 ```

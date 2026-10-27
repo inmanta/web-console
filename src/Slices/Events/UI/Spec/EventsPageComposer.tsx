@@ -1,10 +1,10 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { ServiceModel } from "@/Core";
-import { MockedDependencyProvider, Service } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { Events } from "@S/Events/UI/Events";
+import { ServiceModel } from "@inmanta/web-console-core";
+import { MockedDependencyProvider, Service } from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 
 interface Handles {
   component: React.ReactElement;

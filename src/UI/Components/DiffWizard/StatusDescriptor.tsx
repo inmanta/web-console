@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import { Diff } from "@/Core";
+import { Diff } from "@inmanta/web-console-core";
 
 interface Props {
   status: Diff.Status;

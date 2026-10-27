@@ -106,6 +106,10 @@ export default [
               group: "internal",
             },
             {
+              pattern: "@inmanta/web-console-*{,/**}",
+              group: "internal",
+            },
+            {
               pattern: "react*",
               group: "external",
               position: "before",
@@ -158,7 +162,7 @@ export default [
   {
     // The messages are registered when the app starts, after its modules have loaded, and the
     // messages of a feature loaded as a plugin even later.
-    files: ["src/**/*.ts", "src/**/*.tsx"],
+    files: ["{src,packages}/**/*.ts", "{src,packages}/**/*.tsx"],
     ignores: ["**/*.test.ts", "**/*.test.tsx"],
     rules: {
       "no-restricted-syntax": [
@@ -173,19 +177,19 @@ export default [
     },
   },
   {
-    // The layer rules of the composition architecture (#7451). Tests are left out until the test
-    // helpers move into their own package (#7462).
-    files: ["src/**/*.ts", "src/**/*.tsx"],
+    // The layer rules of the composition architecture (#7451). Tests are left out until they no
+    // longer import across the layers (#7462).
+    files: ["{src,packages}/**/*.ts", "{src,packages}/**/*.tsx"],
     ignores: [
       "**/*.test.ts",
       "**/*.test.tsx",
       "**/*.spec.ts",
       "**/*.spec.tsx",
-      "src/Test/**",
+      "packages/test-utils/**",
       "src/Slices/*/Test/**",
-      "src/**/Mock.ts",
-      "src/**/Mock/**",
-      "src/**/Spec/**",
+      "**/Mock.ts",
+      "**/Mock/**",
+      "**/Spec/**",
     ],
     rules: {
       "import/no-restricted-paths": ["error", { basePath, zones: importBoundaryZones }],

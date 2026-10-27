@@ -4,8 +4,8 @@ import {
   t_global_color_status_danger_default,
   chart_color_blue_300,
 } from "@patternfly/react-tokens";
-import { DeploymentProgress, words } from "@/Core";
-import { LegendBar, LegendItemDetails } from "@/UI/Components/LegendBar";
+import { DeploymentProgress, words } from "@inmanta/web-console-core";
+import { LegendBar, LegendItemDetails } from "@inmanta/web-console-ui/Components/LegendBar";
 
 type Progress = Omit<DeploymentProgress, "total"> | undefined | null;
 

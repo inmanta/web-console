@@ -1,8 +1,8 @@
 import React from "react";
 import { Badge, Tooltip } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { LifecycleModel, StateModel } from "@/Core";
 import { InstanceStateLabel } from "@/UI/Components/InstanceState";
+import { LifecycleModel, StateModel } from "@inmanta/web-console-core";
 
 /**
  * Renders a state name as a resolved `InstanceStateLabel` (web_label/web_icon/

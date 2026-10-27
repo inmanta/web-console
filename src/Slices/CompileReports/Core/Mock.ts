@@ -1,4 +1,4 @@
-import { CompileReport } from "@/Core/Domain/CompileReport";
+import { CompileReport } from "@inmanta/web-console-core/Domain/CompileReport";
 
 const data: CompileReport[] = [
   {

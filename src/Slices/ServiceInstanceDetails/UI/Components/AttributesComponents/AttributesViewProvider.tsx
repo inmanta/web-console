@@ -1,6 +1,4 @@
 import React, { useContext } from "react";
-import { InstanceAttributeModel } from "@/Core";
-import { useUrlStateWithString } from "@/Data/Common";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import {
   AttributeSets,
@@ -9,7 +7,9 @@ import {
   getAttributeSetsFromInstance,
   getAvailableAttributesSets,
 } from "@/Slices/ServiceInstanceDetails/Utils";
-import { LoadingView } from "@/UI/Components/LoadingView";
+import { InstanceAttributeModel } from "@inmanta/web-console-core";
+import { useUrlStateWithString } from "@inmanta/web-console-core/Common";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { AttributesCompare } from "./AttributesCompare";
 import { AttributesEditor } from "./AttributesEditor";
 import { AttributesTable } from "./AttributesTable";

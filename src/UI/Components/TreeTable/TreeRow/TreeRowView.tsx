@@ -3,10 +3,10 @@ import { Button, Icon, Split, SplitItem, Tooltip } from "@patternfly/react-core"
 import { ExclamationTriangleIcon, InfoAltIcon } from "@patternfly/react-icons";
 import { Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
-import { ParsedNumber, Attributes, AttributeAnnotations } from "@/Core";
 import { Toggle } from "@/UI/Components/Toggle";
-import { ClipboardCopyButton } from "../../ClipboardCopyButton";
-import { RowHoverReveal } from "../../RowHoverReveal";
+import { ParsedNumber, Attributes, AttributeAnnotations } from "@inmanta/web-console-core";
+import { ClipboardCopyButton } from "@inmanta/web-console-ui/Components/ClipboardCopyButton";
+import { RowHoverReveal } from "@inmanta/web-console-ui/Components/RowHoverReveal";
 import { CellWithCopy } from "./CellWithCopy";
 import { Indent } from "./Indent";
 import { TreeRow } from "./TreeRow";

@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { DropdownItem } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { Link } from "@/UI/Components/Link";
-import { DependencyContext } from "@/UI/Dependency";
 import { GetDesiredStatesContext } from "@S/DesiredState/UI/GetDesiredStatesContext";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { Link } from "@inmanta/web-console-ui/Components/Link";
 import { sanitizeFromTo } from "./fromTo";
 
 interface Props {

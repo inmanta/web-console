@@ -1,9 +1,9 @@
 import React from "react";
 import { RouteObject } from "react-router";
-import { FeatureModule, getFeatureRoutes } from "@/Core";
 import { LoginPage } from "@/Slices/Login";
-import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { NotFoundPage } from "@S/NotFound/UI";
+import { FeatureModule, getFeatureRoutes } from "@inmanta/web-console-core";
+import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
 import { PageFrame } from "./Components";
 import { DefaultRoute } from "./Components/DefaultRoute";
 import { PrimaryPageManager } from "./PrimaryPageManager";

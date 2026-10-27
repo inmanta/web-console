@@ -6,12 +6,12 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
-import { FlatEnvironment, words } from "@/Core";
-import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
-import { HoverRowGroup } from "@/UI/Components/RowHoverReveal";
-import { TextWithCopy } from "@/UI/Components/TextWithCopy";
-import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { FlatEnvironment, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
+import { HoverRowGroup } from "@inmanta/web-console-ui/Components/RowHoverReveal";
+import { TextWithCopy } from "@inmanta/web-console-ui/Components/TextWithCopy";
 import { ConfirmationForm } from "./ConfirmationForm";
 
 export type EnvActions = "delete" | "clear";

@@ -5,8 +5,8 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { baseSetup } from "@/Test/Utils/base-setup";
-import { testClient } from "@/Test/Utils/react-query-setup";
+import { baseSetup } from "@inmanta/web-console-test-utils/Utils/base-setup";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import {
   responseCompletedOrder,
   responseInProgressOrder,

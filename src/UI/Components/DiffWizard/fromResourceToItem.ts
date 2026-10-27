@@ -1,4 +1,4 @@
-import { Diff } from "@/Core";
+import { Diff } from "@inmanta/web-console-core";
 import { Item } from "./types";
 
 export const fromResourceToItem = (resource: Diff.Resource): Item => {

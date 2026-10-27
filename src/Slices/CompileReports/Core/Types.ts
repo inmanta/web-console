@@ -1,4 +1,4 @@
-import { CompileStatus } from "@/Core/Domain/CompileStatus";
+import { CompileStatus } from "@inmanta/web-console-core/Domain/CompileStatus";
 
 export interface CompileReportRow {
   id: string;

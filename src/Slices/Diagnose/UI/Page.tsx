@@ -1,13 +1,13 @@
 import React from "react";
 
-import { words } from "@/Core";
-import { useUrlStateWithString } from "@/Data/Common";
-import { useGetInstance } from "@/Data/Queries/Slices/ServiceInstance";
-import { Description } from "@/UI/Components/Description";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PageContainer } from "@/UI/Components/PageContainer";
-import { useRouteParams } from "@/UI/Routing";
+import { words } from "@inmanta/web-console-core";
+import { useUrlStateWithString } from "@inmanta/web-console-core/Common";
+import { useGetInstance } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { useRouteParams } from "@inmanta/web-console-core/Routing";
+import { Description } from "@inmanta/web-console-ui/Components/Description";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { Diagnose } from "./Diagnose";
 import { LookBackSlider } from "./LookBackSlider";
 

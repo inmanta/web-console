@@ -21,8 +21,8 @@ import {
   RhUiArrowUpDownIcon,
 } from "@patternfly/react-icons";
 import { t_global_color_brand_clicked, t_global_icon_color_subtle } from "@patternfly/react-tokens";
-import { Resource, Sort, words } from "@/Core";
-import { MultiSort, toggleMulti } from "@/Data/Common";
+import { Resource, Sort, words } from "@inmanta/web-console-core";
+import { MultiSort, toggleMulti } from "@inmanta/web-console-core/Common";
 
 const getLabel = (key: Resource.StatusSortKey) => words(`resources.sort.label.${key}`);
 

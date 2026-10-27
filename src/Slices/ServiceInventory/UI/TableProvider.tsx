@@ -1,5 +1,9 @@
 import React from "react";
-import { ServiceModel, ServiceInstanceModelWithTargetStates, Sort } from "@/Core";
+import {
+  ServiceModel,
+  ServiceInstanceModelWithTargetStates,
+  Sort,
+} from "@inmanta/web-console-core";
 import { InventoryTable } from "./InventoryTable";
 import { createInventoryTablePresenter } from "./Presenters";
 

@@ -8,9 +8,9 @@ import {
   DropdownItem,
 } from "@patternfly/react-core";
 import { CopyIcon, EllipsisVIcon, FileMedicalAltIcon, ToolsIcon } from "@patternfly/react-icons";
-import { ParsedNumber, words } from "@/Core";
-import { Link } from "@/UI/Components/Link";
-import { DependencyContext, useVisibleLinkActions } from "@/UI/Dependency";
+import { ParsedNumber, words } from "@inmanta/web-console-core";
+import { DependencyContext, useVisibleLinkActions } from "@inmanta/web-console-core/Dependency";
+import { Link } from "@inmanta/web-console-ui/Components/Link";
 import { DeleteAction } from "./DeleteAction";
 
 interface InstanceActionsProps {

@@ -1,9 +1,12 @@
 import React, { lazy, Suspense, useContext, useEffect, useMemo } from "react";
 import { Outlet } from "react-router";
-import { DependencyContext } from "@/UI/Dependency";
-import { SearchSanitizer } from "@/UI/Routing";
-import { GlobalStyles } from "@/UI/Styles";
-import { getThemePreference, setThemePreference } from "../Components/DarkmodeOption";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { SearchSanitizer } from "@inmanta/web-console-core/Routing";
+import {
+  getThemePreference,
+  setThemePreference,
+} from "@inmanta/web-console-ui/Components/DarkmodeOption";
+import { GlobalStyles } from "@inmanta/web-console-ui/Styles";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 const ReactQueryDevtools = lazy(() =>

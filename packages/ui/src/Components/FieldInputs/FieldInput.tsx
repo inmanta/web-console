@@ -1,0 +1,823 @@
+import React, { useCallback, useMemo, useState } from "react";
+import {
+  Button,
+  FormFieldGroupExpandable,
+  FormFieldGroupHeader,
+  FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+} from "@patternfly/react-core";
+import { PlusIcon } from "@patternfly/react-icons";
+import { v4 as uuidv4 } from "uuid";
+import {
+  InstanceAttributeModel,
+  DictListField,
+  Field,
+  NestedField,
+  FormSuggestion,
+  SuggestionValue,
+  words,
+} from "@inmanta/web-console-core";
+import { toOptionalBoolean } from "@inmanta/web-console-core/Common";
+import { createFormState, getItemTitle } from "@inmanta/web-console-core/FormState";
+import { get } from "@inmanta/web-console-core/Language/collection";
+import {
+  FieldScopes,
+  SuggestionVariables,
+  getFieldDependencyNames,
+  useSuggestedValues,
+} from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { OptionalToggleGroup } from "@inmanta/web-console-ui/Components/OptionalToggleGroup";
+import { UnitFormInput } from "@inmanta/web-console-ui/Components/UnitInput";
+import { BooleanToggleInput } from "./BooleanToggleInput";
+import { DictFieldInput } from "./DictFieldInput";
+import { RelatedServiceProvider } from "./RelatedServiceProvider";
+import { SelectFormInput } from "./SelectFormInput";
+import { TextFormInput } from "./TextFormInput";
+import { TextListFormInput } from "./TextListFormInput";
+import { useValidationError } from "./ValidationErrorsContext";
+
+interface Props {
+  field: Field;
+  formState: InstanceAttributeModel;
+  originalState: InstanceAttributeModel;
+  getUpdate: GetUpdate;
+  path: string | null;
+  isNew?: boolean;
+  suggestions?: FormSuggestion | null;
+  suggestionVariables?: SuggestionVariables;
+  isFlat?: boolean;
+}
+
+/**
+ * Updates form state at `path` with `value`; `multi` marks a multi-value update.
+ *
+ * @example
+ * getUpdate("endpoints.0.region", "r1") // sets that field in form state
+ */
+type GetUpdate = (path: string, value: unknown, multi?: boolean) => void;
+
+/**
+ * Joins a parent path with the next segment (parent may be null at the root).
+ *
+ * @example
+ * makePath("endpoints.0", "region") // => "endpoints.0.region"
+ */
+const makePath = (path: string | null, next: string): string =>
+  path === null ? next : `${path}.${next}`;
+
+/**
+ * FieldInput component for managing form input related to a specific field. A validation error
+ * from the last submit shows as an error on the input.
+ *
+ * @param {Props} props - Props for the FieldInput component.
+ *   @prop {Field} field - The field associated with the input.
+ *   @prop {FormState} formState - The current form state.
+ *   @prop {OriginalState} originalState - The original state of the field.
+ *   @prop {Function} getUpdate - Function to get updates for the field.
+ *   @prop {string} path - The path of the field within the form.
+ *   @prop {boolean} isNew - Flag indicating whether the field is newly added. Default is false.
+ *   @prop {FormSuggestion | null} suggestions - The suggestions for the field. Default is null.
+ *   @prop {SuggestionVariables} suggestionVariables - The form's values for `${...}` variables in a suggestion's parameter name.
+ *   @prop {boolean} isFlat - Renders an embedded relation without its expandable group, for a tab that holds nothing else. Default is false.
+ *
+ * @returns {React.FC<Props>} The rendered FieldInput component.
+ */
+export const FieldInput: React.FC<Props> = ({
+  field,
+  formState,
+  originalState,
+  getUpdate,
+  path,
+  isNew = false,
+  suggestions,
+  suggestionVariables,
+  isFlat = false,
+}) => {
+  // --- Resolve suggestions ---
+  // `form` resolves `${form.*}` from the form root; `self` resolves `${self.*}` from this field's
+  // own embedded instance (its siblings only).
+  const fieldScopes: FieldScopes = {
+    form: formState,
+    self: path === null ? formState : get(formState, path),
+  };
+  const { data, isLoading, error, isFetching, modelError, hasUnresolvedDependency, isRefreshing } =
+    useSuggestedValues(suggestions, suggestionVariables, fieldScopes).useOneTime();
+
+  // --- Dependency and loading state ---
+  const dependencyNames = useMemo(() => getFieldDependencyNames(suggestions), [suggestions]);
+  const dependencyLabel = dependencyNames.join(", ");
+  const isCascading = dependencyNames.length > 0;
+  // Busy while a source change settles (debounce, then fetch): disabled so a stale option can't be picked.
+  const isLoadingSuggestions = !hasUnresolvedDependency && (isFetching || isRefreshing);
+  const isRefreshingDependent = isCascading && isLoadingSuggestions;
+  // A stored value this form can't edit (edit mode): its value is fixed, so feedback would be noise.
+  const isLocked =
+    field.isDisabled && get(originalState, makePath(path, field.name)) !== undefined && !isNew;
+
+  // --- Options offered in the popover ---
+  // Keep the previous list while refreshing (keepPreviousData) so the label stays stable, but drop
+  // it while a source is unresolved so a stale source's options can't be offered.
+  const suggestionsList: SuggestionValue[] | null =
+    !isLoading && !error && !hasUnresolvedDependency ? (data ?? null) : null;
+
+  // --- Feedback ---
+  // Two non-blocking weights (no red/danger, which would read as a block): warnings (yellow) need
+  // attention, hints (neutral) are routine guidance.
+
+  // The query has come back clean (filled source, done loading, no error): only now is an empty or
+  // stale result real rather than a passing state, so the settled hints/warnings gate on it.
+  const isSettled =
+    isCascading && !hasUnresolvedDependency && !isLoadingSuggestions && !modelError && !error;
+  const hasNoSuggestions = isSettled && !suggestionsList?.length;
+  const currentValue = get(formState, makePath(path, field.name));
+  const currentValues = (Array.isArray(currentValue) ? currentValue : [currentValue])
+    .filter((value) => value !== null && value !== undefined && value !== "")
+    .map(String);
+  const hasUnlistedValue =
+    isSettled &&
+    !!suggestionsList?.length &&
+    currentValues.some(
+      (value) => !suggestionsList.some((suggestion) => suggestion.value === value)
+    );
+
+  // A group only shows the validation errors on itself; its fields show the ones below it.
+  const isGroup = field.kind === "Nested" || field.kind === "DictList";
+  const validationError = useValidationError(makePath(path, field.name), !isGroup);
+
+  // Warning: broken annotation, then failed fetch, then a kept value no longer among the options
+  // (`notInList` suppressed on a locked field).
+  let warningMessage: string | undefined;
+  if (modelError) {
+    warningMessage = modelError;
+  } else if (isCascading && !!error) {
+    warningMessage = words("inventory.form.suggestions.fetchError");
+  } else if (!isLocked && hasUnlistedValue) {
+    warningMessage = words("inventory.form.suggestions.notInList")(dependencyLabel);
+  }
+
+  // Hint: waiting on a source, then a source that returned no options (both suppressed on a locked field).
+  let suggestionHint: string | undefined;
+  if (isLocked) {
+    suggestionHint = undefined;
+  } else if (hasUnresolvedDependency) {
+    suggestionHint = words("inventory.form.suggestions.waitingOnSource")(dependencyLabel);
+  } else if (hasNoSuggestions) {
+    suggestionHint = words("inventory.form.suggestions.empty")(dependencyLabel);
+  }
+
+  // Hoisted so the warning/hint precedence is shared by both suggestion inputs (Text, TextList).
+  const suggestionInputProps = {
+    suggestions: suggestionsList,
+    warningMessage,
+    hint: suggestionHint,
+    loading: isLoadingSuggestions,
+    validationError,
+  };
+
+  // Get the controlled value for the field
+  // If the value is an object or an array, it needs to be converted.
+  function getControlledValue(value) {
+    if (value === null || value === undefined) {
+      return "";
+    } else if (Array.isArray(value)) {
+      return value.join(", ");
+    } else if (typeof value === "object") {
+      return JSON.stringify(value);
+    } else {
+      return value;
+    }
+  }
+
+  //callback was used to avoid re-render in useEffect used in SelectFormInput
+  const getEnumUpdate = useCallback(
+    (value) => {
+      getUpdate(makePath(path, field.name), value);
+    },
+    [getUpdate, path, field.name]
+  );
+
+  switch (field.kind) {
+    case "Boolean": {
+      const booleanPath = makePath(path, field.name);
+
+      if (!field.isOptional) {
+        return (
+          <BooleanToggleInput
+            aria-label={`BooleanToggleInput-${field.name}`}
+            attributeName={field.name}
+            isChecked={get<boolean | undefined>(formState, booleanPath)}
+            handleInputChange={(value, _event) => getUpdate(booleanPath, toOptionalBoolean(value))}
+            description={field.description}
+            key={field.id || field.name}
+            shouldBeDisabled={
+              field.isDisabled && get(originalState, booleanPath) !== undefined && !isNew
+            }
+            validationError={validationError}
+          />
+        );
+      }
+
+      // The optional boolean maps onto the toggle group as a single nullable value:
+      // a selected option means true/false, an empty selection means null.
+      const booleanValue = get<boolean | null>(formState, booleanPath, null);
+
+      return (
+        <FormGroup
+          aria-label={`BooleanFieldInput-${field.name}`}
+          fieldId={field.name}
+          key={field.id || field.name}
+          label={field.name}
+        >
+          <FormHelperText>
+            <HelperText>
+              <HelperTextItem>{field.description}</HelperTextItem>
+            </HelperText>
+          </FormHelperText>
+          <OptionalToggleGroup
+            isDisabled={field.isDisabled && get(originalState, booleanPath) !== undefined && !isNew}
+            selected={booleanValue === null ? [] : [booleanValue]}
+            onChange={(next) => getUpdate(booleanPath, next[0] ?? null)}
+            options={[
+              { value: true, buttonId: `${field.name}-true`, label: words("true") },
+              { value: false, buttonId: `${field.name}-false`, label: words("false") },
+            ]}
+          />
+          {validationError && (
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem variant="error">{validationError}</HelperTextItem>
+              </HelperText>
+            </FormHelperText>
+          )}
+        </FormGroup>
+      );
+    }
+    case "TextList":
+      return (
+        <TextListFormInput
+          aria-label={`TextFieldInput-${field.name}`}
+          attributeName={field.name}
+          attributeValue={get<string[]>(formState, makePath(path, field.name), []) ?? []}
+          description={field.description}
+          shouldBeDisabled={isRefreshingDependent || isLocked}
+          type={field.inputType}
+          handleInputChange={(value, _event) => getUpdate(makePath(path, field.name), value)}
+          placeholder={getPlaceholderForType(field.type)}
+          typeHint={getTypeHintForType(field.type)}
+          key={field.id || field.name}
+          {...suggestionInputProps}
+        />
+      );
+    case "Textarea":
+      return (
+        <TextFormInput
+          aria-label={`TextFieldInput-${field.name}`}
+          attributeName={field.name}
+          attributeValue={get<string>(formState, makePath(path, field.name), "") ?? ""}
+          description={field.description}
+          isOptional={field.isOptional}
+          shouldBeDisabled={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
+          }
+          type={field.inputType}
+          handleInputChange={(value, _event) => {
+            getUpdate(makePath(path, field.name), value);
+          }}
+          placeholder={getPlaceholderForType(field.type)}
+          typeHint={getTypeHintForType(field.type)}
+          key={field.id || field.name}
+          isTextarea
+          warningMessage={modelError}
+          validationError={validationError}
+        />
+      );
+    case "Text":
+      return (
+        <TextFormInput
+          aria-label={`TextFieldInput-${field.name}`}
+          attributeName={field.name}
+          attributeValue={getControlledValue(get(formState, makePath(path, field.name)))}
+          description={field.description}
+          isOptional={field.isOptional}
+          shouldBeDisabled={isRefreshingDependent || isLocked}
+          type={field.inputType}
+          handleInputChange={(value, _event) => {
+            getUpdate(makePath(path, field.name), value);
+          }}
+          placeholder={getPlaceholderForType(field.type)}
+          typeHint={getTypeHintForType(field.type)}
+          key={field.id || field.name}
+          {...suggestionInputProps}
+        />
+      );
+    case "Unit":
+      return (
+        <UnitFormInput
+          attributeName={field.name}
+          attributeValue={get<number | bigint | null>(formState, makePath(path, field.name), null)}
+          description={field.description}
+          isOptional={field.isOptional}
+          shouldBeDisabled={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
+          }
+          config={field.config}
+          bounds={field.bounds}
+          handleInputChange={(value, _event) => {
+            getUpdate(makePath(path, field.name), value);
+          }}
+          key={field.id || field.name}
+          validationError={validationError}
+        />
+      );
+    case "Dict":
+      return (
+        <DictFieldInput
+          key={field.id || field.name}
+          field={field}
+          value={get(formState, makePath(path, field.name))}
+          readOnly={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
+          }
+          onChange={(value) => {
+            getUpdate(makePath(path, field.name), value);
+          }}
+          validationError={validationError}
+        />
+      );
+    case "InterServiceRelation":
+      return (
+        <RelatedServiceProvider
+          alreadySelected={get<string[]>(formState, makePath(path, field.name), [])}
+          key={makePath(path, field.name)}
+          serviceName={field.serviceEntity}
+          attributeName={field.name}
+          description={field.description}
+          attributeValue={get<string | null>(formState, makePath(path, field.name), null)}
+          isOptional={field.isOptional}
+          isDisabled={!isNew && field.isDisabled}
+          handleInputChange={(value) => getUpdate(makePath(path, field.name), value)}
+          validationError={validationError}
+        />
+      );
+    case "Enum":
+      return (
+        <SelectFormInput
+          aria-label={`EnumFieldInput-${field.name}`}
+          options={field.options}
+          attributeName={field.name}
+          attributeValue={get<string>(formState, makePath(path, field.name), "") ?? ""}
+          description={field.description}
+          isOptional={field.isOptional}
+          handleInputChange={getEnumUpdate}
+          key={field.id || field.name}
+          shouldBeDisabled={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
+          }
+          validationError={validationError}
+        />
+      );
+    case "Nested":
+      return (
+        <NestedFieldInput
+          field={field}
+          formState={formState}
+          originalState={originalState}
+          getUpdate={getUpdate}
+          path={path}
+          isNew={isNew}
+          suggestionVariables={suggestionVariables}
+          isFlat={isFlat}
+          validationError={validationError}
+        />
+      );
+    case "DictList":
+      return (
+        <DictListFieldInput
+          field={field}
+          formState={formState}
+          originalState={originalState}
+          getUpdate={getUpdate}
+          path={path}
+          isNew={isNew}
+          suggestionVariables={suggestionVariables}
+          isFlat={isFlat}
+          validationError={validationError}
+        />
+      );
+    case "RelationList":
+      return (
+        <RelatedServiceProvider
+          alreadySelected={get<string[]>(formState, makePath(path, field.name), [])}
+          key={makePath(path, field.name)}
+          serviceName={field.serviceEntity}
+          attributeName={field.name}
+          description={field.description !== null ? field.description : ""}
+          attributeValue={get<string[]>(formState, makePath(path, field.name), [])}
+          isOptional={field.isOptional}
+          isDisabled={!isNew && field.isDisabled}
+          handleInputChange={(value) => {
+            getUpdate(makePath(path, field.name), value, true);
+          }}
+          multi={true}
+          validationError={validationError}
+        />
+      );
+  }
+};
+
+/**
+ * The placeholder text for a field type, or undefined when the type needs none.
+ *
+ * @param {string} typeName - The data type name.
+ * @returns {string | undefined} The placeholder string for the given data type, or undefined if not found.
+ */
+const getPlaceholderForType = (typeName: string): string | undefined => {
+  if (typeName === "int[]") {
+    return words("inventory.form.placeholder.intList");
+  } else if (typeName === "float[]") {
+    return words("inventory.form.placeholder.floatList");
+  } else if (typeName.endsWith("[]")) {
+    return words("inventory.form.placeholder.stringList");
+  } else if (typeName.includes("dict")) {
+    return words("inventory.form.placeholder.dict");
+  }
+
+  return undefined;
+};
+
+/**
+ * The type-hint text for a list or dict field type, or undefined for others.
+ *
+ * @param {string} typeName - The data type name.
+ * @returns {string | undefined} The type hint string for the given data type, or undefined if not found.
+ */
+const getTypeHintForType = (typeName: string): string | undefined => {
+  if (typeName.endsWith("[]")) {
+    return words("inventory.form.typeHint.list")(typeName.substring(0, typeName.indexOf("[")));
+  } else if (typeName.includes("dict")) {
+    return words("inventory.form.typeHint.dict");
+  }
+
+  return undefined;
+};
+
+interface NestedProps {
+  field: NestedField;
+  formState: InstanceAttributeModel;
+  originalState: InstanceAttributeModel;
+  getUpdate: GetUpdate;
+  path: string | null;
+  isNew?: boolean;
+  suggestionVariables?: SuggestionVariables;
+  isFlat?: boolean;
+  validationError?: string;
+}
+
+/**
+ * The header description of a field group, with the group's validation error below it.
+ *
+ * @example
+ * renderGroupDescription("The endpoints", "List should have at least 1 item")
+ * // => the description, then an error helper text with the message
+ */
+const renderGroupDescription = (description: React.ReactNode, validationError?: string) => {
+  if (!validationError) {
+    return description;
+  }
+
+  return (
+    <>
+      {description}
+      <HelperText>
+        <HelperTextItem variant="error">{validationError}</HelperTextItem>
+      </HelperText>
+    </>
+  );
+};
+
+/**
+ * NestedFieldInput component with inner state for managing nested field input.
+ *
+ * @param {NestedProps} props - Props for the NestedFieldInput component.
+ *   @prop {Field} field - The nested field.
+ *   @prop {FormState} formState - The form state.
+ *   @prop {OriginalState} originalState - The original state of the nested field.
+ *   @prop {Function} getUpdate - Function to update and get updates for the nested field.
+ *   @prop {string} path - The path of the nested field.
+ *   @prop {string} validationError - A validation error on the nested field itself, shown in its header.
+ * @returns {React.FC<NestedProps>} The rendered NestedFieldInput component.
+ */
+const NestedFieldInput: React.FC<NestedProps> = ({
+  field,
+  formState,
+  originalState,
+  getUpdate,
+  path,
+  isNew = false,
+  suggestionVariables,
+  isFlat = false,
+  validationError,
+}) => {
+  const [showList, setShowList] = useState(
+    !field.isOptional || get(formState, makePath(path, field.name)) != null
+  );
+
+  const onAdd = () => {
+    setShowList(true);
+
+    if (formState !== null) {
+      getUpdate(makePath(path, field.name), createFormState(field.fields));
+    }
+  };
+
+  const getOnDelete = () => () => {
+    setShowList(false);
+
+    return getUpdate(makePath(path, field.name), null);
+  };
+
+  const header = (
+    <FormFieldGroupHeader
+      // A flat relation is titled by its tab already, so repeating the field name is noise.
+      titleText={
+        isFlat
+          ? undefined
+          : {
+              text: field.name,
+              id: `NestedFieldInput-${makePath(path, field.name)}`,
+            }
+      }
+      titleDescription={renderGroupDescription(field.description, validationError)}
+      actions={
+        field.isOptional && (
+          <>
+            <Button
+              variant="link"
+              icon={<PlusIcon />}
+              onClick={onAdd}
+              isDisabled={
+                (!isNew &&
+                  field.isDisabled &&
+                  get(originalState, makePath(path, field.name)) !== undefined) ||
+                showList
+              }
+            >
+              {words("add")}
+            </Button>
+            <Button
+              variant="link"
+              onClick={getOnDelete()}
+              isDisabled={!isNew && (field.isDisabled || !showList)}
+            >
+              {words("delete")}
+            </Button>
+          </>
+        )
+      }
+    />
+  );
+
+  const subForm =
+    showList &&
+    field.fields.map((childField) => (
+      <FieldInput
+        field={childField}
+        key={makePath(path, `${field.name}.${childField.name}`)}
+        formState={formState}
+        originalState={originalState}
+        getUpdate={getUpdate}
+        path={makePath(path, field.name)}
+        suggestions={childField.suggestion}
+        suggestionVariables={suggestionVariables}
+        isNew={isNew}
+      />
+    ));
+
+  // Flat: the tab is the group. Header and sub-form become siblings in the tab's own
+  // column, so there is nothing left to expand.
+  if (isFlat) {
+    return (
+      <>
+        {header}
+        {subForm}
+      </>
+    );
+  }
+
+  return (
+    <FormFieldGroupExpandable
+      aria-label={`NestedFieldInput-${makePath(path, field.name)}`}
+      header={header}
+    >
+      {subForm}
+    </FormFieldGroupExpandable>
+  );
+};
+
+interface DictListProps {
+  field: DictListField;
+  formState: InstanceAttributeModel;
+  originalState: InstanceAttributeModel;
+  getUpdate: GetUpdate;
+  path: string | null;
+  isNew?: boolean;
+  suggestionVariables?: SuggestionVariables;
+  isFlat?: boolean;
+  validationError?: string;
+}
+
+/**
+ * DictListFieldInput component with inner state to manage dictionary list field input.
+ *
+ * @param {DictListProps} props - Props for the DictListFieldInput component.
+ *   @prop {Field} field - The dictionary list field.
+ *   @prop {FormState} formState - The form state.
+ *   @prop {OriginalState} originalState - The original state of the dictionary list field.
+ *   @prop {Function} getUpdate - Function to update and get updates for the dictionary list field.
+ *   @prop {string} path - The path of the dictionary list field.
+ *   @prop {string} validationError - A validation error on the list itself, shown in its header.
+ * @returns {React.FC<DictListProps>} The rendered DictListFieldInput component.
+ */
+const DictListFieldInput: React.FC<DictListProps> = ({
+  field,
+  formState,
+  originalState,
+  getUpdate,
+  path,
+  isNew = false,
+  suggestionVariables,
+  isFlat = false,
+  validationError,
+}) => {
+  const list = useMemo(
+    () => get<Array<unknown>>(formState, makePath(path, field.name), []) ?? [],
+    [formState, path, field.name]
+  );
+
+  const [addedItemsPaths, setAddedItemPaths] = useState<string[]>([]);
+
+  // Seeded from the list the component mounts with: an item rendered on that first pass
+  // would otherwise take its React key from a missing id, giving every item the same key.
+  const [itemIds, setItemIds] = useState<string[]>(() => list.map(() => uuidv4()));
+
+  /**
+   * Appends a new empty sub-form of this type to the list and records its path.
+   *
+   * @returns void
+   */
+  const onAdd = () => {
+    if (field.max && list.length >= field.max) {
+      return;
+    }
+
+    get(originalState, makePath(path, field.name));
+    setAddedItemPaths([...addedItemsPaths, `${makePath(path, field.name)}.${list.length}`]);
+
+    setItemIds([...itemIds, uuidv4()]);
+
+    getUpdate(makePath(path, field.name), [...list, createFormState(field.fields)]);
+  };
+
+  /**
+   * Returns a handler that removes item `index`, re-indexing the stored added-item paths.
+   *
+   * @param {index} number
+   * @returns void
+   */
+  const getOnDelete = (index: number) => () => {
+    const newPaths: string[] = [];
+
+    // Remove the item from the list of unique IDs
+    setItemIds(itemIds.filter((_, i) => i !== index));
+
+    /**
+     * We need to update the stored paths after the deleted item,
+     * because paths are dynamically defined and not fixed.
+     * If the user deletes an item preceding the new items,
+     * we want to make sure the path refers to the same entity.
+     */
+    addedItemsPaths.forEach((addedPath) => {
+      // Extract the index from the path
+      const pathIndex = Number(addedPath.slice(-1));
+
+      if (pathIndex < index) {
+        // If the path's index is less than the deleted index, keep it unchanged
+        newPaths.push(addedPath);
+      } else if (pathIndex > index) {
+        // If the path's index is greater than the deleted index, decrement it by 1
+        const basePath = addedPath.slice(0, -1);
+        newPaths.push(`${basePath}${pathIndex - 1}`);
+      }
+      // If pathIndex === index, we don't add it to newPaths since it's being deleted
+    });
+
+    setAddedItemPaths(newPaths);
+    getUpdate(makePath(path, field.name), [...list.filter((_, i) => i !== index)]);
+  };
+
+  const header = (
+    <FormFieldGroupHeader
+      // A flat relation is titled by its tab already, so repeating the field name is noise.
+      titleText={
+        isFlat
+          ? undefined
+          : {
+              text: field.name,
+              id: `DictListFieldInput-${makePath(path, field.name)}`,
+            }
+      }
+      titleDescription={renderGroupDescription(
+        `${field.description !== null ? field.description : ""} (${words(
+          "inventory.createInstance.items"
+        )(list.length)})`,
+        validationError
+      )}
+      actions={
+        <Button
+          variant="link"
+          icon={<PlusIcon />}
+          onClick={onAdd}
+          isDisabled={
+            (field.isDisabled && get(originalState, makePath(path, field.name)) !== undefined) ||
+            (!!field.max && list.length >= field.max)
+          }
+        >
+          {words("add")}
+        </Button>
+      }
+    />
+  );
+
+  const items = list.map((item, index) => (
+    <FormFieldGroupExpandable
+      aria-label={`DictListFieldInputItem-${makePath(path, `${field.name}.${index}`)}`}
+      key={makePath(path, `${field.name}.${itemIds[index]}`)}
+      header={
+        <FormFieldGroupHeader
+          titleText={{
+            text: getItemTitle(item, index, field.keyAttributes),
+            id: `DictListFieldInputItem-${makePath(path, `${field.name}.${index}`)}`,
+          }}
+          actions={
+            <Button
+              variant="link"
+              onClick={getOnDelete(index)}
+              isDisabled={
+                (!isNew &&
+                  field.isDisabled &&
+                  get(originalState, makePath(path, field.name)) !== undefined) ||
+                list.length <= field.min
+              }
+            >
+              {words("delete")}
+            </Button>
+          }
+        />
+      }
+    >
+      {field.fields.map((childField) => (
+        <FieldInput
+          field={childField}
+          key={makePath(path, `${field.name}.${index}.${childField.name}`)}
+          formState={formState}
+          originalState={originalState}
+          getUpdate={getUpdate}
+          path={makePath(path, `${field.name}.${index}`)}
+          isNew={isNew || addedItemsPaths.includes(`${makePath(path, field.name)}.${index}`)}
+          suggestions={childField.suggestion}
+          suggestionVariables={suggestionVariables}
+        />
+      ))}
+    </FormFieldGroupExpandable>
+  ));
+
+  // Flat: the tab is the group. Header and items become siblings in the tab's own
+  // column, so there is nothing left to expand.
+  if (isFlat) {
+    return (
+      <>
+        {header}
+        {items}
+      </>
+    );
+  }
+
+  return (
+    <FormFieldGroupExpandable
+      aria-label={`DictListFieldInput-${makePath(path, field.name)}`}
+      header={header}
+    >
+      {items}
+    </FormFieldGroupExpandable>
+  );
+};

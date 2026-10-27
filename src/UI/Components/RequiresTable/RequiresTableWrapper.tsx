@@ -1,6 +1,6 @@
 import React from "react";
 import { Tbody, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 
 export const RequiresTableWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   children,

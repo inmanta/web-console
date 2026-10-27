@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { words } from "@/Core";
-import { useCreateSupportArchive } from "@/Data/Queries/Slices/Server";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { useCreateSupportArchive } from "@inmanta/web-console-core/Queries/Slices/Server";
 import { DownloadButton } from "./Components";
 
 /**

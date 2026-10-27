@@ -12,10 +12,10 @@ import {
 } from "@patternfly/react-core";
 import { CodeIcon, KeyIcon, RobotIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { ClientType, words } from "@/Core";
-import { AppAlert } from "@/UI/Components/AppAlert";
-import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
-import { Description } from "@/UI/Components/Description";
+import { ClientType, words } from "@inmanta/web-console-core";
+import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
+import { ClipboardCopyButton } from "@inmanta/web-console-ui/Components/ClipboardCopyButton";
+import { Description } from "@inmanta/web-console-ui/Components/Description";
 import { ExpiryInput } from "./ExpiryInput";
 
 interface AdvancedSectionProps {

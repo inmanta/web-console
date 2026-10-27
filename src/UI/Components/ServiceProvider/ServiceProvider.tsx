@@ -1,8 +1,8 @@
 import React from "react";
-import { ServiceModel } from "@/Core";
-import { useGetServiceModel } from "@/Data/Queries/Slices/Service";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
+import { ServiceModel } from "@inmanta/web-console-core";
+import { useGetServiceModel } from "@inmanta/web-console-core/Queries/Slices/Service";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 
 interface Props {
   serviceName: string;

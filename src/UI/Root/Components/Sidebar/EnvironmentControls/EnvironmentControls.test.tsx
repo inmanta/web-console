@@ -5,10 +5,10 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { QueryControlProvider } from "@/Data/Queries/Helpers";
-import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { QueryControlProvider } from "@inmanta/web-console-core/Queries/Helpers";
+import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ModalProvider } from "../../ModalProvider";
 import { EnvironmentControls } from "./EnvironmentControls";
 

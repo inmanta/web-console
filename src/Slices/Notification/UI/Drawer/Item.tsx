@@ -10,12 +10,12 @@ import {
   DropdownItem,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { RouteKindWithId, words } from "@/Core";
-import { Notification, Body } from "@/Core/Domain/Notification";
-import { DependencyContext } from "@/UI/Dependency";
-import { useNavigateTo } from "@/UI/Routing";
-import { CustomDatePresenter } from "@/UI/Utils";
 import { getSeverityForNotification } from "@S/Notification/UI/Utils";
+import { RouteKindWithId, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { Notification, Body } from "@inmanta/web-console-core/Domain/Notification";
+import { useNavigateTo } from "@inmanta/web-console-core/Routing";
+import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 
 export type OnUpdate = (body: Body) => void;
 

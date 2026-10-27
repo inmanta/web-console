@@ -1,10 +1,10 @@
-import { FeatureModule } from "@/Core";
 import * as Agents from "@S/Agents/Core/Route";
 import * as Facts from "@S/Facts/Core/Route";
 import * as Resource from "@S/Resource/Core/Route";
 import * as ResourceDetails from "@S/ResourceDetails/Core/Route";
 import * as DiscoveredResources from "@S/ResourceDiscovery/Core/Route";
 import * as DiscoveredResourceDetails from "@S/ResourceDiscoveryDetails/Core/Route";
+import { FeatureModule } from "@inmanta/web-console-core";
 import { resourceManagerMessages } from "./messages";
 
 /**

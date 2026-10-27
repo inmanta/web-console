@@ -1,6 +1,6 @@
 import React from "react";
-import { CustomDatePresenter, useTickerWithInterval } from "@/UI/Utils";
-import dayjs from "@/dayjs";
+import dayjs from "@inmanta/web-console-core/dayjs";
+import { CustomDatePresenter, useTickerWithInterval } from "@inmanta/web-console-ui/Utils";
 import { Timeline } from "./Timeline";
 
 interface Props {

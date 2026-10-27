@@ -1,9 +1,9 @@
 import React, { useEffect, useContext, useState } from "react";
-import { useGetEnvironmentPreview } from "@/Data/Queries/Slices/Environment";
-import { useGetServerStatus } from "@/Data/Queries/Slices/Server";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { DependencyContext } from "@/UI/Dependency";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useGetEnvironmentPreview } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { useGetServerStatus } from "@inmanta/web-console-core/Queries/Slices/Server";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 
 /**
  * Initializer component

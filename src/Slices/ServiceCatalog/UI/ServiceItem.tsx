@@ -17,13 +17,13 @@ import {
   Content,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { ServiceModel, words } from "@/Core";
-import { useDeleteService } from "@/Data/Queries/Slices/Service";
-import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
 import { InstanceSummaryLabels } from "@/UI/Components/InstanceSummaryLabels";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { ServiceModel, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { useDeleteService } from "@inmanta/web-console-core/Queries/Slices/Service";
+import { ConfirmUserActionForm } from "@inmanta/web-console-ui/Components/ConfirmUserActionForm";
 
 interface Props {
   service: ServiceModel;

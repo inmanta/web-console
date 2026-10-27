@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Navigate } from "react-router";
-import { DependencyContext } from "@/UI/Dependency";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 
 /**
  * DefaultRoute handles the "/" redirect logic:

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import { dia, ui } from "@joint/plus";
 import styled from "styled-components";
-import { ServiceModel, words } from "@/Core";
-import { Inventories } from "@/Data/Queries/Slices/ServiceInstance";
+import { ServiceModel, words } from "@inmanta/web-console-core";
+import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { RelationsDictionary } from "../Data";
 import { ComposerContext } from "../Data/Context";
 import { LEFT_SIDEBAR_WIDTH } from "../config";

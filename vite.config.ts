@@ -208,6 +208,16 @@ export default defineConfig({
     alias: [
       { find: "@", replacement: resolve(__dirname, "./src") },
       { find: "@S", replacement: resolve(__dirname, "./src/Slices") },
+      // The packages of the composition architecture (#7451), by the names they get as workspaces.
+      {
+        find: "@inmanta/web-console-core",
+        replacement: resolve(__dirname, "./packages/core/src"),
+      },
+      { find: "@inmanta/web-console-ui", replacement: resolve(__dirname, "./packages/ui/src") },
+      {
+        find: "@inmanta/web-console-test-utils",
+        replacement: resolve(__dirname, "./packages/test-utils/src"),
+      },
       {
         find: "@assets",
         replacement: resolve(__dirname, "./node_modules/@patternfly/react-core/dist/styles/assets"),
@@ -356,9 +366,9 @@ export default defineConfig({
         settings: { disableJavaScriptFileLoading: true, disableCSSFileLoading: true },
       },
     },
-    setupFiles: ["./test-setup.ts"],
+    setupFiles: ["./packages/test-utils/src/setup.ts"],
     restoreMocks: true,
-    dir: "./src",
+    include: ["{src,packages}/**/*.{test,spec}.?(c|m)[jt]s?(x)"],
     coverage: {
       provider: "v8",
       enabled: process.env.CI ? true : false,
@@ -367,7 +377,7 @@ export default defineConfig({
         ["cobertura", { file: "cobertura-coverage.xml" }],
       ],
       exclude: ["node_modules/", "**/*.d.ts", "**/*.config.*", "**/__mocks__/**"],
-      include: ["src/**/*"],
+      include: ["src/**/*", "packages/**/*"],
       maxThreads: process.env.CI ? 2 : 0,
     },
     deps: {

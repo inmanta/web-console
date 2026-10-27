@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { dia, ui } from "@joint/plus";
-import { InstanceAttributeModel, words } from "@/Core";
-import { ServiceModel } from "@/Core";
+import { InstanceAttributeModel, words } from "@inmanta/web-console-core";
+import { ServiceModel } from "@inmanta/web-console-core";
 import { ServiceEntityShape } from "../../UI";
 import { createHalo, revealDirectChildren } from "../../UI/JointJsShapes/createHalo";
 import { RelationsDictionary } from "../Helpers";

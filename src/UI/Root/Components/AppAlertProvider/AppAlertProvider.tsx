@@ -1,12 +1,12 @@
 import React, { useState, useCallback, PropsWithChildren } from "react";
 import { AlertGroup, AlertVariant } from "@patternfly/react-core";
 import { v4 as uuidv4 } from "uuid";
-import { AppAlert as AppAlertComponent } from "@/UI/Components/AppAlert";
 import {
   AppAlertContext,
   NotifyOptions,
   NotifyShorthandOptions,
-} from "@/UI/Dependency/AppAlertContext";
+} from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { AppAlert as AppAlertComponent } from "@inmanta/web-console-ui/Components/AppAlert";
 
 export const AppAlertProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [alerts, setAlerts] = useState<NotifyOptions[]>([]);

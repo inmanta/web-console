@@ -2,11 +2,11 @@ import React from "react";
 import { MemoryRouter, Route, Routes, useSearchParams } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
-import { MockEnvironmentHandler } from "@/Test/Mock";
-import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { routes } from "@/appFeatures";
+import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
+import { EnvironmentPreview } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
+import { MockEnvironmentHandler } from "@inmanta/web-console-test-utils/Mock";
 import { DefaultRoute } from "./DefaultRoute";
 
 const DashboardSentinel: React.FC = () => {
