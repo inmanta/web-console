@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { DryRunContext, ResourceActionFilter } from "@/Core";
-import { usePost } from "@/Data/Queries/Helpers";
+import { getRequiredResponseBody, usePost } from "@/Data/Queries/Helpers";
 import { getDryRunsKey } from "@/Data/Queries/Slices/DryRun";
 import { DependencyContext } from "@/UI/Dependency";
 import { StartedDryRun } from "./types";
@@ -47,14 +47,11 @@ export const useDryRunFiltered = (
   const client = useQueryClient();
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<DryRunFilteredRequest>;
+  const post = usePost(env)<DryRunFilteredRequest, { data: DryRunFilteredResponse }>;
 
   return useMutation({
     mutationFn: async (request) => {
-      const { data }: { data: DryRunFilteredResponse } = await post(
-        "/api/v2/dryrun_filtered",
-        request
-      );
+      const { data } = getRequiredResponseBody(await post("/api/v2/dryrun_filtered", request));
 
       return { id: data.id, modelVersion: data.model };
     },

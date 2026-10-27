@@ -1,5 +1,5 @@
 import { PrimaryBaseUrlManager } from "@/UI/Routing";
-import { parseJsonResponse, useFetchHelpers } from "./useFetchHelpers";
+import { getRequiredResponseBody, parseJsonResponse, useFetchHelpers } from "./useFetchHelpers";
 
 /**
  * Custom hook to perform a GET request.
@@ -10,9 +10,9 @@ import { parseJsonResponse, useFetchHelpers } from "./useFetchHelpers";
  *
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  *
- * @returns {Function(path: string): Promise<Response>} A function that performs a GET request and returns the response data.
+ * @returns {Function(path: string): Promise<ResponseBody>} A function that performs a GET request and returns the response data. It rejects when the response body is empty.
  *
- * @template Response - The type of the response data.
+ * @template ResponseBody - The type of the response data.
  */
 export const useGet = (env: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -23,7 +23,7 @@ export const useGet = (env: string, options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ env, message: options?.message });
 
-  return async <Response>(path: string): Promise<Response> => {
+  return async <ResponseBody>(path: string): Promise<ResponseBody> => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         headers,
@@ -31,7 +31,7 @@ export const useGet = (env: string, options?: { message?: string }) => {
 
       await handleErrors(response, { method: "GET", path });
 
-      return parseJsonResponse(response);
+      return getRequiredResponseBody(await parseJsonResponse<ResponseBody>(response));
     } catch (error) {
       throw error;
     }
@@ -47,9 +47,9 @@ export const useGet = (env: string, options?: { message?: string }) => {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  *
- * @returns {Function(path: string): Promise<Response>} A function that performs a GET request and returns the response data.
+ * @returns {Function(path: string): Promise<ResponseBody>} A function that performs a GET request and returns the response data. It rejects when the response body is empty.
  *
- * @template Response - The type of the response data.
+ * @template ResponseBody - The type of the response data.
  */
 export const useGetWithOptionalEnv = (env?: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -61,7 +61,7 @@ export const useGetWithOptionalEnv = (env?: string, options?: { message?: string
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ env, message: options?.message });
 
-  return async <Response>(path: string): Promise<Response> => {
+  return async <ResponseBody>(path: string): Promise<ResponseBody> => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         headers,
@@ -69,7 +69,7 @@ export const useGetWithOptionalEnv = (env?: string, options?: { message?: string
 
       await handleErrors(response, { method: "GET", path });
 
-      return parseJsonResponse(response);
+      return getRequiredResponseBody(await parseJsonResponse<ResponseBody>(response));
     } catch (error) {
       throw error;
     }
@@ -85,9 +85,9 @@ export const useGetWithOptionalEnv = (env?: string, options?: { message?: string
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  * In comparison to useGet, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function(path: string): Promise<Response>} A function that performs a GET request and returns the response data.
+ * @returns {Function(path: string): Promise<ResponseBody>} A function that performs a GET request and returns the response data. It rejects when the response body is empty.
  *
- * @template Response - The type of the response data.
+ * @template ResponseBody - The type of the response data.
  */
 export const useGetWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -98,7 +98,7 @@ export const useGetWithoutEnv = (options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ message: options?.message });
 
-  return async <Response>(path: string): Promise<Response> => {
+  return async <ResponseBody>(path: string): Promise<ResponseBody> => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         headers,
@@ -106,7 +106,7 @@ export const useGetWithoutEnv = (options?: { message?: string }) => {
 
       await handleErrors(response, { method: "GET", path });
 
-      return parseJsonResponse(response);
+      return getRequiredResponseBody(await parseJsonResponse<ResponseBody>(response));
     } catch (error) {
       throw error;
     }
@@ -155,9 +155,10 @@ export const useGetZipWithoutEnv = (options?: { message?: string }) => {
  * @param {Object} [options] - Optional configuration for the POST request.
  * @param {string} [options.message] - Optional message to include in the request headers.
  *
- * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a POST request.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a POST request and returns the response data, or undefined when the response body is empty.
  *
- * @template Body - The type of the request body.
+ * @template RequestBody - The type of the request body.
+ * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
 export const usePost = (env: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -168,7 +169,7 @@ export const usePost = (env: string, options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ env, message: options?.message });
 
-  return async <Body>(path: string, body: Body) => {
+  return async <RequestBody, ResponseBody = void>(path: string, body: RequestBody) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "POST",
@@ -178,7 +179,7 @@ export const usePost = (env: string, options?: { message?: string }) => {
 
       await handleErrors(response, { method: "POST", path });
 
-      return parseJsonResponse(response);
+      return parseJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
@@ -194,9 +195,10 @@ export const usePost = (env: string, options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a POST request to the specified path.
  * In comparison to usePost, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a POST request.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a POST request and returns the response data, or undefined when the response body is empty.
  *
- * @template Body - The type of the request body.
+ * @template RequestBody - The type of the request body.
+ * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
 export const usePostWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -207,7 +209,7 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ message: options?.message });
 
-  return async <Body>(path: string, body: Body) => {
+  return async <RequestBody, ResponseBody = void>(path: string, body: RequestBody) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "POST",
@@ -217,7 +219,7 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
 
       await handleErrors(response, { method: "POST", path });
 
-      return parseJsonResponse(response);
+      return parseJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
@@ -231,9 +233,10 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
  * @param {Object} [options] - Optional configuration for the PUT request.
  * @param {string} [options.message] - Optional message to include in the request headers.
  *
- * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PUT request.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a PUT request and returns the response data, or undefined when the response body is empty.
  *
- * @template Body - The type of the request body.
+ * @template RequestBody - The type of the request body.
+ * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
 export const usePut = (env: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -244,7 +247,7 @@ export const usePut = (env: string, options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ env, message: options?.message });
 
-  return async <Body>(path: string, body: Body) => {
+  return async <RequestBody, ResponseBody = void>(path: string, body: RequestBody) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "PUT",
@@ -254,7 +257,7 @@ export const usePut = (env: string, options?: { message?: string }) => {
 
       await handleErrors(response, { method: "PUT", path });
 
-      return parseJsonResponse(response);
+      return parseJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
@@ -270,9 +273,10 @@ export const usePut = (env: string, options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
  * In comparison to usePut, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PUT request.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a PUT request and returns the response data, or undefined when the response body is empty.
  *
- * @template Body - The type of the request body.
+ * @template RequestBody - The type of the request body.
+ * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
 export const usePutWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -283,7 +287,7 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ message: options?.message });
 
-  return async <Body>(path: string, body: Body) => {
+  return async <RequestBody, ResponseBody = void>(path: string, body: RequestBody) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "PUT",
@@ -293,7 +297,7 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
 
       await handleErrors(response, { method: "PUT", path });
 
-      return parseJsonResponse(response);
+      return parseJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
@@ -309,9 +313,10 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a PATCH request to the specified path.
  *
- * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PATCH request.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a PATCH request and returns the response data, or undefined when the response body is empty.
  *
- * @template Body - The type of the request body.
+ * @template RequestBody - The type of the request body.
+ * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
 export const usePatch = (env: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -322,7 +327,7 @@ export const usePatch = (env: string, options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ env, message: options?.message });
 
-  return async <Body>(path: string, body: Body) => {
+  return async <RequestBody, ResponseBody = void>(path: string, body: RequestBody) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "PATCH",
@@ -332,7 +337,7 @@ export const usePatch = (env: string, options?: { message?: string }) => {
 
       await handleErrors(response, { method: "PATCH", path });
 
-      return parseJsonResponse(response);
+      return parseJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
@@ -348,9 +353,10 @@ export const usePatch = (env: string, options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a PATCH request to the specified path.
  * In comparison to usePatch, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PATCH request.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a PATCH request and returns the response data, or undefined when the response body is empty.
  *
- * @template Body - The type of the request body.
+ * @template RequestBody - The type of the request body.
+ * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
 export const usePatchWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -361,7 +367,7 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ message: options?.message });
 
-  return async <Body>(path: string, body: Body) => {
+  return async <RequestBody, ResponseBody = void>(path: string, body: RequestBody) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "PATCH",
@@ -371,7 +377,7 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
 
       await handleErrors(response, { method: "PATCH", path });
 
-      return parseJsonResponse(response);
+      return parseJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
@@ -387,7 +393,9 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a DELETE request to the specified path.
  *
- * @returns {Function} A function that performs a DELETE request and returns the response data.
+ * @returns {Function(path: string): Promise<ResponseBody | undefined>} A function that performs a DELETE request and returns the response data, or undefined when the response body is empty.
+ *
+ * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
 export const useDelete = (env: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -402,7 +410,7 @@ export const useDelete = (env: string, options?: { message?: string }) => {
     headers.append("message", options.message);
   }
 
-  return async (path: string) => {
+  return async <ResponseBody = void>(path: string) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "DELETE",
@@ -411,7 +419,7 @@ export const useDelete = (env: string, options?: { message?: string }) => {
 
       await handleErrors(response, { method: "DELETE", path });
 
-      return parseJsonResponse(response);
+      return parseJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
@@ -427,7 +435,9 @@ export const useDelete = (env: string, options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a DELETE request to the specified path.
  * In comparison to useDelete, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function} A function that performs a DELETE request and returns the response data.
+ * @returns {Function(path: string): Promise<ResponseBody | undefined>} A function that performs a DELETE request and returns the response data, or undefined when the response body is empty.
+ *
+ * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
 export const useDeleteWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -438,7 +448,7 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
   const { createHeaders, handleErrors } = useFetchHelpers();
   const headers = createHeaders({ message: options?.message });
 
-  return async (path: string) => {
+  return async <ResponseBody = void>(path: string) => {
     try {
       const response = await fetch(`${baseUrl}${path}`, {
         method: "DELETE",
@@ -447,7 +457,7 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
 
       await handleErrors(response, { method: "DELETE", path });
 
-      return parseJsonResponse(response);
+      return parseJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }

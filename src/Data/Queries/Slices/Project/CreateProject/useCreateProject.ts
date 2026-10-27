@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ProjectModel } from "@/Core";
-import { usePutWithoutEnv } from "@/Data/Queries/Helpers";
+import { getRequiredResponseBody, usePutWithoutEnv } from "@/Data/Queries/Helpers";
 import { getProjectsKey } from "../GetProjects";
 
 /**
@@ -31,11 +31,12 @@ export interface CreateProjectResponse {
 export const useCreateProject = (
   options?: UseMutationOptions<CreateProjectResponse, Error, CreateProjectParams>
 ): UseMutationResult<CreateProjectResponse, Error, CreateProjectParams> => {
-  const put = usePutWithoutEnv()<CreateProjectParams>;
+  const put = usePutWithoutEnv()<CreateProjectParams, CreateProjectResponse>;
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: CreateProjectParams) => put("/api/v2/project", params),
+    mutationFn: async (params: CreateProjectParams) =>
+      getRequiredResponseBody(await put("/api/v2/project", params)),
     ...options,
     onSuccess: () => {
       // Invalidate and refetch projects query

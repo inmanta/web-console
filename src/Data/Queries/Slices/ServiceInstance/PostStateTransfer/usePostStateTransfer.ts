@@ -16,24 +16,18 @@ interface PostStateTransfer {
   target_state: string;
 }
 
-interface StateTransferResponse {
-  current_version: 0;
-  target_state: "string";
-  message: "string";
-}
-
 /**
  * React Query to update the state of an instance.
  *
  * @param {string} instance_id - the UUID of the instance
  * @param {string } service_entity - The service entity type of the instance
- * @returns {UseMutationResult<StateTransferResponse, Error, PostStateTransfer, unknown>} The useMutation ReactQuery Hook
+ * @returns {UseMutationResult<void, Error, PostStateTransfer, unknown>} The useMutation ReactQuery Hook
  */
 export const usePostStateTransfer = (
   instance_id: string,
   service_entity: string,
-  options?: UseMutationOptions<StateTransferResponse, Error, PostStateTransfer>
-): UseMutationResult<StateTransferResponse, Error, PostStateTransfer> => {
+  options?: UseMutationOptions<void, Error, PostStateTransfer>
+): UseMutationResult<void, Error, PostStateTransfer> => {
   const client = useQueryClient();
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();

@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ServiceOrderItemRequest } from "@/Core";
 import { ServiceOrder } from "@/Core/Domain/ServiceOrderModel";
-import { usePost } from "@/Data/Queries/Helpers";
+import { getRequiredResponseBody, usePost } from "@/Data/Queries/Helpers";
 import { DependencyContext } from "@/UI/Dependency";
 
 interface PostResponse {
@@ -29,14 +29,16 @@ export const usePostOrder = (
 ): UseMutationResult<PostResponse, Error, ServiceOrderItemRequest[]> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<PostOrderBody>;
+  const post = usePost(env)<PostOrderBody, PostResponse>;
 
   return useMutation({
-    mutationFn: (service_order_items) =>
-      post("/lsm/v2/order", {
-        service_order_items,
-        description: ORDER_DESCRIPTION,
-      }),
+    mutationFn: async (service_order_items) =>
+      getRequiredResponseBody(
+        await post("/lsm/v2/order", {
+          service_order_items,
+          description: ORDER_DESCRIPTION,
+        })
+      ),
     mutationKey: ["post_order", env],
     ...options,
   });

@@ -5,7 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { usePost } from "@/Data/Queries/Helpers";
+import { getRequiredResponseBody, usePost } from "@/Data/Queries/Helpers";
 import { DependencyContext } from "@/UI/Dependency";
 import { getDryRunsKey } from "../GetDryRuns";
 
@@ -22,11 +22,11 @@ export const useTriggerDryRun = (
   const client = useQueryClient();
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<void>;
+  const post = usePost(env)<void, { data: string }>;
 
   return useMutation({
     mutationFn: async (version) => {
-      const { data }: { data: string } = await post(`/api/v2/dryrun/${version}`);
+      const { data } = getRequiredResponseBody(await post(`/api/v2/dryrun/${version}`));
 
       return data;
     },

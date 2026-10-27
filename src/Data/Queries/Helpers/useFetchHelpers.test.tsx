@@ -5,7 +5,7 @@ import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import { createCookie, removeCookie } from "@/Data/Common/CookieHelper";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { ApiEndpoint, parseJsonResponse, useFetchHelpers } from ".";
+import { ApiEndpoint, getRequiredResponseBody, parseJsonResponse, useFetchHelpers } from ".";
 
 const accessPolicyMessage = "Request is not allowed by the access policy.";
 const proxyErrorPage = "<html><body><h1>502 Bad Gateway</h1></body></html>";
@@ -226,5 +226,15 @@ describe("parseJsonResponse", () => {
       message: words("error.response.redirected"),
       status: 200,
     });
+  });
+});
+
+describe("getRequiredResponseBody", () => {
+  it("GIVEN a parsed response body THEN it returns that body", () => {
+    expect(getRequiredResponseBody({ data: [] })).toEqual({ data: [] });
+  });
+
+  it("GIVEN no response body THEN it throws an empty response error", () => {
+    expect(() => getRequiredResponseBody(undefined)).toThrow(words("error.response.empty"));
   });
 });

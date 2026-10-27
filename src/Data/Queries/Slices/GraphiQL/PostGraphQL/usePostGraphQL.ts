@@ -50,7 +50,7 @@ export const usePostGraphQL = (
 
       await handleErrors(response, { method: "POST", path: "/api/v2/graphql" });
 
-      return (await parseJsonResponse(response)) ?? {};
+      return (await parseJsonResponse<SyncExecutionResult>(response)) ?? {};
     },
   });
 };

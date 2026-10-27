@@ -1,6 +1,6 @@
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { Environment } from "@/Core";
-import { usePutWithoutEnv } from "@/Data/Queries/Helpers";
+import { getRequiredResponseBody, usePutWithoutEnv } from "@/Data/Queries/Helpers";
 
 /**
  * Interface for the parameters for the create environment mutation.
@@ -29,10 +29,10 @@ interface Response {
 export const useCreateEnvironment = (
   options?: UseMutationOptions<Response, Error, CreateEnvironmentParams>
 ): UseMutationResult<Response, Error, CreateEnvironmentParams> => {
-  const put = usePutWithoutEnv()<CreateEnvironmentParams>;
+  const put = usePutWithoutEnv()<CreateEnvironmentParams, Response>;
 
   return useMutation({
-    mutationFn: (params) => put("/api/v2/environment", params),
+    mutationFn: async (params) => getRequiredResponseBody(await put("/api/v2/environment", params)),
     mutationKey: ["create_environment"],
     ...options,
   });

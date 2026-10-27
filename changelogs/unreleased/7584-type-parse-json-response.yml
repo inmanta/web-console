@@ -1,0 +1,5 @@
+description: Type the response bodies of the REST request hooks.
+issue-nr: 7584
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

@@ -1,6 +1,5 @@
-import { words } from "@/Core";
 import { PrimaryBaseUrlManager } from "@/UI/Routing";
-import { createCustomError, parseJsonResponse, useFetchHelpers } from "./useFetchHelpers";
+import { getRequiredResponseBody, parseJsonResponse, useFetchHelpers } from "./useFetchHelpers";
 
 /**
  * Hook that provides GraphQL request functionality.
@@ -55,11 +54,7 @@ export function useGraphQLRequest<Type>(
 
     await handleErrors(response, { method: "POST", path: "/api/v2/graphql" });
 
-    const body: { data: Type } | undefined = await parseJsonResponse(response);
-
-    if (body === undefined) {
-      throw createCustomError(words("error.response.unexpected")(response.status), response.status);
-    }
+    const body = getRequiredResponseBody(await parseJsonResponse<{ data: Type }>(response));
 
     return body.data;
   };
