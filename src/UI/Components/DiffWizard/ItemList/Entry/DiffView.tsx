@@ -8,10 +8,11 @@ export const DiffView: React.FC<Diff.Values> = ({ from, to }) => {
       hideSummary={true}
       showDiffOnly={false}
       styles={{
+        // The library sizes columns with a <colgroup>; hide the 28px marker columns along with the marker cells.
+        diffContainer: { 'col[width="28px"]': { display: "none" } },
         marker: { display: "none" },
         wordDiff: { padding: 0 },
         contentText: { lineHeight: "29px !important" },
-        line: { display: "flex" },
         content: {
           overflowWrap: "anywhere",
           padding: "0 4px",
