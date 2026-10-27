@@ -43,6 +43,9 @@ describe("useGraphQLRequest", () => {
   it("GIVEN an empty body with status 200 THEN it rejects with an empty response error", async () => {
     server.use(http.post("/api/v2/graphql", () => new HttpResponse(null, { status: 200 })));
 
-    await expect(renderGraphQLRequest()()).rejects.toThrow(words("error.response.empty"));
+    await expect(renderGraphQLRequest()()).rejects.toMatchObject({
+      message: words("error.response.empty"),
+      status: 200,
+    });
   });
 });

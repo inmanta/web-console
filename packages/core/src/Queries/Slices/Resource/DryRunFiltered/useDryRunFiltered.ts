@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { DryRunContext, ResourceActionFilter } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
-import { getRequiredResponseBody, usePost } from "@inmanta/web-console-core/Queries/Helpers";
+import { usePost } from "@inmanta/web-console-core/Queries/Helpers";
 import { getDryRunsKey } from "@inmanta/web-console-core/Queries/Slices/DryRun";
 import { StartedDryRun } from "./types";
 
@@ -47,11 +47,14 @@ export const useDryRunFiltered = (
   const client = useQueryClient();
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<DryRunFilteredRequest, { data: DryRunFilteredResponse }>;
+  const post = usePost(env, { isResponseBodyRequired: true })<
+    DryRunFilteredRequest,
+    { data: DryRunFilteredResponse }
+  >;
 
   return useMutation({
     mutationFn: async (request) => {
-      const { data } = getRequiredResponseBody(await post("/api/v2/dryrun_filtered", request));
+      const { data } = await post("/api/v2/dryrun_filtered", request);
 
       return { id: data.id, modelVersion: data.model };
     },

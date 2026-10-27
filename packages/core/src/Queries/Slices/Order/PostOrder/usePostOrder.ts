@@ -3,7 +3,7 @@ import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/re
 import { ServiceOrderItemRequest } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { ServiceOrder } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
-import { getRequiredResponseBody, usePost } from "@inmanta/web-console-core/Queries/Helpers";
+import { usePost } from "@inmanta/web-console-core/Queries/Helpers";
 
 interface PostResponse {
   data: ServiceOrder;
@@ -29,16 +29,14 @@ export const usePostOrder = (
 ): UseMutationResult<PostResponse, Error, ServiceOrderItemRequest[]> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<PostOrderBody, PostResponse>;
+  const post = usePost(env, { isResponseBodyRequired: true })<PostOrderBody, PostResponse>;
 
   return useMutation({
-    mutationFn: async (service_order_items) =>
-      getRequiredResponseBody(
-        await post("/lsm/v2/order", {
-          service_order_items,
-          description: ORDER_DESCRIPTION,
-        })
-      ),
+    mutationFn: (service_order_items) =>
+      post("/lsm/v2/order", {
+        service_order_items,
+        description: ORDER_DESCRIPTION,
+      }),
     mutationKey: ["post_order", env],
     ...options,
   });

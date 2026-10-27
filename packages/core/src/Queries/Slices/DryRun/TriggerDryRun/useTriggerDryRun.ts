@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
-import { getRequiredResponseBody, usePost } from "@inmanta/web-console-core/Queries/Helpers";
+import { usePost } from "@inmanta/web-console-core/Queries/Helpers";
 import { getDryRunsKey } from "../GetDryRuns";
 
 /**
@@ -22,11 +22,11 @@ export const useTriggerDryRun = (
   const client = useQueryClient();
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<void, { data: string }>;
+  const post = usePost(env, { isResponseBodyRequired: true })<void, { data: string }>;
 
   return useMutation({
     mutationFn: async (version) => {
-      const { data } = getRequiredResponseBody(await post(`/api/v2/dryrun/${version}`));
+      const { data } = await post(`/api/v2/dryrun/${version}`);
 
       return data;
     },

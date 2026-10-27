@@ -1,5 +1,5 @@
 import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
-import { getRequiredResponseBody, parseJsonResponse, useFetchHelpers } from "./useFetchHelpers";
+import { parseRequiredJsonResponse, useFetchHelpers } from "./useFetchHelpers";
 
 /**
  * Hook that provides GraphQL request functionality.
@@ -54,7 +54,7 @@ export function useGraphQLRequest<Type>(
 
     await handleErrors(response, { method: "POST", path: "/api/v2/graphql" });
 
-    const body = getRequiredResponseBody(await parseJsonResponse<{ data: Type }>(response));
+    const body = await parseRequiredJsonResponse<{ data: Type }>(response);
 
     return body.data;
   };

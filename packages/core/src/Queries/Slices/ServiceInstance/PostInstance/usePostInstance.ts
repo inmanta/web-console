@@ -2,11 +2,7 @@ import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { Field, InstanceAttributeModel, ServiceInstanceModel } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
-import {
-  CustomError,
-  getRequiredResponseBody,
-  usePost,
-} from "@inmanta/web-console-core/Queries/Helpers";
+import { CustomError, usePost } from "@inmanta/web-console-core/Queries/Helpers";
 import { prepBody } from "./helper";
 
 interface Params {
@@ -35,15 +31,13 @@ export const usePostInstance = (
 ): UseMutationResult<Response, CustomError, Params, unknown> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<Body, Response>;
+  const post = usePost(env, { isResponseBodyRequired: true })<Body, Response>;
 
   return useMutation({
-    mutationFn: async ({ fields, attributes, initial_state }) => {
+    mutationFn: ({ fields, attributes, initial_state }) => {
       const body: Body = prepBody(fields, attributes, initial_state);
 
-      return getRequiredResponseBody(
-        await post(`/lsm/v1/service_inventory/${service_entity}`, body)
-      );
+      return post(`/lsm/v1/service_inventory/${service_entity}`, body);
     },
     mutationKey: ["post_instance", env],
     ...options,

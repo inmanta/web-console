@@ -1,5 +1,32 @@
 import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
-import { getRequiredResponseBody, parseJsonResponse, useFetchHelpers } from "./useFetchHelpers";
+import { parseJsonResponse, parseRequiredJsonResponse, useFetchHelpers } from "./useFetchHelpers";
+
+/**
+ * Options of the POST and PUT request hooks.
+ */
+interface RequestWithBodyOptions {
+  /** Message to include in the request headers. */
+  message?: string;
+
+  /** Whether the request rejects when the server sends an empty response body, for callers that read the response. */
+  isResponseBodyRequired?: boolean;
+}
+
+/**
+ * A POST or PUT request that resolves to the response body, or undefined when the body is empty.
+ */
+type RequestWithOptionalResponseBody = <RequestBody, ResponseBody = void>(
+  path: string,
+  body: RequestBody
+) => Promise<ResponseBody | undefined>;
+
+/**
+ * A POST or PUT request that resolves to the response body, and rejects when the body is empty.
+ */
+type RequestWithRequiredResponseBody = <RequestBody, ResponseBody>(
+  path: string,
+  body: RequestBody
+) => Promise<ResponseBody>;
 
 /**
  * Custom hook to perform a GET request.
@@ -31,7 +58,7 @@ export const useGet = (env: string, options?: { message?: string }) => {
 
       await handleErrors(response, { method: "GET", path });
 
-      return getRequiredResponseBody(await parseJsonResponse<ResponseBody>(response));
+      return parseRequiredJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
@@ -69,7 +96,7 @@ export const useGetWithOptionalEnv = (env?: string, options?: { message?: string
 
       await handleErrors(response, { method: "GET", path });
 
-      return getRequiredResponseBody(await parseJsonResponse<ResponseBody>(response));
+      return parseRequiredJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
@@ -106,7 +133,7 @@ export const useGetWithoutEnv = (options?: { message?: string }) => {
 
       await handleErrors(response, { method: "GET", path });
 
-      return getRequiredResponseBody(await parseJsonResponse<ResponseBody>(response));
+      return parseRequiredJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
@@ -152,15 +179,22 @@ export const useGetZipWithoutEnv = (options?: { message?: string }) => {
  * Custom hook to create a POST request function.
  *
  * @param {string} env - The environment Id to be used in the request headers.
- * @param {Object} [options] - Optional configuration for the POST request.
- * @param {string} [options.message] - Optional message to include in the request headers.
+ * @param {RequestWithBodyOptions} [options] - Optional configuration for the POST request.
  *
- * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a POST request and returns the response data, or undefined when the response body is empty.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a POST request and returns the response data. With `isResponseBodyRequired` it rejects on an empty response body, otherwise it returns undefined for it.
  *
  * @template RequestBody - The type of the request body.
  * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
-export const usePost = (env: string, options?: { message?: string }) => {
+export function usePost(
+  env: string,
+  options: RequestWithBodyOptions & { isResponseBodyRequired: true }
+): RequestWithRequiredResponseBody;
+export function usePost(
+  env: string,
+  options?: RequestWithBodyOptions
+): RequestWithOptionalResponseBody;
+export function usePost(env: string, options?: RequestWithBodyOptions) {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
@@ -179,28 +213,35 @@ export const usePost = (env: string, options?: { message?: string }) => {
 
       await handleErrors(response, { method: "POST", path });
 
-      return parseJsonResponse<ResponseBody>(response);
+      return options?.isResponseBodyRequired
+        ? parseRequiredJsonResponse<ResponseBody>(response)
+        : parseJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
   };
-};
+}
 
 /**
  * Custom hook to create a POST request function.
  *
- * @param {Object} [options] - Optional configuration for the POST request.
- * @param {string} [options.message] - Optional message to include in the request headers.
+ * @param {RequestWithBodyOptions} [options] - Optional configuration for the POST request.
  *
  * This hook constructs the base URL and headers, and provides a function to perform a POST request to the specified path.
  * In comparison to usePost, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a POST request and returns the response data, or undefined when the response body is empty.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a POST request and returns the response data. With `isResponseBodyRequired` it rejects on an empty response body, otherwise it returns undefined for it.
  *
  * @template RequestBody - The type of the request body.
  * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
-export const usePostWithoutEnv = (options?: { message?: string }) => {
+export function usePostWithoutEnv(
+  options: RequestWithBodyOptions & { isResponseBodyRequired: true }
+): RequestWithRequiredResponseBody;
+export function usePostWithoutEnv(
+  options?: RequestWithBodyOptions
+): RequestWithOptionalResponseBody;
+export function usePostWithoutEnv(options?: RequestWithBodyOptions) {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
@@ -219,26 +260,35 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
 
       await handleErrors(response, { method: "POST", path });
 
-      return parseJsonResponse<ResponseBody>(response);
+      return options?.isResponseBodyRequired
+        ? parseRequiredJsonResponse<ResponseBody>(response)
+        : parseJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
   };
-};
+}
 
 /**
  * Custom hook to create a PUT request function.
  *
  * @param {string} env - The environment Id to be used in the request headers.
- * @param {Object} [options] - Optional configuration for the PUT request.
- * @param {string} [options.message] - Optional message to include in the request headers.
+ * @param {RequestWithBodyOptions} [options] - Optional configuration for the PUT request.
  *
- * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a PUT request and returns the response data, or undefined when the response body is empty.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a PUT request and returns the response data. With `isResponseBodyRequired` it rejects on an empty response body, otherwise it returns undefined for it.
  *
  * @template RequestBody - The type of the request body.
  * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
-export const usePut = (env: string, options?: { message?: string }) => {
+export function usePut(
+  env: string,
+  options: RequestWithBodyOptions & { isResponseBodyRequired: true }
+): RequestWithRequiredResponseBody;
+export function usePut(
+  env: string,
+  options?: RequestWithBodyOptions
+): RequestWithOptionalResponseBody;
+export function usePut(env: string, options?: RequestWithBodyOptions) {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
@@ -257,28 +307,33 @@ export const usePut = (env: string, options?: { message?: string }) => {
 
       await handleErrors(response, { method: "PUT", path });
 
-      return parseJsonResponse<ResponseBody>(response);
+      return options?.isResponseBodyRequired
+        ? parseRequiredJsonResponse<ResponseBody>(response)
+        : parseJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
   };
-};
+}
 
 /**
  * Custom hook to create a PUT request function.
  *
- * @param {Object} [options] - Optional configuration for the PUT request.
- * @param {string} [options.message] - Optional message to include in the request headers.
+ * @param {RequestWithBodyOptions} [options] - Optional configuration for the PUT request.
  *
  * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
  * In comparison to usePut, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a PUT request and returns the response data, or undefined when the response body is empty.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a PUT request and returns the response data. With `isResponseBodyRequired` it rejects on an empty response body, otherwise it returns undefined for it.
  *
  * @template RequestBody - The type of the request body.
  * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
-export const usePutWithoutEnv = (options?: { message?: string }) => {
+export function usePutWithoutEnv(
+  options: RequestWithBodyOptions & { isResponseBodyRequired: true }
+): RequestWithRequiredResponseBody;
+export function usePutWithoutEnv(options?: RequestWithBodyOptions): RequestWithOptionalResponseBody;
+export function usePutWithoutEnv(options?: RequestWithBodyOptions) {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
@@ -297,12 +352,14 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
 
       await handleErrors(response, { method: "PUT", path });
 
-      return parseJsonResponse<ResponseBody>(response);
+      return options?.isResponseBodyRequired
+        ? parseRequiredJsonResponse<ResponseBody>(response)
+        : parseJsonResponse<ResponseBody>(response);
     } catch (error) {
       throw error;
     }
   };
-};
+}
 
 /**
  * Custom hook to create a PATCH request function.

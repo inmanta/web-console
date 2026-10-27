@@ -1,9 +1,6 @@
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { Environment } from "@inmanta/web-console-core";
-import {
-  getRequiredResponseBody,
-  usePutWithoutEnv,
-} from "@inmanta/web-console-core/Queries/Helpers";
+import { usePutWithoutEnv } from "@inmanta/web-console-core/Queries/Helpers";
 
 /**
  * Interface for the parameters for the create environment mutation.
@@ -32,10 +29,10 @@ interface Response {
 export const useCreateEnvironment = (
   options?: UseMutationOptions<Response, Error, CreateEnvironmentParams>
 ): UseMutationResult<Response, Error, CreateEnvironmentParams> => {
-  const put = usePutWithoutEnv()<CreateEnvironmentParams, Response>;
+  const put = usePutWithoutEnv({ isResponseBodyRequired: true })<CreateEnvironmentParams, Response>;
 
   return useMutation({
-    mutationFn: async (params) => getRequiredResponseBody(await put("/api/v2/environment", params)),
+    mutationFn: (params) => put("/api/v2/environment", params),
     mutationKey: ["create_environment"],
     ...options,
   });

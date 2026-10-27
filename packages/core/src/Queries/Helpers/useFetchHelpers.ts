@@ -122,16 +122,18 @@ export const parseJsonResponse = async <ResponseBody = unknown>(
 };
 
 /**
- * Gets the parsed response body of a request that always answers with data.
- * Throws an error when the server sent an empty body instead.
+ * Reads the body of a successful response that always answers with data as JSON of the given type.
+ * Throws a CustomError when the body is empty or not JSON.
  *
- * @example getRequiredResponseBody({ data: [] }) // { data: [] }
+ * @example await parseRequiredJsonResponse<{ data: string[] }>(new Response('{"data":[]}')) // { data: [] }
  */
-export const getRequiredResponseBody = <ResponseBody>(
-  responseBody: ResponseBody | undefined
-): ResponseBody => {
+export const parseRequiredJsonResponse = async <ResponseBody>(
+  response: Response
+): Promise<ResponseBody> => {
+  const responseBody = await parseJsonResponse<ResponseBody>(response);
+
   if (responseBody === undefined) {
-    throw new Error(words("error.response.empty"));
+    throw createCustomError(words("error.response.empty"), response.status);
   }
 
   return responseBody;

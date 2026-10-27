@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { TokenInfo } from "@inmanta/web-console-core/Domain";
-import { getRequiredResponseBody, usePost } from "@inmanta/web-console-core/Queries/Helpers";
+import { usePost } from "@inmanta/web-console-core/Queries/Helpers";
 
 /**
  * Interface for the response from the generate token mutation.
@@ -21,11 +21,10 @@ export const useGenerateToken = (
 ): UseMutationResult<Response, Error, TokenInfo> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<TokenInfo, Response>;
+  const post = usePost(env, { isResponseBodyRequired: true })<TokenInfo, Response>;
 
   return useMutation({
-    mutationFn: async (params) =>
-      getRequiredResponseBody(await post("/api/v2/environment_auth", params)),
+    mutationFn: (params) => post("/api/v2/environment_auth", params),
     mutationKey: ["generate_token", env],
     ...options,
   });

@@ -1,8 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import {
-  getRequiredResponseBody,
-  usePostWithoutEnv,
-} from "@inmanta/web-console-core/Queries/Helpers";
+import { usePostWithoutEnv } from "@inmanta/web-console-core/Queries/Helpers";
 
 interface LoginResponse {
   data: {
@@ -27,10 +24,10 @@ interface LoginBody {
  * @returns A tuple containing the mutation function and mutation state.
  */
 export const useLogin = () => {
-  const post = usePostWithoutEnv()<LoginBody, LoginResponse>;
+  const post = usePostWithoutEnv({ isResponseBodyRequired: true })<LoginBody, LoginResponse>;
 
   return useMutation<LoginResponse, Error, LoginBody>({
-    mutationFn: async (body) => getRequiredResponseBody(await post("/api/v2/login", body)),
+    mutationFn: (body) => post("/api/v2/login", body),
     mutationKey: ["login"],
   });
 };
