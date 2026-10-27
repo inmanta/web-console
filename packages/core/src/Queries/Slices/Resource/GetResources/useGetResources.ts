@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
-import { gql } from "graphql-request";
 import { PageSize, Pagination, Resource, ResourceActionFilter } from "@inmanta/web-console-core";
 import { MultiSort } from "@inmanta/web-console-core/Common";
 import { CurrentPage } from "@inmanta/web-console-core/Common/UrlState/useUrlStateWithCurrentPage";
@@ -61,7 +60,7 @@ interface GetResourcesParams {
   currentPage: CurrentPage;
 }
 
-const GET_RESOURCES_QUERY = gql`
+const GET_RESOURCES_QUERY = /* GraphQL */ `
   query GetResources(
     $filter: ResourceFilter!
     $environment: String!

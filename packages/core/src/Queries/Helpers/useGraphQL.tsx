@@ -13,7 +13,7 @@ import { createCustomError, parseJsonResponse, useFetchHelpers } from "./useFetc
  * @returns {Promise<any>} A promise that resolves to the GraphQL response data
  *
  * @example
- * const query = gql`
+ * const query = `
  *   query GetResources($filter: ResourceFilter!, $first: Int) {
  *     resources(filter: $filter, first: $first) {
  *       edges {

@@ -1,5 +1,4 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { gql } from "graphql-request";
 import { Environment } from "@inmanta/web-console-core/Domain";
 import {
   CustomError,
@@ -55,7 +54,7 @@ interface GetEnvironmentPreview {
  * @returns GetEnvironmentPreview A query result containing environment previews data or an error.
  */
 export const useGetEnvironmentPreview = (): GetEnvironmentPreview => {
-  const query = gql`
+  const query = /* GraphQL */ `
     query {
       environments {
         edges {
