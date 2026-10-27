@@ -1,6 +1,6 @@
 import React from "react";
 import { StackItem } from "@patternfly/react-core";
-import { Resource, words } from "@inmanta/web-console-core";
+import { hasAnySetValue, Resource, words } from "@inmanta/web-console-core";
 import { ActiveFilterGroup, ActiveFilters } from "@inmanta/web-console-ui/Components/FilterDrawer";
 
 export interface ActiveFiltersSectionProps {
@@ -64,17 +64,19 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
   removeIncludeOwned,
 }) => {
   const hasActiveFilters =
-    (filter.type && filter.type.length > 0) ||
-    (filter.agent && filter.agent.length > 0) ||
-    (filter.value && filter.value.length > 0) ||
-    (filter.status && filter.status.length > 0) ||
-    (filter.serviceEntity && filter.serviceEntity.length > 0) ||
-    (filter.serviceInstance && filter.serviceInstance.length > 0) ||
-    Boolean(filter.includeOwned);
+    filter.includeOwned === true ||
+    hasAnySetValue(filter, [
+      "type",
+      "agent",
+      "value",
+      "status",
+      "serviceEntity",
+      "serviceInstance",
+    ]);
 
   return (
     <ActiveFilters
-      hasActiveFilters={Boolean(hasActiveFilters)}
+      hasActiveFilters={hasActiveFilters}
       onClear={onResetFilters}
       emptyStateBody={words("resources.filters.active.empty.body")}
     >

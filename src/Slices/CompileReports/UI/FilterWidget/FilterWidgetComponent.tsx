@@ -1,6 +1,6 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
-import { CompileStatus, words } from "@inmanta/web-console-core";
+import { CompileStatus, hasAnySetValue, words } from "@inmanta/web-console-core";
 import { Filter } from "@inmanta/web-console-core/Domain/CompileReportFilter";
 import {
   ActiveFilterGroup,
@@ -48,7 +48,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
       status: value ? CompileStatus[value.replace(/\s+/g, "")] : undefined,
     });
 
-  const hasActiveFilters = Boolean(filter.status) || (filter.requested?.length ?? 0) > 0;
+  const hasActiveFilters = hasAnySetValue(filter, ["status", "requested"]);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Divider, Form, Stack, StackItem, Title } from "@patternfly/react-core";
-import { words } from "@inmanta/web-console-core";
+import { hasAnySetValue, words } from "@inmanta/web-console-core";
 import { useUrlStateWithFilter } from "@inmanta/web-console-core/Common";
 import { Filter } from "@inmanta/web-console-core/Queries/Slices/DiscoveredResources";
 import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
@@ -60,7 +60,10 @@ export const DiscoveredResourcesFilterWidget: React.FC<DiscoveredResourcesFilter
     const { addString, removeStringChip, clearStringGroup } = getFilterActions(filter, setFilter);
 
     const fields = getFields();
-    const hasActiveFilters = fields.some(({ key }) => (filter[key]?.length ?? 0) > 0);
+    const hasActiveFilters = hasAnySetValue(
+      filter,
+      fields.map(({ key }) => key)
+    );
 
     return (
       <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

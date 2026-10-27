@@ -1,4 +1,4 @@
-import { DryRunContext, ResourceActionFilter } from "@inmanta/web-console-core";
+import { DryRunContext, hasAnySetValue, ResourceActionFilter } from "@inmanta/web-console-core";
 import { DryRunVersion, VersionSelectionBlocker } from "./types";
 
 /**
@@ -33,10 +33,7 @@ export const createDryRunContext = (
  */
 const hasStatusFilter = (filter: ResourceActionFilter): boolean =>
   filter.isOrphan === true ||
-  filter.isDeploying !== undefined ||
-  filter.blocked !== undefined ||
-  filter.compliance !== undefined ||
-  filter.lastHandlerRun !== undefined;
+  hasAnySetValue(filter, ["isDeploying", "blocked", "compliance", "lastHandlerRun"]);
 
 /**
  * Returns the part of this filter that blocks selecting a version for a dry run, or undefined when

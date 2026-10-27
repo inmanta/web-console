@@ -1,6 +1,6 @@
 import React from "react";
 import { Divider, Form, Stack, StackItem } from "@patternfly/react-core";
-import { words } from "@inmanta/web-console-core";
+import { hasAnySetValue, words } from "@inmanta/web-console-core";
 import { Filter } from "@inmanta/web-console-core/Domain/FactFilter";
 import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
 import {
@@ -32,7 +32,7 @@ interface Props {
 export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onClose }) => {
   const { addString, removeStringChip, clearStringGroup } = getFilterActions(filter, setFilter);
 
-  const hasActiveFilters = (filter.name?.length ?? 0) > 0 || (filter.resource_id?.length ?? 0) > 0;
+  const hasActiveFilters = hasAnySetValue(filter, ["name", "resource_id"]);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

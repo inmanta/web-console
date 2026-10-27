@@ -6,6 +6,7 @@ import {
   getKeysExcluding,
   keepKeys,
   resolvePromiseRecord,
+  hasAnySetValue,
 } from "./Utils";
 
 test("toggleValueInList", () => {
@@ -59,6 +60,39 @@ test("keepKeys", () => {
 
 test("keepKeys", () => {
   expect(keepKeys(["a", "b"], { a: 1, c: 2, d: 3 })).toEqual({ a: 1 });
+});
+
+describe("hasAnySetValue", () => {
+  interface Sample {
+    list?: string[];
+    text?: string | null;
+    flag?: boolean;
+    count?: number;
+    match?: { eq?: string[] };
+  }
+
+  test.each<[string, Sample]>([
+    ["undefined", { list: undefined }],
+    ["null", { text: null }],
+    ["an empty string", { text: "" }],
+    ["an empty list", { list: [] }],
+  ])("returns false when every given key is %s", (_, sample) => {
+    expect(hasAnySetValue(sample, ["list", "text"])).toBe(false);
+  });
+
+  test.each<[string, Sample]>([
+    ["a list with items", { list: ["a"] }],
+    ["a string", { text: "a" }],
+    ["false", { flag: false }],
+    ["0", { count: 0 }],
+    ["an object", { match: {} }],
+  ])("returns true when a given key holds %s", (_, sample) => {
+    expect(hasAnySetValue(sample, ["list", "text", "flag", "count", "match"])).toBe(true);
+  });
+
+  test("ignores set values on keys that are not given", () => {
+    expect(hasAnySetValue<Sample>({ list: [], text: "a" }, ["list"])).toBe(false);
+  });
 });
 
 test("resolvePromiseRecord", async () => {

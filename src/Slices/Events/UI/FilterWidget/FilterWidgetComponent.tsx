@@ -1,7 +1,7 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
 import { Filter } from "@/Slices/Events/Core/Types";
-import { EventType, words } from "@inmanta/web-console-core";
+import { EventType, hasAnySetValue, words } from "@inmanta/web-console-core";
 import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
 import {
   ActiveFilterGroup,
@@ -59,12 +59,13 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
       }
     };
 
-  const hasActiveFilters =
-    (filter.event_type?.length ?? 0) > 0 ||
-    (filter.source?.length ?? 0) > 0 ||
-    (filter.destination?.length ?? 0) > 0 ||
-    (filter.version?.length ?? 0) > 0 ||
-    (filter.timestamp?.length ?? 0) > 0;
+  const hasActiveFilters = hasAnySetValue(filter, [
+    "event_type",
+    "source",
+    "destination",
+    "version",
+    "timestamp",
+  ]);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

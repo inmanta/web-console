@@ -4,6 +4,7 @@ import {
   Resource,
   ResourceActionFilter,
   StringMatch,
+  hasAnySetValue,
   isObject,
   words,
 } from "@inmanta/web-console-core";
@@ -326,8 +327,7 @@ export const createRerunPlan = (
   modelVersion: number,
   isActiveVersion: boolean
 ): RerunPlan => {
-  const setsVersion =
-    resourceFilter.modelVersion !== undefined || resourceFilter.instanceVersion !== undefined;
+  const setsVersion = hasAnySetValue(resourceFilter, ["modelVersion", "instanceVersion"]);
 
   if (setsVersion || isActiveVersion) {
     return { kind: "ready", filter: resourceFilter };
