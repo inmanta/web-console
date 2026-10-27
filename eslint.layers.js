@@ -46,7 +46,7 @@ const shell = [
   ...shellSlices.map((slice) => `./src/Slices/${slice}`),
 ];
 
-const app = ["./src/index.tsx", "./src/appFeatures.ts"];
+const app = ["./src/index.tsx", "./src/appFeatures.ts", "./src/test-setup.ts"];
 
 /**
  * The folders of each feature: its slices, its folder in `src/Features` and any other folder it
@@ -150,35 +150,66 @@ for (const path of [...core, ...ui, ...shell, ...app, ...allFeatures]) {
 const testUtils = ["./packages/test-utils"];
 
 /**
- * The zones of `import/no-restricted-paths` that enforce the layers.
+ * The zones of `import/no-restricted-paths` that enforce the layers. Tests follow the layers of
+ * the code they test, and may also import the test helpers.
+ *
+ * @param forTests - whether the zones are for tests and test helpers
  */
-export const importBoundaryZones = [
+const layerZones = (forTests) => {
+  const notShipped = forTests ? [] : testUtils;
+
+  return [
+    {
+      target: core,
+      from: [...ui, ...shell, ...allFeatures, ...app, ...notShipped],
+      message: "The web-console core layer only imports vendor libraries and its own code.",
+    },
+    {
+      target: ui,
+      from: [...shell, ...allFeatures, ...app, ...notShipped],
+      message:
+        "Shared components only import the web-console core layer and other shared components.",
+    },
+    {
+      target: ["./packages/ui"],
+      from: componentsToMove,
+      message:
+        "The components left in src/UI/Components move to a feature or the shell, so packages/ui doesn't import them.",
+    },
+    {
+      target: shell,
+      from: [...allFeatures, ...app, ...notShipped],
+      message:
+        "The shell only imports the web-console core layer and shared components. It gets the features from the app.",
+    },
+    ...Object.entries(featurePaths).map(([name, paths]) => ({
+      target: paths,
+      from: [
+        ...shell,
+        ...allFeatures.filter((path) => !paths.includes(path)),
+        ...app,
+        ...notShipped,
+      ],
+      message: `The ${name} feature only imports the web-console core layer, shared components and its own code. Move code that features share into one of those.`,
+    })),
+  ];
+};
+
+/**
+ * The zones for the code that ships.
+ */
+export const importBoundaryZones = layerZones(false);
+
+/**
+ * The zones for tests and test helpers. The test helpers may also render the shell's providers,
+ * but import no feature and not the app, so that each feature's tests only depend on that feature.
+ */
+export const testImportBoundaryZones = [
+  ...layerZones(true),
   {
-    target: core,
-    from: [...ui, ...shell, ...allFeatures, ...app, ...testUtils],
-    message: "The web-console core layer only imports vendor libraries and its own code.",
-  },
-  {
-    target: ui,
-    from: [...shell, ...allFeatures, ...app, ...testUtils],
+    target: testUtils,
+    from: [...allFeatures, ...app],
     message:
-      "Shared components only import the web-console core layer and other shared components.",
+      "The test helpers only import the web-console core layer, shared components and the shell. A feature's tests build what they need from that feature.",
   },
-  {
-    target: ["./packages/ui"],
-    from: componentsToMove,
-    message:
-      "The components left in src/UI/Components move to a feature or the shell, so packages/ui doesn't import them.",
-  },
-  {
-    target: shell,
-    from: [...allFeatures, ...app, ...testUtils],
-    message:
-      "The shell only imports the web-console core layer and shared components. It gets the features from the app.",
-  },
-  ...Object.entries(featurePaths).map(([name, paths]) => ({
-    target: paths,
-    from: [...shell, ...allFeatures.filter((path) => !paths.includes(path)), ...app, ...testUtils],
-    message: `The ${name} feature only imports the web-console core layer, shared components and its own code. Move code that features share into one of those.`,
-  })),
 ];

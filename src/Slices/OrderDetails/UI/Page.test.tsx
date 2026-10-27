@@ -5,6 +5,9 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { lsmFeature } from "@/Features/Lsm";
+import { getFeatureRoutes } from "@inmanta/web-console-core";
+import { stubRoute } from "@inmanta/web-console-test-utils";
 import { baseSetup } from "@inmanta/web-console-test-utils/Utils/base-setup";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import {
@@ -30,6 +33,8 @@ const DetailsPage = (
     <OrderDetailsPage />
   </Page>
 );
+
+const routes = [...getFeatureRoutes([lsmFeature]), stubRoute("CompileDetails")];
 
 describe("Order Details", () => {
   const server = setupServer();
@@ -59,7 +64,7 @@ describe("Order Details", () => {
       })
     );
 
-    const { component } = baseSetup(DetailsPage);
+    const { component } = baseSetup(DetailsPage, [lsmFeature], routes);
 
     render(component);
 
@@ -85,7 +90,7 @@ describe("Order Details", () => {
       })
     );
 
-    const { component } = baseSetup(DetailsPage);
+    const { component } = baseSetup(DetailsPage, [lsmFeature], routes);
 
     render(component);
 
@@ -123,7 +128,7 @@ describe("Order Details", () => {
       })
     );
 
-    const { component } = baseSetup(DetailsPage);
+    const { component } = baseSetup(DetailsPage, [lsmFeature], routes);
 
     render(component);
 
@@ -176,7 +181,7 @@ describe("Order Details", () => {
       })
     );
 
-    const { component } = baseSetup(DetailsPage);
+    const { component } = baseSetup(DetailsPage, [lsmFeature], routes);
 
     render(component);
 
@@ -230,7 +235,7 @@ describe("Order Details", () => {
       })
     );
 
-    const { component } = baseSetup(DetailsPage);
+    const { component } = baseSetup(DetailsPage, [lsmFeature], routes);
 
     render(component);
 
@@ -299,7 +304,7 @@ describe("Order Details", () => {
         })
       );
 
-      const { component } = baseSetup(DetailsPage);
+      const { component } = baseSetup(DetailsPage, [lsmFeature], routes);
 
       render(component);
 
@@ -341,7 +346,7 @@ describe("Order Details", () => {
         })
       );
 
-      const { component } = baseSetup(DetailsPage);
+      const { component } = baseSetup(DetailsPage, [lsmFeature], routes);
 
       render(component);
 

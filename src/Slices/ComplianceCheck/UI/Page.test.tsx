@@ -6,16 +6,18 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { orchestrationEngineFeature } from "@/Features/OrchestrationEngine";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
-import * as DesiredStateMock from "@S/DesiredState/Data/Mock";
-import { DryRun, words } from "@inmanta/web-console-core";
+import { DryRun, words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
 import {
   EnvironmentDetails,
   MockedDependencyProvider,
   ServiceInstance,
+  ModalProvider,
+  stubRoute,
 } from "@inmanta/web-console-test-utils";
+import * as DesiredStateMock from "@inmanta/web-console-test-utils/Data/DesiredStateVersions";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
@@ -61,7 +63,11 @@ function setup(search = "", env = EnvironmentDetails.env, page = <View version="
   const component = (
     <TestMemoryRouter initialEntries={[`/?env=${environment}${search}`]}>
       <QueryClientProvider client={testClient}>
-        <MockedDependencyProvider env={env}>
+        <MockedDependencyProvider
+          features={[orchestrationEngineFeature]}
+          routes={[...getFeatureRoutes([orchestrationEngineFeature]), stubRoute("ResourceDetails")]}
+          env={env}
+        >
           <ModalProvider>{page}</ModalProvider>
         </MockedDependencyProvider>
       </QueryClientProvider>

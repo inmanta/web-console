@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { routes } from "@/appFeatures";
+import { resourceManagerFeature } from "@/Features/ResourceManager";
+import { getFeatureRoutes } from "@inmanta/web-console-core";
 import { Resource, Sort } from "@inmanta/web-console-core";
 import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
 import * as wordsModule from "@inmanta/web-console-core/I18n/Words";
@@ -9,7 +10,7 @@ import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemo
 import { ResourceRow } from "./ResourceTableRow";
 import { ResourcesTable } from "./ResourcesTable";
 
-const routeManager = PrimaryRouteManager("", routes);
+const routeManager = PrimaryRouteManager("", getFeatureRoutes([resourceManagerFeature]));
 
 function makeRow(id: string): ResourceRow {
   return {

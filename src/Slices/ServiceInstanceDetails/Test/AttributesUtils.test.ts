@@ -1,4 +1,5 @@
 import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
+import { historyData } from "@inmanta/web-console-test-utils/Data/InstanceHistory";
 import {
   formatTreeRowData,
   getAttributeSetsFromInstance,
@@ -6,7 +7,7 @@ import {
   sortTreeRows,
   TreeRowData,
 } from "../Utils";
-import { historyData, instanceData } from "./mockData";
+import { instanceData } from "./mockData";
 
 const mockServiceModel = {
   name: "TestService",

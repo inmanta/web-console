@@ -1,6 +1,6 @@
+import { registerAppMessages } from "@/UI/Root/registerAppMessages";
 import { features } from "@/appFeatures";
 import * as WordsModule from "@inmanta/web-console-core/I18n/Words";
-import { registerAppMessages } from "./registerAppMessages";
 
 const messageModules = import.meta.glob<Record<string, WordsModule.Messages>>(
   ["/src/**/messages.{ts,tsx}", "/packages/**/messages.{ts,tsx}"],

@@ -1,7 +1,33 @@
-import { routes } from "@/appFeatures";
-import * as ServiceCatalog from "@S/ServiceCatalog/Core/Route";
-import * as ServiceInventory from "@S/ServiceInventory/Core/Route";
+import { stubRoute } from "@inmanta/web-console-test-utils/Inject/stubRoute";
 import { PrimaryRouteManager } from "./PrimaryRouteManager";
+
+const catalogRoute = stubRoute("Catalog", {
+  label: () => "Service Catalog",
+});
+const inventoryRoute = stubRoute("Inventory", {
+  label: ({ service }) => `Service Inventory: ${service}`,
+});
+
+// A part of the app's route table, as the features declare it.
+const routes = [
+  stubRoute("Dashboard", { label: () => "Dashboard" }),
+  catalogRoute,
+  inventoryRoute,
+  stubRoute("CreateInstance"),
+  stubRoute("EditInstance"),
+  stubRoute("Events"),
+  stubRoute("Diagnose"),
+  stubRoute("InstanceDetails", {
+    label: ({ instance }) => `Instance Details: ${instance}`,
+  }),
+  stubRoute("Resources", { label: () => "Resources" }),
+  stubRoute("ResourceDetails", {
+    label: () => "Resource Details",
+  }),
+  stubRoute("CompileReports"),
+  stubRoute("CompileDetails"),
+  stubRoute("Settings"),
+];
 
 const routeManager = PrimaryRouteManager("", routes);
 
@@ -158,10 +184,7 @@ test("GIVEN a route param containing a space WHEN building a url with getUrl and
 });
 
 describe("Given a route manager with only some routes registered", () => {
-  const partialRouteManager = PrimaryRouteManager("", [
-    ServiceCatalog.route,
-    ServiceInventory.route,
-  ]);
+  const partialRouteManager = PrimaryRouteManager("", [catalogRoute, inventoryRoute]);
 
   it("THEN has() is true for registered routes only", () => {
     expect(partialRouteManager.has("Catalog")).toBe(true);
@@ -195,7 +218,7 @@ describe("Given a route manager with only some routes registered", () => {
 });
 
 test("GIVEN a route registered twice THEN the route manager throws", () => {
-  expect(() => PrimaryRouteManager("", [ServiceCatalog.route, ServiceCatalog.route])).toThrow(
+  expect(() => PrimaryRouteManager("", [catalogRoute, catalogRoute])).toThrow(
     'Route "Catalog" is registered more than once.'
   );
 });

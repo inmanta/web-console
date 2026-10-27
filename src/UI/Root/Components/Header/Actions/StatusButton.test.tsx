@@ -2,6 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { shellFeature } from "@/UI/Root/shellFeature";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
@@ -11,7 +12,7 @@ function setup() {
   return (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={["/?env=123"]}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider features={[shellFeature]}>
           <StatusButton />
         </MockedDependencyProvider>
       </TestMemoryRouter>

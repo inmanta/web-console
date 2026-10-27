@@ -1,10 +1,18 @@
 import { matchRoutes } from "react-router";
-import { features, routes } from "@/appFeatures";
+import { FeatureModule } from "@inmanta/web-console-core";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
+import { stubRoute } from "@inmanta/web-console-test-utils";
 import { createRootRoutes } from "./RootRoutes";
 
-const routeManager = PrimaryRouteManager("/console", routes);
-const rootRoutes = createRootRoutes("/console", features);
+const resourceDetailsRoute = stubRoute("ResourceDetails");
+const feature: FeatureModule = {
+  id: "test",
+  version: "1.0.0",
+  routes: [{ route: resourceDetailsRoute, page: () => Promise.resolve(() => null) }],
+};
+
+const routeManager = PrimaryRouteManager("/console", [resourceDetailsRoute]);
+const rootRoutes = createRootRoutes("/console", [feature]);
 
 const matchLeaf = (url: string) => matchRoutes(rootRoutes, url)?.at(-1);
 

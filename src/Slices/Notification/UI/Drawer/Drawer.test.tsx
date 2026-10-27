@@ -8,8 +8,10 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { shellFeature } from "@/UI/Root/shellFeature";
 import * as Mock from "@S/Notification/Core/Mock";
-import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { getFeatureRoutes } from "@inmanta/web-console-core";
+import { MockedDependencyProvider, stubRoute } from "@inmanta/web-console-test-utils";
 import { links, metadata } from "@inmanta/web-console-test-utils/Data/Pagination";
 import { Drawer } from "./Drawer";
 
@@ -36,7 +38,10 @@ function setup() {
   const component = (
     <QueryClientProvider client={client}>
       <Router location={history.location} navigator={history}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider
+          features={[shellFeature]}
+          routes={[...getFeatureRoutes([shellFeature]), stubRoute("CompileDetails")]}
+        >
           <Page
             notificationDrawer={
               <Drawer onClose={closeCallback} isDrawerOpen drawerRef={{ current: null }} />

@@ -2,12 +2,13 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { lsmFeature } from "@/Features/Lsm";
 import {
   Row,
   Service,
   MockedDependencyProvider,
   EnvironmentDetails,
+  ModalProvider,
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
@@ -25,6 +26,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider
+          features={[lsmFeature]}
           env={{
             ...EnvironmentDetails.env,
             settings: { ...EnvironmentDetails.env.settings, enable_lsm_expert_mode: expertMode },
@@ -84,7 +86,7 @@ test("ServiceInventory sets sorting parameters correctly on click", async () => 
 });
 
 describe("Actions", () => {
-  it("Should have 6 options in total", async () => {
+  it("Should have 4 options in total", async () => {
     const component = setup();
 
     render(component);
@@ -97,6 +99,7 @@ describe("Actions", () => {
 
     const options = await screen.findAllByRole("menuitem");
 
-    expect(options).toHaveLength(6);
+    // The composer adds two more; see appInventoryComposer.test.tsx.
+    expect(options).toHaveLength(4);
   });
 });

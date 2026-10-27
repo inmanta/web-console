@@ -5,10 +5,11 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import * as Mock from "@S/CompileReports/Core/Mock";
+import { orchestrationEngineFeature } from "@/Features/OrchestrationEngine";
 import { words } from "@inmanta/web-console-core";
 import { REFETCH_INTERVAL } from "@inmanta/web-console-core/Queries/Helpers";
 import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import * as Mock from "@inmanta/web-console-test-utils/Data/CompileReports";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { Page } from "./Page";
 
@@ -34,6 +35,7 @@ function setup(serverCompileEnabled: boolean = false) {
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider
+          features={[orchestrationEngineFeature]}
           env={{
             ...EnvironmentDetails.env,
             settings: { ...EnvironmentDetails.env.settings, server_compile: serverCompileEnabled },

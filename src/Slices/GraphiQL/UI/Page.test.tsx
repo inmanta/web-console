@@ -3,6 +3,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { graphiqlFeature } from "@/Features/GraphiQL";
 import { words } from "@inmanta/web-console-core";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
@@ -18,7 +19,7 @@ function setup(search = "") {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[`/graphiql${search}`]}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider features={[graphiqlFeature]}>
           <Page />
         </MockedDependencyProvider>
       </TestMemoryRouter>

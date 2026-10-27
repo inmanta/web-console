@@ -2,8 +2,8 @@ import { t_global_text_color_status_warning_default } from "@patternfly/react-to
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TransferModel } from "@inmanta/web-console-core";
+import { ModalProvider } from "@inmanta/web-console-test-utils";
 import { definePatternFlyToken } from "@inmanta/web-console-test-utils/Utils/definePatternFlyToken";
 import { StateAction } from "./StateAction";
 

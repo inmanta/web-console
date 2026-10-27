@@ -6,13 +6,16 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { routes } from "@/appFeatures";
-import * as DesiredStateVersions from "@S/DesiredState/Data/Mock";
-import { FlatEnvironment, words } from "@inmanta/web-console-core";
+import { orchestrationEngineFeature } from "@/Features/OrchestrationEngine";
+import { FlatEnvironment, getFeatureRoutes, words } from "@inmanta/web-console-core";
 import { SearchHelper } from "@inmanta/web-console-core/Routing";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
-import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import {
+  EnvironmentDetails,
+  MockedDependencyProvider,
+  ModalProvider,
+} from "@inmanta/web-console-test-utils";
+import * as DesiredStateVersions from "@inmanta/web-console-test-utils/Data/DesiredStateVersions";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { Page } from "./Page";
 
@@ -49,7 +52,7 @@ function setup(env?: FlatEnvironment) {
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
         <TestMemoryRouter initialEntries={[`/?env=${EnvironmentDetails.env.id}`]}>
-          <MockedDependencyProvider env={env}>
+          <MockedDependencyProvider env={env} features={[orchestrationEngineFeature]}>
             <LocationDisplay />
             <Page />
           </MockedDependencyProvider>
@@ -573,9 +576,12 @@ describe("DesiredStatesView", () => {
       await userEvent.click(viewReport);
 
       expect(JSON.parse(screen.getByTestId("location").textContent ?? "{}")).toEqual({
-        pathname: PrimaryRouteManager("", routes).getUrl("ComplianceCheck", {
-          version: String(retiredVersion),
-        }),
+        pathname: PrimaryRouteManager("", getFeatureRoutes([orchestrationEngineFeature])).getUrl(
+          "ComplianceCheck",
+          {
+            version: String(retiredVersion),
+          }
+        ),
         env: EnvironmentDetails.env.id,
         state: { ComplianceCheck: { report: dryRunId } },
       });

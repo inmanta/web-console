@@ -2,17 +2,34 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { routes } from "@/appFeatures";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
-import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { MockedDependencyProvider, stubRoute } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
+const required = { environmentRole: "Required" } as const;
+
+const routes = [
+  stubRoute("Dashboard", { ...required, label: () => "Dashboard" }),
+  stubRoute("Catalog", {
+    ...required,
+    label: () => "Service Catalog",
+  }),
+  stubRoute("Inventory", {
+    ...required,
+    label: ({ service }) => `Service Inventory: ${service}`,
+  }),
+  stubRoute("CreateInstance", {
+    ...required,
+    label: () => "Create Instance",
+  }),
+];
+
 function setup(initialEntries?: string[]) {
   const component = (
     <QueryClientProvider client={testClient}>
-      <MockedDependencyProvider>
+      <MockedDependencyProvider routes={routes}>
         <TestMemoryRouter initialEntries={initialEntries}>
           <PageBreadcrumbs />
         </TestMemoryRouter>

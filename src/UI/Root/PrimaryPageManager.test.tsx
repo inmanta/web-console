@@ -1,11 +1,13 @@
 import { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import * as Agents from "@S/Agents/Core/Route";
-import * as Facts from "@S/Facts/Core/Route";
 import { FeatureModule, PageLoader } from "@inmanta/web-console-core";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
+import { stubRoute } from "@inmanta/web-console-test-utils";
 import { PrimaryPageManager } from "./PrimaryPageManager";
+
+const Agents = { route: stubRoute("Agents") };
+const Facts = { route: stubRoute("Facts") };
 
 const AgentsPage = () => <div>Agents page</div>;
 const FactsPage = () => <div>Facts page</div>;

@@ -3,13 +3,13 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { routes } from "@/appFeatures";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
 import { Environment, EnvironmentSettings } from "@inmanta/web-console-test-utils";
+import { stubRoute } from "@inmanta/web-console-test-utils/Inject/stubRoute";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { EnvironmentHandlerImpl } from "./EnvironmentHandler";
 
-const routeManager = PrimaryRouteManager("", routes);
+const routeManager = PrimaryRouteManager("", [stubRoute("Dashboard")]);
 
 describe("EnvironmentHandler", () => {
   const server = setupServer();

@@ -5,10 +5,9 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@inmanta/web-console-core";
 import { defaultAuthContext } from "@inmanta/web-console-core/Auth";
-import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { MockedDependencyProvider, ModalProvider } from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { CatalogActions } from "./CatalogActions";
 

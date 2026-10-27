@@ -2,9 +2,14 @@ import React, { PropsWithChildren } from "react";
 import { loader } from "@monaco-editor/react";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { FeatureModule } from "@inmanta/web-console-core";
-import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { lsmFeature } from "@/Features/Lsm";
+import { FeatureModule, getFeatureRoutes } from "@inmanta/web-console-core";
+import {
+  EnvironmentDetails,
+  MockedDependencyProvider,
+  ModalProvider,
+  stubRoute,
+} from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { ServiceInstanceDetails } from "../UI/Page";
 
@@ -12,12 +17,12 @@ import { ServiceInstanceDetails } from "../UI/Page";
  * Mock setup for the test cases of the Instance Details page.
  *
  * @param {boolean} expertMode - whether to activate the expert mode in the state or not.
- * @param {FeatureModule[]} features - the features of the app. Defaults to every feature the app ships.
+ * @param {FeatureModule[]} features - the features of the app. Defaults to the lsm feature.
  * @returns {React.FC} A React Element rendering the test setup for Instance Details Page
  */
 export const setupServiceInstanceDetails = (
   expertMode: boolean = false,
-  features?: FeatureModule[]
+  features: FeatureModule[] = [lsmFeature]
 ): React.JSX.Element => {
   const component = (
     <SetupWrapper expertMode={expertMode} features={features}>
@@ -45,13 +50,13 @@ interface Props {
  *
  * @params {Props} props - The props of the component.
  * @param {boolean} expertMode - whether to activate the expert mode in the state or not.
- * @param {FeatureModule[]} features - the features of the app. Defaults to every feature the app ships.
+ * @param {FeatureModule[]} features - the features of the app. Defaults to the lsm feature.
  * @returns {React.FC<PropsWithChildren<Props>>} A React Component that provides the test setup for Instance Details Page
  */
 export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
   children,
   expertMode,
-  features,
+  features = [lsmFeature],
 }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -73,6 +78,7 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
         <MockedDependencyProvider
           env={{ ...EnvironmentDetails.a, settings: { enable_lsm_expert_mode: expertMode } }}
           features={features}
+          routes={[...getFeatureRoutes(features), stubRoute("CompileDetails")]}
         >
           <ModalProvider>{children}</ModalProvider>
         </MockedDependencyProvider>

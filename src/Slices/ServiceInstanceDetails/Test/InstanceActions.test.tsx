@@ -2,7 +2,6 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { words } from "@inmanta/web-console-core";
-import { withoutFeature } from "@inmanta/web-console-test-utils";
 import { instanceData, serviceModel } from "./mockData";
 import { defaultServer, serverFailedActions } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
@@ -389,14 +388,15 @@ describe("Page Actions - Success", () => {
 
     const actions = screen.getAllByRole("menuitem");
 
-    expect(actions).toHaveLength(6);
+    // Without the composer, which adds one more.
+    expect(actions).toHaveLength(5);
 
     actions.forEach((action) => {
       expect(action).toBeEnabled();
     });
 
     // delete instance
-    await userEvent.click(actions[3]);
+    await userEvent.click(screen.getByRole("menuitem", { name: words("delete") }));
 
     // the on_delete transfer carries a web_confirm annotation, which replaces the default prompt
     expect(
@@ -414,7 +414,7 @@ describe("Page Actions - Success", () => {
   });
 
   it("Normal Instance Actions - without the composer feature, has no composer link", async () => {
-    render(setupServiceInstanceDetails(false, withoutFeature("composer")));
+    render(setupServiceInstanceDetails(false));
 
     expect(
       await screen.findByRole("region", { name: "Instance-Details-Success" })
@@ -425,12 +425,8 @@ describe("Page Actions - Success", () => {
     expect(
       screen.getByRole("menuitem", { name: words("inventory.editInstance.button") })
     ).toBeVisible();
-    expect(
-      screen.queryByRole("menuitem", { name: words("instanceComposer.editButton") })
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("menuitem", { name: words("instanceComposer.showButton") })
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: "Edit in Composer" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: "Show in Composer" })).not.toBeInTheDocument();
   });
 
   it("Normal Instance Actions Enabled - update state action", async () => {
@@ -795,14 +791,15 @@ describe("Page Actions - Failed", () => {
 
     const actions = screen.getAllByRole("menuitem");
 
-    expect(actions).toHaveLength(6);
+    // Without the composer, which adds one more.
+    expect(actions).toHaveLength(5);
 
     actions.forEach((action) => {
       expect(action).toBeEnabled();
     });
 
     // delete instance
-    await userEvent.click(actions[3]);
+    await userEvent.click(screen.getByRole("menuitem", { name: words("delete") }));
 
     // the on_delete transfer carries a web_confirm annotation, which replaces the default prompt
     expect(

@@ -1,12 +1,12 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@inmanta/web-console-core";
 import {
   ServiceInstance,
   MockedDependencyProvider,
   EnvironmentDetails,
+  ModalProvider,
 } from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { DestroyAction } from "./DestroyAction";

@@ -3,9 +3,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@inmanta/web-console-core";
+import { environmentFeature } from "@/Features/Environment";
+import { words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { ServerStatus as ServerStatusType } from "@inmanta/web-console-core/Domain";
-import { MockedDependencyProvider, ServerStatus } from "@inmanta/web-console-test-utils";
+import { MockedDependencyProvider, ServerStatus, stubRoute } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import { OrchestratorDetailCard } from "./OrchestratorDetailCard";
@@ -22,7 +23,10 @@ function setup() {
   return (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider
+          features={[environmentFeature]}
+          routes={[...getFeatureRoutes([environmentFeature]), stubRoute("Status")]}
+        >
           <OrchestratorDetailCard />
         </MockedDependencyProvider>
       </TestMemoryRouter>

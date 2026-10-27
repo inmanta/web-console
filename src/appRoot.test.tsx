@@ -5,6 +5,8 @@ import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { HttpResponse, graphql, http } from "msw";
 import { setupServer } from "msw/node";
+import { Root } from "@/UI/Root/Root";
+import { createRootRoutes } from "@/UI/Root/RootRoutes";
 import { features } from "@/appFeatures";
 import { defaultAuthContext } from "@inmanta/web-console-core/Auth/AuthContext";
 import { EnvironmentPreviewResponse } from "@inmanta/web-console-core/Queries/Slices/Environment";
@@ -15,8 +17,6 @@ import {
   Project,
   ServerStatus,
 } from "@inmanta/web-console-test-utils";
-import { Root } from "./Root";
-import { createRootRoutes } from "./RootRoutes";
 
 // The header only shows once the whole app has rendered, which can take over the default 1 s on
 // slow CI runners. findBy still resolves as soon as the header is there.
@@ -31,7 +31,7 @@ function setup() {
     [
       {
         element: (
-          <MockedDependencyProvider>
+          <MockedDependencyProvider features={features}>
             <Root />
           </MockedDependencyProvider>
         ),

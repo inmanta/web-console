@@ -1,6 +1,5 @@
 import React from "react";
 import { AppAlertProvider } from "@/UI/Root/Components/AppAlertProvider";
-import { features as appFeatures } from "@/appFeatures";
 import {
   FeatureModule,
   FlatEnvironment,
@@ -27,7 +26,8 @@ interface Props {
   allEnvironments?: EnvironmentPreview[];
 
   /**
-   * The features of the app. Defaults to every feature the app ships.
+   * The features of the app. Defaults to none: pass the features whose pages the test links to,
+   * and `stubRoute` for pages of other features.
    */
   features?: FeatureModule[];
 
@@ -36,16 +36,6 @@ interface Props {
    */
   routes?: RouteFactory[];
 }
-
-/**
- * Returns the features the app ships, without one of them, e.g. to test the app without the
- * composer.
- *
- * @param id - the id of the feature to leave out
- * @returns every other feature of the app
- */
-export const withoutFeature = (id: string): FeatureModule[] =>
-  appFeatures.filter((feature) => feature.id !== id);
 
 /**
  * MockedDependencyProvider is a component that provides the dependencies for the tested component.
@@ -57,7 +47,7 @@ export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> 
   authHelper = defaultAuthContext,
   isCompiling = false,
   allEnvironments = [],
-  features = appFeatures,
+  features = [],
   routes = getFeatureRoutes(features),
   children,
 }) => {

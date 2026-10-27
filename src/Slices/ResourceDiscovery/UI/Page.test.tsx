@@ -6,6 +6,7 @@ import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { resourceManagerFeature } from "@/Features/ResourceManager";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
@@ -16,7 +17,7 @@ function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[""]}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider features={[resourceManagerFeature]}>
           <Page>
             <DiscoveredResourcesPage />
           </Page>

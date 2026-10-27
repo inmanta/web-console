@@ -7,24 +7,24 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { FeatureModule, words } from "@inmanta/web-console-core";
+import { lsmFeature } from "@/Features/Lsm";
+import { words } from "@inmanta/web-console-core";
 import {
   Service,
   ServiceInstance,
   Pagination,
   MockedDependencyProvider,
-  withoutFeature,
+  ModalProvider,
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ServiceInventory } from "./ServiceInventory";
 
-function setup(service = Service.a, pageSize = "", features?: FeatureModule[]) {
+function setup(service = Service.a, pageSize = "") {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[`/?env=aaa${pageSize}`]}>
-        <MockedDependencyProvider features={features}>
+        <MockedDependencyProvider features={[lsmFeature]}>
           <ModalProvider>
             <Page>
               <ServiceInventory serviceName={service.name} service={service} />
@@ -108,7 +108,9 @@ describe("ServiceInventory", () => {
     expect(
       await screen.findByRole("region", { name: "ServiceInventory-Failed" })
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "AddInstanceToggle" })).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: words("inventory.addInstance.button") })
+    ).toBeVisible();
 
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));
 
@@ -237,75 +239,6 @@ describe("ServiceInventory", () => {
     expect(screen.getByRole("button", { name: labelName, pressed: false })).toBeVisible();
   });
 
-  test("ServiceInventory shows enabled composer buttons for root instances ", async () => {
-    server.use(
-      http.get("/lsm/v1/service_inventory/service_name_a", () => {
-        return HttpResponse.json({
-          data: [
-            {
-              ...ServiceInstance.a,
-              id: "a",
-            },
-          ],
-          links: Pagination.links,
-          metadata: Pagination.metadata,
-        });
-      })
-    );
-
-    const { component } = setup(Service.a);
-
-    render(component);
-
-    await userEvent.click(await screen.findByRole("button", { name: "AddInstanceToggle" }));
-
-    expect(await screen.findByText("Add in Composer")).toBeEnabled();
-
-    const menuToggle = await screen.findByRole("button", {
-      name: "row actions toggle",
-    });
-
-    await userEvent.click(menuToggle);
-
-    expect(await screen.findByText("Edit in Composer")).toBeEnabled();
-
-    expect(screen.queryByText("Show in Composer")).toBeEnabled();
-  });
-
-  test("ServiceInventory shows only button to display instance in the composer for non-root", async () => {
-    server.use(
-      http.get("/lsm/v1/service_inventory/service_name_a", () => {
-        return HttpResponse.json({
-          data: [
-            {
-              ...ServiceInstance.a,
-              id: "a",
-            },
-          ],
-          links: Pagination.links,
-          metadata: Pagination.metadata,
-        });
-      })
-    );
-    const { component } = setup({ ...Service.a, owner: "owner" });
-
-    render(component);
-
-    await userEvent.click(await screen.findByRole("button", { name: "AddInstanceToggle" }));
-
-    expect(screen.getByText("Add in Composer")).toBeInTheDocument();
-
-    const menuToggle = await screen.findByRole("button", {
-      name: "row actions toggle",
-    });
-
-    await userEvent.click(menuToggle);
-
-    expect(await screen.findByText("Show in Composer")).toBeEnabled();
-
-    expect(screen.getByText("Edit in Composer")).toBeInTheDocument();
-  });
-
   test("ServiceInventory without the composer feature shows a plain add button and no composer actions", async () => {
     server.use(
       http.get("/lsm/v1/service_inventory/service_name_a", () => {
@@ -317,15 +250,15 @@ describe("ServiceInventory", () => {
       })
     );
 
-    const { component } = setup(Service.a, "", withoutFeature("composer"));
+    const { component } = setup(Service.a);
 
     render(component);
 
     await userEvent.click(await screen.findByRole("button", { name: "row actions toggle" }));
 
     expect(await screen.findByText(words("inventory.editInstance.button"))).toBeVisible();
-    expect(screen.queryByText(words("instanceComposer.editButton"))).not.toBeInTheDocument();
-    expect(screen.queryByText(words("instanceComposer.showButton"))).not.toBeInTheDocument();
+    expect(screen.queryByText("Edit in Composer")).not.toBeInTheDocument();
+    expect(screen.queryByText("Show in Composer")).not.toBeInTheDocument();
 
     expect(screen.queryByRole("button", { name: "AddInstanceToggle" })).not.toBeInTheDocument();
     expect(

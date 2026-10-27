@@ -13,6 +13,7 @@ import {
 import { useExpansion } from "@inmanta/web-console-core/Common/useExpansion";
 import { Reference, ResourceDetailsTab } from "@inmanta/web-console-core/Domain";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { stubRoute } from "@inmanta/web-console-test-utils/Inject/stubRoute";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ReferenceNode } from "./ReferenceNode";
@@ -38,7 +39,9 @@ const renderNode = (ui: React.ReactNode, initialEntry = "/") =>
   render(
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[initialEntry]}>
-        <MockedDependencyProvider>{ui}</MockedDependencyProvider>
+        <MockedDependencyProvider routes={[stubRoute("ResourceDetails")]}>
+          {ui}
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
