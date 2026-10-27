@@ -1,5 +1,5 @@
-import { EventType, ServiceInstanceModel, ServiceModel } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
+import { EventType, ServiceInstanceModel, ServiceModel } from "@inmanta/web-console-core";
+import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
 
 export const instanceData: ServiceInstanceModel = {
   id: "1d96a1ab",

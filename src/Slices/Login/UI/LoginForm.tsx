@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { LoginForm } from "@patternfly/react-core";
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
-import { useLogin } from "@/Data/Queries/Slices/Auth";
-import { DependencyContext } from "@/UI/Dependency";
-import { PrimaryBaseUrlManager } from "@/UI/Routing";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useLogin } from "@inmanta/web-console-core/Queries/Slices/Auth";
+import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
 
 interface Props {
   submitButtonText: string;

@@ -17,13 +17,13 @@ import {
   Textarea,
   UnitField,
   words,
-} from "@/Core";
-import { CustomError } from "@/Data/Queries/Helpers";
-import { SUGGESTION_NAMESPACES } from "@/Data/Queries/Slices/ServiceInstance";
-import * as Test from "@/Test";
-import { MockedDependencyProvider } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+} from "@inmanta/web-console-core";
+import { CustomError } from "@inmanta/web-console-core/Queries/Helpers";
+import { SUGGESTION_NAMESPACES } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import * as Test from "@inmanta/web-console-test-utils";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 import type { Mock } from "vitest";
 

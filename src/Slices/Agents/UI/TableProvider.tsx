@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { Sort } from "@/Core";
-import { Agent } from "@/Core/Domain/Agent";
-import { DependencyContext } from "@/UI/Dependency";
+import { Sort } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { Agent } from "@inmanta/web-console-core/Domain/Agent";
 import { AgentsTable } from "./AgentsTable";
 import { createAgentsTablePresenter } from "./AgentsTablePresenter";
 

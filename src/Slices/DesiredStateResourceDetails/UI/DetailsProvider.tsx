@@ -1,7 +1,7 @@
 import React from "react";
-import { useGetDesiredStateResourceDetails } from "@/Data/Queries/Slices/DesiredState";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
+import { useGetDesiredStateResourceDetails } from "@inmanta/web-console-core/Queries/Slices/DesiredState";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { Details } from "./Details";
 
 interface Props {

@@ -10,7 +10,6 @@ import {
 } from "@patternfly/react-core";
 import { CopyIcon, ToolsIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { words } from "@/Core";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import {
   getAvailableStateTargets,
@@ -19,8 +18,9 @@ import {
   isTransferDisabled,
   StateTarget,
 } from "@/Slices/ServiceInstanceDetails/Utils";
-import { Link } from "@/UI/Components/Link";
-import { DependencyContext, useVisibleLinkActions } from "@/UI/Dependency";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext, useVisibleLinkActions } from "@inmanta/web-console-core/Dependency";
+import { Link } from "@inmanta/web-console-ui/Components/Link";
 import { DeleteAction, DestroyAction, ExpertStateTransfer, StateAction } from "./Actions";
 
 /**

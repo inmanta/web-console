@@ -3,8 +3,8 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { Service, Pagination } from "@/Test";
 import * as InstanceEvent from "@S/Events/Data/Mock";
+import { Service, Pagination } from "@inmanta/web-console-test-utils";
 import { EventsPageComposer } from "./EventsPageComposer";
 
 /** Test with the whole events page rendered */

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Label } from "@patternfly/react-core";
-import { DryRun } from "@/Core";
+import { DryRun } from "@inmanta/web-console-core";
 import { createReportScopeParts } from "./helpers";
 
 /**

@@ -1,8 +1,8 @@
 import React from "react";
 import { Content, ContentVariants, ExpandableSection } from "@patternfly/react-core";
 import { t_global_font_size_body_sm } from "@patternfly/react-tokens";
-import { ServiceModel, words } from "@/Core";
-import { PageContainer } from "@/UI/Components/PageContainer";
+import { ServiceModel, words } from "@inmanta/web-console-core";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { AddInstanceButton } from "./Components";
 
 interface Props {

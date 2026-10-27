@@ -1,5 +1,5 @@
-import { CompileStatus } from "@/Core";
 import { response } from "@S/CompileReports/Core/Mock";
+import { CompileStatus } from "@inmanta/web-console-core";
 import { createCompileReportsTablePresenter } from "./CompileReportsTablePresenter";
 
 const reports = response.data;

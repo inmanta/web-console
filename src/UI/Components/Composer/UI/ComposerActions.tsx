@@ -2,15 +2,15 @@ import React, { useCallback, useContext } from "react";
 import "@rappidcss";
 import { useLocation, useNavigate } from "react-router";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { ServiceOrder } from "@/Core/Domain/ServiceOrderModel";
-import { usePostOrder } from "@/Data/Queries/Slices/Order";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ServiceOrder } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
+import { usePostOrder } from "@inmanta/web-console-core/Queries/Slices/Order";
 import {
   usePostMetadata,
   useGetInstanceWithRelations,
-} from "@/Data/Queries/Slices/ServiceInstance";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+} from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { ComposerContext } from "../Data/Context";
 import { getServiceOrderItemsArray, SavedCoordinates } from "../Data/Helpers";
 

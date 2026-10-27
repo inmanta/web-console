@@ -1,7 +1,7 @@
 import React from "react";
 import { Icon, Tooltip } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 
 export const Warning: React.FC = () => (
   <Icon status="warning" isInline>

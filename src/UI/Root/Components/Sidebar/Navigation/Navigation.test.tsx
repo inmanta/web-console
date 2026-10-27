@@ -2,14 +2,17 @@ import { act } from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { FeatureModule, RouteFactory, words } from "@/Core";
 import { environmentFeature } from "@/Features/Environment";
 import { resourceManagerFeature } from "@/Features/ResourceManager";
-import { MockedDependencyProvider, MockOrchestratorProvider } from "@/Test";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as Agents from "@S/Agents/Core/Route";
 import * as Dashboard from "@S/Dashboard/Core/Route";
 import * as Resource from "@S/Resource/Core/Route";
+import { FeatureModule, RouteFactory, words } from "@inmanta/web-console-core";
+import {
+  MockedDependencyProvider,
+  MockOrchestratorProvider,
+} from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { Navigation } from "./Navigation";
 
 function setup(

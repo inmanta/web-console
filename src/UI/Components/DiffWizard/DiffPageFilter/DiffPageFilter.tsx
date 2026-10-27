@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, MenuFooter, TextInput, ToolbarGroup, ToolbarItem } from "@patternfly/react-core";
-import { Diff, words } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
-import { MultiTextSelect } from "../../MultiTextSelect";
+import { Diff, words } from "@inmanta/web-console-core";
+import { MultiTextSelect } from "@inmanta/web-console-ui/Components/MultiTextSelect";
 
 interface Props {
   statuses: Diff.Status[];

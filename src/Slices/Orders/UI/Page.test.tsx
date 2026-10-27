@@ -5,10 +5,10 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
-import { baseSetup } from "@/Test/Utils/base-setup";
-import { testClient } from "@/Test/Utils/react-query-setup";
+import { words } from "@inmanta/web-console-core";
+import { REFETCH_INTERVAL } from "@inmanta/web-console-core/Queries/Helpers";
+import { baseSetup } from "@inmanta/web-console-test-utils/Utils/base-setup";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { emptyResponse, orderResponse } from "../Data/Mock";
 import { OrdersPage } from ".";
 

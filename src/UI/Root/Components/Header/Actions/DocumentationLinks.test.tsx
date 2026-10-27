@@ -1,8 +1,8 @@
 import { MemoryRouter } from "react-router";
 import { render, screen } from "@testing-library/react";
-import { UrlManager } from "@/Core";
-import { defaultAuthContext } from "@/Data/Auth/AuthContext";
-import { DependencyProvider } from "@/UI/Dependency";
+import { UrlManager } from "@inmanta/web-console-core";
+import { defaultAuthContext } from "@inmanta/web-console-core/Auth/AuthContext";
+import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
 import { DocumentationLinks } from "./DocumentationLinks";
 
 const DOC_LINK = "https://docs.example.com";

@@ -1,6 +1,6 @@
 import { render, screen, cleanup, waitFor, act, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import { AppAlertProvider } from "./AppAlertProvider";
 
 const MockedAppAlertUser = () => {

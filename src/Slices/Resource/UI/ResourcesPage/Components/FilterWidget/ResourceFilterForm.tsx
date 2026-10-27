@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
 import { FormGroup, Stack, StackItem, Title } from "@patternfly/react-core";
-import { Resource, words } from "@/Core";
-import { useDebounce } from "@/Data/Common/useDebounce";
-import { useGetAgents } from "@/Data/Queries/Slices/Agents";
 import { AddableSelectInput, AddableSelectOption } from "@/UI/Components/AddableSelectInput";
-import { AddableTextInput } from "@/UI/Components/AddableTextInput";
-import { excludeIcons, includeIcons } from "@/UI/Components/IncludeExcludeIcons";
-import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
+import { Resource, words } from "@inmanta/web-console-core";
+import { useDebounce } from "@inmanta/web-console-core/Common/useDebounce";
+import { useGetAgents } from "@inmanta/web-console-core/Queries/Slices/Agents";
+import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
+import { excludeIcons, includeIcons } from "@inmanta/web-console-ui/Components/IncludeExcludeIcons";
+import { OptionalToggleGroup } from "@inmanta/web-console-ui/Components/OptionalToggleGroup";
 
 export interface ResourceFilterFormProps {
   onAddType: (type: string) => void;

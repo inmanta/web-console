@@ -1,6 +1,6 @@
-import { DryRun, DryRunReport } from "@/Core";
-import { ServiceInstance } from "@/Test";
-import { resources } from "@/Test/Data/DesiredStateDiff";
+import { DryRun, DryRunReport } from "@inmanta/web-console-core";
+import { ServiceInstance } from "@inmanta/web-console-test-utils";
+import { resources } from "@inmanta/web-console-test-utils/Data/DesiredStateDiff";
 
 export const filteredAgent = "internal";
 export const filteredInstanceLabel = "cpe-east-2";

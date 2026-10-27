@@ -5,13 +5,20 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { graphql, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { PageInfo, mapStatusToGraphQLFilter } from "@/Data/Queries/Slices/Resource";
 import { response } from "@/Slices/Agents";
-import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
-import { createMockResourceSummary } from "@/Test/Data/Resource";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@inmanta/web-console-core";
+import {
+  PageInfo,
+  mapStatusToGraphQLFilter,
+} from "@inmanta/web-console-core/Queries/Slices/Resource";
+import {
+  EnvironmentDetails,
+  MockedDependencyProvider,
+  Resource,
+} from "@inmanta/web-console-test-utils";
+import { createMockResourceSummary } from "@inmanta/web-console-test-utils/Data/Resource";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { Page } from "./Page";
 
 const axe = configureAxe({

@@ -1,18 +1,18 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Content, PageSection, Stack, StackItem } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { usePaginatedTable } from "@/Data/Common";
+import { words } from "@inmanta/web-console-core";
+import { usePaginatedTable } from "@inmanta/web-console-core/Common";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import {
   Filter,
   SortKey,
   useGetDiscoveredResources,
-} from "@/Data/Queries/Slices/DiscoveredResources";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PaginationWidget } from "@/UI/Components/PaginationWidget";
-import { DependencyContext } from "@/UI/Dependency";
+} from "@inmanta/web-console-core/Queries/Slices/DiscoveredResources";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { FilterDrawer, countActiveFilters } from "@inmanta/web-console-ui/Components/FilterDrawer";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PaginationWidget } from "@inmanta/web-console-ui/Components/PaginationWidget";
 import { DiscoveredResourcesFilterWidget } from "./Components";
 import { DiscoveredResourcesTable } from "./DiscoveredResourcesTable";
 import { createDiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";

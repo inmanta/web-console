@@ -14,21 +14,21 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { EyeIcon, WrenchIcon, PlayIcon } from "@patternfly/react-icons";
-import { ResourceActionFilter, words } from "@/Core";
-import { NonEmptyArray } from "@/Core/Language";
-import { DeployAgentsAction } from "@/Data/Queries/Slices/Agents";
+import { ResourceActionFilter, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { NonEmptyArray } from "@inmanta/web-console-core/Language";
+import { DeployAgentsAction } from "@inmanta/web-console-core/Queries/Slices/Agents";
 import {
   createDryRunContext,
   useDeployFiltered,
   useDryRunFiltered,
-} from "@/Data/Queries/Slices/Resource";
-import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+} from "@inmanta/web-console-core/Queries/Slices/Resource";
+import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
+import { useNotifyDryRunStarted } from "@inmanta/web-console-ui/Components/DryRunNotification";
 import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
 import { ResourceActionInstance } from "./types";
-import { useNotifyDryRunStarted } from "./useNotifyDryRunStarted";
 
 const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 

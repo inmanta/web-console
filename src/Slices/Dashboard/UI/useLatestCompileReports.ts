@@ -1,5 +1,5 @@
-import { PageSize } from "@/Core/Domain";
-import { useGetCompileReports } from "@/Data/Queries/Slices/Compilation";
+import { PageSize } from "@inmanta/web-console-core/Domain";
+import { useGetCompileReports } from "@inmanta/web-console-core/Queries/Slices/Compilation";
 
 const PARAMS = {
   pageSize: PageSize.few,

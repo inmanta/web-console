@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { words } from "@/Core";
-import { useDebounce } from "@/Data/Common/useDebounce";
+import { words } from "@inmanta/web-console-core";
+import { useDebounce } from "@inmanta/web-console-core/Common/useDebounce";
 import { VersionSelectOption } from "./VersionSelect";
 
 /**

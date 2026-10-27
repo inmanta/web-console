@@ -2,9 +2,9 @@ import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
-import { TransferModel } from "@/Core";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
-import { CustomDatePresenter } from "@/UI/Utils";
+import { TransferModel } from "@inmanta/web-console-core";
+import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import {
   DocAttributeDescriptors,
   resolveFirstStateTargetByTarget,

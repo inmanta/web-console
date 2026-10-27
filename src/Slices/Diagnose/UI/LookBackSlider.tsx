@@ -7,7 +7,7 @@ import {
   Slider,
   SliderOnChangeEvent,
 } from "@patternfly/react-core";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 
 interface Props {
   instanceVersion: number;

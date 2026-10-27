@@ -1,5 +1,5 @@
-import { FeatureModule } from "@/Core";
 import * as GraphiQL from "@S/GraphiQL/Core/Route";
+import { FeatureModule } from "@inmanta/web-console-core";
 import { graphiqlMessages } from "./messages";
 
 /**

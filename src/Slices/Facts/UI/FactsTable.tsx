@@ -1,9 +1,9 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
-import { Sort } from "@/Core";
-import { Fact } from "@/Core/Domain/Fact";
-import { SortKey } from "@/Core/Domain/FactFilter";
-import { useClassifiedRows } from "@/UI/Components/AttributeList";
+import { Sort } from "@inmanta/web-console-core";
+import { Fact } from "@inmanta/web-console-core/Domain/Fact";
+import { SortKey } from "@inmanta/web-console-core/Domain/FactFilter";
+import { useClassifiedRows } from "@inmanta/web-console-ui/Components/AttributeList";
 import { FactsRow } from "./FactsRow";
 import { FactsTablePresenter } from "./FactsTablePresenter";
 

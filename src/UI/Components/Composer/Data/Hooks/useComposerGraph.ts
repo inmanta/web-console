@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { dia, shapes, ui } from "@joint/plus";
-import { ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Queries/Slices/ServiceInstance/GetInstanceWithRelations";
+import { ServiceModel } from "@inmanta/web-console-core";
+import { InstanceWithRelations } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance/GetInstanceWithRelations";
 import { ServiceEntityShape } from "../../UI";
 import { ComposerPaper } from "../../UI/JointJsShapes/ComposerPaper";
 import { updateAllMissingConnectionsHighlights } from "../../UI/JointJsShapes/createHalo";

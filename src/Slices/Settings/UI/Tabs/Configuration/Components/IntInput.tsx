@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, FlexItem, NumberInput } from "@patternfly/react-core";
-import { EnvironmentSettings } from "@/Core";
-import { preventNumberInputScroll } from "@/UI/Utils";
+import { EnvironmentSettings } from "@inmanta/web-console-core";
+import { preventNumberInputScroll } from "@inmanta/web-console-ui/Utils";
 import { Warning } from "./Warning";
 
 interface Props {

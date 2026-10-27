@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
 import { Content, Stack, StackItem, Switch, Title } from "@patternfly/react-core";
-import { Resource, words } from "@/Core";
-import { useDebounce } from "@/Data/Common/useDebounce";
-import { useGetServiceModels } from "@/Data/Queries/Slices/Service";
-import { useGetInstances } from "@/Data/Queries/Slices/ServiceInstance";
 import { AddableSelectInput, AddableSelectOption } from "@/UI/Components/AddableSelectInput";
-import { AddableTextInput } from "@/UI/Components/AddableTextInput";
+import { Resource, words } from "@inmanta/web-console-core";
+import { useDebounce } from "@inmanta/web-console-core/Common/useDebounce";
+import { useGetServiceModels } from "@inmanta/web-console-core/Queries/Slices/Service";
+import { useGetInstances } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
 
 export interface ServiceFilterFormProps {
   filter: Resource.Filter;

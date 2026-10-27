@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Title } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
-import { ClientType, toggleValueInList, words } from "@/Core";
-import { getTokensKey, useGenerateToken } from "@/Data/Queries/Slices/Environment";
+import { ClientType, toggleValueInList, words } from "@inmanta/web-console-core";
+import {
+  getTokensKey,
+  useGenerateToken,
+} from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { DEFAULT_EXPIRY_SECONDS } from "./ExpiryInput";
 import { TokenForm } from "./TokenForm";
 import { TokenTable } from "./TokenTable";

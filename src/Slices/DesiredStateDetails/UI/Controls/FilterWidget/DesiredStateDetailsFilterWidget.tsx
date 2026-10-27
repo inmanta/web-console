@@ -1,14 +1,14 @@
 import React, { memo } from "react";
 import { Divider, Form, Stack, StackItem, Title } from "@patternfly/react-core";
-import { Resource, words } from "@/Core";
-import { useUrlStateWithFilter } from "@/Data/Common";
-import { AddableTextInput } from "@/UI/Components/AddableTextInput";
+import { Resource, words } from "@inmanta/web-console-core";
+import { useUrlStateWithFilter } from "@inmanta/web-console-core/Common";
+import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
 import {
   ActiveFilterGroup,
   ActiveFilters,
   FilterDrawerPanelContent,
   getFilterActions,
-} from "@/UI/Components/FilterDrawer";
+} from "@inmanta/web-console-ui/Components/FilterDrawer";
 
 interface DesiredStateDetailsFilterWidgetProps {
   onClose: () => void;

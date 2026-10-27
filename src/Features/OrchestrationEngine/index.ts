@@ -1,4 +1,3 @@
-import { FeatureModule } from "@/Core";
 import * as CompileDetails from "@S/CompileDetails/Core/Route";
 import * as CompileReports from "@S/CompileReports/Core/Route";
 import * as ComplianceCheck from "@S/ComplianceCheck/Core/Route";
@@ -7,6 +6,7 @@ import * as DesiredStateCompare from "@S/DesiredStateCompare/Core/Route";
 import * as DesiredStateDetails from "@S/DesiredStateDetails/Core/Route";
 import * as DesiredStateResourceDetails from "@S/DesiredStateResourceDetails/Core/Route";
 import * as Parameters from "@S/Parameters/Core/Route";
+import { FeatureModule } from "@inmanta/web-console-core";
 import { orchestrationEngineMessages } from "./messages";
 
 /**

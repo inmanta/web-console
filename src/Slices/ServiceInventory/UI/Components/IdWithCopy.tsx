@@ -1,6 +1,6 @@
 import React from "react";
-import { Uuid, words } from "@/Core";
-import { TextWithCopy } from "@/UI/Components/TextWithCopy";
+import { Uuid, words } from "@inmanta/web-console-core";
+import { TextWithCopy } from "@inmanta/web-console-ui/Components/TextWithCopy";
 
 interface Props {
   uuid: Uuid;

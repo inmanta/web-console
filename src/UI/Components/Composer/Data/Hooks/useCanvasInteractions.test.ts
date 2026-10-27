@@ -1,6 +1,6 @@
 import { dia, shapes, ui } from "@joint/plus";
 import { act, renderHook } from "@testing-library/react";
-import { ServiceModel } from "@/Core";
+import { ServiceModel } from "@inmanta/web-console-core";
 import { defineObjectsForJointJS } from "../../testSetup";
 import { RelationsDictionary } from "../Helpers";
 import { useCanvasInteractions } from "./useCanvasInteractions";

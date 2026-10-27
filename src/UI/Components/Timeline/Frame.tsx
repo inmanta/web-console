@@ -2,7 +2,7 @@ import React from "react";
 import { Icon } from "@patternfly/react-core";
 import { CheckCircleIcon, ExclamationCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { Spinner } from "../Spinner";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 import { Timestamp } from "./Timestamp";
 
 interface FrameProps {

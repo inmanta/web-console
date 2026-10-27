@@ -1,7 +1,7 @@
 import React from "react";
 import { LoginPage, ListVariant } from "@patternfly/react-core";
-import { words } from "@/Core";
 import logo from "@images/cut-wings.svg";
+import { words } from "@inmanta/web-console-core";
 import { LoginPageComponent } from "./UI/LoginForm";
 
 /**

@@ -1,9 +1,12 @@
 import React from "react";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { InstanceResourceModel } from "@/Core";
-import { ResourceLink } from "@/UI/Components/ResourceLink";
-import { labelColorConfig, ResourceStatusLabel } from "@/UI/Components/ResourceStatus";
-import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
+import { InstanceResourceModel } from "@inmanta/web-console-core";
+import { ResourceLink } from "@inmanta/web-console-ui/Components/ResourceLink";
+import {
+  labelColorConfig,
+  ResourceStatusLabel,
+} from "@inmanta/web-console-ui/Components/ResourceStatus";
+import { getResourceIdFromResourceVersionId } from "@inmanta/web-console-ui/Utils";
 
 interface Props {
   resources: InstanceResourceModel[];

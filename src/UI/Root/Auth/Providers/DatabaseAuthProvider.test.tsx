@@ -3,9 +3,9 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { AuthContext } from "@/Data/Auth/AuthContext";
-import * as CookieHelper from "@/Data/Common/CookieHelper";
 import { AuthProvider } from "@/UI/Root/Auth/AuthProvider";
+import { AuthContext } from "@inmanta/web-console-core/Auth/AuthContext";
+import * as CookieHelper from "@inmanta/web-console-core/Common/CookieHelper";
 
 const mockedUsedNavigate = vi.hoisted(() => vi.fn());
 

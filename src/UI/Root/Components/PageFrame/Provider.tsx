@@ -1,9 +1,9 @@
 import React, { useContext, useLayoutEffect } from "react";
 import { Navigate } from "react-router";
-import { EnvironmentRole, words } from "@/Core";
-import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { EnvironmentRole, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { EnvironmentPreview } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { PageFrame } from "./PageFrame";
 
 interface Props {

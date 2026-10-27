@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer-continued";
-import { Diff } from "@/Core";
+import { Diff } from "@inmanta/web-console-core";
 
 export const DiffView: React.FC<Diff.Values> = ({ from, to }) => {
   return (

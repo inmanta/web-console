@@ -1,6 +1,9 @@
 import React from "react";
 import { UseMutationResult } from "@tanstack/react-query";
-import { CreateProjectParams, CreateProjectResponse } from "@/Data/Queries/Slices/Project";
+import {
+  CreateProjectParams,
+  CreateProjectResponse,
+} from "@inmanta/web-console-core/Queries/Slices/Project";
 import { CreatableSelectInput } from "./CreatableSelectInput";
 import { EditableField, FieldProps, StaticViewComponent } from "./EditableField";
 import { InlineValue } from "./InlineFillers";

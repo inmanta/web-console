@@ -1,6 +1,6 @@
 import React, { memo } from "react";
-import { ServiceInstanceParams } from "@/Core";
-import { useUrlStateWithFilter } from "@/Data/Common";
+import { ServiceInstanceParams } from "@inmanta/web-console-core";
+import { useUrlStateWithFilter } from "@inmanta/web-console-core/Common";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
 interface Props {

@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { useLocation, NavLink } from "react-router";
 import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core";
-import { DependencyContext } from "@/UI/Dependency";
-import { SearchSanitizer } from "@/UI/Routing";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { SearchSanitizer } from "@inmanta/web-console-core/Routing";
 
 export const PageBreadcrumbs: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);

@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { usePauseAgent } from "@/Data/Queries/Slices/Agents";
-import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { usePauseAgent } from "@inmanta/web-console-core/Queries/Slices/Agents";
+import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
 
 interface Props {
   name: string;

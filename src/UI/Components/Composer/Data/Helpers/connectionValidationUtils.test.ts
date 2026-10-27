@@ -1,4 +1,4 @@
-import { EmbeddedEntity, InterServiceRelation } from "@/Core";
+import { EmbeddedEntity, InterServiceRelation } from "@inmanta/web-console-core";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import {
   checkEmbeddedEntityConnections,

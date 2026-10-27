@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import { ImageHelper } from "@/Data/Common";
+import { ImageHelper } from "@inmanta/web-console-core/Common";
 
 export const ImagePreview: React.FC<{ dataUrl: string }> = ({ dataUrl, ...props }) =>
   dataUrl !== "" ? (

@@ -14,9 +14,9 @@ import {
   StackItem,
 } from "@patternfly/react-core";
 import { FolderIcon, LockIcon } from "@patternfly/react-icons";
-import { ProjectModel, words } from "@/Core";
-import { useDeleteProject, useGetProjects } from "@/Data/Queries/Slices/Project";
-import { Spinner } from "@/UI/Components/Spinner";
+import { ProjectModel, words } from "@inmanta/web-console-core";
+import { useDeleteProject, useGetProjects } from "@inmanta/web-console-core/Queries/Slices/Project";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 
 /**
  * Modal content for the "Manage projects" feature.

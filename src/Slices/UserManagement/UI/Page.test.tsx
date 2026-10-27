@@ -6,11 +6,11 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { DefaultBodyType, HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { UserInfo } from "@/Data/Queries/Slices/Auth";
-import { MockedDependencyProvider } from "@/Test";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@inmanta/web-console-core";
+import { UserInfo } from "@inmanta/web-console-core/Queries/Slices/Auth";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { UserManagementPage } from "./Page";
 
 const setup = () => {

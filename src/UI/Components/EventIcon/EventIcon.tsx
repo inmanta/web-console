@@ -12,7 +12,7 @@ import {
   SyncAltIcon,
   TrashAltIcon,
 } from "@patternfly/react-icons";
-import { EventType } from "@/Core";
+import { EventType } from "@inmanta/web-console-core";
 
 interface Props {
   eventType: EventType;

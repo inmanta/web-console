@@ -1,8 +1,8 @@
 import React from "react";
 import { Tabs, Tab, TabContentBody } from "@patternfly/react-core";
-import { ServiceModel } from "@/Core";
-import { useUrlStateWithString } from "@/Data/Common";
-import { stickyTabsStyle } from "@/UI/Components/IconTabs";
+import { ServiceModel } from "@inmanta/web-console-core";
+import { useUrlStateWithString } from "@inmanta/web-console-core/Common";
+import { stickyTabsStyle } from "@inmanta/web-console-ui/Components/IconTabs";
 import { AttributeTable } from "./AttributeTable";
 import { CallbacksView } from "./Callbacks";
 import { Config } from "./Config";

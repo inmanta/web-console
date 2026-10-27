@@ -1,10 +1,10 @@
 import { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { FeatureModule, PageLoader } from "@/Core";
-import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import * as Agents from "@S/Agents/Core/Route";
 import * as Facts from "@S/Facts/Core/Route";
+import { FeatureModule, PageLoader } from "@inmanta/web-console-core";
+import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 const AgentsPage = () => <div>Agents page</div>;

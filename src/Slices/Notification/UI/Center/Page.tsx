@@ -1,12 +1,15 @@
 import React from "react";
-import { words } from "@/Core";
-import { usePaginatedTable } from "@/Data/Common";
-import { NotificationFilter, useGetNotifications } from "@/Data/Queries/Slices/Notification";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PageContainer } from "@/UI/Components/PageContainer";
-import { PaginationWidget } from "@/UI/Components/PaginationWidget";
+import { words } from "@inmanta/web-console-core";
+import { usePaginatedTable } from "@inmanta/web-console-core/Common";
+import {
+  NotificationFilter,
+  useGetNotifications,
+} from "@inmanta/web-console-core/Queries/Slices/Notification";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
+import { PaginationWidget } from "@inmanta/web-console-ui/Components/PaginationWidget";
 import { Controls } from "./Controls";
 import { List } from "./List";
 export const Page: React.FC = () => {

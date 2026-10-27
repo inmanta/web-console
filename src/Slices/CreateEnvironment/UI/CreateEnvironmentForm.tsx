@@ -1,19 +1,19 @@
 import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
-import { Environment, ProjectModel, words } from "@/Core";
+import { CreatableSelectInput } from "@/UI/Components/InlineEditable";
+import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentParams";
+import { Environment, ProjectModel, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import {
   useCreateEnvironment,
   getEnvironmentsKey,
   GetEnvironmentPreviewKey,
   EnvironmentPreviewResponse,
-} from "@/Data/Queries/Slices/Environment";
-import { useCreateProject } from "@/Data/Queries/Slices/Project";
-import { AppAlert } from "@/UI/Components/AppAlert";
-import { CreatableSelectInput } from "@/UI/Components/InlineEditable";
-import { DependencyContext } from "@/UI/Dependency";
-import { useNavigateTo } from "@/UI/Routing";
-import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentParams";
+} from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { useCreateProject } from "@inmanta/web-console-core/Queries/Slices/Project";
+import { useNavigateTo } from "@inmanta/web-console-core/Routing";
+import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
 import { ImageField } from "./ImageField";
 import { TextAreaField } from "./TextAreaField";
 import { TextField } from "./TextField";
@@ -129,17 +129,15 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
     });
   };
 
-  const onSubmitCreate = () => {
-    if (projectName && createEnvironmentBody.name) {
-      const matchingProject = projects.find((project) => project.name === projectName);
+  // A project created from the select only shows up here once the projects query has refetched.
+  const selectedProject = projects.find((project) => project.name === projectName);
 
-      if (matchingProject) {
-        const fullBody = {
-          ...createEnvironmentBody,
-          project_id: matchingProject.id,
-        };
-        createEnvironment.mutate(fullBody);
-      }
+  const onSubmitCreate = () => {
+    if (selectedProject && createEnvironmentBody.name) {
+      createEnvironment.mutate({
+        ...createEnvironmentBody,
+        project_id: selectedProject.id,
+      });
     }
   };
 
@@ -197,7 +195,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       <FormControls
         onSubmit={onSubmitCreate}
         onCancel={navigateToHome}
-        isSubmitDisabled={!(projectName && createEnvironmentBody.name)}
+        isSubmitDisabled={!(selectedProject && createEnvironmentBody.name)}
         isLoading={createEnvironment.isPending}
       />
     </Form>

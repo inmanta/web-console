@@ -1,8 +1,8 @@
 import React from "react";
 import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { NotificationFilter } from "@/Data/Queries/Slices/Notification";
-import { SingleTextSelect } from "@/UI/Components/SingleTextSelect";
+import { words } from "@inmanta/web-console-core";
+import { NotificationFilter } from "@inmanta/web-console-core/Queries/Slices/Notification";
+import { SingleTextSelect } from "@inmanta/web-console-ui/Components/SingleTextSelect";
 
 type Read = "read" | "unread";
 const list: Read[] = ["read", "unread"];

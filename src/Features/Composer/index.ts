@@ -1,14 +1,14 @@
 import { EyeIcon, PlusIcon, ToolsIcon } from "@patternfly/react-icons";
+import * as InstanceComposer from "@S/InstanceComposerCreator/Core/Route";
+import * as InstanceComposerEditor from "@S/InstanceComposerEditor/Core/Route";
+import * as InstanceComposerViewer from "@S/InstanceComposerViewer/Core/Route";
 import {
   FeatureModule,
   InstanceLinkContext,
   LinkAction,
   OrchestratorProvider,
   words,
-} from "@/Core";
-import * as InstanceComposer from "@S/InstanceComposerCreator/Core/Route";
-import * as InstanceComposerEditor from "@S/InstanceComposerEditor/Core/Route";
-import * as InstanceComposerViewer from "@S/InstanceComposerViewer/Core/Route";
+} from "@inmanta/web-console-core";
 import { composerMessages } from "./messages";
 
 const isComposerEnabled = (orchestratorProvider: OrchestratorProvider) =>

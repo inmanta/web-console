@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, FlexItem, Switch } from "@patternfly/react-core";
-import { EnvironmentSettings } from "@/Core";
+import { EnvironmentSettings } from "@inmanta/web-console-core";
 import { Warning } from "./Warning";
 
 interface Props {

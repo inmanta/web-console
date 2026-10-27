@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Dropdown, DropdownItem, MenuToggle, MenuToggleElement } from "@patternfly/react-core";
 import { EllipsisVIcon, FilterIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 
 export type ToggleActionType = (actionType: string) => void;
 

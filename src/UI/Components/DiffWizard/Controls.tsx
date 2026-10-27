@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { Diff } from "@/Core";
+import { Diff } from "@inmanta/web-console-core";
 import { EmptyJumpToAction, JumpToAction } from "./JumpToAction";
 import { Versus, VersusLabels } from "./Versus";
 import { fromResourceToItem } from "./fromResourceToItem";

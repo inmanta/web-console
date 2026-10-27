@@ -1,3 +1,10 @@
+import { AttributeHelper } from "@/UI/Components/TreeTable/Helpers/AttributeHelper";
+import {
+  MultiAttributeNodeDict,
+  AttributeNodeDict,
+  InventoryAttributes,
+} from "@/UI/Components/TreeTable/Helpers/AttributeNode";
+import { InventoryAttributeTree } from "@/UI/Components/TreeTable/types";
 import {
   Attributes,
   EmbeddedEntity,
@@ -6,14 +13,7 @@ import {
   isNotUndefined,
   ServiceModel,
   TreeNode,
-} from "@/Core";
-import { AttributeHelper } from "@/UI/Components/TreeTable/Helpers/AttributeHelper";
-import {
-  MultiAttributeNodeDict,
-  AttributeNodeDict,
-  InventoryAttributes,
-} from "@/UI/Components/TreeTable/Helpers/AttributeNode";
-import { InventoryAttributeTree } from "@/UI/Components/TreeTable/types";
+} from "@inmanta/web-console-core";
 
 export class InventoryAttributeHelper implements AttributeHelper<InventoryAttributeTree> {
   constructor(

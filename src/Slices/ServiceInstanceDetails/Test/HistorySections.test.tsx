@@ -1,10 +1,10 @@
 import { UseInfiniteQueryResult, UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { ServiceModel } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import * as Service from "@/Test/Data/Service";
-import * as State from "@/Test/Data/Service/State";
+import { ServiceModel } from "@inmanta/web-console-core";
+import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
+import * as Service from "@inmanta/web-console-test-utils/Data/Service";
+import * as State from "@inmanta/web-console-test-utils/Data/Service/State";
 import { InstanceDetailsContext } from "../Core/Context";
 import { HistorySection } from "../UI/Components/Sections";
 import { StateLabel } from "../UI/Components/Sections/HistorySection";

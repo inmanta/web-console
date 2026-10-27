@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
-import { ParsedNumber, words } from "@/Core";
-import { Link } from "@/UI/Components/Link";
-import { DependencyContext } from "@/UI/Dependency";
+import { ParsedNumber, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { Link } from "@inmanta/web-console-ui/Components/Link";
 
 interface Props {
   version: ParsedNumber;

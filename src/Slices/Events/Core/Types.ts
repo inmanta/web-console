@@ -1,4 +1,4 @@
-import { EventType, DateRange } from "@/Core/Domain";
+import { EventType, DateRange } from "@inmanta/web-console-core/Domain";
 
 export interface Filter {
   event_type?: EventType[];

@@ -1,7 +1,7 @@
-import { FeatureModule } from "@/Core";
 import * as CreateEnvironment from "@S/CreateEnvironment/Core/Route";
 import * as Dashboard from "@S/Dashboard/Core/Route";
 import * as Settings from "@S/Settings/Core/Route";
+import { FeatureModule } from "@inmanta/web-console-core";
 import { environmentMessages } from "./messages";
 
 /**

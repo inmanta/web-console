@@ -6,11 +6,11 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { ServiceModel, words } from "@/Core";
-import { MockedDependencyProvider, Environment, Service } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { ServiceModel, words } from "@inmanta/web-console-core";
+import { MockedDependencyProvider, Environment, Service } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ServiceCatalogPage } from ".";
 
 const [env1] = Environment.filterable.map((env) => env.id);

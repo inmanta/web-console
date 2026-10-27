@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from "react";
 import { NotificationBadge, NotificationBadgeVariant } from "@patternfly/react-core";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import {
   useGetPartialNotifications,
   PartialNotification,
-} from "@/Data/Queries/Slices/Notification";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+} from "@inmanta/web-console-core/Queries/Slices/Notification";
 
 /**
  * Notification badge component that displays a visual indicator for notifications.

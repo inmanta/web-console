@@ -1,13 +1,22 @@
 import React, { useContext } from "react";
 import { useLocation } from "react-router";
-import { FeatureModule, getFeatureRoutes, isJsonParserId, JsonParserId } from "@/Core";
-import { OrchestratorProvider, PrimaryArchiveHelper, PrimaryFileManager } from "@/Data/Common";
-import { DependencyProvider } from "@/UI/Dependency";
-import { EnvironmentHandlerImpl } from "@/UI/Dependency/EnvironmentHandler";
-import { PrimaryBaseUrlManager } from "@/UI/Routing";
-import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
-import { UrlManagerImpl } from "@/UI/Utils";
-import { AuthContext } from "./Data/Auth";
+import {
+  FeatureModule,
+  getFeatureRoutes,
+  isJsonParserId,
+  JsonParserId,
+} from "@inmanta/web-console-core";
+import { AuthContext } from "@inmanta/web-console-core/Auth";
+import {
+  OrchestratorProvider,
+  PrimaryArchiveHelper,
+  PrimaryFileManager,
+} from "@inmanta/web-console-core/Common";
+import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
+import { EnvironmentHandlerImpl } from "@inmanta/web-console-core/Dependency/EnvironmentHandler";
+import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
+import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
+import { UrlManagerImpl } from "@inmanta/web-console-ui/Utils";
 import { AppAlertProvider } from "./UI/Root/Components/AppAlertProvider";
 import { ModalProvider } from "./UI/Root/Components/ModalProvider";
 

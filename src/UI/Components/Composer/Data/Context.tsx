@@ -1,7 +1,7 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 import { dia, ui } from "@joint/plus";
-import { ServiceModel, ServiceOrderItemRequest } from "@/Core";
-import { Inventories } from "@/Data/Queries/Slices/ServiceInstance";
+import { ServiceModel, ServiceOrderItemRequest } from "@inmanta/web-console-core";
+import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { ServiceEntityShape } from "../UI";
 import { CanvasHandlers, RelationsDictionary } from ".";
 

@@ -1,8 +1,8 @@
 import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
-import { AttributeClassifier } from "@/Data/Common";
-import { DiscoveredResource } from "@/Data/Queries/Slices/DiscoveredResources";
-import { AttributeList } from "@/UI/Components/AttributeList";
+import { AttributeClassifier } from "@inmanta/web-console-core/Common";
+import { DiscoveredResource } from "@inmanta/web-console-core/Queries/Slices/DiscoveredResources";
+import { AttributeList } from "@inmanta/web-console-ui/Components/AttributeList";
 
 interface Props {
   resource: DiscoveredResource;

@@ -1,4 +1,4 @@
-import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
+import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
 import { features, routes } from "./appFeatures";
 
 describe("appFeatures", () => {

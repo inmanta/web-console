@@ -1,6 +1,6 @@
-import { FeatureModule } from "@/Core";
 import * as Notification from "@S/Notification/Core/Route";
 import * as Status from "@S/Status/Core/Route";
+import { FeatureModule } from "@inmanta/web-console-core";
 import { shellMessages } from "./messages";
 
 /**

@@ -10,17 +10,17 @@ import {
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Tbody, Tr, Td, Thead, Th } from "@patternfly/react-table";
 import { useQueryClient } from "@tanstack/react-query";
-import { words } from "@/Core";
-import { Environment } from "@/Core/Domain/ProjectModel";
+import { words } from "@inmanta/web-console-core";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { Environment } from "@inmanta/web-console-core/Domain/ProjectModel";
 import {
   UserInfo,
   useGetRoles,
   useAddRole,
   useDeleteRole,
   getUserKey,
-} from "@/Data/Queries/Slices/Auth";
-import { useGetEnvironments } from "@/Data/Queries/Slices/Environment";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+} from "@inmanta/web-console-core/Queries/Slices/Auth";
+import { useGetEnvironments } from "@inmanta/web-console-core/Queries/Slices/Environment";
 
 /**
  * A table that displays the roles of a user, for all environments.

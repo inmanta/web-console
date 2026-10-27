@@ -1,5 +1,5 @@
 import { dia, shapes } from "@joint/plus";
-import { EmbeddedEntity, ServiceModel } from "@/Core";
+import { EmbeddedEntity, ServiceModel } from "@inmanta/web-console-core";
 import {
   addConnectionsBetweenShapes,
   removeConnectionsBetweenShapes,

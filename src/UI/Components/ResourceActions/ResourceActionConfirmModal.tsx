@@ -9,15 +9,15 @@ import {
   Form,
   FormGroup,
 } from "@patternfly/react-core";
-import { ResourceActionFilter, words } from "@/Core";
-import { NonEmptyArray } from "@/Core/Language";
+import { ResourceActionFilter, words } from "@inmanta/web-console-core";
+import { NonEmptyArray } from "@inmanta/web-console-core/Language";
 import {
   DryRunVersion,
   getVersionSelectionBlocker,
   useGetModelVersionForInstanceVersion,
   withActiveModelVersion,
   withDryRunVersion,
-} from "@/Data/Queries/Slices/Resource";
+} from "@inmanta/web-console-core/Queries/Slices/Resource";
 import { DryRunVersionField } from "./DryRunVersionField";
 import { ResourceActionInstance } from "./types";
 

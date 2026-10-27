@@ -1,0 +1,28 @@
+import { ParsedNumber } from "@inmanta/web-console-core/Language";
+import { CompileError } from "./CompileError";
+
+export interface Diagnostics {
+  rejections: Rejection[];
+  failures: FailureGroup[];
+}
+
+export interface Rejection {
+  instance_version: ParsedNumber;
+  model_version?: ParsedNumber;
+  compile_id: string;
+  errors?: CompileError[];
+  trace?: string;
+}
+
+interface FailureGroup {
+  resource_id: string;
+  failures: Failure[];
+}
+
+export interface Failure {
+  instance_version: ParsedNumber;
+  model_version: ParsedNumber;
+  resource_id: string;
+  time: Date;
+  message: string;
+}

@@ -1,9 +1,9 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { ServiceOrderItem } from "@/Core/Domain/ServiceOrderModel";
-import { MockedDependencyProvider } from "@/Test";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { ServiceOrderItem } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { OrderInstanceLink } from "./OrderInstanceLink";
 
 const baseRow: ServiceOrderItem = {

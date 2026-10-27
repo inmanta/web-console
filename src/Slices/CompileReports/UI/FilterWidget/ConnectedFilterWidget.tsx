@@ -1,6 +1,6 @@
 import React, { memo } from "react";
-import { Filter } from "@/Core/Domain/CompileReportFilter";
-import { useUrlStateWithFilter } from "@/Data/Common";
+import { useUrlStateWithFilter } from "@inmanta/web-console-core/Common";
+import { Filter } from "@inmanta/web-console-core/Domain/CompileReportFilter";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
 interface Props {

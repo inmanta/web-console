@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { Diagnostics } from "@/Core/Domain/Diagnostics";
+import { Diagnostics } from "@inmanta/web-console-core/Domain/Diagnostics";
 import { FailureCard } from "./FailureCard";
 import { RejectionCard } from "./RejectionCard";
 

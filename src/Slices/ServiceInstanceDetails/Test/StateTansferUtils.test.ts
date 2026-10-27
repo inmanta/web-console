@@ -1,4 +1,4 @@
-import { ServiceInstanceModel, ServiceModel } from "@/Core";
+import { ServiceInstanceModel, ServiceModel } from "@inmanta/web-console-core";
 import { getAvailableStateTargets, getExpertStateTargets, isTransferDisabled } from "../Utils";
 import { instanceData, instanceDataDeleted, serviceModel } from "./mockData";
 

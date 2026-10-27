@@ -1,6 +1,6 @@
 import React from "react";
 import { OnSort, Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { Sort, words } from "@/Core";
+import { Sort, words } from "@inmanta/web-console-core";
 import { EventsTablePresenter } from "./EventsTablePresenter";
 
 interface Props {

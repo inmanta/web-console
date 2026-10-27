@@ -1,4 +1,4 @@
-import { Service } from "@/Test";
+import { Service } from "@inmanta/web-console-test-utils";
 import { getActiveLabel, getLabelStates } from "./labelFilter";
 
 const { states } = Service.withInstanceSummary.lifecycle;
