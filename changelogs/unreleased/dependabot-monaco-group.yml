@@ -1,0 +1,4 @@
+description: Add a dependabot group so monaco-editor and monaco-graphql are bumped together.
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

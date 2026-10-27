@@ -41,3 +41,7 @@ updates:
           - "react-dom"
           - "@types/react"
           - "@types/react-dom"
+      monaco:
+        patterns:
+          - "monaco-editor"
+          - "monaco-graphql"
