@@ -1,0 +1,4 @@
+description: Patched a security vulnerability in a transitive dependency (seroval).
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}
