@@ -157,7 +157,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
       { method: DeployAgentsAction[key], filter: scopeFilter },
       {
         onSuccess: () =>
-          notifySuccess({ title: words("resources.resourceActions.success")(actionLabel) }),
+          notifySuccess({ title: words("resources.resourceActions.triggered")(actionLabel) }),
         onError,
       }
     );
@@ -254,7 +254,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
                 progressIcon={
                   pendingActionKey && (
                     <Spinner
-                      aria-label={words("resources.resourceActions.success")(
+                      aria-label={words("resources.resourceActions.triggered")(
                         actions[pendingActionKey].label
                       )}
                     />

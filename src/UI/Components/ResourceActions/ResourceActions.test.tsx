@@ -197,15 +197,15 @@ describe("ResourceActions", () => {
     await userEvent.click(screen.getByRole("button", { name: toggleLabel }));
     await userEvent.click(screen.getByRole("menuitem", { name: new RegExp(repairLabel, "i") }));
 
-    const pendingLabel = words("resources.resourceActions.success")(repairLabel);
+    const spinnerLabel = words("resources.resourceActions.triggered")(repairLabel);
 
-    expect(await screen.findByRole("progressbar", { name: pendingLabel })).toBeVisible();
+    expect(await screen.findByRole("progressbar", { name: spinnerLabel })).toBeVisible();
     expect(screen.getByRole("button", { name: toggleLabel })).toBeDisabled();
 
     act(() => respond());
 
     await waitFor(() =>
-      expect(screen.queryByRole("progressbar", { name: pendingLabel })).not.toBeInTheDocument()
+      expect(screen.queryByRole("progressbar", { name: spinnerLabel })).not.toBeInTheDocument()
     );
     expect(screen.getByRole("button", { name: toggleLabel })).toBeEnabled();
   });
@@ -585,16 +585,16 @@ describe("ResourceActions", () => {
 
       await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
 
-      const pendingLabel = words("resources.resourceActions.success")(dryRunLabel);
+      const spinnerLabel = words("resources.resourceActions.triggered")(dryRunLabel);
 
-      expect(await screen.findByRole("progressbar", { name: pendingLabel })).toBeVisible();
+      expect(await screen.findByRole("progressbar", { name: spinnerLabel })).toBeVisible();
 
       act(() => respond());
 
       expect(await screen.findByTestId("ToastAlert")).toHaveTextContent(
         words("desiredState.complianceCheck.report.started")
       );
-      expect(screen.queryByRole("progressbar", { name: pendingLabel })).not.toBeInTheDocument();
+      expect(screen.queryByRole("progressbar", { name: spinnerLabel })).not.toBeInTheDocument();
     });
 
     test("GIVEN the Compliance Check route is not registered WHEN a dry run starts THEN its toast has no report link", async () => {
