@@ -1,13 +1,13 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { EnvironmentSettings } from "@/Core";
-import { merge } from "@/Core/Language/collection";
+import { EnvironmentSettings } from "@inmanta/web-console-core";
+import { merge } from "@inmanta/web-console-core/Language/collection";
 import {
   useResetEnvironmentSetting,
   useUpdateEnvironmentSetting,
   getEnvironmentSettingsKey,
   GetEnvironmentPreviewKey,
-} from "@/Data/Queries/Slices/Environment";
+} from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { Container } from "./Container";
 import { InputInfoCreator } from "./InputInfoCreator";
 

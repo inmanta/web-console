@@ -25,22 +25,18 @@ export const basePath = dirname(fileURLToPath(import.meta.url));
 
 const inRoot = (path) => resolve(basePath, path);
 
-const core = [
-  "./src/Core",
-  "./src/Data",
-  "./src/UI/Dependency",
-  "./src/UI/Routing",
-  "./src/dayjs.ts",
-];
+const core = ["./packages/core"];
 
-const ui = [
-  ...readdirSync(inRoot("./src/UI/Components"), { withFileTypes: true })
-    .filter((entry) => entry.name !== "Composer")
-    .map((entry) => `./src/UI/Components/${entry.name}`),
-  "./src/UI/Presenters",
-  "./src/UI/Styles",
-  "./src/UI/Utils",
-];
+/**
+ * The components left in `src/UI/Components` belong to one feature or to the shell, and move
+ * there with it (#7463 to #7470). Until then they count as shared components, but
+ * `packages/ui` doesn't import them.
+ */
+const componentsToMove = readdirSync(inRoot("./src/UI/Components"), { withFileTypes: true })
+  .filter((entry) => entry.name !== "Composer")
+  .map((entry) => `./src/UI/Components/${entry.name}`);
+
+const ui = ["./packages/ui", ...componentsToMove];
 
 const shellSlices = ["Login", "NotFound", "Notification", "Status"];
 
@@ -151,7 +147,7 @@ for (const path of [...core, ...ui, ...shell, ...app, ...allFeatures]) {
   }
 }
 
-const testUtils = ["./src/Test"];
+const testUtils = ["./packages/test-utils"];
 
 /**
  * The zones of `import/no-restricted-paths` that enforce the layers.
@@ -167,6 +163,12 @@ export const importBoundaryZones = [
     from: [...shell, ...allFeatures, ...app, ...testUtils],
     message:
       "Shared components only import the web-console core layer and other shared components.",
+  },
+  {
+    target: ["./packages/ui"],
+    from: componentsToMove,
+    message:
+      "The components left in src/UI/Components move to a feature or the shell, so packages/ui doesn't import them.",
   },
   {
     target: shell,

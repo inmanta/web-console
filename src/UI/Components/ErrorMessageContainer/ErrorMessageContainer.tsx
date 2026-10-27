@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { Panel } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
-import { AppAlert } from "../AppAlert";
+import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
 
 interface Props {
   title: string;

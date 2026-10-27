@@ -1,14 +1,14 @@
 import React from "react";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { Fact } from "@/Core/Domain/Fact";
-import { ClassifiedAttribute } from "@/Data/Common";
+import { ClassifiedAttribute } from "@inmanta/web-console-core/Common";
+import { Fact } from "@inmanta/web-console-core/Domain/Fact";
 import {
   AttributeExpandTd,
   AttributeExpansionRow,
   AttributeValueCell,
   useAttributeExpansion,
-} from "@/UI/Components/AttributeList";
-import { CustomDatePresenter } from "@/UI/Utils";
+} from "@inmanta/web-console-ui/Components/AttributeList";
+import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 
 const datePresenter = new CustomDatePresenter();
 

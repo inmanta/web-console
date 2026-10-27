@@ -1,4 +1,4 @@
-import { AttributesSummary, Pairs, InstanceAttributeModel } from "@/Core";
+import { AttributesSummary, Pairs, InstanceAttributeModel } from "@inmanta/web-console-core";
 
 type Attribute = null | unknown;
 

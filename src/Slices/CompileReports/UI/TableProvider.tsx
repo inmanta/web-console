@@ -1,6 +1,6 @@
 import React from "react";
-import { Sort } from "@/Core";
-import { CompileReport } from "@/Core/Domain/CompileReport";
+import { Sort } from "@inmanta/web-console-core";
+import { CompileReport } from "@inmanta/web-console-core/Domain/CompileReport";
 import { CompileReportsTable } from "./CompileReportsTable";
 import { createCompileReportsTablePresenter } from "./CompileReportsTablePresenter";
 

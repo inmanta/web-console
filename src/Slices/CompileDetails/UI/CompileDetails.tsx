@@ -1,7 +1,7 @@
 import React from "react";
-import { useGetCompileDetails } from "@/Data/Queries/Slices/Compilation";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
+import { useGetCompileDetails } from "@inmanta/web-console-core/Queries/Slices/Compilation";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { CompileDetailsSections } from "./CompileDetailsSections";
 
 interface Props {

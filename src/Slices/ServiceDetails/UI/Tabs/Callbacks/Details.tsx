@@ -8,7 +8,7 @@ import {
   ListItem,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { EventTypesList, words } from "@/Core";
+import { EventTypesList, words } from "@inmanta/web-console-core";
 
 /**
  * Props interface for the Details component

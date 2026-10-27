@@ -1,6 +1,6 @@
 import React from "react";
 import { DataList } from "@patternfly/react-core";
-import { ServiceModel } from "@/Core";
+import { ServiceModel } from "@inmanta/web-console-core";
 import { ServiceItem } from "./ServiceItem";
 
 interface Props {

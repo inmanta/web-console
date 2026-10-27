@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump undici from 8.11.2 to 8.12.3
+destination-branches:
+- master
+- iso9
+sections: {}

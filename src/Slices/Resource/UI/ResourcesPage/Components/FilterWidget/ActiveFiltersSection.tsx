@@ -1,7 +1,7 @@
 import React from "react";
 import { StackItem } from "@patternfly/react-core";
-import { Resource, words } from "@/Core";
-import { ActiveFilterGroup, ActiveFilters } from "@/UI/Components/FilterDrawer";
+import { Resource, words } from "@inmanta/web-console-core";
+import { ActiveFilterGroup, ActiveFilters } from "@inmanta/web-console-ui/Components/FilterDrawer";
 
 export interface ActiveFiltersSectionProps {
   filter: Resource.FilterWithDefaultHandling;

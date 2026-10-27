@@ -1,8 +1,8 @@
 import React from "react";
 import { Table, Th, Thead, Tr } from "@patternfly/react-table";
-import { words } from "@/Core";
-import { Callback } from "@/Core/Domain/Callback";
-import { useUrlStateWithExpansion } from "@/Data/Common";
+import { words } from "@inmanta/web-console-core";
+import { useUrlStateWithExpansion } from "@inmanta/web-console-core/Common";
+import { Callback } from "@inmanta/web-console-core/Domain/Callback";
 import { CreateCallbackForm } from "./CreateCallbackForm";
 import { Row } from "./Row";
 

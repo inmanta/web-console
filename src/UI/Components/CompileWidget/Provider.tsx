@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { words } from "@/Core";
-import { useTriggerCompile } from "@/Data/Queries/Slices/Compilation";
-import { GetEnvironmentPreviewKey } from "@/Data/Queries/Slices/Environment";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { useTriggerCompile } from "@inmanta/web-console-core/Queries/Slices/Compilation";
+import { GetEnvironmentPreviewKey } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { CompileWidget } from "./CompileWidget";
 
 interface Props {

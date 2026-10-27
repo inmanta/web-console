@@ -1,5 +1,5 @@
 import { dia, linkTools, shapes } from "@joint/plus";
-import { ServiceModel, words } from "@/Core";
+import { ServiceModel, words } from "@inmanta/web-console-core";
 import { routerNamespace, anchorNamespace } from "..";
 import {
   getEntitiesFromCanvas,

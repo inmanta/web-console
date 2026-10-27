@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Banner, Button, Flex } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { useUpdateEnvironmentSetting } from "@/Data/Queries/Slices/Environment";
-import { Spinner } from "@/UI/Components/Spinner";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { useUpdateEnvironmentSetting } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 
 /**
  * A React component that displays a banner when the expert mode is enabled.

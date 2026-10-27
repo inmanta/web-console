@@ -1,0 +1,30 @@
+import { CurrentPage } from "@inmanta/web-console-core/Common/UrlState/useUrlStateWithCurrentPage";
+import { PageSize } from "./PageSize";
+import { Sort } from "./Sort";
+
+export interface ServiceInstanceParams {
+  filter?: Filter;
+  sort?: Sort;
+  pageSize: PageSize;
+  currentPage: CurrentPage;
+}
+
+/** Infinite scroll query, which manages its own cursor and so needs no currentPage */
+export type ServiceInstanceInfiniteParams = Omit<ServiceInstanceParams, "currentPage">;
+
+export enum AttributeSet {
+  Active = "active_attributes",
+  Candidate = "candidate_attributes",
+  Rollback = "rollback_attributes",
+}
+
+export interface Filter {
+  attributeSetEmpty?: AttributeSet[];
+  attributeSetNotEmpty?: AttributeSet[];
+  deleted?: DeletedRule;
+  identity?: { key: string; value: string };
+  state?: string[];
+  id_or_service_identity?: string[];
+}
+
+export type DeletedRule = "Include" | "Only" | undefined;

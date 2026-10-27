@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Resource, words } from "@/Core";
-import { getById } from "@/Test";
-import { MockOrchestratorProvider } from "@/Test/Mock";
-import { DependencyProvider } from "@/UI/Dependency";
+import { Resource, words } from "@inmanta/web-console-core";
+import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
+import { getById } from "@inmanta/web-console-test-utils";
+import { MockOrchestratorProvider } from "@inmanta/web-console-test-utils/Mock";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
-vi.mock("@/Data/Queries/Slices/Agents", () => ({
+vi.mock("@inmanta/web-console-core/Queries/Slices/Agents", () => ({
   useGetAgents: () => ({
     useInfiniteScroll: () => ({
       data: { pages: [] },
@@ -20,13 +20,13 @@ vi.mock("@/Data/Queries/Slices/Agents", () => ({
   }),
 }));
 
-vi.mock("@/Data/Queries/Slices/Service", () => ({
+vi.mock("@inmanta/web-console-core/Queries/Slices/Service", () => ({
   useGetServiceModels: () => ({
     useOneTime: () => ({ data: [] }),
   }),
 }));
 
-vi.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
+vi.mock("@inmanta/web-console-core/Queries/Slices/ServiceInstance", () => ({
   useGetInstances: () => ({
     useInfiniteScroll: () => ({
       data: { pages: [] },

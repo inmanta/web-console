@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import { Link } from "react-router";
 import { Button, ToolbarItem, Tooltip } from "@patternfly/react-core";
 import { BookIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 
 /**
  * This component will display the documentation link.

@@ -1,9 +1,9 @@
 import React from "react";
-import { words } from "@/Core";
-import { useGetProjects } from "@/Data/Queries/Slices/Project";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PageContainer } from "@/UI/Components/PageContainer";
+import { words } from "@inmanta/web-console-core";
+import { useGetProjects } from "@inmanta/web-console-core/Queries/Slices/Project";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
 
 /**

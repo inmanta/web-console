@@ -1,10 +1,10 @@
 import { UseInfiniteQueryResult, UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
+import { InstanceAttributeModel, ServiceModel } from "@inmanta/web-console-core";
+import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
 import { instanceData } from "../../../Test/mockData";
 import { SetupWrapper } from "../../../Test/mockSetup";
 import { AttributesEditor } from "./AttributesEditor";

@@ -1,4 +1,4 @@
-import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@/Core";
+import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@inmanta/web-console-core";
 import { defineObjectsForJointJS } from "../../testSetup";
 import { ServiceEntityShape } from "./ServiceEntityShape";
 

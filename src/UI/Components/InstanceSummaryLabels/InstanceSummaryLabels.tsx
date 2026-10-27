@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { Label, LabelProps, FlexItem, Flex, Tooltip } from "@patternfly/react-core";
 import { InfoAltIcon, OutlinedCircleIcon } from "@patternfly/react-icons";
-import { InstancesByLabel, words } from "@/Core";
+import { InstancesByLabel, words } from "@inmanta/web-console-core";
 
 /**
  * A lifecycle state label that instances can be counted by.

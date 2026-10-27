@@ -1,9 +1,12 @@
 import React from "react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
-import { Resource, words } from "@/Core";
-import { statusMapping, statusPriority } from "@/UI/Components/CompoundResourceStatus";
-import { colorConfig } from "@/UI/Components/CompoundResourceStatus/config";
-import { LegendBar } from "@/UI/Components/LegendBar";
+import { Resource, words } from "@inmanta/web-console-core";
+import {
+  statusMapping,
+  statusPriority,
+} from "@inmanta/web-console-ui/Components/CompoundResourceStatus";
+import { colorConfig } from "@inmanta/web-console-ui/Components/CompoundResourceStatus/config";
+import { LegendBar } from "@inmanta/web-console-ui/Components/LegendBar";
 import { Dot } from "../EnvironmentHealth/Dot";
 
 // Slimmer than the Resources page's own 20px bars (CompoundResourceStatus) - a dashboard card

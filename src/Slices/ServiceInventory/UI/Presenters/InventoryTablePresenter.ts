@@ -1,3 +1,4 @@
+import { isTransferDisabled } from "@/Slices/ServiceInstanceDetails/Utils";
 import {
   Row,
   ServiceInstanceModel,
@@ -5,9 +6,8 @@ import {
   ServiceModel,
   getUuidFromRaw,
   words,
-} from "@/Core";
-import { isTransferDisabled } from "@/Slices/ServiceInstanceDetails/Utils";
-import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
+} from "@inmanta/web-console-core";
+import { ColumnHead, createTablePresenter } from "@inmanta/web-console-ui/Presenters";
 
 const instanceToRow = (instance: ServiceInstanceModel, service: ServiceModel): Row => {
   const {

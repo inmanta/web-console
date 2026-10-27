@@ -1,8 +1,8 @@
 import React from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { useGetResourceFacts } from "@/Data/Queries/Slices/Resource";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
+import { useGetResourceFacts } from "@inmanta/web-console-core/Queries/Slices/Resource";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { FactsTable } from "./FactsTable";
 
 interface Props {

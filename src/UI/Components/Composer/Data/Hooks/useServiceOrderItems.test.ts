@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { ServiceModel } from "@/Core";
+import { ServiceModel } from "@inmanta/web-console-core";
 import { ServiceEntityShape } from "../../UI";
 import { useServiceOrderItems } from "./useServiceOrderItems";
 

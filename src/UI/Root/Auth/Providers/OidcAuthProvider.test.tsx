@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { OidcAuthProvider } from "./OidcAuthProvider";
 
 const mocks = vi.hoisted(() => ({

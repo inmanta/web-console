@@ -15,10 +15,14 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@inmanta/web-console-core";
+import {
+  MockedDependencyProvider,
+  Service,
+  ServiceInstance,
+} from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Page } from "./Page";
 
 const axe = configureAxe({
@@ -30,7 +34,7 @@ const axe = configureAxe({
 
 // Mock usePost for the duplicate form
 const mockPostFn = vi.hoisted(() => vi.fn());
-vi.mock("@/Data/Queries/Slices/ServiceInstance/PostInstance", () => ({
+vi.mock("@inmanta/web-console-core/Queries/Slices/ServiceInstance/PostInstance", () => ({
   usePostInstance: () => ({ mutate: mockPostFn }),
 }));
 

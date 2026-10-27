@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useMemo } from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
-import { Resource, words } from "@/Core";
-import { MultiSort } from "@/Data/Common";
+import { Resource, words } from "@inmanta/web-console-core";
+import { MultiSort } from "@inmanta/web-console-core/Common";
 import { StatusSortMenu } from "./Components";
 import { ResourceTableRow, ResourceRow } from "./ResourceTableRow";
 import { createResourcesTablePresenter } from "./ResourcesTablePresenter";

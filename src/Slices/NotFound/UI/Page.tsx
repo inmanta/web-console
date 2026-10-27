@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Button, EmptyState, PageSection, EmptyStateFooter } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
-import { Link } from "@/UI/Components/Link";
-import { DependencyContext } from "@/UI/Dependency";
-import { useDocumentTitle } from "@/UI/Routing";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useDocumentTitle } from "@inmanta/web-console-core/Routing";
+import { Link } from "@inmanta/web-console-ui/Components/Link";
 
 export const Page: React.FC = () => {
   useDocumentTitle("404 Page Not Found");

@@ -1,6 +1,6 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
-import { Resource, Sort, words } from "@/Core";
+import { Resource, Sort, words } from "@inmanta/web-console-core";
 import { Row, RowFromVersion } from "./Row";
 import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 

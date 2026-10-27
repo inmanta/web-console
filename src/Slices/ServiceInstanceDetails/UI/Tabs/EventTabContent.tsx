@@ -10,14 +10,14 @@ import {
   TabContent,
 } from "@patternfly/react-core";
 import { ExpandableRowContent, Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { InstanceEvent, words } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { DateWithTimeDiffTooltip } from "@/UI/Components/DateWithTimeDiffTooltip";
-import { ErrorView } from "@/UI/Components/ErrorView";
 import { EventIcon } from "@/UI/Components/EventIcon";
-import { Link } from "@/UI/Components/Link";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { DependencyContext } from "@/UI/Dependency";
+import { InstanceEvent, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { Link } from "@inmanta/web-console-ui/Components/Link";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { CompileReportLink } from "../Components/CompileReportLink";
 import { TabContentWrapper } from "./TabContentWrapper";

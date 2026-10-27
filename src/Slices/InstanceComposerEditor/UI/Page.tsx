@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { words } from "@/Core";
 import { ComposerEditorProvider } from "@/UI/Components/Composer/Providers";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { DependencyContext } from "@/UI/Dependency";
-import { useRouteParams } from "@/UI/Routing";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useRouteParams } from "@inmanta/web-console-core/Routing";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
 
 /**
  * Renders the Page component for the Instance Composer Editor Page.

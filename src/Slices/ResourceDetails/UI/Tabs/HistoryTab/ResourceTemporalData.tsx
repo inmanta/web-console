@@ -5,9 +5,9 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { Details } from "@/Core/Domain/Resource/Resource";
-import { CustomDatePresenter } from "@/UI/Utils";
+import { words } from "@inmanta/web-console-core";
+import { Details } from "@inmanta/web-console-core/Domain/Resource/Resource";
+import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 
 interface Props {
   details: Details;

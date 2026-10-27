@@ -1,7 +1,7 @@
-import { Diff, ResourceActionFilter, words } from "@/Core";
-import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
-import { ServiceInstance } from "@/Test";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
+import { Diff, ResourceActionFilter, words } from "@inmanta/web-console-core";
+import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
+import { ServiceInstance } from "@inmanta/web-console-test-utils";
 import {
   countDiff,
   createFilterRows,

@@ -1,15 +1,19 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { TransferModel } from "@/Core";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
-import { MockedDependencyProvider, ServiceInstance, EnvironmentDetails } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { TransferModel } from "@inmanta/web-console-core";
+import {
+  MockedDependencyProvider,
+  ServiceInstance,
+  EnvironmentDetails,
+} from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { SetStateSection } from "./SetStateSection";
 
 const mockedMutate = vi.hoisted(() => vi.fn());
 
-vi.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
+vi.mock("@inmanta/web-console-core/Queries/Slices/ServiceInstance", () => ({
   usePostStateTransfer: () => ({ mutate: mockedMutate }),
 }));
 

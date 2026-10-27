@@ -3,7 +3,7 @@ import { CatalogAttributeHelper } from "./AttributeHelper";
 import { CatalogTreeTableHelper } from "./TreeTableHelper";
 import type { Mock } from "vitest";
 
-vi.mock("@/Data/Queries/Slices/ServiceInstance");
+vi.mock("@inmanta/web-console-core/Queries/Slices/ServiceInstance");
 
 test("TreeTableHelper getExpansionState returns correct expansionState", () => {
   const service = {

@@ -890,7 +890,7 @@ __metadata:
     file-saver: "npm:^2.0.5"
     graphiql: "npm:^5.4.0"
     graphql: "npm:^17.0.2"
-    happy-dom: "npm:^21.0.3"
+    happy-dom: "npm:^21.0.4"
     highlight.js: "npm:^11.12.0"
     jest-axe: "npm:^11.0.0"
     jsonpathly: "npm:^3.0.1"
@@ -6904,9 +6904,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"happy-dom@npm:^21.0.3":
-  version: 21.0.3
-  resolution: "happy-dom@npm:21.0.3"
+"happy-dom@npm:^21.0.4":
+  version: 21.0.4
+  resolution: "happy-dom@npm:21.0.4"
   dependencies:
     "@types/node": "npm:>=20.0.0"
     "@types/whatwg-mimetype": "npm:^3.0.2"
@@ -6915,7 +6915,7 @@ __metadata:
     entities: "npm:^7.0.1"
     whatwg-mimetype: "npm:^3.0.0"
     ws: "npm:^8.21.0"
-  checksum: 10/18e49eee5d09978c53e23c1e0a656bafcdadadc90d13c954aa92403e131d47ad0ad0b5308ad82ac0a76357f13ea9d64eacca370520d30b31250f2cc6ea5ddfdc
+  checksum: 10/708a07432283cab0a29a10571b06cf27c0e30a933bf5f7fe948e18f78ce3875127b09fbed9aa7c6c5d23b06f4dad824eb73bc7a0cbe356febf5f66efb36aabce
   languageName: node
   linkType: hard
 
@@ -11035,9 +11035,9 @@ __metadata:
   linkType: hard
 
 "undici@npm:^8.3.0":
-  version: 8.11.2
-  resolution: "undici@npm:8.11.2"
-  checksum: 10/a6d851b0a41a94ee11d351457a818f86094ab009af59d82c1e3c38a89cfbb3910f9dbccdef442b156b9d500490f05e9ef9acf312f1a4690a41fac4941a440b8e
+  version: 8.12.3
+  resolution: "undici@npm:8.12.3"
+  checksum: 10/8a238fd928ec1791b76b6b1df512eb6b77bdf51eb609d5b2248c3d8545100e2bdeb4d1695cf1594456dd9d085a6a51069ed42be231e56b270f3ee2191bc6517a
   languageName: node
   linkType: hard
 

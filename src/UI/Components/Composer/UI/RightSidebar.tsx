@@ -10,7 +10,7 @@ import {
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import { RIGHT_SIDEBAR_WIDTH } from "../config";
 import { EntityForm } from "./EntityForm";

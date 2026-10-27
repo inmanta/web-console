@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useGetEnvironments } from "@/Data/Queries/Slices/Environment";
-import { useGetProjects } from "@/Data/Queries/Slices/Project";
-import { DependencyContext } from "@/UI/Dependency";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useGetEnvironments } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { useGetProjects } from "@inmanta/web-console-core/Queries/Slices/Project";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 

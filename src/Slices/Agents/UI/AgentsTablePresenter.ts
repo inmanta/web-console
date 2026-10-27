@@ -1,6 +1,6 @@
-import { words } from "@/Core";
-import { Agent, AgentRow } from "@/Core/Domain/Agent";
-import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
+import { words } from "@inmanta/web-console-core";
+import { Agent, AgentRow } from "@inmanta/web-console-core/Domain/Agent";
+import { ColumnHead, createTablePresenter } from "@inmanta/web-console-ui/Presenters";
 
 /**
  * Table presenter for the Agents view. The "unpause on resume" column only shows

@@ -3,11 +3,11 @@ import { Page } from "@patternfly/react-core";
 import { BlockingModal } from "@/UI/Components/BlockingModal";
 import { ExpertBanner } from "@/UI/Components/ExpertBanner";
 import { LicenseBanner } from "@/UI/Components/LicenseBanner";
-import { EnvSelectorOpenContext } from "@/UI/Dependency/EnvSelectorOpenContext";
 import { Header } from "@/UI/Root/Components/Header";
 import { PageBreadcrumbs } from "@/UI/Root/Components/PageBreadcrumbs";
 import { Sidebar } from "@/UI/Root/Components/Sidebar";
 import { useDrawer } from "@S/Notification/UI/Drawer";
+import { EnvSelectorOpenContext } from "@inmanta/web-console-core/Dependency/EnvSelectorOpenContext";
 
 interface Props {
   environmentId?: string;

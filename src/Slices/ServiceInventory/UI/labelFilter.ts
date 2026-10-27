@@ -2,8 +2,8 @@
  * Maps the status labels of the instance counts to state filters. A label stands for all
  * lifecycle states that carry it, and is active when the state filter holds exactly those states.
  */
-import { StateModel } from "@/Core";
 import { SummaryLabel, summaryLabels } from "@/UI/Components/InstanceSummaryLabels";
+import { StateModel } from "@inmanta/web-console-core";
 
 /**
  * Gets the names of the lifecycle states that carry a label.

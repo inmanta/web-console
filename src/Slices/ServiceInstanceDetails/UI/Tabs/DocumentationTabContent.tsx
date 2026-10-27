@@ -8,17 +8,17 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { InstanceAttributeModel, ServiceInstanceModel, words } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { getAvailableStateTargets, StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
-import { ErrorView } from "@/UI/Components/ErrorView";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
-import { LoadingView } from "@/UI/Components/LoadingView";
 import { SetStateButtonDefaults } from "@/UI/Components/MarkdownContainer";
-import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
-import { useNavigateTo } from "@/UI/Routing";
+import { InstanceAttributeModel, ServiceInstanceModel, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
+import { useNavigateTo } from "@inmanta/web-console-core/Routing";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { StateTransferModalContent } from "../Components/InstanceActions/Actions/StateTransferModalContent";
 import { TabContentWrapper } from "./TabContentWrapper";

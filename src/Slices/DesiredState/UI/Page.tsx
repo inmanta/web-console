@@ -1,22 +1,22 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { ParsedNumber, words } from "@/Core";
-import { usePaginatedTable } from "@/Data/Common";
+import { Filter } from "@/Slices/DesiredState/Core/Types";
+import { ParsedNumber, words } from "@inmanta/web-console-core";
+import { usePaginatedTable } from "@inmanta/web-console-core/Common";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
 import {
   useDeleteDesiredStateVersion,
   useGetDesiredStates,
-} from "@/Data/Queries/Slices/DesiredState";
-import { Filter } from "@/Slices/DesiredState/Core/Types";
+} from "@inmanta/web-console-core/Queries/Slices/DesiredState";
 
-import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PageContainer } from "@/UI/Components/PageContainer";
-import { PaginationWidget } from "@/UI/Components/PaginationWidget";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { ConfirmUserActionForm } from "@inmanta/web-console-ui/Components/ConfirmUserActionForm";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { FilterDrawer, countActiveFilters } from "@inmanta/web-console-ui/Components/FilterDrawer";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
+import { PaginationWidget } from "@inmanta/web-console-ui/Components/PaginationWidget";
 import { TableControls, ConnectedFilterWidget } from "./Components";
 import { DesiredStatesTable } from "./DesiredStatesTable";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";

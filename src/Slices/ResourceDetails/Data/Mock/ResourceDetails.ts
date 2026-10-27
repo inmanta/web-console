@@ -1,6 +1,6 @@
-import { Details, Status } from "@/Core/Domain/Resource/Resource";
-import { referenceAttributes } from "@/Data/Common/References/Mock";
-import { id } from "@/Test/Data/Resource";
+import { referenceAttributes } from "@inmanta/web-console-core/Common/References/Mock";
+import { Details, Status } from "@inmanta/web-console-core/Domain/Resource/Resource";
+import { id } from "@inmanta/web-console-test-utils/Data/Resource";
 
 export const a: Details = {
   resource_id: id,

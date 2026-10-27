@@ -26,8 +26,6 @@ import {
   ThProps,
 } from "@patternfly/react-table";
 import styled from "styled-components";
-import { InstanceAttributeModel, ServiceModel, words } from "@/Core";
-import { formatReadOnly, resolveUnitField } from "@/Core/Domain/Unit";
 import {
   AttributeSets,
   formatTreeRowData,
@@ -35,7 +33,9 @@ import {
   TreeRowData,
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { MultiLinkCell } from "@/UI/Components/TreeTable/TreeRow/CellWithCopy";
-import { DependencyContext } from "@/UI/Dependency";
+import { InstanceAttributeModel, ServiceModel, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { formatReadOnly, resolveUnitField } from "@inmanta/web-console-core/Domain/Unit";
 
 interface Props {
   dropdownOptions: string[];

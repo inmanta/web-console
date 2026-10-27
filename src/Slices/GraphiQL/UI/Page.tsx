@@ -5,14 +5,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { GraphiQL } from "graphiql";
 import graphiqlCSS from "graphiql/style.css?inline";
 import styled, { createGlobalStyle } from "styled-components";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 import {
   useGetGraphQLSchema,
   usePostGraphQL,
   graphQLSchemaKey,
-} from "@/Data/Queries/Slices/GraphiQL";
-import { useTheme } from "@/UI/Components/DarkmodeOption";
-import { PageContainer } from "@/UI/Components/PageContainer";
+} from "@inmanta/web-console-core/Queries/Slices/GraphiQL";
+import { useTheme } from "@inmanta/web-console-ui/Components/DarkmodeOption";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 
 // ?inline tells Vite to give us the CSS as a plain string instead of injecting
 // it as a global stylesheet. We inject it ourselves (wrapped in @layer so its

@@ -1,4 +1,3 @@
-import { FeatureModule } from "@/Core";
 import * as CreateInstance from "@S/CreateInstance/Core/Route";
 import * as Diagnose from "@S/Diagnose/Core/Route";
 import * as DuplicateInstance from "@S/DuplicateInstance/Core/Route";
@@ -11,6 +10,7 @@ import * as ServiceCatalog from "@S/ServiceCatalog/Core/Route";
 import * as ServiceDetails from "@S/ServiceDetails/Core/Route";
 import * as InstanceDetails from "@S/ServiceInstanceDetails/Core/Route";
 import * as ServiceInventory from "@S/ServiceInventory/Core/Route";
+import { FeatureModule } from "@inmanta/web-console-core";
 import { lsmMessages } from "./messages";
 
 /**

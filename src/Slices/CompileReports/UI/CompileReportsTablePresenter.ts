@@ -1,8 +1,8 @@
-import { words } from "@/Core";
-import { CompileReport, getStatusFromReport } from "@/Core/Domain/CompileReport";
 import { CompileReportRow } from "@/Slices/CompileReports/Core/Types";
-import { createTablePresenter } from "@/UI/Presenters";
-import { CustomDatePresenter } from "@/UI/Utils";
+import { words } from "@inmanta/web-console-core";
+import { CompileReport, getStatusFromReport } from "@inmanta/web-console-core/Domain/CompileReport";
+import { createTablePresenter } from "@inmanta/web-console-ui/Presenters";
+import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 
 const defaultDatePresenter = new CustomDatePresenter();
 

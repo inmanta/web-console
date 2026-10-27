@@ -14,10 +14,10 @@ import {
   Label,
 } from "@patternfly/react-core";
 import { CheckIcon, ExclamationCircleIcon, ExclamationTriangleIcon } from "@patternfly/react-icons";
-import { ServerStatus, StatusLicense, WordKey, words } from "@/Core";
-import { useGetServerStatus } from "@/Data/Queries/Slices/Server";
-import { DependencyContext } from "@/UI/Dependency";
-import { CustomDatePresenter } from "@/UI/Utils";
+import { ServerStatus, StatusLicense, WordKey, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useGetServerStatus } from "@inmanta/web-console-core/Queries/Slices/Server";
+import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import { deriveOrchestratorHealth } from "../../orchestratorHealth";
 import { IconBadge } from "../IconBadge";
 

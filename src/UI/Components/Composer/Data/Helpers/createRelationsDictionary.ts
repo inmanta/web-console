@@ -1,5 +1,9 @@
-import { ServiceModel, EmbeddedEntity, InterServiceRelation } from "@/Core/Domain/ServiceModel";
-import { ParsedNumber } from "@/Core/Language";
+import {
+  ServiceModel,
+  EmbeddedEntity,
+  InterServiceRelation,
+} from "@inmanta/web-console-core/Domain/ServiceModel";
+import { ParsedNumber } from "@inmanta/web-console-core/Language";
 
 export type Rules = {
   lower_limit: number;

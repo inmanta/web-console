@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { Outlet, useLocation } from "react-router";
-import { DependencyContext } from "@/UI/Dependency";
 import { Initializer } from "@/UI/Root/Components/Initializer";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 
 /**
  * Renders a component that checks if the user is authenticated before rendering the child components.

@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from "react";
-import { Resource } from "@/Core";
-import { useUrlStateWithFilter } from "@/Data/Common";
+import { Resource } from "@inmanta/web-console-core";
+import { useUrlStateWithFilter } from "@inmanta/web-console-core/Common";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
 interface ConnectedFilterWidgetProps {

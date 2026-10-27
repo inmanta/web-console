@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 import { Button, Icon, Tooltip } from "@patternfly/react-core";
 import { PlayIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { words } from "@/Core";
-import { useQueryControl } from "@/Data/Queries/Helpers";
-import { useResumeEnvironment } from "@/Data/Queries/Slices/Environment";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { words } from "@inmanta/web-console-core";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { useQueryControl } from "@inmanta/web-console-core/Queries/Helpers";
+import { useResumeEnvironment } from "@inmanta/web-console-core/Queries/Slices/Environment";
 
 /**
  * `ResumeButton` is a React functional component that renders a button with a tooltip.

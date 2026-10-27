@@ -1,10 +1,10 @@
 import React from "react";
-import { words } from "@/Core";
-import { useGetServiceModel } from "@/Data/Queries/Slices/Service";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PageContainer } from "@/UI/Components/PageContainer";
-import { useRouteParams } from "@/UI/Routing";
+import { words } from "@inmanta/web-console-core";
+import { useGetServiceModel } from "@inmanta/web-console-core/Queries/Slices/Service";
+import { useRouteParams } from "@inmanta/web-console-core/Routing";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { CreateInstance } from "./CreateInstance";
 
 export const Page: React.FC = () => {

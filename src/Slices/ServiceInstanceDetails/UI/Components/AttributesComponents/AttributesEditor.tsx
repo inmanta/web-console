@@ -9,18 +9,18 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
-import { InstanceAttributeModel, ServiceInstanceModel, words } from "@/Core";
-import {
-  ExpertPatchAttributes,
-  usePatchAttributesExpert,
-} from "@/Data/Queries/Slices/ServiceInstance";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { JSONEditor } from "@/UI/Components/JSONEditor";
-import { Spinner } from "@/UI/Components/Spinner";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { InstanceAttributeModel, ServiceInstanceModel, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import {
+  ExpertPatchAttributes,
+  usePatchAttributesExpert,
+} from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 interface Props {
   dropdownOptions: string[];
   attributeSets: Partial<Record<AttributeSets, InstanceAttributeModel>>;

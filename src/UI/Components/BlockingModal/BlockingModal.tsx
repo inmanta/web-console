@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useContext } from "react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { Spinner } from "@/UI/Components/Spinner";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { words } from "@inmanta/web-console-core";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 
 const SpinnerContent = ({ message }: { message: string }) => (
   <Flex

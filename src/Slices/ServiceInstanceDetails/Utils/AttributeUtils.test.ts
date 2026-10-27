@@ -1,4 +1,4 @@
-import type { AttributeModel, ServiceModel } from "@/Core";
+import type { AttributeModel, ServiceModel } from "@inmanta/web-console-core";
 import { formatTreeRowData } from "./AttributeUtils";
 
 function attribute(name: string, overrides: Partial<AttributeModel> = {}): AttributeModel {

@@ -1,5 +1,10 @@
-import { AttributeModel, InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
+import {
+  AttributeModel,
+  InstanceAttributeModel,
+  ServiceInstanceModel,
+  ServiceModel,
+} from "@inmanta/web-console-core";
+import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
 
 // A type for the possible AttributeSets.
 export type AttributeSets = "active_attributes" | "candidate_attributes" | "rollback_attributes";

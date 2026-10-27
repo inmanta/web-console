@@ -1,7 +1,7 @@
 import React from "react";
-import { Details } from "@/Core/Domain/Resource/Resource";
-import { AttributeClassifier, useUrlStateWithExpansion } from "@/Data/Common";
-import { ResourceAttributesView } from "@/UI/Components/ResourceAttributes";
+import { AttributeClassifier, useUrlStateWithExpansion } from "@inmanta/web-console-core/Common";
+import { Details } from "@inmanta/web-console-core/Domain/Resource/Resource";
+import { ResourceAttributesView } from "@inmanta/web-console-ui/Components/ResourceAttributes";
 
 interface Props {
   details: Details;

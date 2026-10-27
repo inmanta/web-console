@@ -1,9 +1,13 @@
 import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { Config } from "@/Core";
-import { EnvironmentDetails, MockedDependencyProvider, ServiceInstance } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
+import { Config } from "@inmanta/web-console-core";
+import {
+  EnvironmentDetails,
+  MockedDependencyProvider,
+  ServiceInstance,
+} from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ConfigDetails } from "./ConfigDetails";
 
 function setup() {

@@ -6,7 +6,7 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { convertToTitleCase } from "@/UI/Utils";
+import { convertToTitleCase } from "@inmanta/web-console-ui/Utils";
 import { CancelEditButton, EnableEditButton, SubmitEditButton } from "./InlineEditButtons";
 import { InlineEditButtonFiller, InlineLabelItem } from "./InlineFillers";
 

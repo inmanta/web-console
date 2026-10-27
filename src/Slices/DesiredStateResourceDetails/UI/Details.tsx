@@ -1,8 +1,8 @@
 import React from "react";
 import { Flex, Title } from "@patternfly/react-core";
-import { Resource, words } from "@/Core";
-import { AttributeClassifier, useUrlStateWithExpansion } from "@/Data/Common";
-import { ResourceAttributesView } from "@/UI/Components/ResourceAttributes";
+import { Resource, words } from "@inmanta/web-console-core";
+import { AttributeClassifier, useUrlStateWithExpansion } from "@inmanta/web-console-core/Common";
+import { ResourceAttributesView } from "@inmanta/web-console-ui/Components/ResourceAttributes";
 
 interface Props {
   details: Resource.VersionedDetails;

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Dropdown, DropdownItem, MenuToggle, MenuToggleElement } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
-import { useUpdateNotification } from "@/Data/Queries/Slices/Notification";
+import { words } from "@inmanta/web-console-core";
+import { useUpdateNotification } from "@inmanta/web-console-core/Queries/Slices/Notification";
 
 /**
  * Props for the ActionList component.

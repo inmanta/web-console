@@ -1,9 +1,9 @@
-import { Attributes } from "@/Core";
 import {
   InventoryAttributes,
   MultiAttributeNode,
 } from "@/UI/Components/TreeTable/Helpers/AttributeNode";
 import { PathHelper } from "@/UI/Components/TreeTable/Helpers/PathHelper";
+import { Attributes } from "@inmanta/web-console-core";
 import { TreeRow } from "./TreeRow";
 import { extractInventoryValues, TreeRowCreator } from "./TreeRowCreator";
 

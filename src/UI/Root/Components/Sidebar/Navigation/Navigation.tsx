@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useLocation } from "react-router";
 import { Nav, NavGroup } from "@patternfly/react-core";
-import { DependencyContext } from "@/UI/Dependency";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { getGroups } from "./Group";
 import { NavigationItem } from "./NavigationItem";
 

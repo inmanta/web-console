@@ -1,5 +1,5 @@
 import { dia } from "@joint/plus";
-import { ServiceOrderItemRequest } from "@/Core";
+import { ServiceOrderItemRequest } from "@inmanta/web-console-core";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import { defineObjectsForJointJS } from "../../testSetup";
 import {
