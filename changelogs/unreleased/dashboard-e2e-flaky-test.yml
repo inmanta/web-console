@@ -1,4 +1,4 @@
-description: Fixed the flaky dashboard e2e test that waits for a new instance to be up.
+description: Submit on the create environment page now waits until a newly created project is loaded.
 change-type: patch
 destination-branches: [master, iso9]
 sections: {}

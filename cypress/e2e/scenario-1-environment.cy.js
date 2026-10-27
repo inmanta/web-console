@@ -256,7 +256,7 @@ describe("Environment", () => {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
-    cy.get("button").contains("Submit").trigger("click");
+    cy.get('[aria-label="submit"]').click();
 
     // specific to ISO
     if (isIso) {
