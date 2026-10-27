@@ -1,5 +1,4 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { gql } from "graphql-request";
 import { Notification } from "@inmanta/web-console-core/Domain/Notification";
 import {
   CustomError,
@@ -82,7 +81,7 @@ export const useGetPartialNotifications = ({
 }: Props): GetNotifications => {
   const orderByString = formatOrderBy(orderBy);
 
-  const query = gql`
+  const query = /* GraphQL */ `
     query {
       notifications(
         filter: { cleared: ${cleared}, environment: "${envID}" }
