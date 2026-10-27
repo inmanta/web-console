@@ -1,0 +1,6 @@
+description: |
+  Unit test coverage now only runs on master and iso builds.
+issue-nr: 7421
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}
