@@ -4,12 +4,13 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { environmentFeature } from "@/Features/Environment";
 import { EnvironmentPreview } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import {
   Environment,
   EnvironmentDetails,
   MockedDependencyProvider,
+  ModalProvider,
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
@@ -39,6 +40,7 @@ function setup(
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[`/?env=${environment.id}`]}>
         <MockedDependencyProvider
+          features={[environmentFeature]}
           env={{
             ...EnvironmentDetails.env,
             settings: {

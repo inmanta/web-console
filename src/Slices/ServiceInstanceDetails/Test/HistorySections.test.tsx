@@ -3,12 +3,13 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ServiceModel } from "@inmanta/web-console-core";
 import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
+import { historyData } from "@inmanta/web-console-test-utils/Data/InstanceHistory";
 import * as Service from "@inmanta/web-console-test-utils/Data/Service";
 import * as State from "@inmanta/web-console-test-utils/Data/Service/State";
 import { InstanceDetailsContext } from "../Core/Context";
 import { HistorySection } from "../UI/Components/Sections";
 import { StateLabel } from "../UI/Components/Sections/HistorySection";
-import { historyData, instanceData } from "./mockData";
+import { instanceData } from "./mockData";
 import { SetupWrapper } from "./mockSetup";
 
 const setup = (hasNextPage: boolean, hasPreviousPage: boolean) => {

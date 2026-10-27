@@ -366,7 +366,7 @@ export default defineConfig({
         settings: { disableJavaScriptFileLoading: true, disableCSSFileLoading: true },
       },
     },
-    setupFiles: ["./packages/test-utils/src/setup.ts"],
+    setupFiles: ["./packages/test-utils/src/setup.ts", "./src/test-setup.ts"],
     restoreMocks: true,
     include: ["{src,packages}/**/*.{test,spec}.?(c|m)[jt]s?(x)"],
     coverage: {

@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { lsmFeature } from "@/Features/Lsm";
 import { ServiceOrderItem } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
@@ -26,7 +27,7 @@ const baseRow: ServiceOrderItem = {
 function setup(row: ServiceOrderItem) {
   return (
     <TestMemoryRouter>
-      <MockedDependencyProvider>
+      <MockedDependencyProvider features={[lsmFeature]}>
         <OrderInstanceLink row={row} />
       </MockedDependencyProvider>
     </TestMemoryRouter>

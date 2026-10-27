@@ -2,9 +2,10 @@ import { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { CompileError, words } from "@inmanta/web-console-core";
+import { lsmFeature } from "@/Features/Lsm";
+import { CompileError, words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { Rejection } from "@inmanta/web-console-core/Domain/Diagnostics";
-import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { MockedDependencyProvider, stubRoute } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { formatLocation, RejectionCard } from "./RejectionCard";
 
@@ -58,7 +59,15 @@ function createRejection(overrides: Partial<Rejection> = {}): Rejection {
 function setup(rejection: Rejection) {
   return (
     <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-      <MockedDependencyProvider>
+      <MockedDependencyProvider
+        features={[lsmFeature]}
+        routes={[
+          ...getFeatureRoutes([lsmFeature]),
+          stubRoute("ResourceDetails", "/resources/:resourceId"),
+          stubRoute("CompileDetails", "/compilereports/:id"),
+          stubRoute("DesiredStateDetails", "/desiredstate/:version"),
+        ]}
+      >
         <RejectionCard rejection={rejection} />
       </MockedDependencyProvider>
     </TestMemoryRouter>

@@ -5,8 +5,8 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { AppAlertProvider } from "@/UI/Root/Components/AppAlertProvider";
 import { UserInfo } from "@inmanta/web-console-core/Queries/Slices/Auth";
+import { AppAlertProvider } from "@inmanta/web-console-test-utils";
 import { NestedUserRoleTable } from "./NestedUserRoleTable";
 
 const mockEnvironments = [

@@ -6,9 +6,14 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { lsmFeature } from "@/Features/Lsm";
 import { ServiceModel, words } from "@inmanta/web-console-core";
-import { MockedDependencyProvider, Environment, Service } from "@inmanta/web-console-test-utils";
+import {
+  MockedDependencyProvider,
+  Environment,
+  Service,
+  ModalProvider,
+} from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ServiceCatalogPage } from ".";
@@ -20,7 +25,7 @@ function setup() {
     <QueryClientProvider client={testClient}>
       <ModalProvider>
         <TestMemoryRouter initialEntries={["/lsm/catalog?env=" + env1]}>
-          <MockedDependencyProvider>
+          <MockedDependencyProvider features={[lsmFeature]}>
             <Page>
               <ServiceCatalogPage />
             </Page>

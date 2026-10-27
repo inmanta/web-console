@@ -5,8 +5,13 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@inmanta/web-console-core";
-import { MockedDependencyProvider, DesiredStateDiff } from "@inmanta/web-console-test-utils";
+import { orchestrationEngineFeature } from "@/Features/OrchestrationEngine";
+import { words, getFeatureRoutes } from "@inmanta/web-console-core";
+import {
+  MockedDependencyProvider,
+  DesiredStateDiff,
+  stubRoute,
+} from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { View } from "./Page";
@@ -24,7 +29,13 @@ function setup() {
   const component = (
     <TestMemoryRouter initialEntries={[`/?env=${environment}`]}>
       <QueryClientProvider client={testClient}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider
+          features={[orchestrationEngineFeature]}
+          routes={[
+            ...getFeatureRoutes([orchestrationEngineFeature]),
+            stubRoute("ResourceDetails", "/resources/:resourceId"),
+          ]}
+        >
           <View from="123" to="456" />
         </MockedDependencyProvider>
       </QueryClientProvider>

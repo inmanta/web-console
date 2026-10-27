@@ -7,7 +7,22 @@ import eslintPluginReact from "eslint-plugin-react";
 import eslintPluginReactHooks from "eslint-plugin-react-hooks";
 import testingLibrary from "eslint-plugin-testing-library";
 import tseslint from "typescript-eslint";
-import { basePath, importBoundaryZones } from "./eslint.layers.js";
+import { basePath, importBoundaryZones, testImportBoundaryZones } from "./eslint.layers.js";
+
+/**
+ * Tests and the helpers that only tests use.
+ */
+const testFiles = [
+  "{src,packages}/**/*.test.ts",
+  "{src,packages}/**/*.test.tsx",
+  "{src,packages}/**/*.spec.ts",
+  "{src,packages}/**/*.spec.tsx",
+  "packages/test-utils/**/*.{ts,tsx}",
+  "src/Slices/*/Test/**/*.{ts,tsx}",
+  "{src,packages}/**/Mock.ts",
+  "{src,packages}/**/Mock/**/*.{ts,tsx}",
+  "{src,packages}/**/Spec/**/*.{ts,tsx}",
+];
 
 export default [
   {
@@ -177,22 +192,18 @@ export default [
     },
   },
   {
-    // The layer rules of the composition architecture (#7451). Tests are left out until they no
-    // longer import across the layers (#7462).
+    // The layer rules of the composition architecture (#7451) for the code that ships.
     files: ["{src,packages}/**/*.ts", "{src,packages}/**/*.tsx"],
-    ignores: [
-      "**/*.test.ts",
-      "**/*.test.tsx",
-      "**/*.spec.ts",
-      "**/*.spec.tsx",
-      "packages/test-utils/**",
-      "src/Slices/*/Test/**",
-      "**/Mock.ts",
-      "**/Mock/**",
-      "**/Spec/**",
-    ],
+    ignores: testFiles,
     rules: {
       "import/no-restricted-paths": ["error", { basePath, zones: importBoundaryZones }],
+    },
+  },
+  {
+    // The same layer rules for tests and test helpers, which may also import the test helpers.
+    files: testFiles,
+    rules: {
+      "import/no-restricted-paths": ["error", { basePath, zones: testImportBoundaryZones }],
     },
   },
   {

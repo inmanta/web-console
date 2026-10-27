@@ -4,8 +4,10 @@ import { render, screen } from "@testing-library/react";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { lsmFeature } from "@/Features/Lsm";
 import { failureAndRejection } from "@S/Diagnose/Data/Mock";
-import { MockedDependencyProvider, Service } from "@inmanta/web-console-test-utils";
+import { getFeatureRoutes } from "@inmanta/web-console-core";
+import { MockedDependencyProvider, Service, stubRoute } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Diagnose } from "./Diagnose";
@@ -21,7 +23,15 @@ function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider
+          features={[lsmFeature]}
+          routes={[
+            ...getFeatureRoutes([lsmFeature]),
+            stubRoute("ResourceDetails", "/resources/:resourceId"),
+            stubRoute("CompileDetails", "/compilereports/:id"),
+            stubRoute("DesiredStateDetails", "/desiredstate/:version"),
+          ]}
+        >
           <Diagnose
             serviceName={Service.a.name}
             lookBehind="1"

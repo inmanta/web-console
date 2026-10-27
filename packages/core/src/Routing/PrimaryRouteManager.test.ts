@@ -1,7 +1,43 @@
-import { routes } from "@/appFeatures";
-import * as ServiceCatalog from "@S/ServiceCatalog/Core/Route";
-import * as ServiceInventory from "@S/ServiceInventory/Core/Route";
+import { stubRoute } from "@inmanta/web-console-test-utils";
 import { PrimaryRouteManager } from "./PrimaryRouteManager";
+
+const catalogRoute = stubRoute("Catalog", "/lsm/catalog", {
+  parent: "Dashboard",
+  label: () => "Service Catalog",
+});
+const inventoryRoute = stubRoute("Inventory", "/lsm/catalog/:service/inventory", {
+  parent: "Catalog",
+  label: ({ service }) => `Service Inventory: ${service}`,
+});
+
+// A part of the app's route table, as the features declare it.
+const routes = [
+  stubRoute("Dashboard", "/dashboard", { label: () => "Dashboard" }),
+  catalogRoute,
+  inventoryRoute,
+  stubRoute("CreateInstance", "/lsm/catalog/:service/inventory/add", { parent: "Inventory" }),
+  stubRoute("EditInstance", "/lsm/catalog/:service/inventory/:instance/edit", {
+    parent: "Inventory",
+  }),
+  stubRoute("Events", "/lsm/catalog/:service/inventory/:instance/events", {
+    parent: "Inventory",
+  }),
+  stubRoute("Diagnose", "/lsm/catalog/:service/inventory/:instance/diagnose", {
+    parent: "Inventory",
+  }),
+  stubRoute("InstanceDetails", "/lsm/catalog/:service/inventory/:instance/:instanceId/details", {
+    parent: "Inventory",
+    label: ({ instance }) => `Instance Details: ${instance}`,
+  }),
+  stubRoute("Resources", "/resources", { parent: "Dashboard", label: () => "Resources" }),
+  stubRoute("ResourceDetails", "/resources/:resourceId", {
+    parent: "Resources",
+    label: () => "Resource Details",
+  }),
+  stubRoute("CompileReports", "/compilereports", { parent: "Dashboard" }),
+  stubRoute("CompileDetails", "/compilereports/:id", { parent: "CompileReports" }),
+  stubRoute("Settings", "/settings", { parent: "Dashboard" }),
+];
 
 const routeManager = PrimaryRouteManager("", routes);
 
@@ -158,10 +194,7 @@ test("GIVEN a route param containing a space WHEN building a url with getUrl and
 });
 
 describe("Given a route manager with only some routes registered", () => {
-  const partialRouteManager = PrimaryRouteManager("", [
-    ServiceCatalog.route,
-    ServiceInventory.route,
-  ]);
+  const partialRouteManager = PrimaryRouteManager("", [catalogRoute, inventoryRoute]);
 
   it("THEN has() is true for registered routes only", () => {
     expect(partialRouteManager.has("Catalog")).toBe(true);
@@ -195,7 +228,7 @@ describe("Given a route manager with only some routes registered", () => {
 });
 
 test("GIVEN a route registered twice THEN the route manager throws", () => {
-  expect(() => PrimaryRouteManager("", [ServiceCatalog.route, ServiceCatalog.route])).toThrow(
+  expect(() => PrimaryRouteManager("", [catalogRoute, catalogRoute])).toThrow(
     'Route "Catalog" is registered more than once.'
   );
 });

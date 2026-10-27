@@ -6,6 +6,7 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { resourceManagerFeature } from "@/Features/ResourceManager";
 import { Mock } from "@S/Facts/Test";
 import { words } from "@inmanta/web-console-core";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
@@ -27,7 +28,7 @@ function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider features={[resourceManagerFeature]}>
           <Page>
             <FactsPage />
           </Page>

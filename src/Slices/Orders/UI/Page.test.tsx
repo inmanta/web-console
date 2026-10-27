@@ -5,6 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { lsmFeature } from "@/Features/Lsm";
 import { words } from "@inmanta/web-console-core";
 import { REFETCH_INTERVAL } from "@inmanta/web-console-core/Queries/Helpers";
 import { baseSetup } from "@inmanta/web-console-test-utils/Utils/base-setup";
@@ -43,7 +44,7 @@ describe("Order Page", () => {
         return HttpResponse.json(emptyResponse);
       })
     );
-    const { component } = baseSetup(OrderPage);
+    const { component } = baseSetup(OrderPage, [lsmFeature]);
 
     render(component);
 
@@ -65,7 +66,7 @@ describe("Order Page", () => {
       })
     );
 
-    const { component } = baseSetup(OrderPage);
+    const { component } = baseSetup(OrderPage, [lsmFeature]);
 
     render(component);
 
@@ -84,7 +85,7 @@ describe("Order Page", () => {
         return HttpResponse.json(orderResponse);
       })
     );
-    const { component } = baseSetup(OrderPage);
+    const { component } = baseSetup(OrderPage, [lsmFeature]);
 
     render(component);
 
@@ -118,7 +119,7 @@ describe("Order Page", () => {
       })
     );
 
-    const { component } = baseSetup(OrderPage);
+    const { component } = baseSetup(OrderPage, [lsmFeature]);
 
     render(component);
 
@@ -167,7 +168,7 @@ describe("Order Page", () => {
       })
     );
 
-    const { component } = baseSetup(OrderPage);
+    const { component } = baseSetup(OrderPage, [lsmFeature]);
 
     render(component);
 

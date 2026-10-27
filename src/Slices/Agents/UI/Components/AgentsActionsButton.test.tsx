@@ -5,9 +5,12 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@inmanta/web-console-core";
-import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import {
+  EnvironmentDetails,
+  MockedDependencyProvider,
+  ModalProvider,
+} from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { AgentsActionsButton } from "./AgentsActionsButton";
 

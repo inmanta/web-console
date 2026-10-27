@@ -4,13 +4,13 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { TransferModel } from "@inmanta/web-console-core";
+import { historyData } from "@inmanta/web-console-test-utils/Data/InstanceHistory";
 import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import {
   DocAttributeDescriptors,
   resolveFirstStateTargetByTarget,
   sortDocAttributeDescriptors,
 } from "../UI/Tabs/DocumentationTabContent";
-import { historyData } from "./mockData";
 import {
   defaultServer,
   errorServerHistory,

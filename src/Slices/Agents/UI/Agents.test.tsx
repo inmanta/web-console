@@ -5,10 +5,13 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import * as AgentsMock from "@S/Agents/Core/Mock";
 import { words } from "@inmanta/web-console-core";
-import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import {
+  EnvironmentDetails,
+  MockedDependencyProvider,
+  ModalProvider,
+} from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Page } from "./Page";

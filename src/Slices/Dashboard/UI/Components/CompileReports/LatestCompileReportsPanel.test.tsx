@@ -3,9 +3,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import * as Mock from "@S/CompileReports/Core/Mock";
-import { words } from "@inmanta/web-console-core";
-import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { environmentFeature } from "@/Features/Environment";
+import { words, getFeatureRoutes } from "@inmanta/web-console-core";
+import { MockedDependencyProvider, stubRoute } from "@inmanta/web-console-test-utils";
+import * as Mock from "@inmanta/web-console-test-utils/Data/CompileReports";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { LatestCompileReportsPanel } from "./LatestCompileReportsPanel";
 
@@ -19,7 +20,14 @@ function setup() {
   return (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider
+          features={[environmentFeature]}
+          routes={[
+            ...getFeatureRoutes([environmentFeature]),
+            stubRoute("CompileReports", "/compilereports"),
+            stubRoute("CompileDetails", "/compilereports/:id"),
+          ]}
+        >
           <LatestCompileReportsPanel />
         </MockedDependencyProvider>
       </TestMemoryRouter>

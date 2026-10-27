@@ -2,10 +2,10 @@ import React from "react";
 import { MemoryRouter, Route, Routes, useSearchParams } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { routes } from "@/appFeatures";
 import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
 import { EnvironmentPreview } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
+import { stubRoute } from "@inmanta/web-console-test-utils";
 import { MockEnvironmentHandler } from "@inmanta/web-console-test-utils/Mock";
 import { DefaultRoute } from "./DefaultRoute";
 
@@ -42,7 +42,10 @@ const setup = ({
 }: SetupProps = {}) => {
   const queryClient = new QueryClient();
   const baseUrl = "";
-  const routeManager = PrimaryRouteManager(baseUrl, routes);
+  const routeManager = PrimaryRouteManager(baseUrl, [
+    stubRoute("Dashboard", "/dashboard", { environmentRole: "Required" }),
+    stubRoute("CreateEnvironment", "/environment/create", { environmentRole: "Forbidden" }),
+  ]);
 
   const environmentHandler = {
     ...MockEnvironmentHandler({

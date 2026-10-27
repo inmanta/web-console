@@ -5,17 +5,20 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { routes } from "@/appFeatures";
-import * as DesiredStatesMock from "@S/DesiredState/Data/Mock";
-import { historyData } from "@S/ServiceInstanceDetails/Test/mockData";
 import { DryRunContext, Resource, ResourceActionFilter, words } from "@inmanta/web-console-core";
 import { NonEmptyArray } from "@inmanta/web-console-core/Language";
 import { getDesiredStateVersionKey } from "@inmanta/web-console-core/Queries/Slices/DesiredState";
 import { StartedDryRun } from "@inmanta/web-console-core/Queries/Slices/Resource";
 import { SearchHelper } from "@inmanta/web-console-core/Routing";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
-import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import {
+  EnvironmentDetails,
+  MockedDependencyProvider,
+  ModalProvider,
+  stubRoute,
+} from "@inmanta/web-console-test-utils";
+import * as DesiredStatesMock from "@inmanta/web-console-test-utils/Data/DesiredStateVersions";
+import { historyData } from "@inmanta/web-console-test-utils/Data/InstanceHistory";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
@@ -111,9 +114,12 @@ const LocationDisplay: React.FC = () => {
   );
 };
 
+// The page the dry-run toast links to, in the orchestration-engine feature.
+const complianceCheckRoute = stubRoute("ComplianceCheck", "/desiredstate/:version/compliancecheck");
+
 function setup(
   props: React.ComponentProps<typeof ResourceActions> = { filter, tooltips },
-  registeredRoutes = routes
+  registeredRoutes = [complianceCheckRoute]
 ) {
   return (
     <QueryClientProvider client={testClient}>
@@ -529,7 +535,7 @@ describe("ResourceActions", () => {
 
       // The link keeps the environment and drops the state of the page it was started from.
       expect(JSON.parse(screen.getByTestId("location").textContent ?? "{}")).toEqual({
-        pathname: PrimaryRouteManager("", routes).getUrl("ComplianceCheck", {
+        pathname: PrimaryRouteManager("", [complianceCheckRoute]).getUrl("ComplianceCheck", {
           version: String(startedDryRun.modelVersion),
         }),
         env: EnvironmentDetails.env.id,
@@ -538,12 +544,7 @@ describe("ResourceActions", () => {
     });
 
     test("GIVEN the Compliance Check route is not registered WHEN a dry run starts THEN its toast has no report link", async () => {
-      render(
-        setup(
-          { filter, tooltips },
-          routes.filter((route) => route("").kind !== "ComplianceCheck")
-        )
-      );
+      render(setup({ filter, tooltips }, []));
 
       const dialog = await openDryRun();
 

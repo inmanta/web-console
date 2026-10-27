@@ -1,8 +1,14 @@
-import { routes } from "@/appFeatures";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
+import { stubRoute } from "@inmanta/web-console-test-utils";
 import { SearchSanitizer } from "./SearchSanitizer";
 
-const sanitizer = new SearchSanitizer(PrimaryRouteManager("", routes));
+const sanitizer = new SearchSanitizer(
+  PrimaryRouteManager("", [
+    stubRoute("Dashboard", "/dashboard"),
+    stubRoute("Catalog", "/lsm/catalog", { parent: "Dashboard" }),
+    stubRoute("Inventory", "/lsm/catalog/:service/inventory", { parent: "Catalog" }),
+  ])
+);
 
 test("GIVEN sanitizer.isSanitized WHEN clean string THEN returns true", () => {
   const search = "?state.Catalog.x=abc&env=123";

@@ -6,6 +6,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { lsmFeature } from "@/Features/Lsm";
 import { words } from "@inmanta/web-console-core";
 import { cloneDeep } from "@inmanta/web-console-core/Language/collection";
 import {
@@ -71,7 +72,7 @@ function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider features={[lsmFeature]}>
           <Page />
         </MockedDependencyProvider>
       </TestMemoryRouter>

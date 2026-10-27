@@ -2,17 +2,9 @@ import "@testing-library/jest-dom/vitest";
 import React from "react";
 import { loader } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
-import { Messages, registerMessages } from "@inmanta/web-console-core/I18n/Words";
 import dayjs from "@inmanta/web-console-core/dayjs";
 
 import "jest-axe/extend-expect";
-
-// Register the English messages of every layer and feature, as the shell does when the app starts.
-const messageModules = import.meta.glob<Record<string, Messages>>(
-  ["/src/**/messages.{ts,tsx}", "/packages/**/messages.{ts,tsx}"],
-  { eager: true }
-);
-Object.values(messageModules).forEach((module) => Object.values(module).forEach(registerMessages));
 
 // Define mocks using vi.hoisted to ensure they're available during hoisting
 const logViewerMock = vi.hoisted(() => ({
@@ -94,20 +86,6 @@ const codeEditorMock = vi.hoisted(() => ({
     javascript: "javascript",
     typescript: "typescript",
   },
-}));
-
-// Composer mocks - must use function (not arrow) for Vitest 4 constructor compatibility
-const linkShapeMock = vi.hoisted(() => ({
-  LinkShape: vi.fn().mockImplementation(function () {
-    return {
-      source: vi.fn().mockReturnThis(),
-      target: vi.fn().mockReturnThis(),
-      router: vi.fn().mockReturnThis(),
-      connector: vi.fn().mockReturnThis(),
-      set: vi.fn().mockReturnThis(),
-      addTo: vi.fn().mockReturnThis(),
-    };
-  }),
 }));
 
 // Give the Monaco loader the mocked monaco-editor, like src/index.tsx gives it the bundled copy,
@@ -206,9 +184,6 @@ vi.mock("@patternfly/react-log-viewer", () => logViewerMock);
 
 // Mock @patternfly/react-code-editor
 vi.mock("@patternfly/react-code-editor", () => codeEditorMock);
-
-// Mock Composer LinkShape (used by linkUtils, initializeCanvasFromInstance, and other Composer tests)
-vi.mock("@/UI/Components/Composer/UI/JointJsShapes/LinkShape", () => linkShapeMock);
 
 // Mock mermaid
 vi.mock("mermaid", () => ({

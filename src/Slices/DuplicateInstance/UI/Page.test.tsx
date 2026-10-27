@@ -15,6 +15,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { lsmFeature } from "@/Features/Lsm";
 import { words } from "@inmanta/web-console-core";
 import {
   MockedDependencyProvider,
@@ -42,7 +43,7 @@ function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider features={[lsmFeature]}>
           <Page />
         </MockedDependencyProvider>
       </TestMemoryRouter>

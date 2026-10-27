@@ -54,6 +54,18 @@ PatternFly's CSS isn't loaded in unit tests, so a `var(--pf-t--…)` token resol
 
 `expect(el).not.toHaveStyle(...)` passes on its own when happy-dom's CSS parser drops the expected declaration. Always pair a negative style assertion with a positive one on the same value, as `StatusButton.test.tsx` does.
 
+## Features and routes in tests
+
+Tests follow the same import boundaries as the code they test (see `eslint.layers.js`), and may also import `@inmanta/web-console-test-utils`. A feature's tests only depend on that feature:
+
+- `MockedDependencyProvider` registers no features by default. Pass the test's own feature, e.g. `features={[lsmFeature]}`.
+- For a link to a page of another feature or of the shell, add a stub route: `routes={[...getFeatureRoutes([lsmFeature]), stubRoute("CompileDetails", "/compilereports/:id")]}`.
+- Get the shell's `ModalProvider` and `AppAlertProvider` from `@inmanta/web-console-test-utils`.
+- Mock data that several features use lives in `@inmanta/web-console-test-utils/Data`.
+- A test that needs several features together, like the composer's actions in the lsm inventory, is an app-level test next to `src/appFeatures.ts`.
+
+`src/test-setup.ts` holds the setup that depends on the app's features, like registering every feature's messages.
+
 ## Minimum browser versions
 
 We decided to use the last 2 versions of the following browsers: Chrome, Firefox, Safari, Edge.

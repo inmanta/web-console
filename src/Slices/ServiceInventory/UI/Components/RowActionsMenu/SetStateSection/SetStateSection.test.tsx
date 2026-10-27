@@ -1,12 +1,12 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TransferModel } from "@inmanta/web-console-core";
 import {
   MockedDependencyProvider,
   ServiceInstance,
   EnvironmentDetails,
+  ModalProvider,
 } from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { SetStateSection } from "./SetStateSection";

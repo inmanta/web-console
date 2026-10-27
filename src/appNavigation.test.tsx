@@ -4,6 +4,8 @@ import { render, screen, within } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { environmentFeature } from "@/Features/Environment";
 import { resourceManagerFeature } from "@/Features/ResourceManager";
+import { Navigation } from "@/UI/Root/Components/Sidebar/Navigation/Navigation";
+import { features as appFeatures } from "@/appFeatures";
 import * as Agents from "@S/Agents/Core/Route";
 import * as Dashboard from "@S/Dashboard/Core/Route";
 import * as Resource from "@S/Resource/Core/Route";
@@ -13,7 +15,6 @@ import {
   MockOrchestratorProvider,
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
-import { Navigation } from "./Navigation";
 
 function setup(
   initialEntries?: string[],
@@ -26,7 +27,11 @@ function setup(
   const component = (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={initialEntries}>
-        <MockedDependencyProvider isCompiling={isCompiling} routes={routes} features={features}>
+        <MockedDependencyProvider
+          isCompiling={isCompiling}
+          routes={routes}
+          features={features ?? appFeatures}
+        >
           <Navigation environment="env" />
         </MockedDependencyProvider>
       </TestMemoryRouter>

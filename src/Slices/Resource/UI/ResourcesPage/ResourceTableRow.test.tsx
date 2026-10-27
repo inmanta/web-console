@@ -1,13 +1,14 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { routes } from "@/appFeatures";
+import { resourceManagerFeature } from "@/Features/ResourceManager";
+import { getFeatureRoutes } from "@inmanta/web-console-core";
 import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
 import * as wordsModule from "@inmanta/web-console-core/I18n/Words";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { ResourceRow, ResourceTableRow } from "./ResourceTableRow";
 
-const routeManager = PrimaryRouteManager("", routes);
+const routeManager = PrimaryRouteManager("", getFeatureRoutes([resourceManagerFeature]));
 
 function makeRow(id: string, overrides: Partial<ResourceRow> = {}): ResourceRow {
   return {
