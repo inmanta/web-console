@@ -7,8 +7,8 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import * as VersionedResourceDetails from "@S/DesiredStateResourceDetails/Data/Mock";
 import { referenceAttributes } from "@inmanta/web-console-core/Common/References/Mock";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { DetailsProvider } from "./DetailsProvider";
 

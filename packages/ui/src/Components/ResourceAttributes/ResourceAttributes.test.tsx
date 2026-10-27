@@ -8,8 +8,8 @@ import {
   environmentReferences,
   referenceAttributes,
 } from "@inmanta/web-console-core/Common/References/Mock";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ResourceAttributes } from "./ResourceAttributes";
 

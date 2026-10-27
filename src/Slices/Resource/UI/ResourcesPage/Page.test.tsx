@@ -12,13 +12,13 @@ import {
   PageInfo,
   mapStatusToGraphQLFilter,
 } from "@inmanta/web-console-core/Queries/Slices/Resource";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import {
   EnvironmentDetails,
   MockedDependencyProvider,
   Resource,
 } from "@inmanta/web-console-test-utils";
 import { createMockResourceSummary } from "@inmanta/web-console-test-utils/Data/Resource";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { Page } from "./Page";
 
 const axe = configureAxe({

@@ -22,9 +22,9 @@ import {
   TextField,
   Textarea,
 } from "@inmanta/web-console-core";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import * as Test from "@inmanta/web-console-test-utils";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 import type { Mock } from "vitest";

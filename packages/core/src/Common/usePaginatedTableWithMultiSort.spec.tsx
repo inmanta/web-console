@@ -2,7 +2,7 @@ import React from "react";
 import { act, renderHook } from "@testing-library/react";
 import { PageSize, Resource } from "@inmanta/web-console-core";
 import { MultiSort } from "@inmanta/web-console-core/Common";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { usePaginatedTableWithMultiSort } from "./usePaginatedTableWithMultiSort";
 
 const wrapper =

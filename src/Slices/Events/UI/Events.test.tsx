@@ -7,8 +7,8 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { InstanceEvent } from "@inmanta/web-console-core";
 import { REFETCH_INTERVAL } from "@inmanta/web-console-core/Queries/Helpers";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { MockedDependencyProvider, Service } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Events } from "./Events";
 

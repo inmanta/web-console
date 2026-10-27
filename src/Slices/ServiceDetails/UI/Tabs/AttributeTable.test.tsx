@@ -4,9 +4,9 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { AttributeModel, ServiceModel } from "@inmanta/web-console-core";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { MockedDependencyProvider, Service } from "@inmanta/web-console-test-utils";
 import { multiNestedEditable } from "@inmanta/web-console-test-utils/Data/Service/EmbeddedEntity";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { AttributeTable } from "./AttributeTable";
 

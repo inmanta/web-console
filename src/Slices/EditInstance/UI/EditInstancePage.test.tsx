@@ -8,7 +8,6 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { cloneDeep } from "@inmanta/web-console-core/Language/collection";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import {
   getBooleanFieldOption,
   Service,
@@ -16,6 +15,7 @@ import {
   MockedDependencyProvider,
 } from "@inmanta/web-console-test-utils";
 import { multiNestedEditable } from "@inmanta/web-console-test-utils/Data/Service/EmbeddedEntity";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Page } from "./Page";
 

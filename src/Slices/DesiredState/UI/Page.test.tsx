@@ -12,8 +12,8 @@ import * as DesiredStateVersions from "@S/DesiredState/Data/Mock";
 import { FlatEnvironment, words } from "@inmanta/web-console-core";
 import { SearchHelper } from "@inmanta/web-console-core/Routing";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { Page } from "./Page";
 
 const axe = configureAxe({

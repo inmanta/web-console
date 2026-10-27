@@ -4,7 +4,7 @@ import { routes } from "@/appFeatures";
 import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
 import * as wordsModule from "@inmanta/web-console-core/I18n/Words";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { ResourceRow, ResourceTableRow } from "./ResourceTableRow";
 
 const routeManager = PrimaryRouteManager("", routes);

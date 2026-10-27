@@ -8,8 +8,8 @@ import { setupServer } from "msw/node";
 import * as Mock from "@S/CompileReports/Core/Mock";
 import { words } from "@inmanta/web-console-core";
 import { REFETCH_INTERVAL } from "@inmanta/web-console-core/Queries/Helpers";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { Page } from "./Page";
 
 const axe = configureAxe({

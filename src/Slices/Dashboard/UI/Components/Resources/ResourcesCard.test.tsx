@@ -7,9 +7,9 @@ import { graphql, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { SearchHelper } from "@inmanta/web-console-core/Routing/SearchHelper";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { createMockResourceSummary } from "@inmanta/web-console-test-utils/Data/Resource";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { ResourcesCard } from "./ResourcesCard";
 
 const server = setupServer();

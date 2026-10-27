@@ -1,7 +1,7 @@
 import React from "react";
 import { act, renderHook } from "@testing-library/react";
 import { Filter } from "@/Slices/Agents/Core/Types";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { usePaginatedTable } from "./usePaginatedTable";
 
 const wrapper =

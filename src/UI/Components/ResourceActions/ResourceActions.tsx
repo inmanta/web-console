@@ -26,9 +26,9 @@ import {
   useDryRunFiltered,
 } from "@inmanta/web-console-core/Queries/Slices/Resource";
 import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
+import { useNotifyDryRunStarted } from "@inmanta/web-console-ui/Components/DryRunNotification";
 import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
 import { ResourceActionInstance } from "./types";
-import { useNotifyDryRunStarted } from "./useNotifyDryRunStarted";
 
 const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 

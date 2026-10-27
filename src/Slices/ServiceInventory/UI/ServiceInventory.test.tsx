@@ -9,7 +9,6 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { FeatureModule, words } from "@inmanta/web-console-core";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import {
   Service,
   ServiceInstance,
@@ -17,6 +16,7 @@ import {
   MockedDependencyProvider,
   withoutFeature,
 } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ServiceInventory } from "./ServiceInventory";
 

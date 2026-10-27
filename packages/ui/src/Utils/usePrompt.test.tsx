@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, Route, Routes } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { usePrompt } from "./usePrompt";
 
 const setup = () => {

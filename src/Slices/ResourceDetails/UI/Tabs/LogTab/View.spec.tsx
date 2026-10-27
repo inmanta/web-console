@@ -6,8 +6,8 @@ import { delay, HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { ResourceLogs } from "@S/ResourceDetails/Data/Mock";
 import { words } from "@inmanta/web-console-core";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { View } from "./View";
 

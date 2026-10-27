@@ -11,12 +11,12 @@ import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import * as DesiredStateMock from "@S/DesiredState/Data/Mock";
 import { DryRun, words } from "@inmanta/web-console-core";
 import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import {
   EnvironmentDetails,
   MockedDependencyProvider,
   ServiceInstance,
 } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import { countDiff, createReportScopeParts } from "./Components/ReportScope/helpers";

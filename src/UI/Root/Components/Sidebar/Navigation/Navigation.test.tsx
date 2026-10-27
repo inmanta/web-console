@@ -8,11 +8,11 @@ import * as Agents from "@S/Agents/Core/Route";
 import * as Dashboard from "@S/Dashboard/Core/Route";
 import * as Resource from "@S/Resource/Core/Route";
 import { FeatureModule, RouteFactory, words } from "@inmanta/web-console-core";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import {
   MockedDependencyProvider,
   MockOrchestratorProvider,
 } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { Navigation } from "./Navigation";
 
 function setup(

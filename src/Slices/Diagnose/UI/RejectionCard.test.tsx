@@ -4,8 +4,8 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { CompileError, words } from "@inmanta/web-console-core";
 import { Rejection } from "@inmanta/web-console-core/Domain/Diagnostics";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { formatLocation, RejectionCard } from "./RejectionCard";
 
 const axe = configureAxe({

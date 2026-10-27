@@ -6,12 +6,12 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { EnvironmentPreview } from "@inmanta/web-console-core/Queries/Slices/Environment";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import {
   Environment,
   EnvironmentDetails,
   MockedDependencyProvider,
 } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Actions } from "./Actions";
 

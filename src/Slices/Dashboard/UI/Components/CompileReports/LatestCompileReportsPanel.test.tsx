@@ -5,8 +5,8 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import * as Mock from "@S/CompileReports/Core/Mock";
 import { words } from "@inmanta/web-console-core";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { LatestCompileReportsPanel } from "./LatestCompileReportsPanel";
 
 const server = setupServer();

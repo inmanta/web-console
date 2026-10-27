@@ -5,7 +5,7 @@ import { words } from "@inmanta/web-console-core";
 import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
 import { CompileReport } from "@inmanta/web-console-core/Domain/CompileReport";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { LatestCompileReportRow } from "./LatestCompileReportRow";
 
 const routeManager = PrimaryRouteManager("", routes);

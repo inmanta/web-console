@@ -15,8 +15,8 @@ import { getDesiredStateVersionKey } from "@inmanta/web-console-core/Queries/Sli
 import { StartedDryRun } from "@inmanta/web-console-core/Queries/Slices/Resource";
 import { SearchHelper } from "@inmanta/web-console-core/Routing";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import { ResourceActionScope } from "./ResourceActionConfirmModal";

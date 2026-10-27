@@ -12,13 +12,13 @@ import { setupServer } from "msw/node";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { ServiceModel, VersionedServiceInstanceIdentifier, words } from "@inmanta/web-console-core";
 import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import {
   Service,
   ServiceInstance,
   MockedDependencyProvider,
   EnvironmentDetails,
 } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { ConfigSectionContent } from "./ConfigSectionContent";
 
 // Mock the instance config hooks from @inmanta/web-console-core/Queries/Slices/ServiceInstance

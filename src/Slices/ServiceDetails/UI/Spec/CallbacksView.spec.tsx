@@ -7,8 +7,8 @@ import { setupServer } from "msw/node";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { CallbacksView } from "@S/ServiceDetails/UI/Tabs/Callbacks";
 import { getShortUuidFromRaw } from "@inmanta/web-console-core";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { Service, Callback, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 
 const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);

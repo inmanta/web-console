@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { routes } from "@/appFeatures";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { ResourceLink } from "./ResourceLink";
 
 const resourceId = "std::File[agent,path=/tmp/a]";

@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { DropdownItem } from "@patternfly/react-core";
-import { useNotifyDryRunStarted } from "@/UI/Components/ResourceActions";
 import { ParsedNumber, words } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import { useTriggerDryRun } from "@inmanta/web-console-core/Queries/Slices/DryRun";
 import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
+import { useNotifyDryRunStarted } from "@inmanta/web-console-ui/Components/DryRunNotification";
 
 interface Props {
   version: ParsedNumber;

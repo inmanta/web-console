@@ -2,8 +2,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import * as useUpdateEnvironmentSettingModule from "@inmanta/web-console-core/Queries/Slices/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting";
-import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ExpertBanner } from "./ExpertBanner";
 
