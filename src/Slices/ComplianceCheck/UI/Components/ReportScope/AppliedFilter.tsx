@@ -16,11 +16,10 @@ import {
   ModalVariant,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Tr } from "@patternfly/react-table";
-import { DryRunContext, ResourceActionFilter } from "@/Core";
+import { DryRunContext, ResourceActionFilter, words } from "@/Core";
+import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
 import { CodeEditor } from "@/UI/Components/CodeEditor";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
-import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { RerunButton } from "./RerunButton";
 import { createVersionValues, formatFilterValue, isFlag } from "./helpers";
 import { FilterRow, FilterValue } from "./types";

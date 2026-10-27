@@ -17,14 +17,13 @@ import {
   Content,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { ServiceModel } from "@/Core";
+import { ServiceModel, words } from "@/Core";
 import { useDeleteService } from "@/Data/Queries/Slices/Service";
 import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
 import { InstanceSummaryLabels } from "@/UI/Components/InstanceSummaryLabels";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 interface Props {
   service: ServiceModel;

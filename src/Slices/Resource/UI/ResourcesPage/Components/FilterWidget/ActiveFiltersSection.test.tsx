@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Resource } from "@/Core";
-import { words } from "@/UI/words";
+import { Resource, words } from "@/Core";
 import { ActiveFiltersSection } from "./ActiveFiltersSection";
 
 const createHandlers = () => ({

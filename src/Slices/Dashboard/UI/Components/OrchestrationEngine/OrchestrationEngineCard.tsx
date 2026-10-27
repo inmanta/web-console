@@ -23,10 +23,9 @@ import {
   chart_color_orange_300,
   chart_color_purple_200,
 } from "@patternfly/react-tokens";
-import { CompileStatus, DateRange, PageSize, RangeOperator } from "@/Core";
+import { CompileStatus, DateRange, PageSize, RangeOperator, words } from "@/Core";
 import { useGetCompileReports } from "@/Data/Queries/Slices/Compilation";
 import { useGetMetrics } from "@/Data/Queries/Slices/Dashboard";
-import { words } from "@/UI/words";
 import dayjs from "@/dayjs";
 import {
   average,
@@ -40,7 +39,7 @@ import { TrendChart } from "./TrendChart";
 
 type RangeDays = 7 | 14 | 30;
 
-const RANGE_OPTIONS: { value: RangeDays; label: string }[] = [
+const getRangeOptions = (): { value: RangeDays; label: string }[] => [
   { value: 7, label: words("dashboard.orchestrationEngine.range.last7Days") },
   { value: 14, label: words("dashboard.orchestrationEngine.range.last14Days") },
   { value: 30, label: words("dashboard.orchestrationEngine.range.last30Days") },
@@ -54,7 +53,7 @@ interface TabConfig {
   formatValue: (value: number) => string;
 }
 
-const TABS: TabConfig[] = [
+const getTabs = (): TabConfig[] => [
   {
     key: "rate",
     label: words("dashboard.orchestrationEngine.tabs.rate"),
@@ -165,8 +164,10 @@ export const OrchestrationEngineCard: React.FC = () => {
     filter: { requested: requestedRange, status: CompileStatus.failed },
   }).useContinuous();
 
-  const activeTab = TABS.find((candidate) => candidate.key === tab) ?? TABS[0];
-  const activeRangeLabel = RANGE_OPTIONS.find((option) => option.value === days)?.label ?? "";
+  const tabs = getTabs();
+  const rangeOptions = getRangeOptions();
+  const activeTab = tabs.find((candidate) => candidate.key === tab) ?? tabs[0];
+  const activeRangeLabel = rangeOptions.find((option) => option.value === days)?.label ?? "";
   const trend = getTrendSeries(metrics, tab);
   // Tracks failures across the whole selected date range, unlike deriveCompilesHealth (latest
   // single report), so it doesn't reuse that derivation - but it does route through the same
@@ -201,7 +202,7 @@ export const OrchestrationEngineCard: React.FC = () => {
             )}
           >
             <DropdownList>
-              {RANGE_OPTIONS.map((option) => (
+              {rangeOptions.map((option) => (
                 <DropdownItem
                   key={option.value}
                   isSelected={option.value === days}
@@ -226,7 +227,7 @@ export const OrchestrationEngineCard: React.FC = () => {
               hasNoOffset: true,
               actions: (
                 <ToggleGroup aria-label={words("dashboard.orchestrationEngine.title")}>
-                  {TABS.map((tabConfig) => (
+                  {tabs.map((tabConfig) => (
                     <ToggleGroupItem
                       key={tabConfig.key}
                       text={tabConfig.label}

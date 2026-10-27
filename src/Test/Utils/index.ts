@@ -1,5 +1,5 @@
 import { within } from "@testing-library/react";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 
 export const getById = (id: string): HTMLElement => {
   const el = document.getElementById(id);

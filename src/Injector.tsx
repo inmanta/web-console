@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useLocation } from "react-router";
-import { isJsonParserId, JsonParserId } from "@/Core";
+import { FeatureModule, getFeatureRoutes, isJsonParserId, JsonParserId } from "@/Core";
 import { OrchestratorProvider, PrimaryArchiveHelper, PrimaryFileManager } from "@/Data/Common";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentHandlerImpl } from "@/UI/Dependency/EnvironmentHandler";
@@ -10,17 +10,21 @@ import { UrlManagerImpl } from "@/UI/Utils";
 import { AuthContext } from "./Data/Auth";
 import { AppAlertProvider } from "./UI/Root/Components/AppAlertProvider";
 import { ModalProvider } from "./UI/Root/Components/ModalProvider";
-import { features, routes } from "./appFeatures";
+
+interface Props {
+  features: FeatureModule[];
+}
 
 /**
  * This component creates instances of managers, helpers, and resolvers, and provides them through a `DependencyProvider`.
  * It also contains `ModalProvider` and `AppAlertProvider`.
  *
  * @props {Props} props - The properties passed to the component.
+ * @prop {FeatureModule[]} features - The features the app ships. The route table is built from their routes.
  * @prop {React.ReactNode} children - The children to be rendered within the Injector.
  * @returns {React.FC<React.PropsWithChildren<Props>>} A `DependencyProvider` that wraps a `ModalProvider` and the children.
  */
-export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const Injector: React.FC<React.PropsWithChildren<Props>> = ({ features, children }) => {
   const authHelper = useContext(AuthContext);
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -28,7 +32,7 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   );
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl();
-  const routeManager = PrimaryRouteManager(basePathname, routes);
+  const routeManager = PrimaryRouteManager(basePathname, getFeatureRoutes(features));
   const orchestratorProvider = OrchestratorProvider(getJsonParserId(globalThis), COMMITHASH);
   const urlManager = new UrlManagerImpl(orchestratorProvider, baseUrl);
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);

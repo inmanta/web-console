@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { words } from "@/Core";
 import { useGetServiceModel } from "@/Data/Queries/Slices/Service";
 import { useGetInstance } from "@/Data/Queries/Slices/ServiceInstance";
-import { words } from "@/UI/words";
 
 /**
  * Props interface for the useDocumentationContent hook

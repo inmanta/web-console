@@ -1,10 +1,9 @@
 import { Flex, FlexItem, Content, Icon, ListItem, List, Popover } from "@patternfly/react-core";
 import { UnlinkIcon, ClockIcon, CubesIcon } from "@patternfly/react-icons";
-import { Resource } from "@/Core";
+import { Resource, words } from "@/Core";
+import { BlinkingDot } from "@/UI/Components/BlinkingDot";
 import { statusGroupIcons, statusMapping } from "@/UI/Components/CompoundResourceStatus";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
-import { words } from "@/UI/words";
-import { BlinkingDot } from "./Components";
 import { ResourceRow } from "./ResourceTableRow";
 
 const COMPOUND_STATE_KEYS: (keyof Resource.CompoundStateSummary)[] = [

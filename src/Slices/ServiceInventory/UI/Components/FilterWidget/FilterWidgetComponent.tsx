@@ -5,6 +5,7 @@ import {
   invertFilter,
   removeInvertedSelection,
   toggleValueInList,
+  words,
 } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
 import { AddableTextInput } from "@/UI/Components/AddableTextInput";
@@ -17,10 +18,9 @@ import {
 import { IncludeExcludeSelect } from "@/UI/Components/IncludeExcludeSelect";
 import { MultiTextSelect } from "@/UI/Components/MultiTextSelect";
 import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
-import { words } from "@/UI/words";
 
 /** The attribute sets, paired with the label shown to the user. */
-const ATTRIBUTE_SETS: { value: ServiceInstanceParams.AttributeSet; label: string }[] = [
+const getAttributeSets = (): { value: ServiceInstanceParams.AttributeSet; label: string }[] => [
   {
     value: ServiceInstanceParams.AttributeSet.Active,
     label: words("inventory.filters.attributeSet.active"),
@@ -36,18 +36,18 @@ const ATTRIBUTE_SETS: { value: ServiceInstanceParams.AttributeSet; label: string
 ];
 
 const prettyAttributeSet = (value: string): string =>
-  ATTRIBUTE_SETS.find((set) => set.value === value)?.label ?? value;
+  getAttributeSets().find((set) => set.value === value)?.label ?? value;
 
 const rawAttributeSet = (label: string): ServiceInstanceParams.AttributeSet =>
-  ATTRIBUTE_SETS.find((set) => set.label === label)?.value ??
+  getAttributeSets().find((set) => set.label === label)?.value ??
   (label as ServiceInstanceParams.AttributeSet);
 
 /** The deleted-instance rules, paired with the label and tooltip shown for each option. */
-const DELETED_RULES: {
+const getDeletedRules = (): {
   value: Exclude<ServiceInstanceParams.DeletedRule, undefined>;
   label: string;
   tooltip: string;
-}[] = [
+}[] => [
   {
     value: "Include",
     label: words("inventory.filters.deleted.include.label"),
@@ -163,7 +163,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
                 label={words("inventory.filters.attributeSet.activeLabel")}
                 placeholder={words("inventory.filters.attributeSet.placeholder")}
                 selected={attributeSetSelected}
-                options={ATTRIBUTE_SETS.map((set) => set.label)}
+                options={getAttributeSets().map((set) => set.label)}
                 onOptionClick={onAttributeSetClick}
               />
             </FormGroup>
@@ -174,7 +174,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
               <OptionalToggleGroup
                 selected={filter.deleted ? [filter.deleted] : []}
                 onChange={(next) => updateDeleted(next[0] as ServiceInstanceParams.DeletedRule)}
-                options={DELETED_RULES.map((rule) => ({
+                options={getDeletedRules().map((rule) => ({
                   value: rule.value,
                   buttonId: `deleted-${rule.value.toLowerCase()}`,
                   label: rule.label,

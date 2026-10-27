@@ -1,7 +1,6 @@
 import React from "react";
 import { OnSort, Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { Sort } from "@/Core";
-import { words } from "@/UI/words";
+import { Sort, words } from "@/Core";
 import { EventsTablePresenter } from "./EventsTablePresenter";
 
 interface Props {

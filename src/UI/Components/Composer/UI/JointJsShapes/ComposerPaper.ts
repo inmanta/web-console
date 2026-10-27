@@ -1,6 +1,5 @@
 import { dia, linkTools, shapes } from "@joint/plus";
-import { ServiceModel } from "@/Core";
-import { words } from "@/UI/words";
+import { ServiceModel, words } from "@/Core";
 import { routerNamespace, anchorNamespace } from "..";
 import {
   getEntitiesFromCanvas,

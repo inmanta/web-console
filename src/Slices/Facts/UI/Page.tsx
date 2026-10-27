@@ -1,15 +1,15 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
+import { words } from "@/Core";
+import { Filter, SortKey } from "@/Core/Domain/FactFilter";
 import { usePaginatedTable } from "@/Data/Common";
 import { useGetFacts } from "@/Data/Queries/Slices/Facts";
-import { Filter, SortKey } from "@/Slices/Facts/Core/Types";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { PageContainer } from "@/UI/Components/PageContainer";
 import { PaginationWidget } from "@/UI/Components/PaginationWidget";
-import { words } from "@/UI/words";
 import { FactsTable } from "./FactsTable";
 import { createFactsTablePresenter } from "./FactsTablePresenter";
 import { ConnectedFilterWidget } from "./FilterWidget";

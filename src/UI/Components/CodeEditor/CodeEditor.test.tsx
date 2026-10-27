@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 import { CodeEditor } from "./CodeEditor";
 
 describe("CodeEditor", () => {

@@ -4,11 +4,11 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { Token } from "@/Core/Domain";
 import { MockedDependencyProvider } from "@/Test";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
 import { TokenTable } from "./TokenTable";
 
 const datePresenter = new CustomDatePresenter();

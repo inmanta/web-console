@@ -13,6 +13,7 @@ import {
   Stack,
   StackItem,
 } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { Reference } from "@/Core/Domain";
 import { AttributeClassifier, ClassifiedAttribute } from "@/Data/Common/AttributeClassifier";
 import {
@@ -24,7 +25,6 @@ import {
 import { AttributeValue } from "@/UI/Components/AttributeList";
 import { ReferenceNode, ReplacementList } from "@/UI/Components/References";
 import { HoverRow, HoverRowGroup } from "@/UI/Components/RowHoverReveal";
-import { words } from "@/UI/words";
 import { MACHINERY_KEYS, groupReplacements, partitionOrchestrator } from "./helpers";
 
 interface Props {

@@ -5,7 +5,7 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { DryRunContext, Resource, ResourceActionFilter } from "@/Core";
+import { DryRunContext, Resource, ResourceActionFilter, words } from "@/Core";
 import { NonEmptyArray } from "@/Core/Language";
 import { getDesiredStateVersionKey } from "@/Data/Queries/Slices/DesiredState";
 import { StartedDryRun } from "@/Data/Queries/Slices/Resource";
@@ -16,7 +16,6 @@ import { SearchHelper } from "@/UI/Routing";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
 import { routes } from "@/appFeatures";
 import * as DesiredStatesMock from "@S/DesiredState/Data/Mock";
 import { historyData } from "@S/ServiceInstanceDetails/Test/mockData";

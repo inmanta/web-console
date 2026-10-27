@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { CompileStatus, Sort, PageSize, Pagination } from "@/Core/Domain";
 import { DateRange } from "@/Core/Domain";
+import { CompileReport } from "@/Core/Domain/CompileReport";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   CustomError,
@@ -10,7 +11,6 @@ import {
   getPaginationHandlers,
 } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
-import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
 

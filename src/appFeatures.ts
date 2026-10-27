@@ -1,4 +1,4 @@
-import { FeatureModule, RouteFactory } from "@/Core";
+import { FeatureModule, getFeatureRoutes, RouteFactory } from "@/Core";
 import { composerFeature } from "@/Features/Composer";
 import { environmentFeature } from "@/Features/Environment";
 import { graphiqlFeature } from "@/Features/GraphiQL";
@@ -28,15 +28,6 @@ export const features: FeatureModule[] = [
   resourceManagerFeature,
   orchestrationEngineFeature,
 ];
-
-/**
- * Returns the routes of the given features, in order.
- *
- * @param features - the features to take the routes of
- * @returns the route factories of every route of these features
- */
-export const getFeatureRoutes = (features: FeatureModule[]): RouteFactory[] =>
-  features.flatMap((feature) => feature.routes.map(({ route }) => route));
 
 /**
  * The routes of the features this app ships.

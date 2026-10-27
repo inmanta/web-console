@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Button, Flex, FlexItem, FormGroup } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
-import { DateRange, RangeOperator } from "@/Core";
-import { words } from "@/UI/words";
+import { DateRange, RangeOperator, words } from "@/Core";
 import { TimestampPicker } from "./TimestampPicker";
 
 interface Props {

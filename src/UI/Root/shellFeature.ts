@@ -1,6 +1,7 @@
 import { FeatureModule } from "@/Core";
 import * as Notification from "@S/Notification/Core/Route";
 import * as Status from "@S/Status/Core/Route";
+import { shellMessages } from "./messages";
 
 /**
  * The pages the header links to: the status page and the notification center. They belong to the
@@ -9,6 +10,7 @@ import * as Status from "@S/Status/Core/Route";
 export const shellFeature: FeatureModule = {
   id: "shell",
   version: APP_VERSION,
+  messages: shellMessages,
   routes: [
     {
       route: Notification.route,

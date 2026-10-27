@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, ActionGroup, Button } from "@patternfly/react-core";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 
 export const ConfirmUserActionForm: React.FunctionComponent<{
   onSubmit: () => void;

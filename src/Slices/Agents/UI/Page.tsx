@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { usePaginatedTable } from "@/Data/Common";
 import { useGetAgents } from "@/Data/Queries/Slices/Agents";
 import { Filter } from "@/Slices/Agents/Core/Types";
@@ -9,7 +10,6 @@ import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { PageContainer } from "@/UI/Components/PageContainer";
 import { PaginationWidget } from "@/UI/Components/PaginationWidget";
-import { words } from "@/UI/words";
 import { AgentsTableControls } from "./AgentsTableControls";
 import { AgentsActionsButton } from "./Components";
 import { ConnectedFilterWidget } from "./FilterWidget";

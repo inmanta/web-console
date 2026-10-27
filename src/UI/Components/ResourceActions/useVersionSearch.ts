@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useDebounce } from "@/UI/Utils";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
+import { useDebounce } from "@/Data/Common/useDebounce";
 import { VersionSelectOption } from "./VersionSelect";
 
 /**

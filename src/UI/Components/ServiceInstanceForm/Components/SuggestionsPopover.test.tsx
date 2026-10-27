@@ -1,8 +1,7 @@
 import React, { RefObject } from "react";
 import { Button } from "@patternfly/react-core";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { SuggestionValue } from "@/Core";
-import { words } from "@/UI/words";
+import { SuggestionValue, words } from "@/Core";
 import { MAX_VISIBLE_SUGGESTIONS, SuggestionsPopover } from "./SuggestionsPopover";
 
 describe("SuggestionsPopover", () => {

@@ -1,10 +1,9 @@
 import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ServiceOrderItemRequest } from "@/Core";
+import { ServiceOrder } from "@/Core/Domain/ServiceOrderModel";
 import { usePost } from "@/Data/Queries/Helpers";
-import { ServiceOrder } from "@/Slices/Orders/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 
 interface PostResponse {
   data: ServiceOrder;
@@ -14,6 +13,12 @@ interface PostOrderBody {
   service_order_items: ServiceOrderItemRequest[];
   description: string;
 }
+
+/**
+ * The description the order is stored with. It is data the orchestrator keeps and shows to every
+ * user, so it is not translated.
+ */
+const ORDER_DESCRIPTION = "Requested with Instance Composer";
 
 /**
  * React Query hook for sending an order batch from Instance Composer.
@@ -30,7 +35,7 @@ export const usePostOrder = (
     mutationFn: (service_order_items) =>
       post("/lsm/v2/order", {
         service_order_items,
-        description: words("instanceComposer.orderDescription"),
+        description: ORDER_DESCRIPTION,
       }),
     mutationKey: ["post_order", env],
     ...options,

@@ -1,5 +1,6 @@
 import React from "react";
 import { ButtonVariant, Flex, FlexItem } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { useGetDiscoveredResourceDetails } from "@/Data/Queries/Slices/DiscoveredResources/useGetDiscoveredResourceDetails";
 import { DiscoveredResourceLink } from "@/Slices/ResourceDiscovery/UI/Components";
 import { Description } from "@/UI/Components/Description";
@@ -8,7 +9,6 @@ import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { PageContainer } from "@/UI/Components/PageContainer";
 import { useRouteParams } from "@/UI/Routing";
-import { words } from "@/UI/words";
 import { AttributesCard } from "./AttributesCard";
 
 // The wrapper is purely meant to extract the logic from the routing,

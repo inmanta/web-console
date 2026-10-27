@@ -12,7 +12,7 @@ import {
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { UseMutateFunction, UseQueryResult } from "@tanstack/react-query";
-import { PageSize } from "@/Core";
+import { PageSize, words } from "@/Core";
 import {
   NotificationResponse,
   useGetNotifications,
@@ -20,7 +20,6 @@ import {
   useUpdateNotification,
 } from "@/Data/Queries/Slices/Notification";
 import { useNavigateTo } from "@/UI/Routing";
-import { words } from "@/UI/words";
 import { Item, OnUpdate } from "./Item";
 
 /**

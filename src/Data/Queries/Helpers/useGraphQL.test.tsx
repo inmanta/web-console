@@ -2,9 +2,9 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI/words";
 import { useGraphQLRequest } from "./useGraphQL";
 
 const environmentsData = { environments: { edges: [] } };

@@ -1,4 +1,4 @@
-import { Agent, AgentStatus } from "./Domain";
+import { Agent, AgentStatus } from "@/Core/Domain/Agent";
 
 const data: Agent[] = [
   {

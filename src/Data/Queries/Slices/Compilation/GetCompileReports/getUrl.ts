@@ -1,7 +1,7 @@
 import qs from "qs";
 import { CompileStatus, RangeOperator } from "@/Core";
+import { Filter } from "@/Core/Domain/CompileReportFilter";
 import { urlEncodeParams } from "@/Data/Queries/Helpers";
-import { Filter } from "@/Slices/CompileReports/Core/Types";
 import dayjs from "@/dayjs";
 import { CompileReportsParams } from "./useGetCompileReports";
 

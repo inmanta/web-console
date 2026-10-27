@@ -9,14 +9,13 @@ import {
   Toolbar,
   ToolbarContent,
 } from "@patternfly/react-core";
-import { Diff, DryRun } from "@/Core";
+import { Diff, DryRun, words } from "@/Core";
 import { useUrlStateWithString } from "@/Data/Common";
 import { useGetDryRuns } from "@/Data/Queries/Slices/DryRun";
 import * as DiffWizard from "@/UI/Components/DiffWizard";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 import { useRouteParams } from "@/UI/Routing";
 import { REPORT_URL_STATE_KEY } from "@/UI/Routing/ReportSearch";
-import { words } from "@/UI/words";
 import { SelectReportAction, TriggerDryRunAction } from "./Components";
 import { DiffPageSection } from "./DiffPageSection";
 

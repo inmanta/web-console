@@ -1,5 +1,5 @@
+import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
-import { DesiredStateVersionStatus } from "../Core/Domain";
 
 export type CompareSelection = number | undefined;
 

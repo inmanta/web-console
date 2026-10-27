@@ -2,13 +2,12 @@ import React, { useContext } from "react";
 import { MenuItem, Content } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { VersionedServiceInstanceIdentifier } from "@/Core";
+import { VersionedServiceInstanceIdentifier, words } from "@/Core";
 import { useDestroyInstance, getInstanceKey } from "@/Data/Queries/Slices/ServiceInstance";
 import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;

@@ -1,7 +1,6 @@
-import { Diff, DryRun, Resource, ResourceActionFilter, StringMatch, isObject } from "@/Core";
+import { Diff, DryRun, Resource, ResourceActionFilter, StringMatch, isObject, words } from "@/Core";
+import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
 import { getVersionSelectionBlocker, withDryRunVersion } from "@/Data/Queries/Slices/Resource";
-import { words } from "@/UI/words";
-import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import { DiffCounts, FilterRow, FilterValue, ReportScopeParts, RerunPlan } from "./types";
 
 /**

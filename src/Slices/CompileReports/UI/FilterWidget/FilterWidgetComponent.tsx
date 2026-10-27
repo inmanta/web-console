@@ -1,7 +1,7 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
-import { CompileStatus } from "@/Core";
-import { Filter } from "@/Slices/CompileReports/Core/Types";
+import { CompileStatus, words } from "@/Core";
+import { Filter } from "@/Core/Domain/CompileReportFilter";
 import {
   ActiveFilterGroup,
   ActiveFilters,
@@ -11,7 +11,6 @@ import {
 import { TimestampRangeFilter } from "@/UI/Components/Filters";
 import { SingleTextSelect } from "@/UI/Components/SingleTextSelect";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
 
 const datePresenter = new CustomDatePresenter();
 

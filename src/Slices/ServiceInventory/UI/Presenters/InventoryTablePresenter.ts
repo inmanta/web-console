@@ -4,10 +4,10 @@ import {
   ServiceInstanceModelWithTargetStates,
   ServiceModel,
   getUuidFromRaw,
+  words,
 } from "@/Core";
 import { isTransferDisabled } from "@/Slices/ServiceInstanceDetails/Utils";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
 
 const instanceToRow = (instance: ServiceInstanceModel, service: ServiceModel): Row => {
   const {

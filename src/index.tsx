@@ -8,13 +8,16 @@ import * as monaco from "monaco-editor";
 import { createRoot } from "react-dom/client";
 import { QueryControlProvider } from "@/Data/Queries/Helpers";
 import { createRootRoutes, Root } from "@/UI/Root";
+import { AuthProvider } from "@/UI/Root/Auth/AuthProvider";
+import { registerAppMessages } from "@/UI/Root/registerAppMessages";
 import { PrimaryBaseUrlManager } from "@/UI/Routing";
-import { AuthProvider } from "./Data/Auth/AuthProvider";
 import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
 import { features } from "./appFeatures";
 import { createMonacoWorker } from "./monaco-workers";
+
+registerAppMessages(features);
 
 // Monaco worker configuration. Uses getWorker (returns a Worker instance) rather than
 // getWorkerUrl so that Vite's worker bundling sets the correct module type automatically.
@@ -104,7 +107,7 @@ root.render(
                 direction={{ default: "column" }}
                 style={{ height: "100%" }}
               >
-                <Injector>
+                <Injector features={features}>
                   <Root />
                 </Injector>
               </Flex>

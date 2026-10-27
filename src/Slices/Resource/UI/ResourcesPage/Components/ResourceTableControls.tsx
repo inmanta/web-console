@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { FilterToggleButton } from "@/UI/Components/FilterDrawer";
-import { words } from "@/UI/words";
 
 interface Props {
   summaryWidget: React.ReactNode;

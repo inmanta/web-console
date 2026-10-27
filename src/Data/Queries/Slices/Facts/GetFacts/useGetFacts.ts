@@ -1,12 +1,12 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination, Sort } from "@/Core/Domain";
+import { Fact } from "@/Core/Domain/Fact";
+import { SortKey } from "@/Core/Domain/FactFilter";
 import { Handlers, Links } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
-import { Fact } from "@/Slices/Facts/Core/Domain";
-import { SortKey } from "@/Slices/Facts/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
 

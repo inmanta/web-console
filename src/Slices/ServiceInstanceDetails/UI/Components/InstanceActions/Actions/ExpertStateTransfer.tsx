@@ -12,14 +12,13 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { ParsedNumber } from "@/Core";
+import { ParsedNumber, words } from "@/Core";
 import { usePostExpertStateTransfer } from "@/Data/Queries/Slices/ServiceInstance";
 import { AppAlert } from "@/UI/Components/AppAlert";
 import { Spinner } from "@/UI/Components/Spinner";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 interface Props {
   targets: string[];

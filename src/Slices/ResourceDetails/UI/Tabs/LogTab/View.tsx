@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { toggleValueInList } from "@/Core";
+import { toggleValueInList, words } from "@/Core";
+import { ResourceLogFilter } from "@/Core/Domain/ResourceLog";
 import { usePaginatedTable } from "@/Data/Common";
 import { useGetResourceLogs } from "@/Data/Queries/Slices/Resource";
 import { EmptyView } from "@/UI/Components/EmptyView";
@@ -8,8 +9,6 @@ import { ErrorView } from "@/UI/Components/ErrorView";
 import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { PaginationWidget } from "@/UI/Components/PaginationWidget";
-import { words } from "@/UI/words";
-import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
 import { ConnectedFilterWidget, Controls } from "./Controls";
 import { ResourceLogsTable } from "./ResourceLogsTable";
 

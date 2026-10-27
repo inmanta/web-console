@@ -2,9 +2,9 @@ import { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
+import { otherScaleCandidates, selectDisplayUnit } from "@/Core/Domain/Unit";
+import { configFor } from "@/Core/Domain/Unit/testUtils";
 import { UnitFormInput } from "./UnitFormInput";
-import { otherScaleCandidates, selectDisplayUnit } from "./display";
-import { configFor } from "./testUtils";
 
 const axe = configureAxe({
   rules: {

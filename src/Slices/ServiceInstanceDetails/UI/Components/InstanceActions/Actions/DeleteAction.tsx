@@ -1,12 +1,11 @@
 import React, { useCallback, useContext } from "react";
 import { DropdownItem, Content, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
-import { ParsedNumber } from "@/Core";
+import { ParsedNumber, words } from "@/Core";
 import { useDeleteInstance } from "@/Data/Queries/Slices/ServiceInstance";
 import { Spinner } from "@/UI/Components/Spinner";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 interface Props {
   isDisabled: boolean;

@@ -1,10 +1,10 @@
 import React from "react";
 import { Label } from "@patternfly/react-core";
 import styled from "styled-components";
+import { words } from "@/Core";
 import { Reference } from "@/Core/Domain";
 import { ClassifiedAttribute } from "@/Data/Common/AttributeClassifier/ClassifiedAttribute";
 import { AttributeValue, WithSuffix } from "@/UI/Components/AttributeList";
-import { words } from "@/UI/words";
 
 // Values the classifier renders as a single line; anything else renders as a block
 // (code editor or file block), which gets no kind label.

@@ -1,7 +1,7 @@
 import React from "react";
 import { EmptyState, EmptyStateBody } from "@patternfly/react-core";
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 
 interface Props {
   message: string;

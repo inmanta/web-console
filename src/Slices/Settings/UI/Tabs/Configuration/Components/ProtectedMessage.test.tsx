@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { EnvironmentSettings } from "@/Core";
-import { words } from "@/UI/words";
+import { EnvironmentSettings, words } from "@/Core";
 import { ProtectedMessage } from "./ProtectedMessage";
 
 // Helper function to create mock InputInfo

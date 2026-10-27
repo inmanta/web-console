@@ -5,7 +5,7 @@ import {
   t_global_icon_color_status_success_default,
   t_global_icon_color_status_warning_default,
 } from "@patternfly/react-tokens";
-import { Severity } from "@S/Notification/Core/Domain";
+import { Severity } from "@/Core/Domain/Notification";
 
 export const getSeverityForNotification = (severity: Severity): VisualSeverity => {
   switch (severity) {

@@ -9,12 +9,11 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
+import { ServiceModel, VersionedServiceInstanceIdentifier, words } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { Service, ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { words } from "@/UI/words";
 import { ConfigSectionContent } from "./ConfigSectionContent";
 
 // Mock the instance config hooks from @/Data/Queries/Slices/ServiceInstance

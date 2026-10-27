@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import { dia, ui } from "@joint/plus";
 import styled from "styled-components";
-import { ServiceModel } from "@/Core";
+import { ServiceModel, words } from "@/Core";
 import { Inventories } from "@/Data/Queries/Slices/ServiceInstance";
-import { words } from "@/UI/words";
 import { RelationsDictionary } from "../Data";
 import { ComposerContext } from "../Data/Context";
 import { LEFT_SIDEBAR_WIDTH } from "../config";

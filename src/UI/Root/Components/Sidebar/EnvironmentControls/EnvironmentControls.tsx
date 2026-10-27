@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import { Flex, FlexItem, Label, Stack, StackItem } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { useGetEnvironmentDetails } from "@/Data/Queries/Slices/Environment";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { HaltButton } from "./HaltButton";
 import { ResumeButton } from "./ResumeButton";
 

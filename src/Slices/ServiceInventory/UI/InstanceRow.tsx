@@ -3,12 +3,11 @@ import { Link, useNavigate } from "react-router";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
-import { Row, ServiceModel } from "@/Core";
+import { Row, ServiceModel, words } from "@/Core";
 import { StateLabel } from "@/Slices/ServiceInstanceDetails/UI/Components/Sections";
 import { CopyMultiOptions } from "@/UI/Components/CopyMultiOptions";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { DeploymentProgressBar, IdWithCopy } from "./Components";
 import { RowActions } from "./Components/RowActionsMenu/RowActions";
 

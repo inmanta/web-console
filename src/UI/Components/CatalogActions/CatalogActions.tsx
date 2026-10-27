@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { Button, Content, Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { useExportCatalog } from "@/Data/Queries/Slices/Service";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { ConfirmUserActionForm } from "../ConfirmUserActionForm";
 
 /**

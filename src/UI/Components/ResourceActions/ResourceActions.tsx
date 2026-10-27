@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { EyeIcon, WrenchIcon, PlayIcon } from "@patternfly/react-icons";
-import { ResourceActionFilter } from "@/Core";
+import { ResourceActionFilter, words } from "@/Core";
 import { NonEmptyArray } from "@/Core/Language";
 import { DeployAgentsAction } from "@/Data/Queries/Slices/Agents";
 import {
@@ -24,9 +24,8 @@ import {
 } from "@/Data/Queries/Slices/Resource";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
 import { ResourceActionInstance } from "./types";
 import { useNotifyDryRunStarted } from "./useNotifyDryRunStarted";

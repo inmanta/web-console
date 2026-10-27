@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import {
-  Avatar,
   Button,
   Content,
   Divider,
@@ -30,11 +29,11 @@ import {
   UserCircleIcon,
   UsersIcon,
 } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { DarkmodeOption } from "@/UI/Components/DarkmodeOption";
+import { EnvironmentIcon } from "@/UI/Components/EnvironmentIcon";
 import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider/ModalProvider";
-import { words } from "@/UI/words";
-import fallBackImage from "@images/inmanta-wings.svg";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 import { ManageProjectsModal } from "./ManageProjectsModal";
 
@@ -246,11 +245,3 @@ export const EnvSelector: React.FC<Props> = ({
     />
   );
 };
-
-export const EnvironmentIcon: React.FC<{ icon?: string }> = ({ icon }) => (
-  <Avatar
-    src={icon ?? fallBackImage}
-    alt="Environment icon"
-    style={{ height: "20px", width: "20px", display: "block" }}
-  />
-);

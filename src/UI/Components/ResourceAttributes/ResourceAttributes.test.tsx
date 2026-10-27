@@ -1,13 +1,13 @@
 import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
+import { words } from "@/Core";
 import { AttributeClassifier, useExpansion } from "@/Data/Common";
 import { attributes as plainAttributes } from "@/Data/Common/AttributeClassifier/Mock";
 import { environmentReferences, referenceAttributes } from "@/Data/Common/References/Mock";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { words } from "@/UI/words";
 import { ResourceAttributes } from "./ResourceAttributes";
 
 const classifier = new AttributeClassifier();

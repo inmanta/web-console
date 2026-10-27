@@ -16,13 +16,13 @@ import {
   StackItem,
 } from "@patternfly/react-core";
 import styled from "styled-components";
+import { words } from "@/Core";
 import { Reference, ResourceDetailsTab } from "@/Core/Domain";
 import { classifyValue, summarize } from "@/Data/Common/References";
 import { AttributeValue } from "@/UI/Components/AttributeList";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
 import { HoverRow, HoverRowGroup } from "@/UI/Components/RowHoverReveal";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
-import { words } from "@/UI/words";
 import {
   ClassifiedValue,
   factResourceId,

@@ -5,11 +5,11 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { KeycloakAuthConfig, LocalConfig } from "@/Data/Auth";
-import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import * as CookieHelper from "@/Data/Common/CookieHelper";
 import { AuthTestWrapper } from "@/Test/Inject";
-import { words } from "@/UI/words";
+import { AuthProvider } from "@/UI/Root/Auth/AuthProvider";
 import { Login } from "./Page";
 
 const mockedUsedNavigate = vi.hoisted(() => vi.fn());

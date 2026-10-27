@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { Dropdown, MenuToggle } from "@patternfly/react-core";
 import { UseQueryResult } from "@tanstack/react-query";
-import { Environment, FlatEnvironment, ProjectModel } from "@/Core";
+import { Environment, FlatEnvironment, ProjectModel, words } from "@/Core";
 import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
 import { Spinner } from "@/UI/Components/Spinner";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { words } from "@/UI/words";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 import { EnvironmentSelectorItem, EnvSelectorWrapper } from "./EnvSelectorWrapper";
 
 interface Props {

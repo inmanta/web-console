@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 
 const rotate = keyframes`
   to { transform: rotate(360deg); }

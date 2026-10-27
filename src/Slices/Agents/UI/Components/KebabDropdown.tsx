@@ -7,8 +7,8 @@ import {
   MenuToggleElement,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { DeployAgentsAction, useDeployAgents } from "@/Data/Queries/Slices/Agents";
-import { words } from "@/UI/words";
 
 interface Props {
   name: string;

@@ -1,13 +1,6 @@
-import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
-import { Fact } from "@S/Facts/Core/Domain";
-
-const columnHeads: ColumnHead[] = [
-  { displayName: words("name"), apiName: "name" },
-  { displayName: words("updated"), apiName: "updated" },
-  { displayName: words("value"), apiName: "value" },
-  { displayName: words("resourceId"), apiName: "resource_id" },
-];
+import { words } from "@/Core";
+import { Fact } from "@/Core/Domain/Fact";
+import { createTablePresenter } from "@/UI/Presenters";
 
 /**
  * Table presenter for the Facts view. Rows are the facts unchanged.
@@ -16,7 +9,12 @@ const columnHeads: ColumnHead[] = [
  */
 export const createFactsTablePresenter = () =>
   createTablePresenter<Fact, Fact>({
-    columnHeads,
+    columnHeads: [
+      { displayName: words("name"), apiName: "name" },
+      { displayName: words("updated"), apiName: "updated" },
+      { displayName: words("value"), apiName: "value" },
+      { displayName: words("resourceId"), apiName: "resource_id" },
+    ],
     sortableColumns: ["name", "resource_id"],
     createRows: (facts) => facts,
   });

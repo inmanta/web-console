@@ -3,9 +3,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { words } from "@/UI/words";
 import * as Mock from "@S/CompileReports/Core/Mock";
 import { LatestCompileReportsPanel } from "./LatestCompileReportsPanel";
 

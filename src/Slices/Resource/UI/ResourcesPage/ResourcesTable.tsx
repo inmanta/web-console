@@ -1,14 +1,10 @@
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
-import { Resource } from "@/Core";
+import { Resource, words } from "@/Core";
 import { MultiSort } from "@/Data/Common";
-import { words } from "@/UI/words";
 import { StatusSortMenu } from "./Components";
 import { ResourceTableRow, ResourceRow } from "./ResourceTableRow";
 import { createResourcesTablePresenter } from "./ResourcesTablePresenter";
-
-const tablePresenter = createResourcesTablePresenter();
-const sortableColumns = tablePresenter.getSortableColumnNames();
 
 interface Props {
   rows: ResourceRow[];
@@ -17,12 +13,15 @@ interface Props {
 }
 
 export const ResourcesTable: React.FC<Props> = memo(({ rows, sort, setSort, ...props }) => {
+  const tablePresenter = useMemo(createResourcesTablePresenter, []);
+  const sortableColumns = tablePresenter.getSortableColumnNames();
+
   const onSort: OnSort = useCallback(
     (_event, index, order) => {
       const name = tablePresenter.getColumnNameForIndex(index) as Resource.SortKey;
       setSort([{ name, order }]);
     },
-    [setSort]
+    [setSort, tablePresenter]
   );
 
   const activeRegularSort = sort.find((sortEntry) => !Resource.isStatusSortKey(sortEntry.name));

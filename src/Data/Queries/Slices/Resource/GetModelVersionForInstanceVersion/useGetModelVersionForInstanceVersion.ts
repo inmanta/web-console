@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { gql } from "graphql-request";
 import { useGraphQLRequest } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
@@ -13,7 +12,7 @@ interface Response {
   data: { resources: { edges: { node: { modelVersion: number } }[] } };
 }
 
-const GET_MODEL_VERSION_FOR_INSTANCE_VERSION_QUERY = gql`
+const GET_MODEL_VERSION_FOR_INSTANCE_VERSION_QUERY = /* GraphQL */ `
   query GetModelVersionForInstanceVersion($filter: ResourceFilter!) {
     resources(filter: $filter, first: 1) {
       edges {

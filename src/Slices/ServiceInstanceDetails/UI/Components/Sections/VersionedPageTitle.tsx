@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Flex, Label } from "@patternfly/react-core";
+import { words } from "@/Core";
 import { useUrlStateWithString } from "@/Data/Common";
-import { words } from "@/UI/words";
 import { InstanceDetailsContext } from "../../../Core/Context";
 
 interface Props {

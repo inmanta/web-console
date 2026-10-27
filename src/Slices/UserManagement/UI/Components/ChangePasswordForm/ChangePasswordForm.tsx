@@ -11,11 +11,11 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { useChangeUserPassword } from "@/Data/Queries/Slices/Auth";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 interface Props {
   user: string;

@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { BACKDROP_CLASS, ModalContext, ModalProvider, Params } from "./ModalProvider";
+import { ModalContext, Params } from "@/UI/Dependency/ModalContext";
+import { BACKDROP_CLASS, ModalProvider } from "./ModalProvider";
 
 const MockedModalUser = ({ overrides = {} }: { overrides?: Partial<Params> }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);

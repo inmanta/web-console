@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Button, EmptyState, PageSection, EmptyStateFooter } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { Link } from "@/UI/Components/Link";
 import { DependencyContext } from "@/UI/Dependency";
 import { useDocumentTitle } from "@/UI/Routing";
-import { words } from "@/UI/words";
 
 export const Page: React.FC = () => {
   useDocumentTitle("404 Page Not Found");

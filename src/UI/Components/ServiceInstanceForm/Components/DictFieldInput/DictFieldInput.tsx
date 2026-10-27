@@ -1,10 +1,9 @@
 import React, { ComponentProps, useEffect, useRef, useState } from "react";
 import { Language } from "@patternfly/react-code-editor";
 import { FormGroup, FormHelperText, HelperText, HelperTextItem } from "@patternfly/react-core";
-import { DictField } from "@/Core";
+import { DictField, words } from "@/Core";
 import { CodeEditor } from "@/UI/Components/CodeEditor";
 import { ResizeHandle } from "@/UI/Components/ResizeHandle";
-import { words } from "@/UI/words";
 import { DictValue, toDict, toText } from "./helpers";
 
 const MAX_AUTO_HEIGHT = 350;

@@ -1,5 +1,7 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
+import { words } from "@/Core";
+import { AgentStatus } from "@/Core/Domain/Agent";
 import { Filter } from "@/Slices/Agents/Core/Types";
 import { AddableTextInput } from "@/UI/Components/AddableTextInput";
 import {
@@ -9,8 +11,6 @@ import {
   getFilterActions,
 } from "@/UI/Components/FilterDrawer";
 import { MultiTextSelect } from "@/UI/Components/MultiTextSelect";
-import { words } from "@/UI/words";
-import { AgentStatus } from "@S/Agents/Core/Domain";
 
 interface Props {
   filter: Filter;

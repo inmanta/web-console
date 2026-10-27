@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Resource } from "@/Core";
+import { Resource, words } from "@/Core";
 import { getById } from "@/Test";
 import { MockOrchestratorProvider } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
 vi.mock("@/Data/Queries/Slices/Agents", () => ({

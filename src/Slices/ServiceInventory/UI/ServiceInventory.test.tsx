@@ -7,7 +7,7 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { FeatureModule } from "@/Core";
+import { FeatureModule, words } from "@/Core";
 import {
   Service,
   ServiceInstance,
@@ -18,7 +18,6 @@ import {
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { words } from "@/UI/words";
 import { ServiceInventory } from "./ServiceInventory";
 
 function setup(service = Service.a, pageSize = "", features?: FeatureModule[]) {

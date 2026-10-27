@@ -11,7 +11,7 @@ import {
 } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
-import { FlatEnvironment } from "@/Core";
+import { FlatEnvironment, words } from "@/Core";
 import {
   useClearEnvironment,
   useDeleteEnvironment,
@@ -20,9 +20,8 @@ import {
 } from "@/Data/Queries/Slices/Environment";
 import { AppAlert } from "@/UI/Components/AppAlert";
 import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { useNavigateTo } from "@/UI/Routing";
-import { words } from "@/UI/words";
 import { EnvActions } from "./Actions";
 
 interface Props {

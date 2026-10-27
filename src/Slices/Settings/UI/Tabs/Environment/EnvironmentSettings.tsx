@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { DescriptionList } from "@patternfly/react-core";
-import { FlatEnvironment, ProjectModel } from "@/Core";
+import { FlatEnvironment, ProjectModel, words } from "@/Core";
 import { useModifyEnvironment } from "@/Data/Queries/Slices/Environment";
 import { useCreateProject } from "@/Data/Queries/Slices/Project";
 import { AppAlert } from "@/UI/Components/AppAlert";
@@ -12,7 +12,6 @@ import {
   EditableTextAreaField,
 } from "@/UI/Components/InlineEditable";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { Actions } from "./Components";
 
 interface Props {

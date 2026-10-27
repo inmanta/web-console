@@ -1,14 +1,6 @@
-import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
-import { ServiceOrder } from "../Core/Types";
-
-const columnHeads: ColumnHead[] = [
-  { displayName: words("orders.column.created_at"), apiName: "created_at" },
-  { displayName: words("orders.column.completed_at"), apiName: "completed_at" },
-  { displayName: words("status"), apiName: "status" },
-  { displayName: words("orders.column.progress"), apiName: "progress" },
-  { displayName: words("orders.column.description"), apiName: "description" },
-];
+import { words } from "@/Core";
+import { ServiceOrder } from "@/Core/Domain/ServiceOrderModel";
+import { createTablePresenter } from "@/UI/Presenters";
 
 /**
  * Table presenter for the orders view. Rows are the orders unchanged.
@@ -17,7 +9,13 @@ const columnHeads: ColumnHead[] = [
  */
 export const createOrdersTablePresenter = () =>
   createTablePresenter<ServiceOrder, ServiceOrder>({
-    columnHeads,
+    columnHeads: [
+      { displayName: words("orders.column.created_at"), apiName: "created_at" },
+      { displayName: words("orders.column.completed_at"), apiName: "completed_at" },
+      { displayName: words("status"), apiName: "status" },
+      { displayName: words("orders.column.progress"), apiName: "progress" },
+      { displayName: words("orders.column.description"), apiName: "description" },
+    ],
     sortableColumns: ["created_at"],
     createRows: (orders) => orders,
   });

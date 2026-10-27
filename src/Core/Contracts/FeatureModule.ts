@@ -1,5 +1,6 @@
 import { ComponentType } from "react";
 import { RouteFactory, RouteKind } from "@/Core/Domain";
+import { Messages } from "@/Core/I18n";
 import { Feature, OrchestratorProvider } from "./OrchestratorProvider";
 
 /**
@@ -50,9 +51,11 @@ export interface FeatureModule {
   contributions?: Partial<Contributions>;
 
   /**
-   * The messages of the feature, merged into the words registry.
+   * The English messages of the feature, registered with `registerMessages` when the app starts.
+   * English is the default language and the fallback of every other one. Their keys are added to
+   * `WordsRegistry` next to the messages.
    */
-  translations?: Translations;
+  messages?: Messages;
 }
 
 /**
@@ -111,6 +114,10 @@ export type Contributions = {
 };
 
 /**
- * Messages by key. A message is a string, or a function that returns one.
+ * Returns the routes of the given features, in order.
+ *
+ * @param features - the features to take the routes of
+ * @returns the route factories of every route of these features
  */
-export type Translations = Record<string, string | ((...args: never[]) => string)>;
+export const getFeatureRoutes = (features: FeatureModule[]): RouteFactory[] =>
+  features.flatMap((feature) => feature.routes.map(({ route }) => route));

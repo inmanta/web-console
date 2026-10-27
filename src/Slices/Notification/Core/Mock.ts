@@ -1,4 +1,4 @@
-import { Notification } from "./Domain";
+import { Notification } from "@/Core/Domain/Notification";
 
 export const unread: Notification = {
   environment: "env",

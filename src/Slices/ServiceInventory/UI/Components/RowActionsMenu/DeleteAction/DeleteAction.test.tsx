@@ -1,10 +1,10 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { words } from "@/Core";
 import { ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
 import { DeleteAction } from "./DeleteAction";
 
 const mockedMutate = vi.hoisted(() => vi.fn());

@@ -1,10 +1,10 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { Resource, Sort } from "@/Core";
+import * as wordsModule from "@/Core/I18n/Words";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import * as wordsModule from "@/UI/words";
 import { routes } from "@/appFeatures";
 import { ResourceRow } from "./ResourceTableRow";
 import { ResourcesTable } from "./ResourcesTable";

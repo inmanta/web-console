@@ -10,6 +10,7 @@ import {
 } from "@patternfly/react-core";
 import { CopyIcon, ToolsIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
+import { words } from "@/Core";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import {
   getAvailableStateTargets,
@@ -20,7 +21,6 @@ import {
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { Link } from "@/UI/Components/Link";
 import { DependencyContext, useVisibleLinkActions } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { DeleteAction, DestroyAction, ExpertStateTransfer, StateAction } from "./Actions";
 
 /**
@@ -128,7 +128,7 @@ export const InstanceActions: React.FC = () => {
         popperProps={{ position: "right" }}
       >
         <DropdownList>
-          {actions.map(({ id, label, icon: Icon, getUrl, isDisabled }) => (
+          {actions.map(({ id, getLabel, icon: Icon, getUrl, isDisabled }) => (
             <DropdownItem
               key={id}
               itemId={id}
@@ -136,7 +136,7 @@ export const InstanceActions: React.FC = () => {
               isDisabled={isDisabled?.(context) ?? false}
             >
               <Link variant="plain" pathname={getUrl(routeManager, context)}>
-                {label}
+                {getLabel()}
               </Link>
             </DropdownItem>
           ))}

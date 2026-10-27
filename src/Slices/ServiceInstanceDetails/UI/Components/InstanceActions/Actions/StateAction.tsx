@@ -2,12 +2,11 @@ import React, { useContext, useState } from "react";
 import { DropdownGroup, DropdownItem } from "@patternfly/react-core";
 import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
 import styled, { css } from "styled-components";
-import { ParsedNumber } from "@/Core";
+import { ParsedNumber, words } from "@/Core";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { iconColorFor } from "@/UI/Utils";
-import { words } from "@/UI/words";
 import { StateTransferModalContent } from "./StateTransferModalContent";
 
 interface Props {

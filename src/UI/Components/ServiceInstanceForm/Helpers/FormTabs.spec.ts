@@ -1,6 +1,5 @@
-import { EntityAnnotations, Field } from "@/Core";
+import { EntityAnnotations, Field, words } from "@/Core";
 import * as Test from "@/Test";
-import { words } from "@/UI/words";
 import { isSingleRelationTab, resolveFormTabs } from "./FormTabs";
 
 const { general, network, extras, entityAnnotations } = Test.Service.FormTabs;

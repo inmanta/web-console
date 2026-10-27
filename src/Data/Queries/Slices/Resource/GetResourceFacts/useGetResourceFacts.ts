@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { Fact } from "@/Core/Domain/Fact";
 import { useGet, REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
-import { Fact } from "@/Slices/Facts/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**

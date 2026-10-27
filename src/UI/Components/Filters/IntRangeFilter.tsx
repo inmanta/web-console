@@ -9,9 +9,8 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
-import { IntRange, RangeOperator } from "@/Core";
+import { IntRange, RangeOperator, words } from "@/Core";
 import { preventNumberInputScroll } from "@/UI/Utils";
-import { words } from "@/UI/words";
 
 interface Props {
   label: string;

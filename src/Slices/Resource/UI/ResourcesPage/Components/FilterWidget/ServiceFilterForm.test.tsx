@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Resource } from "@/Core";
-import { words } from "@/UI/words";
+import { Resource, words } from "@/Core";
 import { ServiceFilterForm } from "./ServiceFilterForm";
 
 vi.mock("@/Data/Queries/Slices/Service", () => ({

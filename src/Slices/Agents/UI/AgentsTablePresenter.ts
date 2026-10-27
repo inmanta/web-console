@@ -1,6 +1,6 @@
+import { words } from "@/Core";
+import { Agent, AgentRow } from "@/Core/Domain/Agent";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
-import { words } from "@/UI/words";
-import { Agent, AgentRow } from "@S/Agents/Core/Domain";
 
 /**
  * Table presenter for the Agents view. The "unpause on resume" column only shows

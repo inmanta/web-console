@@ -11,9 +11,9 @@ import {
 } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { ServiceOrderItemStatus } from "@/Slices/Orders/Core/Types";
+import { words } from "@/Core";
+import { ServiceOrderItemStatus } from "@/Core/Domain/ServiceOrderModel";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 
 interface Props {
   state: ServiceOrderItemStatus;

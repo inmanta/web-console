@@ -5,6 +5,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, graphql, http } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   EnvironmentPreviewResponse,
@@ -12,7 +13,6 @@ import {
 } from "@/Data/Queries/Slices/Environment";
 import { getServerStatusKey } from "@/Data/Queries/Slices/Server";
 import { MockedDependencyProvider, ServerStatus } from "@/Test";
-import { words } from "@/UI/words";
 import { Initializer } from "./Initializer";
 
 const queryBase = graphql.link("/api/v2/graphql");

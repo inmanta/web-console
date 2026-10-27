@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import { Button, Label } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import { words } from "@/Core";
 import { useGetTokens, useRevokeToken } from "@/Data/Queries/Slices/Environment";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 
 /**
  * Lists the registered (revocable) tokens of the current environment and allows revoking them.

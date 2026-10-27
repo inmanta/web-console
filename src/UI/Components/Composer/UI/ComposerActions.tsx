@@ -2,15 +2,15 @@ import React, { useCallback, useContext } from "react";
 import "@rappidcss";
 import { useLocation, useNavigate } from "react-router";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
+import { words } from "@/Core";
+import { ServiceOrder } from "@/Core/Domain/ServiceOrderModel";
 import { usePostOrder } from "@/Data/Queries/Slices/Order";
 import {
   usePostMetadata,
   useGetInstanceWithRelations,
 } from "@/Data/Queries/Slices/ServiceInstance";
-import { ServiceOrder } from "@/Slices/Orders/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { words } from "@/UI/words";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 import { ComposerContext } from "../Data/Context";
 import { getServiceOrderItemsArray, SavedCoordinates } from "../Data/Helpers";
 

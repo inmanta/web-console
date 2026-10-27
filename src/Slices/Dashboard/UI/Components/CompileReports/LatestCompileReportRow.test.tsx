@@ -1,10 +1,10 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
+import { words } from "@/Core";
+import { CompileReport } from "@/Core/Domain/CompileReport";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { words } from "@/UI/words";
 import { routes } from "@/appFeatures";
 import { LatestCompileReportRow } from "./LatestCompileReportRow";
 

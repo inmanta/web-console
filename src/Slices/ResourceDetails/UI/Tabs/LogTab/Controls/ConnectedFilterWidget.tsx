@@ -1,6 +1,6 @@
 import React, { memo } from "react";
+import { ResourceLogFilter } from "@/Core/Domain/ResourceLog";
 import { useUrlStateWithFilter } from "@/Data/Common";
-import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
 interface Props {

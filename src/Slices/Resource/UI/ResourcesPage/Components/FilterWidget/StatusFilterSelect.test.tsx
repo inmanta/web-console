@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { words } from "@/Core";
 import { getById } from "@/Test";
-import { words } from "@/UI/words";
 import { StatusFilterSelect } from "./StatusFilterSelect";
 
 const StatusFilterHarness: React.FC<{ initial?: string[] }> = ({ initial }) => {

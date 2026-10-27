@@ -1,5 +1,5 @@
 import markdownit, { type MarkdownIt } from "markdown-it";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 import stateTransferPlugin, { SetStateButtonDefaults } from "./StateTransferPlugin";
 
 describe("StateTransferPlugin", () => {

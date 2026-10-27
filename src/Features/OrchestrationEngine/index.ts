@@ -7,6 +7,7 @@ import * as DesiredStateCompare from "@S/DesiredStateCompare/Core/Route";
 import * as DesiredStateDetails from "@S/DesiredStateDetails/Core/Route";
 import * as DesiredStateResourceDetails from "@S/DesiredStateResourceDetails/Core/Route";
 import * as Parameters from "@S/Parameters/Core/Route";
+import { orchestrationEngineMessages } from "./messages";
 
 /**
  * The Orchestration Engine: desired state, compliance checks, compile reports and parameters.
@@ -14,6 +15,7 @@ import * as Parameters from "@S/Parameters/Core/Route";
 export const orchestrationEngineFeature: FeatureModule = {
   id: "orchestration-engine",
   version: APP_VERSION,
+  messages: orchestrationEngineMessages,
   routes: [
     {
       route: CompileDetails.route,

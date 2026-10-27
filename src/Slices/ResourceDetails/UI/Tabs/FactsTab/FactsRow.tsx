@@ -1,5 +1,6 @@
 import React from "react";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
+import { Fact } from "@/Core/Domain/Fact";
 import { ClassifiedAttribute } from "@/Data/Common";
 import {
   AttributeExpandTd,
@@ -8,7 +9,6 @@ import {
   useAttributeExpansion,
 } from "@/UI/Components/AttributeList";
 import { CustomDatePresenter } from "@/UI/Utils";
-import { Fact } from "@S/Facts/Core/Domain";
 
 const datePresenter = new CustomDatePresenter();
 

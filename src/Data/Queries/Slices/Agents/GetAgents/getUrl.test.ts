@@ -1,5 +1,5 @@
 import { PageSize } from "@/Core";
-import { AgentStatus } from "@S/Agents/Core/Domain";
+import { AgentStatus } from "@/Core/Domain/Agent";
 import { getUrl } from "./getUrl";
 import { GetAgentsParams } from "./useGetAgents";
 

@@ -1,10 +1,10 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react";
+import { words } from "@/Core";
 import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import { createCookie, removeCookie } from "@/Data/Common/CookieHelper";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI/words";
 import { ApiEndpoint, parseJsonResponse, useFetchHelpers } from ".";
 
 const accessPolicyMessage = "Request is not allowed by the access policy.";

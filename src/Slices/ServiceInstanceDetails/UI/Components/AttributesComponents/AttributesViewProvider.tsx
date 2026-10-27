@@ -44,7 +44,7 @@ export const AttributesViewProvider: React.FC<Props> = ({ selectedView }) => {
   }
 
   if (!logsQuery.data || !serviceModelQuery.data) {
-    return NoDataState;
+    return <NoDataState />;
   }
 
   let attributeSets: Partial<Record<AttributeSets, InstanceAttributeModel>>;
@@ -58,7 +58,7 @@ export const AttributesViewProvider: React.FC<Props> = ({ selectedView }) => {
   const dropdownOptions = Object.keys(attributeSets);
 
   if (!dropdownOptions.length) {
-    return NoDataState;
+    return <NoDataState />;
   }
 
   return (

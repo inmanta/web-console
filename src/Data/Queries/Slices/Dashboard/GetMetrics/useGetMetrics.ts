@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { BackendMetricData } from "@/Core/Domain/Metrics";
 import { CustomError, useGet } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
-import { BackendMetricData } from "@/Slices/Dashboard/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
 

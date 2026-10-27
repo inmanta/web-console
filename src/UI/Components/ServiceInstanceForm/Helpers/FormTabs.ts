@@ -1,5 +1,4 @@
-import { EntityAnnotations, Field, FormTabDefinition } from "@/Core";
-import { words } from "@/UI/words";
+import { EntityAnnotations, Field, FormTabDefinition, words } from "@/Core";
 
 /**
  * A form tab together with the top-level fields that are assigned to it.

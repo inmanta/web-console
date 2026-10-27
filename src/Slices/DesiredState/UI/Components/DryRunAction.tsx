@@ -1,12 +1,11 @@
 import React, { useContext } from "react";
 import { DropdownItem } from "@patternfly/react-core";
-import { ParsedNumber } from "@/Core";
+import { ParsedNumber, words } from "@/Core";
 import { useTriggerDryRun } from "@/Data/Queries/Slices/DryRun";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { useNotifyDryRunStarted } from "@/UI/Components/ResourceActions";
 import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { words } from "@/UI/words";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
 
 interface Props {
   version: ParsedNumber;

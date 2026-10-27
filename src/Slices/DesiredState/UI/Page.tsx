@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { ParsedNumber } from "@/Core";
+import { ParsedNumber, words } from "@/Core";
 import { usePaginatedTable } from "@/Data/Common";
 import {
   useDeleteDesiredStateVersion,
@@ -15,9 +15,8 @@ import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { PageContainer } from "@/UI/Components/PageContainer";
 import { PaginationWidget } from "@/UI/Components/PaginationWidget";
-import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
+import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { ModalContext } from "@/UI/Dependency/ModalContext";
 import { TableControls, ConnectedFilterWidget } from "./Components";
 import { DesiredStatesTable } from "./DesiredStatesTable";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";

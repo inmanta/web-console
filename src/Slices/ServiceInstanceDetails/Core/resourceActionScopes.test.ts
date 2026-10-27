@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { words } from "@/UI/words";
+import { words } from "@/Core";
 import { buildInstanceResourceActionScopes } from "./resourceActionScopes";
 
 describe("buildInstanceResourceActionScopes", () => {

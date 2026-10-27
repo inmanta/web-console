@@ -17,6 +17,7 @@ import {
   NestedField,
   FormSuggestion,
   SuggestionValue,
+  words,
 } from "@/Core";
 import { get } from "@/Core/Language/collection";
 import { toOptionalBoolean } from "@/Data/Common";
@@ -29,7 +30,6 @@ import {
 import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
 import { createFormState, getItemTitle } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { UnitFormInput } from "@/UI/Components/UnitInput";
-import { words } from "@/UI/words";
 import { BooleanToggleInput } from "./BooleanToggleInput";
 import { DictFieldInput } from "./DictFieldInput";
 import { RelatedServiceProvider } from "./RelatedServiceProvider";

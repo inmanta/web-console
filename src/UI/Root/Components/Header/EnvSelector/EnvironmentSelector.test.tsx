@@ -7,15 +7,15 @@ import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { KeycloakAuthConfig, LocalConfig } from "@/Data/Auth";
-import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import { EnvironmentPreview, useGetEnvironments } from "@/Data/Queries/Slices/Environment";
 import { useGetProjects } from "@/Data/Queries/Slices/Project";
 import { AuthTestWrapper, Environment, MockedDependencyProvider, Project } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
+import { EnvSelectorOpenContext } from "@/UI/Dependency/EnvSelectorOpenContext";
+import { AuthProvider } from "@/UI/Root/Auth/AuthProvider";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
-import { EnvSelectorOpenContext } from "./EnvSelectorOpenContext";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 
@@ -331,7 +331,9 @@ describe("EnvironmentSelector", () => {
 
     await userEvent.click(toggle);
 
-    expect(screen.getByPlaceholderText("Search by name or project")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText("Search by name or project")).toBeVisible();
+    });
   });
 
   test("GIVEN EnvironmentSelector WHEN user types in search THEN only matching environments are shown", async () => {
@@ -354,7 +356,9 @@ describe("EnvironmentSelector", () => {
 
     await userEvent.type(searchInput, "dev");
 
-    expect(screen.getByRole("menuitem", { name: /dev-env2/ })).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByRole("menuitem", { name: /dev-env2/ })).toBeVisible();
+    });
     expect(screen.queryByRole("menuitem", { name: /test-env1/ })).not.toBeInTheDocument();
     expect(screen.queryByRole("menuitem", { name: /test-env2/ })).not.toBeInTheDocument();
   });
@@ -403,7 +407,9 @@ describe("EnvironmentSelector", () => {
 
     await userEvent.click(toggle);
 
-    expect(screen.getByText("Create new environment")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByText("Create new environment")).toBeVisible();
+    });
   });
 
   test("GIVEN EnvironmentSelector WHEN environment has an icon THEN an img element is rendered for that item", async () => {
@@ -444,7 +450,9 @@ describe("EnvironmentSelector", () => {
 
     await userEvent.click(toggle);
 
-    expect(screen.getByTestId("manage-projects-menu-item")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByTestId("manage-projects-menu-item")).toBeVisible();
+    });
     expect(screen.getByText("Manage projects")).toBeVisible();
   });
 

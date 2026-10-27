@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Button, Flex } from "@patternfly/react-core";
 import { DownloadIcon } from "@patternfly/react-icons";
+import { words } from "@/Core";
 import { useGetFile } from "@/Data/Queries/Slices/Server";
 import { Spinner } from "@/UI/Components/Spinner";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { Delayed } from "@/UI/Utils";
-import { words } from "@/UI/words";
 import { AppAlert } from "../AppAlert";
 import { CodeEditor } from "../CodeEditor";
 

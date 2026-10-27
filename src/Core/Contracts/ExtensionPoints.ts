@@ -16,9 +16,10 @@ export interface LinkAction<Context> {
   id: string;
 
   /**
-   * The text of the menu item.
+   * Returns the text of the menu item. It is a function, so the message is looked up when the
+   * menu renders, once the messages are registered.
    */
-  label: string;
+  getLabel: () => string;
 
   /**
    * The icon shown before the label.

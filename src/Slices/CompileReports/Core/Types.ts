@@ -1,6 +1,11 @@
-import { DateRange, CompileStatus } from "@/Core/Domain";
+import { CompileStatus } from "@/Core/Domain/CompileStatus";
 
-export interface Filter {
-  requested?: DateRange.DateRange[];
-  status?: CompileStatus;
+export interface CompileReportRow {
+  id: string;
+  requested: string;
+  completed?: string | null;
+  message: string;
+  waitTime: string;
+  compileTime: string;
+  status: CompileStatus;
 }

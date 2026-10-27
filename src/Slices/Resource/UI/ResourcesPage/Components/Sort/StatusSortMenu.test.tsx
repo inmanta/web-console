@@ -4,7 +4,7 @@ import { Resource } from "@/Core";
 import { MultiSort } from "@/Data/Common";
 import { StatusSortMenu, reorderSorts } from "./StatusSortMenu";
 
-vi.mock("@/UI/words", () => ({
+vi.mock("@/Core/I18n/Words", () => ({
   words: (key: string) => key,
 }));
 

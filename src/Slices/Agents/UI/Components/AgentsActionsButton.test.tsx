@@ -5,10 +5,10 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI/words";
 import { AgentsActionsButton } from "./AgentsActionsButton";
 
 const axe = configureAxe({

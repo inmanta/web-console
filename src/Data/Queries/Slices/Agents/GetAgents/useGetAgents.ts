@@ -8,6 +8,7 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import { PageSize, Pagination, Sort } from "@/Core";
+import { Agent, AgentStatus } from "@/Core/Domain/Agent";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   CustomError,
@@ -16,7 +17,6 @@ import {
   getPaginationHandlers,
 } from "@/Data/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
-import { Agent, AgentStatus } from "@/Slices/Agents/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
 

@@ -5,13 +5,13 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { graphql, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@/Core";
 import { PageInfo, mapStatusToGraphQLFilter } from "@/Data/Queries/Slices/Resource";
 import { response } from "@/Slices/Agents";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
 import { createMockResourceSummary } from "@/Test/Data/Resource";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { words } from "@/UI/words";
 import { Page } from "./Page";
 
 const axe = configureAxe({
