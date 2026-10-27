@@ -1,4 +1,4 @@
-import { ServiceOrderItem } from "@/Core/Domain/ServiceOrderModel";
+import { ServiceOrderItem } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
 import { getInstanceDisplayName } from "./getInstanceDisplayName";
 
 const baseRow: ServiceOrderItem = {

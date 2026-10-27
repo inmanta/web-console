@@ -12,14 +12,14 @@ import {
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { UseMutateFunction, UseQueryResult } from "@tanstack/react-query";
-import { PageSize, words } from "@/Core";
+import { PageSize, words } from "@inmanta/web-console-core";
 import {
   NotificationResponse,
   useGetNotifications,
   UpdateNotificationParams,
   useUpdateNotification,
-} from "@/Data/Queries/Slices/Notification";
-import { useNavigateTo } from "@/UI/Routing";
+} from "@inmanta/web-console-core/Queries/Slices/Notification";
+import { useNavigateTo } from "@inmanta/web-console-core/Routing";
 import { Item, OnUpdate } from "./Item";
 
 /**

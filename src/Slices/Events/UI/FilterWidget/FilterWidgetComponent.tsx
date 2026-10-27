@@ -1,17 +1,17 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
-import { EventType, words } from "@/Core";
 import { Filter } from "@/Slices/Events/Core/Types";
-import { AddableTextInput } from "@/UI/Components/AddableTextInput";
+import { EventType, words } from "@inmanta/web-console-core";
+import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
 import {
   ActiveFilterGroup,
   ActiveFilters,
   FilterDrawerPanelContent,
   getFilterActions,
-} from "@/UI/Components/FilterDrawer";
-import { TimestampRangeFilter } from "@/UI/Components/Filters";
-import { MultiTextSelect } from "@/UI/Components/MultiTextSelect";
-import { CustomDatePresenter } from "@/UI/Utils";
+} from "@inmanta/web-console-ui/Components/FilterDrawer";
+import { TimestampRangeFilter } from "@inmanta/web-console-ui/Components/Filters";
+import { MultiTextSelect } from "@inmanta/web-console-ui/Components/MultiTextSelect";
+import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 
 const datePresenter = new CustomDatePresenter();
 

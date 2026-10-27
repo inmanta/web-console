@@ -1,10 +1,10 @@
 import React from "react";
-import { ServiceModel, words } from "@/Core";
-import { useGetInstance } from "@/Data/Queries/Slices/ServiceInstance";
-import { Description } from "@/UI/Components/Description";
-import { PageContainer } from "@/UI/Components/PageContainer";
 import { ServiceProvider } from "@/UI/Components/ServiceProvider";
-import { useRouteParams } from "@/UI/Routing";
+import { ServiceModel, words } from "@inmanta/web-console-core";
+import { useGetInstance } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { useRouteParams } from "@inmanta/web-console-core/Routing";
+import { Description } from "@inmanta/web-console-ui/Components/Description";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { Events } from "./Events";
 
 const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children, ...props }) => (

@@ -4,7 +4,7 @@ import {
   InterServiceRelation,
   ServiceInstanceModel,
   ServiceModel,
-} from "@/Core";
+} from "@inmanta/web-console-core";
 import { applyRequiredConnections, createPlaceholderInstance } from "./createPlaceholderInstance";
 
 const createMockServiceModel = (

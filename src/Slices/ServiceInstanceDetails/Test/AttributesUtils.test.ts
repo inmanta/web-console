@@ -1,4 +1,4 @@
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
+import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
 import {
   formatTreeRowData,
   getAttributeSetsFromInstance,

@@ -1,5 +1,5 @@
-import { FeatureModule } from "@/Core";
 import * as UserManagement from "@S/UserManagement/Core/Route";
+import { FeatureModule } from "@inmanta/web-console-core";
 import { userManagementMessages } from "./messages";
 
 /**

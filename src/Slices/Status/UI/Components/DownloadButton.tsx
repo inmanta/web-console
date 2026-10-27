@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@patternfly/react-core";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 
 interface Props {
   isPending: boolean;

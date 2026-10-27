@@ -1,7 +1,7 @@
 import React from "react";
-import { words } from "@/Core";
-import { NotificationFilter } from "@/Data/Queries/Slices/Notification";
-import { FreeTextFilter } from "@/UI/Components/Filters";
+import { words } from "@inmanta/web-console-core";
+import { NotificationFilter } from "@inmanta/web-console-core/Queries/Slices/Notification";
+import { FreeTextFilter } from "@inmanta/web-console-ui/Components/Filters";
 
 /**
  * Props for the TitleFilter component.

@@ -3,16 +3,16 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Mock } from "@S/Facts/Test";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { FactsTab } from "./FactsTab";
 import { sortFactRows } from "./FactsTable";
 
 const valueOf = (name: string) => Mock.list.find((f) => f.name === name)?.value ?? "";
 
-// The code editor is mocked globally in test-setup.ts; it renders its content
+// The code editor is mocked globally in the test setup; it renders its content
 // into a <pre data-testid="code-editor-content">. Scope to it so we match the
 // formatted value in the editor rather than the raw value in the preview button.
 const editorShowing = (snippet: string) =>

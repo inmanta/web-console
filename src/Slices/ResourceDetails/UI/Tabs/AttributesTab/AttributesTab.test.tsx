@@ -3,11 +3,11 @@ import { useLocation } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { environmentReferences } from "@/Data/Common/References/Mock";
 import { a, withReferences } from "@/Slices/ResourceDetails/Data/Mock/ResourceDetails";
-import { MockedDependencyProvider } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { environmentReferences } from "@inmanta/web-console-core/Common/References/Mock";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { AttributesTab } from "./AttributesTab";
 
 // Prints the current URL so a test can read the expansion state back out of it.

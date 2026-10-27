@@ -11,17 +11,17 @@ import {
 } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
-import { FlatEnvironment, words } from "@/Core";
+import { FlatEnvironment, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
 import {
   useClearEnvironment,
   useDeleteEnvironment,
   getEnvironmentsKey,
   GetEnvironmentPreviewKey,
-} from "@/Data/Queries/Slices/Environment";
-import { AppAlert } from "@/UI/Components/AppAlert";
-import { DependencyContext } from "@/UI/Dependency";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
-import { useNavigateTo } from "@/UI/Routing";
+} from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { useNavigateTo } from "@inmanta/web-console-core/Routing";
+import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
 import { EnvActions } from "./Actions";
 
 interface Props {

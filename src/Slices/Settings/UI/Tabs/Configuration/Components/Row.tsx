@@ -2,7 +2,7 @@ import React from "react";
 import { Tooltip } from "@patternfly/react-core";
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import { Td, Tr } from "@patternfly/react-table";
-import { EnvironmentSettings } from "@/Core";
+import { EnvironmentSettings } from "@inmanta/web-console-core";
 import { InputActions } from "./InputActions";
 import { ProtectedMessage } from "./ProtectedMessage";
 

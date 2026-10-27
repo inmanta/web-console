@@ -1,10 +1,13 @@
 import React from "react";
 import { Tooltip } from "@patternfly/react-core";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { words } from "@/Core";
-import { DesiredStateVersion, DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
-import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
-import { DesiredStateStatusLabel } from "@/UI/Components/DesiredStateStatusLabel";
+import { words } from "@inmanta/web-console-core";
+import {
+  DesiredStateVersion,
+  DesiredStateVersionStatus,
+} from "@inmanta/web-console-core/Domain/DesiredStateVersion";
+import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
+import { DesiredStateStatusLabel } from "@inmanta/web-console-ui/Components/DesiredStateStatusLabel";
 import { Actions, ResourcesLink } from "./Components";
 
 interface Props {

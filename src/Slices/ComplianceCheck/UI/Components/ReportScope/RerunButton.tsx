@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
-import { DryRunContext, ResourceActionFilter, words } from "@/Core";
-import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
-import { useDryRunFiltered } from "@/Data/Queries/Slices/Resource";
-import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
+import { DryRunContext, ResourceActionFilter, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
+import { useDryRunFiltered } from "@inmanta/web-console-core/Queries/Slices/Resource";
+import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
 import { createRerunPlan } from "./helpers";
 import { RerunPlan } from "./types";
 

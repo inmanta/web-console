@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { Config, words } from "@/Core";
-import { usePostServiceConfig } from "@/Data/Queries/Slices/Service";
 import { BooleanSwitch } from "@/UI/Components/BooleanSwitch";
-import { EmptyView } from "@/UI/Components/EmptyView";
 import { SettingsList } from "@/UI/Components/SettingsList";
-import { DependencyContext } from "@/UI/Dependency";
+import { Config, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { usePostServiceConfig } from "@inmanta/web-console-core/Queries/Slices/Service";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
 
 interface Props {
   config: Config;

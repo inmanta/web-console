@@ -23,17 +23,7 @@ import {
   ListItem,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { InstanceAttributeModel, EntityAnnotations, Field, words } from "@/Core";
-import { set as setAtPath } from "@/Core/Language/collection";
-import { CustomError } from "@/Data/Queries/Helpers";
-import { SuggestionVariables } from "@/Data/Queries/Slices/ServiceInstance";
-import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
-import { usePrompt } from "@/UI/Utils/usePrompt";
-import { AppAlert } from "../AppAlert";
-import { DynamicFAIcon } from "../FaIcon";
-import { JSONEditor } from "../JSONEditor";
-import { FieldInput } from "./Components";
-import { ValidationErrorsContext } from "./Components/ValidationErrorsContext";
+import { InstanceAttributeModel, EntityAnnotations, Field, words } from "@inmanta/web-console-core";
 import {
   createDuplicateFormState,
   createEditFormState,
@@ -44,7 +34,17 @@ import {
   isSingleRelationTab,
   resolveFieldDependencies,
   resolveFormTabs,
-} from "./Helpers";
+} from "@inmanta/web-console-core/FormState";
+import { set as setAtPath } from "@inmanta/web-console-core/Language/collection";
+import { CustomError } from "@inmanta/web-console-core/Queries/Helpers";
+import { SuggestionVariables } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
+import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
+import { FieldInput } from "@inmanta/web-console-ui/Components/FieldInputs";
+import { ValidationErrorsContext } from "@inmanta/web-console-ui/Components/FieldInputs/ValidationErrorsContext";
+import { usePrompt } from "@inmanta/web-console-ui/Utils/usePrompt";
+import { DynamicFAIcon } from "../FaIcon";
+import { JSONEditor } from "../JSONEditor";
 
 interface Props {
   service_entity: string;

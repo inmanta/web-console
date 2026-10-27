@@ -1,7 +1,7 @@
 import React from "react";
 import { Tooltip } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { CustomDatePresenter, useTickerWithUnixMs } from "@/UI/Utils";
+import { words } from "@inmanta/web-console-core";
+import { CustomDatePresenter, useTickerWithUnixMs } from "@inmanta/web-console-ui/Utils";
 
 const datePresenter = new CustomDatePresenter();
 

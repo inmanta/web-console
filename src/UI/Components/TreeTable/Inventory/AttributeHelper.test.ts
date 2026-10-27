@@ -1,5 +1,5 @@
-import { ServiceModel } from "@/Core";
-import { Service } from "@/Test";
+import { ServiceModel } from "@inmanta/web-console-core";
+import { Service } from "@inmanta/web-console-test-utils";
 import { InventoryAttributeHelper, getValue, isLeaf, isMultiLeaf } from "./AttributeHelper";
 
 test("AttributeHelper getPaths", () => {

@@ -4,10 +4,10 @@ import { render, screen } from "@testing-library/react";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { MockedDependencyProvider, EnvironmentDetails } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@inmanta/web-console-core";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { MockedDependencyProvider, EnvironmentDetails } from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Page } from "./Page";
 
 const axe = configureAxe({

@@ -1,11 +1,11 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { words } from "@/Core";
-import { CompileReport } from "@/Core/Domain/CompileReport";
-import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { routes } from "@/appFeatures";
+import { words } from "@inmanta/web-console-core";
+import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
+import { CompileReport } from "@inmanta/web-console-core/Domain/CompileReport";
+import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { LatestCompileReportRow } from "./LatestCompileReportRow";
 
 const routeManager = PrimaryRouteManager("", routes);

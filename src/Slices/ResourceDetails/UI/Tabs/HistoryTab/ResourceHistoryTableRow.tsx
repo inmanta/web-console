@@ -1,10 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { words } from "@/Core";
-import { useExpansion } from "@/Data/Common";
 import { ResourceHistoryRow } from "@/Slices/ResourceDetails/Core/Types";
-import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
-import { scrollRowIntoView } from "@/UI/Utils";
+import { words } from "@inmanta/web-console-core";
+import { useExpansion } from "@inmanta/web-console-core/Common";
+import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
+import { scrollRowIntoView } from "@inmanta/web-console-ui/Utils";
 import { TabKey, Tabs } from "./Tabs";
 
 interface Props {

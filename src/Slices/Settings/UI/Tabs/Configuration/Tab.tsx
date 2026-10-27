@@ -1,7 +1,7 @@
 import React from "react";
-import { useGetEnvironmentSettings } from "@/Data/Queries/Slices/Environment";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
+import { useGetEnvironmentSettings } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { Provider } from "./Provider";
 
 interface Props {

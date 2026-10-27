@@ -1,11 +1,11 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { Resource, Sort } from "@/Core";
-import * as wordsModule from "@/Core/I18n/Words";
-import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { routes } from "@/appFeatures";
+import { Resource, Sort } from "@inmanta/web-console-core";
+import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
+import * as wordsModule from "@inmanta/web-console-core/I18n/Words";
+import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import { ResourceRow } from "./ResourceTableRow";
 import { ResourcesTable } from "./ResourcesTable";
 

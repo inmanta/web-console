@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 import { buildInstanceResourceActionScopes } from "./resourceActionScopes";
 
 describe("buildInstanceResourceActionScopes", () => {

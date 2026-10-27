@@ -1,6 +1,6 @@
 import React from "react";
 import { Table, Thead, Tr, Th, OnSort } from "@patternfly/react-table";
-import { Row, ServiceModel, Sort, words } from "@/Core";
+import { Row, ServiceModel, Sort, words } from "@inmanta/web-console-core";
 import { InstanceRow } from "./InstanceRow";
 import { InventoryTablePresenter } from "./Presenters";
 

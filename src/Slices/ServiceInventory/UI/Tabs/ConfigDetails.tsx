@@ -8,12 +8,12 @@ import {
   Title,
   Tooltip,
 } from "@patternfly/react-core";
-import { Config, VersionedServiceInstanceIdentifier, words } from "@/Core";
-import { usePostInstanceConfig } from "@/Data/Queries/Slices/ServiceInstance";
 import { DefaultSwitch } from "@/UI/Components/DefaultSwitch";
-import { EmptyView } from "@/UI/Components/EmptyView";
 import { SettingsList } from "@/UI/Components/SettingsList";
-import { DependencyContext } from "@/UI/Dependency";
+import { Config, VersionedServiceInstanceIdentifier, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { usePostInstanceConfig } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
 
 interface Props {
   config: Config;

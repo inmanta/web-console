@@ -9,12 +9,12 @@ import {
   SelectOptionProps,
   Content,
 } from "@patternfly/react-core";
-import { InstanceAttributeModel, words } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { AttributeSets, getAvailableAttributesSets } from "@/Slices/ServiceInstanceDetails/Utils";
-import { useTheme } from "@/UI/Components/DarkmodeOption";
 import { SearchSelect } from "@/UI/Components/SearchSelect";
-import { CustomDatePresenter } from "@/UI/Utils";
+import { InstanceAttributeModel, words } from "@inmanta/web-console-core";
+import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
+import { useTheme } from "@inmanta/web-console-ui/Components/DarkmodeOption";
+import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 
 interface Props {
   instanceLogs: InstanceLog[];

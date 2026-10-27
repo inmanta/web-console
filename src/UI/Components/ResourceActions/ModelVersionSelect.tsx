@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { words } from "@/Core";
-import { DesiredStateVersion, DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersion";
+import { words } from "@inmanta/web-console-core";
+import {
+  DesiredStateVersion,
+  DesiredStateVersionStatus,
+} from "@inmanta/web-console-core/Domain/DesiredStateVersion";
 import {
   useGetDesiredStateVersion,
   useGetDesiredStateVersions,
-} from "@/Data/Queries/Slices/DesiredState";
-import { DesiredStateStatusLabel } from "@/UI/Components/DesiredStateStatusLabel";
+} from "@inmanta/web-console-core/Queries/Slices/DesiredState";
+import { DesiredStateStatusLabel } from "@inmanta/web-console-ui/Components/DesiredStateStatusLabel";
 import { VersionSelectNotice, VersionSelectOption, VersionSelect } from "./VersionSelect";
 import { useVersionSearch } from "./useVersionSearch";
 

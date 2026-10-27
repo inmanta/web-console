@@ -6,9 +6,9 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
-import { EventRow, words } from "@/Core";
-import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { EventIcon } from "@/UI/Components/EventIcon";
+import { EventRow, words } from "@inmanta/web-console-core";
+import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
 import { CompileReportLink } from "./CompileReportLink";
 
 interface Props {

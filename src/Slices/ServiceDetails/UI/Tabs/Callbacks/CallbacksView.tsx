@@ -1,7 +1,7 @@
 import React from "react";
-import { useGetCallbacks } from "@/Data/Queries/Slices/Callback";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
+import { useGetCallbacks } from "@inmanta/web-console-core/Queries/Slices/Callback";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { CallbacksTable } from "./CallbacksTable";
 
 interface Props {

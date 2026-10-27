@@ -3,10 +3,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { MockedDependencyProvider } from "@/Test";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as Mock from "@S/CompileReports/Core/Mock";
+import { words } from "@inmanta/web-console-core";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { LatestCompileReportsPanel } from "./LatestCompileReportsPanel";
 
 const server = setupServer();

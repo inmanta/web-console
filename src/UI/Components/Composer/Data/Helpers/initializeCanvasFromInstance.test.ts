@@ -1,6 +1,6 @@
 import { dia } from "@joint/plus";
-import { ServiceModel, ServiceInstanceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Queries/Slices/ServiceInstance/GetInstanceWithRelations";
+import { ServiceModel, ServiceInstanceModel } from "@inmanta/web-console-core";
+import { InstanceWithRelations } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance/GetInstanceWithRelations";
 import { defineObjectsForJointJS } from "../../testSetup";
 import { RelationsDictionary } from "./createRelationsDictionary";
 import { initializeCanvasFromInstance } from "./initializeCanvasFromInstance";

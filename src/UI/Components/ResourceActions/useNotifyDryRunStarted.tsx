@@ -2,12 +2,12 @@ import React, { useContext } from "react";
 import { useLocation } from "react-router";
 import { AlertActionLink } from "@patternfly/react-core";
 import { EyeIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
-import { StartedDryRun } from "@/Data/Queries/Slices/Resource";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { useNavigateTo } from "@/UI/Routing";
-import { createReportSearch } from "@/UI/Routing/ReportSearch";
+import { words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { StartedDryRun } from "@inmanta/web-console-core/Queries/Slices/Resource";
+import { useNavigateTo } from "@inmanta/web-console-core/Routing";
+import { createReportSearch } from "@inmanta/web-console-core/Routing/ReportSearch";
 
 /**
  * Returns a function that shows the "Dry run started" toast. Its link opens the dry run's report on

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { words } from "@/Core";
-import { useUrlStateWithString } from "@/Data/Common";
-import { useGetServiceModel } from "@/Data/Queries/Slices/Service";
-import { useGetInstance, useGetInstanceLogs } from "@/Data/Queries/Slices/ServiceInstance";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PageContainer } from "@/UI/Components/PageContainer";
-import { useRouteParams } from "@/UI/Routing";
+import { words } from "@inmanta/web-console-core";
+import { useUrlStateWithString } from "@inmanta/web-console-core/Common";
+import { useGetServiceModel } from "@inmanta/web-console-core/Queries/Slices/Service";
+import {
+  useGetInstance,
+  useGetInstanceLogs,
+} from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { useRouteParams } from "@inmanta/web-console-core/Routing";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { InstanceDetailsContext } from "../Core/Context";
 import { InstanceHeaderActions, VersionedPageTitle } from "./Components/Sections";
 import { ServiceInstanceDetailsLayout } from "./ServiceInstanceDetailsLayout";

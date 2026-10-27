@@ -1,4 +1,4 @@
-import { Diagnostics } from "@/Core/Domain/Diagnostics";
+import { Diagnostics } from "@inmanta/web-console-core/Domain/Diagnostics";
 
 const failure: Diagnostics = {
   failures: [

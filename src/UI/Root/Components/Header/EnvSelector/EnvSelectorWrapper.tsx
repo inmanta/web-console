@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { EnvSelectorOpenContext } from "@/UI/Dependency/EnvSelectorOpenContext";
+import { EnvSelectorOpenContext } from "@inmanta/web-console-core/Dependency/EnvSelectorOpenContext";
 import { EnvSelector } from "./EnvSelector";
 
 interface Props {

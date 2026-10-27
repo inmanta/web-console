@@ -5,10 +5,15 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { getBooleanFieldOption, MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@inmanta/web-console-core";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import {
+  getBooleanFieldOption,
+  MockedDependencyProvider,
+  Service,
+  ServiceInstance,
+} from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { CreateInstance } from "./CreateInstance";
 
 const axe = configureAxe({
@@ -20,8 +25,9 @@ const axe = configureAxe({
 
 // Mock usePost before the test
 const postMock = vi.fn();
-vi.mock("@/Data/Queries/Helpers/useQueries", async (importActual) => {
-  const actual = await importActual<typeof import("@/Data/Queries/Helpers/useQueries")>();
+vi.mock("@inmanta/web-console-core/Queries/Helpers/useQueries", async (importActual) => {
+  const actual =
+    await importActual<typeof import("@inmanta/web-console-core/Queries/Helpers/useQueries")>();
 
   return {
     ...actual,

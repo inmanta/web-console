@@ -7,9 +7,9 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Diff, words } from "@/Core";
-import { useGetFile } from "@/Data/Queries/Slices/Server";
 import { EntryInfo } from "@/UI/Components/DiffWizard/types";
+import { Diff, words } from "@inmanta/web-console-core";
+import { useGetFile } from "@inmanta/web-console-core/Queries/Slices/Server";
 import { DefaultEntry } from "./DefaultEntry";
 import { DiffView } from "./DiffView";
 

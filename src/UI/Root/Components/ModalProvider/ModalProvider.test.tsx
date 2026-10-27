@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ModalContext, Params } from "@/UI/Dependency/ModalContext";
+import { ModalContext, Params } from "@inmanta/web-console-core/Dependency/ModalContext";
 import { BACKDROP_CLASS, ModalProvider } from "./ModalProvider";
 
 const MockedModalUser = ({ overrides = {} }: { overrides?: Partial<Params> }) => {

@@ -1,5 +1,5 @@
-import { InstanceEvent, EventType } from "@/Core";
-import * as ServiceInstance from "../../../Test/Data/ServiceInstance";
+import { InstanceEvent, EventType } from "@inmanta/web-console-core";
+import * as ServiceInstance from "@inmanta/web-console-test-utils/Data/ServiceInstance";
 
 export const listA: InstanceEvent[] = [
   {

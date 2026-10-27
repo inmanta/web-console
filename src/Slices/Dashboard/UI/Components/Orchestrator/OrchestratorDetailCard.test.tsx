@@ -3,11 +3,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { ServerStatus as ServerStatusType } from "@/Core/Domain";
-import { MockedDependencyProvider, ServerStatus } from "@/Test";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { CustomDatePresenter } from "@/UI/Utils";
+import { words } from "@inmanta/web-console-core";
+import { ServerStatus as ServerStatusType } from "@inmanta/web-console-core/Domain";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { MockedDependencyProvider, ServerStatus } from "@inmanta/web-console-test-utils";
+import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import { OrchestratorDetailCard } from "./OrchestratorDetailCard";
 
 const datePresenter = new CustomDatePresenter();

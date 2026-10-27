@@ -11,20 +11,20 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
-import { Resource, words } from "@/Core";
-import { usePaginatedTableWithMultiSort } from "@/Data/Common";
+import { ResourceActions } from "@/UI/Components/ResourceActions";
+import { Resource, words } from "@inmanta/web-console-core";
+import { usePaginatedTableWithMultiSort } from "@inmanta/web-console-core/Common";
 import {
   useGetResources,
   mapToResourceActionFilterWithInstanceLabels,
-} from "@/Data/Queries/Slices/Resource";
-import { CompoundResourceStatus } from "@/UI/Components/CompoundResourceStatus";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PaginationWidget } from "@/UI/Components/PaginationWidget";
-import { ResourceActions } from "@/UI/Components/ResourceActions";
-import { Spinner } from "@/UI/Components/Spinner";
+} from "@inmanta/web-console-core/Queries/Slices/Resource";
+import { CompoundResourceStatus } from "@inmanta/web-console-ui/Components/CompoundResourceStatus";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { FilterDrawer, countActiveFilters } from "@inmanta/web-console-ui/Components/FilterDrawer";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PaginationWidget } from "@inmanta/web-console-ui/Components/PaginationWidget";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
 import { ResourcesTable } from "./ResourcesTable";
 import { createResourcesTablePresenter } from "./ResourcesTablePresenter";

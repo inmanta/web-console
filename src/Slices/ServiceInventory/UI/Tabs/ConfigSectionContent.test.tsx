@@ -9,14 +9,19 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { ServiceModel, VersionedServiceInstanceIdentifier, words } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
-import { Service, ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { ServiceModel, VersionedServiceInstanceIdentifier, words } from "@inmanta/web-console-core";
+import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import {
+  Service,
+  ServiceInstance,
+  MockedDependencyProvider,
+  EnvironmentDetails,
+} from "@inmanta/web-console-test-utils";
 import { ConfigSectionContent } from "./ConfigSectionContent";
 
-// Mock the instance config hooks from @/Data/Queries/Slices/ServiceInstance
+// Mock the instance config hooks from @inmanta/web-console-core/Queries/Slices/ServiceInstance
 const mockMutate = vi.fn();
 
 // Create mutable data that can be updated by mutations
@@ -36,7 +41,7 @@ function triggerRefetch() {
   refetchSubscribers.forEach((cb) => cb());
 }
 
-vi.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
+vi.mock("@inmanta/web-console-core/Queries/Slices/ServiceInstance", () => ({
   useGetInstanceConfig: () => ({
     useOneTime: () => {
       const [_, setRerender] = useState({});

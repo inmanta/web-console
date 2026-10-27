@@ -1,4 +1,8 @@
-import { ServiceModel, EmbeddedEntity, InterServiceRelation } from "@/Core/Domain/ServiceModel";
+import {
+  ServiceModel,
+  EmbeddedEntity,
+  InterServiceRelation,
+} from "@inmanta/web-console-core/Domain/ServiceModel";
 import { createRelationsDictionary } from "./createRelationsDictionary";
 
 // Helper function to create a basic service model

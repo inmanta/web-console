@@ -1,7 +1,7 @@
 import React from "react";
 import { Label } from "@patternfly/react-core";
-import { DryRunProgress, words } from "@/Core";
-import { Spinner } from "@/UI/Components/Spinner";
+import { DryRunProgress, words } from "@inmanta/web-console-core";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 
 interface Props {
   progress: DryRunProgress;

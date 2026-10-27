@@ -1,8 +1,11 @@
 import React from "react";
 import { Tr, Td } from "@patternfly/react-table";
-import { Resource } from "@/Core";
-import { ResourceLink } from "@/UI/Components/ResourceLink";
-import { labelColorConfig, ResourceStatusLabel } from "@/UI/Components/ResourceStatus";
+import { Resource } from "@inmanta/web-console-core";
+import { ResourceLink } from "@inmanta/web-console-ui/Components/ResourceLink";
+import {
+  labelColorConfig,
+  ResourceStatusLabel,
+} from "@inmanta/web-console-ui/Components/ResourceStatus";
 import { RequiresTableWrapper } from "./RequiresTableWrapper";
 
 interface Props {

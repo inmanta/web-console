@@ -1,5 +1,9 @@
 import React from "react";
-import { KeycloakAuthConfig, LocalConfig, OidcAuthConfig } from "@/Data/Auth/types";
+import {
+  KeycloakAuthConfig,
+  LocalConfig,
+  OidcAuthConfig,
+} from "@inmanta/web-console-core/Auth/types";
 import { DatabaseAuthProvider } from "./Providers/DatabaseAuthProvider";
 import { JwtAuthProvider } from "./Providers/JwtAuthProvider";
 import { KeycloakAuthProvider } from "./Providers/KeycloakAuthProvider";

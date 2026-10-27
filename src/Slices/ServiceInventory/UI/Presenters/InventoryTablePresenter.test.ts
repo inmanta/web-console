@@ -1,4 +1,4 @@
-import { Service, ServiceInstance } from "@/Test";
+import { Service, ServiceInstance } from "@inmanta/web-console-test-utils";
 import { createInventoryTablePresenter } from "./InventoryTablePresenter";
 
 test("createRows shortens each instance id to a 4 character short id", () => {

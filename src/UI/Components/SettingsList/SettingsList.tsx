@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { Config } from "@/Core";
+import { Config } from "@inmanta/web-console-core";
 
 interface Props {
   config: Config;

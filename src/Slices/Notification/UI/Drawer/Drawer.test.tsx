@@ -8,9 +8,9 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider } from "@/Test";
-import { links, metadata } from "@/Test/Data/Pagination";
 import * as Mock from "@S/Notification/Core/Mock";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { links, metadata } from "@inmanta/web-console-test-utils/Data/Pagination";
 import { Drawer } from "./Drawer";
 
 const axe = configureAxe({

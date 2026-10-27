@@ -2,12 +2,12 @@ import React, { useCallback, useContext } from "react";
 import { useNavigate } from "react-router";
 import { DropdownItem, Content, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
-import { ParsedNumber, words } from "@/Core";
-import { useDestroyInstance } from "@/Data/Queries/Slices/ServiceInstance";
-import { Spinner } from "@/UI/Components/Spinner";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { ParsedNumber, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { useDestroyInstance } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 
 interface Props {
   instance_display_identity: string;

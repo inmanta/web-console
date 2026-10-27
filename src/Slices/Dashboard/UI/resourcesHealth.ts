@@ -1,5 +1,5 @@
-import { words } from "@/Core";
-import { Resource } from "@/Core/Domain/Resource";
+import { words } from "@inmanta/web-console-core";
+import { Resource } from "@inmanta/web-console-core/Domain/Resource";
 import { HealthStatus } from "./Components/EnvironmentHealth/StatusIndicator";
 
 export interface ResourcesHealth {

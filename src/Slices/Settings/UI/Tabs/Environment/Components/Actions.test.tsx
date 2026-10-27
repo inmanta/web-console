@@ -4,11 +4,15 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { EnvironmentPreview } from "@/Data/Queries/Slices/Environment";
-import { Environment, EnvironmentDetails, MockedDependencyProvider } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { EnvironmentPreview } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import {
+  Environment,
+  EnvironmentDetails,
+  MockedDependencyProvider,
+} from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Actions } from "./Actions";
 
 /**

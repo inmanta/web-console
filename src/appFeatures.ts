@@ -1,4 +1,3 @@
-import { FeatureModule, getFeatureRoutes, RouteFactory } from "@/Core";
 import { composerFeature } from "@/Features/Composer";
 import { environmentFeature } from "@/Features/Environment";
 import { graphiqlFeature } from "@/Features/GraphiQL";
@@ -7,6 +6,7 @@ import { orchestrationEngineFeature } from "@/Features/OrchestrationEngine";
 import { resourceManagerFeature } from "@/Features/ResourceManager";
 import { userManagementFeature } from "@/Features/UserManagement";
 import { shellFeature } from "@/UI/Root/shellFeature";
+import { FeatureModule, getFeatureRoutes, RouteFactory } from "@inmanta/web-console-core";
 
 /**
  * The features this app ships. The route table, pages and sidebar are built from this list, so a

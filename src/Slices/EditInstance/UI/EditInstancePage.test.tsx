@@ -6,19 +6,25 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { cloneDeep } from "@/Core/Language/collection";
-import { getBooleanFieldOption, Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
-import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { words } from "@inmanta/web-console-core";
+import { cloneDeep } from "@inmanta/web-console-core/Language/collection";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import {
+  getBooleanFieldOption,
+  Service,
+  ServiceInstance,
+  MockedDependencyProvider,
+} from "@inmanta/web-console-test-utils";
+import { multiNestedEditable } from "@inmanta/web-console-test-utils/Data/Service/EmbeddedEntity";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Page } from "./Page";
 
 // Mock usePatch and usePut before the test
 const mockPatchFn = vi.fn();
 const mockPutFn = vi.fn();
-vi.mock("@/Data/Queries/Helpers/useQueries", async (importActual) => {
-  const actual = await importActual<typeof import("@/Data/Queries/Helpers/useQueries")>();
+vi.mock("@inmanta/web-console-core/Queries/Helpers/useQueries", async (importActual) => {
+  const actual =
+    await importActual<typeof import("@inmanta/web-console-core/Queries/Helpers/useQueries")>();
 
   return {
     ...actual,

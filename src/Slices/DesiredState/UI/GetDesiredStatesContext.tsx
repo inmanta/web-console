@@ -1,7 +1,10 @@
 import { createContext } from "react";
-import { PageSize, ParsedNumber } from "@/Core";
-import { CurrentPage, initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
+import { PageSize, ParsedNumber } from "@inmanta/web-console-core";
+import {
+  CurrentPage,
+  initialCurrentPage,
+} from "@inmanta/web-console-core/Common/UrlState/useUrlStateWithCurrentPage";
 import { CompareSelection } from "./Utils";
 
 interface GetDesiredStatesProvider {

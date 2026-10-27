@@ -1,6 +1,6 @@
-import { words } from "@/Core";
-import { Fact } from "@/Core/Domain/Fact";
-import { createTablePresenter } from "@/UI/Presenters";
+import { words } from "@inmanta/web-console-core";
+import { Fact } from "@inmanta/web-console-core/Domain/Fact";
+import { createTablePresenter } from "@inmanta/web-console-ui/Presenters";
 
 /**
  * Table presenter for the Facts view. Rows are the facts unchanged.

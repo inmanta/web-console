@@ -1,4 +1,4 @@
-import { CompileDetails } from "@/Core/Domain/CompileDetails";
+import { CompileDetails } from "@inmanta/web-console-core/Domain/CompileDetails";
 
 export const data: CompileDetails = {
   id: "4878c413-be74-49cb-9519-8c1d55897e73",

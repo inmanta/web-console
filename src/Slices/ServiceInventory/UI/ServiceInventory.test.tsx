@@ -7,17 +7,17 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { FeatureModule, words } from "@/Core";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { FeatureModule, words } from "@inmanta/web-console-core";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
 import {
   Service,
   ServiceInstance,
   Pagination,
   MockedDependencyProvider,
   withoutFeature,
-} from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+} from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { ServiceInventory } from "./ServiceInventory";
 
 function setup(service = Service.a, pageSize = "", features?: FeatureModule[]) {

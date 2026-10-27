@@ -5,11 +5,11 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@/Core";
-import { KeycloakAuthConfig, LocalConfig } from "@/Data/Auth";
-import * as CookieHelper from "@/Data/Common/CookieHelper";
-import { AuthTestWrapper } from "@/Test/Inject";
 import { AuthProvider } from "@/UI/Root/Auth/AuthProvider";
+import { words } from "@inmanta/web-console-core";
+import { KeycloakAuthConfig, LocalConfig } from "@inmanta/web-console-core/Auth";
+import * as CookieHelper from "@inmanta/web-console-core/Common/CookieHelper";
+import { AuthTestWrapper } from "@inmanta/web-console-test-utils/Inject";
 import { Login } from "./Page";
 
 const mockedUsedNavigate = vi.hoisted(() => vi.fn());

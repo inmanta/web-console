@@ -6,11 +6,11 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider } from "@/Test";
-import { links, metadata } from "@/Test/Data/Pagination";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as Mock from "@S/Notification/Core/Mock";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { links, metadata } from "@inmanta/web-console-test-utils/Data/Pagination";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { NotificationCenterPage } from ".";
 
 const axe = configureAxe({

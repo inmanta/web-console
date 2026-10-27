@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ServiceModel, ServiceOrderItemRequest } from "@/Core";
+import { ServiceModel, ServiceOrderItemRequest } from "@inmanta/web-console-core";
 import { ServiceEntityShape } from "../../UI";
 import { canvasStateToServiceOrderItems } from "../Helpers/deploymentHelpers";
 

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { words } from "@/Core";
-import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { useGetModelVersionForInstanceVersion } from "@/Data/Queries/Slices/Resource";
-import { useGetInstanceLog, useGetInstanceLogs } from "@/Data/Queries/Slices/ServiceInstance";
+import { words } from "@inmanta/web-console-core";
+import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
+import { useGetModelVersionForInstanceVersion } from "@inmanta/web-console-core/Queries/Slices/Resource";
+import {
+  useGetInstanceLog,
+  useGetInstanceLogs,
+} from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { VersionSelectNotice, VersionSelectOption, VersionSelect } from "./VersionSelect";
 import { ResourceActionInstance } from "./types";
 import { useVersionSearch } from "./useVersionSearch";

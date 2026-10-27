@@ -1,8 +1,8 @@
 import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
-import { useGetServiceConfig } from "@/Data/Queries/Slices/Service";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
+import { useGetServiceConfig } from "@inmanta/web-console-core/Queries/Slices/Service";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { ConfigList } from "./ConfigList";
 
 interface Props {

@@ -6,18 +6,18 @@ import {
   removeInvertedSelection,
   toggleValueInList,
   words,
-} from "@/Core";
-import { uniq } from "@/Core/Language/collection";
-import { AddableTextInput } from "@/UI/Components/AddableTextInput";
+} from "@inmanta/web-console-core";
+import { uniq } from "@inmanta/web-console-core/Language/collection";
+import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
 import {
   ActiveFilterGroup,
   ActiveFilters,
   FilterDrawerPanelContent,
   getFilterActions,
-} from "@/UI/Components/FilterDrawer";
-import { IncludeExcludeSelect } from "@/UI/Components/IncludeExcludeSelect";
-import { MultiTextSelect } from "@/UI/Components/MultiTextSelect";
-import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
+} from "@inmanta/web-console-ui/Components/FilterDrawer";
+import { IncludeExcludeSelect } from "@inmanta/web-console-ui/Components/IncludeExcludeSelect";
+import { MultiTextSelect } from "@inmanta/web-console-ui/Components/MultiTextSelect";
+import { OptionalToggleGroup } from "@inmanta/web-console-ui/Components/OptionalToggleGroup";
 
 /** The attribute sets, paired with the label shown to the user. */
 const getAttributeSets = (): { value: ServiceInstanceParams.AttributeSet; label: string }[] => [

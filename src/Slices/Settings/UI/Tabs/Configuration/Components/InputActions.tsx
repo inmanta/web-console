@@ -1,7 +1,7 @@
 import React from "react";
 import { ActionList, ActionListItem, Button } from "@patternfly/react-core";
 import { SaveIcon, UndoIcon } from "@patternfly/react-icons";
-import { EnvironmentSettings, words } from "@/Core";
+import { EnvironmentSettings, words } from "@inmanta/web-console-core";
 
 interface Props {
   info: EnvironmentSettings.InputInfo;

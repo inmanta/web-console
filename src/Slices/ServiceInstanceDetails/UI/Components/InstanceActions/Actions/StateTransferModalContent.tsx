@@ -1,11 +1,11 @@
 import React, { useCallback, useContext, useState } from "react";
 import { Content, Button, Flex, FlexItem, Form, FormGroup, TextArea } from "@patternfly/react-core";
-import { ParsedNumber, words } from "@/Core";
-import { usePostStateTransfer } from "@/Data/Queries/Slices/ServiceInstance";
-import { Spinner } from "@/UI/Components/Spinner";
-import { DependencyContext } from "@/UI/Dependency";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { ParsedNumber, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { usePostStateTransfer } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 
 export interface StateTransferModalContentProps {
   instance_id: string;

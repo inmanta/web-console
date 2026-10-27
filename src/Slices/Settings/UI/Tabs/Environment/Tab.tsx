@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { FlatEnvironment, ProjectModel } from "@/Core";
-import { useGetEnvironmentDetails } from "@/Data/Queries/Slices/Environment";
-import { useGetProjects } from "@/Data/Queries/Slices/Project";
-import { ErrorView } from "@/UI/Components/ErrorView";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { DependencyContext } from "@/UI/Dependency";
+import { FlatEnvironment, ProjectModel } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useGetEnvironmentDetails } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { useGetProjects } from "@inmanta/web-console-core/Queries/Slices/Project";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
 /**

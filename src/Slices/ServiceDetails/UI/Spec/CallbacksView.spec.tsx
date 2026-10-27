@@ -4,12 +4,12 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getShortUuidFromRaw } from "@/Core";
-import { Service, Callback, MockedDependencyProvider } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CallbacksView } from "@S/ServiceDetails/UI/Tabs/Callbacks";
+import { getShortUuidFromRaw } from "@inmanta/web-console-core";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { Service, Callback, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 
 const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);
 

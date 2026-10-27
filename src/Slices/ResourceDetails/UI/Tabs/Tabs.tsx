@@ -1,10 +1,10 @@
 import React from "react";
 import { PageSection, TabContent } from "@patternfly/react-core";
 import { ColumnsIcon, HistoryIcon, ListIcon, ModuleIcon, TableIcon } from "@patternfly/react-icons";
-import { words } from "@/Core";
-import { ResourceDetailsTab } from "@/Core/Domain";
-import { Details } from "@/Core/Domain/Resource/Resource";
-import { IconTabs, TabDescriptor } from "@/UI/Components/IconTabs";
+import { words } from "@inmanta/web-console-core";
+import { ResourceDetailsTab } from "@inmanta/web-console-core/Domain";
+import { Details } from "@inmanta/web-console-core/Domain/Resource/Resource";
+import { IconTabs, TabDescriptor } from "@inmanta/web-console-ui/Components/IconTabs";
 import { AttributesTab } from "./AttributesTab";
 import { FactsTab } from "./FactsTab";
 import { ResourceHistoryView } from "./HistoryTab/ResourceHistoryView";

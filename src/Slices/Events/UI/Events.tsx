@@ -1,18 +1,18 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { ServiceModel, words } from "@/Core";
-import { usePaginatedTable } from "@/Data/Common";
-import { useGetInstanceEvents } from "@/Data/Queries/Slices/ServiceInstance";
 import { Filter } from "@/Slices/Events/Core/Types";
-import { EmptyView } from "@/UI/Components/EmptyView";
-import { ErrorView } from "@/UI/Components/ErrorView";
 import {
   createEventsTablePresenter,
   EventsTableWrapper,
   EventsTableBody,
 } from "@/UI/Components/EventsTable";
-import { FilterDrawer, countActiveFilters } from "@/UI/Components/FilterDrawer";
-import { LoadingView } from "@/UI/Components/LoadingView";
-import { PaginationWidget } from "@/UI/Components/PaginationWidget";
+import { ServiceModel, words } from "@inmanta/web-console-core";
+import { usePaginatedTable } from "@inmanta/web-console-core/Common";
+import { useGetInstanceEvents } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { FilterDrawer, countActiveFilters } from "@inmanta/web-console-ui/Components/FilterDrawer";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PaginationWidget } from "@inmanta/web-console-ui/Components/PaginationWidget";
 import { EventsTableControls } from "./EventsTableControls";
 import { ConnectedFilterWidget } from "./FilterWidget";
 

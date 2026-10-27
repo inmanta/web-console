@@ -17,10 +17,10 @@ import {
   ServiceModel,
   ServiceOrderItemAction,
   ServiceOrderItemRequest,
-} from "@/Core";
-import { sanitizeAttributes } from "@/Data/Common";
-import { SuggestionVariables } from "@/Data/Queries/Slices/ServiceInstance";
-import { CreateModifierHandler, FieldCreator } from "@/UI/Components/ServiceInstanceForm";
+} from "@inmanta/web-console-core";
+import { sanitizeAttributes } from "@inmanta/web-console-core/Common";
+import { CreateModifierHandler, FieldCreator } from "@inmanta/web-console-core/FormState";
+import { SuggestionVariables } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { RelationsDictionary } from "../../Data";
 import {
   checkEmbeddedEntityConnections,

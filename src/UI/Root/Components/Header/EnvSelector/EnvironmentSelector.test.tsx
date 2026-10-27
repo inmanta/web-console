@@ -6,16 +6,24 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { KeycloakAuthConfig, LocalConfig } from "@/Data/Auth";
-import { EnvironmentPreview, useGetEnvironments } from "@/Data/Queries/Slices/Environment";
-import { useGetProjects } from "@/Data/Queries/Slices/Project";
-import { AuthTestWrapper, Environment, MockedDependencyProvider, Project } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { EnvSelectorOpenContext } from "@/UI/Dependency/EnvSelectorOpenContext";
 import { AuthProvider } from "@/UI/Root/Auth/AuthProvider";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
+import { KeycloakAuthConfig, LocalConfig } from "@inmanta/web-console-core/Auth";
+import { EnvSelectorOpenContext } from "@inmanta/web-console-core/Dependency/EnvSelectorOpenContext";
+import {
+  EnvironmentPreview,
+  useGetEnvironments,
+} from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { useGetProjects } from "@inmanta/web-console-core/Queries/Slices/Project";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import {
+  AuthTestWrapper,
+  Environment,
+  MockedDependencyProvider,
+  Project,
+} from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import ErrorBoundary from "@inmanta/web-console-ui/Utils/ErrorBoundary";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 

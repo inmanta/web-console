@@ -1,8 +1,8 @@
 import React from "react";
 import { Label } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
-import { CompileStatus } from "@/Core";
-import { Spinner } from "@/UI/Components/Spinner";
+import { CompileStatus } from "@inmanta/web-console-core";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 
 /**
  * CompileStatusLabel component

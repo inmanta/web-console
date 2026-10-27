@@ -1,5 +1,5 @@
-import { words } from "@/Core";
-import { InstanceSummary, ServiceModel } from "@/Core/Domain/ServiceModel";
+import { words } from "@inmanta/web-console-core";
+import { InstanceSummary, ServiceModel } from "@inmanta/web-console-core/Domain/ServiceModel";
 import { aggregateServicesHealth } from "./servicesHealth";
 
 function makeServiceModel(instanceSummary: InstanceSummary | null): ServiceModel {

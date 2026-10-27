@@ -2,10 +2,10 @@ import { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { CompileError, words } from "@/Core";
-import { Rejection } from "@/Core/Domain/Diagnostics";
-import { MockedDependencyProvider } from "@/Test";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { CompileError, words } from "@inmanta/web-console-core";
+import { Rejection } from "@inmanta/web-console-core/Domain/Diagnostics";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { formatLocation, RejectionCard } from "./RejectionCard";
 
 const axe = configureAxe({

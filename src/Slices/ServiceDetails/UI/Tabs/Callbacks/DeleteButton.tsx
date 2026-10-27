@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
-import { words } from "@/Core";
-import { Callback } from "@/Core/Domain/Callback";
-import { useDeleteCallback } from "@/Data/Queries/Slices/Callback";
-import { ConfirmUserActionForm } from "@/UI/Components/ConfirmUserActionForm";
-import { useAppAlert } from "@/UI/Dependency/AppAlertContext";
-import { ModalContext } from "@/UI/Dependency/ModalContext";
+import { words } from "@inmanta/web-console-core";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { Callback } from "@inmanta/web-console-core/Domain/Callback";
+import { useDeleteCallback } from "@inmanta/web-console-core/Queries/Slices/Callback";
+import { ConfirmUserActionForm } from "@inmanta/web-console-ui/Components/ConfirmUserActionForm";
 
 interface Props {
   callback: Callback;

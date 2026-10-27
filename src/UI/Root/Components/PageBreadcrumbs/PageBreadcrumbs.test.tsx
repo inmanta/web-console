@@ -2,11 +2,11 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { MockedDependencyProvider } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { PrimaryRouteManager } from "@/UI/Routing/PrimaryRouteManager";
-import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { routes } from "@/appFeatures";
+import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
+import { TestMemoryRouter } from "@inmanta/web-console-core/Routing/TestMemoryRouter";
+import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
 function setup(initialEntries?: string[]) {

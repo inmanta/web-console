@@ -5,12 +5,12 @@ import {
   t_global_text_color_regular,
 } from "@patternfly/react-tokens";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { words } from "@/Core";
+import { words } from "@inmanta/web-console-core";
 import { MarkdownContainer } from "./MarkdownContainer";
 import type { Mock } from "vitest";
 
 // Mock the theme hook
-vi.mock("../DarkmodeOption", () => ({
+vi.mock("@inmanta/web-console-ui/Components/DarkmodeOption", () => ({
   useTheme: vi.fn(() => ({ isDark: false, theme: "light", setTheme: vi.fn() })),
 }));
 
