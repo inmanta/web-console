@@ -19,6 +19,10 @@ updates:
     ignore:
       - dependency-name: "madge"
         update-types: ["version-update:semver-major"]
+      # msw 3 mocks below happy-dom's fetch in unit tests, and its fix (`defineNetwork`) is still
+      # experimental. Allow the major again once `defineNetwork` is stable.
+      - dependency-name: "msw"
+        update-types: ["version-update:semver-major"]
     groups:
       patternfly:
         patterns:
