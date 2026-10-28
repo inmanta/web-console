@@ -7,24 +7,18 @@ import { words } from "@/UI/words";
 
 /**
  * This component will display the documentation link and the general API link.
- * If the user is authenticated, the documentation link will be displayed with the token.
+ * The documentation link points to the external docs site, so it never carries the user's token.
  *
  * @returns <React.FC> DocumentationLinks
  */
 export const DocumentationLinks: React.FC = () => {
   const { urlManager, authHelper } = useContext(DependencyContext);
 
-  const documentationLink = urlManager.getDocumentationLink();
-  const generalApiLink = urlManager.getGeneralAPILink();
-
-  // If the user is authenticated, we need to add the token to the documentation link to allow access to the page.
-  const getUrl = (link: string) => {
-    if (authHelper.getToken()) {
-      return link + "?token=" + authHelper.getToken();
-    }
-
-    return link;
-  };
+  // A new tab can't send the Authorization header, so the orchestrator's /api/v2/docs endpoint
+  // reads the token from the query (token_param="token"). Never add the token to external links.
+  const generalApiLink = authHelper.getToken()
+    ? urlManager.getGeneralAPILink() + "?token=" + authHelper.getToken()
+    : urlManager.getGeneralAPILink();
 
   return (
     <>
@@ -34,14 +28,14 @@ export const DocumentationLinks: React.FC = () => {
           position="bottom"
           entryDelay={500}
         >
-          <Link to={getUrl(documentationLink)} target="_blank">
+          <Link to={urlManager.getDocumentationLink()} target="_blank" rel="noopener noreferrer">
             <Button icon={<BookIcon />} aria-label="documentation link" variant="plain" />
           </Link>
         </Tooltip>
       </ToolbarItem>
       <ToolbarItem>
         <Tooltip content={words("dashboard.API.tooltip")} position="bottom" entryDelay={500}>
-          <Link to={getUrl(generalApiLink)} target="_blank">
+          <Link to={generalApiLink} target="_blank">
             <Button icon={<FileCodeIcon />} aria-label="general API link" variant="plain" />
           </Link>
         </Tooltip>

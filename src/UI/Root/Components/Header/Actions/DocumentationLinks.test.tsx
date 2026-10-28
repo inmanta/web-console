@@ -51,11 +51,13 @@ describe("DocumentationLinks", () => {
     expect(apiLink).toHaveAttribute("href", API_LINK);
   });
 
-  it("renders links with token when authenticated", () => {
+  it("adds the token to the API link only when authenticated", () => {
     jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("my-token");
     render(
       <MemoryRouter>
-        <DependencyProvider dependencies={{ urlManager: mockUrlManager }}>
+        <DependencyProvider
+          dependencies={{ urlManager: mockUrlManager, authHelper: defaultAuthContext }}
+        >
           <DocumentationLinks />
         </DependencyProvider>
       </MemoryRouter>
@@ -64,7 +66,8 @@ describe("DocumentationLinks", () => {
     const docButton = screen.getByLabelText("documentation link");
     expect(docButton).toBeInTheDocument();
     const docLink = docButton.closest("a");
-    expect(docLink).toHaveAttribute("href", `${DOC_LINK}?token=my-token`);
+    expect(docLink).toHaveAttribute("href", DOC_LINK);
+    expect(docLink).toHaveAttribute("rel", "noopener noreferrer");
     // API link
     const apiButton = screen.getByLabelText("general API link");
     expect(apiButton).toBeInTheDocument();

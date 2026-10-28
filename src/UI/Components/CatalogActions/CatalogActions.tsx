@@ -30,7 +30,8 @@ export const CatalogActions: React.FC = () => {
 
   const lsmApiLink = urlManager.getLSMAPILink(environmentHandler.useId());
 
-  // If the user is authenticated, we need to add the token to the documentation link to allow access to the page.
+  // A new tab can't send the Authorization header, so the orchestrator's LSM docs endpoint
+  // reads the token from the query. Never add the token to external links.
   const getUrl = (link: string) => {
     if (authHelper.getToken()) {
       return link + "&token=" + authHelper.getToken();

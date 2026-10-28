@@ -1,0 +1,6 @@
+description: |
+  The documentation button in the header no longer adds your login token to the docs.inmanta.com link.
+change-type: patch
+destination-branches: [iso8]
+sections:
+  bugfix: "{{description}}"
