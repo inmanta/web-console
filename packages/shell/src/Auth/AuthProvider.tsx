@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  KeycloakAuthConfig,
-  LocalConfig,
-  OidcAuthConfig,
-} from "@inmanta/web-console-core/Auth/types";
+import { AuthConfig } from "@inmanta/web-console-shell/ShellOptions";
 import { DatabaseAuthProvider } from "./Providers/DatabaseAuthProvider";
 import { JwtAuthProvider } from "./Providers/JwtAuthProvider";
 import { KeycloakAuthProvider } from "./Providers/KeycloakAuthProvider";
@@ -11,7 +7,7 @@ import { NoAuthProvider } from "./Providers/NoAuthProvider";
 import { OidcAuthProvider } from "./Providers/OidcAuthProvider";
 
 interface Props {
-  config: undefined | KeycloakAuthConfig | OidcAuthConfig | LocalConfig;
+  config: AuthConfig | undefined;
 }
 
 /**
