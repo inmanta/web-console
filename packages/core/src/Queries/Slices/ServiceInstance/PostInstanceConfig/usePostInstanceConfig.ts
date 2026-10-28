@@ -10,19 +10,15 @@ interface Body {
   values: Config;
 }
 
-interface Response {
-  data: Config;
-}
-
 /**
  * React Query hook for posting service instance config.
  *
- * @returns {UseMutationResult<Response, Error, Body, unknown>}- The mutation object from `useMutation` hook.
+ * @returns {UseMutationResult<void, Error, Body, unknown>}- The mutation object from `useMutation` hook.
  */
 export const usePostInstanceConfig = (
   service_entity: string,
   id: string
-): UseMutationResult<Response, Error, Body, unknown> => {
+): UseMutationResult<void, Error, Body, unknown> => {
   const client = useQueryClient();
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();

@@ -21,7 +21,7 @@ export const useGenerateToken = (
 ): UseMutationResult<Response, Error, TokenInfo> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<TokenInfo>;
+  const post = usePost(env, { expectResponseBody: true })<TokenInfo, Response>;
 
   return useMutation({
     mutationFn: (params) => post("/api/v2/environment_auth", params),

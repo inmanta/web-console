@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
-import { Config, Field, InstanceAttributeModel } from "@inmanta/web-console-core";
+import { Field, InstanceAttributeModel } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { CustomError, usePut } from "@inmanta/web-console-core/Queries/Helpers";
 import { BodyPut, getBodyPut } from "./helpers";
@@ -10,24 +10,20 @@ interface MutationBody {
   updatedAttributes: InstanceAttributeModel;
 }
 
-interface Response {
-  data: Config;
-}
-
 /**
  * React Query hook for updating instance attributes via PUT.
  *
  * Uses PUT /lsm/v1/service_inventory/{service_entity}/{id}.
  * `current_version` and `ignore_read_only_attributes` are sent in the request body.
  *
- * @returns {UseMutationResult<Response, CustomError, MutationBody, unknown>} The mutation object.
+ * @returns {UseMutationResult<void, CustomError, MutationBody, unknown>} The mutation object.
  */
 export const usePutAttributes = (
   service_entity: string,
   id: string,
   version: number,
-  options: UseMutationOptions<Response, CustomError, MutationBody>
-): UseMutationResult<Response, CustomError, MutationBody, unknown> => {
+  options: UseMutationOptions<void, CustomError, MutationBody>
+): UseMutationResult<void, CustomError, MutationBody, unknown> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const url = `/lsm/v1/service_inventory/${service_entity}/${id}`;

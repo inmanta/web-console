@@ -47,14 +47,14 @@ export const useDryRunFiltered = (
   const client = useQueryClient();
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<DryRunFilteredRequest>;
+  const post = usePost(env, { expectResponseBody: true })<
+    DryRunFilteredRequest,
+    { data: DryRunFilteredResponse }
+  >;
 
   return useMutation({
     mutationFn: async (request) => {
-      const { data }: { data: DryRunFilteredResponse } = await post(
-        "/api/v2/dryrun_filtered",
-        request
-      );
+      const { data } = await post("/api/v2/dryrun_filtered", request);
 
       return { id: data.id, modelVersion: data.model };
     },
