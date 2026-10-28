@@ -43,8 +43,8 @@ const shell = ["./packages/shell"];
 const app = ["./apps/web-console"];
 
 /**
- * The folders of each feature: its slices, its folder in `src/Features` and any other folder it
- * owns. A feature that moved into `packages/features` only has its package folder there.
+ * The folders of each feature: its slices and its folder in `src/Features`. A feature that moved
+ * into `packages/features` only has its package folder there.
  */
 const features = {
   composer: {
@@ -106,17 +106,14 @@ const features = {
 };
 
 const featurePaths = Object.fromEntries(
-  Object.entries(features).map(
-    ([name, { package: packageFolder, folder, slices = [], other = [] }]) => [
-      name,
-      [
-        ...(packageFolder ? [`./packages/features/${packageFolder}`] : []),
-        ...(folder ? [`./src/Features/${folder}`] : []),
-        ...slices.map((slice) => `./src/Slices/${slice}`),
-        ...other,
-      ],
-    ]
-  )
+  Object.entries(features).map(([name, { package: packageFolder, folder, slices = [] }]) => [
+    name,
+    [
+      ...(packageFolder ? [`./packages/features/${packageFolder}`] : []),
+      ...(folder ? [`./src/Features/${folder}`] : []),
+      ...slices.map((slice) => `./src/Slices/${slice}`),
+    ],
+  ])
 );
 
 const allFeatures = Object.values(featurePaths).flat();
