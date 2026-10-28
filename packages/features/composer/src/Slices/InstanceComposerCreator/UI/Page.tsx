@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { ComposerCreatorProvider } from "@/UI/Components/Composer/Providers";
 import { words } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { useRouteParams } from "@inmanta/web-console-core/Routing";
+import { ComposerCreatorProvider } from "@inmanta/web-console-feature-composer/Components/Composer/Providers";
 import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
 
 /**

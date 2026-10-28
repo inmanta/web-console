@@ -32,9 +32,9 @@ const core = ["./packages/core"];
  * (#7464 to #7470). Until then they count as shared components, but `packages/ui` doesn't
  * import them.
  */
-const componentsToMove = readdirSync(inRoot("./src/UI/Components"), { withFileTypes: true })
-  .filter((entry) => entry.name !== "Composer")
-  .map((entry) => `./src/UI/Components/${entry.name}`);
+const componentsToMove = readdirSync(inRoot("./src/UI/Components"), { withFileTypes: true }).map(
+  (entry) => `./src/UI/Components/${entry.name}`
+);
 
 const ui = ["./packages/ui", ...componentsToMove];
 
@@ -44,13 +44,11 @@ const app = ["./apps/web-console"];
 
 /**
  * The folders of each feature: its slices, its folder in `src/Features` and any other folder it
- * owns.
+ * owns. A feature that moved into `packages/features` only has its package folder there.
  */
 const features = {
   composer: {
-    folder: "Composer",
-    slices: ["InstanceComposerCreator", "InstanceComposerEditor", "InstanceComposerViewer"],
-    other: ["./src/UI/Components/Composer"],
+    other: ["./packages/features/composer"],
   },
   environment: {
     folder: "Environment",
@@ -108,9 +106,13 @@ const features = {
 };
 
 const featurePaths = Object.fromEntries(
-  Object.entries(features).map(([name, { folder, slices, other = [] }]) => [
+  Object.entries(features).map(([name, { folder, slices = [], other = [] }]) => [
     name,
-    [`./src/Features/${folder}`, ...slices.map((slice) => `./src/Slices/${slice}`), ...other],
+    [
+      ...(folder ? [`./src/Features/${folder}`] : []),
+      ...slices.map((slice) => `./src/Slices/${slice}`),
+      ...other,
+    ],
   ])
 );
 
@@ -128,11 +130,11 @@ const assertAllAssigned = (directory, assigned) => {
 
 assertAllAssigned(
   "./src/Slices",
-  Object.values(features).flatMap(({ slices }) => slices)
+  Object.values(features).flatMap(({ slices = [] }) => slices)
 );
 assertAllAssigned(
   "./src/Features",
-  Object.values(features).map(({ folder }) => folder)
+  Object.values(features).flatMap(({ folder }) => folder ?? [])
 );
 
 for (const path of [...core, ...ui, ...shell, ...app, ...allFeatures]) {

@@ -1,7 +1,4 @@
 import { EyeIcon, PlusIcon, ToolsIcon } from "@patternfly/react-icons";
-import * as InstanceComposer from "@S/InstanceComposerCreator/Core/Route";
-import * as InstanceComposerEditor from "@S/InstanceComposerEditor/Core/Route";
-import * as InstanceComposerViewer from "@S/InstanceComposerViewer/Core/Route";
 import {
   FeatureModule,
   InstanceLinkContext,
@@ -9,6 +6,9 @@ import {
   OrchestratorProvider,
   words,
 } from "@inmanta/web-console-core";
+import * as InstanceComposer from "@inmanta/web-console-feature-composer/Slices/InstanceComposerCreator/Core/Route";
+import * as InstanceComposerEditor from "@inmanta/web-console-feature-composer/Slices/InstanceComposerEditor/Core/Route";
+import * as InstanceComposerViewer from "@inmanta/web-console-feature-composer/Slices/InstanceComposerViewer/Core/Route";
 import { composerMessages } from "./messages";
 
 const isComposerEnabled = (orchestratorProvider: OrchestratorProvider) =>
@@ -46,17 +46,23 @@ export const composerFeature: FeatureModule = {
     {
       route: InstanceComposer.route,
       page: () =>
-        import("@S/InstanceComposerCreator/UI").then((module) => module.InstanceComposerPage),
+        import("@inmanta/web-console-feature-composer/Slices/InstanceComposerCreator/UI").then(
+          (module) => module.InstanceComposerPage
+        ),
     },
     {
       route: InstanceComposerEditor.route,
       page: () =>
-        import("@S/InstanceComposerEditor/UI").then((module) => module.InstanceComposerEditorPage),
+        import("@inmanta/web-console-feature-composer/Slices/InstanceComposerEditor/UI").then(
+          (module) => module.InstanceComposerEditorPage
+        ),
     },
     {
       route: InstanceComposerViewer.route,
       page: () =>
-        import("@S/InstanceComposerViewer/UI").then((module) => module.InstanceComposerViewerPage),
+        import("@inmanta/web-console-feature-composer/Slices/InstanceComposerViewer/UI").then(
+          (module) => module.InstanceComposerViewerPage
+        ),
     },
   ],
   contributions: {

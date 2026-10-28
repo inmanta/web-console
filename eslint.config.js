@@ -207,6 +207,24 @@ export default [
     },
   },
   {
+    // Only the composer depends on JointJS, so that an app without it builds without the licence.
+    files: ["{src,packages,apps}/**/*.ts", "{src,packages,apps}/**/*.tsx"],
+    ignores: ["packages/features/composer/**"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@joint/*", "@rappidcss"],
+              message: "Only the composer feature (packages/features/composer) imports JointJS.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "cypress/**/*"],
     rules: {
       "@stylistic/quotes": ["warn", "double", { avoidEscape: true }],
