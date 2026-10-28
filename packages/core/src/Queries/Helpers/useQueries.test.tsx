@@ -36,9 +36,9 @@ describe("useQueries", () => {
     });
   });
 
-  it("GIVEN a POST request that requires a response body and gets an empty one THEN it rejects with an empty response error", async () => {
+  it("GIVEN a POST request that expects a response body and gets an empty one THEN it rejects with an empty response error", async () => {
     server.use(http.post(projectsPath, () => new HttpResponse(null, { status: 201 })));
-    const post = renderHook(() => usePost(environmentId, { isResponseBodyRequired: true }), {
+    const post = renderHook(() => usePost(environmentId, { expectResponseBody: true }), {
       wrapper,
     }).result.current;
 

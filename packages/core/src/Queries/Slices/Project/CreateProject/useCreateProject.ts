@@ -31,7 +31,7 @@ export interface CreateProjectResponse {
 export const useCreateProject = (
   options?: UseMutationOptions<CreateProjectResponse, Error, CreateProjectParams>
 ): UseMutationResult<CreateProjectResponse, Error, CreateProjectParams> => {
-  const put = usePutWithoutEnv({ isResponseBodyRequired: true })<
+  const put = usePutWithoutEnv({ expectResponseBody: true })<
     CreateProjectParams,
     CreateProjectResponse
   >;

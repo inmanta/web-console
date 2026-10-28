@@ -8,8 +8,8 @@ interface RequestWithBodyOptions {
   /** Message to include in the request headers. */
   message?: string;
 
-  /** Whether the request rejects when the server sends an empty response body, for callers that read the response. */
-  isResponseBodyRequired?: boolean;
+  /** Whether the caller expects a response body. The request then rejects when the server sends an empty one. */
+  expectResponseBody?: boolean;
 }
 
 /**
@@ -23,7 +23,7 @@ type RequestWithOptionalResponseBody = <RequestBody, ResponseBody = void>(
 /**
  * A POST or PUT request that resolves to the response body, and rejects when the body is empty.
  */
-type RequestWithRequiredResponseBody = <RequestBody, ResponseBody>(
+type RequestWithExpectedResponseBody = <RequestBody, ResponseBody>(
   path: string,
   body: RequestBody
 ) => Promise<ResponseBody>;
@@ -181,15 +181,15 @@ export const useGetZipWithoutEnv = (options?: { message?: string }) => {
  * @param {string} env - The environment Id to be used in the request headers.
  * @param {RequestWithBodyOptions} [options] - Optional configuration for the POST request.
  *
- * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a POST request and returns the response data. With `isResponseBodyRequired` it rejects on an empty response body, otherwise it returns undefined for it.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a POST request and returns the response data. With `expectResponseBody` it rejects on an empty response body, otherwise it returns undefined for it.
  *
  * @template RequestBody - The type of the request body.
  * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
 export function usePost(
   env: string,
-  options: RequestWithBodyOptions & { isResponseBodyRequired: true }
-): RequestWithRequiredResponseBody;
+  options: RequestWithBodyOptions & { expectResponseBody: true }
+): RequestWithExpectedResponseBody;
 export function usePost(
   env: string,
   options?: RequestWithBodyOptions
@@ -213,7 +213,7 @@ export function usePost(env: string, options?: RequestWithBodyOptions) {
 
       await handleErrors(response, { method: "POST", path });
 
-      return options?.isResponseBodyRequired
+      return options?.expectResponseBody
         ? parseRequiredJsonResponse<ResponseBody>(response)
         : parseJsonResponse<ResponseBody>(response);
     } catch (error) {
@@ -230,14 +230,14 @@ export function usePost(env: string, options?: RequestWithBodyOptions) {
  * This hook constructs the base URL and headers, and provides a function to perform a POST request to the specified path.
  * In comparison to usePost, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a POST request and returns the response data. With `isResponseBodyRequired` it rejects on an empty response body, otherwise it returns undefined for it.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a POST request and returns the response data. With `expectResponseBody` it rejects on an empty response body, otherwise it returns undefined for it.
  *
  * @template RequestBody - The type of the request body.
  * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
 export function usePostWithoutEnv(
-  options: RequestWithBodyOptions & { isResponseBodyRequired: true }
-): RequestWithRequiredResponseBody;
+  options: RequestWithBodyOptions & { expectResponseBody: true }
+): RequestWithExpectedResponseBody;
 export function usePostWithoutEnv(
   options?: RequestWithBodyOptions
 ): RequestWithOptionalResponseBody;
@@ -260,7 +260,7 @@ export function usePostWithoutEnv(options?: RequestWithBodyOptions) {
 
       await handleErrors(response, { method: "POST", path });
 
-      return options?.isResponseBodyRequired
+      return options?.expectResponseBody
         ? parseRequiredJsonResponse<ResponseBody>(response)
         : parseJsonResponse<ResponseBody>(response);
     } catch (error) {
@@ -275,15 +275,15 @@ export function usePostWithoutEnv(options?: RequestWithBodyOptions) {
  * @param {string} env - The environment Id to be used in the request headers.
  * @param {RequestWithBodyOptions} [options] - Optional configuration for the PUT request.
  *
- * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a PUT request and returns the response data. With `isResponseBodyRequired` it rejects on an empty response body, otherwise it returns undefined for it.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a PUT request and returns the response data. With `expectResponseBody` it rejects on an empty response body, otherwise it returns undefined for it.
  *
  * @template RequestBody - The type of the request body.
  * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
 export function usePut(
   env: string,
-  options: RequestWithBodyOptions & { isResponseBodyRequired: true }
-): RequestWithRequiredResponseBody;
+  options: RequestWithBodyOptions & { expectResponseBody: true }
+): RequestWithExpectedResponseBody;
 export function usePut(
   env: string,
   options?: RequestWithBodyOptions
@@ -307,7 +307,7 @@ export function usePut(env: string, options?: RequestWithBodyOptions) {
 
       await handleErrors(response, { method: "PUT", path });
 
-      return options?.isResponseBodyRequired
+      return options?.expectResponseBody
         ? parseRequiredJsonResponse<ResponseBody>(response)
         : parseJsonResponse<ResponseBody>(response);
     } catch (error) {
@@ -324,14 +324,14 @@ export function usePut(env: string, options?: RequestWithBodyOptions) {
  * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
  * In comparison to usePut, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a PUT request and returns the response data. With `isResponseBodyRequired` it rejects on an empty response body, otherwise it returns undefined for it.
+ * @returns {Function(path: string, body: RequestBody): Promise<ResponseBody | undefined>} - A function that performs a PUT request and returns the response data. With `expectResponseBody` it rejects on an empty response body, otherwise it returns undefined for it.
  *
  * @template RequestBody - The type of the request body.
  * @template ResponseBody - The type of the response data. Defaults to void for callers that don't read the response.
  */
 export function usePutWithoutEnv(
-  options: RequestWithBodyOptions & { isResponseBodyRequired: true }
-): RequestWithRequiredResponseBody;
+  options: RequestWithBodyOptions & { expectResponseBody: true }
+): RequestWithExpectedResponseBody;
 export function usePutWithoutEnv(options?: RequestWithBodyOptions): RequestWithOptionalResponseBody;
 export function usePutWithoutEnv(options?: RequestWithBodyOptions) {
   const baseUrlManager = new PrimaryBaseUrlManager(
@@ -352,7 +352,7 @@ export function usePutWithoutEnv(options?: RequestWithBodyOptions) {
 
       await handleErrors(response, { method: "PUT", path });
 
-      return options?.isResponseBodyRequired
+      return options?.expectResponseBody
         ? parseRequiredJsonResponse<ResponseBody>(response)
         : parseJsonResponse<ResponseBody>(response);
     } catch (error) {

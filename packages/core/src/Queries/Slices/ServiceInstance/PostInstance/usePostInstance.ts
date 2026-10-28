@@ -31,7 +31,7 @@ export const usePostInstance = (
 ): UseMutationResult<Response, CustomError, Params, unknown> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env, { isResponseBodyRequired: true })<Body, Response>;
+  const post = usePost(env, { expectResponseBody: true })<Body, Response>;
 
   return useMutation({
     mutationFn: ({ fields, attributes, initial_state }) => {

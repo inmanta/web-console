@@ -29,7 +29,7 @@ interface Response {
 export const useCreateEnvironment = (
   options?: UseMutationOptions<Response, Error, CreateEnvironmentParams>
 ): UseMutationResult<Response, Error, CreateEnvironmentParams> => {
-  const put = usePutWithoutEnv({ isResponseBodyRequired: true })<CreateEnvironmentParams, Response>;
+  const put = usePutWithoutEnv({ expectResponseBody: true })<CreateEnvironmentParams, Response>;
 
   return useMutation({
     mutationFn: (params) => put("/api/v2/environment", params),

@@ -47,7 +47,7 @@ export const useDryRunFiltered = (
   const client = useQueryClient();
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env, { isResponseBodyRequired: true })<
+  const post = usePost(env, { expectResponseBody: true })<
     DryRunFilteredRequest,
     { data: DryRunFilteredResponse }
   >;
