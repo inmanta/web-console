@@ -38,7 +38,7 @@ packages/
       index.ts - composerFeature, its FeatureModule
       Components/Composer/ - The canvas, its shapes, sidebars and providers
       Slices/ - The composer pages: creator, editor, viewer
-    lsm/src/ - The Lifecycle Service Manager: catalog, inventory, instance details, create/edit/duplicate, orders, events
+    lsm/src/ - The Lifecycle Service Manager: catalog and service details, inventory and instance details, create/edit/duplicate, orders, events and diagnose
       Components/ - The components only lsm uses, e.g. ServiceInstanceForm, TreeTable, EventsTable
       Slices/ - The lsm pages
 apps/
