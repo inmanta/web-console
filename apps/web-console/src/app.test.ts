@@ -1,7 +1,9 @@
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
-import { features, routes } from "./appFeatures";
+import { app } from "./app";
 
-describe("appFeatures", () => {
+const { features, routes } = app;
+
+describe("app", () => {
   test("GIVEN the features of the app THEN every feature has a unique id", () => {
     const ids = features.map(({ id }) => id);
 

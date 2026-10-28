@@ -1,0 +1,23 @@
+import { environmentFeature } from "@/Features/Environment";
+import { graphiqlFeature } from "@/Features/GraphiQL";
+import { orchestrationEngineFeature } from "@/Features/OrchestrationEngine";
+import { resourceManagerFeature } from "@/Features/ResourceManager";
+import { userManagementFeature } from "@/Features/UserManagement";
+import { composerFeature } from "@inmanta/web-console-feature-composer";
+import { lsmFeature } from "@inmanta/web-console-feature-lsm";
+import { createApp } from "@inmanta/web-console-shell";
+
+/**
+ * The web console: the shell with every feature, and the shell's default options.
+ */
+export const app = createApp({
+  features: [
+    environmentFeature,
+    graphiqlFeature,
+    userManagementFeature,
+    lsmFeature,
+    composerFeature,
+    resourceManagerFeature,
+    orchestrationEngineFeature,
+  ],
+});
