@@ -5,6 +5,7 @@ import * as EmbeddedEntity from "./EmbeddedEntity";
 import * as InstanceSummary from "./InstanceSummary";
 import * as State from "./State";
 import * as Transfer from "./Transfer";
+export * as EntityPresentation from "./EntityPresentation";
 export * as FormTabs from "./FormTabs";
 export * as InterServiceRelations from "./InterServiceRelations";
 
