@@ -1,11 +1,11 @@
 import { environmentFeature } from "@/Features/Environment";
 import { graphiqlFeature } from "@/Features/GraphiQL";
-import { lsmFeature } from "@/Features/Lsm";
 import { orchestrationEngineFeature } from "@/Features/OrchestrationEngine";
 import { resourceManagerFeature } from "@/Features/ResourceManager";
 import { userManagementFeature } from "@/Features/UserManagement";
 import { FeatureModule, getFeatureRoutes, RouteFactory } from "@inmanta/web-console-core";
 import { composerFeature } from "@inmanta/web-console-feature-composer";
+import { lsmFeature } from "@inmanta/web-console-feature-lsm";
 import { shellFeature } from "@inmanta/web-console-shell/shellFeature";
 
 /**
