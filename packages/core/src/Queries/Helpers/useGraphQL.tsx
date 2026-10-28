@@ -1,6 +1,5 @@
-import { words } from "@inmanta/web-console-core";
 import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
-import { createCustomError, parseJsonResponse, useFetchHelpers } from "./useFetchHelpers";
+import { parseRequiredJsonResponse, useFetchHelpers } from "./useFetchHelpers";
 
 /**
  * Hook that provides GraphQL request functionality.
@@ -55,11 +54,7 @@ export function useGraphQLRequest<Type>(
 
     await handleErrors(response, { method: "POST", path: "/api/v2/graphql" });
 
-    const body: { data: Type } | undefined = await parseJsonResponse(response);
-
-    if (body === undefined) {
-      throw createCustomError(words("error.response.unexpected")(response.status), response.status);
-    }
+    const body = await parseRequiredJsonResponse<{ data: Type }>(response);
 
     return body.data;
   };

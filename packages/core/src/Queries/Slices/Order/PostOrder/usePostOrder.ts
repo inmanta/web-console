@@ -29,7 +29,7 @@ export const usePostOrder = (
 ): UseMutationResult<PostResponse, Error, ServiceOrderItemRequest[]> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<PostOrderBody>;
+  const post = usePost(env, { expectResponseBody: true })<PostOrderBody, PostResponse>;
 
   return useMutation({
     mutationFn: (service_order_items) =>

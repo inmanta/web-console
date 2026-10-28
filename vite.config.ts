@@ -219,6 +219,10 @@ export default defineConfig({
         replacement: resolve(__dirname, "./packages/shell/src"),
       },
       {
+        find: "@inmanta/web-console-feature-composer",
+        replacement: resolve(__dirname, "./packages/features/composer/src"),
+      },
+      {
         find: "@inmanta/web-console-test-utils",
         replacement: resolve(__dirname, "./packages/test-utils/src"),
       },
@@ -373,7 +377,7 @@ export default defineConfig({
     setupFiles: [
       "./packages/test-utils/src/setup.ts",
       "./apps/web-console/src/test-setup.ts",
-      "./src/UI/Components/Composer/globalTestMocks.ts",
+      "./packages/features/composer/src/Components/Composer/globalTestMocks.ts",
     ],
     restoreMocks: true,
     include: ["{src,packages,apps}/**/*.{test,spec}.?(c|m)[jt]s?(x)"],

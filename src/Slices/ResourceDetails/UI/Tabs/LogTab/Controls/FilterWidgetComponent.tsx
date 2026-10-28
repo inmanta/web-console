@@ -1,6 +1,6 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
-import { LogLevelsList, words } from "@inmanta/web-console-core";
+import { hasAnySetValue, LogLevelsList, words } from "@inmanta/web-console-core";
 import { ResourceLogFilter, actionTypes } from "@inmanta/web-console-core/Domain/ResourceLog";
 import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
 import {
@@ -59,11 +59,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
   const updateLogLevel = (value: string | null) =>
     setFilter({ ...filter, minimal_log_level: value || undefined });
 
-  const hasActiveFilters =
-    (filter.action?.length ?? 0) > 0 ||
-    Boolean(filter.minimal_log_level) ||
-    (filter.message?.length ?? 0) > 0 ||
-    (filter.timestamp?.length ?? 0) > 0;
+  const hasActiveFilters = hasAnySetValue(filter);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

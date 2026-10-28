@@ -100,13 +100,14 @@ const formatNonJsonResponseMessage = (response: Response): string =>
     : words("error.response.unexpected")(response.status);
 
 /**
- * Reads the body of a successful response as JSON, or undefined when the body is empty.
+ * Reads the body of a successful response as JSON of the given type, or undefined when the body is empty.
  * Throws a CustomError when the body is not JSON, like a proxy's login page sent with status 200.
  *
- * @example await parseJsonResponse(new Response('{"data":[]}')) // { data: [] }
+ * @example await parseJsonResponse<{ data: string[] }>(new Response('{"data":[]}')) // { data: [] }
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const parseJsonResponse = async (response: Response): Promise<any> => {
+export const parseJsonResponse = async <ResponseBody = unknown>(
+  response: Response
+): Promise<ResponseBody | undefined> => {
   const bodyText = await response.text();
 
   if (!bodyText) {
@@ -118,6 +119,24 @@ export const parseJsonResponse = async (response: Response): Promise<any> => {
   } catch {
     throw createCustomError(formatNonJsonResponseMessage(response), response.status);
   }
+};
+
+/**
+ * Reads the body of a successful response that always answers with data as JSON of the given type.
+ * Throws a CustomError when the body is empty or not JSON.
+ *
+ * @example await parseRequiredJsonResponse<{ data: string[] }>(new Response('{"data":[]}')) // { data: [] }
+ */
+export const parseRequiredJsonResponse = async <ResponseBody>(
+  response: Response
+): Promise<ResponseBody> => {
+  const responseBody = await parseJsonResponse<ResponseBody>(response);
+
+  if (responseBody === undefined) {
+    throw createCustomError(words("error.response.empty"), response.status);
+  }
+
+  return responseBody;
 };
 
 /**
