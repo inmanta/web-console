@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageUpload } from "@/UI/Components/ImageUpload";
+import { ImageUpload } from "@inmanta/web-console-feature-environment/Components/ImageUpload";
 import { ImagePreview } from "../ImageUpload/ImagePreview";
 import { EditableField, EditViewComponent, FieldProps, StaticViewComponent } from "./EditableField";
 

@@ -56,6 +56,12 @@
       "@inmanta/web-console-shell/*": [
         "./packages/shell/src/*"
       ],
+      "@inmanta/web-console-feature-environment": [
+        "./packages/features/environment/src"
+      ],
+      "@inmanta/web-console-feature-environment/*": [
+        "./packages/features/environment/src/*"
+      ],
       "@inmanta/web-console-feature-composer": [
         "./packages/features/composer/src"
       ],

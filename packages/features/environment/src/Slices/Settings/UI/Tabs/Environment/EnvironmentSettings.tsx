@@ -1,16 +1,16 @@
 import React, { useContext, useState } from "react";
 import { DescriptionList } from "@patternfly/react-core";
+import { FlatEnvironment, ProjectModel, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useModifyEnvironment } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { useCreateProject } from "@inmanta/web-console-core/Queries/Slices/Project";
 import {
   EditableTextField,
   EditableMultiTextField,
   EditableSelectField,
   EditableImageField,
   EditableTextAreaField,
-} from "@/UI/Components/InlineEditable";
-import { FlatEnvironment, ProjectModel, words } from "@inmanta/web-console-core";
-import { DependencyContext } from "@inmanta/web-console-core/Dependency";
-import { useModifyEnvironment } from "@inmanta/web-console-core/Queries/Slices/Environment";
-import { useCreateProject } from "@inmanta/web-console-core/Queries/Slices/Project";
+} from "@inmanta/web-console-feature-environment/Components/InlineEditable";
 import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
 import { Actions } from "./Components";
 
