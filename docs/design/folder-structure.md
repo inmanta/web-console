@@ -39,6 +39,7 @@ packages/
       Components/Composer/ - The canvas, its shapes, sidebars and providers
       Slices/ - The composer pages: creator, editor, viewer
     orchestration-engine/src/ - The Orchestration Engine: compile reports, desired state, compliance check, parameters
+      index.ts - orchestrationEngineFeature, its FeatureModule
       Components/ - The components only the orchestration engine uses, e.g. DiffWizard, Timeline
       Slices/ - The orchestration engine pages
 apps/
