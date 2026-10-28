@@ -20,7 +20,11 @@ import {
   RhMicronsArrowUpIcon,
   RhUiArrowUpDownIcon,
 } from "@patternfly/react-icons";
-import { t_global_color_brand_clicked, t_global_icon_color_subtle } from "@patternfly/react-tokens";
+import {
+  t_global_color_brand_clicked,
+  t_global_icon_color_subtle,
+  t_global_text_color_regular,
+} from "@patternfly/react-tokens";
 import { Resource, Sort, words } from "@inmanta/web-console-core";
 import { MultiSort, toggleMulti } from "@inmanta/web-console-core/Common";
 
@@ -142,7 +146,9 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactE
                 key={`label-${key}`}
                 style={{
                   cursor: "pointer",
-                  color: isActive ? t_global_color_brand_clicked.var : undefined,
+                  color: isActive
+                    ? t_global_color_brand_clicked.var
+                    : t_global_text_color_regular.var,
                 }}
                 onClick={onClick}
               >
