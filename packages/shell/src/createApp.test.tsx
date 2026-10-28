@@ -10,7 +10,7 @@ const page = () => Promise.resolve(() => null);
 const feature: FeatureModule = {
   id: "test",
   version: "1.0.0",
-  messages: { "test.message": "A message" } as WordsModule.Messages,
+  messages: { "test.message": "A message" },
   routes: [{ route: stubRoute("Dashboard"), page }],
 };
 
@@ -55,6 +55,12 @@ describe("createApp", () => {
     act(() => unmount());
 
     expect(container).toBeEmptyDOMElement();
+  });
+
+  test("GIVEN no element WHEN the app is rendered THEN it throws a clear error", () => {
+    expect(() => createApp({ features: [feature] }).render(null)).toThrow(
+      "createApp: the element to render the app in does not exist."
+    );
   });
 
   test("GIVEN no auth option or 'from-config' THEN the auth settings come from config.js", () => {

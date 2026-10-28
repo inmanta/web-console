@@ -14,7 +14,7 @@ export type AuthConfig = KeycloakAuthConfig | OidcAuthConfig | LocalConfig;
 /**
  * A sidebar link that only this app adds, e.g. to its documentation. It opens in a new tab.
  */
-export interface SidebarLink {
+export interface AppLink {
   group: NavigationGroup;
   label: string;
   href: string;
@@ -25,29 +25,32 @@ export interface SidebarLink {
  */
 export interface SidebarOptions {
   /**
-   * The order of the sidebar groups. Groups left out follow in their default order. Defaults to
-   * the order of `NAVIGATION_GROUPS`.
+   * The sidebar groups shown first. The other groups follow in their default order, the order of
+   * `NAVIGATION_GROUPS`.
    */
-  order?: NavigationGroup[];
+  groupOrder?: NavigationGroup[];
 
   /**
    * The sidebar entries this app leaves out. Their pages stay reachable by url.
    */
-  hide?: RouteKind[];
+  hiddenEntries?: RouteKind[];
 
   /**
    * Links this app adds, after the entries of its features in the same group.
    */
-  links?: SidebarLink[];
+  appLinks?: AppLink[];
 }
 
 /**
- * The options an app gives the shell. Leaving one out gives today's web console.
+ * The options an app gives the shell. Leaving one out uses the shell's defaults.
  */
 export interface ShellOptions {
   /**
    * How users log in. Defaults to "from-config": the settings the orchestrator writes into
    * `config.js` (`window.auth`). With no settings there, the app has no login.
+   *
+   * Only the login follows this option. User management still reads `window.auth` to decide
+   * whether it shows the roles (#7687).
    */
   auth?: "from-config" | AuthConfig;
 

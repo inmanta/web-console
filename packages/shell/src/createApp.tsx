@@ -17,6 +17,9 @@ import { AuthConfig, ShellOptions, ShellOptionsContext } from "./ShellOptions";
 import { registerAppMessages } from "./registerAppMessages";
 import { shellFeature } from "./shellFeature";
 
+/**
+ * What an app is made of: its features and the shell options.
+ */
 export interface AppOptions {
   /**
    * The features the app ships. The route table, pages and sidebar are built from them, so a
@@ -29,11 +32,14 @@ export interface AppOptions {
   features: FeatureModule[];
 
   /**
-   * How the shell is set up. Leaving it out gives today's web console.
+   * How the shell is set up. Leaving it out uses the shell's defaults.
    */
   shell?: ShellOptions;
 }
 
+/**
+ * An app composed with `createApp`.
+ */
 export interface App {
   /**
    * The features of the app: the shell's own, then the given ones.
@@ -47,17 +53,14 @@ export interface App {
 
   /**
    * Starts the app in the given element: registers the messages of its features and renders it.
-   *
-   * @returns a function that unmounts the app again
+   * Throws when the element is missing. Returns a function that unmounts the app again.
    */
-  render(container: Element): () => void;
+  render(container: Element | null): () => void;
 }
 
 /**
- * Returns the auth settings to log in with.
- *
- * @param auth - the `auth` shell option
- * @returns the settings from `config.js` for "from-config" or no option, otherwise the option
+ * Returns the auth settings to log in with: the settings from `config.js` for "from-config" or no
+ * option, otherwise the option itself.
  */
 export const getAuthConfig = (auth: ShellOptions["auth"]): AuthConfig | undefined =>
   auth === undefined || auth === "from-config" ? globalThis.auth : auth;
@@ -68,9 +71,6 @@ export const getAuthConfig = (auth: ShellOptions["auth"]): AuthConfig | undefine
  *
  * @example
  * createApp({ features: [environmentFeature, lsmFeature] }).render(document.getElementById("root"));
- *
- * @param options - the features of the app and the shell options
- * @returns the app
  */
 export const createApp = ({ features, shell = {} }: AppOptions): App => {
   const appFeatures = [shellFeature, ...features];
@@ -79,6 +79,10 @@ export const createApp = ({ features, shell = {} }: AppOptions): App => {
     features: appFeatures,
     routes: getFeatureRoutes(appFeatures),
     render: (container) => {
+      if (container === null) {
+        throw new Error("createApp: the element to render the app in does not exist.");
+      }
+
       registerAppMessages(appFeatures);
 
       // We don't want to retry requests, especially in the continuous queries, there it would could result in infinite loop if the request takes longer than the interval.

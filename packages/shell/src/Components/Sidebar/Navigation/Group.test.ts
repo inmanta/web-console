@@ -49,7 +49,15 @@ describe("getGroups", () => {
 
   test("GIVEN a group order THEN those groups come first and the others follow", () => {
     const groups = groupsOf(features, routeManager, orchestratorProvider, true, {
-      order: ["resourceManager"],
+      groupOrder: ["resourceManager"],
+    });
+
+    expect(groups.map(({ id }) => id)).toEqual(["resourceManager", "environment"]);
+  });
+
+  test("GIVEN a group listed twice in the group order THEN it shows once", () => {
+    const groups = groupsOf(features, routeManager, orchestratorProvider, true, {
+      groupOrder: ["resourceManager", "environment", "resourceManager"],
     });
 
     expect(groups.map(({ id }) => id)).toEqual(["resourceManager", "environment"]);
@@ -57,7 +65,7 @@ describe("getGroups", () => {
 
   test("GIVEN hidden entries THEN they are left out, and a group left empty is not shown", () => {
     const groups = groupsOf(features, routeManager, orchestratorProvider, true, {
-      hide: ["Settings", "Resources", "Agents"],
+      hiddenEntries: ["Settings", "Resources", "Agents"],
     });
 
     expect(groups).toEqual([{ id: "environment", links: ["Dashboard"] }]);
@@ -65,7 +73,9 @@ describe("getGroups", () => {
 
   test("GIVEN app links THEN they follow the entries of their group and open in a new tab", () => {
     const groups = getGroups(features, routeManager, orchestratorProvider, false, {
-      links: [{ group: "environment", label: "Documentation", href: "https://docs.inmanta.com" }],
+      appLinks: [
+        { group: "environment", label: "Documentation", href: "https://docs.inmanta.com" },
+      ],
     });
 
     expect(groups[0].links.map(({ label }) => label)).toEqual([
@@ -87,7 +97,7 @@ describe("getGroups", () => {
 
   test("GIVEN an app link in a group no feature fills THEN that group shows", () => {
     const groups = groupsOf([environment], routeManager, orchestratorProvider, true, {
-      links: [{ group: "orchestrationEngine", label: "Runbook", href: "https://example.com" }],
+      appLinks: [{ group: "orchestrationEngine", label: "Runbook", href: "https://example.com" }],
     });
 
     expect(groups.map(({ id }) => id)).toEqual(["environment", "orchestrationEngine"]);

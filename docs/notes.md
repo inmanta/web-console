@@ -65,15 +65,17 @@ export const app = createApp({
     // How users log in. Defaults to "from-config": window.auth from config.js.
     auth: "from-config",
     sidebar: {
-      order: ["resourceManager"], // groups shown first; the others follow in their default order
-      hide: ["Agents"], // entries left out of the sidebar; their pages stay reachable
-      links: [{ group: "environment", label: "Documentation", href: "https://docs.inmanta.com" }],
+      groupOrder: ["resourceManager"], // groups shown first; the others follow in their default order
+      hiddenEntries: ["Agents"], // entries left out of the sidebar; their pages stay reachable
+      appLinks: [
+        { group: "environment", label: "Documentation", href: "https://docs.inmanta.com" },
+      ],
     },
   },
 });
 ```
 
-`createApp` adds the shell's own pages (status, notifications) in front of the features and builds the routes, pages and sidebar from them. Nothing starts until `app.render(element)` is called, so tests can look at `app.features` and `app.routes` without starting the app. Leaving `shell` out gives today's web console.
+`createApp` adds the shell's own pages (status, notifications) in front of the features and builds the routes, pages and sidebar from them. Nothing starts until `app.render(element)` is called, so tests can look at `app.features` and `app.routes` without starting the app. Leaving `shell` out uses the shell's defaults.
 
 ## Features and routes in tests
 

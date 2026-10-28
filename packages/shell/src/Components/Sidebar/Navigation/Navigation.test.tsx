@@ -1,12 +1,13 @@
 import { act } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { FeatureModule, words } from "@inmanta/web-console-core";
+import { FeatureModule } from "@inmanta/web-console-core";
 import { ShellOptions, ShellOptionsContext } from "@inmanta/web-console-shell/ShellOptions";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { stubRoute } from "@inmanta/web-console-test-utils/Inject/stubRoute";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Navigation } from "./Navigation";
 
 const page = () => Promise.resolve(() => null);
@@ -38,7 +39,7 @@ function setup({
   initialEntries?: string[];
 } = {}) {
   return (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={initialEntries}>
         <MockedDependencyProvider features={[feature]} isCompiling={isCompiling}>
           <ShellOptionsContext.Provider value={shell}>
@@ -51,6 +52,10 @@ function setup({
 }
 
 describe("Navigation", () => {
+  afterEach(() => {
+    testClient.clear();
+  });
+
   test("GIVEN Navigation THEN it is accessible", async () => {
     const { container } = render(setup());
 
@@ -72,27 +77,19 @@ describe("Navigation", () => {
     ).toEqual(["Dashboard", "CompileReports", "Resources"]);
   });
 
-  test("GIVEN the sidebar options of the app THEN it orders, hides and adds entries", () => {
+  // getGroups' tests cover what each sidebar option does; this one checks that they reach it.
+  test("GIVEN the sidebar options of the app THEN it uses them, and an app link opens in a new tab", () => {
     render(
       setup({
         shell: {
           sidebar: {
-            order: ["resourceManager"],
-            hide: ["CompileReports"],
-            links: [
+            appLinks: [
               { group: "environment", label: "Documentation", href: "https://docs.inmanta.com" },
             ],
           },
         },
       })
     );
-
-    const navigation = screen.getByRole("navigation", { name: "Global" });
-    const [first, second] = within(navigation).getAllByRole("region");
-
-    expect(within(first).getByText(words("navigation.resourceManager"))).toBeVisible();
-    expect(within(second).getByText(words("navigation.environment"))).toBeVisible();
-    expect(screen.queryByText("CompileReports")).not.toBeInTheDocument();
 
     const documentation = screen.getByRole("link", { name: "Sidebar-Navigation-Item-External" });
 
@@ -107,7 +104,7 @@ describe("Navigation", () => {
         withEnvironment: false,
         shell: {
           sidebar: {
-            links: [
+            appLinks: [
               { group: "environment", label: "Documentation", href: "https://docs.inmanta.com" },
             ],
           },
@@ -116,6 +113,12 @@ describe("Navigation", () => {
     );
 
     expect(screen.queryAllByRole("link", { name: "Sidebar-Navigation-Item" })).toHaveLength(0);
+    // The feature entries are still shown, but locked: a disabled link that goes nowhere.
+    const dashboard = screen.getByText("Dashboard").closest("a");
+
+    expect(dashboard).toBeVisible();
+    expect(dashboard).toHaveAttribute("disabled");
+    expect(dashboard).not.toHaveAttribute("href");
     expect(screen.getByRole("link", { name: "Sidebar-Navigation-Item-External" })).toBeVisible();
   });
 
