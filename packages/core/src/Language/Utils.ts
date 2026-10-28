@@ -86,6 +86,27 @@ export const isObjectEmpty = (obj: Record<string, unknown>): obj is Record<strin
   Object.entries(obj).length <= 0;
 
 /**
+ * Checks whether a value is set: anything except undefined, null, an empty string or an empty list.
+ * False and 0 count as set, since they can be meaningful values, like a filter on `isDeploying: false`.
+ */
+const isValueSet = (value: unknown): boolean => {
+  if (value === undefined || value === null) {
+    return false;
+  }
+  if (typeof value === "string" || Array.isArray(value)) {
+    return value.length > 0;
+  }
+
+  return true;
+};
+
+/**
+ * Checks whether any property of an object holds a set value: not undefined, null, an empty string
+ * or an empty list. Leave out the properties that must not count before calling it.
+ */
+export const hasAnySetValue = (object: object): boolean => Object.values(object).some(isValueSet);
+
+/**
  * Get the keys of the provided object excluding the provided keys.
  */
 export const getKeysExcluding = (

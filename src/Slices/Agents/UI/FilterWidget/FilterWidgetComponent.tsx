@@ -1,7 +1,7 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
 import { Filter } from "@/Slices/Agents/Core/Types";
-import { words } from "@inmanta/web-console-core";
+import { hasAnySetValue, words } from "@inmanta/web-console-core";
 import { AgentStatus } from "@inmanta/web-console-core/Domain/Agent";
 import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
 import {
@@ -40,7 +40,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
   const agentStatuses = Object.values(AgentStatus);
 
-  const hasActiveFilters = (filter.name?.length ?? 0) > 0 || (filter.status?.length ?? 0) > 0;
+  const hasActiveFilters = hasAnySetValue(filter);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
-import { words } from "@inmanta/web-console-core";
+import { hasAnySetValue, words } from "@inmanta/web-console-core";
 import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
 import {
   ActiveFilterGroup,
@@ -38,10 +38,8 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
   const clearAllFilters = () => setFilter({});
 
-  const hasActiveFilters =
-    (filter.status?.length ?? 0) > 0 ||
-    (filter.date?.length ?? 0) > 0 ||
-    (filter.version?.length ?? 0) > 0;
+  const { disregardDefault: _disregardDefault, ...filterValues } = filter;
+  const hasActiveFilters = hasAnySetValue(filterValues);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
