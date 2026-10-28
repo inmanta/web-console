@@ -31,7 +31,10 @@ export interface CreateProjectResponse {
 export const useCreateProject = (
   options?: UseMutationOptions<CreateProjectResponse, Error, CreateProjectParams>
 ): UseMutationResult<CreateProjectResponse, Error, CreateProjectParams> => {
-  const put = usePutWithoutEnv()<CreateProjectParams>;
+  const put = usePutWithoutEnv({ expectResponseBody: true })<
+    CreateProjectParams,
+    CreateProjectResponse
+  >;
   const queryClient = useQueryClient();
 
   return useMutation({

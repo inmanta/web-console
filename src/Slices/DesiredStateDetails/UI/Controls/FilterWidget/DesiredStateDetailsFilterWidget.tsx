@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Divider, Form, Stack, StackItem, Title } from "@patternfly/react-core";
-import { Resource, words } from "@inmanta/web-console-core";
+import { hasAnySetValue, Resource, words } from "@inmanta/web-console-core";
 import { useUrlStateWithFilter } from "@inmanta/web-console-core/Common";
 import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
 import {
@@ -57,7 +57,7 @@ export const DesiredStateDetailsFilterWidget: React.FC<DesiredStateDetailsFilter
     const { addString, removeStringChip, clearStringGroup } = getFilterActions(filter, setFilter);
 
     const fields = getFields();
-    const hasActiveFilters = fields.some(({ key }) => (filter[key]?.length ?? 0) > 0);
+    const hasActiveFilters = hasAnySetValue(filter);
 
     return (
       <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

@@ -24,7 +24,7 @@ interface LoginBody {
  * @returns A tuple containing the mutation function and mutation state.
  */
 export const useLogin = () => {
-  const post = usePostWithoutEnv()<LoginBody>;
+  const post = usePostWithoutEnv({ expectResponseBody: true })<LoginBody, LoginResponse>;
 
   return useMutation<LoginResponse, Error, LoginBody>({
     mutationFn: (body) => post("/api/v2/login", body),

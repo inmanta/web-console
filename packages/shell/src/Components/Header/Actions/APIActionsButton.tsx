@@ -30,6 +30,8 @@ export const APIActionsButton: React.FC = () => {
   const hasGraphiQL = routeManager.has("GraphiQL");
   const graphiQLSearch = new SearchHelper().keepEnvOnly(search);
 
+  // A new tab can't send the Authorization header, so the orchestrator's /api/v2/docs endpoint
+  // reads the token from the query (token_param="token"). Never add the token to external links.
   const restApiUrl = authHelper.getToken()
     ? urlManager.getGeneralAPILink() + "?token=" + authHelper.getToken()
     : urlManager.getGeneralAPILink();

@@ -25,7 +25,7 @@ class MockUrlManager implements UrlManager {
 const mockUrlManager = new MockUrlManager();
 
 describe("DocumentationLinks", () => {
-  it("renders links without token when no token is provided", () => {
+  it("links to the documentation when no token is provided", () => {
     render(
       <MemoryRouter>
         <DependencyProvider
@@ -44,11 +44,13 @@ describe("DocumentationLinks", () => {
     expect(screen.queryByLabelText("general API link")).not.toBeInTheDocument();
   });
 
-  it("renders links with token when authenticated", () => {
+  it("does not add the token to the documentation link when authenticated", () => {
     vi.spyOn(defaultAuthContext, "getToken").mockReturnValue("my-token");
     render(
       <MemoryRouter>
-        <DependencyProvider dependencies={{ urlManager: mockUrlManager }}>
+        <DependencyProvider
+          dependencies={{ urlManager: mockUrlManager, authHelper: defaultAuthContext }}
+        >
           <DocumentationLinks />
         </DependencyProvider>
       </MemoryRouter>
@@ -57,7 +59,8 @@ describe("DocumentationLinks", () => {
     const docButton = screen.getByLabelText("documentation link");
     expect(docButton).toBeInTheDocument();
     const docLink = docButton.closest("a");
-    expect(docLink).toHaveAttribute("href", `${DOC_LINK}?token=my-token`);
+    expect(docLink).toHaveAttribute("href", DOC_LINK);
+    expect(docLink).toHaveAttribute("rel", "noopener noreferrer");
     // REST API link is no longer rendered by DocumentationLinks
     expect(screen.queryByLabelText("general API link")).not.toBeInTheDocument();
   });

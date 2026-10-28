@@ -5,7 +5,7 @@ import { defaultAuthContext } from "@inmanta/web-console-core/Auth/AuthContext";
 import { createCookie, removeCookie } from "@inmanta/web-console-core/Common/CookieHelper";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
-import { ApiEndpoint, parseJsonResponse, useFetchHelpers } from ".";
+import { ApiEndpoint, parseJsonResponse, parseRequiredJsonResponse, useFetchHelpers } from ".";
 
 const accessPolicyMessage = "Request is not allowed by the access policy.";
 const proxyErrorPage = "<html><body><h1>502 Bad Gateway</h1></body></html>";
@@ -225,6 +225,23 @@ describe("parseJsonResponse", () => {
     await expect(parseJsonResponse(response)).rejects.toMatchObject({
       message: words("error.response.redirected"),
       status: 200,
+    });
+  });
+});
+
+describe("parseRequiredJsonResponse", () => {
+  it("GIVEN a JSON body THEN it returns the parsed body", async () => {
+    await expect(parseRequiredJsonResponse(new Response('{"data":[]}'))).resolves.toEqual({
+      data: [],
+    });
+  });
+
+  it("GIVEN an empty body THEN it throws an empty response error with the status", async () => {
+    await expect(
+      parseRequiredJsonResponse(new Response(null, { status: 201 }))
+    ).rejects.toMatchObject({
+      message: words("error.response.empty"),
+      status: 201,
     });
   });
 });

@@ -7,22 +7,12 @@ import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 
 /**
  * This component will display the documentation link.
- * If the user is authenticated, the documentation link will be displayed with the token.
+ * The link points to the external docs site, so it never carries the user's token.
  *
  * @returns <React.FC> DocumentationLinks
  */
 export const DocumentationLinks: React.FC = () => {
-  const { urlManager, authHelper } = useContext(DependencyContext);
-
-  const documentationLink = urlManager.getDocumentationLink();
-
-  const getUrl = (link: string) => {
-    if (authHelper.getToken()) {
-      return link + "?token=" + authHelper.getToken();
-    }
-
-    return link;
-  };
+  const { urlManager } = useContext(DependencyContext);
 
   return (
     <ToolbarItem>
@@ -31,7 +21,7 @@ export const DocumentationLinks: React.FC = () => {
         position="bottom"
         entryDelay={500}
       >
-        <Link to={getUrl(documentationLink)} target="_blank">
+        <Link to={urlManager.getDocumentationLink()} target="_blank" rel="noopener noreferrer">
           <Button icon={<BookIcon />} aria-label="documentation link" variant="plain" />
         </Link>
       </Tooltip>

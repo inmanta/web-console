@@ -187,6 +187,35 @@ describe("ResourceActions", () => {
     await waitFor(() => expect(body).toEqual({ filter, agent_trigger_method: "push_full_deploy" }));
   });
 
+  test("WHEN Repair is starting THEN the control is disabled and shows a spinner until it responds", async () => {
+    let respond: () => void = () => {};
+
+    server.use(
+      http.post("/api/v2/deploy_filtered", async () => {
+        await new Promise<void>((resolve) => (respond = resolve));
+
+        return HttpResponse.json({});
+      })
+    );
+
+    render(setup());
+
+    await userEvent.click(screen.getByRole("button", { name: toggleLabel }));
+    await userEvent.click(screen.getByRole("menuitem", { name: new RegExp(repairLabel, "i") }));
+
+    const spinnerLabel = words("resources.resourceActions.triggered")(repairLabel);
+
+    expect(await screen.findByRole("progressbar", { name: spinnerLabel })).toBeVisible();
+    expect(screen.getByRole("button", { name: toggleLabel })).toBeDisabled();
+
+    act(() => respond());
+
+    await waitFor(() =>
+      expect(screen.queryByRole("progressbar", { name: spinnerLabel })).not.toBeInTheDocument()
+    );
+    expect(screen.getByRole("button", { name: toggleLabel })).toBeEnabled();
+  });
+
   test("WHEN scopes are given THEN Deploy opens a dialog showing the scope details and confirms against the first scope", async () => {
     let body: unknown;
 
@@ -541,6 +570,37 @@ describe("ResourceActions", () => {
         env: EnvironmentDetails.env.id,
         state: { ComplianceCheck: { report: startedDryRun.id } },
       });
+    });
+
+    test("WHEN a dry run is starting THEN the control shows a spinner until its toast shows", async () => {
+      let respond: () => void = () => {};
+
+      server.use(
+        http.post("/api/v2/dryrun_filtered", async () => {
+          await new Promise<void>((resolve) => (respond = resolve));
+
+          return HttpResponse.json({
+            data: { id: startedDryRun.id, model: startedDryRun.modelVersion },
+          });
+        })
+      );
+
+      render(setup());
+
+      const dialog = await openDryRun();
+
+      await userEvent.click(within(dialog).getByRole("button", { name: dryRunLabel }));
+
+      const spinnerLabel = words("resources.resourceActions.triggered")(dryRunLabel);
+
+      expect(await screen.findByRole("progressbar", { name: spinnerLabel })).toBeVisible();
+
+      act(() => respond());
+
+      expect(await screen.findByTestId("ToastAlert")).toHaveTextContent(
+        words("desiredState.complianceCheck.report.started")
+      );
+      expect(screen.queryByRole("progressbar", { name: spinnerLabel })).not.toBeInTheDocument();
     });
 
     test("GIVEN the Compliance Check route is not registered WHEN a dry run starts THEN its toast has no report link", async () => {

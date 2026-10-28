@@ -22,11 +22,11 @@ export const useTriggerDryRun = (
   const client = useQueryClient();
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<void>;
+  const post = usePost(env, { expectResponseBody: true })<void, { data: string }>;
 
   return useMutation({
     mutationFn: async (version) => {
-      const { data }: { data: string } = await post(`/api/v2/dryrun/${version}`);
+      const { data } = await post(`/api/v2/dryrun/${version}`);
 
       return data;
     },

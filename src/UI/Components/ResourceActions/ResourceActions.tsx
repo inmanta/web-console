@@ -27,6 +27,7 @@ import {
 } from "@inmanta/web-console-core/Queries/Slices/Resource";
 import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
 import { useNotifyDryRunStarted } from "@inmanta/web-console-ui/Components/DryRunNotification";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
 import { ResourceActionInstance } from "./types";
 
@@ -69,7 +70,8 @@ type Props =
  * select the version to preview against, and its toast links to the dry run's report when the app
  * has the Compliance Check page. A dry run
  * stores the labels of the service instances its filter names, so its report shows them. It
- * disables itself while the environment is halted.
+ * disables itself while the environment is halted, and while an action is starting, when the Deploy
+ * button shows a spinner in place of its icon.
  *
  * @Props {Props} - The props of the component
  *  @prop {ResourceActionFilter} filter - Deploy and Repair run immediately against this filter (mutually exclusive with scopes)
@@ -97,6 +99,18 @@ export const ResourceActions: React.FC<Props> = (props) => {
 
   const tooltip = isHalted ? words("environment.halt.tooltip") : disabledReason;
   const isDisabled = deploy.isPending || dryRun.isPending || Boolean(tooltip);
+
+  const getPendingActionKey = (): ActionKey | undefined => {
+    if (dryRun.isPending) {
+      return "dryRun";
+    }
+    if (!deploy.isPending) {
+      return undefined;
+    }
+
+    return deploy.variables.method === DeployAgentsAction.repair ? "repair" : "deploy";
+  };
+  const pendingActionKey = getPendingActionKey();
 
   const actions: Record<ActionKey, ActionConfig> = {
     deploy: {
@@ -143,7 +157,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
       { method: DeployAgentsAction[key], filter: scopeFilter },
       {
         onSuccess: () =>
-          notifySuccess({ title: words("resources.resourceActions.success")(actionLabel) }),
+          notifySuccess({ title: words("resources.resourceActions.triggered")(actionLabel) }),
         onError,
       }
     );
@@ -233,7 +247,20 @@ export const ResourceActions: React.FC<Props> = (props) => {
                 gap: "var(--pf-t--global--spacer--sm)",
               }}
             >
-              <Icon isInline size="sm">
+              <Icon
+                isInline
+                size="sm"
+                isInProgress={pendingActionKey !== undefined}
+                progressIcon={
+                  pendingActionKey && (
+                    <Spinner
+                      aria-label={words("resources.resourceActions.triggered")(
+                        actions[pendingActionKey].label
+                      )}
+                    />
+                  )
+                }
+              >
                 <PlayIcon />
               </Icon>
               {actions.deploy.label}

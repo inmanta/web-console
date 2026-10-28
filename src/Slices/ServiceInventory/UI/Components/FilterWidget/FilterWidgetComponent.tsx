@@ -2,6 +2,7 @@ import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
 import {
   ServiceInstanceParams,
+  hasAnySetValue,
   invertFilter,
   removeInvertedSelection,
   toggleValueInList,
@@ -117,12 +118,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
   const updateDeleted = (deleted: ServiceInstanceParams.DeletedRule) =>
     setFilter({ ...filter, deleted });
 
-  const hasActiveFilters =
-    (filter.state?.length ?? 0) > 0 ||
-    (filter.id_or_service_identity?.length ?? 0) > 0 ||
-    (filter.attributeSetEmpty?.length ?? 0) > 0 ||
-    (filter.attributeSetNotEmpty?.length ?? 0) > 0 ||
-    Boolean(filter.deleted);
+  const hasActiveFilters = hasAnySetValue(filter);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

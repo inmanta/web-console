@@ -40,11 +40,11 @@ describe("useGraphQLRequest", () => {
     await expect(renderGraphQLRequest()()).resolves.toEqual(environmentsData);
   });
 
-  it("GIVEN an empty body with status 200 THEN it rejects with an unexpected response error", async () => {
+  it("GIVEN an empty body with status 200 THEN it rejects with an empty response error", async () => {
     server.use(http.post("/api/v2/graphql", () => new HttpResponse(null, { status: 200 })));
 
     await expect(renderGraphQLRequest()()).rejects.toMatchObject({
-      message: words("error.response.unexpected")(200),
+      message: words("error.response.empty"),
       status: 200,
     });
   });

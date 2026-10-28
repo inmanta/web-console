@@ -2,13 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { usePostWithoutEnv } from "@inmanta/web-console-core/Queries/Helpers";
 import { getUserKey } from "../GetUsers/useGetUsers";
 
-interface AddUSerResponse {
-  data: {
-    username: "string";
-    auth_method: "database";
-  };
-}
-
 interface AddUserBody {
   username: string;
   password: string;
@@ -22,7 +15,7 @@ export const useAddUser = () => {
   const client = useQueryClient();
   const post = usePostWithoutEnv()<AddUserBody>;
 
-  return useMutation<AddUSerResponse, Error, AddUserBody>({
+  return useMutation<void, Error, AddUserBody>({
     mutationFn: (body) => post("/api/v2/user", body),
     mutationKey: ["add_user"],
     onSuccess: () => {
