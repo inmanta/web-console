@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useLocation } from "react-router";
 import { Nav, NavGroup } from "@patternfly/react-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
-import { ShellOptionsContext } from "../../../ShellOptions";
+import { ShellOptionsContext } from "@inmanta/web-console-shell/ShellOptions";
 import { getGroups } from "./Group";
 import { NavigationItem } from "./NavigationItem";
 

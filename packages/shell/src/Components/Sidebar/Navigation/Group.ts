@@ -6,7 +6,7 @@ import {
   RouteManager,
   words,
 } from "@inmanta/web-console-core";
-import { SidebarLink, SidebarOptions } from "../../../ShellOptions";
+import { SidebarLink, SidebarOptions } from "@inmanta/web-console-shell/ShellOptions";
 
 /**
  * Interface that represents a Group of links in the sidebar navigation

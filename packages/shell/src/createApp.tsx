@@ -47,8 +47,10 @@ export interface App {
 
   /**
    * Starts the app in the given element: registers the messages of its features and renders it.
+   *
+   * @returns a function that unmounts the app again
    */
-  render(container: Element): void;
+  render(container: Element): () => void;
 }
 
 /**
@@ -90,7 +92,9 @@ export const createApp = ({ features, shell = {} }: AppOptions): App => {
         },
       });
 
-      createRoot(container).render(
+      const root = createRoot(container);
+
+      root.render(
         <ShellOptionsContext.Provider value={shell}>
           <ErrorBoundary>
             <QueryControlProvider>
@@ -123,6 +127,8 @@ export const createApp = ({ features, shell = {} }: AppOptions): App => {
           </ErrorBoundary>
         </ShellOptionsContext.Provider>
       );
+
+      return () => root.unmount();
     },
   };
 };

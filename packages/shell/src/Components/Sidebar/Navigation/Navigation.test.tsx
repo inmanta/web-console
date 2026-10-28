@@ -3,10 +3,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { FeatureModule, words } from "@inmanta/web-console-core";
+import { ShellOptions, ShellOptionsContext } from "@inmanta/web-console-shell/ShellOptions";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { stubRoute } from "@inmanta/web-console-test-utils/Inject/stubRoute";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
-import { ShellOptions, ShellOptionsContext } from "../../../ShellOptions";
 import { Navigation } from "./Navigation";
 
 const page = () => Promise.resolve(() => null);

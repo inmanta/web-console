@@ -1,4 +1,4 @@
-import { act } from "react";
+import { act, within } from "@testing-library/react";
 import { FeatureModule } from "@inmanta/web-console-core";
 import * as WordsModule from "@inmanta/web-console-core/I18n/Words";
 import { stubRoute } from "@inmanta/web-console-test-utils/Inject/stubRoute";
@@ -37,14 +37,24 @@ describe("createApp", () => {
     expect(registerMessages).not.toHaveBeenCalled();
   });
 
-  test("GIVEN an app WHEN it is rendered THEN it registers the messages of its features and renders into the element", async () => {
+  test("GIVEN an app WHEN it is rendered THEN it registers the messages of its features and renders the shell into the element", async () => {
     const registerMessages = vi.spyOn(WordsModule, "registerMessages");
+    // The requests never answer, so the initializer stays on its loading view.
+    vi.spyOn(globalThis, "fetch").mockReturnValue(new Promise(() => {}));
     const container = document.createElement("div");
+    let unmount = () => {};
 
-    await act(async () => createApp({ features: [feature] }).render(container));
+    await act(async () => {
+      unmount = createApp({ features: [feature] }).render(container);
+    });
 
     expect(registerMessages).toHaveBeenCalledWith(feature.messages);
-    expect(container).not.toBeEmptyDOMElement();
+    // The shell's initializer only renders inside the whole provider stack: router, Injector and Root.
+    expect(within(container).getByRole("region", { name: "Initializer-Loading" })).toBeTruthy();
+
+    act(() => unmount());
+
+    expect(container).toBeEmptyDOMElement();
   });
 
   test("GIVEN no auth option or 'from-config' THEN the auth settings come from config.js", () => {

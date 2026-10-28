@@ -1,4 +1,3 @@
-export * from "./createApp";
-export * from "./Root";
-export * from "./RootRoutes";
-export * from "./ShellOptions";
+export { createApp } from "./createApp";
+export type { App, AppOptions } from "./createApp";
+export type { AuthConfig, ShellOptions, SidebarLink, SidebarOptions } from "./ShellOptions";
