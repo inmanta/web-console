@@ -38,6 +38,9 @@ packages/
       index.ts - composerFeature, its FeatureModule
       Components/Composer/ - The canvas, its shapes, sidebars and providers
       Slices/ - The composer pages: creator, editor, viewer
+    orchestration-engine/src/ - The Orchestration Engine: compile reports, desired state, compliance check, parameters
+      Components/ - The components only the orchestration engine uses, e.g. DiffWizard, Timeline
+      Slices/ - The orchestration engine pages
 apps/
   web-console/src/ - The app: its entry (index.tsx), the features it ships (appFeatures.ts), its config.js and app-level tests
 src/

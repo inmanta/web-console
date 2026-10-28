@@ -62,6 +62,12 @@
       "@inmanta/web-console-feature-composer/*": [
         "./packages/features/composer/src/*"
       ],
+      "@inmanta/web-console-feature-orchestration-engine": [
+        "./packages/features/orchestration-engine/src"
+      ],
+      "@inmanta/web-console-feature-orchestration-engine/*": [
+        "./packages/features/orchestration-engine/src/*"
+      ],
       "@inmanta/web-console-test-utils": [
         "./packages/test-utils/src"
       ],

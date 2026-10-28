@@ -76,17 +76,7 @@ const features = {
     ],
   },
   "orchestration-engine": {
-    folder: "OrchestrationEngine",
-    slices: [
-      "CompileDetails",
-      "CompileReports",
-      "ComplianceCheck",
-      "DesiredState",
-      "DesiredStateCompare",
-      "DesiredStateDetails",
-      "DesiredStateResourceDetails",
-      "Parameters",
-    ],
+    package: "orchestration-engine",
   },
   "resource-manager": {
     folder: "ResourceManager",
