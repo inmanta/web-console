@@ -14,8 +14,8 @@ import { fileURLToPath } from "node:url";
  * | features | core, ui, their own files         |
  * | app      | everything (it composes the rest) |
  *
- * Every slice and every folder in `src/Features` belongs to exactly one feature.
- * A new one has to be added here, or linting fails.
+ * Every slice, every folder in `src/Features` and every folder in `packages/features` belongs to
+ * exactly one feature. A new one has to be added here, or linting fails.
  */
 
 /**
@@ -32,9 +32,9 @@ const core = ["./packages/core"];
  * (#7464 to #7470). Until then they count as shared components, but `packages/ui` doesn't
  * import them.
  */
-const componentsToMove = readdirSync(inRoot("./src/UI/Components"), { withFileTypes: true })
-  .filter((entry) => entry.name !== "Composer")
-  .map((entry) => `./src/UI/Components/${entry.name}`);
+const componentsToMove = readdirSync(inRoot("./src/UI/Components"), { withFileTypes: true }).map(
+  (entry) => `./src/UI/Components/${entry.name}`
+);
 
 const ui = ["./packages/ui", ...componentsToMove];
 
@@ -43,14 +43,12 @@ const shell = ["./packages/shell"];
 const app = ["./apps/web-console"];
 
 /**
- * The folders of each feature: its slices, its folder in `src/Features` and any other folder it
- * owns.
+ * The folders of each feature: its slices and its folder in `src/Features`. A feature that moved
+ * into `packages/features` only has its package folder there.
  */
 const features = {
   composer: {
-    folder: "Composer",
-    slices: ["InstanceComposerCreator", "InstanceComposerEditor", "InstanceComposerViewer"],
-    other: ["./src/UI/Components/Composer"],
+    package: "composer",
   },
   environment: {
     folder: "Environment",
@@ -108,9 +106,13 @@ const features = {
 };
 
 const featurePaths = Object.fromEntries(
-  Object.entries(features).map(([name, { folder, slices, other = [] }]) => [
+  Object.entries(features).map(([name, { package: packageFolder, folder, slices = [] }]) => [
     name,
-    [`./src/Features/${folder}`, ...slices.map((slice) => `./src/Slices/${slice}`), ...other],
+    [
+      ...(packageFolder ? [`./packages/features/${packageFolder}`] : []),
+      ...(folder ? [`./src/Features/${folder}`] : []),
+      ...slices.map((slice) => `./src/Slices/${slice}`),
+    ],
   ])
 );
 
@@ -128,11 +130,15 @@ const assertAllAssigned = (directory, assigned) => {
 
 assertAllAssigned(
   "./src/Slices",
-  Object.values(features).flatMap(({ slices }) => slices)
+  Object.values(features).flatMap(({ slices = [] }) => slices)
 );
 assertAllAssigned(
   "./src/Features",
-  Object.values(features).map(({ folder }) => folder)
+  Object.values(features).flatMap(({ folder }) => folder ?? [])
+);
+assertAllAssigned(
+  "./packages/features",
+  Object.values(features).flatMap(({ package: packageFolder }) => packageFolder ?? [])
 );
 
 for (const path of [...core, ...ui, ...shell, ...app, ...allFeatures]) {

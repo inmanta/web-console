@@ -33,10 +33,15 @@ packages/
     Auth/ - The auth providers
     Slices/ - The shell's own pages: login, not found, notifications, status
   test-utils/src/ - @inmanta/web-console-test-utils, common test data, mock implementations, testing utilities, test setup
+  features/ - One folder per feature that has moved, imported as @inmanta/web-console-feature-<name>
+    composer/src/ - The Instance Composer, the only code that imports JointJS (@joint/*)
+      index.ts - composerFeature, its FeatureModule
+      Components/Composer/ - The canvas, its shapes, sidebars and providers
+      Slices/ - The composer pages: creator, editor, viewer
 apps/
   web-console/src/ - The app: its entry (index.tsx), the features it ships (appFeatures.ts), its config.js and app-level tests
 src/
-  Features/ - The FeatureModule of each feature
+  Features/ - The FeatureModule of each feature that hasn't moved to packages/features yet
   UI/
     Components/ - Components that only one feature uses, waiting to move there
   Slices/ (repeat the 3 layers for each slice)

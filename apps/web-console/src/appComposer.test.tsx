@@ -4,12 +4,12 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { composerFeature } from "@/Features/Composer";
 import { lsmFeature } from "@/Features/Lsm";
 import { defaultServer } from "@S/ServiceInstanceDetails/Test/mockServer";
 import { setupServiceInstanceDetails } from "@S/ServiceInstanceDetails/Test/mockSetup";
 import { ServiceInventory } from "@S/ServiceInventory/UI/ServiceInventory";
 import { ServiceModel } from "@inmanta/web-console-core";
+import { composerFeature } from "@inmanta/web-console-feature-composer";
 import {
   MockedDependencyProvider,
   ModalProvider,

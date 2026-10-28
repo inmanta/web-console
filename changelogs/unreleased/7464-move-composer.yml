@@ -1,0 +1,5 @@
+description: Move the instance composer into its package folder, packages/features/composer.
+issue-nr: 7464
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

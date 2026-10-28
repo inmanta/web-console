@@ -18,4 +18,7 @@ const linkShapeMock = vi.hoisted(() => ({
 }));
 
 // Mock Composer LinkShape (used by linkUtils, initializeCanvasFromInstance, and other Composer tests)
-vi.mock("@/UI/Components/Composer/UI/JointJsShapes/LinkShape", () => linkShapeMock);
+vi.mock(
+  "@inmanta/web-console-feature-composer/Components/Composer/UI/JointJsShapes/LinkShape",
+  () => linkShapeMock
+);
