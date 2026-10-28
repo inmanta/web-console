@@ -16,7 +16,7 @@ import {
   Project,
   ServerStatus,
 } from "@inmanta/web-console-test-utils";
-import { features } from "./appFeatures";
+import { app } from "./app";
 
 // The header only shows once the whole app has rendered, which can take over the default 1 s on
 // slow CI runners. findBy still resolves as soon as the header is there.
@@ -31,11 +31,11 @@ function setup() {
     [
       {
         element: (
-          <MockedDependencyProvider features={features}>
+          <MockedDependencyProvider features={app.features}>
             <Root />
           </MockedDependencyProvider>
         ),
-        children: createRootRoutes("", features),
+        children: createRootRoutes("", app.features),
       },
     ],
     { initialEntries: ["/"] }

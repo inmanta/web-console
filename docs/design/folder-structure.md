@@ -43,7 +43,7 @@ packages/
       Components/ - The components only the orchestration engine uses, e.g. DiffWizard, Timeline
       Slices/ - The orchestration engine pages
 apps/
-  web-console/src/ - The app: its entry (index.tsx), the features it ships (appFeatures.ts), its config.js and app-level tests
+  web-console/src/ - The app: its composition (app.ts: createApp with the features it ships and the shell options), its entry (index.tsx), Monaco setup, config.js and app-level tests
 src/
   Features/ - The FeatureModule of each feature that hasn't moved to packages/features yet
   UI/

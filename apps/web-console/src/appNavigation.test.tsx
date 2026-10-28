@@ -14,7 +14,7 @@ import {
   MockOrchestratorProvider,
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
-import { features as appFeatures } from "./appFeatures";
+import { app } from "./app";
 
 function setup(
   initialEntries?: string[],
@@ -30,7 +30,7 @@ function setup(
         <MockedDependencyProvider
           isCompiling={isCompiling}
           routes={routes}
-          features={features ?? appFeatures}
+          features={features ?? app.features}
         >
           <Navigation environment="env" />
         </MockedDependencyProvider>
