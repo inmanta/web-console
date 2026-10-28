@@ -14,8 +14,8 @@ import { fileURLToPath } from "node:url";
  * | features | core, ui, their own files         |
  * | app      | everything (it composes the rest) |
  *
- * Every slice and every folder in `src/Features` belongs to exactly one feature.
- * A new one has to be added here, or linting fails.
+ * Every slice, every folder in `src/Features` and every folder in `packages/features` belongs to
+ * exactly one feature. A new one has to be added here, or linting fails.
  */
 
 /**
@@ -48,7 +48,7 @@ const app = ["./apps/web-console"];
  */
 const features = {
   composer: {
-    other: ["./packages/features/composer"],
+    package: "composer",
   },
   environment: {
     folder: "Environment",
@@ -106,14 +106,17 @@ const features = {
 };
 
 const featurePaths = Object.fromEntries(
-  Object.entries(features).map(([name, { folder, slices = [], other = [] }]) => [
-    name,
-    [
-      ...(folder ? [`./src/Features/${folder}`] : []),
-      ...slices.map((slice) => `./src/Slices/${slice}`),
-      ...other,
-    ],
-  ])
+  Object.entries(features).map(
+    ([name, { package: packageFolder, folder, slices = [], other = [] }]) => [
+      name,
+      [
+        ...(packageFolder ? [`./packages/features/${packageFolder}`] : []),
+        ...(folder ? [`./src/Features/${folder}`] : []),
+        ...slices.map((slice) => `./src/Slices/${slice}`),
+        ...other,
+      ],
+    ]
+  )
 );
 
 const allFeatures = Object.values(featurePaths).flat();
@@ -135,6 +138,10 @@ assertAllAssigned(
 assertAllAssigned(
   "./src/Features",
   Object.values(features).flatMap(({ folder }) => folder ?? [])
+);
+assertAllAssigned(
+  "./packages/features",
+  Object.values(features).flatMap(({ package: packageFolder }) => packageFolder ?? [])
 );
 
 for (const path of [...core, ...ui, ...shell, ...app, ...allFeatures]) {

@@ -208,6 +208,7 @@ export default [
   },
   {
     // Only the composer depends on JointJS, so that an app without it builds without the licence.
+    // This rule only sees static imports; the workspaces step (#7461) also catches import() and vi.mock.
     files: ["{src,packages,apps}/**/*.ts", "{src,packages,apps}/**/*.tsx"],
     ignores: ["packages/features/composer/**"],
     rules: {
