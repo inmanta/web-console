@@ -76,8 +76,9 @@ describe("hasAnySetValue", () => {
     ["null", { text: null }],
     ["an empty string", { text: "" }],
     ["an empty list", { list: [] }],
-  ])("returns false when every given key is %s", (_, sample) => {
-    expect(hasAnySetValue(sample, ["list", "text"])).toBe(false);
+    ["missing", {}],
+  ])("returns false when every property is %s", (_, sample) => {
+    expect(hasAnySetValue(sample)).toBe(false);
   });
 
   test.each<[string, Sample]>([
@@ -86,12 +87,8 @@ describe("hasAnySetValue", () => {
     ["false", { flag: false }],
     ["0", { count: 0 }],
     ["an object", { match: {} }],
-  ])("returns true when a given key holds %s", (_, sample) => {
-    expect(hasAnySetValue(sample, ["list", "text", "flag", "count", "match"])).toBe(true);
-  });
-
-  test("ignores set values on keys that are not given", () => {
-    expect(hasAnySetValue<Sample>({ list: [], text: "a" }, ["list"])).toBe(false);
+  ])("returns true when a property holds %s", (_, sample) => {
+    expect(hasAnySetValue(sample)).toBe(true);
   });
 });
 

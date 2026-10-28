@@ -32,7 +32,7 @@ interface Props {
 export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onClose }) => {
   const { addString, removeStringChip, clearStringGroup } = getFilterActions(filter, setFilter);
 
-  const hasActiveFilters = hasAnySetValue(filter, ["name", "resource_id"]);
+  const hasActiveFilters = hasAnySetValue(filter);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

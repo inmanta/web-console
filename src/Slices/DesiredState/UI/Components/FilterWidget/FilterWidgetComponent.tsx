@@ -38,7 +38,8 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
   const clearAllFilters = () => setFilter({});
 
-  const hasActiveFilters = hasAnySetValue(filter, ["status", "date", "version"]);
+  const { disregardDefault: _disregardDefault, ...filterValues } = filter;
+  const hasActiveFilters = hasAnySetValue(filterValues);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

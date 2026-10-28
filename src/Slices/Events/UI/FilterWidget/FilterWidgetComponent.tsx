@@ -59,13 +59,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
       }
     };
 
-  const hasActiveFilters = hasAnySetValue(filter, [
-    "event_type",
-    "source",
-    "destination",
-    "version",
-    "timestamp",
-  ]);
+  const hasActiveFilters = hasAnySetValue(filter);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

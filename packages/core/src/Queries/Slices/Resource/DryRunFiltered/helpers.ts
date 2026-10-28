@@ -31,9 +31,14 @@ export const createDryRunContext = (
  *
  * @example hasStatusFilter({ isOrphan: false, compliance: { eq: ["NON_COMPLIANT"] } }) // true
  */
-const hasStatusFilter = (filter: ResourceActionFilter): boolean =>
-  filter.isOrphan === true ||
-  hasAnySetValue(filter, ["isDeploying", "blocked", "compliance", "lastHandlerRun"]);
+const hasStatusFilter = ({
+  isOrphan,
+  isDeploying,
+  blocked,
+  compliance,
+  lastHandlerRun,
+}: ResourceActionFilter): boolean =>
+  isOrphan === true || hasAnySetValue({ isDeploying, blocked, compliance, lastHandlerRun });
 
 /**
  * Returns the part of this filter that blocks selecting a version for a dry run, or undefined when

@@ -101,13 +101,10 @@ const isValueSet = (value: unknown): boolean => {
 };
 
 /**
- * Checks whether any of the given keys of an object holds a set value: not undefined, null, an
- * empty string or an empty list. Only the given keys are checked, so other keys never count.
- *
- * @example hasAnySetValue({ name: [], status: "failed", identity: "x" }, ["name", "status"]) // true
+ * Checks whether any property of an object holds a set value: not undefined, null, an empty string
+ * or an empty list. Leave out the properties that must not count before calling it.
  */
-export const hasAnySetValue = <T extends object>(object: T, keys: (keyof T)[]): boolean =>
-  keys.some((key) => isValueSet(object[key]));
+export const hasAnySetValue = (object: object): boolean => Object.values(object).some(isValueSet);
 
 /**
  * Get the keys of the provided object excluding the provided keys.

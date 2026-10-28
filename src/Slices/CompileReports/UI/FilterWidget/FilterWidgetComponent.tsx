@@ -48,7 +48,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
       status: value ? CompileStatus[value.replace(/\s+/g, "")] : undefined,
     });
 
-  const hasActiveFilters = hasAnySetValue(filter, ["status", "requested"]);
+  const hasActiveFilters = hasAnySetValue(filter);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

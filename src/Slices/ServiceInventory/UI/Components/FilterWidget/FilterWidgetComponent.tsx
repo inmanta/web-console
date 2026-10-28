@@ -118,13 +118,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
   const updateDeleted = (deleted: ServiceInstanceParams.DeletedRule) =>
     setFilter({ ...filter, deleted });
 
-  const hasActiveFilters = hasAnySetValue(filter, [
-    "state",
-    "id_or_service_identity",
-    "attributeSetEmpty",
-    "attributeSetNotEmpty",
-    "deleted",
-  ]);
+  const hasActiveFilters = hasAnySetValue(filter);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

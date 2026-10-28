@@ -59,12 +59,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
   const updateLogLevel = (value: string | null) =>
     setFilter({ ...filter, minimal_log_level: value || undefined });
 
-  const hasActiveFilters = hasAnySetValue(filter, [
-    "action",
-    "minimal_log_level",
-    "message",
-    "timestamp",
-  ]);
+  const hasActiveFilters = hasAnySetValue(filter);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

@@ -57,10 +57,7 @@ export const DesiredStateDetailsFilterWidget: React.FC<DesiredStateDetailsFilter
     const { addString, removeStringChip, clearStringGroup } = getFilterActions(filter, setFilter);
 
     const fields = getFields();
-    const hasActiveFilters = hasAnySetValue(
-      filter,
-      fields.map(({ key }) => key)
-    );
+    const hasActiveFilters = hasAnySetValue(filter);
 
     return (
       <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

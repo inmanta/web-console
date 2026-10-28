@@ -44,7 +44,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
     clearDateRange,
   } = getFilterActions(filter, setFilter);
 
-  const hasActiveFilters = hasAnySetValue(filter, ["name", "source", "updated"]);
+  const hasActiveFilters = hasAnySetValue(filter);
 
   return (
     <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

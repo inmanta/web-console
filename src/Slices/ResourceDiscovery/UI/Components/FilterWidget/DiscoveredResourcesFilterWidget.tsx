@@ -60,10 +60,7 @@ export const DiscoveredResourcesFilterWidget: React.FC<DiscoveredResourcesFilter
     const { addString, removeStringChip, clearStringGroup } = getFilterActions(filter, setFilter);
 
     const fields = getFields();
-    const hasActiveFilters = hasAnySetValue(
-      filter,
-      fields.map(({ key }) => key)
-    );
+    const hasActiveFilters = hasAnySetValue(filter);
 
     return (
       <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>

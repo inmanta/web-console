@@ -63,16 +63,8 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
   clearServiceInstances,
   removeIncludeOwned,
 }) => {
-  const hasActiveFilters =
-    filter.includeOwned === true ||
-    hasAnySetValue(filter, [
-      "type",
-      "agent",
-      "value",
-      "status",
-      "serviceEntity",
-      "serviceInstance",
-    ]);
+  const { disregardDefault: _disregardDefault, ...filterValues } = filter;
+  const hasActiveFilters = hasAnySetValue(filterValues);
 
   return (
     <ActiveFilters
