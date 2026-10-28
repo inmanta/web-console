@@ -228,7 +228,7 @@ describe("ResourceDetailsView", () => {
 
       // The user gets confirmation the action was accepted.
       expect(
-        await screen.findByText(words("resources.resourceActions.success")(deployLabel))
+        await screen.findByText(words("resources.resourceActions.triggered")(deployLabel))
       ).toBeVisible();
     });
 

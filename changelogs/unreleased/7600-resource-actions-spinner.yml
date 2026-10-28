@@ -1,0 +1,6 @@
+description: The Deploy button shows a spinner while a deploy, repair or dry run is starting.
+issue-nr: 7600
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"
