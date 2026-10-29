@@ -1,4 +1,5 @@
 import { ServiceModel, StateModel, TransferModel } from "@inmanta/web-console-core";
+import * as Test from "@inmanta/web-console-test-utils";
 import { warnUnrecognisedAnnotations } from "./AnnotationWarnings";
 
 const baseState: StateModel = {
@@ -43,6 +44,12 @@ const buildServiceModel = (states: StateModel[], transfers: TransferModel[]): Se
     lifecycle: { initial_state: "up", states, transfers },
   }) as ServiceModel;
 
+const entityWithAnnotations = (annotations: Record<string, unknown>): ServiceModel => ({
+  ...buildServiceModel([], []),
+  name: "router",
+  entity_annotations: annotations,
+});
+
 describe("warnUnrecognisedAnnotations", () => {
   let warnSpy: ReturnType<typeof vi.spyOn>;
 
@@ -74,6 +81,27 @@ describe("warnUnrecognisedAnnotations", () => {
     expect(warnSpy).toHaveBeenCalledWith(
       '⚠ [lsm] unrecognised annotation key\n   "web_buton_label" on transfer "up -> setting_start" — ignored.\n   Did you mean "web_button_label"?'
     );
+  });
+
+  it("warns for an unrecognised web_* key on the entity", () => {
+    warnUnrecognisedAnnotations(entityWithAnnotations({ web_titel: "Router" }), new Set());
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy).toHaveBeenCalledWith(
+      '⚠ [lsm] unrecognised annotation key\n   "web_titel" on entity "router" — ignored.\n   Did you mean "web_title"?'
+    );
+  });
+
+  it("does not warn for recognised or non-web_* keys on the entity", () => {
+    const serviceModel = entityWithAnnotations({
+      ...Test.Service.EntityAnnotations.valid,
+      web_tabs: [],
+      synctool_id: "abc",
+    });
+
+    warnUnrecognisedAnnotations(serviceModel, new Set());
+
+    expect(warnSpy).not.toHaveBeenCalled();
   });
 
   it("does not warn for a recognised key", () => {
