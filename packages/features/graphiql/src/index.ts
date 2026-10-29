@@ -1,5 +1,5 @@
-import * as GraphiQL from "@S/GraphiQL/Core/Route";
 import { FeatureModule } from "@inmanta/web-console-core";
+import * as GraphiQL from "@inmanta/web-console-feature-graphiql/Slices/GraphiQL/Core/Route";
 import { graphiqlMessages } from "./messages";
 
 /**
@@ -14,7 +14,10 @@ export const graphiqlFeature: FeatureModule = {
   routes: [
     {
       route: GraphiQL.route,
-      page: () => import("@S/GraphiQL/UI").then((module) => module.GraphiQLPage),
+      page: () =>
+        import("@inmanta/web-console-feature-graphiql/Slices/GraphiQL/UI").then(
+          (module) => module.GraphiQLPage
+        ),
     },
   ],
 };

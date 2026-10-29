@@ -55,8 +55,7 @@ const features = {
     slices: ["CreateEnvironment", "Dashboard", "Settings"],
   },
   graphiql: {
-    folder: "GraphiQL",
-    slices: ["GraphiQL"],
+    package: "graphiql",
   },
   lsm: {
     package: "lsm",
@@ -76,8 +75,7 @@ const features = {
     ],
   },
   "user-management": {
-    folder: "UserManagement",
-    slices: ["UserManagement"],
+    package: "user-management",
   },
 };
 
