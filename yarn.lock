@@ -882,7 +882,7 @@ __metadata:
     "@remix-run/router": "npm:^1.23.4"
     "@stylistic/eslint-plugin-ts": "npm:^4.4.1"
     "@tanstack/react-query": "npm:^5.104.5"
-    "@tanstack/react-query-devtools": "npm:^5.104.5"
+    "@tanstack/react-query-devtools": "npm:^5.105.0"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/jest-dom": "npm:^7.0.1"
     "@testing-library/react": "npm:^16.3.3"
@@ -2614,38 +2614,45 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-devtools@npm:5.104.5":
-  version: 5.104.5
-  resolution: "@tanstack/query-devtools@npm:5.104.5"
+"@tanstack/query-core@npm:5.105.0":
+  version: 5.105.0
+  resolution: "@tanstack/query-core@npm:5.105.0"
+  checksum: 10/1a52f339f4e05cae0667b41e091fa6ec4c12b159a95cf54fde9d39204aff461e214a9f59513fdbb4b715ba9cbed60b31012d058ac8d22cd88b59247be6e890fc
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-devtools@npm:5.105.0":
+  version: 5.105.0
+  resolution: "@tanstack/query-devtools@npm:5.105.0"
   dependencies:
     "@kobalte/core": "npm:^0.13.14"
     "@solid-primitives/keyed": "npm:^1.5.3"
     "@solid-primitives/resize-observer": "npm:^2.2.0"
     "@solid-primitives/storage": "npm:^1.3.11"
     "@tanstack/match-sorter-utils": "npm:^9.1.2"
-    "@tanstack/query-core": "npm:5.104.5"
+    "@tanstack/query-core": "npm:5.105.0"
     clsx: "npm:^2.1.1"
     goober: "npm:^2.1.19"
     solid-js: "npm:^1.9.15"
     solid-transition-group: "npm:^0.2.3"
     superjson: "npm:^2.2.6"
-  checksum: 10/da8f0a942570785bad2de57e3eb49012c21225e1e6367c304503f26db0a2ef0051a20099a5a43dfaded130b78511a2b07cadeff4f43404651a0ed1e0549a3075
+  checksum: 10/521d4b792b850cfe1b80d5e342efa253cce57154f3bb549ba81eda2471253c70598bd14b73c81392cb037a7b9e8aed0799c645fd814ad0d75c41e3cc234b8122
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:^5.104.5":
-  version: 5.104.5
-  resolution: "@tanstack/react-query-devtools@npm:5.104.5"
+"@tanstack/react-query-devtools@npm:^5.105.0":
+  version: 5.105.0
+  resolution: "@tanstack/react-query-devtools@npm:5.105.0"
   dependencies:
-    "@tanstack/query-devtools": "npm:5.104.5"
+    "@tanstack/query-devtools": "npm:5.105.0"
   peerDependencies:
-    "@tanstack/react-query": ^5.104.5
+    "@tanstack/react-query": ^5.105.0
     "@types/react": ^18 || ^19
     react: ^18 || ^19
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/5d9b751a8784680f621656b1a90497b3edbe5a71075243054683860f3371fd7a8a7eb836e60b186d62587832323c062b0796e80b20626429c44d062424b85244
+  checksum: 10/2830024dd03d13d8d7ddeabcc82006dc20def5a4208711aad88bca6b8b9b226afdc1c828174c99025bc19bc8fcdca09f87543f59763a64cf26598f55902bc38a
   languageName: node
   linkType: hard
 
