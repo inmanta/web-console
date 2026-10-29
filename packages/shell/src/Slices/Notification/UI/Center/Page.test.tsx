@@ -37,8 +37,11 @@ const setup = (entries?: string[]) => {
   return { component };
 };
 
+// The toggle's name is its count plus "Filters"; a plain /Filters/ also matches Reset Filters.
+const filterToggle = () => screen.getByRole("button", { name: /^\d+\s*Filters$/i });
+
 const openFilters = async () => {
-  await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
+  await userEvent.click(filterToggle());
 };
 
 const server = setupServer();
@@ -140,6 +143,8 @@ describe("NotificationCenterPage", () => {
       })
     ).toHaveLength(2);
 
+    expect(within(filterToggle()).getByText("1")).toBeVisible();
+
     await userEvent.click(screen.getByRole("combobox", { name: "ReadFilterInput" }));
 
     await userEvent.click(screen.getByRole("button", { name: "Clear input value" }));
@@ -151,6 +156,33 @@ describe("NotificationCenterPage", () => {
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("Given Notification Center page When user filters on unread THEN requests read false and the badge counts it", async () => {
+    server.use(
+      http.get("/api/v2/notification", ({ request }) => {
+        if (request.url.includes("filter.read=false")) {
+          return HttpResponse.json({ data: [Mock.unread], links, metadata });
+        }
+
+        return HttpResponse.json({ data: Mock.list, links, metadata });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
+
+    await openFilters();
+
+    await userEvent.click(screen.getByRole("combobox", { name: "ReadFilterInput" }));
+
+    await userEvent.click(screen.getByRole("option", { name: "unread" }));
+
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(1);
+    expect(within(filterToggle()).getByText("1")).toBeVisible();
+    expect(screen.getByRole("button", { name: /close unread/i })).toBeInTheDocument();
   });
 
   test("Given Notification Center page When user filters on message Then executes correct request", async () => {
@@ -175,16 +207,18 @@ describe("NotificationCenterPage", () => {
 
     await openFilters();
 
-    await userEvent.type(
-      screen.getByPlaceholderText(words("notification.message.placeholder")),
-      "abc{enter}"
-    );
+    const messageInput = screen.getByPlaceholderText(words("notification.message.placeholder"));
+
+    await userEvent.type(messageInput, "abc{enter}");
 
     expect(
       await screen.findAllByRole("listitem", {
         name: "NotificationItem",
       })
     ).toHaveLength(2);
+
+    // The page keeps showing the list while the new filter loads, so the panel isn't remounted.
+    expect(messageInput).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("button", { name: /close abc/i }));
 
@@ -253,7 +287,7 @@ describe("NotificationCenterPage", () => {
 
     expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(1);
 
-    const toggle = screen.getByRole("button", { name: /Filters/i });
+    const toggle = filterToggle();
 
     expect(within(toggle).getByText("1")).toBeInTheDocument();
 

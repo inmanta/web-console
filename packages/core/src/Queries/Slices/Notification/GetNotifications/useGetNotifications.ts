@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { CurrentPage } from "@inmanta/web-console-core/Common/UrlState/useUrlStateWithCurrentPage";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { PageSize, Pagination } from "@inmanta/web-console-core/Domain";
@@ -72,19 +72,15 @@ export const useGetNotifications = (params: GetNotificationsParams): GetNotifica
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
-  const filter = params.filter ? Object.values(params.filter) : [];
 
   return {
     useContinuous: () =>
       useQuery({
-        queryKey: getNotificationsKey.list([
-          params.pageSize,
-          ...filter,
-          params.currentPage,
-          params.origin,
-          env,
-        ]),
+        // Like the other slices, the filter stays an object in the key, so the same value on
+        // different fields (title "abc", message "abc") gets a different key.
+        queryKey: getNotificationsKey.list([...Object.values(params), env]),
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
+        placeholderData: keepPreviousData,
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,
