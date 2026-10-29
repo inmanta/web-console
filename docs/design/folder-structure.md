@@ -59,7 +59,7 @@ apps/
 src/
   Features/ - The FeatureModule of each feature that hasn't moved to packages/features yet
   UI/
-    Components/ - Components that only one feature uses, waiting to move there
+    Components/ - Only ResourceActions is left: lsm and resource-manager both use it, and #7466 decides where it goes
   Slices/ (repeat the 3 layers for each slice)
     <SliceName>
         Core (slice specific)

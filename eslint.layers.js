@@ -28,9 +28,9 @@ const inRoot = (path) => resolve(basePath, path);
 const core = ["./packages/core"];
 
 /**
- * The components left in `src/UI/Components` belong to one feature, and move there with it
- * (#7464 to #7470). Until then they count as shared components, but `packages/ui` doesn't
- * import them.
+ * The components left in `src/UI/Components`: only `ResourceActions`, which lsm and
+ * resource-manager both use until #7466 decides where it goes. Until then it counts as a shared
+ * component, but `packages/ui` doesn't import it.
  */
 const componentsToMove = readdirSync(inRoot("./src/UI/Components"), { withFileTypes: true }).map(
   (entry) => `./src/UI/Components/${entry.name}`
