@@ -223,6 +223,10 @@ export default defineConfig({
         replacement: resolve(__dirname, "./packages/features/composer/src"),
       },
       {
+        find: "@inmanta/web-console-feature-environment",
+        replacement: resolve(__dirname, "./packages/features/environment/src"),
+      },
+      {
         find: "@inmanta/web-console-feature-lsm",
         replacement: resolve(__dirname, "./packages/features/lsm/src"),
       },

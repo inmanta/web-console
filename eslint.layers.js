@@ -51,8 +51,7 @@ const features = {
     package: "composer",
   },
   environment: {
-    folder: "Environment",
-    slices: ["CreateEnvironment", "Dashboard", "Settings"],
+    package: "environment",
   },
   graphiql: {
     folder: "GraphiQL",

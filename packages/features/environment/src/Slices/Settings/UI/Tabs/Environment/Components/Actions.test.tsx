@@ -4,8 +4,8 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { environmentFeature } from "@/Features/Environment";
 import { EnvironmentPreview } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import { environmentFeature } from "@inmanta/web-console-feature-environment";
 import {
   Environment,
   EnvironmentDetails,

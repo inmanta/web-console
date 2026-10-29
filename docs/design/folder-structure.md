@@ -38,6 +38,10 @@ packages/
       index.ts - composerFeature, its FeatureModule
       Components/Composer/ - The canvas, its shapes, sidebars and providers
       Slices/ - The composer pages: creator, editor, viewer
+    environment/src/ - The environment pages: dashboard, settings, create environment
+      index.ts - environmentFeature, its FeatureModule
+      Components/ - The components only the environment pages use: DictEditor, ImageUpload, InlineEditable
+      Slices/ - The environment pages
     lsm/src/ - The Lifecycle Service Manager: catalog and service details, inventory and instance details, create/edit/duplicate, orders, events and diagnose
       index.ts - lsmFeature, its FeatureModule
       Components/ - The components only lsm uses, e.g. ServiceInstanceForm, TreeTable, EventsTable

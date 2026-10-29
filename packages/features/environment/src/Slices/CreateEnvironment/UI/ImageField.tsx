@@ -1,6 +1,6 @@
 import React from "react";
 import { FormGroup } from "@patternfly/react-core";
-import { ImageUpload } from "@/UI/Components/ImageUpload";
+import { ImageUpload } from "@inmanta/web-console-feature-environment/Components/ImageUpload";
 
 interface Props {
   label: string;
