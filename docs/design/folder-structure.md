@@ -58,8 +58,6 @@ apps/
   web-console/src/ - The app: its composition (app.ts: createApp with the features it ships and the shell options), its entry (index.tsx), Monaco setup, config.js and app-level tests
 src/
   Features/ - The FeatureModule of each feature that hasn't moved to packages/features yet
-  UI/
-    Components/ - Only ResourceActions is left: lsm and resource-manager both use it, and #7466 decides where it goes
   Slices/ (repeat the 3 layers for each slice)
     <SliceName>
         Core (slice specific)

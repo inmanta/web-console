@@ -27,16 +27,7 @@ const inRoot = (path) => resolve(basePath, path);
 
 const core = ["./packages/core"];
 
-/**
- * The components left in `src/UI/Components`: only `ResourceActions`, which lsm and
- * resource-manager both use until #7466 decides where it goes. Until then it counts as a shared
- * component, but `packages/ui` doesn't import it.
- */
-const componentsToMove = readdirSync(inRoot("./src/UI/Components"), { withFileTypes: true }).map(
-  (entry) => `./src/UI/Components/${entry.name}`
-);
-
-const ui = ["./packages/ui", ...componentsToMove];
+const ui = ["./packages/ui"];
 
 const shell = ["./packages/shell"];
 
@@ -136,12 +127,6 @@ const layerZones = (forTests) => {
       from: [...shell, ...allFeatures, ...app, ...notShipped],
       message:
         "Shared components only import the web-console core layer and other shared components.",
-    },
-    {
-      target: ["./packages/ui"],
-      from: componentsToMove,
-      message:
-        "The components left in src/UI/Components move to a feature, so packages/ui doesn't import them.",
     },
     {
       target: shell,

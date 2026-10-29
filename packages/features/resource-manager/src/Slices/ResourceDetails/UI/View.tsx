@@ -1,6 +1,5 @@
 import React from "react";
 import { Content, Flex, FlexItem, PageSection } from "@patternfly/react-core";
-import { ResourceActions } from "@/UI/Components/ResourceActions";
 import {
   Resource,
   ResourceActionFilter,
@@ -13,6 +12,7 @@ import { Description } from "@inmanta/web-console-ui/Components/Description";
 import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
+import { ResourceActions } from "@inmanta/web-console-ui/Components/ResourceActions";
 import {
   labelColorConfig,
   ResourceStatusLabel,

@@ -11,7 +11,6 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
-import { ResourceActions } from "@/UI/Components/ResourceActions";
 import { Resource, hasAnySetValue, words } from "@inmanta/web-console-core";
 import { usePaginatedTableWithMultiSort } from "@inmanta/web-console-core/Common";
 import {
@@ -24,6 +23,7 @@ import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 import { FilterDrawer, countActiveFilters } from "@inmanta/web-console-ui/Components/FilterDrawer";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { PaginationWidget } from "@inmanta/web-console-ui/Components/PaginationWidget";
+import { ResourceActions } from "@inmanta/web-console-ui/Components/ResourceActions";
 import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
 import { ResourcesTable } from "./ResourcesTable";
