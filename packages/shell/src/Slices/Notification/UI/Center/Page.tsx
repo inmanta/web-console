@@ -1,5 +1,5 @@
 import React from "react";
-import { words } from "@inmanta/web-console-core";
+import { hasAnySetValue, words } from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
 import {
   NotificationFilter,
@@ -46,7 +46,10 @@ export const Page: React.FC = () => {
           setFilter={setFilter}
         />
         {data.data.length <= 0 ? (
-          <EmptyView message={words("notification.center.empty")} />
+          <EmptyView
+            message={words("notification.center.empty")}
+            onResetFilters={hasAnySetValue(filter) ? () => setFilter({}) : undefined}
+          />
         ) : (
           <List {...{ data: data.data }} onUpdate={refetch} />
         )}

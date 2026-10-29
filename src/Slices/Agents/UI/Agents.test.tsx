@@ -76,6 +76,9 @@ describe("Agents", () => {
     expect(await screen.findByRole("generic", { name: "AgentsView-Empty" })).toBeInTheDocument();
 
     expect(screen.getByRole("button", { name: words("actions") })).toBeDisabled();
+    expect(
+      screen.queryByRole("button", { name: words("resources.filters.active.resetFilters") })
+    ).not.toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);

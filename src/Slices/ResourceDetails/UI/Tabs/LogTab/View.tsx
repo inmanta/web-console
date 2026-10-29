@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { toggleValueInList, words } from "@inmanta/web-console-core";
+import { hasAnySetValue, toggleValueInList, words } from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
 import { ResourceLogFilter } from "@inmanta/web-console-core/Domain/ResourceLog";
 import { useGetResourceLogs } from "@inmanta/web-console-core/Queries/Slices/Resource";
@@ -44,6 +44,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
   }, []);
 
   const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
+  const onResetFilters = hasAnySetValue(filter) ? () => setFilter({}) : undefined;
 
   const { data, isSuccess, isError, error, refetch } = useGetResourceLogs({
     id: resourceId,
@@ -90,6 +91,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
             <EmptyView
               message={words("resources.logs.empty.message")}
               aria-label="ResourceLogs-Empty"
+              onResetFilters={onResetFilters}
             />
           ) : (
             <Stack style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>

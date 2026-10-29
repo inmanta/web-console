@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { ParsedNumber, words } from "@inmanta/web-console-core";
+import { ParsedNumber, hasAnySetValue, words } from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
 import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
@@ -32,12 +32,18 @@ export const Page: React.FC = () => {
   const deleteVersion = useDeleteDesiredStateVersion();
   const { notifyError } = useAppAlert();
 
-  const { currentPage, setCurrentPage, pageSize, setPageSize, filter } = usePaginatedTable<Filter>({
-    route: "DesiredState",
-    filterKeys: { date: "DateRange", version: "IntRange", disregardDefault: "Boolean" },
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter } =
+    usePaginatedTable<Filter>({
+      route: "DesiredState",
+      filterKeys: { date: "DateRange", version: "IntRange", disregardDefault: "Boolean" },
+    });
 
   const filterWithDefaults = useMemo(() => applyFilterDefaults(filter), [filter]);
+
+  // Checks the filter without its defaults: resetting brings the default status back, so a reset
+  // only changes the result when the user set a filter.
+  const { disregardDefault: _disregardDefault, ...userFilter } = filter;
+  const onResetFilters = hasAnySetValue(userFilter) ? () => setFilter({}) : undefined;
 
   const [compareSelection, setCompareSelection] = useState<CompareSelection>(undefined);
 
@@ -141,6 +147,7 @@ export const Page: React.FC = () => {
               <EmptyView
                 message={words("desiredState.empty.message")}
                 aria-label="DesiredStatesView-Empty"
+                onResetFilters={onResetFilters}
               />
             ) : (
               <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
