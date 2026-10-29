@@ -728,6 +728,48 @@ describe("useComposerGraph", () => {
     }
   });
 
+  it("should not center content on a scroller that was recreated", () => {
+    vi.useFakeTimers();
+
+    try {
+      // Changing `editable` recreates the paper and scroller, so the init effect re-runs.
+      const { result, rerender } = renderHook(
+        ({ editable }) =>
+          useComposerGraph({
+            editable,
+            serviceName,
+            instanceId: undefined,
+            serviceCatalog,
+            mainService,
+            relationsDictionary,
+            instanceData,
+            isInstanceDataReady,
+            onCanvasStateInitialized,
+            onInitialShapeInfoTracked,
+          }),
+        { initialProps: { editable: true } }
+      );
+
+      const firstScroller = result.current.scroller;
+      const zoomToFitSpy = vi
+        .spyOn(firstScroller, "zoomToFit")
+        .mockImplementation(() => firstScroller);
+
+      vi.spyOn(firstScroller, "remove").mockImplementation(() => firstScroller);
+      vi.spyOn(result.current.paper, "remove").mockImplementation(() => result.current.paper);
+
+      rerender({ editable: false });
+
+      act(() => {
+        vi.advanceTimersByTime(100);
+      });
+
+      expect(zoomToFitSpy).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("should dispose the paper and scroller on unmount, scroller before paper", () => {
     const { result, unmount } = renderHook(() =>
       useComposerGraph({

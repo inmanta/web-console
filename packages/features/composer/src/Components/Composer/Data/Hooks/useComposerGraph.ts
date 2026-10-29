@@ -193,9 +193,9 @@ export const useComposerGraph = ({
       paper.unfreeze();
     }
 
-    // Update missing connections highlights after canvas is initialized
-    // Use setTimeout to ensure paper is fully rendered
-    // that's also when we want to fit the view to all content.
+    // Fit the view and refresh the highlights once more, 100 ms later. This predates the
+    // 'render:done' handler above and was kept on purpose: #6945 made it zoom to fit, to stop
+    // the view clipping shapes. Removing it would change how the composer opens.
     const fitTimeout = setTimeout(() => {
       scroller.zoomToFit({ useModelGeometry: true, padding: 40, maxScale: 1 });
       updateAllMissingConnectionsHighlights(paper);
