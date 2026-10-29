@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { words } from "@inmanta/web-console-core";
+import { hasAnySetValue, words } from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
 import { Filter } from "@inmanta/web-console-core/Domain/CompileReportFilter";
 import { useGetCompileReports } from "@inmanta/web-console-core/Queries/Slices/Compilation";
@@ -15,7 +15,7 @@ import { ConnectedFilterWidget } from "./FilterWidget";
 import { TableProvider } from "./TableProvider";
 
 export const Page: React.FC = () => {
-  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, sort, setSort } =
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
     usePaginatedTable<Filter>({
       route: "CompileReports",
       defaultSort: { name: "requested", order: "desc" },
@@ -29,6 +29,7 @@ export const Page: React.FC = () => {
   }, []);
 
   const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
+  const onResetFilters = hasAnySetValue(filter) ? () => setFilter({}) : undefined;
 
   const { data, refetch, isSuccess, isError, error } = useGetCompileReports({
     filter,
@@ -77,6 +78,7 @@ export const Page: React.FC = () => {
             <EmptyView
               message={words("compileReports.empty.message")}
               aria-label="CompileReportsView-Empty"
+              onResetFilters={onResetFilters}
             />
           ) : (
             <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
