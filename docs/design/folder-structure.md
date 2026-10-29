@@ -50,6 +50,10 @@ packages/
       index.ts - orchestrationEngineFeature, its FeatureModule
       Components/ - The components only the orchestration engine uses, e.g. DiffWizard, Timeline
       Slices/ - The orchestration engine pages
+    resource-manager/src/ - The Resource Manager: resources and their details, discovered resources, agents, facts
+      index.ts - resourceManagerFeature, its FeatureModule
+      Components/ - The components only the resource manager uses: AddableSelectInput, CodeText, RequiresTable
+      Slices/ - The resource manager pages
 apps/
   web-console/src/ - The app: its composition (app.ts: createApp with the features it ships and the shell options), its entry (index.tsx), Monaco setup, config.js and app-level tests
 src/

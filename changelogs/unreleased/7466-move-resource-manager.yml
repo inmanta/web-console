@@ -1,0 +1,5 @@
+description: Move the Resource Manager pages into their package folder, packages/features/resource-manager.
+issue-nr: 7466
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

@@ -1,0 +1,152 @@
+import { useMemo, useState } from "react";
+import { FormGroup, Stack, StackItem, Title } from "@patternfly/react-core";
+import { Resource, words } from "@inmanta/web-console-core";
+import { useDebounce } from "@inmanta/web-console-core/Common/useDebounce";
+import { useGetAgents } from "@inmanta/web-console-core/Queries/Slices/Agents";
+import {
+  AddableSelectInput,
+  AddableSelectOption,
+} from "@inmanta/web-console-feature-resource-manager/Components/AddableSelectInput";
+import { AddableTextInput } from "@inmanta/web-console-ui/Components/AddableTextInput";
+import { excludeIcons, includeIcons } from "@inmanta/web-console-ui/Components/IncludeExcludeIcons";
+import { OptionalToggleGroup } from "@inmanta/web-console-ui/Components/OptionalToggleGroup";
+
+export interface ResourceFilterFormProps {
+  onAddType: (type: string) => void;
+  onAddValue: (value: string) => void;
+  onAddAgent: (agent: string) => void;
+  onChangeStatus: (statuses: string[]) => void;
+  filter: Resource.Filter;
+}
+
+/**
+ * The ResourceFilterForm component.
+ *
+ * Collects free-form resource identifiers (type, value, agent) and forwards them to the filter state.
+ *
+ * @Props {ResourceFilterFormProps} - Component props.
+ *  @prop {(type: string) => void} onAddType - Callback when a type value is added.
+ *  @prop {(value: string) => void} onAddValue - Callback when a resource value is added.
+ *  @prop {(agent: string) => void} onAddAgent - Callback when an agent value is added.
+ *  @prop {Resource.Filter} filter - Current filter state supplied by the parent.
+ * @returns {React.ReactElement} The rendered resource filter form.
+ */
+export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
+  onAddType,
+  onAddValue,
+  onAddAgent,
+  onChangeStatus,
+  filter,
+}) => {
+  const [agentSearch, setAgentSearch] = useState("");
+  const [inputMode, setInputMode] = useState<"select" | "text">("select");
+  const debouncedSearch = useDebounce(agentSearch, 500);
+
+  const { data, hasNextPage, isFetchingNextPage, isLoading, fetchNextPage } =
+    useGetAgents().useInfiniteScroll({
+      pageSize: { kind: "PageSize", value: "20" },
+      filter: debouncedSearch ? { name: [debouncedSearch] } : undefined,
+    });
+
+  const agentOptions = useMemo<AddableSelectOption[]>(() => {
+    if (!data?.pages) {
+      return [];
+    }
+
+    return data.pages.flatMap((page) =>
+      page.data.map((agent) => ({
+        value: agent.name,
+        label: agent.name,
+      }))
+    );
+  }, [data]);
+
+  return (
+    <>
+      <Stack hasGutter style={{ padding: "1rem 0" }}>
+        <StackItem>
+          <Title headingLevel="h3" size="md">
+            {words("resourceId")}
+          </Title>
+        </StackItem>
+        <StackItem>
+          <AddableTextInput
+            label={words("type")}
+            placeholder={words("resources.filters.resource.type.placeholder")}
+            onAdd={onAddType}
+            hint={words("resources.filters.resource.type.hint")}
+          />
+        </StackItem>
+        <StackItem>
+          <AddableTextInput
+            label={words("value")}
+            placeholder={words("resources.filters.resource.value.placeholder")}
+            onAdd={onAddValue}
+            hint={words("resources.filters.resource.value.hint")}
+          />
+        </StackItem>
+        <StackItem>
+          {inputMode === "select" ? (
+            <AddableSelectInput
+              label={words("resources.filters.resource.agent.label")}
+              placeholder={words("resources.filters.resource.agent.placeholder")}
+              hint={words("resources.filters.resource.agent.hint")}
+              onAdd={onAddAgent}
+              options={agentOptions.filter((option) => !filter.agent?.includes(option.value))}
+              onFilter={setAgentSearch}
+              onReachEnd={() => {
+                if (hasNextPage && !isFetchingNextPage) {
+                  fetchNextPage();
+                }
+              }}
+              isLoading={isLoading || isFetchingNextPage}
+              onToggleInputMode={() => setInputMode("text")}
+              toggleLabel={words("resources.filters.resource.agent.selectInfoLabel")}
+              loadingLabel={words("resources.filters.resource.agent.loading")}
+              emptyLabel={words("agents.empty.message")}
+            />
+          ) : (
+            <AddableTextInput
+              label={words("resources.filters.resource.agent.label")}
+              placeholder={words("resources.filters.resource.agent.placeholder")}
+              onAdd={onAddAgent}
+              hint={words("resources.filters.resource.agent.hint")}
+              onToggleInputMode={() => setInputMode("select")}
+              toggleLabel={words("resources.filters.resource.agent.textInfoLabel")}
+            />
+          )}
+        </StackItem>
+      </Stack>
+
+      <Stack hasGutter style={{ padding: "1rem 0" }}>
+        <StackItem>
+          <Title headingLevel="h3" size="md">
+            {words("resources.filters.desiredState.sectionTitle")}
+          </Title>
+        </StackItem>
+        <StackItem>
+          <FormGroup label={words("resources.filters.desiredState.purged")}>
+            <OptionalToggleGroup
+              selected={filter.status ?? []}
+              onChange={onChangeStatus}
+              options={[
+                {
+                  value: "purged",
+                  buttonId: "purged-include",
+                  icon: includeIcons,
+                  ariaLabel: `${words("include")} ${words("resources.filters.desiredState.purged")}`,
+                },
+                {
+                  value: "!purged",
+                  buttonId: "purged-exclude",
+                  icon: excludeIcons,
+                  ariaLabel: `${words("exclude")} ${words("resources.filters.desiredState.purged")}`,
+                },
+              ]}
+            />
+          </FormGroup>
+        </StackItem>
+      </Stack>
+    </>
+  );
+};

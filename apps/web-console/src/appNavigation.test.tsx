@@ -2,12 +2,12 @@ import { act } from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { resourceManagerFeature } from "@/Features/ResourceManager";
-import * as Agents from "@S/Agents/Core/Route";
-import * as Resource from "@S/Resource/Core/Route";
 import { FeatureModule, RouteFactory, words } from "@inmanta/web-console-core";
 import { environmentFeature } from "@inmanta/web-console-feature-environment";
 import * as Dashboard from "@inmanta/web-console-feature-environment/Slices/Dashboard/Core/Route";
+import { resourceManagerFeature } from "@inmanta/web-console-feature-resource-manager";
+import * as Agents from "@inmanta/web-console-feature-resource-manager/Slices/Agents/Core/Route";
+import * as Resource from "@inmanta/web-console-feature-resource-manager/Slices/Resource/Core/Route";
 import { Navigation } from "@inmanta/web-console-shell/Components/Sidebar/Navigation/Navigation";
 import {
   MockedDependencyProvider,

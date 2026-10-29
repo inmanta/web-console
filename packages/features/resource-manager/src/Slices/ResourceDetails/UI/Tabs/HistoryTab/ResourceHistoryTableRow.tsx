@@ -1,0 +1,90 @@
+import React, { useRef, useState } from "react";
+import { Tbody, Td, Tr } from "@patternfly/react-table";
+import { words } from "@inmanta/web-console-core";
+import { useExpansion } from "@inmanta/web-console-core/Common";
+import { ResourceHistoryRow } from "@inmanta/web-console-feature-resource-manager/Slices/ResourceDetails/Core/Types";
+import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
+import { scrollRowIntoView } from "@inmanta/web-console-ui/Utils";
+import { TabKey, Tabs } from "./Tabs";
+
+interface Props {
+  row: ResourceHistoryRow;
+  isExpanded: boolean;
+  onToggle: () => void;
+  numberOfColumns: number;
+  index: number;
+}
+
+/**
+ * The ResourceHistoryTableRow component.
+ *
+ * This component is responsible of displaying the history of a resource.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {ResourceHistoryRow} row - The row of the resource history
+ *  @prop {boolean} isExpanded - Whether the row is expanded
+ *  @prop {() => void} onToggle - The function to toggle the row
+ *  @prop {number} numberOfColumns - The number of columns
+ *  @prop {number} index - The index of the row
+ *
+ * @returns {React.FC<Props>} A React Component displaying the history of a resource
+ */
+export const ResourceHistoryTableRow: React.FC<Props> = ({
+  row,
+  isExpanded,
+  index,
+  onToggle,
+  numberOfColumns,
+}) => {
+  const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Attributes);
+  // Kept on the row, not the tab, so switching to Requires and back keeps what was expanded.
+  // Local state rather than the URL: every row shares the same reference paths, so one
+  // URL key would open the same node in all rows.
+  const [isReferenceExpanded, onReferenceToggle] = useExpansion();
+  const rowRef = useRef<HTMLSpanElement>(null);
+  const openTabAndScrollTo = (tab: TabKey) => () => {
+    setActiveTab(tab);
+
+    if (!isExpanded) {
+      onToggle();
+    }
+
+    scrollRowIntoView(rowRef);
+  };
+
+  return (
+    <Tbody isExpanded={false}>
+      <Tr aria-label="Resource History Table Row">
+        <Td
+          expand={{
+            rowIndex: index,
+            isExpanded,
+            onToggle,
+          }}
+        />
+        <Td dataLabel={words("date")}>
+          <DateWithTooltip timestamp={row.date} />
+        </Td>
+        <Td dataLabel={words("requires")} onClick={openTabAndScrollTo(TabKey.Requires)}>
+          <span ref={rowRef} style={{ cursor: "pointer" }}>
+            {row.numberOfDependencies as React.ReactNode}
+          </span>
+        </Td>
+      </Tr>
+      {isExpanded && (
+        <Tr isExpanded={isExpanded} data-testid={`details_${row.id}`}>
+          <Td colSpan={numberOfColumns}>
+            <Tabs
+              attributes={row.attributes}
+              requires={row.requires}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              isReferenceExpanded={isReferenceExpanded}
+              onReferenceToggle={onReferenceToggle}
+            />
+          </Td>
+        </Tr>
+      )}
+    </Tbody>
+  );
+};

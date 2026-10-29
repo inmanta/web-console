@@ -64,15 +64,7 @@ const features = {
     package: "orchestration-engine",
   },
   "resource-manager": {
-    folder: "ResourceManager",
-    slices: [
-      "Agents",
-      "Facts",
-      "Resource",
-      "ResourceDetails",
-      "ResourceDiscovery",
-      "ResourceDiscoveryDetails",
-    ],
+    package: "resource-manager",
   },
   "user-management": {
     folder: "UserManagement",
