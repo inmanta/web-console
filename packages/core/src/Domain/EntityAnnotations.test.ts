@@ -1,24 +1,24 @@
 import { ServiceModel } from "@inmanta/web-console-core";
 import * as Test from "@inmanta/web-console-test-utils";
-import { compareEntityPresentations, resolveEntityPresentation } from "./EntityPresentation";
+import { compareEntityAnnotations, resolveEntityAnnotations } from "./EntityAnnotations";
 
 const service = Test.Service.a;
-const { presentationAnnotations } = Test.Service.EntityPresentation;
+const validAnnotations = Test.Service.EntityAnnotations.valid;
 
 const serviceWith = (annotations: Record<string, unknown>): ServiceModel => ({
   ...service,
   entity_annotations: annotations,
 });
 
-describe("resolveEntityPresentation", () => {
+describe("resolveEntityAnnotations", () => {
   it("uses the annotations when they are present", () => {
-    expect(resolveEntityPresentation(serviceWith({ ...presentationAnnotations }))).toEqual(
-      presentationAnnotations
+    expect(resolveEntityAnnotations(serviceWith({ ...validAnnotations }))).toEqual(
+      validAnnotations
     );
   });
 
   it("falls back to the entity name and description when the annotations are missing", () => {
-    expect(resolveEntityPresentation(service)).toEqual({
+    expect(resolveEntityAnnotations(service)).toEqual({
       web_title: service.name,
       web_icon: undefined,
       web_group: undefined,
@@ -28,7 +28,7 @@ describe("resolveEntityPresentation", () => {
   });
 
   it("falls back when an annotation has the wrong type or is empty", () => {
-    const presentation = resolveEntityPresentation(
+    const resolvedAnnotations = resolveEntityAnnotations(
       serviceWith({
         web_title: 42,
         web_icon: "",
@@ -38,7 +38,7 @@ describe("resolveEntityPresentation", () => {
       })
     );
 
-    expect(presentation).toEqual({
+    expect(resolvedAnnotations).toEqual({
       web_title: service.name,
       web_icon: undefined,
       web_group: undefined,
@@ -48,27 +48,27 @@ describe("resolveEntityPresentation", () => {
   });
 
   it("trims the annotation strings", () => {
-    const presentation = resolveEntityPresentation(
-      serviceWith({ web_title: ` ${presentationAnnotations.web_title} ` })
+    const resolvedAnnotations = resolveEntityAnnotations(
+      serviceWith({ web_title: ` ${validAnnotations.web_title} ` })
     );
 
-    expect(presentation.web_title).toBe(presentationAnnotations.web_title);
+    expect(resolvedAnnotations.web_title).toBe(validAnnotations.web_title);
   });
 
   it("ignores a web_order that is not a finite number", () => {
-    expect(resolveEntityPresentation(serviceWith({ web_order: NaN })).web_order).toBeUndefined();
+    expect(resolveEntityAnnotations(serviceWith({ web_order: NaN })).web_order).toBeUndefined();
   });
 
   it("has no description when neither web_description nor description is set", () => {
     expect(
-      resolveEntityPresentation({ ...service, description: null }).web_description
+      resolveEntityAnnotations({ ...service, description: null }).web_description
     ).toBeUndefined();
   });
 });
 
-describe("compareEntityPresentations", () => {
+describe("compareEntityAnnotations", () => {
   it("sorts by order, puts services without an order last and breaks ties on title", () => {
-    const presentations = [
+    const resolvedAnnotationsList = [
       { web_title: "Delta" },
       { web_title: "Charlie", web_order: 2 },
       { web_title: "Bravo" },
@@ -77,7 +77,7 @@ describe("compareEntityPresentations", () => {
     ];
 
     expect(
-      [...presentations].sort(compareEntityPresentations).map(({ web_title }) => web_title)
+      [...resolvedAnnotationsList].sort(compareEntityAnnotations).map(({ web_title }) => web_title)
     ).toEqual(["Echo", "Alpha", "Charlie", "Bravo", "Delta"]);
   });
 });

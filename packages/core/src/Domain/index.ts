@@ -6,7 +6,7 @@ import { Resource } from "./Resource";
 export { Pagination, Reference, Resource, Diff };
 
 export * from "./AnnotationWarnings";
-export * from "./EntityPresentation";
+export * from "./EntityAnnotations";
 export * from "./Config";
 export * as EnvironmentSettings from "./EnvironmentSettings";
 export * from "./EventModel";

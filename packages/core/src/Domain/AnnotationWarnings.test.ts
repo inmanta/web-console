@@ -44,7 +44,7 @@ const buildServiceModel = (states: StateModel[], transfers: TransferModel[]): Se
     lifecycle: { initial_state: "up", states, transfers },
   }) as ServiceModel;
 
-const entityWith = (annotations: Record<string, unknown>): ServiceModel => ({
+const entityWithAnnotations = (annotations: Record<string, unknown>): ServiceModel => ({
   ...buildServiceModel([], []),
   name: "router",
   entity_annotations: annotations,
@@ -84,7 +84,7 @@ describe("warnUnrecognisedAnnotations", () => {
   });
 
   it("warns for an unrecognised web_* key on the entity", () => {
-    warnUnrecognisedAnnotations(entityWith({ web_titel: "Router" }), new Set());
+    warnUnrecognisedAnnotations(entityWithAnnotations({ web_titel: "Router" }), new Set());
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy).toHaveBeenCalledWith(
@@ -93,8 +93,8 @@ describe("warnUnrecognisedAnnotations", () => {
   });
 
   it("does not warn for recognised or non-web_* keys on the entity", () => {
-    const serviceModel = entityWith({
-      ...Test.Service.EntityPresentation.presentationAnnotations,
+    const serviceModel = entityWithAnnotations({
+      ...Test.Service.EntityAnnotations.valid,
       web_tabs: [],
       synctool_id: "abc",
     });

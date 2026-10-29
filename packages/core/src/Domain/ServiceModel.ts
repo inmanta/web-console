@@ -57,10 +57,11 @@ export interface FormTabDefinition {
 }
 
 /**
- * The annotations on a service entity that control how the service is shown in the
- * console. resolveEntityPresentation validates them and applies their fallbacks.
+ * Interface that represents the annotations on a service entity (`__annotations`).
+ * The values originate from the model author, so they are validated at runtime
+ * (see resolveFormTabs and resolveEntityAnnotations) before being used.
  */
-export interface EntityPresentationAnnotations {
+export interface EntityAnnotations {
   /** Display name of the service. Falls back to the entity `name`. */
   web_title?: string;
 
@@ -75,14 +76,7 @@ export interface EntityPresentationAnnotations {
 
   /** One-line service catalog description. Falls back to the entity `description`. */
   web_description?: string;
-}
 
-/**
- * Interface that represents the annotations on a service entity (`__annotations`).
- * The values originate from the model author, so they are validated at runtime
- * (see resolveFormTabs and resolveEntityPresentation) before being used.
- */
-export interface EntityAnnotations extends EntityPresentationAnnotations {
   web_tabs?: FormTabDefinition[];
   [key: string]: unknown;
 }
