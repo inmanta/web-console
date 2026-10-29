@@ -34,14 +34,22 @@ packages/
     Slices/ - The shell's own pages: login, not found, notifications, status
   test-utils/src/ - @inmanta/web-console-test-utils, common test data, mock implementations, testing utilities, test setup
   features/ - One folder per feature that has moved, imported as @inmanta/web-console-feature-<name>
-    environment/src/ - The environment pages: dashboard, settings, create environment
-      index.ts - environmentFeature, its FeatureModule
-      Components/ - The components only the environment pages use: DictEditor, ImageUpload, InlineEditable
-      Slices/ - The environment pages
     composer/src/ - The Instance Composer, the only code that imports JointJS (@joint/*)
       index.ts - composerFeature, its FeatureModule
       Components/Composer/ - The canvas, its shapes, sidebars and providers
       Slices/ - The composer pages: creator, editor, viewer
+    environment/src/ - The environment pages: dashboard, settings, create environment
+      index.ts - environmentFeature, its FeatureModule
+      Components/ - The components only the environment pages use: DictEditor, ImageUpload, InlineEditable
+      Slices/ - The environment pages
+    lsm/src/ - The Lifecycle Service Manager: catalog and service details, inventory and instance details, create/edit/duplicate, orders, events and diagnose
+      index.ts - lsmFeature, its FeatureModule
+      Components/ - The components only lsm uses, e.g. ServiceInstanceForm, TreeTable, EventsTable
+      Slices/ - The lsm pages
+    orchestration-engine/src/ - The Orchestration Engine: compile reports, desired state, compliance check, parameters
+      index.ts - orchestrationEngineFeature, its FeatureModule
+      Components/ - The components only the orchestration engine uses, e.g. DiffWizard, Timeline
+      Slices/ - The orchestration engine pages
 apps/
   web-console/src/ - The app: its composition (app.ts: createApp with the features it ships and the shell options), its entry (index.tsx), Monaco setup, config.js and app-level tests
 src/

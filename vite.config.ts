@@ -219,12 +219,20 @@ export default defineConfig({
         replacement: resolve(__dirname, "./packages/shell/src"),
       },
       {
+        find: "@inmanta/web-console-feature-composer",
+        replacement: resolve(__dirname, "./packages/features/composer/src"),
+      },
+      {
         find: "@inmanta/web-console-feature-environment",
         replacement: resolve(__dirname, "./packages/features/environment/src"),
       },
       {
-        find: "@inmanta/web-console-feature-composer",
-        replacement: resolve(__dirname, "./packages/features/composer/src"),
+        find: "@inmanta/web-console-feature-lsm",
+        replacement: resolve(__dirname, "./packages/features/lsm/src"),
+      },
+      {
+        find: "@inmanta/web-console-feature-orchestration-engine",
+        replacement: resolve(__dirname, "./packages/features/orchestration-engine/src"),
       },
       {
         find: "@inmanta/web-console-test-utils",

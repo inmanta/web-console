@@ -1,0 +1,96 @@
+import React, { useCallback, useContext, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
+import { InstanceAttributeModel, ServiceModel, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import {
+  CreateModifierHandler,
+  FieldCreator,
+  isAttributeValidationFailure,
+} from "@inmanta/web-console-core/FormState";
+import { usePostInstance } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { ServiceInstanceForm } from "@inmanta/web-console-feature-lsm/Components/ServiceInstanceForm";
+import { Description } from "@inmanta/web-console-ui/Components/Description";
+
+interface Props {
+  serviceEntity: ServiceModel;
+}
+
+/**
+ * `CreateInstance` is a React functional component responsible for rendering a form
+ * to create a new instance of a given service entity. It handles form submission,
+ * error handling, and redirection upon successful creation.
+ *
+ * @component
+ * @props {Props} props - The props for the component.
+ * @prop {ServiceModel} props.serviceEntity - The service entity for which an instance is being created.
+ *
+ * @returns {React.FC<Props>} A React functional component.
+ */
+export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
+  const { environmentHandler, routeManager } = useContext(DependencyContext);
+  const { notifyError } = useAppAlert();
+  const [isDirty, setIsDirty] = useState(false);
+  const fieldCreator = new FieldCreator(new CreateModifierHandler());
+  const fields = fieldCreator.create(serviceEntity);
+  const location = useLocation();
+  const isHalted = environmentHandler.useIsHalted();
+  const navigate = useNavigate();
+  const url = routeManager.useUrl("Inventory", {
+    service: serviceEntity.name,
+  });
+
+  const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
+
+  const { mutate, error: submitError } = usePostInstance(serviceEntity.name, {
+    onError: (error) => {
+      setIsDirty(true);
+      if (!isAttributeValidationFailure(error)) {
+        notifyError({
+          title: words("inventory.addInstance.failed"),
+          message: error.message,
+        });
+      }
+    },
+    onSuccess: ({ data }) => {
+      const newUrl = routeManager.getUrl("InstanceDetails", {
+        service: serviceEntity.name,
+        instance: data.service_identity_attribute_value || data.id,
+        instanceId: data.id,
+      });
+
+      navigate(`${newUrl}${location.search}`);
+    },
+  });
+
+  const onSubmit = async (
+    attributes: InstanceAttributeModel,
+    setIsDirty: (values: boolean) => void,
+    initialState?: string
+  ) => {
+    //as setState used in setIsDirty doesn't change immediately we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
+    setIsDirty(false);
+    mutate({ fields, attributes, initial_state: initialState });
+  };
+
+  return (
+    <>
+      <Description withSpace>
+        {words("inventory.addInstance.title")(serviceEntity.name)}
+      </Description>
+      <ServiceInstanceForm
+        service_entity={serviceEntity.name}
+        fields={fields}
+        onSubmit={onSubmit}
+        onCancel={handleRedirect}
+        isSubmitDisabled={isHalted}
+        isDirty={isDirty}
+        setIsDirty={setIsDirty}
+        initialStates={serviceEntity.lifecycle.alternative_initial_states}
+        identifyingAttributeName={serviceEntity.service_identity}
+        entityAnnotations={serviceEntity.entity_annotations}
+        submitError={submitError}
+      />
+    </>
+  );
+};

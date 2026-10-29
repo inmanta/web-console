@@ -19,6 +19,7 @@ const testFiles = [
   "{src,packages,apps}/**/*.spec.tsx",
   "packages/test-utils/**/*.{ts,tsx}",
   "src/Slices/*/Test/**/*.{ts,tsx}",
+  "packages/features/*/src/Slices/*/Test/**/*.{ts,tsx}",
   "{src,packages,apps}/**/Mock.ts",
   "{src,packages,apps}/**/Mock/**/*.{ts,tsx}",
   "{src,packages,apps}/**/Spec/**/*.{ts,tsx}",
