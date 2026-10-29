@@ -54,7 +54,7 @@
     "@eslint/compat": "^2.1.1",
     "@remix-run/router": "^1.23.4",
     "@stylistic/eslint-plugin-ts": "^4.4.1",
-    "@tanstack/react-query-devtools": "^5.104.5",
+    "@tanstack/react-query-devtools": "^5.105.0",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
