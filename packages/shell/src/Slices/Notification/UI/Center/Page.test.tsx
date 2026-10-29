@@ -1,7 +1,7 @@
 import React, { act } from "react";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
@@ -96,13 +96,33 @@ describe("NotificationCenterPage", () => {
 
     await userEvent.click(screen.getByRole("option", { name: "message" }));
 
-    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(2);
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(2)
+    );
+
+    // Removing the chip also clears the select.
+    await userEvent.click(screen.getByRole("button", { name: /close message/i }));
+
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4)
+    );
+    expect(screen.getByRole("combobox", { name: "SeverityFilterInput" })).toHaveValue("");
+
+    await userEvent.click(screen.getByRole("combobox", { name: "SeverityFilterInput" }));
+
+    await userEvent.click(screen.getByRole("option", { name: "message" }));
+
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(2)
+    );
 
     await userEvent.click(screen.getByRole("combobox", { name: "SeverityFilterInput" }));
 
     await userEvent.click(screen.getByRole("button", { name: "Clear input value" }));
 
-    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4)
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -137,11 +157,9 @@ describe("NotificationCenterPage", () => {
 
     await userEvent.click(screen.getByRole("option", { name: "read" }));
 
-    expect(
-      await screen.findAllByRole("listitem", {
-        name: "NotificationItem",
-      })
-    ).toHaveLength(2);
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(2)
+    );
 
     expect(within(filterToggle()).getByText("1")).toBeVisible();
 
@@ -149,7 +167,9 @@ describe("NotificationCenterPage", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Clear input value" }));
 
-    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4)
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -180,7 +200,9 @@ describe("NotificationCenterPage", () => {
 
     await userEvent.click(screen.getByRole("option", { name: "unread" }));
 
-    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(1);
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(1)
+    );
     expect(within(filterToggle()).getByText("1")).toBeVisible();
     expect(screen.getByRole("button", { name: /close unread/i })).toBeInTheDocument();
   });
@@ -211,18 +233,18 @@ describe("NotificationCenterPage", () => {
 
     await userEvent.type(messageInput, "abc{enter}");
 
-    expect(
-      await screen.findAllByRole("listitem", {
-        name: "NotificationItem",
-      })
-    ).toHaveLength(2);
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(2)
+    );
 
     // The page keeps showing the list while the new filter loads, so the panel isn't remounted.
     expect(messageInput).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("button", { name: /close abc/i }));
 
-    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4)
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -258,11 +280,15 @@ describe("NotificationCenterPage", () => {
       "abc{enter}"
     );
 
-    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(2);
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(2)
+    );
 
     await userEvent.click(screen.getByRole("button", { name: /close abc/i }));
 
-    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4)
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -299,7 +325,10 @@ describe("NotificationCenterPage", () => {
       screen.getByRole("button", { name: words("resources.filters.active.resetFilters") })
     );
 
-    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4)
+    );
+    expect(screen.getByRole("combobox", { name: "ReadFilterInput" })).toHaveValue("");
     expect(within(toggle).getByText("0")).toBeInTheDocument();
   });
 
@@ -330,11 +359,9 @@ describe("NotificationCenterPage", () => {
 
     await userEvent.click(button);
 
-    expect(
-      await screen.findAllByRole("listitem", {
-        name: "NotificationItem",
-      })
-    ).toHaveLength(2);
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(2)
+    );
 
     await act(async () => {
       const results = await axe(document.body);

@@ -76,8 +76,8 @@ export const useGetNotifications = (params: GetNotificationsParams): GetNotifica
   return {
     useContinuous: () =>
       useQuery({
-        // Like the other slices, the filter stays an object in the key, so the same value on
-        // different fields (title "abc", message "abc") gets a different key.
+        // The filter stays an object in the key, so the same value on different fields
+        // (title "abc", message "abc") gets a different key.
         queryKey: getNotificationsKey.list([...Object.values(params), env]),
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         placeholderData: keepPreviousData,
