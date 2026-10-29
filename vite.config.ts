@@ -227,6 +227,10 @@ export default defineConfig({
         replacement: resolve(__dirname, "./packages/features/lsm/src"),
       },
       {
+        find: "@inmanta/web-console-feature-orchestration-engine",
+        replacement: resolve(__dirname, "./packages/features/orchestration-engine/src"),
+      },
+      {
         find: "@inmanta/web-console-test-utils",
         replacement: resolve(__dirname, "./packages/test-utils/src"),
       },

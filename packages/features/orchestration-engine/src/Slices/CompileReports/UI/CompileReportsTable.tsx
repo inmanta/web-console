@@ -1,0 +1,66 @@
+import React from "react";
+import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
+import { Sort, words } from "@inmanta/web-console-core";
+import { CompileReport } from "@inmanta/web-console-core/Domain/CompileReport";
+import { CompileReportRow } from "@inmanta/web-console-feature-orchestration-engine/Slices/CompileReports/Core/Types";
+import { TablePresenter } from "@inmanta/web-console-ui/Presenters";
+import { CompileReportsTableRow } from "./CompileReportsTableRow";
+
+interface Props {
+  tablePresenter: TablePresenter<CompileReport, CompileReportRow>;
+  rows: CompileReportRow[];
+  sort: Sort.Type;
+  setSort: (sort: Sort.Type) => void;
+}
+
+export const CompileReportsTable: React.FC<Props> = ({
+  tablePresenter,
+  rows,
+  sort,
+  setSort,
+  ...props
+}) => {
+  const onSort: OnSort = (event, index, order) => {
+    setSort({ ...sort, order });
+  };
+  // The compile reports table is only sortable by one column
+  const heads = tablePresenter.getColumnHeadDisplayNames().map((column, columnIndex) => {
+    const sortParams =
+      columnIndex == 0
+        ? {
+            sort: {
+              sortBy: {
+                index: 0,
+                direction: sort.order,
+              },
+              onSort,
+              columnIndex,
+            },
+          }
+        : {};
+
+    return (
+      <Th key={column} {...sortParams}>
+        {column}
+      </Th>
+    );
+  });
+
+  return (
+    <Table {...props} isStickyHeader variant={TableVariant.compact}>
+      <Thead noWrap>
+        <Tr>
+          {heads}
+          <Th
+            modifier="fitContent"
+            screenReaderText={words("common.emptyColumnHeader")}
+            aria-label={words("actions")}
+          />
+        </Tr>
+      </Thead>
+      {rows.map((row) => (
+        <CompileReportsTableRow row={row} key={row.id} />
+      ))}
+    </Table>
+  );
+};
