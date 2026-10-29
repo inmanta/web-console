@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
 import { Filter } from "@/Slices/Agents/Core/Types";
-import { words } from "@inmanta/web-console-core";
+import { hasAnySetValue, words } from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
 import { useGetAgents } from "@inmanta/web-console-core/Queries/Slices/Agents";
 import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
@@ -28,7 +28,7 @@ import { TableProvider } from "./TableProvider";
  * @returns {React.FC} The rendered Agents page.
  */
 export const Page: React.FC = () => {
-  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, sort, setSort } =
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
     usePaginatedTable<Filter>({
       route: "Agents",
       defaultSort: { name: "name", order: "asc" },
@@ -41,6 +41,7 @@ export const Page: React.FC = () => {
   }, []);
 
   const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
+  const onResetFilters = hasAnySetValue(filter) ? () => setFilter({}) : undefined;
 
   const { data, isSuccess, isError, error, refetch } = useGetAgents().useContinuous({
     filter,
@@ -83,7 +84,11 @@ export const Page: React.FC = () => {
             panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
           >
             {data.data.length <= 0 ? (
-              <EmptyView message={words("agents.empty.message")} aria-label="AgentsView-Empty" />
+              <EmptyView
+                message={words("agents.empty.message")}
+                aria-label="AgentsView-Empty"
+                onResetFilters={onResetFilters}
+              />
             ) : (
               <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
                 <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>

@@ -1,0 +1,33 @@
+import React from "react";
+import { ImageUpload } from "@inmanta/web-console-feature-environment/Components/ImageUpload";
+import { ImagePreview } from "../ImageUpload/ImagePreview";
+import { EditableField, EditViewComponent, FieldProps, StaticViewComponent } from "./EditableField";
+
+export const EditableImageField: React.FC<FieldProps> = ({
+  isRequired,
+  label,
+  initialValue,
+  initiallyEditable,
+  onSubmit,
+  setError,
+}) => (
+  <EditableField
+    isRequired={isRequired}
+    initiallyEditable={initiallyEditable}
+    label={label}
+    initialValue={initialValue}
+    onSubmit={onSubmit}
+    EditView={EditView}
+    StaticView={StaticView}
+    alignActions="end"
+    setError={setError}
+  />
+);
+
+const EditView: EditViewComponent = ({ onChange, initialValue, ...props }) => (
+  <ImageUpload {...props} onComplete={onChange} initial={initialValue} />
+);
+
+const StaticView: StaticViewComponent = ({ value, ...props }) => (
+  <ImagePreview {...props} dataUrl={value} />
+);

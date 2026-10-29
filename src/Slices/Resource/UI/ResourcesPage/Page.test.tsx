@@ -200,6 +200,53 @@ describe("ResourcesPage", () => {
     });
   });
 
+  test("shows no Reset Filters button in the empty view with only the default filter", async () => {
+    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: emptyGql })));
+
+    const { component } = setup();
+
+    render(component);
+
+    const emptyView = await screen.findByRole("generic", { name: "ResourcesPage-Empty" });
+
+    expect(
+      within(emptyView).queryByRole("button", {
+        name: words("resources.filters.active.resetFilters"),
+      })
+    ).not.toBeInTheDocument();
+  });
+
+  test("resets a filter that leaves no results from the empty view", async () => {
+    server.use(
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) =>
+        HttpResponse.json({
+          data: (variables.filter?.agent?.contains ?? []).some((agent) => agent.includes("unknown"))
+            ? emptyGql
+            : gqlFirst3,
+        })
+      )
+    );
+
+    const { component } = setup(["/?state.Resources.filter.agent[0]=unknown"]);
+
+    render(component);
+
+    const emptyView = await screen.findByRole("generic", { name: "ResourcesPage-Empty" });
+
+    await userEvent.click(
+      within(emptyView).getByRole("button", {
+        name: words("resources.filters.active.resetFilters"),
+      })
+    );
+
+    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
+  });
+
   test("shows error view when the request fails", async () => {
     server.use(http.post("/api/v2/graphql", () => new HttpResponse(null, { status: 500 })));
 

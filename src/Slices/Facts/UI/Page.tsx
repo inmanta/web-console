@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { words } from "@inmanta/web-console-core";
+import { hasAnySetValue, words } from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
 import { Filter, SortKey } from "@inmanta/web-console-core/Domain/FactFilter";
 import { useGetFacts } from "@inmanta/web-console-core/Queries/Slices/Facts";
@@ -22,13 +22,14 @@ import { TableControls } from "./TableControls";
  */
 export const Page: React.FC = () => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
-  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, sort, setSort } =
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
     usePaginatedTable<Filter, SortKey>({
       route: "Facts",
       defaultSort: { name: "name", order: "asc" },
     });
 
   const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
+  const onResetFilters = hasAnySetValue(filter) ? () => setFilter({}) : undefined;
 
   const onCloseFilterWidget = useCallback(() => {
     setIsDrawerExpanded(false);
@@ -75,7 +76,11 @@ export const Page: React.FC = () => {
           panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
         >
           {data.data.length <= 0 ? (
-            <EmptyView message={words("facts.empty.message")} aria-label="FactsView-Empty" />
+            <EmptyView
+              message={words("facts.empty.message")}
+              aria-label="FactsView-Empty"
+              onResetFilters={onResetFilters}
+            />
           ) : (
             <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
               <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>

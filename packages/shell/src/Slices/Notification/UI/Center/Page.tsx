@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { words } from "@inmanta/web-console-core";
+import { hasAnySetValue, words } from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
 import {
   NotificationFilter,
@@ -24,7 +24,7 @@ import { List } from "./List";
  * @returns {React.FC} The rendered Notification Center page.
  */
 export const Page: React.FC = () => {
-  const { currentPage, setCurrentPage, pageSize, setPageSize, filter } =
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter } =
     usePaginatedTable<NotificationFilter>({
       route: "NotificationCenter",
       filterKeys: { read: "Boolean" },
@@ -77,7 +77,10 @@ export const Page: React.FC = () => {
           panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
         >
           {data.data.length <= 0 ? (
-            <EmptyView message={words("notification.center.empty")} />
+            <EmptyView
+              message={words("notification.center.empty")}
+              onResetFilters={hasAnySetValue(filter) ? () => setFilter({}) : undefined}
+            />
           ) : (
             <List {...{ data: data.data }} onUpdate={refetch} />
           )}

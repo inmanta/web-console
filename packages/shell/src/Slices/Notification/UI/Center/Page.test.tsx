@@ -367,4 +367,25 @@ describe("NotificationCenterPage", () => {
       expect(results).toHaveNoViolations();
     });
   });
+
+  test("Given Notification Center page filtered on unread When nothing matches Then the empty view resets the filter", async () => {
+    server.use(
+      http.get("/api/v2/notification", ({ request }) => {
+        if (request.url.includes("filter.read=false")) {
+          return HttpResponse.json({ data: [], links, metadata });
+        }
+
+        return HttpResponse.json({ data: Mock.list, links, metadata });
+      })
+    );
+    const { component } = setup(["/?state.NotificationCenter.filter.read=false"]);
+
+    render(component);
+
+    await userEvent.click(
+      await screen.findByRole("button", { name: words("resources.filters.active.resetFilters") })
+    );
+
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
+  });
 });

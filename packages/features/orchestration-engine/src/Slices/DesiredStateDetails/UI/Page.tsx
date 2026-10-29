@@ -1,0 +1,123 @@
+import React, { useCallback, useMemo, useState } from "react";
+import { Content, Flex, Label, PageSection, Stack, StackItem } from "@patternfly/react-core";
+import { Resource, hasAnySetValue, words } from "@inmanta/web-console-core";
+import { usePaginatedTable } from "@inmanta/web-console-core/Common";
+import { useGetVersionResources } from "@inmanta/web-console-core/Queries/Slices/DesiredState";
+import { useRouteParams } from "@inmanta/web-console-core/Routing";
+import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { FilterDrawer, countActiveFilters } from "@inmanta/web-console-ui/Components/FilterDrawer";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PaginationWidget } from "@inmanta/web-console-ui/Components/PaginationWidget";
+import { Controls, DesiredStateDetailsFilterWidget } from "./Controls";
+import { VersionResourceTable } from "./VersionResourceTable";
+import { createVersionResourceTablePresenter } from "./VersionResourceTablePresenter";
+
+export const Provider: React.FC = () => {
+  const { version } = useRouteParams<"DesiredStateDetails">();
+
+  return <Page version={version} />;
+};
+
+export const Page: React.FC<{ version: string }> = ({ version }) => {
+  const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
+    usePaginatedTable<Resource.FilterFromVersion, Resource.SortKeyFromVersion>({
+      route: "DesiredStateDetails",
+      defaultSort: { name: "resource_type", order: "asc" },
+    });
+
+  const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
+  const onResetFilters = hasAnySetValue(filter) ? () => setFilter({}) : undefined;
+
+  const onCloseFilterWidget = useCallback(() => setIsDrawerExpanded(false), []);
+
+  const { data, isSuccess, isError, error, refetch } = useGetVersionResources({
+    version,
+    pageSize,
+    filter,
+    sort,
+    currentPage,
+  }).useContinuous();
+
+  const presenter = createVersionResourceTablePresenter();
+
+  if (isError) {
+    return (
+      <ErrorView ariaLabel="VersionResourcesTable-Error" retry={refetch} message={error.message} />
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <>
+        <PageSection
+          hasBodyWrapper={false}
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 400,
+            backgroundColor: "var(--pf-t--global--background--color--primary--default)",
+            paddingBottom: "var(--pf-t--global--spacer--md)",
+          }}
+        >
+          <Content component="h1">
+            <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
+              {words("details")}
+              <Label color="purple" data-testid="version-label">
+                {words("versionLabel")(version)}
+              </Label>
+            </Flex>
+          </Content>
+          <Controls
+            paginationWidget={
+              <PaginationWidget
+                data={data}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                setCurrentPage={setCurrentPage}
+              />
+            }
+            onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
+            isDrawerExpanded={isDrawerExpanded}
+            activeFilterCount={activeFilterCount}
+          />
+        </PageSection>
+        <PageSection
+          hasBodyWrapper={false}
+          isFilled
+          padding={{ default: "padding" }}
+          style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+        >
+          <FilterDrawer
+            isExpanded={isDrawerExpanded}
+            panelContent={<DesiredStateDetailsFilterWidget onClose={onCloseFilterWidget} />}
+          >
+            {data.data.length <= 0 ? (
+              <EmptyView
+                message={words("resources.empty.message")}
+                aria-label="VersionResourcesTable-Empty"
+                onResetFilters={onResetFilters}
+              />
+            ) : (
+              <Stack style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+                <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                  <VersionResourceTable
+                    aria-label="VersionResourcesTable-Success"
+                    version={version}
+                    rows={presenter.createRows(data.data)}
+                    tablePresenter={createVersionResourceTablePresenter()}
+                    sort={sort}
+                    setSort={setSort}
+                  />
+                </StackItem>
+              </Stack>
+            )}
+          </FilterDrawer>
+        </PageSection>
+      </>
+    );
+  }
+
+  return <LoadingView ariaLabel="VersionResourcesTable-Loading" />;
+};

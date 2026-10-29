@@ -1,0 +1,108 @@
+import React, { useContext, useState } from "react";
+import {
+  Card,
+  CardBody,
+  CardExpandableContent,
+  CardHeader,
+  Title,
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  Panel,
+  Flex,
+  FlexItem,
+  Content,
+} from "@patternfly/react-core";
+import { words } from "@inmanta/web-console-core";
+import { DeploymentProgressBar } from "@inmanta/web-console-feature-lsm/Slices/ServiceInventory/UI/Components";
+import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
+import { HoverRowGroup } from "@inmanta/web-console-ui/Components/RowHoverReveal";
+import { TextWithCopy } from "@inmanta/web-console-ui/Components/TextWithCopy";
+import { InstanceDetailsContext } from "../../../Core/Context";
+
+/**
+ * The DetailsSection Component
+ *
+ * Displays a collapsible section containing the details of the instance.
+ *
+ * @note This component requires the ServiceInstanceDetails context to exist in one of its parents.
+ *
+ * @returns {React.FC} A React Component displaying the DetailsSection
+ */
+export const DetailsSection: React.FC = () => {
+  const { instance } = useContext(InstanceDetailsContext);
+
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  const onExpand = (_event: React.MouseEvent, _id: string) => {
+    setIsExpanded(!isExpanded);
+  };
+
+  return (
+    <Panel variant="raised">
+      <Card id="details-expandable-card" isExpanded={isExpanded} isPlain>
+        <CardHeader
+          onExpand={onExpand}
+          isToggleRightAligned
+          toggleButtonProps={{
+            id: "toggle-button-details",
+            "aria-label": "Details",
+            "aria-labelledby": "details-expandable-card toggle-button",
+            "aria-expanded": isExpanded,
+          }}
+        >
+          <Title headingLevel="h2">{words("details")}</Title>
+        </CardHeader>
+        <CardExpandableContent>
+          <CardBody>
+            <DescriptionList isHorizontal isCompact isFluid>
+              <HoverRowGroup>
+                <DescriptionListTerm>Id: </DescriptionListTerm>
+                <DescriptionListDescription>
+                  <TextWithCopy value={instance.id} tooltipContent={words("id.copy")} />
+                </DescriptionListDescription>
+              </HoverRowGroup>
+              <DescriptionListGroup>
+                <DescriptionListTerm>
+                  {words("instanceDetails.details.created")}
+                </DescriptionListTerm>
+                <DescriptionListDescription>
+                  <DateWithTooltip timestamp={instance.created_at} />
+                </DescriptionListDescription>
+              </DescriptionListGroup>
+              <DescriptionListGroup>
+                <DescriptionListTerm>
+                  {words("instanceDetails.details.updated")}
+                </DescriptionListTerm>
+                <DescriptionListDescription>
+                  <DateWithTooltip timestamp={instance.last_updated} />
+                </DescriptionListDescription>
+              </DescriptionListGroup>
+              <DescriptionListGroup>
+                <DescriptionListTerm>
+                  {words("instanceDetails.tabs.resources.deploymentProgress")}
+                </DescriptionListTerm>
+                <DescriptionListDescription>
+                  <Flex>
+                    <FlexItem flex={{ default: "flex_1" }}>
+                      <DeploymentProgressBar progress={instance.deployment_progress} />
+                    </FlexItem>
+                    {instance.deployment_progress && (
+                      <FlexItem>
+                        <Content>
+                          {Number(instance.deployment_progress.deployed)} /{" "}
+                          {Number(instance.deployment_progress.total)}
+                        </Content>
+                      </FlexItem>
+                    )}
+                  </Flex>
+                </DescriptionListDescription>
+              </DescriptionListGroup>{" "}
+            </DescriptionList>
+          </CardBody>
+        </CardExpandableContent>
+      </Card>
+    </Panel>
+  );
+};
