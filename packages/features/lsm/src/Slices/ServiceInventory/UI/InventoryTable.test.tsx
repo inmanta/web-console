@@ -1,0 +1,105 @@
+import React from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { lsmFeature } from "@inmanta/web-console-feature-lsm";
+import {
+  Row,
+  Service,
+  MockedDependencyProvider,
+  EnvironmentDetails,
+  ModalProvider,
+} from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { InventoryTable } from "./InventoryTable";
+import { createInventoryTablePresenter } from "./Presenters";
+
+const dummySetter = () => {
+  return;
+};
+
+const tablePresenterWithIdentity = () => createInventoryTablePresenter("service_id", "Service ID");
+
+function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
+  const component = (
+    <QueryClientProvider client={testClient}>
+      <TestMemoryRouter>
+        <MockedDependencyProvider
+          features={[lsmFeature]}
+          env={{
+            ...EnvironmentDetails.env,
+            settings: { ...EnvironmentDetails.env.settings, enable_lsm_expert_mode: expertMode },
+          }}
+        >
+          <ModalProvider>
+            <InventoryTable
+              rows={[Row.a]}
+              tablePresenter={tablePresenterWithIdentity()}
+              service={Service.withIdentity}
+              setSort={setSortFn}
+              sort={{ name: "created_at", order: "desc" }}
+            />
+          </ModalProvider>
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
+    </QueryClientProvider>
+  );
+
+  return component;
+}
+
+test("ServiceInventory shows service identity if it's defined", async () => {
+  const component = setup();
+
+  render(component);
+
+  expect(await screen.findByText("Service ID")).toBeVisible();
+
+  expect(await screen.findByText("instance1")).toBeVisible();
+});
+
+test("ServiceInventory shows sorting buttons for sortable columns", async () => {
+  const component = setup();
+
+  render(component);
+  expect(await screen.findByRole("button", { name: /state/i })).toBeVisible();
+  expect(await screen.findByRole("button", { name: /created/i })).toBeVisible();
+  expect(await screen.findByRole("button", { name: /updated/i })).toBeVisible();
+  expect(screen.queryByRole("button", { name: /attributes/i })).not.toBeInTheDocument();
+});
+
+test("ServiceInventory sets sorting parameters correctly on click", async () => {
+  let sort;
+  const expertMode = false;
+  const component = setup(expertMode, (value) => (sort = value));
+
+  render(component);
+  const stateButton = await screen.findByRole("button", { name: /state/i });
+
+  expect(stateButton).toBeVisible();
+
+  await userEvent.click(stateButton);
+
+  expect(sort.name).toEqual("state");
+  expect(sort.order).toEqual("asc");
+});
+
+describe("Actions", () => {
+  it("Should have 4 options in total", async () => {
+    const component = setup();
+
+    render(component);
+
+    const menuToggle = await screen.findByRole("button", {
+      name: "row actions toggle",
+    });
+
+    await userEvent.click(menuToggle);
+
+    const options = await screen.findAllByRole("menuitem");
+
+    // The composer adds two more; see appInventoryComposer.test.tsx.
+    expect(options).toHaveLength(4);
+  });
+});
