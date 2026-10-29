@@ -261,7 +261,7 @@ describe("NotificationCenterPage", () => {
   test("Given Notification Center page filtered on unread When nothing matches Then the empty view resets the filter", async () => {
     server.use(
       http.get("/api/v2/notification", ({ request }) => {
-        if (request.url.includes("read")) {
+        if (request.url.includes("filter.read=false")) {
           return HttpResponse.json({ data: [], links, metadata });
         }
 

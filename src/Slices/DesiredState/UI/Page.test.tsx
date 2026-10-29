@@ -39,7 +39,7 @@ const LocationDisplay: React.FC = () => {
   );
 };
 
-function setup(env?: FlatEnvironment) {
+function setup(env?: FlatEnvironment, search = "") {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -51,7 +51,7 @@ function setup(env?: FlatEnvironment) {
   const component = (
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
-        <TestMemoryRouter initialEntries={[`/?env=${EnvironmentDetails.env.id}`]}>
+        <TestMemoryRouter initialEntries={[`/?env=${EnvironmentDetails.env.id}${search}`]}>
           <MockedDependencyProvider env={env} features={[orchestrationEngineFeature]}>
             <LocationDisplay />
             <Page />
@@ -125,11 +125,49 @@ describe("DesiredStatesView", () => {
       await screen.findByRole("generic", { name: "DesiredStatesView-Empty" })
     ).toBeInTheDocument();
 
+    // Only the default status filter applies, so there is nothing to reset.
+    expect(
+      screen.queryByRole("button", { name: words("resources.filters.active.resetFilters") })
+    ).not.toBeInTheDocument();
+
     await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  it("DesiredStatesView resets a filter that leaves no results from the empty view", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", async ({ request }) => {
+        const isFilteredOnSkipped = request.url.includes("filter.status=skipped_candidate");
+
+        return HttpResponse.json(
+          isFilteredOnSkipped
+            ? {
+                data: [],
+                links: { self: "" },
+                metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
+              }
+            : DesiredStateVersions.response
+        );
+      })
+    );
+
+    const { component } = setup(
+      undefined,
+      "&state.DesiredState.filter.status[0]=skipped_candidate"
+    );
+
+    render(component);
+
+    await userEvent.click(
+      await screen.findByRole("button", { name: words("resources.filters.active.resetFilters") })
+    );
+
+    expect(
+      await screen.findByRole("grid", { name: "DesiredStatesView-Success" })
+    ).toBeInTheDocument();
   });
 
   it("DesiredStatesView shows failed table", async () => {
