@@ -10,6 +10,7 @@ import {
   FilterDrawerPanelContent,
   getFilterActions,
 } from "@inmanta/web-console-ui/Components/FilterDrawer";
+import { OptionalToggleGroup } from "@inmanta/web-console-ui/Components/OptionalToggleGroup";
 import { SingleTextSelect } from "@inmanta/web-console-ui/Components/SingleTextSelect";
 
 type Read = "read" | "unread";
@@ -66,12 +67,14 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
           <StackItem>
             <FormGroup label={words("notification.filters.read")}>
-              <SingleTextSelect
-                toggleAriaLabel="Read"
-                placeholderText={words("notification.read.placeholder")}
-                options={readOptions.map((value) => ({ value, children: value }))}
-                selected={selectedRead}
-                setSelected={updateRead}
+              <OptionalToggleGroup
+                selected={selectedRead ? [selectedRead] : []}
+                onChange={(next) => updateRead(next[0] ?? null)}
+                options={readOptions.map((value) => ({
+                  value,
+                  buttonId: `read-${value}`,
+                  label: words(`notification.filters.read.${value}`),
+                }))}
               />
             </FormGroup>
           </StackItem>

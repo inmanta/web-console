@@ -153,19 +153,19 @@ describe("NotificationCenterPage", () => {
 
     await openFilters();
 
-    await userEvent.click(screen.getByRole("combobox", { name: "ReadFilterInput" }));
+    const readToggle = screen.getByRole("button", { name: "Read" });
 
-    await userEvent.click(screen.getByRole("option", { name: "read" }));
+    await userEvent.click(readToggle);
 
     await waitFor(() =>
       expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(2)
     );
 
+    expect(readToggle).toHaveAttribute("aria-pressed", "true");
     expect(within(filterToggle()).getByText("1")).toBeVisible();
 
-    await userEvent.click(screen.getByRole("combobox", { name: "ReadFilterInput" }));
-
-    await userEvent.click(screen.getByRole("button", { name: "Clear input value" }));
+    // Clicking the active option again clears the filter.
+    await userEvent.click(readToggle);
 
     await waitFor(() =>
       expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4)
@@ -196,9 +196,7 @@ describe("NotificationCenterPage", () => {
 
     await openFilters();
 
-    await userEvent.click(screen.getByRole("combobox", { name: "ReadFilterInput" }));
-
-    await userEvent.click(screen.getByRole("option", { name: "unread" }));
+    await userEvent.click(screen.getByRole("button", { name: "Unread" }));
 
     await waitFor(() =>
       expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(1)
@@ -328,7 +326,7 @@ describe("NotificationCenterPage", () => {
     await waitFor(() =>
       expect(screen.getAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4)
     );
-    expect(screen.getByRole("combobox", { name: "ReadFilterInput" })).toHaveValue("");
+    expect(screen.getByRole("button", { name: "Unread" })).toHaveAttribute("aria-pressed", "false");
     expect(within(toggle).getByText("0")).toBeInTheDocument();
   });
 
