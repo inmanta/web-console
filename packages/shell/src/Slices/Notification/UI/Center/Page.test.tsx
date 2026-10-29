@@ -1,11 +1,12 @@
 import React, { act } from "react";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@inmanta/web-console-core";
 import * as Mock from "@inmanta/web-console-shell/Slices/Notification/Core/Mock";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { links, metadata } from "@inmanta/web-console-test-utils/Data/Pagination";
@@ -35,6 +36,11 @@ const setup = (entries?: string[]) => {
 
   return { component };
 };
+
+const openFilters = async () => {
+  await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
+};
+
 const server = setupServer();
 
 describe("NotificationCenterPage", () => {
@@ -81,6 +87,8 @@ describe("NotificationCenterPage", () => {
 
     expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
+    await openFilters();
+
     await userEvent.click(screen.getByRole("combobox", { name: "SeverityFilterInput" }));
 
     await userEvent.click(screen.getByRole("option", { name: "message" }));
@@ -119,6 +127,8 @@ describe("NotificationCenterPage", () => {
     render(component);
 
     expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
+
+    await openFilters();
 
     await userEvent.click(screen.getByRole("combobox", { name: "ReadFilterInput" }));
 
@@ -163,7 +173,12 @@ describe("NotificationCenterPage", () => {
 
     expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
-    await userEvent.type(screen.getByRole("textbox", { name: "MessageFilter" }), "abc{enter}");
+    await openFilters();
+
+    await userEvent.type(
+      screen.getByPlaceholderText(words("notification.message.placeholder")),
+      "abc{enter}"
+    );
 
     expect(
       await screen.findAllByRole("listitem", {
@@ -202,7 +217,12 @@ describe("NotificationCenterPage", () => {
 
     expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
 
-    await userEvent.type(screen.getByRole("textbox", { name: "TitleFilter" }), "abc{enter}");
+    await openFilters();
+
+    await userEvent.type(
+      screen.getByPlaceholderText(words("notification.title.placeholder")),
+      "abc{enter}"
+    );
 
     expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(2);
 
@@ -215,6 +235,38 @@ describe("NotificationCenterPage", () => {
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("Given Notification Center page filtered on unread THEN the badge counts it and Reset Filters clears it", async () => {
+    server.use(
+      http.get("/api/v2/notification", ({ request }) => {
+        if (request.url.includes("filter.read=false")) {
+          return HttpResponse.json({ data: [Mock.unread], links, metadata });
+        }
+
+        return HttpResponse.json({ data: Mock.list, links, metadata });
+      })
+    );
+    const { component } = setup(["/?state.NotificationCenter.filter.read=false"]);
+
+    render(component);
+
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(1);
+
+    const toggle = screen.getByRole("button", { name: /Filters/i });
+
+    expect(within(toggle).getByText("1")).toBeInTheDocument();
+
+    await userEvent.click(toggle);
+
+    expect(screen.getByRole("button", { name: /close unread/i })).toBeInTheDocument();
+
+    await userEvent.click(
+      screen.getByRole("button", { name: words("resources.filters.active.resetFilters") })
+    );
+
+    expect(await screen.findAllByRole("listitem", { name: "NotificationItem" })).toHaveLength(4);
+    expect(within(toggle).getByText("0")).toBeInTheDocument();
   });
 
   test("Given Notification Center page When user clicks next page Then fetches next page", async () => {
