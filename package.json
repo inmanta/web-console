@@ -97,7 +97,7 @@
   },
   "dependencies": {
     "@graphiql/react": "^0.39.1",
-    "@joint/plus": "^4.3.3",
+    "@joint/plus": "^4.3.4",
     "@monaco-editor/react": "^4.7.0",
     "@patternfly/react-charts": "^8.7.0",
     "@patternfly/react-code-editor": "^6.7.0",

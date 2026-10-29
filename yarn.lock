@@ -867,7 +867,7 @@ __metadata:
   dependencies:
     "@eslint/compat": "npm:^2.1.1"
     "@graphiql/react": "npm:^0.39.1"
-    "@joint/plus": "npm:^4.3.3"
+    "@joint/plus": "npm:^4.3.4"
     "@monaco-editor/react": "npm:^4.7.0"
     "@patternfly/react-charts": "npm:^8.7.0"
     "@patternfly/react-code-editor": "npm:^6.7.0"
@@ -1122,19 +1122,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joint/core@npm:~4.3.3":
-  version: 4.3.3
-  resolution: "@joint/core@npm:4.3.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40joint%2Fcore%2F-%2Fcore-4.3.3.tgz"
-  checksum: 10/c15dd8da26471dbe132c1c6637b4f195d71a762e488413f6263ecc0d82d93d0d758777ecaeaca650654963e8d876f33507c164ea7ee572d80fe9733b70257f0f
+"@joint/core@npm:~4.3.4":
+  version: 4.3.4
+  resolution: "@joint/core@npm:4.3.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40joint%2Fcore%2F-%2Fcore-4.3.4.tgz"
+  checksum: 10/8251a1d09b73e05657be90088f157be675bd449e337d892b8d837bc5123f939ad5d713ac53a24be855e7f8ae32f4028a3b8ac96c75fabc41a3372488ba90b85e
   languageName: node
   linkType: hard
 
-"@joint/plus@npm:^4.3.3":
-  version: 4.3.3
-  resolution: "@joint/plus@npm:4.3.3::__archiveUrl=https%3A%2F%2Fnpm.jointjs.com%2Fapi%2Fv4%2Fprojects%2F77690663%2Fpackages%2Fnpm%2F%40joint%2Fplus%2F-%2F%40joint%2Fplus-4.3.3.tgz"
+"@joint/plus@npm:^4.3.4":
+  version: 4.3.4
+  resolution: "@joint/plus@npm:4.3.4::__archiveUrl=https%3A%2F%2Fnpm.jointjs.com%2Fapi%2Fv4%2Fprojects%2F77690663%2Fpackages%2Fnpm%2F%40joint%2Fplus%2F-%2F%40joint%2Fplus-4.3.4.tgz"
   dependencies:
-    "@joint/core": "npm:~4.3.3"
-  checksum: 10/7b5aebfc628bda8b55e0bfc2580c4153fee9d152bf38519474c66a72e3d25e70a839d1084a9f01ddba260539e5b21957438375fa79ba400e026c7ff423bdf618
+    "@joint/core": "npm:~4.3.4"
+  checksum: 10/88b36f71828ff8b3434994955840ff651aff2bfd5fb5b504ce8f6ed2d00b9cc7ccd70ec62a430a438dd1b727fa3b15e3afb1a3da643970d1f33b148459290ee1
   languageName: node
   linkType: hard
 
