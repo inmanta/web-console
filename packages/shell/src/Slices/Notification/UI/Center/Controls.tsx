@@ -1,33 +1,44 @@
 import React from "react";
-import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { NotificationFilter } from "@inmanta/web-console-core/Queries/Slices/Notification";
-import { MessageFilter } from "./MessageFilter";
-import { ReadFilter } from "./ReadFilter";
-import { SeverityFilter } from "./SeverityFilter";
-import { TitleFilter } from "./TitleFilter";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import { words } from "@inmanta/web-console-core";
+import { FilterToggleButton } from "@inmanta/web-console-ui/Components/FilterDrawer";
 
 interface Props {
   paginationWidget: React.ReactNode;
-  filter: NotificationFilter;
-  setFilter: (filter: NotificationFilter) => void;
+  onToggleFilters: () => void;
+  isDrawerExpanded: boolean;
+  activeFilterCount: number;
 }
 
-export const Controls: React.FC<Props> = ({ paginationWidget, filter, setFilter }) => (
-  <Toolbar clearAllFilters={() => setFilter({})}>
+/**
+ * The Controls component.
+ *
+ * Renders the Notification Center toolbar: the pagination widget and a toggle button
+ * that opens the filter side panel, showing the number of active filters.
+ *
+ * @Props {Props} - Component props.
+ *  @prop {React.ReactNode} paginationWidget - The pagination widget.
+ *  @prop {() => void} onToggleFilters - Toggles the filter side panel.
+ *  @prop {boolean} isDrawerExpanded - Whether the filter side panel is expanded.
+ *  @prop {number} activeFilterCount - The number of active filters.
+ */
+export const Controls: React.FC<Props> = ({
+  paginationWidget,
+  onToggleFilters,
+  isDrawerExpanded,
+  activeFilterCount,
+}) => (
+  <Toolbar aria-label="NotificationCenter-toolbar">
     <ToolbarContent>
-      <ToolbarItem>
-        <SeverityFilter filter={filter} setFilter={setFilter} />
-      </ToolbarItem>
-      <ToolbarItem>
-        <ReadFilter filter={filter} setFilter={setFilter} />
-      </ToolbarItem>
-      <ToolbarItem>
-        <MessageFilter filter={filter} setFilter={setFilter} />
-      </ToolbarItem>
-      <ToolbarItem>
-        <TitleFilter filter={filter} setFilter={setFilter} />
-      </ToolbarItem>
       <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
+      <ToolbarItem>
+        <FilterToggleButton
+          onClick={onToggleFilters}
+          isExpanded={isDrawerExpanded}
+          activeFilterCount={activeFilterCount}
+          label={words("filters")}
+        />
+      </ToolbarItem>
     </ToolbarContent>
   </Toolbar>
 );
