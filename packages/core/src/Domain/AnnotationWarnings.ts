@@ -11,6 +11,16 @@ const RECOGNISED_STATE_ANNOTATION_KEYS: ReadonlySet<string> = new Set([
   "web_description",
 ]);
 
+/** The full `web_*` vocabulary recognised on a service entity. */
+const RECOGNISED_ENTITY_ANNOTATION_KEYS: ReadonlySet<string> = new Set([
+  "web_tabs",
+  "web_title",
+  "web_icon",
+  "web_group",
+  "web_order",
+  "web_description",
+]);
+
 /** The full `web_*` vocabulary recognised on a lifecycle transfer. */
 const RECOGNISED_TRANSFER_ANNOTATION_KEYS: ReadonlySet<string> = new Set([
   "web_confirm",
@@ -115,7 +125,8 @@ function warnUnrecognisedKeys(
 
 /**
  * Best-effort typo aid (issue #7097): logs a dev-console warning for every
- * unrecognised `web_*` key found on a lifecycle state or transfer annotation.
+ * unrecognised `web_*` key found on the service entity or on a lifecycle state or
+ * transfer annotation.
  * Non-blocking - the annotation is still passed through unchanged and the UI
  * renders normally; this is purely a developer-facing signal, gated to dev
  * builds so it never reaches production consoles.
@@ -131,6 +142,13 @@ export function warnUnrecognisedAnnotations(
   if (!import.meta.env.DEV || !serviceModel) {
     return;
   }
+
+  warnUnrecognisedKeys(
+    serviceModel.entity_annotations,
+    RECOGNISED_ENTITY_ANNOTATION_KEYS,
+    `entity "${serviceModel.name}"`,
+    seen
+  );
 
   for (const state of serviceModel.lifecycle.states) {
     warnUnrecognisedKeys(

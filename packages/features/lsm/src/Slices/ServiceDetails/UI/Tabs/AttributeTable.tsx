@@ -1,0 +1,51 @@
+import React from "react";
+import { ServiceModel } from "@inmanta/web-console-core";
+import { useNavigateTo } from "@inmanta/web-console-core/Routing";
+import {
+  TreeTable,
+  TreeTableCellContext,
+} from "@inmanta/web-console-feature-lsm/Components/TreeTable";
+import {
+  CatalogAttributeHelper,
+  CatalogTreeTableHelper,
+} from "@inmanta/web-console-feature-lsm/Components/TreeTable/Catalog";
+import {
+  PathHelper,
+  TreeExpansionManager,
+} from "@inmanta/web-console-feature-lsm/Components/TreeTable/Helpers";
+
+interface Props {
+  service: ServiceModel;
+}
+
+export const AttributeTable: React.FunctionComponent<Props> = ({ service }) => {
+  const navigate = useNavigateTo();
+
+  if (
+    service.attributes.length > 0 ||
+    service.embedded_entities.length > 0 ||
+    (service.inter_service_relations && service.inter_service_relations.length > 0)
+  ) {
+    return (
+      <TreeTableCellContext.Provider
+        value={{
+          onClick: (value) =>
+            navigate("ServiceDetails", { service: value }, `?env=${service?.environment}`),
+        }}
+      >
+        <TreeTable
+          treeTableHelper={
+            new CatalogTreeTableHelper(
+              new PathHelper("$"),
+              new TreeExpansionManager("$"),
+              new CatalogAttributeHelper("$"),
+              service
+            )
+          }
+        />
+      </TreeTableCellContext.Provider>
+    );
+  }
+
+  return <div>No attributes found for the service</div>;
+};

@@ -38,6 +38,14 @@ packages/
       index.ts - composerFeature, its FeatureModule
       Components/Composer/ - The canvas, its shapes, sidebars and providers
       Slices/ - The composer pages: creator, editor, viewer
+    lsm/src/ - The Lifecycle Service Manager: catalog and service details, inventory and instance details, create/edit/duplicate, orders, events and diagnose
+      index.ts - lsmFeature, its FeatureModule
+      Components/ - The components only lsm uses, e.g. ServiceInstanceForm, TreeTable, EventsTable
+      Slices/ - The lsm pages
+    orchestration-engine/src/ - The Orchestration Engine: compile reports, desired state, compliance check, parameters
+      index.ts - orchestrationEngineFeature, its FeatureModule
+      Components/ - The components only the orchestration engine uses, e.g. DiffWizard, Timeline
+      Slices/ - The orchestration engine pages
 apps/
   web-console/src/ - The app: its composition (app.ts: createApp with the features it ships and the shell options), its entry (index.tsx), Monaco setup, config.js and app-level tests
 src/
