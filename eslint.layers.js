@@ -59,21 +59,7 @@ const features = {
     slices: ["GraphiQL"],
   },
   lsm: {
-    folder: "Lsm",
-    slices: [
-      "CreateInstance",
-      "Diagnose",
-      "DuplicateInstance",
-      "EditInstance",
-      "Events",
-      "MarkdownPreviewer",
-      "OrderDetails",
-      "Orders",
-      "ServiceCatalog",
-      "ServiceDetails",
-      "ServiceInstanceDetails",
-      "ServiceInventory",
-    ],
+    package: "lsm",
   },
   "orchestration-engine": {
     package: "orchestration-engine",
