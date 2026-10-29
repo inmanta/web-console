@@ -196,10 +196,14 @@ export const useComposerGraph = ({
     // Update missing connections highlights after canvas is initialized
     // Use setTimeout to ensure paper is fully rendered
     // that's also when we want to fit the view to all content.
-    setTimeout(() => {
+    const fitTimeout = setTimeout(() => {
       scroller.zoomToFit({ useModelGeometry: true, padding: 40, maxScale: 1 });
       updateAllMissingConnectionsHighlights(paper);
     }, 100);
+
+    // Cleared when the effect re-runs or the composer unmounts, so it never runs on a removed
+    // scroller (or, in tests, after the DOM is gone).
+    return () => clearTimeout(fitTimeout);
   }, [
     instanceId,
     isInstanceDataReady,

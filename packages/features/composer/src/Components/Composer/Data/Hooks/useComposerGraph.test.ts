@@ -660,6 +660,74 @@ describe("useComposerGraph", () => {
     expect(zoomToFitSpy).toHaveBeenCalledTimes(1);
   });
 
+  it("should center content again 100 ms after initializing", () => {
+    vi.useFakeTimers();
+
+    try {
+      const { result } = renderHook(() =>
+        useComposerGraph({
+          editable,
+          serviceName,
+          instanceId: undefined,
+          serviceCatalog,
+          mainService,
+          relationsDictionary,
+          instanceData,
+          isInstanceDataReady,
+          onCanvasStateInitialized,
+          onInitialShapeInfoTracked,
+        })
+      );
+
+      const zoomToFitSpy = vi
+        .spyOn(result.current.scroller, "zoomToFit")
+        .mockImplementation(() => result.current.scroller);
+
+      act(() => {
+        vi.advanceTimersByTime(100);
+      });
+
+      expect(zoomToFitSpy).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("should not center content after unmount", () => {
+    vi.useFakeTimers();
+
+    try {
+      const { result, unmount } = renderHook(() =>
+        useComposerGraph({
+          editable,
+          serviceName,
+          instanceId: undefined,
+          serviceCatalog,
+          mainService,
+          relationsDictionary,
+          instanceData,
+          isInstanceDataReady,
+          onCanvasStateInitialized,
+          onInitialShapeInfoTracked,
+        })
+      );
+
+      const zoomToFitSpy = vi
+        .spyOn(result.current.scroller, "zoomToFit")
+        .mockImplementation(() => result.current.scroller);
+
+      unmount();
+
+      act(() => {
+        vi.advanceTimersByTime(100);
+      });
+
+      expect(zoomToFitSpy).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("should dispose the paper and scroller on unmount, scroller before paper", () => {
     const { result, unmount } = renderHook(() =>
       useComposerGraph({
