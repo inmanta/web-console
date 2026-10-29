@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Content, Flex, Label, PageSection, Stack, StackItem } from "@patternfly/react-core";
-import { Resource, words } from "@inmanta/web-console-core";
+import { Resource, hasAnySetValue, words } from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
 import { useGetVersionResources } from "@inmanta/web-console-core/Queries/Slices/DesiredState";
 import { useRouteParams } from "@inmanta/web-console-core/Routing";
@@ -21,13 +21,14 @@ export const Provider: React.FC = () => {
 
 export const Page: React.FC<{ version: string }> = ({ version }) => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
-  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, sort, setSort } =
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
     usePaginatedTable<Resource.FilterFromVersion, Resource.SortKeyFromVersion>({
       route: "DesiredStateDetails",
       defaultSort: { name: "resource_type", order: "asc" },
     });
 
   const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
+  const onResetFilters = hasAnySetValue(filter) ? () => setFilter({}) : undefined;
 
   const onCloseFilterWidget = useCallback(() => setIsDrawerExpanded(false), []);
 
@@ -96,6 +97,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
               <EmptyView
                 message={words("resources.empty.message")}
                 aria-label="VersionResourcesTable-Empty"
+                onResetFilters={onResetFilters}
               />
             ) : (
               <Stack style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>

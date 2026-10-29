@@ -38,6 +38,10 @@ packages/
       index.ts - composerFeature, its FeatureModule
       Components/Composer/ - The canvas, its shapes, sidebars and providers
       Slices/ - The composer pages: creator, editor, viewer
+    environment/src/ - The environment pages: dashboard, settings, create environment
+      index.ts - environmentFeature, its FeatureModule
+      Components/ - The components only the environment pages use: DictEditor, ImageUpload, InlineEditable
+      Slices/ - The environment pages
     graphiql/src/ - The GraphiQL page, to explore the orchestrator GraphQL API
       index.ts - graphiqlFeature, its FeatureModule
       Slices/ - The GraphiQL page

@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @joint/plus from 4.3.3 to 4.3.4 in the jointjs group
+destination-branches:
+- master
+- iso9
+sections: {}

@@ -92,6 +92,9 @@ export const uiMessages = {
   "attributesTab.rollback": "Rollback",
   "attribute.value.copy": "Copy full value to clipboard",
   "empty.title": "There is nothing here",
+  "empty.filtered.title": "No results found",
+  "empty.filtered.message":
+    "No results match the filter criteria. Reset the filters and try again.",
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
   "inventory.service.failed": "Something went wrong with fetching the service",

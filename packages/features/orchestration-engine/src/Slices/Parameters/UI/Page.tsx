@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { words } from "@inmanta/web-console-core";
+import { hasAnySetValue, words } from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
 import { Filter, SortKey } from "@inmanta/web-console-core/Domain/ParameterFilter";
 import { useGetParameters } from "@inmanta/web-console-core/Queries/Slices/Parameters";
@@ -22,7 +22,7 @@ import { TableControls } from "./TableControls";
  */
 export const Page: React.FC = () => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
-  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter } =
+  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
     usePaginatedTable<Filter, SortKey>({
       route: "Parameters",
       defaultSort: { name: "name", order: "asc" },
@@ -30,6 +30,7 @@ export const Page: React.FC = () => {
     });
 
   const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
+  const onResetFilters = hasAnySetValue(filter) ? () => setFilter({}) : undefined;
 
   const onCloseFilterWidget = useCallback(() => {
     setIsDrawerExpanded(false);
@@ -77,6 +78,7 @@ export const Page: React.FC = () => {
             <EmptyView
               message={words("parameters.empty.message")}
               aria-label="ParametersView-Empty"
+              onResetFilters={onResetFilters}
             />
           ) : (
             <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>

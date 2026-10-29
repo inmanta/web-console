@@ -1,6 +1,11 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Stack, StackItem } from "@patternfly/react-core";
-import { ServiceModel, ServiceInstanceParams, words } from "@inmanta/web-console-core";
+import {
+  ServiceModel,
+  ServiceInstanceParams,
+  hasAnySetValue,
+  words,
+} from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
 import { useGetInstances } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import {
@@ -44,6 +49,7 @@ export const ServiceInventory: React.FunctionComponent<{
   }, []);
 
   const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
+  const onResetFilters = hasAnySetValue(filter) ? () => setFilter({}) : undefined;
 
   const states = useMemo(
     () => service.lifecycle.states.map((state) => state.name).sort(),
@@ -127,6 +133,7 @@ export const ServiceInventory: React.FunctionComponent<{
             <EmptyView
               message={words("inventory.empty.message")(serviceName)}
               aria-label="ServiceInventory-Empty"
+              onResetFilters={onResetFilters}
             />
           )}
         </FilterDrawer>

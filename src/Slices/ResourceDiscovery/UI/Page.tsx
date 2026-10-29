@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Content, PageSection, Stack, StackItem } from "@patternfly/react-core";
-import { words } from "@inmanta/web-console-core";
+import { hasAnySetValue, words } from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import {
@@ -28,7 +28,7 @@ import { TableControls } from "./TableControls";
 export const Page: React.FC = () => {
   const { orchestratorProvider } = React.useContext(DependencyContext);
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
-  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter } =
+  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
     usePaginatedTable<Filter, SortKey>({
       route: "DiscoveredResources",
       defaultSort: { name: "discovered_resource_id", order: "asc" },
@@ -46,6 +46,8 @@ export const Page: React.FC = () => {
   }).useContinuous();
 
   const disabledDiscoveredResourcesView = !orchestratorProvider.isResourceDiscoveryEnabled();
+  const onResetFilters =
+    !disabledDiscoveredResourcesView && hasAnySetValue(filter) ? () => setFilter({}) : undefined;
 
   if (isError) {
     return (
@@ -103,6 +105,7 @@ export const Page: React.FC = () => {
                     : words("resources.empty.message")
                 }
                 aria-label="DiscoveredResourcesView-Empty"
+                onResetFilters={onResetFilters}
               />
             ) : (
               <Stack style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>

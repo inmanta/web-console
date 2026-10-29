@@ -1,6 +1,6 @@
-import { environmentFeature } from "@/Features/Environment";
 import { resourceManagerFeature } from "@/Features/ResourceManager";
 import { composerFeature } from "@inmanta/web-console-feature-composer";
+import { environmentFeature } from "@inmanta/web-console-feature-environment";
 import { graphiqlFeature } from "@inmanta/web-console-feature-graphiql";
 import { lsmFeature } from "@inmanta/web-console-feature-lsm";
 import { orchestrationEngineFeature } from "@inmanta/web-console-feature-orchestration-engine";

@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { ServiceModel, words } from "@inmanta/web-console-core";
+import { ServiceModel, hasAnySetValue, words } from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
 import { useGetInstanceEvents } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import {
@@ -34,7 +34,7 @@ interface Props {
  * @returns {React.FC<Props>} The rendered Events component
  */
 export const Events: React.FC<Props> = ({ service, instanceId }) => {
-  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, sort, setSort } =
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
     usePaginatedTable<Filter>({
       route: "Events",
       filterKeys: { timestamp: "DateRange" },
@@ -48,6 +48,7 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
   }, []);
 
   const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
+  const onResetFilters = hasAnySetValue(filter) ? () => setFilter({}) : undefined;
 
   const states = useMemo(
     () => service.lifecycle.states.map((state) => state.name).sort(),
@@ -94,6 +95,7 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
               title={words("events.empty.title")}
               message={words("events.empty.body")}
               aria-label="EventTable-Empty"
+              onResetFilters={onResetFilters}
             />
           ) : (
             <EventsTableWrapper

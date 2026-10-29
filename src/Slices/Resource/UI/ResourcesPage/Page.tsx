@@ -12,7 +12,7 @@ import {
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import { ResourceActions } from "@/UI/Components/ResourceActions";
-import { Resource, words } from "@inmanta/web-console-core";
+import { Resource, hasAnySetValue, words } from "@inmanta/web-console-core";
 import { usePaginatedTableWithMultiSort } from "@inmanta/web-console-core/Common";
 import {
   useGetResources,
@@ -50,6 +50,11 @@ export const Page: React.FC = () => {
 
     return countActiveFilters(filterValues);
   }, [filterWithDefaults]);
+
+  // Checks the filter without its defaults: resetting brings the default status back, so a reset
+  // only changes the result when the user set a filter.
+  const { disregardDefault: _disregardDefault, ...userFilter } = filter;
+  const onResetFilters = hasAnySetValue(userFilter) ? () => setFilter({}) : undefined;
 
   const onCloseFilterWidget = useCallback(() => {
     setIsDrawerExpanded(false);
@@ -208,6 +213,7 @@ export const Page: React.FC = () => {
             <EmptyView
               message={words("resources.empty.filterMessage")}
               aria-label="ResourcesPage-Empty"
+              onResetFilters={onResetFilters}
             />
           ) : (
             <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
