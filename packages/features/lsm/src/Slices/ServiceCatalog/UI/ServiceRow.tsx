@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import {
-  Bullseye,
   Button,
   Content,
   ContentVariants,
@@ -8,10 +7,9 @@ import {
   DropdownItem,
   DropdownList,
   Flex,
+  Icon,
   MenuToggle,
   MenuToggleElement,
-  Title,
-  TitleProps,
   Truncate,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
@@ -26,13 +24,12 @@ import { DynamicFAIcon } from "@inmanta/web-console-feature-lsm/Components/FaIco
 import { InstanceSummaryLabels } from "@inmanta/web-console-feature-lsm/Components/InstanceSummaryLabels";
 import { ConfirmUserActionForm } from "@inmanta/web-console-ui/Components/ConfirmUserActionForm";
 import { Link } from "@inmanta/web-console-ui/Components/Link";
-import { formatDescriptionLine } from "./helpers";
+import { formatDescriptionLine, getServiceIconName } from "./helpers";
 import { CatalogService } from "./types";
 
 interface Props {
   service: CatalogService;
-  titleHeadingLevel: TitleProps["headingLevel"];
-  hasIconTile: boolean;
+  hasServiceIcons: boolean;
 }
 
 /**
@@ -41,12 +38,11 @@ interface Props {
  *
  * @props {Props} props - The props of the component.
  *  @prop {CatalogService} service - The service and its resolved entity annotations.
- *  @prop {TitleProps["headingLevel"]} titleHeadingLevel - The heading level of the service title, one below the section heading.
- *  @prop {boolean} hasIconTile - Whether the row starts with an icon tile. It stays empty when this service has no icon, so titles line up with rows that do.
+ *  @prop {boolean} hasServiceIcons - Whether the catalog shows service icons. A service without a `web_icon` then gets a fallback icon, so the titles line up.
  *
  * @returns {React.FC<Props>} A table row for the service.
  */
-export const ServiceRow: React.FC<Props> = ({ service, titleHeadingLevel, hasIconTile }) => {
+export const ServiceRow: React.FC<Props> = ({ service, hasServiceIcons }) => {
   const { serviceModel, resolvedAnnotations } = service;
   const instanceSummary = serviceModel.instance_summary;
   const { triggerModal, closeModal } = useContext(ModalContext);
@@ -94,15 +90,13 @@ export const ServiceRow: React.FC<Props> = ({ service, titleHeadingLevel, hasIco
           columnGap={{ default: "columnGapMd" }}
           flexWrap={{ default: "nowrap" }}
         >
-          {hasIconTile && (
-            <ServiceIconTile>
-              {resolvedAnnotations.web_icon && (
-                <DynamicFAIcon
-                  icon={resolvedAnnotations.web_icon}
-                  color="var(--pf-t--global--icon--color--brand--default)"
-                  attr={{ "aria-hidden": true }}
-                />
-              )}
+          {hasServiceIcons && (
+            <ServiceIconTile iconSize="md">
+              <DynamicFAIcon
+                icon={getServiceIconName(service)}
+                color="var(--pf-t--global--icon--color--brand--default)"
+                attr={{ "aria-hidden": true }}
+              />
             </ServiceIconTile>
           )}
           <Flex
@@ -114,15 +108,13 @@ export const ServiceRow: React.FC<Props> = ({ service, titleHeadingLevel, hasIco
               alignItems={{ default: "alignItemsBaseline" }}
               columnGap={{ default: "columnGapSm" }}
             >
-              <Title headingLevel={titleHeadingLevel} size="md">
-                <ServiceTitleLink pathname={inventoryPathname} variant="plain" fitContent>
+              <Link pathname={inventoryPathname} fitContent>
+                <Button variant="link" isInline component="span">
                   {resolvedAnnotations.web_title}
-                </ServiceTitleLink>
-              </Title>
+                </Button>
+              </Link>
               {resolvedAnnotations.web_title !== serviceModel.name && (
-                <Content component={ContentVariants.small}>
-                  <code>{serviceModel.name}</code>
-                </Content>
+                <Content component={ContentVariants.small}>{serviceModel.name}</Content>
               )}
             </Flex>
             {resolvedAnnotations.web_description && (
@@ -190,24 +182,16 @@ export const ServiceRow: React.FC<Props> = ({ service, titleHeadingLevel, hasIco
   );
 };
 
-const ServiceIconTile = styled(Bullseye)`
-  flex-shrink: 0;
-  width: var(--pf-t--global--spacer--xl);
-  height: var(--pf-t--global--spacer--xl);
-  border-radius: var(--pf-t--global--border--radius--small);
-  background-color: var(--pf-t--global--color--brand--subtle--default);
+/**
+ * A brand-tinted square behind the service icon, the size of the xl spacer, which no PatternFly
+ * Icon size matches. `&&` lets the size win over PatternFly's own `pf-v6-c-icon` rule.
+ */
+const ServiceIconTile = styled(Icon)`
+  && {
+    --pf-v6-c-icon--Width: var(--pf-t--global--spacer--xl);
+    --pf-v6-c-icon--Height: var(--pf-t--global--spacer--xl);
 
-  &:empty {
-    background-color: transparent;
-  }
-`;
-
-const ServiceTitleLink = styled(Link)`
-  text-underline-offset: auto;
-  transition: none;
-
-  &:hover {
-    color: var(--pf-t--global--text--color--link--hover);
-    text-decoration: underline;
+    border-radius: var(--pf-t--global--border--radius--small);
+    background-color: var(--pf-t--global--color--brand--subtle--default);
   }
 `;

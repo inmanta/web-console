@@ -10,6 +10,7 @@ import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemo
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { CatalogSections } from "./CatalogSections";
 import { firewall, linuxVm, loadBalancer, router, vpn } from "./Mock";
+import { ownerServiceFallbackIconName, serviceFallbackIconName } from "./types";
 
 const axe = configureAxe({
   rules: {
@@ -43,9 +44,7 @@ test("GIVEN CatalogSections WHEN no service has a group THEN one table without s
 
   expect(within(table).getByTestId(Service.a.name + "-item")).toBeInTheDocument();
   expect(within(table).getByTestId(Service.b.name + "-item")).toBeInTheDocument();
-  expect(
-    screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent)
-  ).toEqual([Service.a.name, Service.b.name]);
+  expect(screen.queryByRole("heading")).not.toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -102,6 +101,31 @@ test("GIVEN CatalogSections WHEN a service has entity annotations THEN its title
   expect(within(row).getByText(vpn.name)).toBeVisible();
   expect(within(row).getByText(String(vpn.entity_annotations?.web_description))).toBeVisible();
   expect(within(row).getByTestId(String(vpn.entity_annotations?.web_icon))).toBeInTheDocument();
+});
+
+test("GIVEN CatalogSections WHEN some services have a web_icon THEN the others get a fallback icon", async () => {
+  const ownerFirewall: ServiceModel = { ...firewall, owned_entities: [linuxVm.name] };
+
+  render(Component([vpn, ownerFirewall, linuxVm]));
+
+  expect(
+    within(screen.getByTestId(vpn.name + "-item")).getByTestId(
+      String(vpn.entity_annotations?.web_icon)
+    )
+  ).toBeInTheDocument();
+  expect(
+    within(screen.getByTestId(firewall.name + "-item")).getByTestId(ownerServiceFallbackIconName)
+  ).toBeInTheDocument();
+  expect(
+    within(screen.getByTestId(linuxVm.name + "-item")).getByTestId(serviceFallbackIconName)
+  ).toBeInTheDocument();
+});
+
+test("GIVEN CatalogSections WHEN no service has a web_icon THEN no row shows an icon", async () => {
+  render(Component([Service.a, Service.b]));
+
+  expect(screen.queryByTestId(serviceFallbackIconName)).not.toBeInTheDocument();
+  expect(screen.queryByTestId(ownerServiceFallbackIconName)).not.toBeInTheDocument();
 });
 
 test("GIVEN CatalogSections WHEN a service has no annotations THEN its name is shown once with its description", async () => {

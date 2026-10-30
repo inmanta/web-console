@@ -4,7 +4,12 @@ import {
   ServiceModel,
   words,
 } from "@inmanta/web-console-core";
-import { CatalogSection, CatalogService } from "./types";
+import {
+  CatalogSection,
+  CatalogService,
+  ownerServiceFallbackIconName,
+  serviceFallbackIconName,
+} from "./types";
 
 /**
  * Splits the services into catalog sections by `web_group`, which only applies to root
@@ -60,6 +65,23 @@ export const createCatalogSections = (serviceModels: ServiceModel[]): CatalogSec
  */
 export const getSectionTitle = (section: CatalogSection): string =>
   section.kind === "Group" ? section.name : words("catalog.section.ungrouped");
+
+/**
+ * Gets the icon name of a service: its `web_icon`, or a fallback that shows whether the service
+ * owns other services.
+ */
+export const getServiceIconName = ({
+  serviceModel,
+  resolvedAnnotations,
+}: CatalogService): string => {
+  if (resolvedAnnotations.web_icon !== undefined) {
+    return resolvedAnnotations.web_icon;
+  }
+
+  return serviceModel.owned_entities.length > 0
+    ? ownerServiceFallbackIconName
+    : serviceFallbackIconName;
+};
 
 /**
  * Formats a service description as a single line, so a multi-line docstring fits one row.

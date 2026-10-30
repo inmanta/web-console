@@ -22,6 +22,12 @@ export type CatalogSection =
     }
   | { kind: "Ungrouped"; services: CatalogService[] };
 
+/** The icon of a service that owns other services and has no `web_icon`. */
+export const ownerServiceFallbackIconName = "FaFolder";
+
+/** The icon of a service that owns no other services and has no `web_icon`. */
+export const serviceFallbackIconName = "FaCube";
+
 /**
  * The number of cells in a ServiceRow: service, instances, inventory link and actions.
  * A section heading spans all of them.
