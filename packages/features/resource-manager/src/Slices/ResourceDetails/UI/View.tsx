@@ -1,0 +1,112 @@
+import React from "react";
+import { Content, Flex, FlexItem, PageSection } from "@patternfly/react-core";
+import {
+  Resource,
+  ResourceActionFilter,
+  ResourceDetailsTab,
+  words,
+} from "@inmanta/web-console-core";
+import { useUrlStateWithString } from "@inmanta/web-console-core/Common";
+import { useGetResourceDetails } from "@inmanta/web-console-core/Queries/Slices/Resource";
+import { Description } from "@inmanta/web-console-ui/Components/Description";
+import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
+import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
+import { ResourceActions } from "@inmanta/web-console-ui/Components/ResourceActions";
+import {
+  labelColorConfig,
+  ResourceStatusLabel,
+} from "@inmanta/web-console-ui/Components/ResourceStatus";
+import { Tabs } from "./Tabs";
+
+interface Props {
+  id: string;
+}
+
+/**
+ * The View component.
+ *
+ * This component is responsible of displaying the resource details.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {string} id - The id of the resource
+ *
+ * @returns {React.FC<Props>} A React Component displaying the resource details
+ */
+export const View: React.FC<Props> = ({ id }) => {
+  const [activeTab, setActiveTab] = useUrlStateWithString<ResourceDetailsTab>({
+    default: ResourceDetailsTab.Attributes,
+    key: "tab",
+    route: "ResourceDetails",
+  });
+
+  const { data, isSuccess, isError, error, refetch } = useGetResourceDetails().useContinuous(id);
+
+  if (isError) {
+    return (
+      <PageContainer pageTitle={words("resources.details.title")}>
+        <ErrorView message={error.message} ariaLabel="ResourceDetails-Error" retry={refetch} />
+      </PageContainer>
+    );
+  }
+
+  if (isSuccess) {
+    // A single resource is a filter of one: pin its identity (type/agent/value) on the latest
+    // released intent, so deploy and repair act on exactly this resource.
+    const resourceFilter: ResourceActionFilter = {
+      isOrphan: false,
+      resourceType: { eq: [data.resource_type] },
+      agent: { eq: [data.agent] },
+      resourceIdValue: { eq: [data.id_attribute_value] },
+    };
+
+    return (
+      <>
+        <PageSection hasBodyWrapper={false}>
+          <Flex
+            justifyContent={{ default: "justifyContentSpaceBetween" }}
+            alignItems={{ default: "alignItemsCenter" }}
+          >
+            <FlexItem>
+              <Content>
+                <Content component="h1">{words("resources.details.title")}</Content>
+              </Content>
+            </FlexItem>
+            <FlexItem>
+              <ResourceActions
+                filter={resourceFilter}
+                tooltips={{
+                  deploy: words("resources.resourceActions.deploy.tooltip.resource"),
+                  repair: words("resources.resourceActions.repair.tooltip.resource"),
+                  dryRun: words("resources.resourceActions.dryRun.tooltip.resource"),
+                }}
+                disabledReason={
+                  Resource.isOrphanedStatus(data.status)
+                    ? words("resources.resourceActions.orphaned.disabled")
+                    : undefined
+                }
+              />
+            </FlexItem>
+          </Flex>
+        </PageSection>
+        <PageSection hasBodyWrapper={false} aria-label="ResourceDetails-Success">
+          <Flex>
+            <FlexItem aria-label={`resourceName-${id}`}>
+              <Description>{id}</Description>
+            </FlexItem>
+            <FlexItem>
+              <ResourceStatusLabel status={labelColorConfig[data.status]} label={data.status} />
+            </FlexItem>
+          </Flex>
+        </PageSection>
+        <Tabs {...{ id, data, activeTab, setActiveTab }} />
+      </>
+    );
+  }
+
+  return (
+    <PageContainer pageTitle={words("resources.details.title")}>
+      <LoadingView ariaLabel="ResourceDetails-Loading" />;{" "}
+    </PageContainer>
+  );
+};

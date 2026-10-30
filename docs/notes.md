@@ -83,7 +83,7 @@ Tests follow the same import boundaries as the code they test (see `eslint.layer
 
 - `MockedDependencyProvider` registers no features by default. Pass the test's own feature, e.g. `features={[lsmFeature]}`.
 - For a link to a page of another feature or of the shell, add a stub route: `routes={[...getFeatureRoutes([lsmFeature]), stubRoute("CompileDetails")]}`. Its path and parent come from `stubbedRoutes` in `test-utils`, which `apps/web-console/src/appStubRoutes.test.ts` checks against the app's routes. Add a route there when a test needs one that isn't listed.
-- Get the shell's `ModalProvider` and `AppAlertProvider` from `@inmanta/web-console-test-utils`.
+- Get `ModalProvider` and `AppAlertProvider` from `@inmanta/web-console-test-utils`.
 - Mock data that several features use lives in `@inmanta/web-console-test-utils/Data`.
 - A test that needs several features together, like the composer's actions on lsm's pages, is an app-level test next to `apps/web-console/src/app.ts`.
 - The lint rule only sees `import` statements. Keep the paths in `vi.mock`, `vi.importActual` and `typeof import()` within the same boundaries.

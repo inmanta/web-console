@@ -56,6 +56,7 @@ export const useComposerGraph = ({
   onInitialShapeInfoTracked,
 }: UseComposerGraphParams): UseComposerGraphReturn => {
   const initializationKeyRef = useRef<string | null>(null);
+  const fitTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   // The paper only reads the catalog and relations dictionary inside its event
   // handlers (e.g. when deciding whether a link may be removed). Keeping them in
@@ -106,6 +107,8 @@ export const useComposerGraph = ({
   // no explicit disposal.
   useEffect(() => {
     return () => {
+      // The delayed fit below must not run on the scroller removed here.
+      clearTimeout(fitTimeoutRef.current);
       scroller.remove();
       paper.remove();
     };
@@ -193,10 +196,12 @@ export const useComposerGraph = ({
       paper.unfreeze();
     }
 
-    // Update missing connections highlights after canvas is initialized
-    // Use setTimeout to ensure paper is fully rendered
-    // that's also when we want to fit the view to all content.
-    setTimeout(() => {
+    // Fit the view and refresh the highlights once more, 100 ms later. This predates the
+    // 'render:done' handler above and was kept on purpose: #6945 made it zoom to fit, to stop
+    // the view clipping shapes. Removing it would change how the composer opens.
+    // The dispose effect above clears it when the scroller goes away (recreated or unmounted).
+    clearTimeout(fitTimeoutRef.current);
+    fitTimeoutRef.current = setTimeout(() => {
       scroller.zoomToFit({ useModelGeometry: true, padding: 40, maxScale: 1 });
       updateAllMissingConnectionsHighlights(paper);
     }, 100);

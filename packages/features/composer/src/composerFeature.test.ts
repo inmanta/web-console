@@ -3,6 +3,7 @@ import {
   isLinkActionVisible,
   OrchestratorProvider,
 } from "@inmanta/web-console-core";
+import { defaultAuthContext } from "@inmanta/web-console-core/Auth";
 import { MockOrchestratorProvider } from "@inmanta/web-console-test-utils";
 import { composerFeature } from ".";
 
@@ -15,7 +16,7 @@ const visibleIds = (point: keyof ExtensionPointRegistry, composerEnabled: boolea
   orchestratorProvider.isComposerEnabled = () => composerEnabled;
 
   return (composerFeature.contributions?.[point] ?? [])
-    .filter((action) => isLinkActionVisible(action, orchestratorProvider))
+    .filter((action) => isLinkActionVisible(action, orchestratorProvider, defaultAuthContext))
     .map(({ id }) => id);
 };
 
