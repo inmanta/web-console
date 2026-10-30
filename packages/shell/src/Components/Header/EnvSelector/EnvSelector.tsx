@@ -183,9 +183,9 @@ export const EnvSelector: React.FC<Props> = ({
           {userActions.map(({ id, getLabel, icon: Icon, getUrl, isDisabled }) => (
             <MenuItem
               key={id}
-              onClick={() => navigate(getUrl(routeManager, {}))}
+              onClick={() => navigate(getUrl(routeManager, undefined))}
               icon={<Icon />}
-              isDisabled={isDisabled?.({}) ?? false}
+              isDisabled={isDisabled?.(undefined) ?? false}
             >
               {getLabel()}
             </MenuItem>

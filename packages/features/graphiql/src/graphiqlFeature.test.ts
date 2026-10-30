@@ -8,6 +8,8 @@ describe("graphiqlFeature contributions", () => {
     const links = graphiqlFeature.contributions?.["header.developerTools.actions"] ?? [];
 
     expect(links.map(({ id }) => id)).toEqual(["graphiql"]);
-    expect(links[0].getUrl(routeManager, {})).toBe(routeManager.getUrl("GraphiQL", undefined));
+    expect(links[0].getUrl(routeManager, undefined)).toBe(
+      routeManager.getUrl("GraphiQL", undefined)
+    );
   });
 });

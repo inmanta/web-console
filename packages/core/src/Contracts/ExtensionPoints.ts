@@ -28,8 +28,8 @@ export interface LinkAction<Context> {
   icon: ComponentType;
 
   /**
-   * Returns the pathname the link opens, e.g. with `routeManager.getUrl`. The link keeps the
-   * current query string, so the environment stays selected.
+   * Returns the pathname the link opens, e.g. with `routeManager.getUrl`. Each extension point
+   * says what the link keeps of the current query string.
    */
   getUrl: (routeManager: RouteManager, context: Context) => string;
 
@@ -86,7 +86,8 @@ export interface InstanceLinkContext {
 
 /**
  * The extension points of the lsm feature. They are declared in core instead of in lsm, so a
- * feature can contribute to them without importing lsm.
+ * feature can contribute to them without importing lsm. Their links keep the current query
+ * string, so the environment stays selected.
  */
 declare module "@inmanta/web-console-core/Contracts/FeatureModule" {
   interface ExtensionPointRegistry {
@@ -110,9 +111,9 @@ declare module "@inmanta/web-console-core/Contracts/FeatureModule" {
 
 /**
  * What the links in the header menus are about: nothing in particular, they apply to the whole
- * app.
+ * app. Like a route without parameters, they get `undefined`.
  */
-export type HeaderLinkContext = Record<string, never>;
+export type HeaderLinkContext = undefined;
 
 /**
  * The extension points of the shell's header. They are declared in core, so a feature can add a

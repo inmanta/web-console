@@ -3,7 +3,7 @@ import { useLocation } from "react-router";
 import { UsersIcon } from "@patternfly/react-icons";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { FeatureModule } from "@inmanta/web-console-core";
+import { FeatureModule, words } from "@inmanta/web-console-core";
 import { AuthContextInterface, defaultAuthContext } from "@inmanta/web-console-core/Auth";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
@@ -42,6 +42,16 @@ const Location: React.FC = () => {
   return <div data-testid="location">{pathname + search}</div>;
 };
 
+/**
+ * The labels of the menu items, from "Manage projects" up to "Logout".
+ */
+const accountItems = (): string[] => {
+  const labels = screen.getAllByRole("menuitem").map((item) => item.textContent ?? "");
+  const start = labels.indexOf(words("home.environmentSwitcher.manageProjects.button"));
+
+  return labels.slice(start, labels.indexOf(words("dashboard.logout")) + 1);
+};
+
 const setup = (features: FeatureModule[], authHelper: AuthContextInterface) =>
   render(
     <TestMemoryRouter initialEntries={["/?env=aaa"]}>
@@ -55,6 +65,12 @@ const setup = (features: FeatureModule[], authHelper: AuthContextInterface) =>
 describe("EnvSelector", () => {
   it("shows the links the features add to the user menu, and opens their page", async () => {
     setup([linkingFeature], databaseSession);
+
+    expect(accountItems()).toEqual([
+      words("home.environmentSwitcher.manageProjects.button"),
+      "Users",
+      words("dashboard.logout"),
+    ]);
 
     await userEvent.click(screen.getByRole("menuitem", { name: "Users" }));
 
@@ -70,7 +86,9 @@ describe("EnvSelector", () => {
   it("shows no extra links without features that add them", () => {
     setup([], databaseSession);
 
-    expect(screen.queryByRole("menuitem", { name: "Users" })).not.toBeInTheDocument();
-    expect(screen.getByRole("menuitem", { name: "Logout" })).toBeInTheDocument();
+    expect(accountItems()).toEqual([
+      words("home.environmentSwitcher.manageProjects.button"),
+      words("dashboard.logout"),
+    ]);
   });
 });

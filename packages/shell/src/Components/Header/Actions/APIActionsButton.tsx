@@ -63,9 +63,9 @@ export const APIActionsButton: React.FC = () => {
             {developerActions.map(({ id, getLabel, getUrl, isDisabled }) => (
               <DropdownItem
                 key={id}
-                isDisabled={isDisabled?.({}) ?? false}
+                isDisabled={isDisabled?.(undefined) ?? false}
                 onClick={() =>
-                  navigate({ pathname: getUrl(routeManager, {}), search: envOnlySearch })
+                  navigate({ pathname: getUrl(routeManager, undefined), search: envOnlySearch })
                 }
               >
                 {getLabel()}
