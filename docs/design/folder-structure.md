@@ -29,7 +29,7 @@ packages/
     Components/ - Including the modal and alert providers (ModalProvider, AppAlertProvider): the shell renders them, the test helpers re-export them for tests
     Presenters/, Styles/, Utils/
   shell/src/ - @inmanta/web-console-shell, the app frame: header, sidebar, breadcrumbs, global providers, auth, startup
-    Components/ - The app frame and global providers (header, sidebar, breadcrumbs, banners, initializer)
+    Components/ - The app frame (header, sidebar, breadcrumbs, banners, blocking modal, initializer)
     Auth/ - The auth providers
     Slices/ - The shell's own pages: login, not found, notifications, status
   test-utils/src/ - @inmanta/web-console-test-utils, common test data, mock implementations, testing utilities, test setup

@@ -1,6 +1,6 @@
 /**
- * The providers that tests of a component or a feature render it in, re-exported so the tests get
- * their test helpers from one place.
+ * The modal and alert providers from `ui`, re-exported so tests get them from their test helpers,
+ * like the rest of what they render the component under test in.
  */
 export { AppAlertProvider } from "@inmanta/web-console-ui/Components/AppAlertProvider";
 export { ModalProvider } from "@inmanta/web-console-ui/Components/ModalProvider";
