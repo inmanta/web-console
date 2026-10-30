@@ -8,6 +8,7 @@ import {
   StackItem,
   Title,
 } from "@patternfly/react-core";
+import { RhMicronsDoubleCaretDownIcon, RhMicronsDoubleCaretUpIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, TdProps, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ServiceModel, words } from "@inmanta/web-console-core";
@@ -27,10 +28,10 @@ interface Props {
 /**
  * The service catalog: one table per section, each under a heading with its service and
  * instance count. A section is a `web_group`, or "Other services" for the services without one.
- * Owned services are nested under their owner, collapsed by default, with Expand all and
- * Collapse all buttons above the tables. Without any group, the catalog is a single table
- * without heading, and without any owned service, there is no expand column and no Expand all
- * or Collapse all. When any service has a `web_icon`, every row shows an icon, with a fallback
+ * Owned services are nested under their owner, collapsed by default, with one button above the
+ * tables that expands every owner, or collapses them once all are expanded. Without any group,
+ * the catalog is a single table without heading, and without any owned service, there is no
+ * expand column and no such button. When any service has a `web_icon`, every row shows an icon, with a fallback
  * for the services without one; otherwise the rows have no icon.
  *
  * @props {Props} props - The props of the component.
@@ -47,6 +48,7 @@ export const CatalogSections: React.FC<Props> = ({ serviceModels }) => {
     .map((service) => service.serviceModel.name);
   const hasGroups = sections.some((section) => section.kind === "Group");
   const hasOwnedServices = ownerServiceNames.length > 0;
+  const isEveryOwnerExpanded = ownerServiceNames.every((name) => expandedServiceNames.has(name));
   const hasServiceIcons = allServices.some(
     ({ resolvedAnnotations }) => resolvedAnnotations.web_icon !== undefined
   );
@@ -116,18 +118,25 @@ export const CatalogSections: React.FC<Props> = ({ serviceModels }) => {
     <Stack hasGutter>
       {hasOwnedServices && (
         <StackItem>
-          <Flex columnGap={{ default: "columnGapSm" }}>
+          {isEveryOwnerExpanded ? (
             <Button
-              variant="link"
+              variant="plain"
               size="sm"
+              icon={<RhMicronsDoubleCaretUpIcon />}
+              onClick={() => setExpandedServiceNames(new Set())}
+            >
+              {words("catalog.ownedServices.collapseAll")}
+            </Button>
+          ) : (
+            <Button
+              variant="plain"
+              size="sm"
+              icon={<RhMicronsDoubleCaretDownIcon />}
               onClick={() => setExpandedServiceNames(new Set(ownerServiceNames))}
             >
               {words("catalog.ownedServices.expandAll")}
             </Button>
-            <Button variant="link" size="sm" onClick={() => setExpandedServiceNames(new Set())}>
-              {words("catalog.ownedServices.collapseAll")}
-            </Button>
-          </Flex>
+          )}
         </StackItem>
       )}
       {sections.map((section) => (

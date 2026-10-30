@@ -141,8 +141,12 @@ test("GIVEN CatalogSections WHEN services own other services THEN they are neste
   });
 });
 
-test("GIVEN CatalogSections WHEN Expand all and Collapse all are clicked THEN every level expands and collapses", async () => {
+test("GIVEN CatalogSections WHEN the expand all toggle is clicked twice THEN every level expands and collapses", async () => {
   render(Component(deploymentTree));
+
+  expect(
+    screen.queryByRole("button", { name: words("catalog.ownedServices.collapseAll") })
+  ).not.toBeInTheDocument();
 
   await userEvent.click(
     screen.getByRole("button", { name: words("catalog.ownedServices.expandAll") })
@@ -150,12 +154,31 @@ test("GIVEN CatalogSections WHEN Expand all and Collapse all are clicked THEN ev
 
   expect(screen.getByTestId(aviVirtualIp.name + "-item")).toHaveAttribute("aria-level", "3");
   expect(screen.getAllByRole("row")).toHaveLength(deploymentTree.length);
+  expect(
+    screen.queryByRole("button", { name: words("catalog.ownedServices.expandAll") })
+  ).not.toBeInTheDocument();
 
   await userEvent.click(
     screen.getByRole("button", { name: words("catalog.ownedServices.collapseAll") })
   );
 
   expect(screen.getAllByRole("row").map((row) => row.id)).toEqual([deployment.name]);
+});
+
+test("GIVEN CatalogSections WHEN every owner is expanded one by one THEN the toggle offers Collapse all", async () => {
+  render(Component(deploymentTree));
+
+  for (const owner of [deployment, aviLoadBalancerCluster]) {
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: words("catalog.ownedServices.expand")(String(owner.entity_annotations?.web_title)),
+      })
+    );
+  }
+
+  expect(
+    screen.getByRole("button", { name: words("catalog.ownedServices.collapseAll") })
+  ).toBeVisible();
 });
 
 test("GIVEN CatalogSections WHEN a service has entity annotations THEN its title, raw name and description are shown", async () => {
