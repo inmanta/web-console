@@ -16,7 +16,16 @@ import {
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
-import { firewall, linuxVm, router, vpn } from "./Mock";
+import {
+  aviVirtualIp,
+  deployment,
+  deploymentTree,
+  dnsRecord,
+  firewall,
+  linuxVm,
+  router,
+  vpn,
+} from "./Mock";
 import { ServiceCatalogPage } from ".";
 
 const [env1] = Environment.filterable.map((env) => env.id);
@@ -123,6 +132,35 @@ describe("ServiceCatalog", () => {
 
     expect(within(networkTable).getByTestId(router.name + "-item")).toBeInTheDocument();
     expect(within(networkTable).getByTestId(vpn.name + "-item")).toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("GIVEN ServiceCatalog WHEN services own other services THEN only the roots are listed until expanded", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog", () => {
+        return HttpResponse.json({ data: [linuxVm, ...deploymentTree] });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    const table = await screen.findByRole("treegrid", { name: words("catalog.title") });
+
+    expect(within(table).getByTestId(deployment.name + "-item")).toBeInTheDocument();
+    expect(within(table).queryByTestId(dnsRecord.name + "-item")).not.toBeInTheDocument();
+
+    await userEvent.click(
+      screen.getByRole("button", { name: words("catalog.ownedServices.expandAll") })
+    );
+
+    expect(within(table).getByTestId(aviVirtualIp.name + "-item")).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);

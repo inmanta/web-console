@@ -1,16 +1,31 @@
 import { ServiceModel, words } from "@inmanta/web-console-core";
 import { Service } from "@inmanta/web-console-test-utils";
-import { firewall, linuxVm, router, vpn, vpnTunnel } from "./Mock";
+import {
+  aviLoadBalancerCluster,
+  aviVirtualIp,
+  deployment,
+  deploymentTree,
+  dnsRecord,
+  firewall,
+  linuxVm,
+  router,
+  vpn,
+  vpnTunnel,
+} from "./Mock";
 import {
   createCatalogSections,
   formatDescriptionLine,
+  getAllCatalogServices,
   getSectionInstanceCount,
   getSectionTitle,
 } from "./helpers";
-import { CatalogSection } from "./types";
+import { CatalogSection, CatalogService } from "./types";
 
 const getServiceNames = (section: CatalogSection): string[] =>
   section.services.map(({ serviceModel }) => serviceModel.name);
+
+const getOwnedServiceNames = (service: CatalogService): string[] =>
+  service.ownedServices.map(({ serviceModel }) => serviceModel.name);
 
 describe("createCatalogSections", () => {
   it("groups root services by web_group and puts ungrouped services last", () => {
@@ -26,11 +41,32 @@ describe("createCatalogSections", () => {
     expect(getServiceNames(sections[2])).toEqual([linuxVm.name]);
   });
 
-  it("ignores web_group on owned services", () => {
+  it("nests owned services under their owner and ignores their web_group", () => {
     const sections = createCatalogSections([vpn, vpnTunnel]);
 
-    expect(sections[1].kind).toBe("Ungrouped");
-    expect(getServiceNames(sections[1])).toEqual([vpnTunnel.name]);
+    expect(sections).toHaveLength(1);
+    expect(getServiceNames(sections[0])).toEqual([vpn.name]);
+    expect(getOwnedServiceNames(sections[0].services[0])).toEqual([vpnTunnel.name]);
+  });
+
+  it("nests owned services over multiple levels, siblings ordered by web_order", () => {
+    const sections = createCatalogSections(deploymentTree);
+
+    expect(getServiceNames(sections[0])).toEqual([deployment.name]);
+
+    const [deploymentService] = sections[0].services;
+
+    expect(getOwnedServiceNames(deploymentService)).toEqual([
+      dnsRecord.name,
+      aviLoadBalancerCluster.name,
+    ]);
+    expect(getOwnedServiceNames(deploymentService.ownedServices[1])).toEqual([aviVirtualIp.name]);
+  });
+
+  it("lists a service whose owner is not in the catalog as a root", () => {
+    const sections = createCatalogSections([aviVirtualIp]);
+
+    expect(getServiceNames(sections[0])).toEqual([aviVirtualIp.name]);
   });
 
   it("orders a group by the lowest web_order of its services", () => {
@@ -76,6 +112,20 @@ describe("createCatalogSections", () => {
 
   it("returns no sections for an empty catalog", () => {
     expect(createCatalogSections([])).toEqual([]);
+  });
+});
+
+describe("getAllCatalogServices", () => {
+  it("returns every service at any depth, each owner before its owned services", () => {
+    const allServices = getAllCatalogServices(createCatalogSections([linuxVm, ...deploymentTree]));
+
+    expect(allServices.map(({ serviceModel }) => serviceModel.name)).toEqual([
+      deployment.name,
+      dnsRecord.name,
+      aviLoadBalancerCluster.name,
+      aviVirtualIp.name,
+      linuxVm.name,
+    ]);
   });
 });
 

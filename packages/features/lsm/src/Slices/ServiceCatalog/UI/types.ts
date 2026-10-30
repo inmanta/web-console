@@ -1,16 +1,21 @@
 import { ResolvedEntityAnnotations, ServiceModel } from "@inmanta/web-console-core";
 
 /**
- * A service in the catalog together with its resolved entity annotations.
+ * A service in the catalog together with its resolved entity annotations and the services
+ * it owns.
  */
 export interface CatalogService {
   serviceModel: ServiceModel;
   resolvedAnnotations: ResolvedEntityAnnotations;
+
+  /** The services whose `owner` is this service, ordered by `web_order`, then by title. */
+  ownedServices: CatalogService[];
 }
 
 /**
- * A section of the service catalog. A "Group" section holds the services that share a
- * `web_group`; the "Ungrouped" section holds the services without one.
+ * A section of the service catalog. A "Group" section holds the root services that share a
+ * `web_group`; the "Ungrouped" section holds the root services without one. Owned services
+ * sit under their owner, not directly in a section.
  */
 export type CatalogSection =
   | {

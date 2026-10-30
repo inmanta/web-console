@@ -215,6 +215,12 @@ export const lsmMessages = {
   "catalog.section.ungrouped": "Other services",
   "catalog.section.count": (serviceCount: number, instanceCount: number) =>
     `${serviceCount} ${serviceCount === 1 ? "service" : "services"} · ${instanceCount} ${instanceCount === 1 ? "instance" : "instances"}`,
+  "catalog.ownedServices.count": (ownedServiceCount: number) =>
+    `${ownedServiceCount} owned ${ownedServiceCount === 1 ? "service" : "services"}`,
+  "catalog.ownedServices.expand": (serviceTitle: string) => `Expand ${serviceTitle}`,
+  "catalog.ownedServices.collapse": (serviceTitle: string) => `Collapse ${serviceTitle}`,
+  "catalog.ownedServices.expandAll": "Expand all",
+  "catalog.ownedServices.collapseAll": "Collapse all",
   "catalog.delete.modal.title": "Delete Service",
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,

@@ -42,6 +42,47 @@ export const vpnTunnel: ServiceModel = {
   entity_annotations: { web_title: "VPN tunnel", web_group: "Network" },
 };
 
+/** A root service that owns a three-level tree, modeled on the pxsdc catalog. */
+export const deployment: ServiceModel = {
+  ...Service.withInstanceSummary,
+  name: "deployment",
+  owned_entities: ["avi_load_balancer_cluster", "dns_record"],
+  entity_annotations: { web_title: "Deployment", web_order: 1 },
+};
+
+/** A service owned by the deployment that owns a service itself; ordered after the DNS record. */
+export const aviLoadBalancerCluster: ServiceModel = {
+  ...Service.a,
+  name: "avi_load_balancer_cluster",
+  owner: deployment.name,
+  owned_entities: ["avi_virtual_ip"],
+  entity_annotations: { web_title: "Load balancer cluster", web_order: 2 },
+};
+
+/** A service owned by the deployment, ordered first among its siblings. */
+export const dnsRecord: ServiceModel = {
+  ...Service.a,
+  name: "dns_record",
+  owner: deployment.name,
+  entity_annotations: { web_title: "DNS record", web_order: 1 },
+};
+
+/** A service on the third level, owned by the load balancer cluster. */
+export const aviVirtualIp: ServiceModel = {
+  ...Service.a,
+  name: "avi_virtual_ip",
+  owner: aviLoadBalancerCluster.name,
+  entity_annotations: { web_title: "Virtual IP" },
+};
+
+/** The pxsdc-like tree: the deployment and every service it owns, at any depth. */
+export const deploymentTree: ServiceModel[] = [
+  aviVirtualIp,
+  aviLoadBalancerCluster,
+  dnsRecord,
+  deployment,
+];
+
 /** A root service whose instance summary counts no instances. */
 export const loadBalancer: ServiceModel = {
   ...Service.a,

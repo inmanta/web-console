@@ -7,13 +7,14 @@ import {
   DropdownItem,
   DropdownList,
   Flex,
+  FlexItem,
   Icon,
   MenuToggle,
   MenuToggleElement,
   Truncate,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { Td, Tr } from "@patternfly/react-table";
+import { Td, TdProps, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
@@ -30,19 +31,22 @@ import { CatalogService } from "./types";
 interface Props {
   service: CatalogService;
   hasServiceIcons: boolean;
+  treeRow?: TdProps["treeRow"];
 }
 
 /**
- * A service in the catalog table: its icon, title and one-line description, its instance
- * summary, a link to its inventory and an actions menu with details and delete.
+ * A service in the catalog table: its icon, title and one-line description, the number of
+ * services it owns, its instance summary, a link to its inventory and an actions menu with
+ * details and delete.
  *
  * @props {Props} props - The props of the component.
- *  @prop {CatalogService} service - The service and its resolved entity annotations.
+ *  @prop {CatalogService} service - The service, its resolved entity annotations and its owned services.
  *  @prop {boolean} hasServiceIcons - Whether the catalog shows service icons. A service without a `web_icon` then gets a fallback icon, so the titles line up.
+ *  @prop {TdProps["treeRow"]} [treeRow] - The tree table level and expand toggle of the row. Undefined when the catalog has no owned services, so the row has no expand column.
  *
  * @returns {React.FC<Props>} A table row for the service.
  */
-export const ServiceRow: React.FC<Props> = ({ service, hasServiceIcons }) => {
+export const ServiceRow: React.FC<Props> = ({ service, hasServiceIcons, treeRow }) => {
   const { serviceModel, resolvedAnnotations } = service;
   const instanceSummary = serviceModel.instance_summary;
   const { triggerModal, closeModal } = useContext(ModalContext);
@@ -57,6 +61,7 @@ export const ServiceRow: React.FC<Props> = ({ service, hasServiceIcons }) => {
       }),
   });
   const serviceKey = serviceModel.name + "-item";
+  const hasOwnedServices = service.ownedServices.length > 0;
   const inventoryPathname = routeManager.getUrl("Inventory", { service: serviceModel.name });
 
   /**
@@ -83,8 +88,15 @@ export const ServiceRow: React.FC<Props> = ({ service, hasServiceIcons }) => {
   };
 
   return (
-    <Tr id={serviceModel.name} data-testid={serviceKey}>
-      <Td dataLabel={words("catalog.column.service")}>
+    <Tr
+      id={serviceModel.name}
+      data-testid={serviceKey}
+      aria-level={treeRow?.props["aria-level"]}
+      aria-posinset={treeRow?.props["aria-posinset"]}
+      aria-setsize={treeRow?.props["aria-setsize"]}
+      aria-expanded={hasOwnedServices ? treeRow?.props.isExpanded : undefined}
+    >
+      <Td dataLabel={words("catalog.column.service")} treeRow={treeRow}>
         <Flex
           alignItems={{ default: "alignItemsCenter" }}
           columnGap={{ default: "columnGapMd" }}
@@ -114,7 +126,16 @@ export const ServiceRow: React.FC<Props> = ({ service, hasServiceIcons }) => {
                 </Button>
               </Link>
               {resolvedAnnotations.web_title !== serviceModel.name && (
-                <Content component={ContentVariants.small}>{serviceModel.name}</Content>
+                <FlexItem>
+                  <Content component={ContentVariants.small}>{serviceModel.name}</Content>
+                </FlexItem>
+              )}
+              {hasOwnedServices && (
+                <FlexItem>
+                  <Content component={ContentVariants.small}>
+                    {words("catalog.ownedServices.count")(service.ownedServices.length)}
+                  </Content>
+                </FlexItem>
               )}
             </Flex>
             {resolvedAnnotations.web_description && (

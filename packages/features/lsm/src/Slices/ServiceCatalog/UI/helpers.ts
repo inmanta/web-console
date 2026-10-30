@@ -12,25 +12,51 @@ import {
 } from "./types";
 
 /**
- * Splits the services into catalog sections by `web_group`, which only applies to root
- * services. Group sections are ordered by the lowest `web_order` of their services, then by
- * name, and the ungrouped services come last. Services within a section are ordered by
- * `web_order`, then by title.
+ * Nests the owned services under their owner and splits the root services into catalog
+ * sections by `web_group`, which only applies to roots. A service whose owner is not in the
+ * catalog counts as a root, so it is never lost. Group sections are ordered by the lowest
+ * `web_order` of their services, then by name, and the ungrouped services come last. Services
+ * within a section and owned services under an owner are ordered by `web_order`, then by title.
  *
  * @example
- * createCatalogSections([vpn (web_group "Network"), router (no group)])
- * // [{ kind: "Group", name: "Network", services: [vpn] }, { kind: "Ungrouped", services: [router] }]
+ * createCatalogSections([vpn (web_group "Network"), vpn_tunnel (owner vpn), router (no group)])
+ * // [{ kind: "Group", name: "Network", services: [vpn, owning vpn_tunnel] }, { kind: "Ungrouped", services: [router] }]
  */
 export const createCatalogSections = (serviceModels: ServiceModel[]): CatalogSection[] => {
+  const servicesByName = new Map<string, CatalogService>();
+
+  for (const serviceModel of serviceModels) {
+    servicesByName.set(serviceModel.name, {
+      serviceModel,
+      resolvedAnnotations: resolveEntityAnnotations(serviceModel),
+      ownedServices: [],
+    });
+  }
+
+  const rootServices: CatalogService[] = [];
+
+  for (const service of servicesByName.values()) {
+    const owner =
+      service.serviceModel.owner === null
+        ? undefined
+        : servicesByName.get(service.serviceModel.owner);
+
+    if (owner === undefined) {
+      rootServices.push(service);
+    } else {
+      owner.ownedServices.push(service);
+    }
+  }
+
+  for (const service of servicesByName.values()) {
+    sortCatalogServices(service.ownedServices);
+  }
+
   const servicesByGroup = new Map<string, CatalogService[]>();
   const ungroupedServices: CatalogService[] = [];
 
-  for (const serviceModel of serviceModels) {
-    const service: CatalogService = {
-      serviceModel,
-      resolvedAnnotations: resolveEntityAnnotations(serviceModel),
-    };
-    const group = serviceModel.owner === null ? service.resolvedAnnotations.web_group : undefined;
+  for (const service of rootServices) {
+    const group = service.resolvedAnnotations.web_group;
 
     if (group === undefined) {
       ungroupedServices.push(service);
@@ -65,6 +91,23 @@ export const createCatalogSections = (serviceModels: ServiceModel[]): CatalogSec
  */
 export const getSectionTitle = (section: CatalogSection): string =>
   section.kind === "Group" ? section.name : words("catalog.section.ungrouped");
+
+/**
+ * Gets every service in the sections, the owned services at any depth included, each owner
+ * before the services it owns.
+ */
+export const getAllCatalogServices = (sections: CatalogSection[]): CatalogService[] => {
+  const allServices: CatalogService[] = [];
+
+  const addWithOwnedServices = (service: CatalogService): void => {
+    allServices.push(service);
+    service.ownedServices.forEach(addWithOwnedServices);
+  };
+
+  sections.forEach((section) => section.services.forEach(addWithOwnedServices));
+
+  return allServices;
+};
 
 /**
  * Gets the icon name of a service: its `web_icon`, or a fallback that shows whether the service
