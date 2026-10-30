@@ -19,10 +19,10 @@ import {
   Environment,
   MockedDependencyProvider,
   Project,
+  ModalProvider,
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
-import { ModalProvider } from "@inmanta/web-console-ui/Components/ModalProvider";
 import ErrorBoundary from "@inmanta/web-console-ui/Utils/ErrorBoundary";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";

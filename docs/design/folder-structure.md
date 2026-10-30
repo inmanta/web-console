@@ -26,7 +26,7 @@ packages/
     Routing/ - Code related to routing and urls
     FormState/ - Helpers that turn service attributes into form fields
   ui/src/ - @inmanta/web-console-ui, components used by more than one feature (or a feature and the shell)
-    Components/ - Including the modal and alert providers (ModalProvider, BlockingModal, AppAlertProvider), which the shell and the test helpers render
+    Components/ - Including the modal and alert providers (ModalProvider, AppAlertProvider): the shell renders them, the test helpers re-export them for tests
     Presenters/, Styles/, Utils/
   shell/src/ - @inmanta/web-console-shell, the app frame: header, sidebar, breadcrumbs, global providers, auth, startup
     Components/ - The app frame and global providers (header, sidebar, breadcrumbs, banners, initializer)

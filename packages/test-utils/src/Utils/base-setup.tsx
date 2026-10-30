@@ -2,7 +2,6 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { FeatureModule, getFeatureRoutes, RouteFactory } from "@inmanta/web-console-core";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
-import { BlockingModal } from "@inmanta/web-console-ui/Components/BlockingModal";
 import { TestMemoryRouter } from "./TestMemoryRouter";
 import { testClient } from "./react-query-setup";
 
@@ -23,7 +22,6 @@ export function baseSetup(
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={["/"]}>
         <MockedDependencyProvider features={features} routes={routes}>
-          <BlockingModal />
           {Page}
         </MockedDependencyProvider>
       </TestMemoryRouter>
