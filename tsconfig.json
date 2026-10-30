@@ -68,6 +68,12 @@
       "@inmanta/web-console-feature-environment/*": [
         "./packages/features/environment/src/*"
       ],
+      "@inmanta/web-console-feature-graphiql": [
+        "./packages/features/graphiql/src"
+      ],
+      "@inmanta/web-console-feature-graphiql/*": [
+        "./packages/features/graphiql/src/*"
+      ],
       "@inmanta/web-console-feature-lsm": [
         "./packages/features/lsm/src"
       ],
@@ -79,6 +85,12 @@
       ],
       "@inmanta/web-console-feature-orchestration-engine/*": [
         "./packages/features/orchestration-engine/src/*"
+      ],
+      "@inmanta/web-console-feature-user-management": [
+        "./packages/features/user-management/src"
+      ],
+      "@inmanta/web-console-feature-user-management/*": [
+        "./packages/features/user-management/src/*"
       ],
       "@inmanta/web-console-test-utils": [
         "./packages/test-utils/src"
