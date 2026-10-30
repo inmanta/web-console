@@ -1,7 +1,7 @@
 import React, { act } from "react";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
@@ -16,6 +16,16 @@ import {
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import {
+  aviVirtualIp,
+  deployment,
+  deploymentTree,
+  dnsRecord,
+  firewall,
+  linuxVm,
+  router,
+  vpn,
+} from "./Mock";
 import { ServiceCatalogPage } from ".";
 
 const [env1] = Environment.filterable.map((env) => env.id);
@@ -47,6 +57,10 @@ describe("ServiceCatalog", () => {
 
   beforeEach(() => {
     server.resetHandlers();
+  });
+
+  afterEach(() => {
+    testClient.clear();
   });
 
   afterAll(() => {
@@ -93,6 +107,60 @@ describe("ServiceCatalog", () => {
     expect(
       await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
     ).toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("GIVEN ServiceCatalog WHEN services have groups THEN they are shown in group sections", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog", () => {
+        return HttpResponse.json({ data: [linuxVm, firewall, vpn, router] });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    const networkTable = await screen.findByRole("grid", {
+      name: router.entity_annotations?.web_group,
+    });
+
+    expect(within(networkTable).getByTestId(router.name + "-item")).toBeInTheDocument();
+    expect(within(networkTable).getByTestId(vpn.name + "-item")).toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("GIVEN ServiceCatalog WHEN services own other services THEN only the roots are listed until expanded", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog", () => {
+        return HttpResponse.json({ data: [linuxVm, ...deploymentTree] });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    const table = await screen.findByRole("treegrid", { name: words("catalog.title") });
+
+    expect(within(table).getByTestId(deployment.name + "-item")).toBeInTheDocument();
+    expect(within(table).queryByTestId(dnsRecord.name + "-item")).not.toBeInTheDocument();
+
+    await userEvent.click(
+      screen.getByRole("button", { name: words("catalog.ownedServices.expandAll") })
+    );
+
+    expect(within(table).getByTestId(aviVirtualIp.name + "-item")).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);

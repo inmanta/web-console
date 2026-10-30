@@ -16,7 +16,7 @@ if (isIso) {
       selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#embedded-entity-service").contains("Show inventory").click();
+      cy.get("#embedded-entity-service").contains("Inventory").click();
 
       // make sure the call to get inventory has been executed
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
@@ -47,7 +47,7 @@ if (isIso) {
       }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#embedded-entity-service").contains("Show inventory").click();
+      cy.get("#embedded-entity-service").contains("Inventory").click();
 
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
     });
@@ -63,7 +63,7 @@ if (isIso) {
         .get('[aria-label="Number of instances by label"]')
         .children()
         .should("have.length", 1);
-      cy.get("#embedded-entity-service").contains("Show inventory").click();
+      cy.get("#embedded-entity-service").contains("Inventory").click();
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
 
       // Check Instance Details page
@@ -103,7 +103,7 @@ if (isIso) {
         .get('[aria-label="Number of instances by label"]')
         .children()
         .should("have.length", 1);
-      cy.get("#embedded-entity-service").contains("Show inventory").click();
+      cy.get("#embedded-entity-service").contains("Inventory").click();
 
       cy.get('[aria-label="deploy-progress"]', { timeout: 20000 }).first().click();
 
@@ -117,7 +117,7 @@ if (isIso) {
       selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#embedded-entity-service").contains("Show inventory").click();
+      cy.get("#embedded-entity-service").contains("Inventory").click();
 
       // delete but cancel deletion in modal
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
