@@ -138,15 +138,15 @@ const layerZones = (forTests) => {
 export const importBoundaryZones = layerZones(false);
 
 /**
- * The zones for tests and test helpers. The test helpers may also render the shell's providers,
- * but import no feature and not the app, so that each feature's tests only depend on that feature.
+ * The zones for tests and test helpers. The test helpers import no feature, not the shell and not
+ * the app, so that each feature's tests only depend on that feature.
  */
 export const testImportBoundaryZones = [
   ...layerZones(true),
   {
     target: testUtils,
-    from: [...allFeatures, ...app],
+    from: [...allFeatures, ...shell, ...app],
     message:
-      "The test helpers only import the web-console core layer, shared components and the shell. A feature's tests build what they need from that feature.",
+      "The test helpers only import the web-console core layer and shared components. A feature's tests build what they need from that feature.",
   },
 ];
