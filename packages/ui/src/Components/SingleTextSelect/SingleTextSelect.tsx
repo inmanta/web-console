@@ -111,6 +111,19 @@ export const SingleTextSelect: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options, selected]);
 
+  // Clear the input when the selection is reset from outside, e.g. by removing a filter chip.
+  // Only on that change, so text the user is typing while nothing is selected stays.
+  const previousSelected = useRef(selected);
+
+  useEffect(() => {
+    if (previousSelected.current && !selected) {
+      setInputValue("");
+      setFilterValue("");
+    }
+
+    previousSelected.current = selected;
+  }, [selected]);
+
   const onToggleClick = () => {
     setIsOpen(!isOpen);
   };

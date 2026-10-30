@@ -14,8 +14,8 @@ import { fileURLToPath } from "node:url";
  * | features | core, ui, their own files         |
  * | app      | everything (it composes the rest) |
  *
- * Every slice, every folder in `src/Features` and every folder in `packages/features` belongs to
- * exactly one feature. A new one has to be added here, or linting fails.
+ * Every folder in `packages/features` belongs to exactly one feature. A new one has to be added
+ * here, or linting fails.
  */
 
 /**
@@ -34,8 +34,7 @@ const shell = ["./packages/shell"];
 const app = ["./apps/web-console"];
 
 /**
- * The folders of each feature: its slices and its folder in `src/Features`. A feature that moved
- * into `packages/features` only has its package folder there.
+ * The package folder of each feature in `packages/features`.
  */
 const features = {
   composer: {
@@ -45,8 +44,7 @@ const features = {
     package: "environment",
   },
   graphiql: {
-    folder: "GraphiQL",
-    slices: ["GraphiQL"],
+    package: "graphiql",
   },
   lsm: {
     package: "lsm",
@@ -58,19 +56,14 @@ const features = {
     package: "resource-manager",
   },
   "user-management": {
-    folder: "UserManagement",
-    slices: ["UserManagement"],
+    package: "user-management",
   },
 };
 
 const featurePaths = Object.fromEntries(
-  Object.entries(features).map(([name, { package: packageFolder, folder, slices = [] }]) => [
+  Object.entries(features).map(([name, { package: packageFolder }]) => [
     name,
-    [
-      ...(packageFolder ? [`./packages/features/${packageFolder}`] : []),
-      ...(folder ? [`./src/Features/${folder}`] : []),
-      ...slices.map((slice) => `./src/Slices/${slice}`),
-    ],
+    [`./packages/features/${packageFolder}`],
   ])
 );
 
@@ -87,16 +80,8 @@ const assertAllAssigned = (directory, assigned) => {
 };
 
 assertAllAssigned(
-  "./src/Slices",
-  Object.values(features).flatMap(({ slices = [] }) => slices)
-);
-assertAllAssigned(
-  "./src/Features",
-  Object.values(features).flatMap(({ folder }) => folder ?? [])
-);
-assertAllAssigned(
   "./packages/features",
-  Object.values(features).flatMap(({ package: packageFolder }) => packageFolder ?? [])
+  Object.values(features).map(({ package: packageFolder }) => packageFolder)
 );
 
 for (const path of [...core, ...ui, ...shell, ...app, ...allFeatures]) {

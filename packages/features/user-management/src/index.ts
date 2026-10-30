@@ -1,5 +1,5 @@
-import * as UserManagement from "@S/UserManagement/Core/Route";
 import { FeatureModule } from "@inmanta/web-console-core";
+import * as UserManagement from "@inmanta/web-console-feature-user-management/Slices/UserManagement/Core/Route";
 import { userManagementMessages } from "./messages";
 
 /**
@@ -12,7 +12,10 @@ export const userManagementFeature: FeatureModule = {
   routes: [
     {
       route: UserManagement.route,
-      page: () => import("@S/UserManagement/UI/Page").then((module) => module.UserManagementPage),
+      page: () =>
+        import("@inmanta/web-console-feature-user-management/Slices/UserManagement/UI/Page").then(
+          (module) => module.UserManagementPage
+        ),
     },
   ],
 };

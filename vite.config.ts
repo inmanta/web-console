@@ -227,6 +227,10 @@ export default defineConfig({
         replacement: resolve(__dirname, "./packages/features/environment/src"),
       },
       {
+        find: "@inmanta/web-console-feature-graphiql",
+        replacement: resolve(__dirname, "./packages/features/graphiql/src"),
+      },
+      {
         find: "@inmanta/web-console-feature-lsm",
         replacement: resolve(__dirname, "./packages/features/lsm/src"),
       },
@@ -237,6 +241,10 @@ export default defineConfig({
       {
         find: "@inmanta/web-console-feature-resource-manager",
         replacement: resolve(__dirname, "./packages/features/resource-manager/src"),
+      },
+      {
+        find: "@inmanta/web-console-feature-user-management",
+        replacement: resolve(__dirname, "./packages/features/user-management/src"),
       },
       {
         find: "@inmanta/web-console-test-utils",

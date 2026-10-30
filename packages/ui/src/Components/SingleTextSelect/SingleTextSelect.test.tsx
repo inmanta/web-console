@@ -112,3 +112,30 @@ test("SingleTextSelect clears input when clear button is clicked", async () => {
   expect(setSelected).toHaveBeenCalledWith("");
   expect(screen.getByRole("combobox")).toHaveValue("");
 });
+
+test("SingleTextSelect clears input when the selection is reset from outside", async () => {
+  const { rerender } = render(
+    <SingleTextSelect selected={null} setSelected={vi.fn()} options={options} />
+  );
+
+  await userEvent.click(screen.getByRole("combobox"));
+  await userEvent.click(screen.getByText("Apple"));
+  rerender(<SingleTextSelect selected="apple" setSelected={vi.fn()} options={options} />);
+
+  expect(screen.getByRole("combobox")).toHaveValue("Apple");
+
+  rerender(<SingleTextSelect selected={null} setSelected={vi.fn()} options={options} />);
+
+  expect(screen.getByRole("combobox")).toHaveValue("");
+});
+
+test("SingleTextSelect keeps typed text while nothing is selected", async () => {
+  const { rerender } = render(
+    <SingleTextSelect selected={null} setSelected={vi.fn()} options={options} />
+  );
+
+  await userEvent.type(screen.getByRole("combobox"), "Ban");
+  rerender(<SingleTextSelect selected={null} setSelected={vi.fn()} options={[...options]} />);
+
+  expect(screen.getByRole("combobox")).toHaveValue("Ban");
+});

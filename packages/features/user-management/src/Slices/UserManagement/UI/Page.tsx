@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
-import { UserCredentialsForm } from "@/Slices/UserManagement/UI/Components/AddUserForm";
 import { words } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
 import { useGetUsers } from "@inmanta/web-console-core/Queries/Slices/Auth";
+import { UserCredentialsForm } from "@inmanta/web-console-feature-user-management/Slices/UserManagement/UI/Components/AddUserForm";
 import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
 import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";

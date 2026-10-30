@@ -660,6 +660,147 @@ describe("useComposerGraph", () => {
     expect(zoomToFitSpy).toHaveBeenCalledTimes(1);
   });
 
+  describe("the delayed fit 100 ms after initializing", () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it("should center content again 100 ms after initializing", () => {
+      const { result } = renderHook(() =>
+        useComposerGraph({
+          editable,
+          serviceName,
+          instanceId: undefined,
+          serviceCatalog,
+          mainService,
+          relationsDictionary,
+          instanceData,
+          isInstanceDataReady,
+          onCanvasStateInitialized,
+          onInitialShapeInfoTracked,
+        })
+      );
+
+      const zoomToFitSpy = vi
+        .spyOn(result.current.scroller, "zoomToFit")
+        .mockImplementation(() => result.current.scroller);
+
+      act(() => {
+        vi.advanceTimersByTime(100);
+      });
+
+      expect(zoomToFitSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should still center content when new data arrives within 100 ms", () => {
+      vi.mocked(Helpers.initializeCanvasFromInstance).mockImplementation(
+        (_data, _catalog, _dict, graph) => {
+          // A cell in the graph makes the re-run take the "already initialized" early return.
+          graph.addCell(new shapes.standard.Rectangle({ id: "test-cell" }));
+
+          return new Map();
+        }
+      );
+
+      const mockInstance = createMockInstance("existing-id", "test-service");
+      const { result, rerender } = renderHook(
+        ({ instanceData }) =>
+          useComposerGraph({
+            editable,
+            serviceName,
+            instanceId: "existing-id",
+            serviceCatalog,
+            mainService,
+            relationsDictionary,
+            instanceData,
+            isInstanceDataReady: true,
+            onCanvasStateInitialized,
+            onInitialShapeInfoTracked,
+          }),
+        { initialProps: { instanceData: createMockInstanceWithRelations(mockInstance) } }
+      );
+
+      const zoomToFitSpy = vi
+        .spyOn(result.current.scroller, "zoomToFit")
+        .mockImplementation(() => result.current.scroller);
+
+      // Refetched data for the same instance re-runs the effect before the fit is due.
+      rerender({ instanceData: createMockInstanceWithRelations(mockInstance) });
+
+      act(() => {
+        vi.advanceTimersByTime(100);
+      });
+
+      expect(zoomToFitSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should not center content after unmount", () => {
+      const { result, unmount } = renderHook(() =>
+        useComposerGraph({
+          editable,
+          serviceName,
+          instanceId: undefined,
+          serviceCatalog,
+          mainService,
+          relationsDictionary,
+          instanceData,
+          isInstanceDataReady,
+          onCanvasStateInitialized,
+          onInitialShapeInfoTracked,
+        })
+      );
+
+      const zoomToFitSpy = vi
+        .spyOn(result.current.scroller, "zoomToFit")
+        .mockImplementation(() => result.current.scroller);
+
+      unmount();
+
+      act(() => {
+        vi.advanceTimersByTime(100);
+      });
+
+      expect(zoomToFitSpy).not.toHaveBeenCalled();
+    });
+
+    it("should not center content on the old scroller after the paper and scroller are recreated", () => {
+      // Changing `editable` recreates the paper and scroller.
+      const { result, rerender } = renderHook(
+        ({ editable }) =>
+          useComposerGraph({
+            editable,
+            serviceName,
+            instanceId: undefined,
+            serviceCatalog,
+            mainService,
+            relationsDictionary,
+            instanceData,
+            isInstanceDataReady,
+            onCanvasStateInitialized,
+            onInitialShapeInfoTracked,
+          }),
+        { initialProps: { editable: true } }
+      );
+
+      const firstScroller = result.current.scroller;
+      const zoomToFitSpy = vi
+        .spyOn(firstScroller, "zoomToFit")
+        .mockImplementation(() => firstScroller);
+
+      rerender({ editable: false });
+
+      act(() => {
+        vi.advanceTimersByTime(100);
+      });
+
+      expect(zoomToFitSpy).not.toHaveBeenCalled();
+    });
+  });
+
   it("should dispose the paper and scroller on unmount, scroller before paper", () => {
     const { result, unmount } = renderHook(() =>
       useComposerGraph({
