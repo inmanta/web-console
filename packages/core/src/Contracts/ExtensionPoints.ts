@@ -1,4 +1,5 @@
 import { ComponentType } from "react";
+import { AuthContextInterface } from "@inmanta/web-console-core/Auth";
 import { OrchestratorProvider } from "./OrchestratorProvider";
 import { RouteManager } from "./RouteManager";
 
@@ -33,9 +34,13 @@ export interface LinkAction<Context> {
   getUrl: (routeManager: RouteManager, context: Context) => string;
 
   /**
-   * Hides the link when it returns false, e.g. when the license doesn't include the feature.
+   * Hides the link when it returns false, e.g. when the license doesn't include the feature, or
+   * when the way the user logged in doesn't fit the page.
    */
-  isVisible?: (orchestratorProvider: OrchestratorProvider) => boolean;
+  isVisible?: (
+    orchestratorProvider: OrchestratorProvider,
+    authHelper: AuthContextInterface
+  ) => boolean;
 
   /**
    * Disables the link when it returns true: it is still shown, but greyed out and not clickable.
@@ -49,12 +54,14 @@ export interface LinkAction<Context> {
  *
  * @param action - the link
  * @param orchestratorProvider - the features and license of the orchestrator
+ * @param authHelper - how the user is logged in
  * @returns true when the link is shown
  */
 export const isLinkActionVisible = (
   { isVisible }: Pick<LinkAction<never>, "isVisible">,
-  orchestratorProvider: OrchestratorProvider
-): boolean => isVisible === undefined || isVisible(orchestratorProvider);
+  orchestratorProvider: OrchestratorProvider,
+  authHelper: AuthContextInterface
+): boolean => isVisible === undefined || isVisible(orchestratorProvider, authHelper);
 
 /**
  * What the links of the "Add instance" button of the service inventory are about.
@@ -98,5 +105,31 @@ declare module "@inmanta/web-console-core/Contracts/FeatureModule" {
      * Links at the top of the Actions menu on the instance details page.
      */
     "instance.actions": LinkAction<InstanceLinkContext>;
+  }
+}
+
+/**
+ * What the links in the header menus are about: nothing in particular, they apply to the whole
+ * app.
+ */
+export type HeaderLinkContext = Record<string, never>;
+
+/**
+ * The extension points of the shell's header. They are declared in core, so a feature can add a
+ * link to the header without importing the shell.
+ */
+declare module "@inmanta/web-console-core/Contracts/FeatureModule" {
+  interface ExtensionPointRegistry {
+    /**
+     * Links in the user menu (the environment selector), between "Manage projects" and "Log out".
+     * The link opens its page without the current query string.
+     */
+    "header.user.actions": LinkAction<HeaderLinkContext>;
+
+    /**
+     * Links in the Developer Tools menu, before the REST API link. The link keeps only the
+     * selected environment from the current query string. The menu shows the label, not the icon.
+     */
+    "header.developerTools.actions": LinkAction<HeaderLinkContext>;
   }
 }

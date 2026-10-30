@@ -11,13 +11,12 @@ import {
 } from "@patternfly/react-core";
 import { CodeIcon } from "@patternfly/react-icons";
 import { words } from "@inmanta/web-console-core";
-import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { DependencyContext, useVisibleLinkActions } from "@inmanta/web-console-core/Dependency";
 import { SearchHelper } from "@inmanta/web-console-core/Routing";
 
 /**
- * A single icon-button dropdown in the header that groups the GraphiQL
- * explorer and the REST API / Swagger link together, keeping the header bar
- * uncluttered.
+ * A single icon-button dropdown in the header that groups the developer tools, keeping the header
+ * bar uncluttered: the links the features add (e.g. GraphiQL), then the REST API / Swagger link.
  */
 export const APIActionsButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,8 +26,8 @@ export const APIActionsButton: React.FC = () => {
 
   const handleSelect = () => setIsOpen(false);
 
-  const hasGraphiQL = routeManager.has("GraphiQL");
-  const graphiQLSearch = new SearchHelper().keepEnvOnly(search);
+  const developerActions = useVisibleLinkActions("header.developerTools.actions");
+  const envOnlySearch = new SearchHelper().keepEnvOnly(search);
 
   // A new tab can't send the Authorization header, so the orchestrator's /api/v2/docs endpoint
   // reads the token from the query (token_param="token"). Never add the token to external links.
@@ -61,18 +60,17 @@ export const APIActionsButton: React.FC = () => {
           )}
         >
           <DropdownList>
-            {hasGraphiQL && (
+            {developerActions.map(({ id, getLabel, getUrl, isDisabled }) => (
               <DropdownItem
+                key={id}
+                isDisabled={isDisabled?.({}) ?? false}
                 onClick={() =>
-                  navigate({
-                    pathname: routeManager.getUrl("GraphiQL", undefined),
-                    search: graphiQLSearch,
-                  })
+                  navigate({ pathname: getUrl(routeManager, {}), search: envOnlySearch })
                 }
               >
-                {words("dashboard.apiActions.graphiql")}
+                {getLabel()}
               </DropdownItem>
-            )}
+            ))}
             <DropdownItem to={restApiUrl} component="a" target="_blank" rel="noopener noreferrer">
               {words("dashboard.apiActions.restApi")}
             </DropdownItem>

@@ -27,10 +27,9 @@ import {
   PlusCircleIcon,
   SignOutAltIcon,
   UserCircleIcon,
-  UsersIcon,
 } from "@patternfly/react-icons";
 import { words } from "@inmanta/web-console-core";
-import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { DependencyContext, useVisibleLinkActions } from "@inmanta/web-console-core/Dependency";
 import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
 import { DarkmodeOption } from "@inmanta/web-console-ui/Components/DarkmodeOption";
 import { EnvironmentIcon } from "@inmanta/web-console-ui/Components/EnvironmentIcon";
@@ -69,12 +68,8 @@ export const EnvSelector: React.FC<Props> = ({
     setIsOpen(!isOpen);
   };
 
-  // Only show the user management link for a database session (database auth, or the
-  // OIDC/JWT local login fallback). Other auth methods have external user and role management.
-  const showUserManagement =
-    routeManager.has("UserManagement") &&
-    !authHelper.isDisabled() &&
-    authHelper.isDatabaseSession();
+  // Links the features add to this menu, e.g. user management.
+  const userActions = useVisibleLinkActions("header.user.actions");
   const showLogout = !authHelper.isDisabled();
 
   const filteredItems = searchText
@@ -185,14 +180,16 @@ export const EnvSelector: React.FC<Props> = ({
           >
             {words("home.environmentSwitcher.manageProjects.button")}
           </MenuItem>
-          {showUserManagement && (
+          {userActions.map(({ id, getLabel, icon: Icon, getUrl, isDisabled }) => (
             <MenuItem
-              onClick={() => navigate(routeManager.getUrl("UserManagement", undefined))}
-              icon={<UsersIcon />}
+              key={id}
+              onClick={() => navigate(getUrl(routeManager, {}))}
+              icon={<Icon />}
+              isDisabled={isDisabled?.({}) ?? false}
             >
-              {words("userManagement.title")}
+              {getLabel()}
             </MenuItem>
-          )}
+          ))}
           {showLogout && (
             <MenuItem onClick={() => authHelper.logout()} icon={<SignOutAltIcon />}>
               {words("dashboard.logout")}
