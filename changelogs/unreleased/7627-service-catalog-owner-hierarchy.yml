@@ -1,0 +1,6 @@
+description: The service catalog nests owned services under their owner, collapsed by default.
+issue-nr: 7627
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

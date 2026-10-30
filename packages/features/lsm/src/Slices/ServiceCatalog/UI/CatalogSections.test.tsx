@@ -9,7 +9,18 @@ import { MockedDependencyProvider, Service } from "@inmanta/web-console-test-uti
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { CatalogSections } from "./CatalogSections";
-import { firewall, linuxVm, loadBalancer, router, vpn } from "./Mock";
+import {
+  aviLoadBalancerCluster,
+  aviVirtualIp,
+  deployment,
+  deploymentTree,
+  dnsRecord,
+  firewall,
+  linuxVm,
+  loadBalancer,
+  router,
+  vpn,
+} from "./Mock";
 import { ownerServiceFallbackIconName, serviceFallbackIconName } from "./types";
 
 const axe = configureAxe({
@@ -45,6 +56,9 @@ test("GIVEN CatalogSections WHEN no service has a group THEN one table without s
   expect(within(table).getByTestId(Service.a.name + "-item")).toBeInTheDocument();
   expect(within(table).getByTestId(Service.b.name + "-item")).toBeInTheDocument();
   expect(screen.queryByRole("heading")).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole("button", { name: words("catalog.ownedServices.expandAll") })
+  ).not.toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -88,6 +102,60 @@ test("GIVEN CatalogSections WHEN services have groups THEN each group gets a hea
 
     expect(results).toHaveNoViolations();
   });
+});
+
+test("GIVEN CatalogSections WHEN services own other services THEN they are nested under their owner and collapsed", async () => {
+  render(Component([linuxVm, ...deploymentTree]));
+
+  const table = screen.getByRole("treegrid", { name: words("catalog.title") });
+  const getVisibleServiceNames = () =>
+    within(table)
+      .getAllByRole("row")
+      .map((row) => row.id);
+
+  expect(getVisibleServiceNames()).toEqual([deployment.name, linuxVm.name]);
+  expect(
+    within(screen.getByTestId(deployment.name + "-item")).getByText(
+      words("catalog.ownedServices.count")(deployment.owned_entities.length)
+    )
+  ).toBeVisible();
+
+  await userEvent.click(
+    screen.getByRole("button", {
+      name: words("catalog.ownedServices.expand")(String(deployment.entity_annotations?.web_title)),
+    })
+  );
+
+  expect(getVisibleServiceNames()).toEqual([
+    deployment.name,
+    dnsRecord.name,
+    aviLoadBalancerCluster.name,
+    linuxVm.name,
+  ]);
+  expect(screen.getByTestId(dnsRecord.name + "-item")).toHaveAttribute("aria-level", "2");
+
+  await act(async () => {
+    const results = await axe(document.body);
+
+    expect(results).toHaveNoViolations();
+  });
+});
+
+test("GIVEN CatalogSections WHEN Expand all and Collapse all are clicked THEN every level expands and collapses", async () => {
+  render(Component(deploymentTree));
+
+  await userEvent.click(
+    screen.getByRole("button", { name: words("catalog.ownedServices.expandAll") })
+  );
+
+  expect(screen.getByTestId(aviVirtualIp.name + "-item")).toHaveAttribute("aria-level", "3");
+  expect(screen.getAllByRole("row")).toHaveLength(deploymentTree.length);
+
+  await userEvent.click(
+    screen.getByRole("button", { name: words("catalog.ownedServices.collapseAll") })
+  );
+
+  expect(screen.getAllByRole("row").map((row) => row.id)).toEqual([deployment.name]);
 });
 
 test("GIVEN CatalogSections WHEN a service has entity annotations THEN its title, raw name and description are shown", async () => {
