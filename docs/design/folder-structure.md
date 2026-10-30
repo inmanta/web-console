@@ -10,7 +10,7 @@ If a domain type or query is used by multiple slices, it should either be moved 
 So a slice is not necessarily a single page (it might be a smaller or larger unit as well).
 A slice also doesn't necessarily has to have all of the { Core, Data, UI} folders.
 
-The code is moving into packages, one layer at a time (composition architecture, #7451). A package is imported by its package name, e.g. `@inmanta/web-console-core/Queries/Slices/Resource`.
+The code lives in packages (composition architecture, #7451). A package is imported by its package name, e.g. `@inmanta/web-console-core/Queries/Slices/Resource`.
 
 ```
 packages/
@@ -33,7 +33,7 @@ packages/
     Auth/ - The auth providers
     Slices/ - The shell's own pages: login, not found, notifications, status
   test-utils/src/ - @inmanta/web-console-test-utils, common test data, mock implementations, testing utilities, test setup
-  features/ - One folder per feature that has moved, imported as @inmanta/web-console-feature-<name>
+  features/ - One folder per feature, imported as @inmanta/web-console-feature-<name>
     composer/src/ - The Instance Composer, the only code that imports JointJS (@joint/*)
       index.ts - composerFeature, its FeatureModule
       Components/Composer/ - The canvas, its shapes, sidebars and providers
@@ -53,22 +53,16 @@ packages/
       index.ts - orchestrationEngineFeature, its FeatureModule
       Components/ - The components only the orchestration engine uses, e.g. DiffWizard, Timeline
       Slices/ - The orchestration engine pages
+    resource-manager/src/ - The Resource Manager: resources and their details, discovered resources, agents, facts
+      index.ts - resourceManagerFeature, its FeatureModule
+      Components/ - The components only the resource manager uses: AddableSelectInput, CodeText, RequiresTable
+      Slices/ - The resource manager pages
     user-management/src/ - The user management page: users, their passwords and roles
       index.ts - userManagementFeature, its FeatureModule
       Slices/ - The user management page
 apps/
   web-console/src/ - The app: its composition (app.ts: createApp with the features it ships and the shell options), its entry (index.tsx), Monaco setup, config.js and app-level tests
-src/
-  Features/ - The FeatureModule of each feature that hasn't moved to packages/features yet
-  UI/
-    Components/ - Components that only one feature uses, waiting to move there
-  Slices/ (repeat the 3 layers for each slice)
-    <SliceName>
-        Core (slice specific)
-            any types or contracts
-        Data (slice specific)
-            transformations
-            implementations
-        UI (slice specific)
-            Components
+src/ - Only the global type declarations (typings.d.ts, vite-env.d.ts)
 ```
+
+Each slice (a folder in a package's `Slices/`) uses the same layers: `Core/` for its types and contracts, `Data/` for transformations and implementations, `UI/` for its components.

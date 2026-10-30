@@ -239,6 +239,10 @@ export default defineConfig({
         replacement: resolve(__dirname, "./packages/features/orchestration-engine/src"),
       },
       {
+        find: "@inmanta/web-console-feature-resource-manager",
+        replacement: resolve(__dirname, "./packages/features/resource-manager/src"),
+      },
+      {
         find: "@inmanta/web-console-feature-user-management",
         replacement: resolve(__dirname, "./packages/features/user-management/src"),
       },
