@@ -23,7 +23,6 @@ interface Props {
  * @returns {React.FC<Props>} The service catalog sections.
  */
 export const CatalogSections: React.FC<Props> = ({ serviceModels }) => {
-  console.log("serviceModels", serviceModels);
   const sections = useMemo(() => createCatalogSections(serviceModels), [serviceModels]);
   const hasGroups = sections.some((section) => section.kind === "Group");
   const hasIconTile = sections.some((section) =>
