@@ -125,7 +125,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Add a new instance via resource-states service
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#resource-states").contains("Show inventory").click();
+      cy.get("#resource-states").contains("Inventory").click();
       cy.get("#add-instance-button").click();
       cy.get("#name").type("test");
       cy.get("button").contains("Confirm").click();
@@ -289,7 +289,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Add a resource-states instance with scale=3 to get enough resources for pagination
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#resource-states").contains("Show inventory").click();
+      cy.get("#resource-states").contains("Inventory").click();
       cy.get("#add-instance-button").click();
       cy.get("#name").type("pagination-test");
       cy.get("#scale").clear().type("3");
@@ -504,7 +504,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Delete the "test" resource-states instance to orphan its resources
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#resource-states").contains("Show inventory").click();
+      cy.get("#resource-states").contains("Inventory").click();
       cy.get('[aria-label="IdentityCell-test"]')
         .closest('[aria-label="InstanceRow-Intro"]')
         .find('[aria-label="row actions toggle"]')

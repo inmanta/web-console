@@ -91,31 +91,24 @@ export const CatalogActions: React.FC = () => {
   };
 
   return (
-    <>
-      <Flex
-        direction={{ default: "row" }}
-        fullWidth={{ default: "fullWidth" }}
-        justifyContent={{ default: "justifyContentFlexEnd" }}
-        rowGap={{ default: "rowGap" }}
-      >
-        <FlexItem>
-          <Tooltip content={words("catalog.API.tooltip")} entryDelay={500}>
-            <Button
-              variant="plain"
-              aria-label="API-Documentation"
-              icon={<FileCodeIcon />}
-              component="a"
-              href={getUrl(lsmApiLink)}
-              target="_blank"
-            ></Button>
-          </Tooltip>
-        </FlexItem>
-        <FlexItem>
-          <Tooltip content={words("catalog.update.tooltip")}>
-            <Button onClick={openModal}>{words("catalog.button.update")}</Button>
-          </Tooltip>
-        </FlexItem>
-      </Flex>
-    </>
+    <Flex rowGap={{ default: "rowGap" }}>
+      <FlexItem>
+        <Tooltip content={words("catalog.API.tooltip")} entryDelay={500}>
+          <Button
+            variant="plain"
+            aria-label="API-Documentation"
+            icon={<FileCodeIcon />}
+            component="a"
+            href={getUrl(lsmApiLink)}
+            target="_blank"
+          ></Button>
+        </Tooltip>
+      </FlexItem>
+      <FlexItem>
+        <Tooltip content={words("catalog.update.tooltip")}>
+          <Button onClick={openModal}>{words("catalog.button.update")}</Button>
+        </Tooltip>
+      </FlexItem>
+    </Flex>
   );
 };
