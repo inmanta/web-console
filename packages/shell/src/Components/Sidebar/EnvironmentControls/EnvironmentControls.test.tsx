@@ -9,7 +9,7 @@ import { QueryControlProvider } from "@inmanta/web-console-core/Queries/Helpers"
 import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
-import { ModalProvider } from "../../ModalProvider";
+import { ModalProvider } from "@inmanta/web-console-ui/Components/ModalProvider";
 import { EnvironmentControls } from "./EnvironmentControls";
 
 function setup() {

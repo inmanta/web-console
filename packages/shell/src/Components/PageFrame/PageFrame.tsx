@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Page } from "@patternfly/react-core";
 import { EnvSelectorOpenContext } from "@inmanta/web-console-core/Dependency/EnvSelectorOpenContext";
-import { BlockingModal } from "@inmanta/web-console-shell/Components/BlockingModal";
 import { ExpertBanner } from "@inmanta/web-console-shell/Components/ExpertBanner";
 import { Header } from "@inmanta/web-console-shell/Components/Header";
 import { LicenseBanner } from "@inmanta/web-console-shell/Components/LicenseBanner";
 import { PageBreadcrumbs } from "@inmanta/web-console-shell/Components/PageBreadcrumbs";
 import { Sidebar } from "@inmanta/web-console-shell/Components/Sidebar";
 import { useDrawer } from "@inmanta/web-console-shell/Slices/Notification/UI/Drawer";
+import { BlockingModal } from "@inmanta/web-console-ui/Components/BlockingModal";
 
 interface Props {
   environmentId?: string;

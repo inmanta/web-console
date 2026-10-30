@@ -10,13 +10,13 @@ import { PrimaryArchiveHelper } from "@inmanta/web-console-core/Common";
 import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
 import { EnvironmentPreview } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
-import { AppAlertProvider } from "@inmanta/web-console-shell/Components/AppAlertProvider";
 import { EnvironmentDetails } from "@inmanta/web-console-test-utils/Data";
 import {
   MockEnvironmentHandler,
   MockOrchestratorProvider,
   MockFileManager,
 } from "@inmanta/web-console-test-utils/Mock";
+import { AppAlertProvider } from "@inmanta/web-console-ui/Components/AppAlertProvider";
 import { UrlManagerImpl } from "@inmanta/web-console-ui/Utils";
 
 interface Props {
