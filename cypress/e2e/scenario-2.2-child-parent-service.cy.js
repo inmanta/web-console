@@ -14,7 +14,7 @@ if (isIso) {
       cy.visit("/console/");
       selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#parent-service").contains("Show inventory").click();
+      cy.get("#parent-service").contains("Inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
       // Add an instance and fill form
       cy.get("#add-instance-button").click();
@@ -30,7 +30,7 @@ if (isIso) {
       cy.get('[aria-label="History-Row"]', { timeout: 90000 }).should("contain", "up");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#parent-service").contains("Show inventory").click();
+      cy.get("#parent-service").contains("Inventory").click();
 
       // Should show the ServiceInventory-Success Component.
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
@@ -40,8 +40,8 @@ if (isIso) {
       // click on service catalog in breadcrumb
       cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
 
-      // click show inventory on child-service
-      cy.get("#child-service").contains("Show inventory").click();
+      // click Inventory on child-service
+      cy.get("#child-service").contains("Inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
       // Add an instance and fill form
       cy.get("#add-instance-button").click();
@@ -56,7 +56,7 @@ if (isIso) {
       }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#child-service").contains("Show inventory").click();
+      cy.get("#child-service").contains("Inventory").click();
 
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
 
@@ -68,7 +68,7 @@ if (isIso) {
       selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#parent-service").contains("Show inventory").click();
+      cy.get("#parent-service").contains("Inventory").click();
       cy.get('[data-label="State"]').eq(0, { timeout: 90000 }).should("have.text", "up");
 
       // try delete item (Should not be possible)
@@ -81,7 +81,7 @@ if (isIso) {
       // click on service catalog in breadcrumb
       cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
 
-      cy.get("#child-service").contains("Show inventory").click();
+      cy.get("#child-service").contains("Inventory").click();
       cy.get('[data-label="State"]').eq(0, { timeout: 90000 }).should("have.text", "up");
       // try delete item (Should be possible)
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();

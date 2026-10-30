@@ -84,7 +84,7 @@ if (isIso) {
       }).should("to.be.visible");
 
       // Step 3: Open l3out inventory and start composer flow.
-      cy.get("#l3out").contains("Show inventory").click();
+      cy.get("#l3out").contains("Inventory").click();
 
       cy.get('[aria-label="AddInstanceToggle"]').click();
       cy.get("#add-instance-composer-button").click();
@@ -239,7 +239,7 @@ if (isIso) {
       cy.visit("/console/");
       selectEnvironment(PXSDC_ENV_NAME);
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#l3out").contains("Show inventory").click();
+      cy.get("#l3out").contains("Inventory").click();
 
       cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 60000 }).should("contain", "pxs-l3out");
 
@@ -339,15 +339,9 @@ if (isIso) {
         .should("have.length", 1)
         .and("have.text", "1");
 
-      cy.get('#l3out [aria-label="Number of instances by label"] .pf-v6-c-label').should(
-        "not.exist"
-      );
-      cy.get('#network [aria-label="Number of instances by label"] .pf-v6-c-label').should(
-        "not.exist"
-      );
-      cy.get('#virtualmachine [aria-label="Number of instances by label"] .pf-v6-c-label').should(
-        "not.exist"
-      );
+      cy.get("#l3out").should("contain", "No instances");
+      cy.get("#network").should("contain", "No instances");
+      cy.get("#virtualmachine").should("contain", "No instances");
     });
 
     it("Should be able to add an instance and connect it to an existing instance", () => {
@@ -355,7 +349,7 @@ if (isIso) {
       cy.visit("/console/");
       selectEnvironment(PXSDC_ENV_NAME);
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#project").contains("Show inventory").click();
+      cy.get("#project").contains("Inventory").click();
 
       cy.get('[aria-label="ServiceInventory-Success"]', { timeout: 60000 }).should("be.visible");
       cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 60000 }).should(
@@ -501,7 +495,7 @@ if (isIso) {
       cy.visit("/console/");
       selectEnvironment(PXSDC_ENV_NAME);
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#project").contains("Show inventory").click();
+      cy.get("#project").contains("Inventory").click();
 
       cy.get('[aria-label="ServiceInventory-Success"]').should("be.visible");
       cy.get('[aria-label="InstanceRow-Intro"]').first().should("contain", "pxs-project");

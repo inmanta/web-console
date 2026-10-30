@@ -156,7 +156,7 @@ describe("1.1 Dashboard", () => {
       // resource-states deterministically emits 26 resources spread across every
       // compliance/deploy-result/blocked combination, so every card below is guaranteed to move
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#resource-states").contains("Show inventory").click();
+      cy.get("#resource-states").contains("Inventory").click();
       cy.get("#add-instance-button").click();
       cy.get("#name").type("dashboard-live-check");
       cy.get("button").contains("Confirm").click();
@@ -205,7 +205,7 @@ describe("1.1 Dashboard", () => {
 
       // Clean up: delete the instance so it doesn't leak into other specs
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#resource-states").contains("Show inventory").click();
+      cy.get("#resource-states").contains("Inventory").click();
       cy.get('[aria-label="IdentityCell-dashboard-live-check"]')
         .closest('[aria-label="InstanceRow-Intro"]')
         .as("liveCheckRow");

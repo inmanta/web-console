@@ -35,7 +35,7 @@ const openAddInstanceForm = () => {
   cy.visit("/console/");
   selectEnvironment();
   cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-  cy.get(`#${SERVICE}`, { timeout: 60000 }).contains("Show inventory").click();
+  cy.get(`#${SERVICE}`, { timeout: 60000 }).contains("Inventory").click();
   cy.get("#add-instance-button", { timeout: 60000 }).click();
 };
 

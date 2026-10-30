@@ -6,7 +6,7 @@ import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
 import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
-import { CatalogDataList } from "./CatalogDataList";
+import { CatalogSections } from "./CatalogSections";
 
 export const Page: React.FC = () => {
   const { data, isError, error, isSuccess, refetch } = useGetServiceModels().useContinuous();
@@ -22,25 +22,16 @@ export const Page: React.FC = () => {
   if (isSuccess) {
     component =
       data.length <= 0 ? (
-        <>
-          <EmptyView aria-label="ServiceCatalog-Empty" message={words("catalog.empty.message")} />
-        </>
+        <EmptyView aria-label="ServiceCatalog-Empty" message={words("catalog.empty.message")} />
       ) : (
         <div aria-label="ServiceCatalog-Success">
-          <CatalogDataList services={data} />
+          <CatalogSections serviceModels={data} />
         </div>
       );
   }
 
   return (
-    <PageContainer
-      pageTitle={
-        <>
-          {words("catalog.title")}
-          <CatalogActions />
-        </>
-      }
-    >
+    <PageContainer pageTitle={words("catalog.title")} actions={<CatalogActions />}>
       {component}
     </PageContainer>
   );
