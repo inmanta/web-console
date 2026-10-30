@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useNavigate } from "react-router";
 import {
   Card,
@@ -14,7 +14,7 @@ import {
 import { CubeIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { isObject, Resource, words } from "@inmanta/web-console-core";
-import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useUrlIfRegistered } from "@inmanta/web-console-core/Dependency";
 import { useGetResources } from "@inmanta/web-console-core/Queries/Slices/Resource";
 import { SearchHelper } from "@inmanta/web-console-core/Routing";
 import { MINIMAL_PAGE } from "../../EnvironmentHealthRow";
@@ -67,18 +67,20 @@ const buildFilteredResourcesUrl = (
  * Clicking a bar segment navigates to the Resources page, pre-filtered by that status.
  */
 export const ResourcesCard: React.FC = () => {
-  const { routeManager } = useContext(DependencyContext);
   const navigate = useNavigate();
-  const resourcesUrl = routeManager.useUrl("Resources", undefined);
+  // The resources page belongs to the resource manager; without it the bar isn't clickable.
+  const resourcesUrl = useUrlIfRegistered("Resources", undefined);
 
   const { data } = useGetResources({ ...MINIMAL_PAGE, filter: {}, sort: [] }).useContinuous();
   const summary = data?.resourceSummary;
   const totalCount = summary?.totalCount ?? 0;
   const resourcesHealth = summary ? deriveResourcesHealth(summary) : undefined;
 
-  const onSegmentClick = (status: Resource.CompoundStateKey): void => {
-    navigate(buildFilteredResourcesUrl(resourcesUrl, status));
-  };
+  const onSegmentClick = resourcesUrl
+    ? (status: Resource.CompoundStateKey): void => {
+        navigate(buildFilteredResourcesUrl(resourcesUrl, status));
+      }
+    : undefined;
 
   const statTiles: { label: string; value: number; tone: keyof typeof STAT_TONE_COLOR }[] = [
     {

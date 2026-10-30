@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
 import { words } from "@inmanta/web-console-core";
-import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { DependencyContext, useUrlIfRegistered } from "@inmanta/web-console-core/Dependency";
 import { EnvSelectorOpenContext } from "@inmanta/web-console-core/Dependency/EnvSelectorOpenContext";
 import { PageSize } from "@inmanta/web-console-core/Domain";
 import { AgentStatus } from "@inmanta/web-console-core/Domain/Agent";
@@ -38,17 +38,18 @@ export const MINIMAL_PAGE = {
  * existing page.
  */
 export const EnvironmentHealthRow: React.FC = () => {
-  const { routeManager, environmentHandler } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const { setIsOpen: setEnvSelectorOpen } = useContext(EnvSelectorOpenContext);
   const navigate = useNavigate();
 
   const envName = environmentHandler.useName();
   const selectedEnvironmentId = environmentHandler.useId();
 
-  const catalogUrl = routeManager.useUrl("Catalog", undefined);
-  const resourcesUrl = routeManager.useUrl("Resources", undefined);
-  const compileReportsUrl = routeManager.useUrl("CompileReports", undefined);
-  const agentsUrl = routeManager.useUrl("Agents", undefined);
+  // Each column opens a page of another feature; without that feature it isn't clickable.
+  const catalogUrl = useUrlIfRegistered("Catalog", undefined);
+  const resourcesUrl = useUrlIfRegistered("Resources", undefined);
+  const compileReportsUrl = useUrlIfRegistered("CompileReports", undefined);
+  const agentsUrl = useUrlIfRegistered("Agents", undefined);
 
   const { data: serverStatus } = useGetServerStatus().useContinuous();
   const { data: serviceModels } = useGetServiceModels().useContinuous();
@@ -126,28 +127,28 @@ export const EnvironmentHealthRow: React.FC = () => {
             title={words("dashboard.environmentHealth.services")}
             status={servicesHealth?.status ?? "healthy"}
             statLines={servicesHealth?.statLines ?? ["—"]}
-            onClick={() => navigate(catalogUrl)}
+            onClick={catalogUrl ? () => navigate(catalogUrl) : undefined}
           />,
           <HealthColumn
             key="resources"
             title={words("resources")}
             status={resourcesHealth?.status ?? "healthy"}
             statLines={resourcesHealth?.statLines ?? ["—"]}
-            onClick={() => navigate(resourcesUrl)}
+            onClick={resourcesUrl ? () => navigate(resourcesUrl) : undefined}
           />,
           <HealthColumn
             key="compiles"
             title={words("dashboard.environmentHealth.compiles")}
             status={compilesHealth.status}
             statLines={compilesHealth.statLines}
-            onClick={() => navigate(compileReportsUrl)}
+            onClick={compileReportsUrl ? () => navigate(compileReportsUrl) : undefined}
           />,
           <HealthColumn
             key="agents"
             title={words("dashboard.environmentHealth.agents")}
             status={agentsHealth?.status ?? "healthy"}
             statLines={agentsHealth?.statLines ?? ["—"]}
-            onClick={() => navigate(agentsUrl)}
+            onClick={agentsUrl ? () => navigate(agentsUrl) : undefined}
           />,
         ]}
       />

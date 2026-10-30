@@ -12,7 +12,14 @@ import { LatestCompileReportsPanel } from "./LatestCompileReportsPanel";
 
 const server = setupServer();
 
-function setup() {
+// The compile report pages belong to the orchestration engine.
+const linkedRoutes = [
+  ...getFeatureRoutes([environmentFeature]),
+  stubRoute("CompileReports"),
+  stubRoute("CompileDetails"),
+];
+
+function setup(routes = linkedRoutes) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -20,14 +27,7 @@ function setup() {
   return (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-        <MockedDependencyProvider
-          features={[environmentFeature]}
-          routes={[
-            ...getFeatureRoutes([environmentFeature]),
-            stubRoute("CompileReports"),
-            stubRoute("CompileDetails"),
-          ]}
-        >
+        <MockedDependencyProvider features={[environmentFeature]} routes={routes}>
           <LatestCompileReportsPanel />
         </MockedDependencyProvider>
       </TestMemoryRouter>
@@ -113,5 +113,14 @@ describe("LatestCompileReportsPanel", () => {
       "data-tone",
       "warning"
     );
+  });
+
+  it("shows the compile reports without links when the app has no compile report pages", async () => {
+    respondWith(Mock.response.data.slice(0, 3));
+
+    render(setup(getFeatureRoutes([environmentFeature])));
+
+    expect(await screen.findAllByText("message")).toHaveLength(3);
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 });

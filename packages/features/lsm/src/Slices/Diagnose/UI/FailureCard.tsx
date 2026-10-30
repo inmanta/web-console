@@ -26,26 +26,34 @@ interface Props {
 export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
   const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
+  // The links go to pages of the resource manager and the orchestration engine, so each is only
+  // there when the app has that feature.
+  const hasResourceLink = routeManager.has("ResourceDetails");
+  const hasModelVersionLink = routeManager.has("DesiredStateDetails");
   const dropdownItems = (
     <DropdownList>
-      <DropdownItem key="resourceDetailsLink">
-        <Link
-          pathname={routeManager.getUrl("ResourceDetails", {
-            resourceId: getResourceIdFromResourceVersionId(resourceId),
-          })}
-        >
-          {words("diagnose.links.resourceDetails")}
-        </Link>
-      </DropdownItem>
-      <DropdownItem key="modelVersionLink">
-        <Link
-          pathname={routeManager.getUrl("DesiredStateDetails", {
-            version: failure.model_version.toString(),
-          })}
-        >
-          {words("diagnose.links.modelVersionDetails")}
-        </Link>
-      </DropdownItem>
+      {hasResourceLink && (
+        <DropdownItem key="resourceDetailsLink">
+          <Link
+            pathname={routeManager.getUrl("ResourceDetails", {
+              resourceId: getResourceIdFromResourceVersionId(resourceId),
+            })}
+          >
+            {words("diagnose.links.resourceDetails")}
+          </Link>
+        </DropdownItem>
+      )}
+      {hasModelVersionLink && (
+        <DropdownItem key="modelVersionLink">
+          <Link
+            pathname={routeManager.getUrl("DesiredStateDetails", {
+              version: failure.model_version.toString(),
+            })}
+          >
+            {words("diagnose.links.modelVersionDetails")}
+          </Link>
+        </DropdownItem>
+      )}
     </DropdownList>
   );
 
@@ -57,7 +65,7 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
     <Card>
       <CardHeader
         actions={{
-          actions: (
+          actions: (hasResourceLink || hasModelVersionLink) && (
             <>
               <Dropdown
                 onSelect={() => setIsOpen((value) => !value)}

@@ -58,7 +58,8 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
               <DescriptionListDescription>{state.reason}</DescriptionListDescription>
             </DescriptionListGroup>
           )}
-          {state.validation_compile_id && (
+          {/* The compile report is a page of the orchestration engine, only there when the app has it. */}
+          {state.validation_compile_id && routeManager.has("CompileDetails") && (
             <DescriptionListGroup>
               <DescriptionListDescription>
                 <NoWrapLink

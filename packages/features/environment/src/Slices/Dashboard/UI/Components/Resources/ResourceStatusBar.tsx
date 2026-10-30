@@ -18,7 +18,7 @@ interface Props {
   title: string;
   counts: Resource.CompoundStateSummary[keyof Resource.CompoundStateSummary] | undefined;
   totalCount: number;
-  onSegmentClick: (status: Resource.CompoundStateKey) => void;
+  onSegmentClick?: (status: Resource.CompoundStateKey) => void;
 }
 
 /**

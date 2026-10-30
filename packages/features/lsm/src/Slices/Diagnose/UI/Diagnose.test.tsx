@@ -19,19 +19,19 @@ const axe = configureAxe({
   },
 });
 
-function setup() {
+// The pages the cards link to, which belong to the orchestration engine and the resource manager.
+const linkedRoutes = [
+  ...getFeatureRoutes([lsmFeature]),
+  stubRoute("ResourceDetails"),
+  stubRoute("CompileDetails"),
+  stubRoute("DesiredStateDetails"),
+];
+
+function setup(routes = linkedRoutes) {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <MockedDependencyProvider
-          features={[lsmFeature]}
-          routes={[
-            ...getFeatureRoutes([lsmFeature]),
-            stubRoute("ResourceDetails"),
-            stubRoute("CompileDetails"),
-            stubRoute("DesiredStateDetails"),
-          ]}
-        >
+        <MockedDependencyProvider features={[lsmFeature]} routes={routes}>
           <Diagnose
             serviceName={Service.a.name}
             lookBehind="1"
@@ -129,11 +129,33 @@ describe("Diagnose", () => {
     render(component);
 
     expect(await screen.findByRole("generic", { name: "Diagnostics-Success" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "actions-dropdown" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "repair-deploy-dropdown" })).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("Diagnose View shows the failure and the rejection without the features they link to", async () => {
+    server.use(
+      http.get(
+        "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose",
+        () => {
+          return HttpResponse.json({ data: failureAndRejection });
+        }
+      )
+    );
+    const { component } = setup(getFeatureRoutes([lsmFeature]));
+
+    render(component);
+
+    expect(await screen.findByRole("generic", { name: "Diagnostics-Success" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "actions-dropdown" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "repair-deploy-dropdown" })
+    ).not.toBeInTheDocument();
   });
 });

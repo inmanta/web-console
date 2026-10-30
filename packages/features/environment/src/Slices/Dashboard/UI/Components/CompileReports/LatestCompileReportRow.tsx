@@ -51,7 +51,10 @@ export const LatestCompileReportRow: React.FC<Props> = ({ report }) => {
   const status = getStatusFromReport(report);
   const isInProgress = status === CompileStatus.inprogress;
   const isRunning = isInProgress || status === CompileStatus.queued;
-  const detailsUrl = routeManager.getUrl("CompileDetails", { id: report.id });
+  // The compile report is a page of the orchestration engine, only linked when the app has it.
+  const detailsUrl = routeManager.has("CompileDetails")
+    ? routeManager.getUrl("CompileDetails", { id: report.id })
+    : undefined;
   const trigger = report.metadata["type"] as string | undefined;
 
   return (
@@ -127,16 +130,18 @@ export const LatestCompileReportRow: React.FC<Props> = ({ report }) => {
             </FlexItem>
           </>
         )}
-        <FlexItem>
-          <Link to={{ pathname: detailsUrl, search: location.search }}>
-            <Button variant="link" isInline>
-              {isRunning
-                ? words("dashboard.compileReports.viewProgress")
-                : words("dashboard.compileReports.viewReport")}{" "}
-              &gt;
-            </Button>
-          </Link>
-        </FlexItem>
+        {detailsUrl && (
+          <FlexItem>
+            <Link to={{ pathname: detailsUrl, search: location.search }}>
+              <Button variant="link" isInline>
+                {isRunning
+                  ? words("dashboard.compileReports.viewProgress")
+                  : words("dashboard.compileReports.viewReport")}{" "}
+                &gt;
+              </Button>
+            </Link>
+          </FlexItem>
+        )}
       </Flex>
     </Flex>
   );

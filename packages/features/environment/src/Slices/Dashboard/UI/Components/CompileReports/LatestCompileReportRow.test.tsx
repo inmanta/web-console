@@ -27,10 +27,10 @@ function makeReport(overrides: Partial<CompileReport> = {}): CompileReport {
   };
 }
 
-function renderRow(report: CompileReport) {
+function renderRow(report: CompileReport, routes = routeManager) {
   return render(
     <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-      <DependencyProvider dependencies={{ routeManager }}>
+      <DependencyProvider dependencies={{ routeManager: routes }}>
         <LatestCompileReportRow report={report} />
       </DependencyProvider>
     </TestMemoryRouter>
@@ -97,5 +97,12 @@ describe("LatestCompileReportRow", () => {
 
     expect(screen.getByText("Recompile model on schedule")).toBeVisible();
     expect(screen.queryByText(/ -$/)).not.toBeInTheDocument();
+  });
+
+  it("shows the compile without a link when the app has no compile report page", () => {
+    renderRow(makeReport(), PrimaryRouteManager("", []));
+
+    expect(screen.getByText("Recompile trigger through API call")).toBeVisible();
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 });

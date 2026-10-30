@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router";
 import {
   Button,
@@ -13,7 +13,7 @@ import {
 } from "@patternfly/react-core";
 import { CodeIcon } from "@patternfly/react-icons";
 import { words } from "@inmanta/web-console-core";
-import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useUrlIfRegistered } from "@inmanta/web-console-core/Dependency";
 import { deriveCompilesHealth } from "../../compilesHealth";
 import { useLatestCompileReports } from "../../useLatestCompileReports";
 import { HEALTH_TONE, IconBadge } from "../IconBadge";
@@ -23,8 +23,8 @@ import { LatestCompileReportRow } from "./LatestCompileReportRow";
  * Latest Compile Reports panel: title + "View all" link, and the most recent compile reports.
  */
 export const LatestCompileReportsPanel: React.FC = () => {
-  const { routeManager } = useContext(DependencyContext);
-  const compileReportsUrl = routeManager.useUrl("CompileReports", undefined);
+  // The compile reports page belongs to the orchestration engine, so "View all" needs it.
+  const compileReportsUrl = useUrlIfRegistered("CompileReports", undefined);
 
   const { data } = useLatestCompileReports();
 
@@ -38,7 +38,7 @@ export const LatestCompileReportsPanel: React.FC = () => {
           // Default false applies a negative margin calibrated for a plain-text CardTitle;
           // ours is taller (icon + text), so that offset would misalign the action against it.
           hasNoOffset: true,
-          actions: (
+          actions: compileReportsUrl && (
             <Link to={compileReportsUrl}>
               <Button variant="link" isInline>
                 {words("dashboard.compileReports.viewAll")}

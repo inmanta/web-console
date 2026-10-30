@@ -174,6 +174,24 @@ describe("Order Details", () => {
     });
   });
 
+  test("OrderDetailsView leaves out the compile report link without the orchestration engine", async () => {
+    server.use(
+      http.get("/lsm/v2/order/1234", () => {
+        return HttpResponse.json({ data: responsePartialOrder });
+      })
+    );
+
+    const { component } = baseSetup(DetailsPage, [lsmFeature]);
+
+    render(component);
+
+    await userEvent.click((await screen.findAllByLabelText("Toggle-DetailsRow"))[0]);
+    const rowDetails = await screen.findByLabelText("Expanded-Details");
+
+    expect(rowDetails).toHaveTextContent(/Failure Type/);
+    expect(rowDetails).not.toHaveTextContent(/Show Compile Report/);
+  });
+
   test("OrderDetailsView shows view for a in progress order", async () => {
     server.use(
       http.get("/lsm/v2/order/1234", () => {
