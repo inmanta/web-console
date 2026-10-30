@@ -5,7 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getFeatureRoutes } from "@inmanta/web-console-core";
+import { getFeatureRoutes, words } from "@inmanta/web-console-core";
 import { lsmFeature } from "@inmanta/web-console-feature-lsm";
 import { stubRoute } from "@inmanta/web-console-test-utils";
 import { baseSetup } from "@inmanta/web-console-test-utils/Utils/base-setup";
@@ -174,6 +174,24 @@ describe("Order Details", () => {
     });
   });
 
+  test("OrderDetailsView leaves out the compile report link without the orchestration engine", async () => {
+    server.use(
+      http.get("/lsm/v2/order/1234", () => {
+        return HttpResponse.json({ data: responsePartialOrder });
+      })
+    );
+
+    const { component } = baseSetup(DetailsPage, [lsmFeature]);
+
+    render(component);
+
+    await userEvent.click((await screen.findAllByLabelText("Toggle-DetailsRow"))[0]);
+    const rowDetails = await screen.findByLabelText("Expanded-Details");
+
+    expect(rowDetails).toHaveTextContent(/Failure Type/);
+    expect(rowDetails).not.toHaveTextContent(/Show Compile Report/);
+  });
+
   test("OrderDetailsView shows view for a in progress order", async () => {
     server.use(
       http.get("/lsm/v2/order/1234", () => {
@@ -226,6 +244,25 @@ describe("Order Details", () => {
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("OrderDetailsView shows a completed order item as empty without the orchestration engine", async () => {
+    server.use(
+      http.get("/lsm/v2/order/1234", () => {
+        return HttpResponse.json({ data: responseCompletedOrder });
+      })
+    );
+
+    const { component } = baseSetup(DetailsPage, [lsmFeature]);
+
+    render(component);
+
+    await userEvent.click(await screen.findByLabelText("Toggle-DetailsRow"));
+    const rowDetails = await screen.findByLabelText("Expanded-Details");
+
+    // Its only detail is the compile report, which this app can't link to.
+    expect(rowDetails).toHaveTextContent(words("orders.row.empty"));
+    expect(rowDetails).not.toHaveTextContent(/Show Compile Report/);
   });
 
   test("OrderDetailsView shows view for completed order", async () => {

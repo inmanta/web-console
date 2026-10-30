@@ -12,7 +12,8 @@ interface Props {
 /**
  * CompileReportLink Component
  *
- * A plain link button that displays the text "Export" if it's an export compile link or "Validation".
+ * A plain link button that displays the text "Export" if it's an export compile link or "Validation",
+ * or just that text when the app has no compile report page.
  * The difference between the two compiles can be spotted in the message present in the details of the event.
  * A validation compile should always contain a key word validate/validation.
  *
@@ -24,6 +25,13 @@ interface Props {
  */
 export const CompileReportLink: React.FC<Props> = ({ compileId, isExport }) => {
   const { routeManager } = useContext(DependencyContext);
+  const label = isExport ? words("export") : words("instanceDetails.events.validationReport");
+
+  // The compile report is a page of the orchestration engine. Without it, the label still says
+  // which kind of compile it was.
+  if (!routeManager.has("CompileDetails")) {
+    return <>{label}</>;
+  }
 
   return (
     <Link
@@ -35,7 +43,7 @@ export const CompileReportLink: React.FC<Props> = ({ compileId, isExport }) => {
       }}
     >
       <Button variant="link" isInline>
-        {isExport ? words("export") : words("instanceDetails.events.validationReport")}
+        {label}
       </Button>
     </Link>
   );

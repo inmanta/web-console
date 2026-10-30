@@ -18,7 +18,7 @@ interface Props {
   title: string;
   counts: Resource.CompoundStateSummary[keyof Resource.CompoundStateSummary] | undefined;
   totalCount: number;
-  onSegmentClick: (status: Resource.CompoundStateKey) => void;
+  onSegmentClick?: (status: Resource.CompoundStateKey) => void;
 }
 
 /**
@@ -26,7 +26,8 @@ interface Props {
  * title, a slim stacked bar, and a legend of each present status's color dot + count. Reuses
  * the Resources page's color/label/priority mapping (CompoundResourceStatus's config) and
  * LegendBar primitive so status colors stay consistent across the app. Segment clicks are
- * delegated to the parent, which navigates to the Resources page pre-filtered by that status.
+ * delegated to the parent, which navigates to the Resources page pre-filtered by that status;
+ * without `onSegmentClick` the segments aren't clickable.
  */
 export const ResourceStatusBar: React.FC<Props> = ({
   title,

@@ -33,8 +33,10 @@ interface Props {
  */
 export const OrderStateDetails: React.FC<Props> = ({ state }) => {
   const { routeManager } = useContext(DependencyContext);
+  // The compile report is a page of the orchestration engine, only there when the app has it.
+  const compileReportId = routeManager.has("CompileDetails") ? state.validation_compile_id : null;
 
-  if (!state.failure_type && !state.reason && !state.validation_compile_id) {
+  if (!state.failure_type && !state.reason && !compileReportId) {
     return (
       <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
         {words("orders.row.empty")}
@@ -58,14 +60,14 @@ export const OrderStateDetails: React.FC<Props> = ({ state }) => {
               <DescriptionListDescription>{state.reason}</DescriptionListDescription>
             </DescriptionListGroup>
           )}
-          {state.validation_compile_id && (
+          {compileReportId && (
             <DescriptionListGroup>
               <DescriptionListDescription>
                 <NoWrapLink
                   target="_blank"
                   to={{
                     pathname: routeManager.getUrl("CompileDetails", {
-                      id: state.validation_compile_id,
+                      id: compileReportId,
                     }),
                     search: location.search,
                   }}

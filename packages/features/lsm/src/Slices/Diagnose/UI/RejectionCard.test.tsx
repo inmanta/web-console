@@ -56,18 +56,17 @@ function createRejection(overrides: Partial<Rejection> = {}): Rejection {
   };
 }
 
-function setup(rejection: Rejection) {
+// The pages the card links to, which belong to the orchestration engine.
+const linkedRoutes = [
+  ...getFeatureRoutes([lsmFeature]),
+  stubRoute("CompileDetails"),
+  stubRoute("DesiredStateDetails"),
+];
+
+function setup(rejection: Rejection, routes = linkedRoutes) {
   return (
     <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-      <MockedDependencyProvider
-        features={[lsmFeature]}
-        routes={[
-          ...getFeatureRoutes([lsmFeature]),
-          stubRoute("ResourceDetails"),
-          stubRoute("CompileDetails"),
-          stubRoute("DesiredStateDetails"),
-        ]}
-      >
+      <MockedDependencyProvider features={[lsmFeature]} routes={routes}>
         <RejectionCard rejection={rejection} />
       </MockedDependencyProvider>
     </TestMemoryRouter>
@@ -176,6 +175,26 @@ describe("RejectionCard", () => {
 
     expect(
       screen.queryByRole("button", { name: words("diagnose.rejection.traceback") })
+    ).not.toBeInTheDocument();
+  });
+
+  it("links to the compile report and the model version", async () => {
+    render(setup(createRejection()));
+
+    await userEvent.click(screen.getByRole("button", { name: "repair-deploy-dropdown" }));
+
+    expect(screen.getByRole("link", { name: words("diagnose.links.compileReport") })).toBeVisible();
+    expect(
+      screen.getByRole("link", { name: words("diagnose.links.modelVersionDetails") })
+    ).toBeVisible();
+  });
+
+  it("shows no links without the orchestration engine", () => {
+    render(setup(createRejection(), getFeatureRoutes([lsmFeature])));
+
+    expect(screen.getByText("value set twice")).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: "repair-deploy-dropdown" })
     ).not.toBeInTheDocument();
   });
 

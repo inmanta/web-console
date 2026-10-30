@@ -64,16 +64,13 @@ function expectStatTile(
   expect(tile.getByRole("heading", { level: 2 })).toHaveTextContent(value);
 }
 
-function setup() {
+function setup(routes = [...getFeatureRoutes([environmentFeature]), stubRoute("Resources")]) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
   return (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-        <MockedDependencyProvider
-          features={[environmentFeature]}
-          routes={[...getFeatureRoutes([environmentFeature]), stubRoute("Resources")]}
-        >
+        <MockedDependencyProvider features={[environmentFeature]} routes={routes}>
           <LocationDisplay />
           <ResourcesCard />
         </MockedDependencyProvider>
@@ -187,5 +184,15 @@ describe("ResourcesCard", () => {
       "data-tone",
       "success"
     );
+  });
+
+  it("doesn't navigate on a bar segment without the resources page", async () => {
+    respondWith(createMockResourceSummary());
+
+    render(setup(getFeatureRoutes([environmentFeature])));
+
+    await userEvent.click(await screen.findByLabelText("LegendItem-failed"));
+
+    expect(JSON.parse(screen.getByTestId("location").textContent ?? "{}")).toEqual({ env: "aaa" });
   });
 });

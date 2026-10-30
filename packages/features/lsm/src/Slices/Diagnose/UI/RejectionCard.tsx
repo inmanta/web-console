@@ -112,18 +112,23 @@ export const RejectionCard: React.FC<Props> = ({
 }) => {
   const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
+  // The links go to the orchestration engine's pages, so they are only there when the app has it.
+  const hasCompileReportLink = routeManager.has("CompileDetails");
+  const hasModelVersionLink = Boolean(model_version) && routeManager.has("DesiredStateDetails");
   const dropdownItems: React.ReactNode = (
     <DropdownList>
-      <DropdownItem key="compileReportLink">
-        <Link
-          pathname={routeManager.getUrl("CompileDetails", {
-            id: compile_id,
-          })}
-        >
-          {words("diagnose.links.compileReport")}
-        </Link>
-      </DropdownItem>
-      {model_version ? (
+      {hasCompileReportLink && (
+        <DropdownItem key="compileReportLink">
+          <Link
+            pathname={routeManager.getUrl("CompileDetails", {
+              id: compile_id,
+            })}
+          >
+            {words("diagnose.links.compileReport")}
+          </Link>
+        </DropdownItem>
+      )}
+      {model_version && hasModelVersionLink ? (
         <DropdownItem key="modelVersionLink">
           <Link
             pathname={routeManager.getUrl("DesiredStateDetails", {
@@ -157,27 +162,29 @@ export const RejectionCard: React.FC<Props> = ({
                   </Label>
                 </FlexItem>
               )}
-              <FlexItem>
-                <Dropdown
-                  onSelect={() => setIsOpen((value) => !value)}
-                  toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-                    <MenuToggle
-                      ref={toggleRef}
-                      aria-label="repair-deploy-dropdown"
-                      variant="plain"
-                      onClick={onToggleClick}
-                      isExpanded={isOpen}
-                      icon={<EllipsisVIcon />}
-                    />
-                  )}
-                  isOpen={isOpen}
-                  isPlain
-                  onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-                  popperProps={{ position: "center" }}
-                >
-                  {dropdownItems}
-                </Dropdown>
-              </FlexItem>
+              {(hasCompileReportLink || hasModelVersionLink) && (
+                <FlexItem>
+                  <Dropdown
+                    onSelect={() => setIsOpen((value) => !value)}
+                    toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                      <MenuToggle
+                        ref={toggleRef}
+                        aria-label="repair-deploy-dropdown"
+                        variant="plain"
+                        onClick={onToggleClick}
+                        isExpanded={isOpen}
+                        icon={<EllipsisVIcon />}
+                      />
+                    )}
+                    isOpen={isOpen}
+                    isPlain
+                    onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+                    popperProps={{ position: "center" }}
+                  >
+                    {dropdownItems}
+                  </Dropdown>
+                </FlexItem>
+              )}
             </Flex>
           ),
           // Default false applies a negative margin calibrated for a plain-text CardTitle;
