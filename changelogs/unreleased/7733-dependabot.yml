@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump qs from 6.16.1 to 6.17.0
+destination-branches:
+- master
+- iso9
+sections: {}
