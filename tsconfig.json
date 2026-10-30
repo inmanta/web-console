@@ -86,6 +86,12 @@
       "@inmanta/web-console-feature-orchestration-engine/*": [
         "./packages/features/orchestration-engine/src/*"
       ],
+      "@inmanta/web-console-feature-resource-manager": [
+        "./packages/features/resource-manager/src"
+      ],
+      "@inmanta/web-console-feature-resource-manager/*": [
+        "./packages/features/resource-manager/src/*"
+      ],
       "@inmanta/web-console-feature-user-management": [
         "./packages/features/user-management/src"
       ],

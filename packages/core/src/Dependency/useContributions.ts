@@ -28,7 +28,7 @@ type LinkActionPoint = {
 
 /**
  * Returns the links the features of the app contribute to an extension point, without the ones
- * their `isVisible` hides.
+ * their `isVisible` hides for this orchestrator and this login.
  *
  * @param point - an extension point whose contributions are links
  * @returns the visible links, in the order of the features
@@ -36,9 +36,9 @@ type LinkActionPoint = {
 export const useVisibleLinkActions = <K extends LinkActionPoint>(
   point: K
 ): ExtensionPointRegistry[K][] => {
-  const { orchestratorProvider } = useContext(DependencyContext);
+  const { orchestratorProvider, authHelper } = useContext(DependencyContext);
 
   return useContributions(point).filter((action) =>
-    isLinkActionVisible(action, orchestratorProvider)
+    isLinkActionVisible(action, orchestratorProvider, authHelper)
   );
 };

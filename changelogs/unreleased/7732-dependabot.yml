@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump victory from 37.3.6 to 37.4.1
+destination-branches:
+- master
+- iso9
+sections: {}
