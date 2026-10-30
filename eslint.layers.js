@@ -14,8 +14,8 @@ import { fileURLToPath } from "node:url";
  * | features | core, ui, their own files         |
  * | app      | everything (it composes the rest) |
  *
- * Every slice, every folder in `src/Features` and every folder in `packages/features` belongs to
- * exactly one feature. A new one has to be added here, or linting fails.
+ * Every folder in `packages/features` belongs to exactly one feature. A new one has to be added
+ * here, or linting fails.
  */
 
 /**
@@ -27,24 +27,14 @@ const inRoot = (path) => resolve(basePath, path);
 
 const core = ["./packages/core"];
 
-/**
- * The components left in `src/UI/Components` belong to one feature, and move there with it
- * (#7464 to #7470). Until then they count as shared components, but `packages/ui` doesn't
- * import them.
- */
-const componentsToMove = readdirSync(inRoot("./src/UI/Components"), { withFileTypes: true }).map(
-  (entry) => `./src/UI/Components/${entry.name}`
-);
-
-const ui = ["./packages/ui", ...componentsToMove];
+const ui = ["./packages/ui"];
 
 const shell = ["./packages/shell"];
 
 const app = ["./apps/web-console"];
 
 /**
- * The folders of each feature: its slices and its folder in `src/Features`. A feature that moved
- * into `packages/features` only has its package folder there.
+ * The package folder of each feature in `packages/features`.
  */
 const features = {
   composer: {
@@ -54,8 +44,7 @@ const features = {
     package: "environment",
   },
   graphiql: {
-    folder: "GraphiQL",
-    slices: ["GraphiQL"],
+    package: "graphiql",
   },
   lsm: {
     package: "lsm",
@@ -64,30 +53,17 @@ const features = {
     package: "orchestration-engine",
   },
   "resource-manager": {
-    folder: "ResourceManager",
-    slices: [
-      "Agents",
-      "Facts",
-      "Resource",
-      "ResourceDetails",
-      "ResourceDiscovery",
-      "ResourceDiscoveryDetails",
-    ],
+    package: "resource-manager",
   },
   "user-management": {
-    folder: "UserManagement",
-    slices: ["UserManagement"],
+    package: "user-management",
   },
 };
 
 const featurePaths = Object.fromEntries(
-  Object.entries(features).map(([name, { package: packageFolder, folder, slices = [] }]) => [
+  Object.entries(features).map(([name, { package: packageFolder }]) => [
     name,
-    [
-      ...(packageFolder ? [`./packages/features/${packageFolder}`] : []),
-      ...(folder ? [`./src/Features/${folder}`] : []),
-      ...slices.map((slice) => `./src/Slices/${slice}`),
-    ],
+    [`./packages/features/${packageFolder}`],
   ])
 );
 
@@ -104,16 +80,8 @@ const assertAllAssigned = (directory, assigned) => {
 };
 
 assertAllAssigned(
-  "./src/Slices",
-  Object.values(features).flatMap(({ slices = [] }) => slices)
-);
-assertAllAssigned(
-  "./src/Features",
-  Object.values(features).flatMap(({ folder }) => folder ?? [])
-);
-assertAllAssigned(
   "./packages/features",
-  Object.values(features).flatMap(({ package: packageFolder }) => packageFolder ?? [])
+  Object.values(features).map(({ package: packageFolder }) => packageFolder)
 );
 
 for (const path of [...core, ...ui, ...shell, ...app, ...allFeatures]) {
@@ -146,12 +114,6 @@ const layerZones = (forTests) => {
         "Shared components only import the web-console core layer and other shared components.",
     },
     {
-      target: ["./packages/ui"],
-      from: componentsToMove,
-      message:
-        "The components left in src/UI/Components move to a feature, so packages/ui doesn't import them.",
-    },
-    {
       target: shell,
       from: [...allFeatures, ...app, ...notShipped],
       message:
@@ -176,15 +138,15 @@ const layerZones = (forTests) => {
 export const importBoundaryZones = layerZones(false);
 
 /**
- * The zones for tests and test helpers. The test helpers may also render the shell's providers,
- * but import no feature and not the app, so that each feature's tests only depend on that feature.
+ * The zones for tests and test helpers. The test helpers import no feature, not the shell and not
+ * the app, so that each feature's tests only depend on that feature.
  */
 export const testImportBoundaryZones = [
   ...layerZones(true),
   {
     target: testUtils,
-    from: [...allFeatures, ...app],
+    from: [...allFeatures, ...shell, ...app],
     message:
-      "The test helpers only import the web-console core layer, shared components and the shell. A feature's tests build what they need from that feature.",
+      "The test helpers only import the web-console core layer and shared components. A feature's tests build what they need from that feature.",
   },
 ];

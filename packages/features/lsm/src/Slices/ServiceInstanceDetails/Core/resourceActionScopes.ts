@@ -1,6 +1,6 @@
-import { ResourceActionScope } from "@/UI/Components/ResourceActions";
 import { words } from "@inmanta/web-console-core";
 import { NonEmptyArray, ParsedNumber } from "@inmanta/web-console-core/Language";
+import { ResourceActionScope } from "@inmanta/web-console-ui/Components/ResourceActions";
 
 /**
  * Builds the deploy, repair and dry-run scopes offered for a service instance: always the instance itself, and an

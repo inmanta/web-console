@@ -1,0 +1,598 @@
+import { act } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { render, screen, within } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { configureAxe } from "jest-axe";
+import { delay, http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { words } from "@inmanta/web-console-core";
+import * as AgentsMock from "@inmanta/web-console-feature-resource-manager/Slices/Agents/Core/Mock";
+import {
+  EnvironmentDetails,
+  MockedDependencyProvider,
+  ModalProvider,
+} from "@inmanta/web-console-test-utils";
+import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { Page } from "./Page";
+
+const axe = configureAxe({
+  rules: {
+    // disable landmark rules when testing isolated components.
+    region: { enabled: false },
+  },
+});
+
+function setup(halted: boolean = false) {
+  const component = (
+    <QueryClientProvider client={testClient}>
+      <ModalProvider>
+        <TestMemoryRouter>
+          <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
+            <Page />
+          </MockedDependencyProvider>
+        </TestMemoryRouter>
+      </ModalProvider>
+    </QueryClientProvider>
+  );
+
+  return { component };
+}
+
+describe("Agents", () => {
+  const server = setupServer();
+
+  beforeAll(() => {
+    server.listen();
+  });
+
+  beforeEach(() => {
+    server.resetHandlers();
+  });
+
+  afterAll(() => {
+    server.close();
+    vi.clearAllMocks();
+  });
+
+  test("AgentsView shows empty table", async () => {
+    server.use(
+      http.get("/api/v2/agents", async () => {
+        await delay(200);
+
+        return HttpResponse.json({
+          data: [],
+          links: { self: "" },
+          metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
+        });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByRole("region", { name: "AgentsView-Loading" })).toBeInTheDocument();
+
+    expect(await screen.findByRole("generic", { name: "AgentsView-Empty" })).toBeInTheDocument();
+
+    expect(screen.getByRole("button", { name: words("actions") })).toBeDisabled();
+    expect(
+      screen.queryByRole("button", { name: words("resources.filters.active.resetFilters") })
+    ).not.toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("AgentsView shows failed table", async () => {
+    server.use(
+      http.get("/api/v2/agents", async () => {
+        return HttpResponse.json({ message: "something went wrong" }, { status: 500 });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByRole("region", { name: "AgentsView-Error" })).toBeInTheDocument();
+
+    expect(screen.getByRole("button", { name: words("actions") })).toBeDisabled();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("AgentsView shows success table", async () => {
+    server.use(
+      http.get("/api/v2/agents", async () => {
+        return HttpResponse.json(AgentsMock.response);
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByRole("grid", { name: "AgentsView-Success" })).toBeInTheDocument();
+
+    expect(screen.getByRole("button", { name: words("actions") })).not.toBeDisabled();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("When using the name filter then only the matching agents should be fetched and shown", async () => {
+    server.use(
+      http.get("/api/v2/agents", ({ request }) => {
+        if (request.url.includes("&filter.name=internal&sort=name.asc")) {
+          return HttpResponse.json({
+            ...AgentsMock.response,
+            data: AgentsMock.response.data.slice(0, 3),
+          });
+        }
+
+        return HttpResponse.json(AgentsMock.response);
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    const initialRows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    expect(initialRows).toHaveLength(6);
+
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
+
+    const input = screen.getByPlaceholderText(words("agents.filters.name.placeholder"));
+
+    await userEvent.type(input, "internal{enter}");
+
+    const rowsAfter = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    expect(rowsAfter).toHaveLength(3);
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("When using the status filter with the 'up' option then the agents in the 'up' state should be fetched and shown", async () => {
+    server.use(
+      http.get("/api/v2/agents", ({ request }) => {
+        if (request.url.includes("&filter.status=up&sort=name.asc")) {
+          return HttpResponse.json({
+            ...AgentsMock.response,
+            data: AgentsMock.response.data.slice(0, 3),
+          });
+        }
+
+        return HttpResponse.json(AgentsMock.response);
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    const initialRows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    expect(initialRows).toHaveLength(6);
+
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
+
+    const input = screen.getByPlaceholderText(words("agents.filters.status.placeholder"));
+
+    await userEvent.click(input);
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    const option = await screen.findByRole("option", {
+      name: words("agent.tests.up"),
+    });
+
+    await userEvent.click(option);
+
+    const rowsAfter = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    expect(rowsAfter).toHaveLength(3);
+  });
+
+  test("Given the Agents view with filters, When pausing an agent, then the correct request is fired", async () => {
+    const data = JSON.parse(JSON.stringify(AgentsMock.response)); //copy the object to avoid mutation overflow to others places
+    server.use(
+      http.post("/api/v2/agent/aws/pause", () => {
+        data.data[0].status = "paused";
+        data.data[0].paused = "true";
+
+        return HttpResponse.json();
+      }),
+      http.get("/api/v2/agents", () => {
+        return HttpResponse.json(data);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: /Filters/i }));
+
+    const input = await screen.findByPlaceholderText(words("agents.filters.name.placeholder"));
+
+    await userEvent.type(input, "aws{enter}");
+
+    const rows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    //assert the pause state is set to up
+    const upState = await within(rows[0]).findByText("up");
+    expect(upState).toBeVisible();
+
+    const pauseAgentButton = await within(rows[0]).findByRole("button", {
+      name: words("agents.actions.pause"),
+    });
+
+    await userEvent.click(pauseAgentButton);
+
+    const updatedRows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    //assert the pause state is updated to paused
+    const pausedState = await within(updatedRows[0]).findByText("paused");
+    expect(pausedState).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("Given the Agents view with filters, When unpausing an agent, then the correct request is fired", async () => {
+    const data = JSON.parse(JSON.stringify(AgentsMock.response)); //copy the object to avoid mutation overflow to others places
+    server.use(
+      http.post("/api/v2/agent/bru-23-r321/unpause", () => {
+        data.data[1].status = "up";
+        data.data[1].paused = false;
+
+        return HttpResponse.json();
+      }),
+      http.get("/api/v2/agents", () => {
+        return HttpResponse.json(data);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: /Filters/i }));
+
+    const input = await screen.findByPlaceholderText(words("agents.filters.name.placeholder"));
+
+    await userEvent.type(input, "bru{enter}");
+
+    const rows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    //assert the pause state is set to paused
+    const pausedState = await within(rows[1]).findByText("paused");
+    expect(pausedState).toBeVisible();
+
+    const unpauseAgentButton = await within(rows[1]).findByRole("button", {
+      name: words("agents.actions.unpause"),
+    });
+
+    await userEvent.click(unpauseAgentButton);
+
+    const updatedRows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    //assert the pause state is updated to up
+    const upState = await within(updatedRows[1]).findByText("up");
+    expect(upState).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("Given the Agents view When pausing an agent results in an error, then the error is shown", async () => {
+    server.use(
+      http.post("/api/v2/agent/aws/pause", () => {
+        return HttpResponse.json({ message: "something happened" }, { status: 500 });
+      }),
+      http.get("/api/v2/agents", () => {
+        return HttpResponse.json(AgentsMock.response);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    const rows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+    const pauseAgentButton = await within(rows[0]).findByRole("button", {
+      name: words("agents.actions.pause"),
+    });
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    await userEvent.click(pauseAgentButton);
+
+    expect(await screen.findByText("something happened")).toBeVisible();
+  });
+
+  test("Given the Agents view with the environment NOT halted, THEN the on resume column shouldn't be shown", async () => {
+    server.use(
+      http.get("/api/v2/agents", async () => {
+        return HttpResponse.json(AgentsMock.response);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    const tableHeaders = await screen.findAllByRole("columnheader");
+
+    expect(tableHeaders).toHaveLength(4);
+
+    const onResumeColumnHeader = tableHeaders.find((header) => header.textContent === "On resume");
+
+    expect(onResumeColumnHeader).toBeUndefined();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("Given the Agents view with the environment halted, When setting keep_paused_on_resume on an agent, Then the correct request is fired", async () => {
+    const data = JSON.parse(JSON.stringify(AgentsMock.response)); //copy the object to avoid mutation overflow to others places
+    server.use(
+      http.post("/api/v2/agent/aws/keep_paused_on_resume", () => {
+        data.data[0].keep_paused_on_resume = true;
+
+        return HttpResponse.json();
+      }),
+      http.get("/api/v2/agents", () => {
+        return HttpResponse.json(data);
+      })
+    );
+    const { component } = setup(true);
+
+    render(component);
+
+    const onResumeToggle = await screen.findByRole("switch", {
+      name: "aws-on-resume-toggle",
+    });
+
+    expect(onResumeToggle).toBeVisible();
+    expect(onResumeToggle).toBeChecked();
+
+    await userEvent.click(onResumeToggle);
+
+    const updatedRows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+    const updatedOnResumeToggle = await within(updatedRows[3]).findByRole("switch", {
+      name: "ecx-on-resume-toggle",
+    });
+    expect(updatedOnResumeToggle).toBeVisible();
+    expect(updatedOnResumeToggle).not.toBeChecked();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("Given the Agents view with the environment halted, When setting unpause_on_resume on an agent, Then the correct request is fired", async () => {
+    const data = JSON.parse(JSON.stringify(AgentsMock.response)); //copy the object to avoid mutation overflow to others places
+    server.use(
+      http.post("/api/v2/agent/ecx/unpause_on_resume", () => {
+        data.data[3].unpause_on_resume = true;
+
+        return HttpResponse.json();
+      }),
+      http.get("/api/v2/agents", () => {
+        return HttpResponse.json(data);
+      })
+    );
+
+    const { component } = setup(true);
+
+    render(component);
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    const onResumeToggle = await screen.findByRole("switch", {
+      name: "ecx-on-resume-toggle",
+    });
+
+    expect(onResumeToggle).toBeVisible();
+    expect(onResumeToggle).not.toBeChecked();
+
+    await userEvent.click(onResumeToggle);
+
+    const updatedRows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+    const updatedOnResumeToggle = await within(updatedRows[3]).findByRole("switch", {
+      name: "ecx-on-resume-toggle",
+    });
+    expect(updatedOnResumeToggle).toBeVisible();
+    expect(updatedOnResumeToggle).toBeChecked();
+  });
+
+  test("Given the Agents view with the environment halted, THEN the on resume column should be shown", async () => {
+    server.use(
+      http.get("/api/v2/agents", async () => {
+        return HttpResponse.json(AgentsMock.response);
+      })
+    );
+    const { component } = setup(true);
+
+    render(component);
+
+    const tableHeaders = await screen.findAllByRole("columnheader");
+
+    expect(tableHeaders).toHaveLength(5);
+
+    const onResumeColumnHeader = tableHeaders.find((header) => header.textContent === "On resume");
+
+    expect(onResumeColumnHeader).toBeDefined();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("GIVEN AgentsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+    server.use(
+      http.get("/api/v2/agents", async ({ request }) => {
+        if (request.url.includes("end=fake-first-param")) {
+          return HttpResponse.json({
+            ...AgentsMock.response,
+            data: AgentsMock.response.data.slice(0, 3),
+          });
+        }
+
+        return HttpResponse.json({
+          ...AgentsMock.response,
+          metadata: {
+            total: 103,
+            before: 0,
+            after: 83,
+            page_size: 100,
+          },
+          links: {
+            self: "",
+            next: "/fake-link?end=fake-first-param",
+          },
+        });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    const initialRows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    expect(initialRows).toHaveLength(6);
+
+    await userEvent.click(screen.getByLabelText("Go to next page"));
+
+    const updatedRows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    expect(updatedRows).toHaveLength(3);
+
+    //sort on the second page
+    await userEvent.click(screen.getByRole("button", { name: "Name" }));
+
+    const updatedRows2 = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    expect(updatedRows2).toHaveLength(6);
+  });
+
+  test("Given the Agents view, the bulk Actions dropdown is shown next to the title", async () => {
+    server.use(
+      http.get("/api/v2/agents", () => {
+        return HttpResponse.json(AgentsMock.response);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByRole("button", { name: words("actions") })).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("Given the Agents view, when triggering Pause all from the Actions dropdown, then the correct request is fired and the table refreshes", async () => {
+    const data = JSON.parse(JSON.stringify(AgentsMock.response));
+    server.use(
+      http.post("/api/v2/agents/pause", () => {
+        data.data.forEach((agent: { status: string; paused: string }) => {
+          agent.status = "paused";
+          agent.paused = "true";
+        });
+
+        return HttpResponse.json();
+      }),
+      http.get("/api/v2/agents", () => {
+        return HttpResponse.json(data);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: words("actions") }));
+
+    await userEvent.click(screen.getByRole("menuitem", { name: words("agents.actions.pauseAll") }));
+
+    expect(await screen.findByText(words("agents.actions.pauseAll.requested"))).toBeVisible();
+
+    const updatedRows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    for (const row of updatedRows) {
+      expect(await within(row).findByText("paused")).toBeVisible();
+    }
+  });
+});
