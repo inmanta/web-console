@@ -14,7 +14,6 @@ export const shellMessages = {
   "dashboard.logout": "Logout",
   "dashboard.documentation.tooltip": "Documentation",
   "dashboard.apiActions.tooltip": "Developer Tools",
-  "dashboard.apiActions.graphiql": "GraphiQL",
   "dashboard.apiActions.restApi": "REST API / Swagger",
   "dashboard.status_page.tooltip": "Status page",
   "dashboard.notifications.tooltip": "Show notifications",
