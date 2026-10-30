@@ -64,32 +64,36 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
   return (
     <Card>
       <CardHeader
-        actions={{
-          actions: (hasResourceLink || hasModelVersionLink) && (
-            <>
-              <Dropdown
-                onSelect={() => setIsOpen((value) => !value)}
-                toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-                  <MenuToggle
-                    ref={toggleRef}
-                    aria-label="actions-dropdown"
-                    variant="plain"
-                    onClick={onToggleClick}
-                    isExpanded={isOpen}
-                    icon={<EllipsisVIcon />}
-                  />
-                )}
-                isOpen={isOpen}
-                popperProps={{ position: "right" }}
-                onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-              >
-                {dropdownItems}
-              </Dropdown>
-            </>
-          ),
-          hasNoOffset: false,
-          className: undefined,
-        }}
+        actions={
+          hasResourceLink || hasModelVersionLink
+            ? {
+                actions: (
+                  <>
+                    <Dropdown
+                      onSelect={() => setIsOpen((value) => !value)}
+                      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                        <MenuToggle
+                          ref={toggleRef}
+                          aria-label="actions-dropdown"
+                          variant="plain"
+                          onClick={onToggleClick}
+                          isExpanded={isOpen}
+                          icon={<EllipsisVIcon />}
+                        />
+                      )}
+                      isOpen={isOpen}
+                      popperProps={{ position: "right" }}
+                      onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
+                    >
+                      {dropdownItems}
+                    </Dropdown>
+                  </>
+                ),
+                hasNoOffset: false,
+                className: undefined,
+              }
+            : undefined
+        }
       >
         <CardTitle>{words("diagnose.failure.title")}</CardTitle>
       </CardHeader>

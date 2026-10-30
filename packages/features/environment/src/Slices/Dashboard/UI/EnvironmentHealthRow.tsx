@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
 import { words } from "@inmanta/web-console-core";
-import { DependencyContext, useUrlIfRegistered } from "@inmanta/web-console-core/Dependency";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { EnvSelectorOpenContext } from "@inmanta/web-console-core/Dependency/EnvSelectorOpenContext";
 import { PageSize } from "@inmanta/web-console-core/Domain";
 import { AgentStatus } from "@inmanta/web-console-core/Domain/Agent";
@@ -12,6 +12,7 @@ import { useGetProjects } from "@inmanta/web-console-core/Queries/Slices/Project
 import { useGetResources } from "@inmanta/web-console-core/Queries/Slices/Resource";
 import { useGetServerStatus } from "@inmanta/web-console-core/Queries/Slices/Server";
 import { useGetServiceModels } from "@inmanta/web-console-core/Queries/Slices/Service";
+import { useUrlIfRegistered } from "@inmanta/web-console-core/Routing";
 import { EnvironmentIcon } from "@inmanta/web-console-ui/Components/EnvironmentIcon";
 import { HealthCardGrid } from "./Components/EnvironmentHealth/HealthCardGrid";
 import { HealthColumn } from "./Components/EnvironmentHealth/HealthColumn";

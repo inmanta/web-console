@@ -14,8 +14,8 @@ import {
 import { CubeIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { isObject, Resource, words } from "@inmanta/web-console-core";
-import { useUrlIfRegistered } from "@inmanta/web-console-core/Dependency";
 import { useGetResources } from "@inmanta/web-console-core/Queries/Slices/Resource";
+import { useUrlIfRegistered } from "@inmanta/web-console-core/Routing";
 import { SearchHelper } from "@inmanta/web-console-core/Routing";
 import { MINIMAL_PAGE } from "../../EnvironmentHealthRow";
 import { deriveResourcesHealth } from "../../resourcesHealth";

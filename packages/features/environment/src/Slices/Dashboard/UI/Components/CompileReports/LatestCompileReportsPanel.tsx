@@ -13,7 +13,7 @@ import {
 } from "@patternfly/react-core";
 import { CodeIcon } from "@patternfly/react-icons";
 import { words } from "@inmanta/web-console-core";
-import { useUrlIfRegistered } from "@inmanta/web-console-core/Dependency";
+import { useUrlIfRegistered } from "@inmanta/web-console-core/Routing";
 import { deriveCompilesHealth } from "../../compilesHealth";
 import { useLatestCompileReports } from "../../useLatestCompileReports";
 import { HEALTH_TONE, IconBadge } from "../IconBadge";
@@ -34,18 +34,22 @@ export const LatestCompileReportsPanel: React.FC = () => {
   return (
     <Card>
       <CardHeader
-        actions={{
-          // Default false applies a negative margin calibrated for a plain-text CardTitle;
-          // ours is taller (icon + text), so that offset would misalign the action against it.
-          hasNoOffset: true,
-          actions: compileReportsUrl && (
-            <Link to={compileReportsUrl}>
-              <Button variant="link" isInline>
-                {words("dashboard.compileReports.viewAll")}
-              </Button>
-            </Link>
-          ),
-        }}
+        actions={
+          compileReportsUrl
+            ? {
+                // Default false applies a negative margin calibrated for a plain-text CardTitle;
+                // ours is taller (icon + text), so that offset would misalign the action against it.
+                hasNoOffset: true,
+                actions: (
+                  <Link to={compileReportsUrl}>
+                    <Button variant="link" isInline>
+                      {words("dashboard.compileReports.viewAll")}
+                    </Button>
+                  </Link>
+                ),
+              }
+            : undefined
+        }
       >
         <CardTitle>
           <Flex

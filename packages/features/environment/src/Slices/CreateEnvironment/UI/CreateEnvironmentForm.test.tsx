@@ -5,8 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@inmanta/web-console-core";
-import { RouteFactory, getFeatureRoutes } from "@inmanta/web-console-core";
+import { RouteFactory, getFeatureRoutes, words } from "@inmanta/web-console-core";
 import * as routing from "@inmanta/web-console-core/Routing/Utils";
 import { environmentFeature } from "@inmanta/web-console-feature-environment";
 import {
@@ -568,7 +567,11 @@ describe("CreateEnvironmentForm", () => {
 
     expect(mockFn).toHaveBeenCalledWith("Catalog", undefined, "?env=environment_id_a");
   });
-  test("Given CreateEnvironmentForm When the app has neither the catalog nor the desired state Then it opens the new environment's dashboard", async () => {
+
+  /**
+   * Creates environment "dev" in the first project, and returns the mocked navigateTo it called.
+   */
+  const createEnvironmentWith = async (routes: RouteFactory[]) => {
     const mockFn = vi.fn();
     vi.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
     server.use(
@@ -580,7 +583,7 @@ describe("CreateEnvironmentForm", () => {
       })
     );
 
-    const { component } = setup(getFeatureRoutes([environmentFeature]));
+    const { component } = setup(routes);
 
     render(component);
 
@@ -597,6 +600,21 @@ describe("CreateEnvironmentForm", () => {
     await userEvent.type(textBox, "dev{enter}");
     await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
-    expect(mockFn).toHaveBeenCalledWith("Dashboard", undefined, "?env=environment_id_a");
+    return mockFn;
+  };
+
+  test("Given CreateEnvironmentForm When the app has the desired state but not the catalog Then it opens the new environment's desired state", async () => {
+    const navigateTo = await createEnvironmentWith([
+      ...getFeatureRoutes([environmentFeature]),
+      stubRoute("DesiredState"),
+    ]);
+
+    expect(navigateTo).toHaveBeenCalledWith("DesiredState", undefined, "?env=environment_id_a");
+  });
+
+  test("Given CreateEnvironmentForm When the app has neither the catalog nor the desired state Then it opens the new environment's dashboard", async () => {
+    const navigateTo = await createEnvironmentWith(getFeatureRoutes([environmentFeature]));
+
+    expect(navigateTo).toHaveBeenCalledWith("Dashboard", undefined, "?env=environment_id_a");
   });
 });
