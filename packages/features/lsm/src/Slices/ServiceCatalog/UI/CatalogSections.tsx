@@ -4,7 +4,7 @@ import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ServiceModel, words } from "@inmanta/web-console-core";
 import { ServiceRow } from "./ServiceRow";
-import { createCatalogSections, formatSectionTitle, getSectionInstanceCount } from "./helpers";
+import { createCatalogSections, getSectionInstanceCount, getSectionTitle } from "./helpers";
 import { CatalogSection, serviceRowColumnCount } from "./types";
 
 interface Props {
@@ -32,10 +32,10 @@ export const CatalogSections: React.FC<Props> = ({ serviceModels }) => {
   return (
     <Stack hasGutter>
       {sections.map((section) => (
-        <StackItem key={`${section.kind}-${formatSectionTitle(section)}`}>
+        <StackItem key={`${section.kind}-${getSectionTitle(section)}`}>
           <Table
             variant="compact"
-            aria-label={hasGroups ? formatSectionTitle(section) : words("catalog.title")}
+            aria-label={hasGroups ? getSectionTitle(section) : words("catalog.title")}
           >
             <Tbody>
               {hasGroups && (
@@ -65,7 +65,7 @@ export const CatalogSections: React.FC<Props> = ({ serviceModels }) => {
 const renderSectionHeading = (section: CatalogSection): React.ReactNode => (
   <Flex alignItems={{ default: "alignItemsBaseline" }} columnGap={{ default: "columnGapSm" }}>
     <Title headingLevel="h2" size="md">
-      {formatSectionTitle(section)}
+      {getSectionTitle(section)}
     </Title>
     <Content component={ContentVariants.small}>
       {words("catalog.section.count")(section.services.length, getSectionInstanceCount(section))}

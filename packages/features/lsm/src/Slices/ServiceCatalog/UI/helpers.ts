@@ -41,24 +41,24 @@ export const createCatalogSections = (serviceModels: ServiceModel[]): CatalogSec
   const groupEntries = [...servicesByGroup.entries()];
 
   for (const [, services] of groupEntries) {
-    services.sort(compareCatalogServices);
+    sortCatalogServices(services);
   }
 
-  const sections: CatalogSection[] = groupEntries
-    .sort(compareGroups)
-    .map(([name, services]): CatalogSection => ({ kind: "Group", name, services }));
+  const sections: CatalogSection[] = sortGroups(groupEntries).map(
+    ([name, services]): CatalogSection => ({ kind: "Group", name, services })
+  );
 
   if (ungroupedServices.length > 0) {
-    sections.push({ kind: "Ungrouped", services: ungroupedServices.sort(compareCatalogServices) });
+    sections.push({ kind: "Ungrouped", services: sortCatalogServices(ungroupedServices) });
   }
 
   return sections;
 };
 
 /**
- * Formats the title of a catalog section: the group name, or "Other services".
+ * Gets the title of a catalog section: the group name, or "Other services".
  */
-export const formatSectionTitle = (section: CatalogSection): string =>
+export const getSectionTitle = (section: CatalogSection): string =>
   section.kind === "Group" ? section.name : words("catalog.section.ungrouped");
 
 /**
@@ -77,22 +77,20 @@ export const getSectionInstanceCount = (section: CatalogSection): number =>
   );
 
 /**
- * Comparator that orders catalog services by `web_order`, then by title.
+ * Sorts catalog services in place by `web_order`, then by title, and returns them.
  */
-const compareCatalogServices = (a: CatalogService, b: CatalogService): number =>
-  compareEntityAnnotations(a.resolvedAnnotations, b.resolvedAnnotations);
+const sortCatalogServices = (services: CatalogService[]): CatalogService[] =>
+  services.sort((a, b) => compareEntityAnnotations(a.resolvedAnnotations, b.resolvedAnnotations));
 
 /**
- * Comparator for `[group name, services]` entries whose services are already sorted. It orders
- * groups by the `web_order` of their first service, which is the lowest one, groups without
- * any order last, and falls back to the name.
+ * Sorts `[group name, services]` entries in place, whose services are already sorted. Groups
+ * are ordered by the `web_order` of their first service, which is the lowest one, groups
+ * without any order last, then by name.
  */
-const compareGroups = (
-  [nameA, servicesA]: [string, CatalogService[]],
-  [nameB, servicesB]: [string, CatalogService[]]
-): number => {
-  const orderA = servicesA[0].resolvedAnnotations.web_order ?? Number.MAX_SAFE_INTEGER;
-  const orderB = servicesB[0].resolvedAnnotations.web_order ?? Number.MAX_SAFE_INTEGER;
+const sortGroups = (groupEntries: [string, CatalogService[]][]): [string, CatalogService[]][] =>
+  groupEntries.sort(([nameA, servicesA], [nameB, servicesB]) => {
+    const orderA = servicesA[0].resolvedAnnotations.web_order ?? Number.MAX_SAFE_INTEGER;
+    const orderB = servicesB[0].resolvedAnnotations.web_order ?? Number.MAX_SAFE_INTEGER;
 
-  return orderA - orderB || nameA.localeCompare(nameB);
-};
+    return orderA - orderB || nameA.localeCompare(nameB);
+  });

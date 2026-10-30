@@ -4,8 +4,8 @@ import { firewall, linuxVm, router, vpn, vpnTunnel } from "./Mock";
 import {
   createCatalogSections,
   formatDescriptionLine,
-  formatSectionTitle,
   getSectionInstanceCount,
+  getSectionTitle,
 } from "./helpers";
 import { CatalogSection } from "./types";
 
@@ -16,7 +16,7 @@ describe("createCatalogSections", () => {
   it("groups root services by web_group and puts ungrouped services last", () => {
     const sections = createCatalogSections([linuxVm, firewall, vpn, router]);
 
-    expect(sections.map(formatSectionTitle)).toEqual([
+    expect(sections.map(getSectionTitle)).toEqual([
       router.entity_annotations?.web_group,
       firewall.entity_annotations?.web_group,
       words("catalog.section.ungrouped"),
@@ -40,7 +40,7 @@ describe("createCatalogSections", () => {
     };
     const sections = createCatalogSections([lateNetworkService, vpn, firewall]);
 
-    expect(sections.map(formatSectionTitle)).toEqual([
+    expect(sections.map(getSectionTitle)).toEqual([
       vpn.entity_annotations?.web_group,
       firewall.entity_annotations?.web_group,
     ]);
@@ -59,7 +59,7 @@ describe("createCatalogSections", () => {
     };
     const sections = createCatalogSections([storage, backup, firewall]);
 
-    expect(sections.map(formatSectionTitle)).toEqual([
+    expect(sections.map(getSectionTitle)).toEqual([
       firewall.entity_annotations?.web_group,
       backup.entity_annotations?.web_group,
       storage.entity_annotations?.web_group,
