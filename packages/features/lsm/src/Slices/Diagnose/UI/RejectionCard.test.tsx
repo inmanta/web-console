@@ -56,10 +56,9 @@ function createRejection(overrides: Partial<Rejection> = {}): Rejection {
   };
 }
 
-// The pages the card links to, which belong to the orchestration engine and the resource manager.
+// The pages the card links to, which belong to the orchestration engine.
 const linkedRoutes = [
   ...getFeatureRoutes([lsmFeature]),
-  stubRoute("ResourceDetails"),
   stubRoute("CompileDetails"),
   stubRoute("DesiredStateDetails"),
 ];

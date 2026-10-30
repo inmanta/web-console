@@ -27,10 +27,10 @@ function makeReport(overrides: Partial<CompileReport> = {}): CompileReport {
   };
 }
 
-function renderRow(report: CompileReport, routes = routeManager) {
+function renderRow(report: CompileReport, routeManagerForRow = routeManager) {
   return render(
     <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-      <DependencyProvider dependencies={{ routeManager: routes }}>
+      <DependencyProvider dependencies={{ routeManager: routeManagerForRow }}>
         <LatestCompileReportRow report={report} />
       </DependencyProvider>
     </TestMemoryRouter>

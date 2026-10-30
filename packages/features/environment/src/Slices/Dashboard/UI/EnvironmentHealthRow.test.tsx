@@ -1,15 +1,12 @@
 import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { setupServer } from "msw/node";
 import { getFeatureRoutes, RouteFactory, words } from "@inmanta/web-console-core";
 import { environmentFeature } from "@inmanta/web-console-feature-environment";
 import { MockedDependencyProvider, stubRoute } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { EnvironmentHealthRow } from "./EnvironmentHealthRow";
-
-// The columns only need their titles here; without responses the queries just stay pending.
-const server = setupServer();
 
 // The pages the four columns open: the catalog (lsm), resources and agents (resource manager),
 // and the compile reports (orchestration engine).
@@ -30,9 +27,7 @@ const columnTitles = [
 
 const setup = (routes: RouteFactory[]) =>
   render(
-    <QueryClientProvider
-      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
-    >
+    <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={["/?env=aaa"]}>
         <MockedDependencyProvider features={[environmentFeature]} routes={routes}>
           <EnvironmentHealthRow />
@@ -45,10 +40,10 @@ const columnAction = (title: string) =>
   screen.queryByLabelText(words("dashboard.environmentHealth.viewDetails")(title));
 
 describe("EnvironmentHealthRow", () => {
-  beforeAll(() => server.listen({ onUnhandledRequest: "bypass" }));
-  afterAll(() => server.close());
+  // The columns only need their titles, which they show before their data loads.
+  afterEach(() => testClient.clear());
 
-  it("makes every column open its page", () => {
+  it("makes every column clickable", () => {
     setup(linkedRoutes);
 
     columnTitles.forEach((title) => expect(columnAction(title)).toBeInTheDocument());

@@ -15,8 +15,7 @@ import { CubeIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { isObject, Resource, words } from "@inmanta/web-console-core";
 import { useGetResources } from "@inmanta/web-console-core/Queries/Slices/Resource";
-import { useUrlIfRegistered } from "@inmanta/web-console-core/Routing";
-import { SearchHelper } from "@inmanta/web-console-core/Routing";
+import { SearchHelper, useUrlIfRegistered } from "@inmanta/web-console-core/Routing";
 import { MINIMAL_PAGE } from "../../EnvironmentHealthRow";
 import { deriveResourcesHealth } from "../../resourcesHealth";
 import { HEALTH_TONE, IconBadge } from "../IconBadge";
@@ -64,7 +63,8 @@ const buildFilteredResourcesUrl = (
  * Resource Manager card: Compliance / Deploy result / Blocked stacked bars plus a 4-tile
  * deployment summary. Sourced from the same `useGetResources` call/params as the Environment
  * Health row's Resources column, so React Query dedupes the two into a single network request.
- * Clicking a bar segment navigates to the Resources page, pre-filtered by that status.
+ * When the app has the Resources page, clicking a bar segment opens it, pre-filtered by that
+ * status.
  */
 export const ResourcesCard: React.FC = () => {
   const navigate = useNavigate();

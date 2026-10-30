@@ -28,11 +28,11 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
   const [isOpen, setIsOpen] = useState(false);
   // The links go to pages of the resource manager and the orchestration engine, so each is only
   // there when the app has that feature.
-  const hasResourceLink = routeManager.has("ResourceDetails");
+  const hasResourceDetailsLink = routeManager.has("ResourceDetails");
   const hasModelVersionLink = routeManager.has("DesiredStateDetails");
   const dropdownItems = (
     <DropdownList>
-      {hasResourceLink && (
+      {hasResourceDetailsLink && (
         <DropdownItem key="resourceDetailsLink">
           <Link
             pathname={routeManager.getUrl("ResourceDetails", {
@@ -65,7 +65,7 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
     <Card>
       <CardHeader
         actions={
-          hasResourceLink || hasModelVersionLink
+          hasResourceDetailsLink || hasModelVersionLink
             ? {
                 actions: (
                   <>
