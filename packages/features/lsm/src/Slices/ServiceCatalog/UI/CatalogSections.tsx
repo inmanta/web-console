@@ -31,8 +31,8 @@ interface Props {
  * Owned services are nested under their owner, collapsed by default, with one button above the
  * tables that expands every owner, or collapses them once all are expanded. Without any group,
  * the catalog is a single table without heading, and without any owned service, there is no
- * expand column and no such button. When any service has a `web_icon`, every row shows an icon, with a fallback
- * for the services without one; otherwise the rows have no icon.
+ * expand column and no such button. When any service has a `web_icon`, every row shows an icon,
+ * with a fallback for the services without one; otherwise the rows have no icon.
  *
  * @props {Props} props - The props of the component.
  *  @prop {ServiceModel[]} serviceModels - The services in the catalog.
@@ -118,25 +118,16 @@ export const CatalogSections: React.FC<Props> = ({ serviceModels }) => {
     <Stack hasGutter>
       {hasOwnedServices && (
         <StackItem>
-          {isEveryOwnerExpanded ? (
-            <Button
-              variant="link"
-              isInline
-              icon={<AngleDownIcon />}
-              onClick={() => setExpandedServiceNames(new Set())}
-            >
-              {words("collapseAll")}
-            </Button>
-          ) : (
-            <Button
-              variant="link"
-              isInline
-              icon={<AngleRightIcon />}
-              onClick={() => setExpandedServiceNames(new Set(ownerServiceNames))}
-            >
-              {words("expandAll")}
-            </Button>
-          )}
+          <Button
+            variant="link"
+            isInline
+            icon={isEveryOwnerExpanded ? <AngleDownIcon /> : <AngleRightIcon />}
+            onClick={() =>
+              setExpandedServiceNames(new Set(isEveryOwnerExpanded ? [] : ownerServiceNames))
+            }
+          >
+            {words(isEveryOwnerExpanded ? "collapseAll" : "expandAll")}
+          </Button>
         </StackItem>
       )}
       {sections.map((section) => (

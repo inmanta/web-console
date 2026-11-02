@@ -20,7 +20,7 @@ import {
  *
  * @example
  * createCatalogSections([vpn (web_group "Network"), vpn_tunnel (owner vpn), router (no group)])
- * // [{ kind: "Group", name: "Network", services: [vpn, owning vpn_tunnel] }, { kind: "Ungrouped", services: [router] }]
+ * // [{ kind: "Group", name: "Network", services: [vpn (ownedServices: [vpn_tunnel])] }, { kind: "Ungrouped", services: [router] }]
  */
 export const createCatalogSections = (serviceModels: ServiceModel[]): CatalogSection[] => {
   const servicesByName = new Map<string, CatalogService>();
