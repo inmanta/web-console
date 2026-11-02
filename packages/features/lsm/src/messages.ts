@@ -222,8 +222,6 @@ export const lsmMessages = {
     `${ownedServiceCount} owned ${ownedServiceCount === 1 ? "service" : "services"}`,
   "catalog.ownedServices.expand": (serviceTitle: string) => `Expand ${serviceTitle}`,
   "catalog.ownedServices.collapse": (serviceTitle: string) => `Collapse ${serviceTitle}`,
-  "catalog.ownedServices.expandAll": "Expand all",
-  "catalog.ownedServices.collapseAll": "Collapse all",
   "catalog.delete.modal.title": "Delete Service",
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,

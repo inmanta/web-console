@@ -156,9 +156,7 @@ describe("ServiceCatalog", () => {
     expect(within(table).getByTestId(deployment.name + "-item")).toBeInTheDocument();
     expect(within(table).queryByTestId(dnsRecord.name + "-item")).not.toBeInTheDocument();
 
-    await userEvent.click(
-      screen.getByRole("button", { name: words("catalog.ownedServices.expandAll") })
-    );
+    await userEvent.click(screen.getByRole("button", { name: words("expandAll") }));
 
     expect(within(table).getByTestId(aviVirtualIp.name + "-item")).toBeInTheDocument();
 

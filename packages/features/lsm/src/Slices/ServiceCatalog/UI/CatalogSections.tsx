@@ -8,7 +8,7 @@ import {
   StackItem,
   Title,
 } from "@patternfly/react-core";
-import { RhMicronsDoubleCaretDownIcon, RhMicronsDoubleCaretUpIcon } from "@patternfly/react-icons";
+import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, TdProps, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ServiceModel, words } from "@inmanta/web-console-core";
@@ -120,21 +120,21 @@ export const CatalogSections: React.FC<Props> = ({ serviceModels }) => {
         <StackItem>
           {isEveryOwnerExpanded ? (
             <Button
-              variant="plain"
-              size="sm"
-              icon={<RhMicronsDoubleCaretUpIcon />}
+              variant="link"
+              isInline
+              icon={<AngleDownIcon />}
               onClick={() => setExpandedServiceNames(new Set())}
             >
-              {words("catalog.ownedServices.collapseAll")}
+              {words("collapseAll")}
             </Button>
           ) : (
             <Button
-              variant="plain"
-              size="sm"
-              icon={<RhMicronsDoubleCaretDownIcon />}
+              variant="link"
+              isInline
+              icon={<AngleRightIcon />}
               onClick={() => setExpandedServiceNames(new Set(ownerServiceNames))}
             >
-              {words("catalog.ownedServices.expandAll")}
+              {words("expandAll")}
             </Button>
           )}
         </StackItem>
@@ -178,11 +178,10 @@ const renderSectionHeading = (section: CatalogSection): React.ReactNode => (
 
 /**
  * Adjusts the PatternFly tree table, which has no props for this. A catalog row is two lines
- * with an icon, so the toggle is centered on the row instead of on the first text line, and it
- * uses the small plain button padding and a small-text chevron. Only the toggle expands a row,
- * so the cell drops PatternFly's pointer cursor. This overrides PF-internal
- * `pf-v6-c-table__tree-view-main`, `pf-v6-c-table__toggle` and `pf-v6-c-button` classes and
- * variables, so check it after a PatternFly upgrade.
+ * with an icon, so the toggle is centered on the row, in line with the icon, instead of on the
+ * first text line. Only the toggle expands a row, so the cell drops PatternFly's pointer cursor.
+ * This overrides the PF-internal `pf-v6-c-table__tree-view-main`, `pf-v6-c-table__toggle` and
+ * `pf-v6-c-button` classes, so check it after a PatternFly upgrade.
  */
 const CatalogTable = styled(Table)`
   .pf-v6-c-table__tree-view-main {
@@ -191,15 +190,6 @@ const CatalogTable = styled(Table)`
   }
 
   .pf-v6-c-table__tree-view-main > .pf-v6-c-table__toggle .pf-v6-c-button {
-    --pf-v6-c-button--PaddingBlockStart: var(--pf-v6-c-button--m-small--PaddingBlockStart);
-    --pf-v6-c-button--PaddingBlockEnd: var(--pf-v6-c-button--m-small--PaddingBlockEnd);
-    --pf-v6-c-button--m-plain--PaddingInlineStart: var(
-      --pf-v6-c-button--m-plain--m-small--PaddingInlineStart
-    );
-    --pf-v6-c-button--m-plain--PaddingInlineEnd: var(
-      --pf-v6-c-button--m-plain--m-small--PaddingInlineEnd
-    );
-    --pf-v6-c-button--FontSize: var(--pf-t--global--font--size--body--sm);
-    --pf-v6-c-button--LineHeight: 1;
+    margin-block-start: 0;
   }
 `;

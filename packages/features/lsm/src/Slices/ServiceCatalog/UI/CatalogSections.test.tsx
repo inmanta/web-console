@@ -56,9 +56,7 @@ test("GIVEN CatalogSections WHEN no service has a group THEN one table without s
   expect(within(table).getByTestId(Service.a.name + "-item")).toBeInTheDocument();
   expect(within(table).getByTestId(Service.b.name + "-item")).toBeInTheDocument();
   expect(screen.queryByRole("heading")).not.toBeInTheDocument();
-  expect(
-    screen.queryByRole("button", { name: words("catalog.ownedServices.expandAll") })
-  ).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: words("expandAll") })).not.toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -144,23 +142,15 @@ test("GIVEN CatalogSections WHEN services own other services THEN they are neste
 test("GIVEN CatalogSections WHEN the expand all toggle is clicked twice THEN every level expands and collapses", async () => {
   render(Component(deploymentTree));
 
-  expect(
-    screen.queryByRole("button", { name: words("catalog.ownedServices.collapseAll") })
-  ).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: words("collapseAll") })).not.toBeInTheDocument();
 
-  await userEvent.click(
-    screen.getByRole("button", { name: words("catalog.ownedServices.expandAll") })
-  );
+  await userEvent.click(screen.getByRole("button", { name: words("expandAll") }));
 
   expect(screen.getByTestId(aviVirtualIp.name + "-item")).toHaveAttribute("aria-level", "3");
   expect(screen.getAllByRole("row")).toHaveLength(deploymentTree.length);
-  expect(
-    screen.queryByRole("button", { name: words("catalog.ownedServices.expandAll") })
-  ).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: words("expandAll") })).not.toBeInTheDocument();
 
-  await userEvent.click(
-    screen.getByRole("button", { name: words("catalog.ownedServices.collapseAll") })
-  );
+  await userEvent.click(screen.getByRole("button", { name: words("collapseAll") }));
 
   expect(screen.getAllByRole("row").map((row) => row.id)).toEqual([deployment.name]);
 });
@@ -176,9 +166,7 @@ test("GIVEN CatalogSections WHEN every owner is expanded one by one THEN the tog
     );
   }
 
-  expect(
-    screen.getByRole("button", { name: words("catalog.ownedServices.collapseAll") })
-  ).toBeVisible();
+  expect(screen.getByRole("button", { name: words("collapseAll") })).toBeVisible();
 });
 
 test("GIVEN CatalogSections WHEN a service has entity annotations THEN its title, raw name and description are shown", async () => {

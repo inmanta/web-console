@@ -219,9 +219,9 @@ const ServiceTitleLink = styled(Link)`
 `;
 
 /**
- * A brand-tinted square behind the service icon, the size of a PatternFly plain button (a line of
- * body text plus the control padding on both sides), which no PatternFly Icon size matches. `&&`
- * lets the size win over PatternFly's own `pf-v6-c-icon` rule.
+ * A brand-tinted square behind the service icon, the size of a plain button such as the expand
+ * toggle next to it (a line of body text plus the control padding on both sides), which no
+ * PatternFly Icon size matches. `&&` lets the size win over PatternFly's own `pf-v6-c-icon` rule.
  */
 const ServiceIconTile = styled(Icon)`
   && {
