@@ -1,4 +1,4 @@
-description: The environment settings update banner hides through the PatternFly alert timeout.
+description: Fix a flaky unit test caused by the environment settings update banner timeout.
 change-type: patch
 destination-branches: [master, iso9]
 sections: {}
