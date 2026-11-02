@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { EnvironmentSettings } from "@inmanta/web-console-core";
+import { EnvironmentSettings, words } from "@inmanta/web-console-core";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import { merge } from "@inmanta/web-console-core/Language/collection";
 import {
   useResetEnvironmentSetting,
@@ -86,7 +87,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     resetedValueName: "",
   });
   const client = useQueryClient();
-  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
+  const { notifySuccess } = useAppAlert();
   const [errorMessage, setErrorMessage] = useState("");
 
   const updateSetting = useUpdateEnvironmentSetting({
@@ -95,7 +96,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
       client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
       document.dispatchEvent(new Event("settings-update"));
       setErrorMessage("");
-      setShowUpdateBanner(true);
+      notifySuccess({ title: words("settings.update") });
     },
     onError: (error) => setErrorMessage(error.message),
   });
@@ -120,10 +121,6 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     return updateSetting.mutate({ id, value });
   };
 
-  const updateSuccessBanner = (value: boolean) => {
-    setShowUpdateBanner(value);
-  };
-
   const infos = new InputInfoCreator(
     (values: EnvironmentSettings.ValuesMap) => {
       dispatch({ type: "set", payload: values });
@@ -137,12 +134,6 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
   }, [settings]);
 
   return (
-    <Container
-      infos={infos}
-      errorMessage={errorMessage}
-      onErrorClose={() => setErrorMessage("")}
-      showUpdateBanner={showUpdateBanner}
-      setShowUpdateBanner={updateSuccessBanner}
-    />
+    <Container infos={infos} errorMessage={errorMessage} onErrorClose={() => setErrorMessage("")} />
   );
 };

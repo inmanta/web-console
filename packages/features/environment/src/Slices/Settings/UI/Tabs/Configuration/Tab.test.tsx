@@ -42,10 +42,6 @@ describe("ConfigurationTab", () => {
     server.resetHandlers();
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   afterAll(() => {
     server.close();
   });
@@ -636,47 +632,6 @@ describe("ConfigurationTab", () => {
 
       expect(results).toHaveNoViolations();
     });
-  });
-
-  test("GIVEN ConfigurationTab WHEN a save succeeds THEN the update banner hides after its timeout and shows again on the next save", async () => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
-    server.use(
-      http.get("/api/v2/environment_settings", () => {
-        return HttpResponse.json({ data: EnvironmentSettings.base });
-      }),
-      http.post("/api/v2/environment_settings/auto_deploy", () => {
-        return HttpResponse.json();
-      })
-    );
-
-    const { component } = setup();
-
-    render(component);
-
-    const row = await screen.findByRole("row", {
-      name: "Row-auto_deploy",
-    });
-
-    const toggleAndSave = async () => {
-      await userEvent.click(within(row).getByRole("switch", { name: "Toggle-auto_deploy" }));
-      await userEvent.click(within(row).getByRole("button", { name: "SaveAction" }), {
-        skipHover: true,
-      });
-    };
-
-    await toggleAndSave();
-
-    expect(await screen.findByText(words("settings.update"))).toBeVisible();
-
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(3000);
-    });
-
-    expect(screen.queryByText(words("settings.update"))).not.toBeInTheDocument();
-
-    await toggleAndSave();
-
-    expect(await screen.findByText(words("settings.update"))).toBeVisible();
   });
 
   test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete is performed", async () => {

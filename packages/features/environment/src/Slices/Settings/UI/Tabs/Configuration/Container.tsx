@@ -1,7 +1,7 @@
 import React from "react";
-import { AlertVariant, Stack, Title } from "@patternfly/react-core";
+import { Stack, Title } from "@patternfly/react-core";
 import { Tbody, Table, Td, Tr } from "@patternfly/react-table";
-import { EnvironmentSettings, words } from "@inmanta/web-console-core";
+import { EnvironmentSettings } from "@inmanta/web-console-core";
 import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
 import { InputRow } from "./Components";
 
@@ -9,32 +9,13 @@ interface Props {
   infos: EnvironmentSettings.SectionnedInputInfo;
   errorMessage: string;
   onErrorClose: () => void;
-  showUpdateBanner: boolean;
-  setShowUpdateBanner: (showUpdateBanner: boolean) => void;
   className?: string;
 }
 
-export const Container: React.FC<Props> = ({
-  infos,
-  errorMessage,
-  showUpdateBanner,
-  setShowUpdateBanner,
-  onErrorClose,
-  className,
-}) => {
+export const Container: React.FC<Props> = ({ infos, errorMessage, onErrorClose, className }) => {
   return (
     <Stack hasGutter style={{ maxWidth: "1000px" }} className={className}>
       {errorMessage && <AppAlert title={errorMessage} onClose={onErrorClose} isInline />}
-      {showUpdateBanner && (
-        <AppAlert
-          title={words("settings.update")}
-          onClose={() => setShowUpdateBanner(false)}
-          isInline
-          variant={AlertVariant.success}
-          timeout={2000}
-          onTimeout={() => setShowUpdateBanner(false)}
-        />
-      )}
       <Table variant="compact" borders={false}>
         <Tbody>
           {Object.entries(infos).map(([section, infos]) => (
