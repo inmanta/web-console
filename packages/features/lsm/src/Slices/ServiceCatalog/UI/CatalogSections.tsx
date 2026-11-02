@@ -33,10 +33,7 @@ export const CatalogSections: React.FC<Props> = ({ serviceModels }) => {
     <Stack hasGutter>
       {sections.map((section) => (
         <StackItem key={`${section.kind}-${getSectionTitle(section)}`}>
-          <Table
-            variant="compact"
-            aria-label={hasGroups ? getSectionTitle(section) : words("catalog.title")}
-          >
+          <Table aria-label={hasGroups ? getSectionTitle(section) : words("catalog.title")}>
             <Tbody>
               {hasGroups && (
                 <Tr>
@@ -63,7 +60,7 @@ export const CatalogSections: React.FC<Props> = ({ serviceModels }) => {
  */
 const renderSectionHeading = (section: CatalogSection): React.ReactNode => (
   <Flex alignItems={{ default: "alignItemsBaseline" }} columnGap={{ default: "columnGapSm" }}>
-    <Title headingLevel="h2" size="md">
+    <Title headingLevel="h2" size="lg">
       {getSectionTitle(section)}
     </Title>
     <Content component={ContentVariants.small}>

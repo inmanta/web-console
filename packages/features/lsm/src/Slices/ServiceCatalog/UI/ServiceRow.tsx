@@ -91,9 +91,10 @@ export const ServiceRow: React.FC<Props> = ({ service, hasServiceIcons }) => {
           flexWrap={{ default: "nowrap" }}
         >
           {hasServiceIcons && (
-            <ServiceIconTile iconSize="md">
+            <ServiceIconTile iconSize="lg">
               <DynamicFAIcon
                 icon={getServiceIconName(service)}
+                isInline
                 color="var(--pf-t--global--icon--color--brand--default)"
                 attr={{ "aria-hidden": true }}
               />
@@ -108,17 +109,15 @@ export const ServiceRow: React.FC<Props> = ({ service, hasServiceIcons }) => {
               alignItems={{ default: "alignItemsBaseline" }}
               columnGap={{ default: "columnGapSm" }}
             >
-              <Link pathname={inventoryPathname} fitContent>
-                <Button variant="link" isInline component="span">
-                  {resolvedAnnotations.web_title}
-                </Button>
-              </Link>
+              <ServiceTitleLink pathname={inventoryPathname} variant="plain" fitContent>
+                {resolvedAnnotations.web_title}
+              </ServiceTitleLink>
               {resolvedAnnotations.web_title !== serviceModel.name && (
                 <Content component={ContentVariants.small}>{serviceModel.name}</Content>
               )}
             </Flex>
             {resolvedAnnotations.web_description && (
-              <Content component={ContentVariants.small} id={`${serviceModel.name}-description`}>
+              <Content component={ContentVariants.p} id={`${serviceModel.name}-description`}>
                 <Truncate content={formatDescriptionLine(resolvedAnnotations.web_description)} />
               </Content>
             )}
@@ -183,13 +182,34 @@ export const ServiceRow: React.FC<Props> = ({ service, hasServiceIcons }) => {
 };
 
 /**
- * A brand-tinted square behind the service icon, the size of the xl spacer, which no PatternFly
- * Icon size matches. `&&` lets the size win over PatternFly's own `pf-v6-c-icon` rule.
+ * The service title, a link to its inventory in the heading font, so the title stands out from the
+ * entity name and description next to it. It has the regular text color and only shows as a link
+ * on hover.
+ */
+const ServiceTitleLink = styled(Link)`
+  font-family: var(--pf-t--global--font--family--heading);
+  font-size: var(--pf-t--global--font--size--body--lg);
+  font-weight: var(--pf-t--global--font--weight--heading--default);
+
+  &:hover {
+    color: var(--pf-t--global--text--color--link--hover);
+    text-decoration: underline;
+  }
+`;
+
+/**
+ * A brand-tinted square behind the service icon, the size of a PatternFly plain button (a line of
+ * body text plus the control padding on both sides), which no PatternFly Icon size matches. `&&`
+ * lets the size win over PatternFly's own `pf-v6-c-icon` rule.
  */
 const ServiceIconTile = styled(Icon)`
   && {
-    --pf-v6-c-icon--Width: var(--pf-t--global--spacer--xl);
-    --pf-v6-c-icon--Height: var(--pf-t--global--spacer--xl);
+    --pf-v6-c-icon--Width: calc(
+      var(--pf-t--global--font--size--body--default) *
+        var(--pf-t--global--font--line-height--body) + 2 *
+        var(--pf-t--global--spacer--control--vertical--default)
+    );
+    --pf-v6-c-icon--Height: var(--pf-v6-c-icon--Width);
 
     border-radius: var(--pf-t--global--border--radius--small);
     background-color: var(--pf-t--global--color--brand--subtle--default);
