@@ -1,4 +1,4 @@
-description: Clear the environment settings update banner timeout when the tab unmounts.
+description: The environment settings update banner hides through the PatternFly alert timeout.
 change-type: patch
 destination-branches: [master, iso9]
 sections: {}

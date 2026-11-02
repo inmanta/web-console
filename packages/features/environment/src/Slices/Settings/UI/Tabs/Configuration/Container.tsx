@@ -31,6 +31,8 @@ export const Container: React.FC<Props> = ({
           onClose={() => setShowUpdateBanner(false)}
           isInline
           variant={AlertVariant.success}
+          timeout={2000}
+          onTimeout={() => setShowUpdateBanner(false)}
         />
       )}
       <Table variant="compact" borders={false}>

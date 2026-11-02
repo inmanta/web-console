@@ -42,6 +42,10 @@ describe("ConfigurationTab", () => {
     server.resetHandlers();
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   afterAll(() => {
     server.close();
   });
@@ -634,7 +638,8 @@ describe("ConfigurationTab", () => {
     });
   });
 
-  test("GIVEN ConfigurationTab WHEN a save succeeds and the tab unmounts THEN the update banner timeout is cleared", async () => {
+  test("GIVEN ConfigurationTab WHEN a save succeeds THEN the update banner hides after its timeout and shows again on the next save", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     server.use(
       http.get("/api/v2/environment_settings", () => {
         return HttpResponse.json({ data: EnvironmentSettings.base });
@@ -643,33 +648,35 @@ describe("ConfigurationTab", () => {
         return HttpResponse.json();
       })
     );
-    const setTimeoutSpy = vi.spyOn(globalThis, "setTimeout");
-    const clearTimeoutSpy = vi.spyOn(globalThis, "clearTimeout");
 
     const { component } = setup();
 
-    const { unmount } = render(component);
+    render(component);
 
     const row = await screen.findByRole("row", {
       name: "Row-auto_deploy",
     });
 
-    await userEvent.click(within(row).getByRole("switch", { name: "Toggle-auto_deploy" }));
-    await userEvent.click(within(row).getByRole("button", { name: "SaveAction" }), {
-      skipHover: true,
-    });
+    const toggleAndSave = async () => {
+      await userEvent.click(within(row).getByRole("switch", { name: "Toggle-auto_deploy" }));
+      await userEvent.click(within(row).getByRole("button", { name: "SaveAction" }), {
+        skipHover: true,
+      });
+    };
+
+    await toggleAndSave();
 
     expect(await screen.findByText(words("settings.update"))).toBeVisible();
 
-    const bannerTimeoutIndex = setTimeoutSpy.mock.calls.findIndex(([, delay]) => delay === 2000);
-    const bannerTimeoutId = setTimeoutSpy.mock.results[bannerTimeoutIndex].value;
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(3000);
+    });
 
-    unmount();
+    expect(screen.queryByText(words("settings.update"))).not.toBeInTheDocument();
 
-    expect(clearTimeoutSpy).toHaveBeenCalledWith(bannerTimeoutId);
+    await toggleAndSave();
 
-    setTimeoutSpy.mockRestore();
-    clearTimeoutSpy.mockRestore();
+    expect(await screen.findByText(words("settings.update"))).toBeVisible();
   });
 
   test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete is performed", async () => {
