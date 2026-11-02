@@ -33,19 +33,10 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
   const { notifySuccess, notifyError } = useAppAlert();
   const { mutate } = useModifyEnvironment(environmentHandler.useId(), {
     onSuccess: () => notifySuccess({ title: words("settings.update") }),
-    onError: (error) => notifyError({ title: error.message }),
+    onError: (error) =>
+      notifyError({ title: words("settings.update.failed"), message: error.message }),
   });
   const createProject = useCreateProject();
-
-  /**
-   * Shows an error of an editable field as a toast. The fields also pass `null` when they clear
-   * their error, which needs no toast.
-   */
-  const notifyFieldError = (message: string | null): void => {
-    if (message !== null) {
-      notifyError({ title: message });
-    }
-  };
 
   const onNameSubmit = (name: string) => mutate({ name: name });
 
@@ -60,7 +51,10 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
     const match = projects.find((project) => project.name === projectName);
 
     if (!match) {
-      notifyError({ title: `No matching project found for name '${projectName}'` });
+      notifyError({
+        title: words("settings.update.failed"),
+        message: words("settings.tabs.environment.projectNotFound")(projectName),
+      });
 
       return;
     }
@@ -89,13 +83,11 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
         initialValue={environment.name}
         label={words("name")}
         onSubmit={onNameSubmit}
-        setError={notifyFieldError}
       />
       <EditableTextAreaField
         initialValue={environment.description || ""}
         label={words("description")}
         onSubmit={onDescriptionSubmit}
-        setError={notifyFieldError}
       />
       <EditableMultiTextField
         groupName={words("settings.tabs.environment.repoSettings")}
@@ -108,7 +100,6 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
           repo_branch: words("createEnv.branch.tooltip"),
         }}
         onSubmit={onRepoSubmit}
-        setError={notifyFieldError}
       />
       <EditableSelectField
         label={words("settings.tabs.environment.projectName")}
@@ -116,13 +107,11 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
         options={projects.map((project) => project.name)}
         onCreate={createProject}
         onSubmit={onProjectSubmit}
-        setError={notifyFieldError}
       />
       <EditableImageField
         label={words("settings.tabs.environment.icon")}
         initialValue={environment.icon || ""}
         onSubmit={onIconSubmit}
-        setError={notifyFieldError}
       />
       <Actions environment={environment} />
     </DescriptionList>

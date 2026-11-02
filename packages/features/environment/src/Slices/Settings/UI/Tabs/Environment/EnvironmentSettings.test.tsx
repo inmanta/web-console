@@ -146,7 +146,8 @@ describe("EnvironmentSettings", () => {
 
     await userEvent.type(textBox, "dev{enter}");
 
-    expect(await screen.findByText("Invalid environment name")).toBeVisible();
+    expect(await screen.findByText(words("settings.update.failed"))).toBeVisible();
+    expect(screen.getByText("Invalid environment name")).toBeVisible();
 
     expect(screen.queryByRole("textbox", { name: "Name-input" })).not.toBeInTheDocument();
 

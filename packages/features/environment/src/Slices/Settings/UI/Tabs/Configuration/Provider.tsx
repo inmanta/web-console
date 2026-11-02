@@ -96,14 +96,17 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
       document.dispatchEvent(new Event("settings-update"));
       notifySuccess({ title: words("settings.update") });
     },
-    onError: (error) => notifyError({ title: error.message }),
+    onError: (error) =>
+      notifyError({ title: words("settings.update.failed"), message: error.message }),
   });
 
   const resetSetting = useResetEnvironmentSetting({
     onSuccess: () => {
       client.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
+      notifySuccess({ title: words("settings.update") });
     },
-    onError: (error) => notifyError({ title: error.message }),
+    onError: (error) =>
+      notifyError({ title: words("settings.update.failed"), message: error.message }),
   });
 
   const handleReset = (id: string) => {

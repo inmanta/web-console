@@ -657,7 +657,8 @@ describe("ConfigurationTab", () => {
       skipHover: true,
     });
 
-    expect(await screen.findByText("Invalid value for auto_deploy")).toBeVisible();
+    expect(await screen.findByText(words("settings.update.failed"))).toBeVisible();
+    expect(screen.getByText("Invalid value for auto_deploy")).toBeVisible();
     expect(screen.queryByText(words("settings.update"))).not.toBeInTheDocument();
   });
 
@@ -698,6 +699,8 @@ describe("ConfigurationTab", () => {
     await userEvent.click(within(row).getByRole("button", { name: "ResetAction" }), {
       skipHover: true,
     });
+
+    expect(await screen.findByText(words("settings.update"))).toBeVisible();
 
     const updatedRow = await screen.findByRole("row", {
       name: "Row-auto_deploy",
