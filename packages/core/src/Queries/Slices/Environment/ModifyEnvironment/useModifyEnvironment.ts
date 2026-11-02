@@ -13,7 +13,8 @@ import { GetEnvironmentPreviewKey } from "../GetEnvironmentPreview/useGetEnviron
 import { getEnvironmentsKey } from "../GetEnvironments";
 
 /**
- * React Query hook for modifying an environment.
+ * React Query hook for modifying an environment. On success it refetches the environment details,
+ * the environment list and the preview, then calls the caller's own `onSuccess`.
  *
  * @returns {UseMutationResult<void, Error, ModifyEnvironmentParams, unknown>} The mutation object for modifying an environment.
  */
@@ -29,11 +30,13 @@ export const useModifyEnvironment = (
   return useMutation({
     mutationFn: (params) => post(`/api/v2/environment/${environmentId}`, params),
     mutationKey: ["modify_environment", environmentId, env],
-    onSuccess: () => {
+    ...options,
+    onSuccess: (...args) => {
       client.refetchQueries({ queryKey: getEnvironmentDetailsKey.root() });
       client.refetchQueries({ queryKey: getEnvironmentsKey.root() });
       client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
+
+      return options?.onSuccess?.(...args);
     },
-    ...options,
   });
 };

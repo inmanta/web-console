@@ -1,4 +1,4 @@
-description: Saving an environment setting now confirms with a toast, like the rest of the console.
+description: Saving environment settings now shows a toast for success and errors, like the rest of the console.
 change-type: patch
 destination-branches: [master, iso9]
 sections:

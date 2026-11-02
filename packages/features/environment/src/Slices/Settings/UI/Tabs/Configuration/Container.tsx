@@ -2,20 +2,16 @@ import React from "react";
 import { Stack, Title } from "@patternfly/react-core";
 import { Tbody, Table, Td, Tr } from "@patternfly/react-table";
 import { EnvironmentSettings } from "@inmanta/web-console-core";
-import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
 import { InputRow } from "./Components";
 
 interface Props {
   infos: EnvironmentSettings.SectionnedInputInfo;
-  errorMessage: string;
-  onErrorClose: () => void;
   className?: string;
 }
 
-export const Container: React.FC<Props> = ({ infos, errorMessage, onErrorClose, className }) => {
+export const Container: React.FC<Props> = ({ infos, className }) => {
   return (
     <Stack hasGutter style={{ maxWidth: "1000px" }} className={className}>
-      {errorMessage && <AppAlert title={errorMessage} onClose={onErrorClose} isInline />}
       <Table variant="compact" borders={false}>
         <Tbody>
           {Object.entries(infos).map(([section, infos]) => (

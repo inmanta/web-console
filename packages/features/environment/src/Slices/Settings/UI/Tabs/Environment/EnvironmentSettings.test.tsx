@@ -1,10 +1,11 @@
 import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { words } from "@inmanta/web-console-core";
 import { Environment, MockedDependencyProvider, Project } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
@@ -80,7 +81,8 @@ describe("EnvironmentSettings", () => {
 
     await userEvent.type(textBox, "dev{enter}");
 
-    expect(screen.queryByTestId("environment-settings-error")).not.toBeInTheDocument();
+    expect(await screen.findByText(words("settings.update"))).toBeVisible();
+    expect(screen.queryByText("Invalid environment name")).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
 
@@ -90,7 +92,7 @@ describe("EnvironmentSettings", () => {
 
     await userEvent.type(textBox2, "otherName{enter}");
 
-    expect(await screen.findByTestId("environment-settings-error")).toBeVisible();
+    expect(await screen.findByText("Invalid environment name")).toBeVisible();
   });
 
   test("Given environment settings When canceling a name edit Then the backend request is not fired", async () => {
@@ -117,10 +119,7 @@ describe("EnvironmentSettings", () => {
     expect(await screen.findByTestId("Name-value")).toHaveTextContent("env");
 
     expect(screen.queryByRole("textbox", { name: "Name-input" })).not.toBeInTheDocument();
-
-    await waitFor(() => {
-      expect(screen.queryByTestId("environment-settings-error")).toBeNull();
-    });
+    expect(screen.queryByTestId("ToastAlert")).not.toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -129,48 +128,34 @@ describe("EnvironmentSettings", () => {
     });
   });
 
-  test.each`
-    displayName                 | elementName
-    ${"with the close button"}  | ${"environment-settings-error-close"}
-    ${"by starting a new edit"} | ${"Name-toggle-edit"}
-  `(
-    "Given environment settings When a name edit yields an error Then the error message is shown and can be closed $displayName",
-    async ({ elementName }) => {
-      server.use(
-        http.post("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", async () => {
-          return HttpResponse.json({ message: "Invalid environment name" }, { status: 400 });
-        })
-      );
-      const { component } = setup();
+  test("Given environment settings When a name edit yields an error Then an error toast shows the message", async () => {
+    server.use(
+      http.post("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", async () => {
+        return HttpResponse.json({ message: "Invalid environment name" }, { status: 400 });
+      })
+    );
+    const { component } = setup();
 
-      render(component);
+    render(component);
 
-      await userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
+    await userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
 
-      const textBox = await screen.findByRole("textbox", { name: "Name-input" });
+    const textBox = await screen.findByRole("textbox", { name: "Name-input" });
 
-      await userEvent.clear(textBox);
+    await userEvent.clear(textBox);
 
-      await userEvent.type(textBox, "dev{enter}");
+    await userEvent.type(textBox, "dev{enter}");
 
-      expect(await screen.findByTestId("environment-settings-error")).toBeVisible();
+    expect(await screen.findByText("Invalid environment name")).toBeVisible();
 
-      expect(screen.queryByRole("textbox", { name: "Name-input" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: "Name-input" })).not.toBeInTheDocument();
 
-      // Closing the alert
-      await userEvent.click(
-        screen.queryByRole("button", { name: elementName }) ?? screen.getByTestId(elementName)
-      );
+    await act(async () => {
+      const results = await axe(document.body);
 
-      expect(screen.queryByTestId("environment-settings-error")).not.toBeInTheDocument();
-
-      await act(async () => {
-        const results = await axe(document.body);
-
-        expect(results).toHaveNoViolations();
-      });
-    }
-  );
+      expect(results).toHaveNoViolations();
+    });
+  });
 
   test("Given environment settings When clicking on the edit repository settings button Then the input fields are shown", async () => {
     const { component } = setup();
@@ -235,9 +220,8 @@ describe("EnvironmentSettings", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Repository Settings-submit-edit" }));
 
-    await waitFor(() => {
-      expect(screen.queryByTestId("environment-settings-error")).toBeNull();
-    });
+    expect(await screen.findByText(words("settings.update"))).toBeVisible();
+    expect(screen.queryByText("Invalid environment name")).not.toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -272,10 +256,7 @@ describe("EnvironmentSettings", () => {
     // The field is shown with the original value
     expect(screen.queryByRole("textbox", { name: "repo_branch-input" })).not.toBeInTheDocument();
     expect(screen.queryByRole("textbox", { name: "repo_url-input" })).not.toBeInTheDocument();
-
-    await waitFor(() => {
-      expect(screen.queryByTestId("environment-settings-error")).toBeNull();
-    });
+    expect(screen.queryByTestId("ToastAlert")).not.toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -284,52 +265,36 @@ describe("EnvironmentSettings", () => {
     });
   });
 
-  test.each`
-    displayName                 | elementName
-    ${"with the close button"}  | ${"environment-settings-error-close"}
-    ${"by starting a new edit"} | ${"Repository Settings-toggle-edit"}
-  `(
-    "Given environment settings When a repo edit yields an error Then the error message is shown and can be closed $displayName",
-    async ({ elementName }) => {
-      server.use(
-        http.post("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", async () => {
-          return HttpResponse.json({ message: "Invalid branch" }, { status: 400 });
-        })
-      );
-      const { component } = setup();
+  test("Given environment settings When a repo edit yields an error Then an error toast shows the message", async () => {
+    server.use(
+      http.post("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", async () => {
+        return HttpResponse.json({ message: "Invalid branch" }, { status: 400 });
+      })
+    );
+    const { component } = setup();
 
-      render(component);
+    render(component);
 
-      await userEvent.click(
-        screen.getByRole("button", { name: "Repository Settings-toggle-edit" })
-      );
+    await userEvent.click(screen.getByRole("button", { name: "Repository Settings-toggle-edit" }));
 
-      const textBox = await screen.findByRole("textbox", {
-        name: "repo_branch-input",
-      });
+    const textBox = await screen.findByRole("textbox", {
+      name: "repo_branch-input",
+    });
 
-      await userEvent.clear(textBox);
+    await userEvent.clear(textBox);
 
-      await userEvent.type(textBox, "dev{enter}");
+    await userEvent.type(textBox, "dev{enter}");
 
-      expect(await screen.findByTestId("environment-settings-error")).toBeVisible();
+    expect(await screen.findByText("Invalid branch")).toBeVisible();
 
-      expect(screen.queryByRole("textbox", { name: "repo_branch-input" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: "repo_branch-input" })).not.toBeInTheDocument();
 
-      // Closing the alert
-      await userEvent.click(
-        screen.queryByRole("button", { name: elementName }) ?? screen.getByTestId(elementName)
-      );
+    await act(async () => {
+      const results = await axe(document.body);
 
-      expect(screen.queryByTestId("environment-settings-error")).not.toBeInTheDocument();
-
-      await act(async () => {
-        const results = await axe(document.body);
-
-        expect(results).toHaveNoViolations();
-      });
-    }
-  );
+      expect(results).toHaveNoViolations();
+    });
+  });
 
   test("Given environment settings When clicking on the edit project button Then the select field is shown", async () => {
     const { component } = setup();
@@ -415,10 +380,7 @@ describe("EnvironmentSettings", () => {
     expect(
       screen.queryByRole("textbox", { name: "Project Name-typeahead" })
     ).not.toBeInTheDocument();
-
-    await waitFor(() => {
-      expect(screen.queryByTestId("environment-settings-error")).toBeNull();
-    });
+    expect(screen.queryByTestId("ToastAlert")).not.toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -427,53 +389,39 @@ describe("EnvironmentSettings", () => {
     });
   });
 
-  test.each`
-    displayName                 | elementName
-    ${"with the close button"}  | ${"environment-settings-error-close"}
-    ${"by starting a new edit"} | ${"Project Name-toggle-edit"}
-  `(
-    "Given environment settings When a project name edit yields an error Then the error message is shown and can be closed $displayName",
-    async ({ elementName }) => {
-      server.use(
-        http.post("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", async () => {
-          return HttpResponse.json({ message: "Invalid project id" }, { status: 400 });
-        })
-      );
-      const { component } = setup();
+  test("Given environment settings When a project name edit yields an error Then an error toast shows the message", async () => {
+    server.use(
+      http.post("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", async () => {
+        return HttpResponse.json({ message: "Invalid project id" }, { status: 400 });
+      })
+    );
+    const { component } = setup();
 
-      render(component);
+    render(component);
 
-      await userEvent.click(screen.getByRole("button", { name: "Project Name-toggle-edit" }));
+    await userEvent.click(screen.getByRole("button", { name: "Project Name-toggle-edit" }));
 
-      const toggle = await screen.findByRole("combobox", {
-        name: "Project Name-select-toggleFilterInput",
-      });
+    const toggle = await screen.findByRole("combobox", {
+      name: "Project Name-select-toggleFilterInput",
+    });
 
-      await userEvent.click(toggle);
+    await userEvent.click(toggle);
 
-      await userEvent.click(screen.getByRole("option", { name: "project_name_b" }));
+    await userEvent.click(screen.getByRole("option", { name: "project_name_b" }));
 
-      await userEvent.click(screen.getByRole("button", { name: "Project Name-submit-edit" }));
-      expect(await screen.findByTestId("environment-settings-error")).toBeVisible();
+    await userEvent.click(screen.getByRole("button", { name: "Project Name-submit-edit" }));
+    expect(await screen.findByText("Invalid project id")).toBeVisible();
 
-      expect(
-        screen.queryByRole("textbox", { name: "Project Name-typeahead" })
-      ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("textbox", { name: "Project Name-typeahead" })
+    ).not.toBeInTheDocument();
 
-      // Closing the alert
-      await userEvent.click(
-        screen.queryByRole("button", { name: elementName }) ?? screen.getByTestId(elementName)
-      );
+    await act(async () => {
+      const results = await axe(document.body);
 
-      expect(screen.queryByTestId("environment-settings-error")).not.toBeInTheDocument();
-
-      await act(async () => {
-        const results = await axe(document.body);
-
-        expect(results).toHaveNoViolations();
-      });
-    }
-  );
+      expect(results).toHaveNoViolations();
+    });
+  });
 
   test("Given environment settings When clicking on the edit description button Then the textarea field is shown", async () => {
     const { component } = setup();

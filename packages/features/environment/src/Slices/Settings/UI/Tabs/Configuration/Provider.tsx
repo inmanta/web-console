@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { EnvironmentSettings, words } from "@inmanta/web-console-core";
 import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
@@ -87,26 +87,23 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     resetedValueName: "",
   });
   const client = useQueryClient();
-  const { notifySuccess } = useAppAlert();
-  const [errorMessage, setErrorMessage] = useState("");
+  const { notifySuccess, notifyError } = useAppAlert();
 
   const updateSetting = useUpdateEnvironmentSetting({
     onSuccess: () => {
       client.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
       client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
       document.dispatchEvent(new Event("settings-update"));
-      setErrorMessage("");
       notifySuccess({ title: words("settings.update") });
     },
-    onError: (error) => setErrorMessage(error.message),
+    onError: (error) => notifyError({ title: error.message }),
   });
 
   const resetSetting = useResetEnvironmentSetting({
     onSuccess: () => {
-      setErrorMessage("");
       client.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
     },
-    onError: (error) => setErrorMessage(error.message),
+    onError: (error) => notifyError({ title: error.message }),
   });
 
   const handleReset = (id: string) => {
@@ -133,7 +130,5 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     dispatch({ type: "update", payload: settings });
   }, [settings]);
 
-  return (
-    <Container infos={infos} errorMessage={errorMessage} onErrorClose={() => setErrorMessage("")} />
-  );
+  return <Container infos={infos} />;
 };
