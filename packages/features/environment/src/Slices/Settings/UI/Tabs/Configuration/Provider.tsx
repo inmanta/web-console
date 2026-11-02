@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { EnvironmentSettings } from "@inmanta/web-console-core";
 import { merge } from "@inmanta/web-console-core/Language/collection";
@@ -87,6 +87,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
   });
   const client = useQueryClient();
   const [showUpdateBanner, setShowUpdateBanner] = useState(false);
+  const updateBannerTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState("");
 
   const updateSetting = useUpdateEnvironmentSetting({
@@ -96,7 +97,8 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
       document.dispatchEvent(new Event("settings-update"));
       setErrorMessage("");
       setShowUpdateBanner(true);
-      setTimeout(() => {
+      clearTimeout(updateBannerTimeoutRef.current);
+      updateBannerTimeoutRef.current = setTimeout(() => {
         setShowUpdateBanner(false);
       }, 2000);
     },
@@ -138,6 +140,12 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
   useEffect(() => {
     dispatch({ type: "update", payload: settings });
   }, [settings]);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(updateBannerTimeoutRef.current);
+    };
+  }, []);
 
   return (
     <Container
