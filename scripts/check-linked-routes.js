@@ -10,35 +10,66 @@
  *
  * No program loads every declaration, so TypeScript can't compare them. This script does: every
  * declared route must have exactly one owner (a declaration outside those files), with the same
- * params. Run by `yarn tsc`.
+ * params. It reads the files with the TypeScript parser, so formatting doesn't matter. Run by
+ * `yarn tsc`.
  */
 import { execSync } from "child_process";
 import { readFileSync } from "fs";
+import ts from "typescript";
 
 const linkerFile = /\/src\/(linkedRoutes|testTypes)\.ts$/;
-const normalize = (params) => params.replace(/\s+/g, " ").replace(/;\s*}/g, " }").trim();
+const printer = ts.createPrinter({ removeComments: true });
 
-const files = execSync('git grep --untracked -l "interface RouteRegistry {" -- packages apps', {
+const files = execSync('git grep --untracked -l "RouteRegistry" -- packages apps', {
   encoding: "utf8",
 })
   .trim()
   .split("\n")
-  .filter((file) => !file.endsWith("Domain/Route.ts"));
+  .filter((file) => /\.tsx?$/.test(file) && !file.endsWith("Domain/Route.ts"));
+
+/**
+ * Every property of every `interface RouteRegistry` in the file, with its type printed the same
+ * way whatever the formatting of the source.
+ */
+const routeDeclarations = (file) => {
+  const source = ts.createSourceFile(
+    file,
+    readFileSync(file, "utf8"),
+    ts.ScriptTarget.Latest,
+    true
+  );
+  const declarations = [];
+  const visit = (node) => {
+    if (ts.isInterfaceDeclaration(node) && node.name.text === "RouteRegistry") {
+      for (const member of node.members) {
+        if (ts.isPropertySignature(member) && member.type) {
+          const params = printer.printNode(ts.EmitHint.Unspecified, member.type, source);
+          declarations.push({
+            kind: member.name.getText(source),
+            params: params.replace(/\s+/g, " "),
+          });
+        }
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(source);
+
+  return declarations;
+};
 
 const owners = new Map();
 const linked = [];
 const problems = [];
 
 for (const file of files) {
-  const source = readFileSync(file, "utf8");
-  const body = source.match(/interface RouteRegistry \{([\s\S]*?)\n\s*\}/)?.[1] ?? "";
-  for (const [, kind, params] of body.matchAll(/^\s+([A-Z][A-Za-z]+): ([^;]+);/gm)) {
+  for (const { kind, params } of routeDeclarations(file)) {
     if (linkerFile.test(file)) {
-      linked.push({ file, kind, params: normalize(params) });
+      linked.push({ file, kind, params });
     } else if (owners.has(kind)) {
       problems.push(`${kind} is declared by two features: ${owners.get(kind).file} and ${file}`);
     } else {
-      owners.set(kind, { file, params: normalize(params) });
+      owners.set(kind, { file, params });
     }
   }
 }

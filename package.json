@@ -24,7 +24,7 @@
     "format:check": "prettier --check \"./**/*.{cjs,js,jsx,ts,tsx}\"",
     "lint": "yarn constraints && eslint --max-warnings=0 -c eslint.config.js",
     "lint:fix": "eslint --max-warnings=0  --quiet --fix",
-    "tsc": "tsc -b && node scripts/check-linked-routes.js",
+    "tsc": "node scripts/check-project-references.js && tsc -b && node scripts/check-linked-routes.js",
     "build:bundle-profile": "vite build --mode analyze",
     "bundle-profile:analyze": "yarn build:bundle-profile",
     "clean": "rimraf dist",

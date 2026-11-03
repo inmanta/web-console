@@ -77,7 +77,7 @@ Each slice (a folder in a package's `Slices/`) uses the same layers: `Core/` for
 
 ## Type checking
 
-`yarn tsc` builds the TypeScript project references (`tsc -b`): every package is its own project and only sees the packages it references, like at runtime. The declarations it generates go to `.tsbuild/`. `core` and `ui` have two projects, `tsconfig.src.json` for their code and `tsconfig.test.json` for their tests, because their tests use `test-utils`, which depends on them.
+`yarn tsc` builds the TypeScript project references (`tsc -b`): every package is its own project, and the declarations it generates go to `.tsbuild/`. `core` and `ui` have two projects, `tsconfig.src.json` for their code and `tsconfig.test.json` for their tests, because their tests use `test-utils`, which depends on them. A project's `references` must match the workspace dependencies in its `package.json`; TypeScript itself doesn't enforce that (an import of a package that isn't referenced compiles that package's source into the program), so `yarn tsc` checks it first (`scripts/check-project-references.js`).
 
 The words and routes registries (`WordsRegistry`, `RouteRegistry`) are filled through declaration merging, and a project only sees the declarations of the files it loads:
 
