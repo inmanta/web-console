@@ -208,7 +208,13 @@ export const lsmMessages = {
   "catalog.title": "Service Catalog",
   "catalog.empty.message": "No services found",
   "catalog.summary.empty": "No instance summary found",
-  "catalog.button.inventory": "Show inventory",
+  "catalog.button.inventory": "Inventory",
+  "catalog.column.service": "Service",
+  "catalog.column.instances": "Instances",
+  "catalog.instances.none": "No instances",
+  "catalog.section.ungrouped": "Other services",
+  "catalog.section.count": (serviceCount: number, instanceCount: number) =>
+    `${serviceCount} ${serviceCount === 1 ? "service" : "services"} · ${instanceCount} ${instanceCount === 1 ? "instance" : "instances"}`,
   "catalog.delete.modal.title": "Delete Service",
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,

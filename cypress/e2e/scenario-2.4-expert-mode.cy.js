@@ -22,7 +22,7 @@ if (isIso) {
       ).as("GetServiceInventory");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Make sure the call to get inventory has been executed
       cy.wait("@GetServiceInventory");
@@ -65,7 +65,7 @@ if (isIso) {
       selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Go to the instance details
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();
@@ -101,7 +101,7 @@ if (isIso) {
       selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Go to the instance details
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();
@@ -149,7 +149,7 @@ if (isIso) {
         .get('[aria-label="Number of instances by label"]')
         .children()
         .should("have.length", 1);
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Go to the instance details
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).last().click();
@@ -223,7 +223,7 @@ if (isIso) {
         .get('[aria-label="Number of instances by label"]')
         .children()
         .should("have.length", 1);
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Go to the instance details
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();

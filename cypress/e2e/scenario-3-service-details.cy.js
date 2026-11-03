@@ -93,8 +93,8 @@ if (isIso) {
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
-      // click on Show Inventory on basic-service
-      cy.get("#basic-service", { timeout: 60000 }).contains("Show inventory").click();
+      // click on Inventory on basic-service
+      cy.get("#basic-service", { timeout: 60000 }).contains("Inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
       cy.get("body").then(($body) => {
@@ -123,7 +123,7 @@ if (isIso) {
       }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // expect newly created instance to be visible in table
       cy.get('[aria-label="ServiceInventory-Success"]', {
@@ -161,8 +161,8 @@ if (isIso) {
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
-      // click on Show Inventory on basic-service
-      cy.get("#basic-service", { timeout: 60000 }).contains("Show inventory").click();
+      // click on Inventory on basic-service
+      cy.get("#basic-service", { timeout: 60000 }).contains("Inventory").click();
 
       // Wait for the inventory to load, otherwise the rows are counted before they render.
       cy.get(
@@ -190,7 +190,7 @@ if (isIso) {
       }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // expect newly created instance to be visible in table
       cy.get('[aria-label="ServiceInventory-Success"]', {
@@ -355,8 +355,8 @@ if (isIso) {
       // Expect Toast : Deleting service entity failed
       cy.get('[data-testid="ToastAlert"]').should("to.be.visible");
 
-      // Click on Show Invetory on basic-service
-      cy.get("#basic-service", { timeout: 60000 }).contains("Show inventory").click();
+      // Click on Inventory on basic-service
+      cy.get("#basic-service", { timeout: 60000 }).contains("Inventory").click();
 
       // Click on delete instance first row
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
