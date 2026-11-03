@@ -7,7 +7,7 @@ declare global {
   // Test globals are provided by vitest/globals
   // DOM testing library matchers are provided by @testing-library/jest-dom
 
-  // Global constants defined in vite.config.ts
+  // Global constants defined in vite.shared.ts
   const COMMITHASH: string;
   const APP_VERSION: string;
 

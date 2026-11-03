@@ -61,7 +61,8 @@ packages/
       index.ts - userManagementFeature, its FeatureModule
       Slices/ - The user management page
 apps/
-  web-console/src/ - The app: its composition (app.ts: createApp with the features it ships and the shell options), its entry (index.tsx), Monaco setup, config.js and app-level tests
+  web-console/ - The app: its Vite config (vite.config.ts) and index.html
+    src/ - Its composition (app.ts: createApp with the features it ships and the shell options), its entry (index.tsx), Monaco setup, config.js and app-level tests
 src/ - Only the global type declarations (typings.d.ts, vite-env.d.ts)
 ```
 
@@ -74,6 +75,12 @@ Every package and app is a Yarn workspace with its own `package.json`. Another p
 Each package also lists the third-party packages it imports in its own `package.json`: `dependencies` for the code that ships, `devDependencies` for tests and test helpers. `yarn lint` checks this (`import/no-extraneous-dependencies`) and runs the Yarn constraints (`yarn.config.cjs`): every package uses the same version of a dependency, and JointJS and the GraphiQL packages are only allowed in the composer and graphiql features. The root `package.json` keeps the build, lint and test tools.
 
 Each slice (a folder in a package's `Slices/`) uses the same layers: `Core/` for its types and contracts, `Data/` for transformations and implementations, `UI/` for its components.
+
+## Builds and tests
+
+Each app has its own Vite config, `apps/<app>/vite.config.ts`. It builds on `vite.shared.ts` at the root (React, the global constants, the shared assets, Monaco) and adds the Vite plugins of the features it ships: a feature that needs Vite settings exports a plugin as `<package>/vite` (`vite.js`, plain JavaScript so Node loads it in any Vite config), like the composer's JointJS aliases and chunk. The root scripts (`yarn build`, `yarn start`, ...) run the app's scripts; the build goes to `dist/` at the root.
+
+`vitest.config.ts` at the root has one Vitest project per package, named after it (`core`, `feature-lsm`, ...). `yarn test` runs them all, `yarn test --project feature-lsm` one of them.
 
 ## Type checking
 
