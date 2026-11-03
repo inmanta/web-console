@@ -382,6 +382,8 @@ export default defineConfig({
             "@monaco-editor/react",
             "@patternfly/react-styles",
             "graphiql",
+            // No package imports @graphiql/react; the graphiql feature declares it for this list.
+            // It moves to that feature's Vite config with the per-app configs (#7461).
             "@graphiql/react",
           ],
         },

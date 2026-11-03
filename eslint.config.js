@@ -257,7 +257,7 @@ export default [
   {
     // Every workspace declares the packages it imports in its own package.json (#7461), so that
     // installing one app only installs what its packages use. Tests and test helpers may use
-    // devDependencies.
+    // devDependencies. includeTypes: a type-only import needs the package installed too.
     files: ["{packages,apps}/**/*.{ts,tsx,js}"],
     rules: {
       "import/no-extraneous-dependencies": [
@@ -266,6 +266,23 @@ export default [
           devDependencies: devDependencyFiles,
           peerDependencies: false,
           optionalDependencies: false,
+          includeTypes: true,
+        },
+      ],
+    },
+  },
+  {
+    // The test helpers are what other packages' tests import, so what they use are dependencies
+    // of test-utils. Only its own tests may use its devDependencies.
+    files: ["packages/test-utils/**/*.{ts,tsx,js}"],
+    rules: {
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          devDependencies: ["packages/test-utils/**/*.test.{ts,tsx}"],
+          peerDependencies: false,
+          optionalDependencies: false,
+          includeTypes: true,
         },
       ],
     },
