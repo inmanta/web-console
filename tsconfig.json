@@ -35,12 +35,6 @@
       "@assets/*": [
         "./node_modules/@patternfly/react-core/dist/styles/assets/*"
       ],
-      "@/*": [
-        "./src/*"
-      ],
-      "@S/*": [
-        "./src/Slices/*"
-      ],
       "@images/*": [
         "./public/images/*"
       ],

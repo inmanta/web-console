@@ -122,10 +122,6 @@ export default [
           ],
           pathGroups: [
             {
-              pattern: "@/**",
-              group: "internal",
-            },
-            {
               pattern: "@inmanta/web-console-*{,/**}",
               group: "internal",
             },

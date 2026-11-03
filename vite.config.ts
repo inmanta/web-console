@@ -206,8 +206,6 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-      { find: "@", replacement: resolve(__dirname, "./src") },
-      { find: "@S", replacement: resolve(__dirname, "./src/Slices") },
       {
         find: "@assets",
         replacement: resolve(__dirname, "./node_modules/@patternfly/react-core/dist/styles/assets"),
