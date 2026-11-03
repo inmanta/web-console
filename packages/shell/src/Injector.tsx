@@ -16,9 +16,9 @@ import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
 import { EnvironmentHandlerImpl } from "@inmanta/web-console-core/Dependency/EnvironmentHandler";
 import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
+import { AppAlertProvider } from "@inmanta/web-console-ui/Components/AppAlertProvider";
+import { ModalProvider } from "@inmanta/web-console-ui/Components/ModalProvider";
 import { UrlManagerImpl } from "@inmanta/web-console-ui/Utils";
-import { AppAlertProvider } from "./Components/AppAlertProvider";
-import { ModalProvider } from "./Components/ModalProvider";
 
 interface Props {
   features: FeatureModule[];

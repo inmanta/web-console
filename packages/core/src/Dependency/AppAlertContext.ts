@@ -42,8 +42,8 @@ const defaultContext: AppAlertContextProps = {
 };
 
 /**
- * The context behind `useAppAlert`. Only the shell's `AppAlertProvider` provides it; outside the
- * provider, the default only warns in development.
+ * The context behind `useAppAlert`. Only `AppAlertProvider` (in `ui`, rendered by the shell)
+ * provides it; outside the provider, the default only warns in development.
  */
 export const AppAlertContext = createContext<AppAlertContextProps>(defaultContext);
 
