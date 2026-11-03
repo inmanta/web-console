@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { words } from "@inmanta/web-console-core";
+import { getServiceTitle, words } from "@inmanta/web-console-core";
 import { useGetServiceModel } from "@inmanta/web-console-core/Queries/Slices/Service";
 import { useGetInstance } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 
@@ -43,7 +43,7 @@ export const useDocumentationContent = ({ service, instanceId }: Props): Result 
   const [code, setCode] = useState<string>("");
 
   const pageTitle = words("markdownPreviewer.pageTitle")(
-    service,
+    getServiceTitle(service, serviceModelQuery.data),
     instanceDetails.data?.service_identity_attribute_value || instanceId
   );
 

@@ -2,8 +2,10 @@ import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
-import { TransferModel } from "@inmanta/web-console-core";
+import { HttpResponse, http } from "msw";
+import { TransferModel, words } from "@inmanta/web-console-core";
 import { StateTarget } from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Utils";
+import { Service } from "@inmanta/web-console-test-utils";
 import { historyData } from "@inmanta/web-console-test-utils/Data/InstanceHistory";
 import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import {
@@ -11,6 +13,7 @@ import {
   resolveFirstStateTargetByTarget,
   sortDocAttributeDescriptors,
 } from "../UI/Tabs/DocumentationTabContent";
+import { serviceModel } from "./mockData";
 import {
   defaultServer,
   errorServerHistory,
@@ -19,7 +22,7 @@ import {
   serverWithDocumentation,
   serverWithMultipleDocumentation,
 } from "./mockServer";
-import { setupServiceInstanceDetails } from "./mockSetup";
+import { instanceName, setupServiceInstanceDetails } from "./mockSetup";
 
 const datePresenter = new CustomDatePresenter();
 
@@ -114,6 +117,35 @@ describe("ServiceInstanceDetailsPage", () => {
 
     expect(screen.getByText("1d96a1ab")).toBeInTheDocument();
 
+    server.close();
+  });
+
+  it("Should name the service by its web_title in the page title", async () => {
+    const server = defaultServer;
+
+    server.use(
+      http.get(`/lsm/v1/service_catalog/${serviceModel.name}`, () =>
+        HttpResponse.json({
+          data: { ...serviceModel, entity_annotations: Service.EntityAnnotations.valid },
+        })
+      )
+    );
+    server.listen();
+    const component = setupServiceInstanceDetails();
+
+    render(component);
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: words("instanceDetails.page.title")(
+          Service.EntityAnnotations.valid.web_title,
+          instanceName
+        ),
+      })
+    ).toBeVisible();
+
+    server.resetHandlers();
     server.close();
   });
 

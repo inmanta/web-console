@@ -102,12 +102,16 @@ test("GIVEN '/lsm/catalog' THEN breadcrumbs should be ['Dashboard','Catalog']", 
     {
       kind: "Dashboard",
       label: "Dashboard",
+      useLabel: expect.any(Function),
+      params: undefined,
       url: "/dashboard",
       active: false,
     },
     {
       kind: "Catalog",
       label: "Service Catalog",
+      useLabel: expect.any(Function),
+      params: undefined,
       url: "/lsm/catalog",
       active: true,
     },
@@ -116,24 +120,31 @@ test("GIVEN '/lsm/catalog' THEN breadcrumbs should be ['Dashboard','Catalog']", 
 
 test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Dashboard', 'Catalog', 'Inventory']", () => {
   const crumbs = routeManager.getCrumbs("/lsm/catalog/xyz/inventory");
+  const params = { service: "xyz" };
 
   expect(crumbs).toHaveLength(3);
   expect(crumbs).toEqual([
     {
       kind: "Dashboard",
       label: "Dashboard",
+      useLabel: expect.any(Function),
+      params,
       url: "/dashboard",
       active: false,
     },
     {
       kind: "Catalog",
       label: "Service Catalog",
+      useLabel: expect.any(Function),
+      params,
       url: "/lsm/catalog",
       active: false,
     },
     {
       kind: "Inventory",
       label: "Service Inventory: xyz",
+      useLabel: expect.any(Function),
+      params,
       url: "/lsm/catalog/xyz/inventory",
       active: true,
     },
@@ -142,24 +153,31 @@ test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Dashboard'
 
 test("GIVEN '/resources/123' THEN breadcrumbs should be ['Dashboard', 'Resources', 'Resource Details']", () => {
   const crumbs = routeManager.getCrumbs("/resources/123");
+  const params = { resourceId: "123" };
 
   expect(crumbs).toHaveLength(3);
   expect(crumbs).toEqual([
     {
       kind: "Dashboard",
       label: "Dashboard",
+      useLabel: expect.any(Function),
+      params,
       url: "/dashboard",
       active: false,
     },
     {
       kind: "Resources",
       label: "Resources",
+      useLabel: expect.any(Function),
+      params,
       url: "/resources",
       active: false,
     },
     {
       kind: "ResourceDetails",
       label: "Resource Details",
+      useLabel: expect.any(Function),
+      params,
       url: "/resources/123",
       active: true,
     },
@@ -181,6 +199,20 @@ test("GIVEN a route param containing a space WHEN building a url with getUrl and
   const instanceCrumb = crumbs.find((crumb) => crumb.kind === "InstanceDetails");
 
   expect(decodeURIComponent(instanceCrumb?.label ?? "")).toEqual("Instance Details: Parent 1");
+});
+
+test("GIVEN a route without a useLabel hook WHEN its crumb label is read THEN it is the decoded label", () => {
+  const url = routeManager.getUrl("InstanceDetails", {
+    service: "basic-service",
+    instance: "Parent 1",
+    instanceId: "Parent 1",
+  });
+
+  const instanceCrumb = routeManager
+    .getCrumbs(url)
+    .find((crumb) => crumb.kind === "InstanceDetails");
+
+  expect(instanceCrumb?.useLabel(instanceCrumb.params)).toEqual("Instance Details: Parent 1");
 });
 
 describe("Given a route manager with only some routes registered", () => {

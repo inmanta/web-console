@@ -9,19 +9,19 @@ import { ResourceActionScope } from "@inmanta/web-console-ui/Components/Resource
  * The owned label is an upper bound: owned_entities is a property of the service type, not a count
  * for this instance, and it is read from the latest catalog version, which may differ from the
  * instance's own service_entity_version. So the owned scope carries no count and only names the
- * entity types it may touch.
+ * entity types it may touch, by their `web_title`.
  *
- * @example buildInstanceResourceActionScopes({ instanceId: "abc", total: 3, ownedEntities: ["l2Connect"] })
+ * @example buildInstanceResourceActionScopes({ instanceId: "abc", total: 3, ownedServiceTitles: ["L2 connect"] })
  *   => [{ id: "instance", ... }, { id: "owned", ... }]
  */
 export function buildInstanceResourceActionScopes({
   instanceId,
   total,
-  ownedEntities,
+  ownedServiceTitles,
 }: {
   instanceId: string;
   total: ParsedNumber | null | undefined;
-  ownedEntities: string[];
+  ownedServiceTitles: string[];
 }): NonEmptyArray<ResourceActionScope> {
   const instanceScope: ResourceActionScope = {
     id: "instance",
@@ -30,7 +30,7 @@ export function buildInstanceResourceActionScopes({
     count: total == null ? undefined : Number(total),
   };
 
-  if (ownedEntities.length === 0) {
+  if (ownedServiceTitles.length === 0) {
     return [instanceScope];
   }
 
@@ -41,7 +41,7 @@ export function buildInstanceResourceActionScopes({
       title: words("resources.resourceActions.confirm.owned.title"),
       filter: { isOrphan: false, serviceInstance: [instanceId], includeOwned: true },
       detail: words("resources.resourceActions.confirm.owned.description")(
-        ownedEntities.join(", ")
+        ownedServiceTitles.join(", ")
       ),
     },
   ];

@@ -6,10 +6,20 @@ import { CustomError, useGet, REFETCH_INTERVAL } from "@inmanta/web-console-core
 import { getServiceModelKey } from "../GetServiceModel";
 
 /**
+ * Options for the useOneTime query.
+ */
+interface UseOneTimeOptions {
+  /**
+   * Whether the query is allowed to run. Defaults to true.
+   */
+  enabled?: boolean;
+}
+
+/**
  * Return Signature of the useGetServiceModel React Query
  */
 interface GetServiceModels {
-  useOneTime: () => UseQueryResult<ServiceModel[], CustomError>;
+  useOneTime: (options?: UseOneTimeOptions) => UseQueryResult<ServiceModel[], CustomError>;
   useContinuous: () => UseQueryResult<ServiceModel[], CustomError>;
   useContinuousNoRefetch: () => UseQueryResult<ServiceModel[], CustomError>;
 }
@@ -20,6 +30,7 @@ interface GetServiceModels {
  * @param environment {string} - the environment in which the services belongs
  *
  * @returns {GetServiceModels} An object containing the different available queries.
+ * @returns {UseQueryResult<ServiceModel[], CustomError>} returns.useOneTime - Fetch the service models once, or not at all when `enabled` is false.
  * @returns {UseQueryResult<ServiceModel[], CustomError>} returns.useContinuous - Fetch the service models with an interval of 5s.
  */
 export const useGetServiceModels = (): GetServiceModels => {
@@ -28,11 +39,12 @@ export const useGetServiceModels = (): GetServiceModels => {
   const get = useGet(env)<{ data: ServiceModel[] }>;
 
   return {
-    useOneTime: (): UseQueryResult<ServiceModel[], CustomError> =>
+    useOneTime: (options?: UseOneTimeOptions): UseQueryResult<ServiceModel[], CustomError> =>
       useQuery({
         queryKey: getServiceModelKey.list([env]),
         queryFn: () => get("/lsm/v1/service_catalog?instance_summary=True"),
         refetchOnWindowFocus: false,
+        enabled: options?.enabled ?? true,
         select: (data) => data.data,
       }),
     useContinuous: (): UseQueryResult<ServiceModel[], CustomError> =>

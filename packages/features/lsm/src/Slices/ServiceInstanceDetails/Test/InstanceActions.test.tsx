@@ -2,9 +2,10 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { words } from "@inmanta/web-console-core";
+import { Service } from "@inmanta/web-console-test-utils";
 import { instanceData, serviceModel } from "./mockData";
 import { defaultServer, serverFailedActions } from "./mockServer";
-import { setupServiceInstanceDetails } from "./mockSetup";
+import { instanceName, setupServiceInstanceDetails } from "./mockSetup";
 
 const mockedUsedNavigate = vi.hoisted(() => vi.fn());
 
@@ -76,12 +77,52 @@ describe("Page Actions - Success", () => {
     );
   });
 
+  it("Deploy actions - skips the service catalog request when the service type owns nothing", async () => {
+    let catalogRequestCount = 0;
+
+    server.use(
+      http.get("/lsm/v1/service_catalog/mobileCore", () =>
+        HttpResponse.json({ data: { ...serviceModel, owned_entities: [] } })
+      ),
+      http.get("/lsm/v1/service_catalog", () => {
+        catalogRequestCount += 1;
+
+        return HttpResponse.json({ data: [] });
+      })
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+    // the Deploy button is enabled once the service model has loaded
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+      ).toBeEnabled()
+    );
+
+    expect(catalogRequestCount).toEqual(0);
+  });
+
   it("Deploy actions - offers the owned-services scope when the service type owns entities", async () => {
     let body: unknown;
 
     server.use(
       http.get("/lsm/v1/service_catalog/mobileCore", () =>
         HttpResponse.json({ data: { ...serviceModel, owned_entities: ["l2Connect"] } })
+      ),
+      http.get("/lsm/v1/service_catalog", () =>
+        HttpResponse.json({
+          data: [
+            {
+              ...serviceModel,
+              name: "l2Connect",
+              entity_annotations: Service.EntityAnnotations.valid,
+            },
+          ],
+        })
       ),
       http.post("/api/v2/deploy_filtered", async ({ request }) => {
         body = await request.json();
@@ -104,7 +145,15 @@ describe("Page Actions - Success", () => {
 
     const dialog = await screen.findByRole("dialog");
 
-    // The catalog declares an owned entity, so the dialog offers the wider "owned services" scope.
+    // The catalog declares an owned entity, so the dialog offers the wider "owned services" scope,
+    // naming the owned service by its web_title.
+    expect(
+      await within(dialog).findByText(
+        words("resources.resourceActions.confirm.owned.description")(
+          Service.EntityAnnotations.valid.web_title
+        )
+      )
+    ).toBeVisible();
     await userEvent.click(
       within(dialog).getByRole("radio", {
         name: new RegExp(words("resources.resourceActions.confirm.owned.title"), "i"),
@@ -331,6 +380,43 @@ describe("Page Actions - Success", () => {
         "/console/lsm/catalog/mobileCore/inventory?env=c85c0a64-ed45-4cba-bdc5-703f65a225f7"
       )
     );
+  });
+
+  it("Expert actions - Destroy names the service by its web_title in the confirmation", async () => {
+    const serviceTitle = Service.EntityAnnotations.valid.web_title;
+
+    server.use(
+      http.get(`/lsm/v1/service_catalog/${serviceModel.name}`, () =>
+        HttpResponse.json({
+          data: { ...serviceModel, entity_annotations: Service.EntityAnnotations.valid },
+        })
+      )
+    );
+
+    render(setupServiceInstanceDetails(true));
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+    // the page title shows the web_title once the service model is loaded
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: words("instanceDetails.page.title")(serviceTitle, instanceName),
+      })
+    ).toBeVisible();
+
+    await userEvent.click(screen.getByRole("button", { name: "Expert-Actions-Toggle" }));
+    await userEvent.click(screen.getByRole("menuitem", { name: /destroy/i }));
+
+    expect(
+      within(screen.getByRole("dialog")).getByText(
+        words("inventory.destroyInstance.header")(
+          instanceData.service_identity_attribute_value ?? instanceData.id,
+          serviceTitle
+        )
+      )
+    ).toBeVisible();
   });
 
   it("Expert actions - collapses the toggle when an action opens its modal", async () => {

@@ -2,6 +2,7 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { RouteFactory } from "@inmanta/web-console-core";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
 import { MockedDependencyProvider, stubRoute } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
@@ -26,10 +27,10 @@ const routes = [
   }),
 ];
 
-function setup(initialEntries?: string[]) {
+function setup(initialEntries?: string[], routeFactories: RouteFactory[] = routes) {
   const component = (
     <QueryClientProvider client={testClient}>
-      <MockedDependencyProvider routes={routes}>
+      <MockedDependencyProvider routes={routeFactories}>
         <TestMemoryRouter initialEntries={initialEntries}>
           <PageBreadcrumbs />
         </TestMemoryRouter>
@@ -132,6 +133,26 @@ test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb li
   expect(crumbsAfter.length).toEqual(3);
   expect(within(crumbsAfter[1]).getByText("Service Catalog")).toBeInTheDocument();
   expect(within(crumbsAfter[2]).getByText("Service Inventory: service")).toBeInTheDocument();
+});
+
+test("GIVEN Breadcrumbs WHEN a route has a useLabel hook THEN its crumb shows the label from the hook", () => {
+  const useInventoryLabel = ({ service }: { service: string }) => `Loaded title of ${service}`;
+  const routesWithUseLabel = [
+    ...routes.filter((route) => route("").kind !== "Inventory"),
+    stubRoute("Inventory", {
+      ...required,
+      label: ({ service }) => `Service Inventory: ${service}`,
+      useLabel: useInventoryLabel,
+    }),
+  ];
+  const { component } = setup(["/lsm/catalog/service/inventory/add"], routesWithUseLabel);
+
+  render(component);
+
+  expect(
+    screen.getByRole("link", { name: useInventoryLabel({ service: "service" }) })
+  ).toBeVisible();
+  expect(screen.queryByText("Service Inventory: service")).not.toBeInTheDocument();
 });
 
 test("GIVEN Breadcrumbs WHEN service name is encoded THEN decoded label is shown", () => {

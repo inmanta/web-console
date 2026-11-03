@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { words } from "@inmanta/web-console-core";
+import { getServiceTitle, words } from "@inmanta/web-console-core";
 import { useUrlStateWithString } from "@inmanta/web-console-core/Common";
+import { useGetServiceModels } from "@inmanta/web-console-core/Queries/Slices/Service";
 import { ResourceActions } from "@inmanta/web-console-ui/Components/ResourceActions";
 import { InstanceDetailsContext } from "../../../Core/Context";
 import { buildInstanceResourceActionScopes } from "../../../Core/resourceActionScopes";
@@ -11,6 +12,8 @@ import { StateLabel } from "./HistorySection";
 /**
  * The Service Instance Details header actions: the Deploy/Repair/Dry run split button (scoped to this
  * instance, plus its owned services when the catalog offers them) and the InstanceActions menu.
+ * When the service type owns entities, it loads the service catalog once to name the owned
+ * services by their `web_title`.
  * A dry run can select one of the instance's own versions, labelled with its lifecycle state.
  * Rendered only on the latest version; requires the ServiceInstanceDetails context.
  */
@@ -24,18 +27,27 @@ export const InstanceHeaderActions: React.FC = () => {
   });
 
   const isLatest = selectedVersion === String(instance.version);
+  const ownedEntities = serviceModelQuery.data?.owned_entities ?? [];
+  const { data: serviceModels } = useGetServiceModels().useOneTime({
+    enabled: isLatest && ownedEntities.length > 0,
+  });
 
   if (!isLatest) {
     return null;
   }
 
   const total = instance.deployment_progress?.total;
-  const ownedEntities = serviceModelQuery.data?.owned_entities ?? [];
+  const ownedServiceTitles = ownedEntities.map((ownedEntity) =>
+    getServiceTitle(
+      ownedEntity,
+      serviceModels?.find((serviceModel) => serviceModel.name === ownedEntity)
+    )
+  );
 
   const scopes = buildInstanceResourceActionScopes({
     instanceId: instance.id,
     total,
-    ownedEntities,
+    ownedServiceTitles,
   });
 
   // A null total is unknown, not zero, so only an explicit zero counts as "no resources".

@@ -165,7 +165,7 @@ if (isIso) {
       cy.get(".markdown-body > h1").should("contain", "Getting started");
 
       // Go back to inventory using the breadcrumbs
-      cy.get('[aria-label="BreadcrumbItem"]').contains("Service Inventory: basic-service").click();
+      cy.get('[aria-label="BreadcrumbItem"]').contains("Service Inventory: Basic service").click();
 
       // click on edit button
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
@@ -523,7 +523,7 @@ if (isIso) {
       cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should("contain", "Up");
 
       // Go back to inventory using the breadcrumbs
-      cy.get('[aria-label="BreadcrumbItem"]').contains("Service Inventory: basic-service").click();
+      cy.get('[aria-label="BreadcrumbItem"]').contains("Service Inventory: Basic service").click();
 
       // delete but cancel deletion in modal
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).last().click();

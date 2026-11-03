@@ -184,12 +184,18 @@ export function PrimaryRouteManager(baseUrl: string, routes: RouteFactory[]): Ro
     const { route, params } = routeMatch;
     const lineage = getLineageFromRoute(route);
 
-    return lineage.map(({ kind, generateLabel, path }, idx) => ({
-      kind,
-      label: generateLabel(params),
-      url: generatePath(path, params),
-      active: idx === lineage.length - 1,
-    }));
+    return lineage.map(({ kind, generateLabel, useLabel, path }, idx) => {
+      const label = generateLabel(params);
+
+      return {
+        kind,
+        label,
+        useLabel: useLabel ?? (() => decodeURIComponent(label)),
+        params,
+        url: generatePath(path, params),
+        active: idx === lineage.length - 1,
+      };
+    });
   }
 
   return {

@@ -1,8 +1,9 @@
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { Table, TableVariant, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
-import { words } from "@inmanta/web-console-core";
+import { getServiceTitle, words } from "@inmanta/web-console-core";
 import { useExpansion } from "@inmanta/web-console-core/Common";
 import { ServiceOrderItem } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
+import { useGetServiceModels } from "@inmanta/web-console-core/Queries/Slices/Service";
 import { OrderDetailsRow } from "./OrderDetailsRow";
 import { OrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";
 
@@ -12,7 +13,8 @@ interface Props {
 }
 
 /**
- * OrderDetailsTable Component
+ * OrderDetailsTable Component. Fetches the service catalog once, so each row can name its
+ * service by its `web_title`.
  *
  * @param tablePresenter  OrderDetailsTablePresenter
  * @param rows ServiceOrderItem[]
@@ -57,6 +59,12 @@ export const OrderDetailsTable: React.FC<Props> = ({ tablePresenter, rows, ...pr
     }
   };
 
+  const { data: serviceModels } = useGetServiceModels().useOneTime();
+  const serviceModelsByName = useMemo(
+    () => new Map(serviceModels?.map((serviceModel) => [serviceModel.name, serviceModel])),
+    [serviceModels]
+  );
+
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }) => {
     return <Th key={apiName}>{displayName}</Th>;
   });
@@ -77,6 +85,10 @@ export const OrderDetailsTable: React.FC<Props> = ({ tablePresenter, rows, ...pr
         {rows.map((row) => (
           <OrderDetailsRow
             row={row}
+            serviceTitle={getServiceTitle(
+              row.service_entity,
+              serviceModelsByName.get(row.service_entity)
+            )}
             orderItems={rows}
             key={row.instance_id}
             isExpanded={isExpanded(row.instance_id)}

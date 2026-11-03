@@ -12,6 +12,7 @@ interface Props {
   instance_display_identity: string;
   instance_id: string;
   service_entity: string;
+  serviceTitle: string;
   version: ParsedNumber;
   collapseToggle: () => void;
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,6 +29,7 @@ interface Props {
  *  @prop {string} instance_display_identity - the display value of the instance Id
  *  @prop {string} instance_id - the hashed id of the instance
  *  @prop {string} service_entity - the service entity type of the instance
+ *  @prop {string} serviceTitle - the `web_title` of the service, or its name when it has none
  *  @prop {ParsedNumber} version - the current version of the instance
  *  @prop {function} collapseToggle - collapses the dropdown toggle when the modal opens
  *  @prop {React.Dispatch<React.SetStateAction<boolean>>} setInterfaceBlocked - setState variable to block the interface when the modal is opened.
@@ -38,6 +40,7 @@ interface Props {
 export const DeleteAction: React.FC<Props> = ({
   isDisabled,
   service_entity,
+  serviceTitle,
   instance_display_identity,
   instance_id,
   version,
@@ -62,6 +65,7 @@ export const DeleteAction: React.FC<Props> = ({
         <ModalContent
           instance_id={instance_id}
           service_entity={service_entity}
+          serviceTitle={serviceTitle}
           instance_display_identity={instance_display_identity}
           version={version}
           webConfirm={webConfirm}
@@ -100,6 +104,7 @@ export const DeleteAction: React.FC<Props> = ({
 interface ModalContentProps {
   instance_id: string;
   service_entity: string;
+  serviceTitle: string;
   instance_display_identity: string;
   version: ParsedNumber;
   webConfirm?: string;
@@ -112,6 +117,7 @@ interface ModalContentProps {
  * @props {ModalContentProps} props - The props of the components
  *  @prop {string} instance_id - the hashed id of the instance
  *  @prop {string} service_entity - the service entity type of the instance
+ *  @prop {string} serviceTitle - the `web_title` of the service, or its name when it has none
  *  @prop {string} instance_display_identity - the display value of the instance Id
  *  @prop {ParsedNumber} version - the current version of the instance
  *  @prop {function} closeCallback - callback method to close the modal
@@ -121,6 +127,7 @@ interface ModalContentProps {
 const ModalContent: React.FC<ModalContentProps> = ({
   instance_id,
   service_entity,
+  serviceTitle,
   instance_display_identity,
   version,
   webConfirm,
@@ -151,7 +158,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
     <>
       <Content component="p">
         {webConfirm ??
-          words("inventory.deleteInstance.header")(instance_display_identity, service_entity)}
+          words("inventory.deleteInstance.header")(instance_display_identity, serviceTitle)}
       </Content>
       <br />
 

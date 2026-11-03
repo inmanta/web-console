@@ -17,6 +17,7 @@ interface InstanceActionsProps {
   instanceId: string;
   service_identity_attribute_value: string | undefined;
   entity: string;
+  serviceTitle: string;
   editDisabled: boolean;
   deleteDisabled: boolean;
   diagnoseDisabled: boolean;
@@ -27,6 +28,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   instanceId,
   service_identity_attribute_value,
   entity,
+  serviceTitle,
   editDisabled,
   deleteDisabled,
   diagnoseDisabled,
@@ -126,6 +128,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
         <DeleteAction
           isDisabled={deleteDisabled}
           service_entity={entity}
+          serviceTitle={serviceTitle}
           instance_identity={service_identity_attribute_value ?? instanceId}
           id={instanceId}
           version={version}

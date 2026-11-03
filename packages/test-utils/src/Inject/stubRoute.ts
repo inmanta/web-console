@@ -52,6 +52,11 @@ interface StubRouteOptions<K extends StubbedRouteKind> {
    * The label of the page, e.g. in breadcrumbs. Defaults to the kind.
    */
   label?: (params: RouteParams<K>) => string;
+
+  /**
+   * The hook that builds the breadcrumb label from loaded data. Unset by default.
+   */
+  useLabel?: (params: RouteParams<K>) => string;
 }
 
 /**
@@ -63,13 +68,13 @@ interface StubRouteOptions<K extends StubbedRouteKind> {
  * <MockedDependencyProvider routes={[stubRoute("CompileDetails")]}>
  *
  * @param kind - the kind of the route
- * @param options - the environment role and label of the route
+ * @param options - the environment role and labels of the route
  * @returns a route factory to pass to `MockedDependencyProvider` in its `routes`
  */
 export const stubRoute =
   <K extends StubbedRouteKind>(
     kind: K,
-    { environmentRole = "Optional", label = () => kind }: StubRouteOptions<K> = {}
+    { environmentRole = "Optional", label = () => kind, useLabel }: StubRouteOptions<K> = {}
   ): RouteFactory =>
   (base): Route<K> => {
     const stubbed: { path: string; parent?: RouteKind } = stubbedRoutes[kind];
@@ -79,6 +84,7 @@ export const stubRoute =
       parent: stubbed.parent,
       path: `${base}${stubbed.path}`,
       generateLabel: label,
+      useLabel,
       environmentRole,
     };
   };
