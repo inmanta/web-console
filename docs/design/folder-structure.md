@@ -70,4 +70,6 @@ Every package and app is a Yarn workspace with its own `package.json`. Another p
 - a `workspace:^` dependency on it in every package that imports it, including `apps/web-console` for a feature;
 - its zone in `eslint.layers.js`.
 
+Each package also lists the third-party packages it imports in its own `package.json`: `dependencies` for the code that ships, `devDependencies` for tests and test helpers. `yarn lint` checks this (`import/no-extraneous-dependencies`) and runs the Yarn constraints (`yarn.config.cjs`): every package uses the same version of a dependency, and JointJS and the GraphiQL packages are only allowed in the composer and graphiql features. The root `package.json` keeps the build, lint and test tools.
+
 Each slice (a folder in a package's `Slices/`) uses the same layers: `Core/` for its types and contracts, `Data/` for transformations and implementations, `UI/` for its components.

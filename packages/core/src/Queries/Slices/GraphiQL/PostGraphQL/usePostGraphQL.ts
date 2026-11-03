@@ -1,11 +1,21 @@
 import { useMemo } from "react";
-import { FetcherParams, SyncExecutionResult } from "@graphiql/toolkit";
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
+import { ExecutionResult } from "graphql";
 import {
   parseJsonResponse,
   useFetchHelpers,
 } from "@inmanta/web-console-core/Queries/Helpers/useFetchHelpers";
 import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
+
+/**
+ * A GraphQL request as the GraphiQL editor sends it. It matches `FetcherParams` from
+ * `@graphiql/toolkit`, which only the GraphiQL feature depends on.
+ */
+export interface GraphQLRequest {
+  query: string;
+  operationName?: string | null;
+  variables?: unknown;
+}
 
 /**
  * React Query mutation hook for executing GraphQL requests against /api/v2/graphql.
@@ -18,7 +28,7 @@ import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
  */
 export const usePostGraphQL = (
   env?: string
-): UseMutationResult<SyncExecutionResult, Error, FetcherParams> => {
+): UseMutationResult<ExecutionResult, Error, GraphQLRequest> => {
   const { createHeaders, handleErrors } = useFetchHelpers();
 
   const baseUrl = useMemo(
@@ -32,7 +42,7 @@ export const usePostGraphQL = (
 
   return useMutation({
     mutationKey: ["post_graphql", env],
-    mutationFn: async ({ query, variables }: FetcherParams) => {
+    mutationFn: async ({ query, variables }: GraphQLRequest) => {
       const headers = createHeaders({ env });
       headers.set("Content-Type", "application/json");
 
@@ -53,7 +63,7 @@ export const usePostGraphQL = (
 
       await handleErrors(response, { method: "POST", path: "/api/v2/graphql" });
 
-      return (await parseJsonResponse<SyncExecutionResult>(response)) ?? {};
+      return (await parseJsonResponse<ExecutionResult>(response)) ?? {};
     },
   });
 };

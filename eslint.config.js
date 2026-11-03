@@ -25,6 +25,13 @@ const testFiles = [
   "{src,packages,apps}/**/Spec/**/*.{ts,tsx}",
 ];
 
+// The files that may import a workspace's devDependencies: the test files above and the test setup.
+const devDependencyFiles = [
+  ...testFiles,
+  "apps/web-console/src/test-setup.ts",
+  "packages/features/composer/src/**/globalTestMocks.ts",
+];
+
 export default [
   {
     // Ignore files/folders
@@ -63,6 +70,9 @@ export default [
       "import/parsers": {
         "@typescript-eslint/parser": [".ts", ".tsx"],
       },
+
+      // The shared images in public/images, not a package: no-extraneous-dependencies skips them.
+      "import/internal-regex": "^@images/",
 
       "import/resolver": {
         typescript: {
@@ -212,10 +222,13 @@ export default [
     },
   },
   {
-    // Only the composer depends on JointJS, so that an app without it builds without the licence.
-    // This rule only sees static imports; the workspaces step (#7461) also catches import() and vi.mock.
+    // Only the composer depends on JointJS, so that an app without it builds without the licence,
+    // and only the GraphiQL feature depends on the GraphiQL packages. This rule gives the clearest
+    // message for a static import; the Yarn constraints (yarn.config.cjs) and
+    // import/no-extraneous-dependencies below also catch import() and a dependency in the wrong
+    // package.json.
     files: ["{src,packages,apps}/**/*.ts", "{src,packages,apps}/**/*.tsx"],
-    ignores: ["packages/features/composer/**"],
+    ignores: ["packages/features/composer/**", "packages/features/graphiql/**"],
     rules: {
       "no-restricted-imports": [
         "error",
@@ -225,7 +238,34 @@ export default [
               group: ["@joint/*", "@rappidcss"],
               message: "Only the composer feature (packages/features/composer) imports JointJS.",
             },
+            {
+              group: [
+                "graphiql",
+                "graphiql/*",
+                "@graphiql/*",
+                "monaco-graphql",
+                "monaco-graphql/*",
+              ],
+              message:
+                "Only the GraphiQL feature (packages/features/graphiql) imports the GraphiQL packages.",
+            },
           ],
+        },
+      ],
+    },
+  },
+  {
+    // Every workspace declares the packages it imports in its own package.json (#7461), so that
+    // installing one app only installs what its packages use. Tests and test helpers may use
+    // devDependencies.
+    files: ["{packages,apps}/**/*.{ts,tsx,js}"],
+    rules: {
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          devDependencies: devDependencyFiles,
+          peerDependencies: false,
+          optionalDependencies: false,
         },
       ],
     },
