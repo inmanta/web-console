@@ -1,4 +1,5 @@
 # Build output
+.tsbuild
 dist
 build
 coverage

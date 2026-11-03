@@ -1,3 +1,7 @@
+// Loads the words of the shared components into WordsRegistry: this package uses them, and with
+// project references a package only sees the declaration merging of the files it imports.
+import type {} from "@inmanta/web-console-ui/messages";
+
 /**
  * The English messages of the shell: the app frame, the header, the sidebar, login and the pages of the shell.
  */
@@ -11,7 +15,6 @@ export const shellMessages = {
   /**
    * Dashboard
    */
-  "dashboard.logout": "Logout",
   "dashboard.documentation.tooltip": "Documentation",
   "dashboard.apiActions.tooltip": "Developer Tools",
   "dashboard.apiActions.restApi": "REST API / Swagger",

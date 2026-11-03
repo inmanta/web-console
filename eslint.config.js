@@ -35,7 +35,7 @@ const devDependencyFiles = [
 export default [
   {
     // Ignore files/folders
-    ignores: ["**/dist", "**/.yarn"],
+    ignores: ["**/dist", "**/.yarn", ".tsbuild"],
   },
 
   // Apply recommended configurations

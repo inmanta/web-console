@@ -32,7 +32,7 @@ interface ResponseBody {
   metadata: Pagination.Metadata;
 }
 
-interface HookResponse extends ResponseBody {
+export interface HookResponse extends ResponseBody {
   handlers: Pagination.Handlers;
 }
 

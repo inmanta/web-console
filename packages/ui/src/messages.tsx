@@ -9,6 +9,7 @@ export const uiMessages = {
   false: "False",
   confirm: "Confirm",
   cancel: "Cancel",
+  "dashboard.logout": "Logout",
   collapse: "Collapse",
   expand: "Expand",
   yes: "Yes",
@@ -119,18 +120,8 @@ export const uiMessages = {
     `The current value is not among the suggested values for ${dependencies}.`,
   "inventory.form.suggestions.fetchError": "Could not load the suggested values. Please try again.",
   "inventory.form.suggestions.loading": "Loading suggestions...",
-  "inventory.form.suggestions.missingDependency": (field: string, reference: string) =>
-    `The suggested values for '${field}' reference '${reference}', which is not a field in scope.`,
-  "inventory.form.suggestions.dependencyCycle": (cycle: string) =>
-    `The suggested values form a dependency cycle: ${cycle}. Dependencies between fields must be acyclic.`,
   "inventory.form.suggestions.moreResults": (shown: number, total: number) =>
     `Showing the first ${shown} of ${total} suggestions. Refine your search to narrow the results.`,
-  "inventory.form.tabs.invalidCatalog":
-    "The web_tabs entity annotation is malformed. Every tab requires a unique string 'key' and a string 'label'.",
-  "inventory.form.tabs.defaultRequired": (count: number) =>
-    `The web_tabs entity annotation must mark exactly one tab as default, but ${count} tabs are marked.`,
-  "inventory.form.tabs.unknownKey": (fieldName: string, tabKey: string) =>
-    `Field "${fieldName}" is assigned to tab "${tabKey}", which is not defined in the web_tabs entity annotation.`,
   "inventory.form.typeHint.list": (listBaseType: string) => `A list of ${listBaseType}s`,
   "inventory.form.typeHint.dict": 'Key-value pairs, following the JSON syntax: {"key": "value"}',
   "inventory.form.placeholder.intList": "1, 2, 3",
@@ -207,6 +198,15 @@ export const uiMessages = {
   "resources.filters.resource.agent.label": "Agent(s)",
   "resources.filters.resource.agent.placeholder": "Select Agent(s)",
   "resources.filters.active.title": "Active filters",
+  "resources.filters.status.blocked.label": "Blocked state(s)",
+  "resources.filters.status.blocked.placeholder": "Filter by blocked state",
+  "resources.resourceActions.confirm.instance.title": "This instance only",
+  "resources.resourceActions.confirm.owned.title": "This instance and owned services",
+  "resources.resourceActions.confirm.owned.description": (services: string) =>
+    `May also act on owned services of these types: ${services}.`,
+  "resources.resourceActions.confirm.filtered.title": "Filtered resources",
+  "resources.resourceActions.confirm.environment.title": "All resources in this environment",
+  "resources.resourceActions.confirm.environment.note": "Ignores the active filter",
   "resources.filters.active.resetFilters": "Reset Filters",
   "resources.filters.active.empty.title": "No filters applied",
   "resources.filters.active.empty.body.noTabs":

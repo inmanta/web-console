@@ -1,60 +1,51 @@
 {
-  "compilerOptions": {
-    "module": "ESNext",
-    "target": "ES2020",
-    "lib": [
-      "ES2020",
-      "dom"
-    ],
-    "sourceMap": true,
-    "jsx": "react-jsx",
-    "moduleResolution": "bundler",
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": false,
-    "allowJs": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "rootDir": ".",
-    "outDir": "dist",
-    "types": [
-      "vitest/globals",
-      "@testing-library/jest-dom",
-      "node"
-    ],
-    "typeRoots": [
-      "./node_modules/@types",
-      "./node_modules",
-      "./src"
-    ],
-    "paths": {
-      "@assets/*": [
-        "./node_modules/@patternfly/react-core/dist/styles/assets/*"
-      ],
-      "@images/*": [
-        "./public/images/*"
-      ],
-      "@rappidcss": [
-        "./node_modules/@joint/plus/joint-plus.css"
-      ]
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/core/tsconfig.src.json"
+    },
+    {
+      "path": "./packages/core/tsconfig.test.json"
+    },
+    {
+      "path": "./packages/ui/tsconfig.src.json"
+    },
+    {
+      "path": "./packages/ui/tsconfig.test.json"
+    },
+    {
+      "path": "./packages/shell"
+    },
+    {
+      "path": "./packages/test-utils"
+    },
+    {
+      "path": "./packages/features/composer"
+    },
+    {
+      "path": "./packages/features/environment"
+    },
+    {
+      "path": "./packages/features/graphiql"
+    },
+    {
+      "path": "./packages/features/lsm"
+    },
+    {
+      "path": "./packages/features/orchestration-engine"
+    },
+    {
+      "path": "./packages/features/resource-manager"
+    },
+    {
+      "path": "./packages/features/user-management"
+    },
+    {
+      "path": "./apps/web-console"
+    },
+    {
+      "path": "./tsconfig.node.json"
     }
-  },
-  "include": [
-    "src/vite-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.jsx",
-    "cypress/support/e2e.js",
-    "./packages/test-utils/src/setup.ts",
-    "./packages/test-utils/src/vitest.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
   ],
   "ts-node": {
     "compilerOptions": {

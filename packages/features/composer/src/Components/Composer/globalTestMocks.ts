@@ -22,3 +22,6 @@ vi.mock(
   "@inmanta/web-console-feature-composer/Components/Composer/UI/JointJsShapes/LinkShape",
   () => linkShapeMock
 );
+
+// A module, not a script, so these mocks stay local to this setup file.
+export {};

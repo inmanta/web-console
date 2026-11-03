@@ -68,8 +68,20 @@ src/ - Only the global type declarations (typings.d.ts, vite-env.d.ts)
 Every package and app is a Yarn workspace with its own `package.json`. Another package imports it through a `workspace:^` dependency, not a path alias. A new package needs:
 - a `package.json` with its name (`@inmanta/web-console-...`) and the same `exports` block as the other packages, which maps `@inmanta/web-console-core/Queries` to `src/Queries`;
 - a `workspace:^` dependency on it in every package that imports it, including `apps/web-console` for a feature;
-- its zone in `eslint.layers.js`.
+- its zone in `eslint.layers.js`;
+- a `tsconfig.json` that extends `tsconfig.base.json` and references the projects of the packages it depends on, and an entry in the root `tsconfig.json`.
 
 Each package also lists the third-party packages it imports in its own `package.json`: `dependencies` for the code that ships, `devDependencies` for tests and test helpers. `yarn lint` checks this (`import/no-extraneous-dependencies`) and runs the Yarn constraints (`yarn.config.cjs`): every package uses the same version of a dependency, and JointJS and the GraphiQL packages are only allowed in the composer and graphiql features. The root `package.json` keeps the build, lint and test tools.
 
 Each slice (a folder in a package's `Slices/`) uses the same layers: `Core/` for its types and contracts, `Data/` for transformations and implementations, `UI/` for its components.
+
+## Type checking
+
+`yarn tsc` builds the TypeScript project references (`tsc -b`): every package is its own project and only sees the packages it references, like at runtime. The declarations it generates go to `.tsbuild/`. `core` and `ui` have two projects, `tsconfig.src.json` for their code and `tsconfig.test.json` for their tests, because their tests use `test-utils`, which depends on them.
+
+The words and routes registries (`WordsRegistry`, `RouteRegistry`) are filled through declaration merging, and a project only sees the declarations of the files it loads:
+
+- A package whose code uses the words of `ui` imports them in its `messages.ts`: `import type {} from "@inmanta/web-console-ui/messages";`.
+- A package that names a route of another feature, for a link or as a parent page, declares that route in `src/linkedRoutes.ts` with the same params as the feature that owns it (in `src/testTypes.ts` when only the tests of `core` or `ui` name it). `yarn tsc` checks those declarations against the owners (`scripts/check-linked-routes.js`).
+
+TypeScript 7's incremental build doesn't always recheck a file when a declaration it depends on changes in another file. If `yarn tsc` reports an error that doesn't match the code after you changed a `linkedRoutes.ts`, `testTypes.ts` or `messages.ts`, remove `.tsbuild/` and run it again.

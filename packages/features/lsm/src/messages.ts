@@ -1,4 +1,7 @@
 import { ParsedNumber } from "@inmanta/web-console-core";
+// Loads the words of the shared components into WordsRegistry: this package uses them, and with
+// project references a package only sees the declaration merging of the files it imports.
+import type {} from "@inmanta/web-console-ui/messages";
 
 /**
  * The English messages of the Lifecycle Service Manager.
@@ -239,10 +242,6 @@ export const lsmMessages = {
     "Loading the service catalog to work out the deploy scope.",
   "resources.resourceActions.catalog.error":
     "The service catalog couldn't be loaded, so the deploy scope is unavailable.",
-  "resources.resourceActions.confirm.instance.title": "This instance only",
-  "resources.resourceActions.confirm.owned.title": "This instance and owned services",
-  "resources.resourceActions.confirm.owned.description": (services: string) =>
-    `May also act on owned services of these types: ${services}.`,
 
   /**
    * Markdown Previewer related text

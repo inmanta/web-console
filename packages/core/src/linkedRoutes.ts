@@ -1,0 +1,22 @@
+/**
+ * The routes of other features that this package names, for links or as a parent page. A package
+ * can't import another feature, so it declares those routes itself, with the same params as the
+ * feature that owns them (#7461). The app's type check loads every feature, so it fails when a
+ * declaration here no longer matches the owner's.
+ */
+export {};
+
+declare module "@inmanta/web-console-core/Domain/Route" {
+  interface RouteRegistry {
+    Catalog: undefined; // lsm
+    CompileDetails: { id: string }; // orchestration-engine
+    CreateInstance: { service: string }; // lsm
+    Dashboard: undefined; // environment
+    DesiredStateResourceDetails: { version: string; resourceId: string }; // orchestration-engine
+    Diagnose: { service: string; instance: string }; // lsm
+    Events: { service: string; instance: string }; // lsm
+    InstanceDetails: { service: string; instance: string; instanceId: string }; // lsm
+    Inventory: { service: string }; // lsm
+    ResourceDetails: { resourceId: string }; // resource-manager
+  }
+}
