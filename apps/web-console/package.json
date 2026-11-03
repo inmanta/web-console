@@ -1,0 +1,19 @@
+{
+  "name": "@inmanta/web-console-app",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@inmanta/web-console-feature-composer": "workspace:^",
+    "@inmanta/web-console-feature-environment": "workspace:^",
+    "@inmanta/web-console-feature-graphiql": "workspace:^",
+    "@inmanta/web-console-feature-lsm": "workspace:^",
+    "@inmanta/web-console-feature-orchestration-engine": "workspace:^",
+    "@inmanta/web-console-feature-resource-manager": "workspace:^",
+    "@inmanta/web-console-feature-user-management": "workspace:^",
+    "@inmanta/web-console-shell": "workspace:^"
+  },
+  "devDependencies": {
+    "@inmanta/web-console-core": "workspace:^",
+    "@inmanta/web-console-test-utils": "workspace:^"
+  }
+}
