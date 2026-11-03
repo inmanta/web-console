@@ -1,10 +1,11 @@
 import React from "react";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { render, screen } from "@testing-library/react";
-import { RouteKind } from "@inmanta/web-console-core";
+import { RouteKind, RouteParams } from "@inmanta/web-console-core";
+import { DependencyProvider } from "@inmanta/web-console-core/Dependency";
 import { stubRoute } from "@inmanta/web-console-test-utils/Inject/stubRoute";
 import { PrimaryRouteManager } from "./PrimaryRouteManager";
-import { useRouteParams } from "./Utils";
+import { useRouteParams, useUrlIfRegistered } from "./Utils";
 
 const routeManager = PrimaryRouteManager("", [
   stubRoute("InstanceDetails"),
@@ -106,4 +107,32 @@ test("GIVEN multiple route params each containing complicated characters WHEN wr
 
   expect(params.version).toEqual(version);
   expect(params.resourceId).toEqual(resourceId);
+});
+
+function UrlProbe<K extends RouteKind>({ kind, params }: { kind: K; params: RouteParams<K> }) {
+  const url = useUrlIfRegistered(kind, params);
+
+  return <div data-testid="url">{String(url)}</div>;
+}
+
+function renderUrlProbe(probe: React.ReactElement) {
+  return renderAtUrl(
+    "/",
+    <DependencyProvider dependencies={{ routeManager }}>{probe}</DependencyProvider>,
+    "/?env=aaa"
+  );
+}
+
+test("GIVEN a registered route WHEN read via useUrlIfRegistered THEN its url with the current query string is returned", () => {
+  renderUrlProbe(<UrlProbe kind="ResourceDetails" params={{ resourceId: "abc" }} />);
+
+  expect(screen.getByTestId("url")).toHaveTextContent(
+    `${routeManager.getUrl("ResourceDetails", { resourceId: "abc" })}?env=aaa`
+  );
+});
+
+test("GIVEN a route the app doesn't register WHEN read via useUrlIfRegistered THEN undefined is returned without throwing", () => {
+  renderUrlProbe(<UrlProbe kind="Agents" params={undefined} />);
+
+  expect(screen.getByTestId("url")).toHaveTextContent("undefined");
 });

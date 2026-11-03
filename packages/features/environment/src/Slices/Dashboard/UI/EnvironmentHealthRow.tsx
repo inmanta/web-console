@@ -12,6 +12,7 @@ import { useGetProjects } from "@inmanta/web-console-core/Queries/Slices/Project
 import { useGetResources } from "@inmanta/web-console-core/Queries/Slices/Resource";
 import { useGetServerStatus } from "@inmanta/web-console-core/Queries/Slices/Server";
 import { useGetServiceModels } from "@inmanta/web-console-core/Queries/Slices/Service";
+import { useUrlIfRegistered } from "@inmanta/web-console-core/Routing";
 import { EnvironmentIcon } from "@inmanta/web-console-ui/Components/EnvironmentIcon";
 import { HealthCardGrid } from "./Components/EnvironmentHealth/HealthCardGrid";
 import { HealthColumn } from "./Components/EnvironmentHealth/HealthColumn";
@@ -35,20 +36,21 @@ export const MINIMAL_PAGE = {
 /**
  * Environment Health row: orchestrator identity/checklist + 4 health columns, each backed by
  * the same hooks already used elsewhere in the app. Card clicks navigate to the relevant
- * existing page.
+ * page, when the app has it.
  */
 export const EnvironmentHealthRow: React.FC = () => {
-  const { routeManager, environmentHandler } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const { setIsOpen: setEnvSelectorOpen } = useContext(EnvSelectorOpenContext);
   const navigate = useNavigate();
 
   const envName = environmentHandler.useName();
   const selectedEnvironmentId = environmentHandler.useId();
 
-  const catalogUrl = routeManager.useUrl("Catalog", undefined);
-  const resourcesUrl = routeManager.useUrl("Resources", undefined);
-  const compileReportsUrl = routeManager.useUrl("CompileReports", undefined);
-  const agentsUrl = routeManager.useUrl("Agents", undefined);
+  // Each column opens a page of another feature; without that feature it isn't clickable.
+  const catalogUrl = useUrlIfRegistered("Catalog", undefined);
+  const resourcesUrl = useUrlIfRegistered("Resources", undefined);
+  const compileReportsUrl = useUrlIfRegistered("CompileReports", undefined);
+  const agentsUrl = useUrlIfRegistered("Agents", undefined);
 
   const { data: serverStatus } = useGetServerStatus().useContinuous();
   const { data: serviceModels } = useGetServiceModels().useContinuous();
@@ -126,28 +128,28 @@ export const EnvironmentHealthRow: React.FC = () => {
             title={words("dashboard.environmentHealth.services")}
             status={servicesHealth?.status ?? "healthy"}
             statLines={servicesHealth?.statLines ?? ["—"]}
-            onClick={() => navigate(catalogUrl)}
+            onClick={catalogUrl ? () => navigate(catalogUrl) : undefined}
           />,
           <HealthColumn
             key="resources"
             title={words("resources")}
             status={resourcesHealth?.status ?? "healthy"}
             statLines={resourcesHealth?.statLines ?? ["—"]}
-            onClick={() => navigate(resourcesUrl)}
+            onClick={resourcesUrl ? () => navigate(resourcesUrl) : undefined}
           />,
           <HealthColumn
             key="compiles"
             title={words("dashboard.environmentHealth.compiles")}
             status={compilesHealth.status}
             statLines={compilesHealth.statLines}
-            onClick={() => navigate(compileReportsUrl)}
+            onClick={compileReportsUrl ? () => navigate(compileReportsUrl) : undefined}
           />,
           <HealthColumn
             key="agents"
             title={words("dashboard.environmentHealth.agents")}
             status={agentsHealth?.status ?? "healthy"}
             statLines={agentsHealth?.statLines ?? ["—"]}
-            onClick={() => navigate(agentsUrl)}
+            onClick={agentsUrl ? () => navigate(agentsUrl) : undefined}
           />,
         ]}
       />
