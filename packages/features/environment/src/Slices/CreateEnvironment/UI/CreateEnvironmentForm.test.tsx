@@ -5,9 +5,15 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { words } from "@inmanta/web-console-core";
+import { RouteFactory, getFeatureRoutes, words } from "@inmanta/web-console-core";
 import * as routing from "@inmanta/web-console-core/Routing/Utils";
-import { Environment, MockedDependencyProvider, Project } from "@inmanta/web-console-test-utils";
+import { environmentFeature } from "@inmanta/web-console-feature-environment";
+import {
+  Environment,
+  MockedDependencyProvider,
+  Project,
+  stubRoute,
+} from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { Page } from "./Page";
@@ -19,11 +25,19 @@ const axe = configureAxe({
   },
 });
 
-function setup() {
+// After creating an environment, the form opens the service catalog (lsm) or the desired state
+// (orchestration engine).
+const linkedRoutes = [
+  ...getFeatureRoutes([environmentFeature]),
+  stubRoute("Catalog"),
+  stubRoute("DesiredState"),
+];
+
+function setup(routes: RouteFactory[] = linkedRoutes) {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider features={[environmentFeature]} routes={routes}>
           <Page />
         </MockedDependencyProvider>
       </TestMemoryRouter>
@@ -552,5 +566,55 @@ describe("CreateEnvironmentForm", () => {
     await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
     expect(mockFn).toHaveBeenCalledWith("Catalog", undefined, "?env=environment_id_a");
+  });
+
+  /**
+   * Creates environment "dev" in the first project, and returns the mocked navigateTo it called.
+   */
+  const createEnvironmentWith = async (routes: RouteFactory[]) => {
+    const mockFn = vi.fn();
+    vi.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
+    server.use(
+      http.get("/api/v2/project", () => {
+        return HttpResponse.json({ data: Project.filterable });
+      }),
+      http.put("/api/v2/environment", () => {
+        return HttpResponse.json({ data: Environment.a });
+      })
+    );
+
+    const { component } = setup(routes);
+
+    render(component);
+
+    await userEvent.click(
+      await screen.findByRole("combobox", {
+        name: "Project Name-select-toggleFilterInput",
+      })
+    );
+    await userEvent.click(await screen.findByRole("option", { name: Project.filterable[0].name }));
+
+    const textBox = await screen.findByRole("textbox", { name: "Name-input" });
+
+    await userEvent.clear(textBox);
+    await userEvent.type(textBox, "dev{enter}");
+    await userEvent.click(await screen.findByRole("button", { name: "submit" }));
+
+    return mockFn;
+  };
+
+  test("Given CreateEnvironmentForm When the app has the desired state but not the catalog Then it opens the new environment's desired state", async () => {
+    const navigateTo = await createEnvironmentWith([
+      ...getFeatureRoutes([environmentFeature]),
+      stubRoute("DesiredState"),
+    ]);
+
+    expect(navigateTo).toHaveBeenCalledWith("DesiredState", undefined, "?env=environment_id_a");
+  });
+
+  test("Given CreateEnvironmentForm When the app has neither the catalog nor the desired state Then it opens the new environment's dashboard", async () => {
+    const navigateTo = await createEnvironmentWith(getFeatureRoutes([environmentFeature]));
+
+    expect(navigateTo).toHaveBeenCalledWith("Dashboard", undefined, "?env=environment_id_a");
   });
 });

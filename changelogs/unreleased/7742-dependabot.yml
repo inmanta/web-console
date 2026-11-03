@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump keycloak-js from 26.2.4 to 26.2.5
+destination-branches:
+- master
+- iso9
+sections: {}

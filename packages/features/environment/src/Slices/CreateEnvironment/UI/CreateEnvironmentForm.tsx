@@ -30,7 +30,7 @@ interface Props {
  * @returns {React.FC<Props>} Create Environment Form
  */
 export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) => {
-  const { orchestratorProvider, environmentHandler } = useContext(DependencyContext);
+  const { orchestratorProvider, environmentHandler, routeManager } = useContext(DependencyContext);
   const isLsmEnabled = orchestratorProvider.isLsmEnabled();
   const navigateTo = useNavigateTo();
   const navigateToHome = () => navigateTo("Dashboard", undefined);
@@ -86,7 +86,14 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       client.refetchQueries({ queryKey: getEnvironmentsKey.list([{ hasDetails: true }]) });
       client.refetchQueries({ queryKey: getEnvironmentsKey.list([{ hasDetails: false }]) });
 
-      const target = isLsmEnabled ? "Catalog" : "DesiredState";
+      // Open the new environment on the service catalog (lsm) or the desired state (orchestration
+      // engine), or on its dashboard when the app has neither.
+      const target =
+        isLsmEnabled && routeManager.has("Catalog")
+          ? "Catalog"
+          : routeManager.has("DesiredState")
+            ? "DesiredState"
+            : "Dashboard";
 
       navigateTo(target, undefined, `?env=${data.data.id}`);
     },
