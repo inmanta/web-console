@@ -58,6 +58,8 @@
   "type": "module",
   "devDependencies": {
     "@eslint/compat": "^2.1.1",
+    "@inmanta/web-console-feature-composer": "workspace:^",
+    "@inmanta/web-console-feature-graphiql": "workspace:^",
     "@stylistic/eslint-plugin-ts": "^4.4.1",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",

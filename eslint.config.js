@@ -238,7 +238,7 @@ export default [
         {
           patterns: [
             {
-              group: ["@joint/*", "@rappidcss"],
+              group: ["@joint/*"],
               message: "Only the composer feature (packages/features/composer) imports JointJS.",
             },
             {

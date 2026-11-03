@@ -19,7 +19,7 @@ export const graphiqlVitePlugin = () => ({
       deps: {
         optimizer: {
           // No package imports @graphiql/react; the graphiql feature declares it for this list.
-          web: { include: ["graphiql", "@graphiql/react"] },
+          client: { include: ["graphiql", "@graphiql/react"] },
         },
       },
     },

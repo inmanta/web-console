@@ -11,10 +11,11 @@ const require = createRequire(import.meta.url);
  * The folder of an installed package, found from its entry point, wherever Yarn installed it.
  *
  * @param {string} name - The name of the package.
+ * @param {NodeJS.Require} [from] - Resolves the package from here, by default from the composer.
  * @returns {string} The path of its folder.
  */
-const packageDir = (name) => {
-  const entry = require.resolve(name);
+const packageDir = (name, from = require) => {
+  const entry = from.resolve(name);
   const marker = join("node_modules", name);
 
   return entry.slice(0, entry.lastIndexOf(marker) + marker.length);
@@ -28,21 +29,21 @@ const packageDir = (name) => {
  */
 export const composerVitePlugin = () => {
   const jointPlus = packageDir("@joint/plus");
-  const jointCore = packageDir("@joint/core");
+  // The composer only depends on @joint/plus, so @joint/core is resolved from there.
+  const jointCore = packageDir("@joint/core", createRequire(join(jointPlus, "package.json")));
 
   return {
     name: "inmanta-composer",
     config: () => ({
       resolve: {
         alias: [
-          // Force @joint/plus to use ESM entry (avoids dist/joint-plus.js)
-          { find: "@joint/plus", replacement: join(jointPlus, "joint-plus.mjs") },
-          // Force @joint/core's bare import to the ESM entry (avoids dist/joint.js).
-          // Regex matches only the exact specifier: a string alias prefix-replaces, mangling
+          // Force JointJS's bare imports to the ESM entries (avoids dist/joint-plus.js and
+          // dist/joint.js). Regex matches only the exact specifier: a string alias
+          // prefix-replaces, mangling subpaths such as @joint/plus/joint-plus.css or
           // @joint/plus >=4.3.0's deep imports (e.g. @joint/core/src/highlighters/index.mjs)
           // into @joint/core/joint.mjs/src/... Subpaths resolve via the package's exports map.
+          { find: /^@joint\/plus$/, replacement: join(jointPlus, "joint-plus.mjs") },
           { find: /^@joint\/core$/, replacement: join(jointCore, "joint.mjs") },
-          { find: "@rappidcss", replacement: join(jointPlus, "joint-plus.css") },
         ],
       },
       optimizeDeps: {
@@ -62,7 +63,7 @@ export const composerVitePlugin = () => {
         },
       },
       test: {
-        deps: { optimizer: { web: { include: ["@joint/plus"] } } },
+        deps: { optimizer: { client: { include: ["@joint/plus"] } } },
       },
     }),
   };

@@ -1,15 +1,14 @@
-/* eslint-disable */
 /**
  * The Vite settings every app and the tests share (#7461): React, the global constants, the
  * aliases of the shared assets and the Monaco setup. Each app's vite.config.ts adds its own build
  * and dev server settings and the plugins of the features it ships; vitest.config.ts adds the
  * test settings.
  */
-import { UserConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import { resolve } from "path";
 import { execSync } from "child_process";
 import { readFileSync } from "fs";
+import { resolve } from "path";
+import react from "@vitejs/plugin-react";
+import { LogOptions, UserConfig, ViteDevServer } from "vite";
 
 export const repoRoot = import.meta.dirname;
 
@@ -40,21 +39,27 @@ const stripBrokenSourcemapsPlugin = () => ({
   // Patch the per-environment loggers that loadAndTransform actually uses.
   // "Failed to load source map" uses logger.warn; "points to missing source files"
   // uses logger.warnOnce — both need to be suppressed.
-  configureServer(server: any) {
+  configureServer(server: ViteDevServer) {
     const shouldSuppress = (msg: string) =>
       msg.includes("Failed to load source map") || msg.includes("points to missing source files");
 
-    for (const env of Object.values(server.environments) as any[]) {
-      if (typeof env?.logger?.warn !== "function") continue;
+    for (const env of Object.values(server.environments)) {
+      if (typeof env?.logger?.warn !== "function") {
+        continue;
+      }
       const origWarn = env.logger.warn.bind(env.logger);
-      env.logger.warn = (msg: string, options?: unknown) => {
-        if (shouldSuppress(msg)) return;
+      env.logger.warn = (msg: string, options?: LogOptions) => {
+        if (shouldSuppress(msg)) {
+          return;
+        }
         origWarn(msg, options);
       };
       const origWarnOnce = env.logger.warnOnce?.bind(env.logger);
       if (origWarnOnce) {
-        env.logger.warnOnce = (msg: string, options?: unknown) => {
-          if (shouldSuppress(msg)) return;
+        env.logger.warnOnce = (msg: string, options?: LogOptions) => {
+          if (shouldSuppress(msg)) {
+            return;
+          }
           origWarnOnce(msg, options);
         };
       }
@@ -64,10 +69,16 @@ const stripBrokenSourcemapsPlugin = () => ({
   // When the load hook returns non-null, Vite's loadAndTransform takes the
   // else-branch and never calls extractSourcemapFromFile, preventing ENOENT.
   load(id: string) {
-    if (id.includes("\x00") || id.includes("?")) return null;
-    if (!id.includes("node_modules")) return null;
+    if (id.includes("\x00") || id.includes("?")) {
+      return null;
+    }
+    if (!id.includes("node_modules")) {
+      return null;
+    }
     // Only intercept files known to reference missing .map files.
-    if (!id.endsWith("marked.js")) return null;
+    if (!id.endsWith("marked.js")) {
+      return null;
+    }
     try {
       const code = readFileSync(id, "utf-8");
       if (code.includes("sourceMappingURL")) {
@@ -76,6 +87,7 @@ const stripBrokenSourcemapsPlugin = () => ({
     } catch {
       // unreadable — fall through to Vite's default handler
     }
+
     return null;
   },
 
@@ -93,6 +105,7 @@ const stripBrokenSourcemapsPlugin = () => ({
         map: null,
       };
     }
+
     return null;
   },
 });

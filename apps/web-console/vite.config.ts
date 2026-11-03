@@ -1,16 +1,15 @@
-/* eslint-disable */
 /**
  * The Vite config of the web-console app (#7461): the shared settings (vite.shared.ts at the
  * root), the Vite plugins of the features it ships, its dev server and its build. The build goes
  * to dist/ at the root of the repository, where the release scripts and the SBOM expect it.
  */
-import { defineConfig, mergeConfig, PluginOption, UserConfig } from "vite";
-import { resolve } from "path";
 import { writeFileSync, readdirSync, renameSync, rmSync, readFileSync, statSync } from "fs";
+import { resolve } from "path";
+import { defineConfig, mergeConfig, PluginOption } from "vite";
 import mkcert from "vite-plugin-mkcert";
 import { composerVitePlugin } from "@inmanta/web-console-feature-composer/vite";
 import { graphiqlVitePlugin } from "@inmanta/web-console-feature-graphiql/vite";
-import { repoRoot, sharedConfig } from "../../vite.shared";
+import { repoRoot, sharedConfig } from "../../vite.shared.ts";
 
 const distDir = resolve(repoRoot, "dist");
 
@@ -68,9 +67,13 @@ function copyConfigPlugin() {
           writeFileSync(faviconDest, readFileSync(faviconSource));
           console.log("favicon.ico copied to build output root");
         }
-        // Update HTML to include config.js script before the main script in the head section
+        // Update HTML to include config.js script before the main script in the head section,
+        // once: closeBundle can run more than once in a build.
         if (statSync(htmlFile, { throwIfNoEntry: false })) {
           let htmlContent = readFileSync(htmlFile, "utf-8");
+          if (htmlContent.includes('src="./config.js"')) {
+            return;
+          }
           // Insert config.js script before the main script in the head section
           htmlContent = htmlContent.replace(
             /(<script type="module" crossorigin src="\.\/[^\"]+\.js"><\/script>)/,
@@ -98,6 +101,7 @@ const blockMonacoCDNPlugin = () => ({
       /https:\/\/cdn\.jsdelivr\.net\/npm\/monaco-editor@[^/'"]+\/min\/vs/g,
       ""
     );
+
     return cleaned !== code ? { code: cleaned, map: null } : null;
   },
 });
@@ -134,14 +138,14 @@ export default defineConfig(
           changeOrigin: true,
           secure: false,
           protocolRewrite: PROTOCOL_REWRITE,
-          configure: (proxy, options) => {
-            proxy.on("error", (err, req, res) => {
+          configure: (proxy) => {
+            proxy.on("error", (err) => {
               console.log("proxy error", err);
             });
-            proxy.on("proxyReq", (proxyReq, req, res) => {
+            proxy.on("proxyReq", (_proxyReq, req) => {
               console.log("Sending Request to the Target:", req.method, req.url);
             });
-            proxy.on("proxyRes", (proxyRes, req, res) => {
+            proxy.on("proxyRes", (proxyRes, req) => {
               console.log("Received Response from the Target:", proxyRes.statusCode, req.url);
             });
           },
@@ -152,14 +156,14 @@ export default defineConfig(
           changeOrigin: true,
           secure: false,
           protocolRewrite: PROTOCOL_REWRITE,
-          configure: (proxy, options) => {
-            proxy.on("error", (err, req, res) => {
+          configure: (proxy) => {
+            proxy.on("error", (err) => {
               console.log("proxy error", err);
             });
-            proxy.on("proxyReq", (proxyReq, req, res) => {
+            proxy.on("proxyReq", (_proxyReq, req) => {
               console.log("Sending Request to the Target:", req.method, req.url);
             });
-            proxy.on("proxyRes", (proxyRes, req, res) => {
+            proxy.on("proxyRes", (proxyRes, req) => {
               console.log("Received Response from the Target:", proxyRes.statusCode, req.url);
             });
           },
@@ -176,8 +180,9 @@ export default defineConfig(
       rollupOptions: {
         output: {
           assetFileNames: (assetInfo) => {
-            if (!assetInfo.names || assetInfo.names.length === 0)
+            if (!assetInfo.names || assetInfo.names.length === 0) {
               return "assets/[name].[hash].[ext]";
+            }
             const baseName = assetInfo.names[0];
             // Try to get extension from the last element, or fallback to splitting baseName
             const ext = baseName.includes(".") ? baseName.split(".").pop() : "";
@@ -185,6 +190,7 @@ export default defineConfig(
             if (/(\.(css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))$/.test(baseName)) {
               return `${baseName}`;
             }
+
             return `${baseName}${ext ? "." + ext : ""}`;
           },
           chunkFileNames: "[name].[hash].js",
@@ -230,5 +236,5 @@ export default defineConfig(
       ],
       force: true,
     },
-  } as UserConfig)
+  })
 );

@@ -11,7 +11,7 @@ import { join, posix, resolve } from "path";
 import { defineConfig, mergeConfig } from "vitest/config";
 import { composerVitePlugin } from "@inmanta/web-console-feature-composer/vite";
 import { graphiqlVitePlugin } from "@inmanta/web-console-feature-graphiql/vite";
-import { repoRoot, sharedConfig } from "./vite.shared";
+import { repoRoot, sharedConfig } from "./vite.shared.ts";
 
 const workspaces = ["packages", "packages/features", "apps"].flatMap((parent) =>
   readdirSync(parent, { withFileTypes: true })
@@ -55,12 +55,13 @@ export default defineConfig(
           ["cobertura", { file: "cobertura-coverage.xml" }],
         ],
         exclude: ["node_modules/", "**/*.d.ts", "**/*.config.*", "**/__mocks__/**"],
-        include: ["packages/**/*", "apps/**/*"],
+        // The source of the packages; not their Vite plugins (vite.js) or the app's index.html.
+        include: workspaces.map((dir) => `${dir}/src/**/*`),
         maxThreads: process.env.CI ? 2 : 0,
       },
       deps: {
         optimizer: {
-          web: {
+          client: {
             include: [
               "mermaid",
               "monaco-editor",

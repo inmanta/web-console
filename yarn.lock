@@ -998,6 +998,7 @@ __metadata:
     react-router: "npm:^8.5.1"
     styled-components: "npm:^6.6.0"
     vite: "npm:^8.3.5"
+    vitest: "npm:^5.0.5"
   languageName: unknown
   linkType: soft
 
@@ -1211,6 +1212,8 @@ __metadata:
   resolution: "@inmanta/web-console@workspace:."
   dependencies:
     "@eslint/compat": "npm:^2.1.1"
+    "@inmanta/web-console-feature-composer": "workspace:^"
+    "@inmanta/web-console-feature-graphiql": "workspace:^"
     "@patternfly/react-styles": "npm:^6.7.0"
     "@stylistic/eslint-plugin-ts": "npm:^4.4.1"
     "@testing-library/dom": "npm:^10.4.2"

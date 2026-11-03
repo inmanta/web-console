@@ -5,7 +5,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "build:ci": "node --max-old-space-size=6144 ../../node_modules/vite/bin/vite.js build",
+    "build:ci": "NODE_OPTIONS=--max-old-space-size=6144 vite build",
     "build:bundle-profile": "vite build --mode analyze"
   },
   "dependencies": {
