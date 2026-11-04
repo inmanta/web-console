@@ -11,16 +11,17 @@
  */
 import { execSync } from "child_process";
 import { readFileSync, rmSync, writeFileSync } from "fs";
-import { resolve } from "path";
 
 const plugin =
   "yarn dlx -q @cyclonedx/yarn-plugin-cyclonedx@3.4.0 --production --output-reproducible";
-const appFile = resolve("dist/sbom-app.cdx.json");
-const rootFile = resolve("dist/sbom-root.cdx.json");
+// Relative to the repository root. The commands are constants; the app's SBOM is written from
+// apps/web-console, two folders down.
+const appFile = "dist/sbom-app.cdx.json";
+const rootFile = "dist/sbom-root.cdx.json";
 const outFile = "dist/sbom.cdx.json";
 
-execSync(`${plugin} -o ${JSON.stringify(appFile)}`, { cwd: "apps/web-console", stdio: "inherit" });
-execSync(`${plugin} -o ${JSON.stringify(rootFile)}`, { stdio: "inherit" });
+execSync(`${plugin} -o ../../${appFile}`, { cwd: "apps/web-console", stdio: "inherit" });
+execSync(`${plugin} -o ${rootFile}`, { stdio: "inherit" });
 
 const appSbom = JSON.parse(readFileSync(appFile, "utf8"));
 const rootSbom = JSON.parse(readFileSync(rootFile, "utf8"));
