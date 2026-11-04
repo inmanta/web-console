@@ -57,9 +57,6 @@ You will need to create a file `env.sh` in `shell-scripts` folder containing the
 `export GITLAB_TOKEN=xxxxxxxxxxxxxxxxx`
 (xxxx equals your PAT token, of course.)
 
-If you want to run the ISO version of the application, you will need to add a npm access token to the JointJS Plus library in your env file.
-`JOINTJS_NPM_TOKEN=jjs-xxxxxxxxxxxxxx`
-
 ## Authentication
 
 To enable authentication with keycloak, you can use environment variables, e.g. add the following variable to a dotenv (`.env` in the root of the project) file (further information on <https://github.com/motdotla/dotenv>)

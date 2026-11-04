@@ -10,19 +10,17 @@ export const VERTICAL_SPACING = 200;
 export const NESTED_HORIZONTAL_OFFSET = 360;
 
 /**
- * Grid layout constants
+ * Spacing of the layered layout: between two layers, and between two shapes in a layer
  */
-export const GRID_COLUMN_WIDTH = HORIZONTAL_SPACING;
-export const GRID_ROW_HEIGHT = VERTICAL_SPACING;
-export const GRID_START_X = 100;
-export const GRID_START_Y = 100;
+export const LAYER_SPACING = 120;
+export const SIBLING_SPACING = 40;
 
 /**
  * Widths of the composer's flanking panels, shared so the canvas, sidebars and zoom
  * toolbar stay aligned from a single source of truth.
  */
-export const LEFT_SIDEBAR_WIDTH = 240;
-export const RIGHT_SIDEBAR_WIDTH = 350;
+export const LEFT_SIDEBAR_WIDTH = 288;
+export const RIGHT_SIDEBAR_WIDTH = 360;
 
 /**
  * The right sidebar sits 1px in from the container edge, so anything aligning to its

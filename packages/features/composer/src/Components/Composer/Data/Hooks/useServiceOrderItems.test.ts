@@ -1,6 +1,6 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { ServiceModel } from "@inmanta/web-console-core";
-import { ServiceEntityShape } from "../../UI";
+import { ServiceEntityShape } from "../ServiceEntityShape";
 import { useServiceOrderItems } from "./useServiceOrderItems";
 
 // Mock the deploymentHelpers module

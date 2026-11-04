@@ -1,9 +1,4 @@
 version: 2
-registries:
-  jointjs-registry:
-    type: npm-registry
-    url: https://npm.jointjs.com
-    token: ${{secrets.JOINTJS_NPM_TOKEN}}
 updates:
   - package-ecosystem: "npm"
     directory: "/"
@@ -14,8 +9,6 @@ updates:
     # Dependabot rebases its own PRs on package.json/yarn.lock conflicts.
     # A limit of 1 let a single open PR block all other updates.
     open-pull-requests-limit: 5
-    registries:
-      - jointjs-registry
     ignore:
       - dependency-name: "madge"
         update-types: ["version-update:semver-major"]
@@ -23,9 +16,9 @@ updates:
       patternfly:
         patterns:
           - "@patternfly/*"
-      jointjs:
+      xyflow:
         patterns:
-          - "@joint/*"
+          - "@xyflow/*"
       vitest:
         patterns:
           - "vitest"

@@ -1,77 +1,99 @@
-import { dia } from "@joint/plus";
-import { ServiceOrderItemRequest } from "@inmanta/web-console-core";
-import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
-import { defineObjectsForJointJS } from "../../testSetup";
+import { ServiceModel, ServiceOrderItemRequest } from "@inmanta/web-console-core";
+import { defineCanvasTestObjects } from "../../testSetup";
+import { ServiceEntityShape } from "../ServiceEntityShape";
 import {
   getCellsCoordinates,
   canvasStateToServiceOrderItems,
   getServiceOrderItemsArray,
 } from "./deploymentHelpers";
+import { addConnectionsBetweenShapes } from "./linkUtils";
 
 describe("deploymentHelpers", () => {
   beforeAll(() => {
-    defineObjectsForJointJS();
+    defineCanvasTestObjects();
   });
 
+  const createMockServiceModel = (name: string): ServiceModel => ({
+    name,
+    environment: "test",
+    lifecycle: {
+      initial_state: "active",
+      states: [],
+      transfers: [],
+    },
+    attributes: [],
+    config: {},
+    embedded_entities: [],
+    inter_service_relations: [],
+    owned_entities: [],
+    owner: null,
+  });
+
+  /**
+   * Creates a real shape whose updateOrderItem is stubbed to produce the given order item,
+   * so the tests control what canvasStateToServiceOrderItems collects.
+   */
   const createMockShape = (
     id: string,
     entityName: string,
     orderItem: ServiceOrderItemRequest | null = null
   ): ServiceEntityShape => {
-    return {
+    const shape = new ServiceEntityShape({
       id,
-      getEntityName: vi.fn().mockReturnValue(entityName),
-      updateOrderItem: vi.fn(),
-      orderItem,
-      get: vi.fn().mockReturnValue("app.ServiceEntityShape"),
-      position: vi.fn().mockReturnValue({ x: 100, y: 200 }),
-    } as unknown as ServiceEntityShape;
+      entityType: "core",
+      serviceModel: createMockServiceModel(entityName),
+      instanceAttributes: {},
+      readonly: false,
+      isNew: true,
+      lockedOnCanvas: false,
+      relationsDictionary: {},
+      rootEntities: {},
+      interServiceRelations: {},
+      embeddedEntities: {},
+    });
+
+    vi.spyOn(shape, "updateOrderItem").mockImplementation(() => {
+      shape.orderItem = orderItem;
+    });
+
+    return shape;
   };
 
   describe("getCellsCoordinates", () => {
-    it("should return empty array when graph has no cells", () => {
-      const graph = new dia.Graph();
-      vi.spyOn(graph, "getCells").mockReturnValue([]);
-
-      const result = getCellsCoordinates(graph);
+    it("should return empty array when the canvas has no shapes", () => {
+      const result = getCellsCoordinates(new Map());
 
       expect(result).toEqual([]);
     });
 
-    it("should return coordinates for ServiceEntityShape cells", () => {
-      const graph = new dia.Graph();
-      const shape1 = createMockShape("shape-1", "ServiceA");
-      const shape2 = createMockShape("shape-2", "ServiceB");
-      const link = {
-        id: "link-1",
-        get: vi.fn().mockReturnValue("standard.Link"),
-        position: vi.fn().mockReturnValue({ x: 50, y: 50 }),
-      } as unknown as dia.Cell;
+    it("should return the coordinates of every shape on the canvas", () => {
+      const shape1 = createMockShape("shape-1", "ServiceA").position(100, 200);
+      const shape2 = createMockShape("shape-2", "ServiceB").position(300, 400);
+      const canvasState = new Map([
+        ["shape-1", shape1],
+        ["shape-2", shape2],
+      ]);
 
-      vi.spyOn(graph, "getCells").mockReturnValue([shape1, shape2, link] as dia.Cell[]);
+      const result = getCellsCoordinates(canvasState);
 
-      const result = getCellsCoordinates(graph);
-
-      expect(result).toHaveLength(2);
       expect(result).toEqual([
         { id: "shape-1", coordinates: { x: 100, y: 200 } },
-        { id: "shape-2", coordinates: { x: 100, y: 200 } },
+        { id: "shape-2", coordinates: { x: 300, y: 400 } },
       ]);
     });
 
-    it("should filter out non-ServiceEntityShape cells", () => {
-      const graph = new dia.Graph();
-      const link1 = {
-        id: "link-1",
-        get: vi.fn().mockReturnValue("standard.Link"),
-        position: vi.fn().mockReturnValue({ x: 50, y: 50 }),
-      } as unknown as dia.Cell;
+    it("should only report shapes, not the links between them", () => {
+      const shape1 = createMockShape("shape-1", "ServiceA").position(100, 200);
+      const shape2 = createMockShape("shape-2", "ServiceB").position(300, 400);
+      addConnectionsBetweenShapes(shape1, shape2);
+      const canvasState = new Map([
+        ["shape-1", shape1],
+        ["shape-2", shape2],
+      ]);
 
-      vi.spyOn(graph, "getCells").mockReturnValue([link1]);
+      const result = getCellsCoordinates(canvasState);
 
-      const result = getCellsCoordinates(graph);
-
-      expect(result).toEqual([]);
+      expect(result.map(({ id }) => id)).toEqual(["shape-1", "shape-2"]);
     });
   });
 

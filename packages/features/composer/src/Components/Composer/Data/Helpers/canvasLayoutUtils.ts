@@ -1,14 +1,14 @@
-import { dia } from "@joint/plus";
-import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
+import dagre from "@dagrejs/dagre";
 import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config";
 import {
   HORIZONTAL_SPACING,
+  LAYER_SPACING,
+  SIBLING_SPACING,
   VERTICAL_SPACING,
-  GRID_COLUMN_WIDTH,
-  GRID_ROW_HEIGHT,
-  GRID_START_X,
-  GRID_START_Y,
 } from "../../config/layoutConfig";
+import { ServiceEntityShape } from "../ServiceEntityShape";
+import { getConnectedLayerData } from "./layerUtils";
+import { getLinks } from "./linkUtils";
 import { PositionTracker } from "./positionTracker";
 import { getShapeDimensions } from "./shapeUtils";
 
@@ -21,29 +21,28 @@ export interface SavedCoordinates {
 }
 
 /**
- * Applies saved coordinates from metadata to cells in the graph
+ * The direction the layered layout grows in: left to right, or top to bottom.
+ */
+export type LayoutDirection = "LR" | "TB";
+
+/**
+ * Applies saved coordinates from metadata to the shapes on the canvas
  * Skips embedded entities (they will be positioned via autolayout. They don't have persistent ids.)
  *
- * @param graph - The JointJS graph
+ * @param canvasState - The shapes on the canvas
  * @param coordinates - Array of saved coordinates from metadata
  */
 export const applyCoordinatesFromMetadata = (
-  graph: dia.Graph,
+  canvasState: Map<string, ServiceEntityShape>,
   coordinates: SavedCoordinates[]
 ): void => {
-  const cells = graph.getCells();
-
   coordinates.forEach((savedCoord) => {
-    const cell = cells.find((c) => String(c.id) === String(savedCoord.id));
-    if (cell && cell instanceof ServiceEntityShape) {
-      if (cell.entityType === "embedded") {
-        return;
-      }
-      cell.set("position", {
-        x: savedCoord.coordinates.x,
-        y: savedCoord.coordinates.y,
-      });
+    const shape = canvasState.get(String(savedCoord.id));
+
+    if (!shape || shape.entityType === "embedded") {
+      return;
     }
+    shape.position(savedCoord.coordinates.x, savedCoord.coordinates.y);
   });
 };
 
@@ -51,71 +50,51 @@ export const applyCoordinatesFromMetadata = (
  * Positions embedded entities to the right of their parent entities
  * Uses the same positioning logic as createEmbeddedEntityShapes
  *
- * @param graph - The JointJS graph
+ * @param canvasState - The shapes on the canvas
  */
-export const applyAutoLayoutToEmbeddedEntities = (graph: dia.Graph): void => {
-  const elements = graph.getElements();
-  const embeddedEntities: ServiceEntityShape[] = [];
-  const parentMap = new Map<string, ServiceEntityShape>(); // parentId -> parent shape
-  const embeddedByParent = new Map<string, ServiceEntityShape[]>(); // parentId -> embedded entities
-
-  // Find all embedded entities and their parents
-  elements.forEach((element) => {
-    if (element instanceof ServiceEntityShape) {
-      if (element.entityType === "embedded") {
-        embeddedEntities.push(element);
-      } else {
-        // Store non-embedded entities as potential parents
-        parentMap.set(String(element.id), element);
-      }
-    }
-  });
+export const applyAutoLayoutToEmbeddedEntities = (
+  canvasState: Map<string, ServiceEntityShape>
+): void => {
+  const shapes = Array.from(canvasState.values());
+  const embeddedEntities = shapes.filter((shape) => shape.entityType === "embedded");
 
   // If there are no embedded entities, nothing to do
   if (embeddedEntities.length === 0) {
     return;
   }
 
-  // Create a position tracker and populate it with all existing element positions
+  // Create a position tracker and populate it with all existing shape positions
   const positionTracker = new PositionTracker(VERTICAL_SPACING, SHAPE_WIDTH, SHAPE_MIN_HEIGHT);
-  elements.forEach((element) => {
-    if (element instanceof ServiceEntityShape && element.entityType !== "embedded") {
-      const pos = element.position();
-      const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(element);
-      positionTracker.reserve(String(element.id), pos.x, pos.y, bboxWidth, bboxHeight);
+  shapes.forEach((shape) => {
+    if (shape.entityType !== "embedded") {
+      const pos = shape.position();
+      const { width, height } = getShapeDimensions(shape);
+      positionTracker.reserve(shape.id, pos.x, pos.y, width, height);
     }
   });
 
-  // Find parent for each embedded entity by looking at incoming links
+  // Group the embedded entities by the non-embedded shape that links to them
+  const embeddedByParent = new Map<string, ServiceEntityShape[]>();
+  const links = getLinks(canvasState);
+
   embeddedEntities.forEach((embeddedEntity) => {
-    const links = graph.getLinks();
-    let parentId: string | null = null;
+    const parentLink = links.find(
+      (link) =>
+        link.target === embeddedEntity.id && canvasState.get(link.source)?.entityType !== "embedded"
+    );
 
-    // Find links where this embedded entity is the target
-    for (const link of links) {
-      const sourceElement = link.getSourceElement();
-      const targetElement = link.getTargetElement();
-
-      if (targetElement && String(targetElement.id) === String(embeddedEntity.id)) {
-        if (sourceElement && sourceElement instanceof ServiceEntityShape) {
-          // Found a parent - embedded entities should only have one parent
-          parentId = String(sourceElement.id);
-          break;
-        }
-      }
+    if (!parentLink) {
+      return;
     }
-
-    if (parentId && parentMap.has(parentId)) {
-      if (!embeddedByParent.has(parentId)) {
-        embeddedByParent.set(parentId, []);
-      }
-      embeddedByParent.get(parentId)!.push(embeddedEntity);
-    }
+    embeddedByParent.set(parentLink.source, [
+      ...(embeddedByParent.get(parentLink.source) || []),
+      embeddedEntity,
+    ]);
   });
 
-  // Position embedded entities relative to their parents using the same logic as createEmbeddedEntityShapes
+  // Position embedded entities relative to their parents
   embeddedByParent.forEach((embeddedList, parentId) => {
-    const parent = parentMap.get(parentId);
+    const parent = canvasState.get(parentId);
     if (!parent) {
       return;
     }
@@ -124,12 +103,7 @@ export const applyAutoLayoutToEmbeddedEntities = (graph: dia.Graph): void => {
     const offsetX = parentPos.x + HORIZONTAL_SPACING;
 
     // Sort embedded entities by their current Y position to maintain relative order
-    embeddedList.sort((a, b) => {
-      const aPos = a.position();
-      const bPos = b.position();
-
-      return aPos.y - bPos.y;
-    });
+    embeddedList.sort((a, b) => a.position().y - b.position().y);
 
     // Position each embedded entity, stacking them vertically
     embeddedList.forEach((embeddedEntity, index) => {
@@ -141,126 +115,85 @@ export const applyAutoLayoutToEmbeddedEntities = (graph: dia.Graph): void => {
         startY
       );
 
-      embeddedEntity.set("position", {
-        x: offsetX,
-        y: finalY,
-      });
+      embeddedEntity.position(offsetX, finalY);
 
-      // Get the actual bounding box to reserve the correct space
-      const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(embeddedEntity);
-      positionTracker.reserve(String(embeddedEntity.id), offsetX, finalY, bboxWidth, bboxHeight);
+      const { width, height } = getShapeDimensions(embeddedEntity);
+      positionTracker.reserve(embeddedEntity.id, offsetX, finalY, width, height);
     });
   });
 };
 
 /**
- * Applies a grid-based layout to the graph
- * Organizes shapes in columns based on their hierarchy depth
+ * Lays the shapes out in layers by relation depth: each link points from one layer to the
+ * next, and the order within a layer keeps links from crossing where it can.
+ * Shapes hidden by a collapsed parent keep their position.
  *
- * @param graph - The JointJS graph
+ * With a root, only the root and everything below it move, and the root stays where it is.
+ *
+ * @param canvasState - The shapes on the canvas
+ * @param direction - Left to right, or top to bottom
+ * @param rootId - The shape whose subtree to arrange; the whole canvas when omitted
+ * @returns The ids of the shapes that moved
  */
-export const applyGridLayout = (graph: dia.Graph): void => {
-  const elements = graph.getElements();
+export const applyLayeredLayout = (
+  canvasState: Map<string, ServiceEntityShape>,
+  direction: LayoutDirection = "LR",
+  rootId?: string
+): string[] => {
+  const root = rootId ? canvasState.get(rootId) : undefined;
+  const scope = root
+    ? [root, ...getConnectedLayerData(canvasState, root).shapes]
+    : Array.from(canvasState.values());
+  const shapes = scope.filter((shape) => !shape.isHidden);
 
-  if (elements.length === 0) {
-    return;
+  if (shapes.length === 0) {
+    return [];
   }
 
-  // Calculate hierarchy depth for each element
-  const depthMap = new Map<string, number>();
-  const processed = new Set<string>();
+  const ids = new Set(shapes.map((shape) => shape.id));
+  const graph = new dagre.graphlib.Graph();
 
-  /**
-   * Calculate the depth of an element based on its connections
-   */
-  const calculateDepth = (elementId: string, visited: Set<string> = new Set()): number => {
-    if (visited.has(elementId)) {
-      return 0; // Prevent cycles
-    }
-    visited.add(elementId);
+  graph.setGraph({
+    rankdir: direction,
+    nodesep: SIBLING_SPACING,
+    ranksep: LAYER_SPACING,
+  });
+  graph.setDefaultEdgeLabel(() => ({}));
 
-    if (depthMap.has(elementId)) {
-      return depthMap.get(elementId)!;
-    }
+  shapes.forEach((shape) => {
+    graph.setNode(shape.id, getShapeDimensions(shape));
+  });
+  getLinks(canvasState)
+    .filter((link) => ids.has(link.source) && ids.has(link.target))
+    .forEach((link) => graph.setEdge(link.source, link.target));
 
-    const element = graph.getCell(elementId) as dia.Element;
-    if (!element) {
-      return 0;
-    }
+  dagre.layout(graph);
 
-    // Find incoming links (links that target this element)
-    const incomingLinks = graph.getLinks().filter((link) => {
-      const targetElement = link.getTargetElement();
+  // dagre places the node centres from the origin. Keep the arranged block where it was:
+  // anchored on the root, or on the top-left corner of the shapes it arranged.
+  const topLeft = (positions: Array<{ x: number; y: number }>) => ({
+    x: Math.min(...positions.map(({ x }) => x)),
+    y: Math.min(...positions.map(({ y }) => y)),
+  });
+  const laidOut = new Map(
+    shapes.map((shape) => {
+      const { x, y } = graph.node(shape.id);
+      const { width, height } = getShapeDimensions(shape);
 
-      return targetElement ? String(targetElement.id) === elementId : false;
-    });
+      return [shape.id, { x: x - width / 2, y: y - height / 2 }];
+    })
+  );
+  const anchorBefore = root ? root.position() : topLeft(shapes.map((shape) => shape.position()));
+  const anchorAfter = root ? laidOut.get(root.id)! : topLeft(Array.from(laidOut.values()));
 
-    if (incomingLinks.length === 0) {
-      // Root element (no incoming links)
-      depthMap.set(elementId, 0);
+  shapes.forEach((shape) => {
+    const { x, y } = laidOut.get(shape.id)!;
 
-      return 0;
-    }
-
-    // Find the maximum depth of source elements
-    let maxSourceDepth = -1;
-    incomingLinks.forEach((link) => {
-      const sourceElement = link.getSourceElement();
-      if (sourceElement) {
-        const sourceDepth = calculateDepth(String(sourceElement.id), new Set(visited));
-        maxSourceDepth = Math.max(maxSourceDepth, sourceDepth);
-      }
-    });
-
-    const depth = maxSourceDepth + 1;
-    depthMap.set(elementId, depth);
-
-    return depth;
-  };
-
-  // Calculate depth for all elements
-  elements.forEach((element) => {
-    const elementId = String(element.id);
-    if (!processed.has(elementId)) {
-      calculateDepth(elementId);
-      processed.add(elementId);
-    }
+    shape.position(
+      Math.round(x - anchorAfter.x + anchorBefore.x),
+      Math.round(y - anchorAfter.y + anchorBefore.y)
+    );
   });
 
-  // Group elements by depth
-  const elementsByDepth = new Map<number, dia.Element[]>();
-  let maxDepth = 0;
-
-  elements.forEach((element) => {
-    const elementId = String(element.id);
-    const depth = depthMap.get(elementId) ?? 0;
-    maxDepth = Math.max(maxDepth, depth);
-
-    if (!elementsByDepth.has(depth)) {
-      elementsByDepth.set(depth, []);
-    }
-    elementsByDepth.get(depth)!.push(element);
-  });
-
-  // Position elements in grid
-  elementsByDepth.forEach((elementsAtDepth, depth) => {
-    const columnX = GRID_START_X + depth * GRID_COLUMN_WIDTH;
-
-    elementsAtDepth.forEach((element, index) => {
-      try {
-        const rowY = GRID_START_Y + index * GRID_ROW_HEIGHT;
-
-        element.set("position", {
-          x: columnX,
-          y: rowY,
-        });
-      } catch {
-        // Fallback if bbox is not available
-        element.set("position", {
-          x: columnX,
-          y: GRID_START_Y + index * GRID_ROW_HEIGHT,
-        });
-      }
-    });
-  });
+  return shapes.map((shape) => shape.id);
 };

@@ -19,7 +19,7 @@ export const ZoomControlsContainer = styled.div`
   filter: drop-shadow(0.05rem 0.2rem 0.2rem var(--pf-t--global--box-shadow--color--100));
   z-index: 10;
 
-  button {
+  > button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -36,6 +36,19 @@ export const ZoomControlsContainer = styled.div`
       display: block;
       margin: 0;
     }
+  }
+
+  > .arrange-toggle {
+    width: auto;
+    gap: var(--pf-t--global--spacer--sm);
+    padding-inline: var(--pf-t--global--spacer--md);
+  }
+
+  .toolbar-divider {
+    width: 1px;
+    height: 1.5rem;
+    margin: 0 var(--pf-t--global--spacer--xs);
+    background: var(--pf-t--global--border--color--default);
   }
 
   .zoom-slider-container {

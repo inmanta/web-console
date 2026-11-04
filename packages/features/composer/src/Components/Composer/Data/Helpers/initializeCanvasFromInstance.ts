@@ -1,19 +1,14 @@
-import { dia } from "@joint/plus";
 import { v4 as uuidv4 } from "uuid";
 import { ServiceModel, ServiceInstanceModel, EmbeddedEntity } from "@inmanta/web-console-core";
 import { InstanceWithRelations } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
-import { LinkShape } from "../../UI/JointJsShapes/LinkShape";
-import {
-  ServiceEntityShape,
-  ServiceEntityOptions,
-} from "../../UI/JointJsShapes/ServiceEntityShape";
 import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config";
 import {
   HORIZONTAL_SPACING,
   VERTICAL_SPACING,
   NESTED_HORIZONTAL_OFFSET,
 } from "../../config/layoutConfig";
-import { applyGridLayout } from "./canvasLayoutUtils";
+import { ServiceEntityShape, ServiceEntityOptions } from "../ServiceEntityShape";
+import { applyLayeredLayout } from "./canvasLayoutUtils";
 import { RelationsDictionary } from "./createRelationsDictionary";
 import { PositionTracker } from "./positionTracker";
 import { getShapeDimensions, getEmbeddedEntityKey, getInterServiceRelationKey } from "./shapeUtils";
@@ -76,7 +71,6 @@ export const createEmbeddedEntityShapes = (
   parentShape: ServiceEntityShape,
   rootEntityId: string,
   relationsDictionary: RelationsDictionary,
-  graph: dia.Graph,
   canvasState: Map<string, ServiceEntityShape>,
   embeddedEntityCache: Map<string, string>,
   positionTracker: PositionTracker,
@@ -167,7 +161,6 @@ export const createEmbeddedEntityShapes = (
           parentShape,
           rootEntityId,
           relationsDictionary,
-          graph,
           canvasState,
           embeddedEntityCache,
           positionTracker,
@@ -219,10 +212,6 @@ export const createEmbeddedEntityShapes = (
     );
 
     shape.position(offsetX, finalY);
-    shape.addTo(graph);
-
-    // Update columns display after shape is added to graph
-    shape.updateColumnsDisplay();
 
     // Get the actual bounding box to reserve the correct space
     const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(shape);
@@ -239,90 +228,14 @@ export const createEmbeddedEntityShapes = (
 };
 
 /**
- * Creates links between shapes based on their connections maps.
- * This is the same simple logic used in initializeCanvasFromInstance.
- */
-export const createLinksFromCanvasState = (
-  canvasState: Map<string, ServiceEntityShape>,
-  graph: dia.Graph
-): void => {
-  if (!graph) {
-    return;
-  }
-
-  canvasState.forEach((sourceShape) => {
-    // Verify shape is in graph before processing
-    if (!graph.getCell(sourceShape.id)) {
-      return;
-    }
-
-    let neighbors: dia.Cell[]; // Neighbors are all the cells that are connected to the source shape
-    try {
-      neighbors = graph.getNeighbors(sourceShape);
-    } catch (error) {
-      console.error(`Failed to get neighbors for ${sourceShape.id}:`, error);
-
-      return;
-    }
-
-    const existingNeighbors = new Set(neighbors.map((neighbor) => String(neighbor.id)));
-
-    sourceShape.connections.forEach((targetIds, relationName) => {
-      const uniqueTargetIds = [...new Set(targetIds)];
-
-      uniqueTargetIds.forEach((targetId) => {
-        const targetShape = canvasState.get(targetId);
-
-        if (!targetShape || existingNeighbors.has(String(targetId))) {
-          return;
-        }
-
-        // Verify target is in graph
-        if (!graph.getCell(targetId)) {
-          return;
-        }
-
-        // Check if link already exists by checking all links in the graph
-        // This prevents duplicates when links are manually created
-        const existingLinks = graph.getLinks();
-        const linkAlreadyExists = existingLinks.some((link) => {
-          const linkSource = link.source();
-          const linkTarget = link.target();
-
-          return (
-            (linkSource.id === sourceShape.id && linkTarget.id === targetId) ||
-            (linkSource.id === targetId && linkTarget.id === sourceShape.id)
-          );
-        });
-
-        if (linkAlreadyExists) {
-          return;
-        }
-
-        try {
-          const link = new LinkShape();
-          link.source({ id: sourceShape.id, port: relationName });
-          link.target({ id: targetId });
-          link.addTo(graph);
-
-          existingNeighbors.add(String(targetId));
-        } catch (error) {
-          console.warn(`Failed to create link from ${sourceShape.id} to ${targetId}:`, error);
-        }
-      });
-    });
-  });
-};
-
-/**
  * Initializes the canvas state from an instance-with-relations payload.
- * Creates shapes, embedded entities, and links, applies layout, and returns the canvas state map.
+ * Creates shapes and embedded entities, lays them out, and returns the canvas state map.
+ * The links follow from the shapes' connections.
  */
 export const initializeCanvasFromInstance = (
   instanceData: InstanceWithRelations,
   serviceCatalog: ServiceModel[],
-  relationsDictionary: RelationsDictionary,
-  graph: dia.Graph
+  relationsDictionary: RelationsDictionary
 ): Map<string, ServiceEntityShape> => {
   const canvasState = new Map<string, ServiceEntityShape>();
   const embeddedEntityCache = new Map<string, string>();
@@ -405,10 +318,6 @@ export const initializeCanvasFromInstance = (
     // Ensure the main instance doesn't overlap with existing shapes
     const finalY = positionTracker.findNextYPosition(shapeX, SHAPE_WIDTH, SHAPE_MIN_HEIGHT, shapeY);
     shape.position(shapeX, finalY);
-    shape.addTo(graph);
-
-    // Update columns display after shape is added to graph
-    shape.updateColumnsDisplay();
 
     // Reserve the position for the main instance
     const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(shape);
@@ -430,7 +339,6 @@ export const initializeCanvasFromInstance = (
           shape,
           instance.id,
           relationsDictionary,
-          graph,
           canvasState,
           embeddedEntityCache,
           positionTracker,
@@ -448,9 +356,7 @@ export const initializeCanvasFromInstance = (
     });
   });
 
-  createLinksFromCanvasState(canvasState, graph);
-
-  applyGridLayout(graph);
+  applyLayeredLayout(canvasState);
 
   return canvasState;
 };

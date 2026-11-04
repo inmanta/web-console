@@ -34,7 +34,7 @@ packages/
     Slices/ - The shell's own pages: login, not found, notifications, status
   test-utils/src/ - @inmanta/web-console-test-utils, common test data, mock implementations, testing utilities, test setup
   features/ - One folder per feature, imported as @inmanta/web-console-feature-<name>
-    composer/src/ - The Instance Composer, the only code that imports JointJS (@joint/*)
+    composer/src/ - The Instance Composer, the only code that imports the canvas libraries (@xyflow/*, @dagrejs/*)
       index.ts - composerFeature, its FeatureModule
       Components/Composer/ - The canvas, its shapes, sidebars and providers
       Slices/ - The composer pages: creator, editor, viewer

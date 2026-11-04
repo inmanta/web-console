@@ -1,27 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { InstanceAttributeModel } from "@inmanta/web-console-core";
+import { ReactFlowProvider } from "@xyflow/react";
 import { useGetServiceModels } from "@inmanta/web-console-core/Queries/Slices/Service";
 import {
   useGetInventoryList,
   useGetInstanceWithRelations,
 } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
-import { createCanvasHandlers } from "./Data/CanvasHandlers";
-import { ComposerContext, composerContext } from "./Data/Context";
+import { ComposerContext, composerContext, PaletteItem } from "./Data/Context";
 import { createRelationsDictionary, RelationsDictionary } from "./Data/Helpers";
-import {
-  useComposerGraph,
-  useCanvasInteractions,
-  useLinkInteractions,
-  useServiceOrderItems,
-} from "./Data/Hooks";
-import {
-  ComposerContainer,
-  ServiceEntityShape,
-  Canvas,
-  LeftSidebar,
-  RightSidebar,
-  ZoomControls,
-} from "./UI";
+import { useCanvasActions, useComposerInitialization, useServiceOrderItems } from "./Data/Hooks";
+import { ServiceEntityShape } from "./Data/ServiceEntityShape";
+import { ComposerContainer, Canvas, LeftSidebar, RightSidebar } from "./UI";
 
 /**
  * Props for the top-level Composer component.
@@ -35,14 +23,14 @@ interface Props {
 
 /**
  * Top-level component for the instance composer.
- * Sets up data fetching, JointJS graph/paper, and provides composer context to child UI.
+ * Sets up data fetching and the canvas state, and provides composer context to child UI.
  */
 export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, children }) => {
   const [catalogEntries, setCatalogEntries] = useState<string[]>([]);
   const [canvasState, setCanvasState] = useState<Map<string, ServiceEntityShape>>(new Map());
-  const [activeCell, setActiveCell] = useState<ServiceEntityShape | null>(null);
-  const [_formState, setFormState] = useState<InstanceAttributeModel>({});
+  const [activeCellId, setActiveCellId] = useState<string | null>(null);
   const initialShapeInfoRef = useRef<Map<string, { service_entity: string }>>(new Map()); // Track initial shape info for delete detection
+  const draggedItemRef = useRef<PaletteItem | null>(null);
 
   const serviceCatalogQuery = useGetServiceModels().useContinuousNoRefetch();
   const relationsDictionary: RelationsDictionary = useMemo(
@@ -81,9 +69,7 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
     []
   );
 
-  // Use composer graph hook for graph/paper/scroller setup and initialization
-  const { graph, paper, scroller } = useComposerGraph({
-    editable,
+  useComposerInitialization({
     serviceName,
     instanceId,
     serviceCatalog: serviceCatalogQuery.data,
@@ -95,28 +81,7 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
     onInitialShapeInfoTracked: handleInitialShapeInfoTracked,
   });
 
-  // Create canvas handlers
-  const canvasHandlers = useMemo(() => createCanvasHandlers(graph), [graph]);
-
-  // Use canvas interactions hook for click events, context menu, and halo
-  useCanvasInteractions({
-    paper,
-    graph,
-    scroller,
-    editable,
-    relationsDictionary,
-    activeCell,
-    setActiveCell,
-    setFormState,
-    initialShapeInfoRef,
-    serviceCatalog: serviceCatalogQuery.data || [],
-  });
-
-  // Use link interactions hook for link creation, connection, and removal
-  useLinkInteractions({
-    paper,
-    graph,
-    canvasHandlers,
+  const canvasActions = useCanvasActions({
     canvasState,
     setCanvasState,
     initialShapeInfoRef,
@@ -131,6 +96,13 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
     serviceCatalog: serviceCatalogQuery.data,
   });
 
+  // The active shape is looked up by id, so it drops out once it leaves the canvas.
+  const activeCell = (activeCellId && canvasState.get(activeCellId)) || null;
+  const setActiveCell = useCallback(
+    (cell: ServiceEntityShape | null) => setActiveCellId(cell ? cell.id : null),
+    []
+  );
+
   const contextValue = useMemo(
     () => ({
       ...composerContext,
@@ -138,15 +110,15 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
       serviceCatalog: serviceCatalogQuery.data || [],
       serviceInventories: inventoriesQuery.data || null,
       serviceInstanceId: instanceId || null,
-      paper: paper,
-      graph: graph,
-      scroller: scroller,
       relationsDictionary: relationsDictionary,
       editable: editable,
       canvasState: canvasState,
       setCanvasState: setCanvasState,
+      canvasActions: canvasActions,
       activeCell: activeCell,
-      canvasHandlers: canvasHandlers,
+      setActiveCell: setActiveCell,
+      initialShapeInfoRef: initialShapeInfoRef,
+      draggedItemRef: draggedItemRef,
       serviceOrderItems: serviceOrderItems,
       hasValidationErrors: hasValidationErrors,
     }),
@@ -155,15 +127,12 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
       serviceCatalogQuery.data,
       inventoriesQuery.data,
       instanceId,
-      paper,
-      graph,
-      scroller,
       relationsDictionary,
       editable,
       canvasState,
-      setCanvasState,
+      canvasActions,
       activeCell,
-      canvasHandlers,
+      setActiveCell,
       serviceOrderItems,
       hasValidationErrors,
     ]
@@ -171,14 +140,15 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
 
   return (
     <ComposerContext.Provider value={contextValue}>
-      {children || (
-        <ComposerContainer id="canvas-wrapper">
-          <LeftSidebar />
-          <Canvas />
-          <RightSidebar />
-          <ZoomControls />
-        </ComposerContainer>
-      )}
+      <ReactFlowProvider>
+        {children || (
+          <ComposerContainer id="canvas-wrapper">
+            <LeftSidebar />
+            <Canvas />
+            <RightSidebar />
+          </ComposerContainer>
+        )}
+      </ReactFlowProvider>
     </ComposerContext.Provider>
   );
 };

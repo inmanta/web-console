@@ -1,15 +1,3 @@
-import { dia, shapes, util } from "@joint/plus";
-import {
-  t_chart_color_yellow_300,
-  t_chart_color_blue_400,
-  t_chart_color_purple_300,
-  t_chart_global_fill_color_white,
-  t_global_background_color_primary_default,
-  t_global_border_radius_small,
-  t_global_font_family_mono,
-  t_global_font_size_body_default,
-  t_global_font_size_body_lg,
-} from "@patternfly/react-tokens";
 import {
   EmbeddedEntity,
   Field,
@@ -21,15 +9,16 @@ import {
 import { sanitizeAttributes } from "@inmanta/web-console-core/Common";
 import { CreateModifierHandler, FieldCreator } from "@inmanta/web-console-core/FormState";
 import { SuggestionVariables } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
-import { RelationsDictionary } from "../../Data";
+import { SHAPE_HEADER_HEIGHT, SHAPE_ROW_HEIGHT, SHAPE_WIDTH } from "../config/shapeConfig";
 import {
   checkEmbeddedEntityConnections,
   checkInterServiceRelationConnections,
   getEmbeddedEntityMissingConnections,
   getInterServiceRelationMissingConnections,
-} from "../../Data/Helpers/connectionValidationUtils";
-import { findTopRootInstance } from "../../Data/Helpers/findTopRootInstance";
-import { getEmbeddedEntityKey } from "../../Data/Helpers/shapeUtils";
+} from "./Helpers/connectionValidationUtils";
+import { RelationsDictionary } from "./Helpers/createRelationsDictionary";
+import { findTopRootInstance } from "./Helpers/findTopRootInstance";
+import { getEmbeddedEntityKey } from "./Helpers/shapeUtils";
 
 /**
  * Base configuration for a service entity rendered on the composer canvas.
@@ -54,24 +43,25 @@ export interface ServiceEntityOptions extends ServiceEntityBase {
   relationsDictionary: RelationsDictionary;
 }
 
-interface ColumnData {
-  name: string;
-  [key: string]: unknown;
-}
-
 export type EntityShapeType = "core" | "embedded" | "relation";
 
-export const HeaderColors: Record<EntityShapeType, string> = {
-  core: t_chart_color_yellow_300.var,
-  embedded: t_chart_color_blue_400.var,
-  relation: t_chart_color_purple_300.var,
-};
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export interface Size {
+  width: number;
+  height: number;
+}
 
 /**
- * JointJS shape that represents a service, embedded entity, or inter-service relation on the canvas.
- * Tracks connections, attributes, and provides helpers for validation and order-item generation.
+ * A service, embedded entity, or inter-service relation on the composer canvas.
+ * Tracks its connections, attributes and position, and provides helpers for validation
+ * and order-item generation. It holds no rendering state: the canvas draws it.
  */
-export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
+export class ServiceEntityShape {
+  readonly id: string;
   connections: Map<string, string[]>;
   serviceModel: ServiceModel | EmbeddedEntity;
   relationsDictionary: RelationsDictionary;
@@ -84,13 +74,17 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   orderItem: ServiceOrderItemRequest | null;
   hasAttributeValidationErrors: boolean;
   isLayersCollapsed: boolean;
+
+  /** Hidden because an ancestor collapsed its layers. */
+  isHidden: boolean;
   parentIds: Set<string>;
 
-  constructor(initializationOptions: ServiceEntityOptions) {
-    // In JointJS 4, the model id should be provided at construction time
-    // so that the graph and paper index the cell under the correct id.
-    super({ id: initializationOptions.id });
+  /** The size the canvas measured for the card, used by the layouts. */
+  size: Size;
+  private _position: Point;
 
+  constructor(initializationOptions: ServiceEntityOptions) {
+    this.id = initializationOptions.id;
     this.connections = new Map<string, string[]>();
     this.serviceModel = initializationOptions.serviceModel;
     this.relationsDictionary = initializationOptions.relationsDictionary;
@@ -103,211 +97,16 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     this.orderItem = null;
     this.hasAttributeValidationErrors = false;
     this.isLayersCollapsed = false;
+    this.isHidden = false;
     this.parentIds = new Set<string>();
+    // An estimate until the canvas has measured the card
+    this.size = {
+      width: SHAPE_WIDTH,
+      height: SHAPE_HEADER_HEIGHT + Math.max(1, this.getKeyAttributes().length) * SHAPE_ROW_HEIGHT,
+    };
+    this._position = { x: 0, y: 0 };
 
-    this._initializeFromOptions(initializationOptions);
-  }
-  defaults() {
-    // Recursively assigns default properties. That means if a property already exists on the child,
-    // the child property won't be replaced even if the parent property of same name has a different value.
-    // It is not exactly the same as using the spread operator.
-    // The spread operator would replace any parent properties if we defined those properties on the child.
-    // See https://resources.jointjs.com/tutorial/ts-shape for more details.
-    return util.defaultsDeep(
-      {
-        type: "app.ServiceEntityShape",
-        columns: [],
-        padding: { top: 40, bottom: 10, left: 10, right: 10 },
-        size: { width: 264 },
-        itemMinLabelWidth: 120,
-        itemHeight: 25,
-        itemOffset: 0,
-        itemOverflow: true,
-        attrs: {
-          body: {
-            class: "joint-entityBlock-body",
-            strokeWidth: 0,
-            cursor: "default",
-            rx: t_global_border_radius_small.value,
-            fill: t_global_background_color_primary_default.var,
-          },
-          header: {
-            strokeWidth: 0,
-            cursor: "grab",
-            d: "M1,0 h257 q6,0 6,6 v24 h-264 v-24 q0,-6 6,-6",
-          },
-          headerLabel: {
-            fontFamily: t_global_font_family_mono.var,
-            textTransform: "uppercase",
-            fill: t_chart_global_fill_color_white.var,
-            fontSize: t_global_font_size_body_lg.var,
-            textWrap: {
-              ellipsis: true,
-              height: 30,
-            },
-            cursor: "grab",
-          },
-          group_1: {
-            cursor: "default",
-          },
-          itemBodies: {
-            cursor: "default",
-          },
-          itemLabels: {
-            class: "joint-entityBlock-itemLabels",
-            fontSize: t_global_font_size_body_default.var,
-            cursor: "default",
-            itemText: {
-              textWrap: false,
-            },
-          },
-          itemLabels_1: {
-            class: "joint-entityBlock-itemLabels-one",
-            fontSize: t_global_font_size_body_default.var,
-            textAnchor: "end",
-            x: "calc(0.5 * w - 10)",
-            cursor: "default",
-          },
-        },
-      },
-      super.defaults
-    );
-  }
-
-  protected _setColumnItems(data: Array<ColumnData> = []) {
-    const names: Array<{
-      id: string;
-      label: string;
-      span: number;
-    }> = [];
-    const values: Array<{
-      id: string;
-      label: string;
-    }> = [];
-
-    data.forEach((item) => {
-      if (!item.name) {
-        return;
-      }
-
-      const nameObject = {
-        id: item.name,
-        label: item.name,
-        span: 2,
-      };
-
-      //out-of-the-box headeredRecord doesn't truncate attribute name, only their values
-      const truncatedName = util.breakText(
-        item.name.toString(),
-        { width: 90, height: 22 },
-        {
-          "font-size": this.attr("itemLabels_1/fontSize"),
-          "font-family": this.attr("itemLabels_1/fontFamily"),
-        },
-        {
-          ellipsis: true,
-        }
-      );
-
-      if (truncatedName.includes("\u2026")) {
-        this.attr(`itemLabel_${item.name}/data-tooltip`, item.name);
-        this.attr(`itemLabel_${item.name}/data-tooltip-position`, "right");
-
-        names.push({ ...nameObject, label: item.name.slice(0, 15) + "\u2026" });
-      } else {
-        names.push(nameObject);
-      }
-
-      const value: { id: string; label: string } = {
-        id: `${item.name}_value`,
-        label: "",
-      };
-
-      if (typeof item.value === "object" && !Array.isArray(item.value) && item.value !== null) {
-        value.label = "{...}";
-      } else {
-        value.label = String(item.value);
-
-        if (item.value !== undefined && item.value !== null) {
-          // reproduce internal formatting of the text base on actual dimensions, if text includes ellipsis add Tooltip
-          const reproducedDisplayText = util.breakText(
-            item.value.toString().replace(/\s+/g, " "),
-            { width: 90, height: 22 },
-            {
-              "font-size": this.attr("itemLabels_1/fontSize"),
-              "font-family": this.attr("itemLabels_1/fontFamily"),
-            },
-            {
-              ellipsis: true,
-            }
-          );
-
-          if (reproducedDisplayText.includes("\u2026")) {
-            value.label = item.value.toString().replace(/\s+/g, " ").slice(0, 16) + "\u2026";
-            this.attr(`itemLabel_${item.name}_value/data-tooltip`, item.value);
-          }
-        }
-      }
-
-      values.push(value);
-    });
-
-    this.set("items", [names, values]);
-
-    return this;
-  }
-
-  protected _setColumns(data: Array<ColumnData> = []) {
-    this._setColumnItems(data);
-
-    return this;
-  }
-
-  setColumns(data: Array<ColumnData>): this {
-    this._setColumns(data);
-
-    return this;
-  }
-
-  preinitialize(): void {
-    this.markup = [
-      {
-        tagName: "rect",
-        selector: "body",
-      },
-      {
-        tagName: "path",
-        selector: "header",
-      },
-
-      {
-        tagName: "text",
-        selector: "headerLabel",
-      },
-      {
-        tagName: "image",
-        selector: "info",
-      },
-    ];
-  }
-
-  initialize(...initializeArguments) {
-    super.initialize(...initializeArguments);
-    const columns = this.get("columns") || [];
-    if (columns.length > 0) {
-      this._setColumns(columns);
-    }
-  }
-
-  private _initializeFromOptions(initializationOptions: ServiceEntityOptions) {
-    const {
-      entityType: type,
-      interServiceRelations,
-      embeddedEntities,
-      rootEntities,
-    } = initializationOptions;
-    this.attr(["header", "fill"], HeaderColors[type]);
-    this.setDisplayName();
+    const { interServiceRelations, embeddedEntities, rootEntities } = initializationOptions;
 
     // add all existing inter-service relations and embedded entities to the connections map
     Object.entries(interServiceRelations).forEach(([relationType, relationId]) => {
@@ -322,71 +121,56 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     Object.values(rootEntities).forEach((ids) => {
       ids.forEach((id) => this.parentIds.add(id));
     });
+  }
 
-    // Prepare columns for display (will be rendered in initialize method)
-    const keyAttributes = this.getKeyAttributes();
-    if (keyAttributes.length > 0) {
-      const displayAttributes = keyAttributes.map((key) => ({
-        name: key,
-        value:
-          this.instanceAttributes[key] !== undefined && this.instanceAttributes[key] !== null
-            ? String(this.instanceAttributes[key])
-            : "",
-      }));
-      // Set columns - initialize will handle rendering via _setColumns
-      this.set("columns", displayAttributes);
-    } else {
-      this.set("columns", []);
+  /**
+   * Gets the position of the card's top-left corner, or moves it when given coordinates.
+   */
+  position(): Point;
+  position(x: number, y: number): this;
+  position(x?: number, y?: number): Point | this {
+    if (x === undefined || y === undefined) {
+      return { ...this._position };
     }
+    this._position = { x, y };
+
+    return this;
   }
 
   /**
-   * Converts the entity to a JSON representation.
-   *
-   * @returns {dia.Cell.JSON<any, dia.Element.Attributes>} The JSON representation of the entity.
-   * Note: The `any` type here is part of JointJS's type definition and is required by the library's API.
+   * The card's bounding box on the canvas.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  toJSON(): dia.Cell.JSON<any, dia.Element.Attributes> {
-    const json = super.toJSON();
-
-    // keeping only the `items` attribute as columns are omitted in our use-case
-    delete json.columns;
-
-    return json;
+  getBBox(): Point & Size {
+    return { ...this._position, ...this.size };
   }
 
   /**
-   * Sets the display name of the header label with a shortened version if necessary.
-   *
-   * @param {string} name - The name to set for the entity.
-   * @param {object} [options] - Optional settings for the attribute update.
-   * @returns {this} The current instance for method chaining.
+   * The name shown in the card header: "type - name" when both are set, otherwise either.
    */
-  setDisplayName(): this {
+  getDisplayName(): string {
     const typeName =
       "type" in this.serviceModel && this.serviceModel.type ? this.serviceModel.type : undefined;
     const serviceName = this.serviceModel.name;
-    const name = typeName && serviceName ? `${typeName} - ${serviceName}` : typeName || serviceName;
-    const shortenName = util.breakText(
-      name,
-      { width: 140, height: 30 },
-      {
-        "font-size": this.attr("headerLabel/fontSize"),
-        "font-family": this.attr("headerLabel/fontFamily"),
-      },
-      {
-        ellipsis: true,
+
+    return typeName && serviceName ? `${typeName} - ${serviceName}` : typeName || serviceName;
+  }
+
+  /**
+   * The key attributes shown on the card, with their current values.
+   */
+  getDisplayAttributes(): Array<{ name: string; value: string }> {
+    return this.getKeyAttributes().map((key) => {
+      const value = this.instanceAttributes[key];
+
+      if (value === undefined || value === null) {
+        return { name: key, value: "" };
       }
-    );
+      if (typeof value === "object" && !Array.isArray(value)) {
+        return { name: key, value: "{...}" };
+      }
 
-    this.attr(["headerLabel", "data-testid"], "header-" + name);
-
-    if (shortenName.includes("\u2026")) {
-      return this.attr(["headerLabel", "text"], name.replace(/\s+/g, " ").slice(0, 16) + "\u2026");
-    } else {
-      return this.attr(["headerLabel", "text"], shortenName);
-    }
+      return { name: key, value: String(value) };
+    });
   }
 
   getEntityType(): string {
@@ -695,10 +479,6 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     return missing;
   }
 
-  getAttributes(): InstanceAttributeModel {
-    return this.attributes;
-  }
-
   getSanitizedAttributes(): InstanceAttributeModel {
     return this.sanitizedAttrs;
   }
@@ -784,47 +564,6 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
 
     // Re-run attribute validation whenever attributes change
     this.validateAttributes();
-
-    const keyAttributes = this.getKeyAttributes();
-    const displayAttributes =
-      keyAttributes.length > 0
-        ? keyAttributes.map((key) => ({
-            name: key,
-            value:
-              attributes[key] !== undefined && attributes[key] !== null
-                ? String(attributes[key])
-                : "",
-          }))
-        : [];
-
-    this.setColumns(displayAttributes);
-  }
-
-  updateColumnsDisplay() {
-    const columns = this.get("columns") || [];
-    if (columns.length === 0) {
-      return;
-    }
-
-    requestAnimationFrame(() => {
-      try {
-        const size = this.get("size");
-        if (size && size.width && size.height) {
-          this._setColumnItems(columns);
-        }
-      } catch {
-        requestAnimationFrame(() => {
-          try {
-            const size = this.get("size");
-            if (size && size.width && size.height) {
-              this._setColumnItems(columns);
-            }
-          } catch {
-            // Ignore if still not ready
-          }
-        });
-      }
-    });
   }
 
   getKeyAttributes(): string[] {
@@ -1082,9 +821,3 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     return this.orderItem;
   }
 }
-
-Object.assign(shapes, {
-  app: {
-    ServiceEntityShape,
-  },
-});

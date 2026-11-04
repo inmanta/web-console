@@ -255,25 +255,8 @@ export default defineConfig({
         replacement: resolve(__dirname, "./node_modules/@patternfly/react-core/dist/styles/assets"),
       },
       { find: "@images", replacement: resolve(__dirname, "./public/images") },
-      // Force @joint/plus to use ESM entry (avoids dist/joint-plus.js)
-      {
-        find: "@joint/plus",
-        replacement: resolve(__dirname, "./node_modules/@joint/plus/joint-plus.mjs"),
-      },
-      // Force @joint/core's bare import to the ESM entry (avoids dist/joint.js).
-      // Regex matches only the exact specifier: a string alias prefix-replaces, mangling
-      // @joint/plus >=4.3.0's deep imports (e.g. @joint/core/src/highlighters/index.mjs)
-      // into @joint/core/joint.mjs/src/... Subpaths resolve via the package's exports map.
-      {
-        find: /^@joint\/core$/,
-        replacement: resolve(__dirname, "./node_modules/@joint/core/joint.mjs"),
-      },
       // Force uuid to use CJS entry point
       { find: "uuid", replacement: "uuid" },
-      {
-        find: "@rappidcss",
-        replacement: resolve(__dirname, "node_modules/@joint/plus/joint-plus.css"),
-      },
       // In tests, redirect ALL monaco-editor imports (including deep ESM subpaths like
       // monaco-editor/esm/vs/base/common/uri.js) to the mock. A regex find is required
       // because a string alias does a prefix replacement, turning subpath imports into
@@ -371,7 +354,7 @@ export default defineConfig({
               test: /node_modules[\\/](monaco-editor|@monaco-editor)[\\/]/,
               priority: 60,
             },
-            { name: "jointjs", test: /node_modules[\\/]@joint[\\/]/, priority: 50 },
+            { name: "xyflow", test: /node_modules[\\/](@xyflow|@dagrejs)[\\/]/, priority: 50 },
             {
               name: "utils",
               test: /node_modules[\\/](uuid|dayjs|bignumber\.js)[\\/]/,
@@ -398,11 +381,7 @@ export default defineConfig({
         settings: { disableJavaScriptFileLoading: true, disableCSSFileLoading: true },
       },
     },
-    setupFiles: [
-      "./packages/test-utils/src/setup.ts",
-      "./apps/web-console/src/test-setup.ts",
-      "./packages/features/composer/src/Components/Composer/globalTestMocks.ts",
-    ],
+    setupFiles: ["./packages/test-utils/src/setup.ts", "./apps/web-console/src/test-setup.ts"],
     restoreMocks: true,
     include: ["{src,packages,apps}/**/*.{test,spec}.?(c|m)[jt]s?(x)"],
     coverage: {
@@ -420,7 +399,6 @@ export default defineConfig({
       optimizer: {
         web: {
           include: [
-            "@joint/plus",
             "mermaid",
             "monaco-editor",
             "@monaco-editor/react",
@@ -465,17 +443,16 @@ export default defineConfig({
       "monaco-editor",
       "@monaco-editor/react",
       "@braintree/sanitize-url",
-      "@joint/plus",
       "@patternfly/react-styles",
       "nullthrows",
       "picomatch-browser",
       "react-diff-viewer-continued",
     ],
-    exclude: ["@joint/core", "monaco-graphql"],
+    exclude: ["monaco-graphql"],
     force: true,
   },
   ssr: {
-    noExternal: ["monaco-editor", "@monaco-editor/react", "mermaid", "@joint/plus"],
+    noExternal: ["monaco-editor", "@monaco-editor/react", "mermaid"],
   },
   worker: {
     format: "es",
