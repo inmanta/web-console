@@ -12,7 +12,6 @@ import { InlineValue } from "./InlineFillers";
  * @prop {string} initialValue - The initial value of the field
  * @prop {boolean} initiallyEditable - Whether the field is initially editable
  * @prop {Function} onSubmit - The function to call when the form is submitted
- * @prop {Function} setError - The function to call when the error message is set
  *
  * @returns {React.FC<FieldProps>} - The EditableTextField component
  */
@@ -22,7 +21,6 @@ export const EditableTextField: React.FC<FieldProps> = ({
   initialValue,
   initiallyEditable,
   onSubmit,
-  setError,
 }) => (
   <EditableField
     isRequired={isRequired}
@@ -32,7 +30,6 @@ export const EditableTextField: React.FC<FieldProps> = ({
     onSubmit={onSubmit}
     EditView={EditView}
     StaticView={StaticView}
-    setError={setError}
   />
 );
 
