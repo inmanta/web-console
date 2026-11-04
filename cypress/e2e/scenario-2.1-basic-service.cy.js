@@ -44,7 +44,7 @@ if (isIso) {
       ).as("GetServiceInventory");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // make sure the call to get inventory has been executed
       cy.wait("@GetServiceInventory");
@@ -76,7 +76,7 @@ if (isIso) {
       cy.visit("/console/");
       selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
       // Add an instance and fill form
@@ -107,7 +107,7 @@ if (isIso) {
       }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Should show the ServiceInventory-Success Component.
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
@@ -134,7 +134,7 @@ if (isIso) {
         .get('[aria-label="Number of instances by label"]')
         .children()
         .should("have.length", 1);
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Check Instance Details page
       // The first button should be the one redirecting to the details page.
@@ -206,7 +206,7 @@ if (isIso) {
       cy.visit("/console/");
       selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Record the current number of instances before duplicating
       cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 30000 }).then(($rows) => {
@@ -303,7 +303,7 @@ if (isIso) {
       }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // expect one more row in inventory than before the duplication
       cy.get("@previousCount").then((previousCount) => {
@@ -323,7 +323,7 @@ if (isIso) {
       ).as("GetServiceInventory");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // make sure the call to get inventory has been executed
       cy.wait("@GetServiceInventory");
@@ -363,7 +363,7 @@ if (isIso) {
         expect(children).to.have.length(1);
       });
 
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Check Instance Details page
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).last().click();
@@ -450,7 +450,7 @@ if (isIso) {
 
       // go back to the service inventory
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // go back to the details page
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).last().click();
@@ -513,7 +513,7 @@ if (isIso) {
       // END WORKAROUND.
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Check Instance Details page
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();

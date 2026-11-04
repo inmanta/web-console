@@ -9,7 +9,6 @@ export const EditableImageField: React.FC<FieldProps> = ({
   initialValue,
   initiallyEditable,
   onSubmit,
-  setError,
 }) => (
   <EditableField
     isRequired={isRequired}
@@ -20,7 +19,6 @@ export const EditableImageField: React.FC<FieldProps> = ({
     EditView={EditView}
     StaticView={StaticView}
     alignActions="end"
-    setError={setError}
   />
 );
 

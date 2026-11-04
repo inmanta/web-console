@@ -1,0 +1,5 @@
+description: Saving environment settings now shows a toast for success and errors, like the rest of the console.
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

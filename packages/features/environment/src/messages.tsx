@@ -197,6 +197,9 @@ export const environmentMessages = {
   "settings.tabs.token.revoke.confirm": (jti: string) =>
     `Are you sure you want to revoke token ${jti}? This action cannot be undone.`,
   "settings.update": "Setting Changed",
+  "settings.update.failed": "Update failed",
+  "settings.tabs.environment.projectNotFound": (projectName: string) =>
+    `No matching project found for name '${projectName}'`,
   "settings.warning.update": "Changed value has not been saved",
   "settings.protected.message": (protected_by: string) =>
     `This setting is protected by ${protected_by}, and cannot be changed.`,

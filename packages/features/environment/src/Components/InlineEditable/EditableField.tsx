@@ -16,7 +16,6 @@ export interface FieldProps {
   initialValue: string;
   initiallyEditable?: boolean;
   onSubmit: (value: string) => void;
-  setError: (error: string | null) => void;
 }
 
 export type EditViewComponent = React.FC<{
@@ -33,7 +32,6 @@ interface Props extends FieldProps {
   EditView: EditViewComponent;
   StaticView: StaticViewComponent;
   alignActions?: "start" | "end";
-  setError: (error: string | null) => void;
 }
 
 export const EditableField: React.FC<Props> = ({
@@ -45,7 +43,6 @@ export const EditableField: React.FC<Props> = ({
   EditView,
   StaticView,
   alignActions,
-  setError,
 }) => {
   const alignment = alignActions === "end" ? "alignSelfFlexEnd" : "alignSelfFlexStart";
   const [editable, setEditable] = useState(initiallyEditable);
@@ -58,7 +55,6 @@ export const EditableField: React.FC<Props> = ({
 
   const onEditClick = () => {
     setEditable(true);
-    setError(null);
   };
 
   const onSubmitClick = () => onSubmitRequest(value);
