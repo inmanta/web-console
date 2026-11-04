@@ -72,4 +72,6 @@ Every package and app is a Yarn workspace with its own `package.json`. Another p
 - its zone in `eslint.layers.js`;
 - a `yarn install` after adding or changing a `package.json`, so `yarn.lock` has its entry; CI installs with `--immutable` and fails without it.
 
+Each package also lists the third-party packages it imports in its own `package.json`: `dependencies` for the code that ships, `devDependencies` for tests and test helpers. Two cases are easy to miss: a package also lists the required peer dependencies of what it uses (e.g. `oidc-client-ts` for `react-oidc-context`, `victory` for `@patternfly/react-charts`), and `test-utils` lists what its helpers import as `dependencies`, because other packages' tests run them. `yarn lint` checks this (`import/no-extraneous-dependencies`) and runs the Yarn constraints (`yarn.config.cjs`): every package uses the same version of a dependency, and JointJS and the GraphiQL packages are only allowed in the composer and graphiql features. The root `package.json` keeps the build, lint and test tools.
+
 Each slice (a folder in a package's `Slices/`) uses the same layers: `Core/` for its types and contracts, `Data/` for transformations and implementations, `UI/` for its components.

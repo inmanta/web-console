@@ -13,6 +13,9 @@ import {
 } from "@inmanta/web-console-core/Queries/Slices/GraphiQL";
 import { useTheme } from "@inmanta/web-console-ui/Components/DarkmodeOption";
 import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
+import { registerGraphQLWorker } from "./graphqlWorker";
+
+registerGraphQLWorker();
 
 // ?inline tells Vite to give us the CSS as a plain string instead of injecting
 // it as a global stylesheet. We inject it ourselves (wrapped in @layer so its
