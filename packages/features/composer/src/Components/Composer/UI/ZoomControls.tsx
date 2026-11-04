@@ -104,7 +104,11 @@ export const ZoomControls: React.FC = () => {
   };
 
   const handleFitToScreen = () => {
-    fitView({ padding: { x: `${ZOOM_TO_FIT_PADDING_BUTTON}px`, y: "40px" }, duration: 200 });
+    fitView({
+      padding: { x: `${ZOOM_TO_FIT_PADDING_BUTTON}px`, y: "40px" },
+      maxZoom: 1,
+      duration: 200,
+    });
   };
 
   const handleZoom = (increment: number) => {
