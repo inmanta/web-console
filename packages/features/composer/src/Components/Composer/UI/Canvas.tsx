@@ -37,6 +37,7 @@ import { RelationEdge, RelationEdgeType } from "./RelationEdge";
 const nodeTypes = { entity: EntityNode };
 const edgeTypes = { relation: RelationEdge };
 const fitViewOptions = { padding: 0.2, maxZoom: 1 };
+const proOptions = { hideAttribution: true };
 
 /**
  * The composer canvas: the shapes as cards and their relations as lines, on a pannable,
@@ -235,6 +236,7 @@ export const Canvas: React.FC = () => {
         maxZoom={MAX_ZOOM}
         fitView
         fitViewOptions={fitViewOptions}
+        proOptions={proOptions}
       >
         <Background variant={BackgroundVariant.Dots} gap={20} size={1.5} />
         <MiniMap
