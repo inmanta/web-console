@@ -74,7 +74,7 @@ export default [
         },
         node: {
           extensions: [".js", ".jsx", ".ts", ".tsx"],
-          moduleDirectory: ["node_modules", "src/"],
+          moduleDirectory: ["node_modules"],
         },
       },
     },

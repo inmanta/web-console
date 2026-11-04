@@ -7,7 +7,8 @@
  * (lazy-loaded pages) are excluded because they don't run at load time.
  *
  * The check fails on any cycle, so fix a cycle your change introduces instead
- * of ignoring it.
+ * of ignoring it. It also fails when an import of a workspace package doesn't
+ * resolve, because the cycle check can't see past such an import.
  *
  * @type {import('dependency-cruiser').IConfiguration}
  */
