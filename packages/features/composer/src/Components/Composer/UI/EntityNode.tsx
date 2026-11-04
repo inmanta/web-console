@@ -156,6 +156,7 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
       <Card
         className="entity-card"
         data-testid={`entity-${displayName}`}
+        data-invalid={validationMessages.length > 0}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >

@@ -280,7 +280,11 @@ export const LeftSidebar: React.FC = () => {
           const isOpen = !!query || !collapsedGroups.has(`${activeTab}/${group.name}`);
 
           return (
-            <div className="palette-group" key={group.name}>
+            <div
+              className="palette-group"
+              key={group.name}
+              data-testid={`palette-group-${group.name}`}
+            >
               <button
                 type="button"
                 className="palette-group-toggle"
@@ -295,7 +299,12 @@ export const LeftSidebar: React.FC = () => {
                 <ul>
                   {group.rows.map((row) =>
                     row.unavailableReason ? (
-                      <li key={row.key} className="palette-row is-unavailable">
+                      <li
+                        key={row.key}
+                        className="palette-row is-unavailable"
+                        aria-disabled="true"
+                        data-testid={`palette-item-${row.label}`}
+                      >
                         <span className="palette-row-label">{row.label}</span>
                         <Label isCompact variant="outline">
                           {row.unavailableReason}
@@ -305,6 +314,7 @@ export const LeftSidebar: React.FC = () => {
                       <li
                         key={row.key}
                         className="palette-row"
+                        data-testid={`palette-item-${row.label}`}
                         draggable
                         onDragStart={(event) => {
                           draggedItemRef.current = row.item;
