@@ -634,6 +634,34 @@ describe("ConfigurationTab", () => {
     });
   });
 
+  test("GIVEN ConfigurationTab WHEN saving a setting fails THEN an error toast shows the message", async () => {
+    server.use(
+      http.get("/api/v2/environment_settings", () => {
+        return HttpResponse.json({ data: EnvironmentSettings.base });
+      }),
+      http.post("/api/v2/environment_settings/auto_deploy", () => {
+        return HttpResponse.json({ message: "Invalid value for auto_deploy" }, { status: 400 });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    const row = await screen.findByRole("row", {
+      name: "Row-auto_deploy",
+    });
+
+    await userEvent.click(within(row).getByRole("switch", { name: "Toggle-auto_deploy" }));
+    await userEvent.click(within(row).getByRole("button", { name: "SaveAction" }), {
+      skipHover: true,
+    });
+
+    expect(await screen.findByText(words("settings.update.failed"))).toBeVisible();
+    expect(screen.getByText("Invalid value for auto_deploy")).toBeVisible();
+    expect(screen.queryByText(words("settings.update"))).not.toBeInTheDocument();
+  });
+
   test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete is performed", async () => {
     let counter = 0;
     server.use(
@@ -671,6 +699,8 @@ describe("ConfigurationTab", () => {
     await userEvent.click(within(row).getByRole("button", { name: "ResetAction" }), {
       skipHover: true,
     });
+
+    expect(await screen.findByText(words("settings.update"))).toBeVisible();
 
     const updatedRow = await screen.findByRole("row", {
       name: "Row-auto_deploy",

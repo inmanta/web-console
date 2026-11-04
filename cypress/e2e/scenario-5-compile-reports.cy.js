@@ -123,8 +123,8 @@ describe("5 Compile reports", () => {
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
-      // Click on Show Inventory on basic service
-      cy.get("#basic-service").contains("Show inventory").click();
+      // Click on Inventory on basic service
+      cy.get("#basic-service").contains("Inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
       // Add instance
@@ -205,8 +205,8 @@ describe("5 Compile reports", () => {
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
-      // Click on Show Inventory on basic-service
-      cy.get("#basic-service").contains("Show inventory").click();
+      // Click on Inventory on basic-service
+      cy.get("#basic-service").contains("Inventory").click();
 
       // click on duplicate instance
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
@@ -223,7 +223,7 @@ describe("5 Compile reports", () => {
       }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Expect to see a rejected service instance in the table
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -283,8 +283,8 @@ describe("5 Compile reports", () => {
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
-      // Click on Show Inventory on basic-service
-      cy.get("#basic-service").contains("Show inventory").click();
+      // Click on Inventory on basic-service
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Delete rejected instance row
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();

@@ -1,6 +1,7 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { EnvironmentSettings } from "@inmanta/web-console-core";
+import { EnvironmentSettings, words } from "@inmanta/web-console-core";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import { merge } from "@inmanta/web-console-core/Language/collection";
 import {
   useResetEnvironmentSetting,
@@ -86,29 +87,26 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     resetedValueName: "",
   });
   const client = useQueryClient();
-  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const { notifySuccess, notifyError } = useAppAlert();
 
   const updateSetting = useUpdateEnvironmentSetting({
     onSuccess: () => {
       client.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
       client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
       document.dispatchEvent(new Event("settings-update"));
-      setErrorMessage("");
-      setShowUpdateBanner(true);
-      setTimeout(() => {
-        setShowUpdateBanner(false);
-      }, 2000);
+      notifySuccess({ title: words("settings.update") });
     },
-    onError: (error) => setErrorMessage(error.message),
+    onError: (error) =>
+      notifyError({ title: words("settings.update.failed"), message: error.message }),
   });
 
   const resetSetting = useResetEnvironmentSetting({
     onSuccess: () => {
-      setErrorMessage("");
       client.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
+      notifySuccess({ title: words("settings.update") });
     },
-    onError: (error) => setErrorMessage(error.message),
+    onError: (error) =>
+      notifyError({ title: words("settings.update.failed"), message: error.message }),
   });
 
   const handleReset = (id: string) => {
@@ -123,10 +121,6 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     return updateSetting.mutate({ id, value });
   };
 
-  const updateSuccessBanner = (value: boolean) => {
-    setShowUpdateBanner(value);
-  };
-
   const infos = new InputInfoCreator(
     (values: EnvironmentSettings.ValuesMap) => {
       dispatch({ type: "set", payload: values });
@@ -139,13 +133,5 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     dispatch({ type: "update", payload: settings });
   }, [settings]);
 
-  return (
-    <Container
-      infos={infos}
-      errorMessage={errorMessage}
-      onErrorClose={() => setErrorMessage("")}
-      showUpdateBanner={showUpdateBanner}
-      setShowUpdateBanner={updateSuccessBanner}
-    />
-  );
+  return <Container infos={infos} />;
 };
