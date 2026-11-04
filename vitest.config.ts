@@ -1,5 +1,5 @@
 /**
- * The Vitest config (#7461): the shared Vite settings (vite.shared.ts), the Vite plugins of the
+ * The Vitest config: the shared Vite settings (vite.shared.ts), the Vite plugins of the
  * features (their tests need them), and one project per package. `yarn test` runs every project;
  * `yarn test --project <name>` runs one, e.g. `--project feature-lsm`.
  *

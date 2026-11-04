@@ -1,5 +1,5 @@
 /**
- * The Vite settings every app and the tests share (#7461): React, the global constants, the
+ * The Vite settings every app and the tests share: React, the global constants, the
  * aliases of the shared assets and the Monaco setup. Each app's vite.config.ts adds its own build
  * and dev server settings and the plugins of the features it ships; vitest.config.ts adds the
  * test settings.

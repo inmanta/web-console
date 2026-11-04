@@ -22,7 +22,7 @@ const packageDir = (name, from = require) => {
 };
 
 /**
- * The Vite settings the composer needs in an app that ships it, and in the tests (#7461). They
+ * The Vite settings the composer needs in an app that ships it, and in the tests. They
  * live with the composer, so an app without it has no JointJS in its Vite config either.
  *
  * @returns {import("vite").Plugin} The Vite plugin.

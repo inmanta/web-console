@@ -1,5 +1,5 @@
 /**
- * The Vite config of the web-console app (#7461): the shared settings (vite.shared.ts at the
+ * The Vite config of the web-console app: the shared settings (vite.shared.ts at the
  * root), the Vite plugins of the features it ships, its dev server and its build. The build goes
  * to dist/ at the root of the repository, where the release scripts and the SBOM expect it.
  */
