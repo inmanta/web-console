@@ -11,9 +11,14 @@ import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
  * A GraphQL request as the GraphiQL editor sends it. It matches `FetcherParams` from
  * `@graphiql/toolkit`, which only the GraphiQL feature depends on.
  */
-export interface GraphQLRequest {
+export interface PostGraphQLParams {
   query: string;
   operationName?: string | null;
+
+  /**
+   * The variables of the query: the raw text of GraphiQL's variables editor (a JSON string,
+   * possibly empty), or an object. A string is parsed before it is sent.
+   */
   variables?: unknown;
 }
 
@@ -28,7 +33,7 @@ export interface GraphQLRequest {
  */
 export const usePostGraphQL = (
   env?: string
-): UseMutationResult<ExecutionResult, Error, GraphQLRequest> => {
+): UseMutationResult<ExecutionResult, Error, PostGraphQLParams> => {
   const { createHeaders, handleErrors } = useFetchHelpers();
 
   const baseUrl = useMemo(
@@ -42,7 +47,7 @@ export const usePostGraphQL = (
 
   return useMutation({
     mutationKey: ["post_graphql", env],
-    mutationFn: async ({ query, variables }: GraphQLRequest) => {
+    mutationFn: async ({ query, variables }: PostGraphQLParams) => {
       const headers = createHeaders({ env });
       headers.set("Content-Type", "application/json");
 

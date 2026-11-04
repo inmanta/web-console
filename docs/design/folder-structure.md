@@ -66,12 +66,14 @@ src/ - Only the global type declarations (typings.d.ts, vite-env.d.ts)
 ```
 
 Every package and app is a Yarn workspace with its own `package.json`. Another package imports it through a `workspace:^` dependency, not a path alias. A new package needs:
-- a `package.json` with its name (`@inmanta/web-console-...`) and the same `exports` block as the other packages, which maps `@inmanta/web-console-core/Queries` to `src/Queries`;
-- a `workspace:^` dependency on it in every package that imports it, including `apps/web-console` for a feature;
-- its zone in `eslint.layers.js`;
-- a `tsconfig.json` that extends `tsconfig.base.json` and references the projects of the packages it depends on, and an entry in the root `tsconfig.json`.
 
-Each package also lists the third-party packages it imports in its own `package.json`: `dependencies` for the code that ships, `devDependencies` for tests and test helpers. `yarn lint` checks this (`import/no-extraneous-dependencies`) and runs the Yarn constraints (`yarn.config.cjs`): every package uses the same version of a dependency, and JointJS and the GraphiQL packages are only allowed in the composer and graphiql features. The root `package.json` keeps the build, lint and test tools.
+- a `package.json` with its name (`@inmanta/web-console-...`) and an `exports` block like the other packages: `"./*"` maps a deep import such as `@inmanta/web-console-core/Queries/Slices/Resource` to `src/Queries/Slices/Resource`, and `"."` maps the package name to `src/index.ts` (only for a package that has one; `ui` doesn't);
+- a `workspace:^` dependency on it in every package that imports it, including `apps/web-console` for a feature, under `devDependencies` when only tests import it (like `test-utils`);
+- its zone in `eslint.layers.js`;
+- a `tsconfig.json` that extends `tsconfig.base.json` and references the projects of the packages it depends on, and an entry in the root `tsconfig.json`;
+- a `yarn install` after adding or changing a `package.json`, so `yarn.lock` has its entry; CI installs with `--immutable` and fails without it.
+
+Each package also lists the third-party packages it imports in its own `package.json`: `dependencies` for the code that ships, `devDependencies` for tests and test helpers. Two cases are easy to miss: a package also lists the required peer dependencies of what it uses (e.g. `oidc-client-ts` for `react-oidc-context`, `victory` for `@patternfly/react-charts`), and `test-utils` lists what its helpers import as `dependencies`, because other packages' tests run them. `yarn lint` checks this (`import/no-extraneous-dependencies`) and runs the Yarn constraints (`yarn.config.cjs`): every package uses the same version of a dependency, and JointJS and the GraphiQL packages are only allowed in the composer and graphiql features. The root `package.json` keeps the build, lint and test tools.
 
 Each slice (a folder in a package's `Slices/`) uses the same layers: `Core/` for its types and contracts, `Data/` for transformations and implementations, `UI/` for its components.
 
