@@ -14,7 +14,7 @@
     "prebuild": "yarn clean",
     "build": "vite build",
     "build:ci": "node --max-old-space-size=6144 ./node_modules/.bin/vite build && yarn build:sbom",
-    "build:sbom": "cd apps/web-console && yarn dlx -q @cyclonedx/yarn-plugin-cyclonedx@3.4.0 --production --output-reproducible -o ../../dist/sbom-app.cdx.json && cd ../.. && yarn dlx -q @cyclonedx/yarn-plugin-cyclonedx@3.4.0 --production --output-reproducible -o dist/sbom-root.cdx.json && node scripts/merge-sbom.js",
+    "build:sbom": "node scripts/build-sbom.js",
     "start": "dotenv run -- vite",
     "start:https": "HTTPS=true dotenv run -- vite",
     "test": "vitest --run",

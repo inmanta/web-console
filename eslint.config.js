@@ -255,7 +255,7 @@ export default [
     },
   },
   {
-    // Every workspace declares the packages it imports in its own package.json (#7461), so that
+    // Every workspace declares the packages it imports in its own package.json, so that
     // installing one app only installs what its packages use. Tests and test helpers may use
     // devDependencies. includeTypes: a type-only import needs the package installed too.
     files: ["{packages,apps}/**/*.{ts,tsx,js}"],
