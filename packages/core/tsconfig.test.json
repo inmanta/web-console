@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../.tsbuild/core-test"
+  },
+  "include": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx",
+    "src/testTypes.ts",
+    "../../src/*.d.ts",
+    "../test-utils/src/vitest.d.ts"
+  ],
+  "references": [
+    {
+      "path": "tsconfig.src.json"
+    },
+    {
+      "path": "../test-utils"
+    }
+  ]
+}

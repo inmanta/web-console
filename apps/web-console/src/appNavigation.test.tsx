@@ -9,6 +9,8 @@ import { resourceManagerFeature } from "@inmanta/web-console-feature-resource-ma
 import * as Agents from "@inmanta/web-console-feature-resource-manager/Slices/Agents/Core/Route";
 import * as Resource from "@inmanta/web-console-feature-resource-manager/Slices/Resource/Core/Route";
 import { Navigation } from "@inmanta/web-console-shell/Components/Sidebar/Navigation/Navigation";
+// Loads the shell's words (the navigation group labels) into WordsRegistry for this test.
+import type {} from "@inmanta/web-console-shell/messages";
 import {
   MockedDependencyProvider,
   MockOrchestratorProvider,

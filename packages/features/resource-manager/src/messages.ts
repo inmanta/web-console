@@ -1,3 +1,7 @@
+// Loads the words of the shared components into WordsRegistry: this package uses them, and with
+// project references a package only sees the declaration merging of the files it imports.
+import type {} from "@inmanta/web-console-ui/messages";
+
 /**
  * The English messages of the resource manager feature.
  */
@@ -31,8 +35,6 @@ export const resourceManagerMessages = {
   "resources.popover.requirements": "Requirements",
   "resources.filters.status.isDeploying": "Is Deploying",
   "resources.filters.status.orphaned.label": "Orphaned",
-  "resources.filters.status.blocked.label": "Blocked state(s)",
-  "resources.filters.status.blocked.placeholder": "Filter by blocked state",
   "resources.filters.status.compliance.label": "Compliance state(s)",
   "resources.filters.status.compliance.placeholder": "Filter by compliance state",
   "resources.filters.status.lastHandlerRun.label": "Handler run state(s)",
@@ -99,9 +101,6 @@ export const resourceManagerMessages = {
     "(Re-)enforce the intent of every resource in the chosen scope. Fixes any drift from the desired state, even for resources marked as compliant.",
   "resources.resourceActions.orphaned.disabled":
     "Orphaned resources are no longer part of the latest desired state, so they cannot be deployed or repaired.",
-  "resources.resourceActions.confirm.filtered.title": "Filtered resources",
-  "resources.resourceActions.confirm.environment.title": "All resources in this environment",
-  "resources.resourceActions.confirm.environment.note": "Ignores the active filter",
 
   /** Discovered Resources related text */
   "discoveredResourceDetails.title": "Discovered Resource Details",

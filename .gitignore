@@ -68,6 +68,8 @@ cypress/videos/
 cypress/screenshots/
 
 dist
+# The declarations and build info of the TypeScript project references (yarn tsc)
+.tsbuild
 yarn-error.log
 stats.json
 coverage

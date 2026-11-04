@@ -1,4 +1,7 @@
 import { ReactNode } from "react";
+// Loads the core layer's own keys into WordsRegistry for every package that uses words(). With
+// project references, a package only sees the declaration merging of the files it imports.
+import type {} from "../messages";
 
 /**
  * A message: a string, or a function that builds one from its arguments. A function may return

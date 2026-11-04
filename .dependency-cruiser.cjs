@@ -35,7 +35,8 @@ module.exports = {
     doNotFollow: { path: "node_modules" },
     exclude: { path: "\\.test\\.tsx?$", dynamic: true },
     tsPreCompilationDeps: false,
-    tsConfig: { fileName: "tsconfig.json" },
+    // The compiler options and path aliases; tsconfig.json itself only lists the project references.
+    tsConfig: { fileName: "tsconfig.base.json" },
     enhancedResolveOptions: {
       exportsFields: ["exports"],
       // No "types": the workspace packages list their TypeScript fallbacks under "types",
