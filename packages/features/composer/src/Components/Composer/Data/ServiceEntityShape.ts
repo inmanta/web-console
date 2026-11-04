@@ -156,6 +156,28 @@ export class ServiceEntityShape {
   }
 
   /**
+   * The attribute that names this instance, and its value: the service identity, or for an
+   * embedded entity its first key attribute. The value is empty while it isn't filled in.
+   */
+  getIdentity(): { name: string; value: string } | null {
+    const name =
+      ("service_identity" in this.serviceModel && this.serviceModel.service_identity) ||
+      this.serviceModel.key_attributes?.[0];
+
+    if (!name) {
+      return null;
+    }
+
+    const value = this.instanceAttributes[name];
+
+    return {
+      name,
+      value:
+        value === undefined || value === null || typeof value === "object" ? "" : String(value),
+    };
+  }
+
+  /**
    * The key attributes shown on the card, with their current values.
    */
   getDisplayAttributes(): Array<{ name: string; value: string }> {

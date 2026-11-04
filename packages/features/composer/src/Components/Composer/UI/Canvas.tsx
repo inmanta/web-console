@@ -67,6 +67,12 @@ export const Canvas: React.FC = () => {
   useEffect(() => {
     setNodes((previousNodes) => {
       const measured = new Map(previousNodes.map((node) => [node.id, node.measured]));
+      const relationCounts = new Map<string, number>();
+
+      getLinks(canvasState).forEach(({ source, target }) => {
+        relationCounts.set(source, (relationCounts.get(source) ?? 0) + 1);
+        relationCounts.set(target, (relationCounts.get(target) ?? 0) + 1);
+      });
 
       return Array.from(canvasState.values()).map((shape) => ({
         id: shape.id,
@@ -80,6 +86,7 @@ export const Canvas: React.FC = () => {
           shape,
           validationMessages: getValidationMessages(shape, canvasState),
           hiddenCount: countHiddenLayers(canvasState, shape),
+          relationCount: relationCounts.get(shape.id) ?? 0,
           hasLayers: getConnectedLayerData(canvasState, shape).shapes.length > 0,
         },
       }));
@@ -232,6 +239,7 @@ export const Canvas: React.FC = () => {
         <Background variant={BackgroundVariant.Dots} gap={20} size={1.5} />
         <MiniMap
           position="top-right"
+          style={{ width: 160, height: 100 }}
           ariaLabel={words("instanceComposer.overview")}
           nodeColor={(node) => HeaderColors[(node as EntityNodeType).data.shape.entityType]}
           pannable

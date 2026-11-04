@@ -52,7 +52,12 @@ const addEmbeddedEntities = (
     );
 
     if (embeddedIds.length > 0) {
-      shape.connections.set(getEmbeddedEntityKey(embeddedEntity), embeddedIds);
+      // Embedded entities of the same type share a key, so add to what is there.
+      const entityKey = getEmbeddedEntityKey(embeddedEntity);
+      shape.connections.set(entityKey, [
+        ...(shape.connections.get(entityKey) || []),
+        ...embeddedIds,
+      ]);
     }
   });
 };

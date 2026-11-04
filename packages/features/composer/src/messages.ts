@@ -52,6 +52,12 @@ export const composerMessages = {
   "instanceComposer.halo.link": "Link to another entity",
   "instanceComposer.halo.actions": (name: string) => `Actions for ${name}`,
   "instanceComposer.hiddenLayers": (count: number) => `${count} hidden`,
+  "instanceComposer.card.unnamed": "Unnamed",
+  "instanceComposer.card.notSet": "Not set",
+  "instanceComposer.card.relations": (count: number) =>
+    count === 1 ? "1 relation" : `${count} relations`,
+  "instanceComposer.card.readOnly": "Existing instance: its attributes can't be changed here",
+  "instanceComposer.card.issues": (count: number) => (count === 1 ? "1 issue" : `${count} issues`),
   "instanceComposer.label.core": "Service",
   "instanceComposer.label.embedded": "Embedded",
   "instanceComposer.label.relation": "Relation",
