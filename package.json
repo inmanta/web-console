@@ -14,7 +14,7 @@
     "prebuild": "yarn clean",
     "build": "yarn workspace @inmanta/web-console-app build",
     "build:ci": "yarn workspace @inmanta/web-console-app build:ci && yarn build:sbom",
-    "build:sbom": "cd apps/web-console && yarn dlx -q @cyclonedx/yarn-plugin-cyclonedx@3.4.0 --production --output-reproducible -o ../../dist/sbom-app.cdx.json && cd ../.. && yarn dlx -q @cyclonedx/yarn-plugin-cyclonedx@3.4.0 --production --output-reproducible -o dist/sbom-root.cdx.json && node scripts/merge-sbom.js",
+    "build:sbom": "node scripts/build-sbom.js",
     "start": "dotenv run -- yarn workspace @inmanta/web-console-app start",
     "start:https": "HTTPS=true dotenv run -- yarn workspace @inmanta/web-console-app start",
     "test": "vitest --run",
