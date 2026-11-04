@@ -38,7 +38,11 @@ export const summaryLabels: SummaryLabel[] = ["danger", "warning", "success", "i
  * @returns {React.FC<Props>} The rendered labels.
  */
 export const InstanceSummaryLabels: React.FC<Props> = ({ byLabel, filtering }) => (
-  <Flex aria-label={words("catalog.summary.title")} gap={{ default: "gapSm" }}>
+  <Flex
+    aria-label={words("catalog.summary.title")}
+    gap={{ default: "gapSm" }}
+    flexWrap={{ default: "nowrap" }}
+  >
     {summaryLabels
       .filter((label) => Number(byLabel[label]) > 0)
       .map((label) => (

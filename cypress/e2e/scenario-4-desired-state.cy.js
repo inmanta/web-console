@@ -19,7 +19,7 @@ describe("Scenario 4 Desired State", () => {
 
     if (isIso) {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
       // Add an instance and fill form
@@ -42,7 +42,7 @@ describe("Scenario 4 Desired State", () => {
       }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get("#basic-service").contains("Inventory").click();
 
       // Should show the ServiceInventory-Success Component.
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");

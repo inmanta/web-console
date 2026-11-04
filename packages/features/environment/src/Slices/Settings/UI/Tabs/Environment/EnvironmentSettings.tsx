@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { DescriptionList } from "@patternfly/react-core";
 import { FlatEnvironment, ProjectModel, words } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import { useModifyEnvironment } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { useCreateProject } from "@inmanta/web-console-core/Queries/Slices/Project";
 import {
@@ -11,7 +12,6 @@ import {
   EditableImageField,
   EditableTextAreaField,
 } from "@inmanta/web-console-feature-environment/Components/InlineEditable";
-import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
 import { Actions } from "./Components";
 
 interface Props {
@@ -30,13 +30,13 @@ interface Props {
  */
 export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) => {
   const { environmentHandler } = useContext(DependencyContext);
+  const { notifySuccess, notifyError } = useAppAlert();
   const { mutate } = useModifyEnvironment(environmentHandler.useId(), {
-    onError: (error) => setError(error.message),
+    onSuccess: () => notifySuccess({ title: words("settings.update") }),
+    onError: (error) =>
+      notifyError({ title: words("settings.update.failed"), message: error.message }),
   });
-  const [error, setError] = useState<string | null>(null);
   const createProject = useCreateProject();
-
-  const onErrorClose = () => setError(null);
 
   const onNameSubmit = (name: string) => mutate({ name: name });
 
@@ -51,7 +51,10 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
     const match = projects.find((project) => project.name === projectName);
 
     if (!match) {
-      setError(`No matching project found for name '${projectName}'`);
+      notifyError({
+        title: words("settings.update.failed"),
+        message: words("settings.tabs.environment.projectNotFound")(projectName),
+      });
 
       return;
     }
@@ -76,25 +79,15 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
 
   return (
     <DescriptionList>
-      {error && (
-        <AppAlert
-          testId="environment-settings-error"
-          title={error}
-          onClose={onErrorClose}
-          isInline
-        />
-      )}
       <EditableTextField
         initialValue={environment.name}
         label={words("name")}
         onSubmit={onNameSubmit}
-        setError={setError}
       />
       <EditableTextAreaField
         initialValue={environment.description || ""}
         label={words("description")}
         onSubmit={onDescriptionSubmit}
-        setError={setError}
       />
       <EditableMultiTextField
         groupName={words("settings.tabs.environment.repoSettings")}
@@ -107,7 +100,6 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
           repo_branch: words("createEnv.branch.tooltip"),
         }}
         onSubmit={onRepoSubmit}
-        setError={setError}
       />
       <EditableSelectField
         label={words("settings.tabs.environment.projectName")}
@@ -115,13 +107,11 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
         options={projects.map((project) => project.name)}
         onCreate={createProject}
         onSubmit={onProjectSubmit}
-        setError={setError}
       />
       <EditableImageField
         label={words("settings.tabs.environment.icon")}
         initialValue={environment.icon || ""}
         onSubmit={onIconSubmit}
-        setError={setError}
       />
       <Actions environment={environment} />
     </DescriptionList>
