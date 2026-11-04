@@ -1,0 +1,6 @@
+description: The service catalog groups services and shows their title, icon and a one-line description from the entity annotations.
+issue-nr: 7626
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

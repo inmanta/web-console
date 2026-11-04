@@ -22,7 +22,6 @@ export const EditableTextAreaField: React.FC<FieldProps> = ({
   initialValue,
   initiallyEditable,
   onSubmit,
-  setError,
 }) => (
   <EditableField
     isRequired={isRequired}
@@ -32,7 +31,6 @@ export const EditableTextAreaField: React.FC<FieldProps> = ({
     onSubmit={onSubmit}
     EditView={EditView}
     StaticView={StaticView}
-    setError={setError}
   />
 );
 

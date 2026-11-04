@@ -21,7 +21,6 @@ interface Props {
   tooltips?: Record<string, string>;
   initiallyEditable?: boolean;
   onSubmit: (fieldDescriptors: Record<string, string>) => void;
-  setError: (error: string | null) => void;
 }
 
 /**
@@ -33,8 +32,6 @@ interface Props {
  * @prop {Record<string, string>} [tooltips] - Optional help text per field, keyed by field name
  * @prop {boolean} initiallyEditable - Whether the fields are initially editable
  * @prop {Function} onSubmit - The function to call when the form is submitted
- * @prop {string | null} [error] - The error message of the field
- * @prop {Function} setError - The function to call to set/clear the error message
  *
  * @returns {React.FC<Props>} - The EditableMultiTextField component
  */
@@ -44,7 +41,6 @@ export const EditableMultiTextField: React.FC<Props> = ({
   tooltips,
   initiallyEditable,
   onSubmit,
-  setError,
 }) => {
   const [editable, setEditable] = useState(initiallyEditable);
   const [fieldValues, setFieldValues] = useState(initialValues);
@@ -63,7 +59,6 @@ export const EditableMultiTextField: React.FC<Props> = ({
 
   const onEditClick = () => {
     setEditable(true);
-    setError(null);
   };
 
   const onSubmitClick = () => onSubmitRequest(fieldValues);
