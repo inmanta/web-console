@@ -1,29 +1,19 @@
-import { dia } from "@joint/plus";
 import { ServiceModel, ServiceInstanceModel } from "@inmanta/web-console-core";
 import { InstanceWithRelations } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance/GetInstanceWithRelations";
-import { defineObjectsForJointJS } from "../../testSetup";
+import { defineCanvasTestObjects } from "../../testSetup";
+import { applyLayeredLayout } from "./canvasLayoutUtils";
 import { RelationsDictionary } from "./createRelationsDictionary";
 import { initializeCanvasFromInstance } from "./initializeCanvasFromInstance";
+import { getLinks } from "./linkUtils";
 
-// Mock the helper functions
+// Mock the layout so the tests see the initial positions
 vi.mock("./canvasLayoutUtils", () => ({
-  applyGridLayout: vi.fn(),
-  HORIZONTAL_SPACING: 420,
-  VERTICAL_SPACING: 200,
-  NESTED_HORIZONTAL_OFFSET: 360,
-}));
-
-vi.mock("./shapeUtils", () => ({
-  SHAPE_WIDTH: 264,
-  SHAPE_MIN_HEIGHT: 50,
-  getShapeDimensions: vi.fn().mockReturnValue({ width: 264, height: 100 }),
-  getEmbeddedEntityKey: vi.fn((entity) => entity.type || entity.name),
-  getInterServiceRelationKey: vi.fn((relation) => relation.entity_type || relation.name),
+  applyLayeredLayout: vi.fn(),
 }));
 
 describe("initializeCanvasFromInstance", () => {
   beforeAll(() => {
-    defineObjectsForJointJS();
+    defineCanvasTestObjects();
   });
 
   const createMockServiceModel = (
@@ -81,14 +71,8 @@ describe("initializeCanvasFromInstance", () => {
     const instanceData = createMockInstanceWithRelations(instance);
     const relationsDictionary: RelationsDictionary = {};
     const serviceCatalog: ServiceModel[] = [serviceModel];
-    const graph = new dia.Graph();
 
-    const result = initializeCanvasFromInstance(
-      instanceData,
-      serviceCatalog,
-      relationsDictionary,
-      graph
-    );
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
     expect(result.size).toBe(1);
     expect(result.has("instance-1")).toBe(true);
@@ -103,14 +87,8 @@ describe("initializeCanvasFromInstance", () => {
     const instanceData = createMockInstanceWithRelations(instance);
     const relationsDictionary: RelationsDictionary = {};
     const serviceCatalog: ServiceModel[] = [serviceModel];
-    const graph = new dia.Graph();
 
-    const result = initializeCanvasFromInstance(
-      instanceData,
-      serviceCatalog,
-      relationsDictionary,
-      graph
-    );
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
     const shape = result.get("instance-1");
     expect(shape?.isNew).toBe(true);
@@ -125,14 +103,8 @@ describe("initializeCanvasFromInstance", () => {
     const instanceData = createMockInstanceWithRelations(instance);
     const relationsDictionary: RelationsDictionary = {};
     const serviceCatalog: ServiceModel[] = [serviceModel];
-    const graph = new dia.Graph();
 
-    const result = initializeCanvasFromInstance(
-      instanceData,
-      serviceCatalog,
-      relationsDictionary,
-      graph
-    );
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
     const shape = result.get("instance-1");
     expect(shape?.isNew).toBe(false);
@@ -146,14 +118,8 @@ describe("initializeCanvasFromInstance", () => {
     const instanceData = createMockInstanceWithRelations(instance, [relationInstance]);
     const relationsDictionary: RelationsDictionary = {};
     const serviceCatalog: ServiceModel[] = [serviceModel1, serviceModel2];
-    const graph = new dia.Graph();
 
-    const result = initializeCanvasFromInstance(
-      instanceData,
-      serviceCatalog,
-      relationsDictionary,
-      graph
-    );
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
     expect(result.size).toBe(2);
     expect(result.has("instance-1")).toBe(true);
@@ -166,14 +132,8 @@ describe("initializeCanvasFromInstance", () => {
     const instanceData = createMockInstanceWithRelations(instance);
     const relationsDictionary: RelationsDictionary = {};
     const serviceCatalog: ServiceModel[] = [serviceModel];
-    const graph = new dia.Graph();
 
-    const result = initializeCanvasFromInstance(
-      instanceData,
-      serviceCatalog,
-      relationsDictionary,
-      graph
-    );
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
     const shape = result.get("instance-1");
     expect(shape?.entityType).toBe("core");
@@ -187,14 +147,8 @@ describe("initializeCanvasFromInstance", () => {
     const instanceData = createMockInstanceWithRelations(instance, [relationInstance]);
     const relationsDictionary: RelationsDictionary = {};
     const serviceCatalog: ServiceModel[] = [serviceModel1, serviceModel2];
-    const graph = new dia.Graph();
 
-    const result = initializeCanvasFromInstance(
-      instanceData,
-      serviceCatalog,
-      relationsDictionary,
-      graph
-    );
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
     const shape = result.get("instance-2");
     expect(shape?.entityType).toBe("relation");
@@ -208,14 +162,8 @@ describe("initializeCanvasFromInstance", () => {
     const instanceData = createMockInstanceWithRelations(instance);
     const relationsDictionary: RelationsDictionary = {};
     const serviceCatalog: ServiceModel[] = [serviceModel];
-    const graph = new dia.Graph();
 
-    const result = initializeCanvasFromInstance(
-      instanceData,
-      serviceCatalog,
-      relationsDictionary,
-      graph
-    );
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
     const shape = result.get("instance-1");
     expect(shape?.instanceAttributes).toEqual({ name: "test-name", port: 8080 });
@@ -230,14 +178,8 @@ describe("initializeCanvasFromInstance", () => {
     const instanceData = createMockInstanceWithRelations(instance);
     const relationsDictionary: RelationsDictionary = {};
     const serviceCatalog: ServiceModel[] = [serviceModel];
-    const graph = new dia.Graph();
 
-    const result = initializeCanvasFromInstance(
-      instanceData,
-      serviceCatalog,
-      relationsDictionary,
-      graph
-    );
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
     const shape = result.get("instance-1");
     expect(shape?.instanceAttributes).toEqual({ name: "active-name" });
@@ -248,15 +190,9 @@ describe("initializeCanvasFromInstance", () => {
     const instanceData = createMockInstanceWithRelations(instance);
     const relationsDictionary: RelationsDictionary = {};
     const serviceCatalog: ServiceModel[] = [];
-    const graph = new dia.Graph();
     const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-    const result = initializeCanvasFromInstance(
-      instanceData,
-      serviceCatalog,
-      relationsDictionary,
-      graph
-    );
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
     expect(result.size).toBe(0);
     expect(consoleSpy).toHaveBeenCalledWith("Service model not found for NonExistentService");
@@ -269,52 +205,70 @@ describe("initializeCanvasFromInstance", () => {
     const instanceData = createMockInstanceWithRelations(instance);
     const relationsDictionary: RelationsDictionary = {};
     const serviceCatalog: ServiceModel[] = [serviceModel];
-    const graph = new dia.Graph();
 
-    const result = initializeCanvasFromInstance(
-      instanceData,
-      serviceCatalog,
-      relationsDictionary,
-      graph
-    );
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
-    const shape = result.get("instance-1");
-    expect(shape).toBeDefined();
-    // The shape should be positioned (tested indirectly by checking it exists in the result)
-    expect(result.size).toBe(1);
+    // The layout is mocked, so this is the position before the layered layout runs
+    expect(result.get("instance-1")?.position()).toEqual({ x: 100, y: 100 });
   });
 
   it("should create links between shapes", () => {
-    const serviceModel = createMockServiceModel("TestService");
-    const instance = createMockInstance("instance-1", "TestService");
-    const instanceData = createMockInstanceWithRelations(instance);
-    const relationsDictionary: RelationsDictionary = {};
-    const serviceCatalog: ServiceModel[] = [serviceModel];
-    const graph = new dia.Graph();
+    const embeddedEntity = {
+      name: "port",
+      type: "Port",
+      lower_limit: 0,
+      upper_limit: 1,
+      modifier: "rw" as const,
+      attributes: [],
+      embedded_entities: [],
+      inter_service_relations: [],
+    };
+    const serviceModelA = createMockServiceModel("ServiceA", {
+      embedded_entities: [embeddedEntity],
+      inter_service_relations: [
+        {
+          name: "service_b",
+          entity_type: "ServiceB",
+          lower_limit: 0,
+          upper_limit: 1,
+          modifier: "rw",
+        },
+      ],
+    });
+    const serviceModelB = createMockServiceModel("ServiceB");
+    const instance = createMockInstance("instance-1", "ServiceA", {
+      candidate_attributes: { service_b: "instance-2", port: { name: "p1" } },
+    });
+    const relationInstance = createMockInstance("instance-2", "ServiceB");
+    const instanceData = createMockInstanceWithRelations(instance, [relationInstance]);
+    const serviceCatalog: ServiceModel[] = [serviceModelA, serviceModelB];
 
-    const result = initializeCanvasFromInstance(
-      instanceData,
-      serviceCatalog,
-      relationsDictionary,
-      graph
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, {});
+
+    const embeddedId = [...result.values()].find((shape) => shape.entityType === "embedded")?.id;
+    expect(embeddedId).toBeDefined();
+
+    // The links follow from the connections, pointing from the parent to the child
+    const links = getLinks(result);
+    expect(links).toHaveLength(2);
+    expect(links).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ source: "instance-1", target: "instance-2" }),
+        expect.objectContaining({ source: "instance-1", target: embeddedId }),
+      ])
     );
-
-    // Links should be created (tested indirectly by checking graph state)
-    expect(result.size).toBeGreaterThan(0);
   });
 
-  it("should call applyGridLayout", async () => {
-    const { applyGridLayout } = await import("./canvasLayoutUtils");
+  it("should call applyLayeredLayout with the canvas state", () => {
     const serviceModel = createMockServiceModel("TestService");
     const instance = createMockInstance("instance-1", "TestService");
     const instanceData = createMockInstanceWithRelations(instance);
     const relationsDictionary: RelationsDictionary = {};
     const serviceCatalog: ServiceModel[] = [serviceModel];
-    const graph = new dia.Graph();
 
-    initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary, graph);
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
-    expect(applyGridLayout).toHaveBeenCalledWith(graph);
+    expect(applyLayeredLayout).toHaveBeenCalledWith(result);
   });
 
   it("should include all embedded entities of the same type in the root shape connections", () => {
@@ -346,9 +300,8 @@ describe("initializeCanvasFromInstance", () => {
 
     const instanceData = createMockInstanceWithRelations(instance);
     const serviceCatalog: ServiceModel[] = [serviceModel];
-    const graph = new dia.Graph();
 
-    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, {}, graph);
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, {});
 
     // 1 root + 2 embedded shapes
     expect(result.size).toBe(3);
@@ -392,14 +345,8 @@ describe("initializeCanvasFromInstance", () => {
     const instanceData = createMockInstanceWithRelations(instance);
     const relationsDictionary: RelationsDictionary = {};
     const serviceCatalog: ServiceModel[] = [serviceModel];
-    const graph = new dia.Graph();
 
-    const result = initializeCanvasFromInstance(
-      instanceData,
-      serviceCatalog,
-      relationsDictionary,
-      graph
-    );
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
     // Should still create the main shape, but not embedded entities
     expect(result.size).toBe(1);

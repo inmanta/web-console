@@ -212,7 +212,7 @@ export default [
     },
   },
   {
-    // Only the composer depends on JointJS, so that an app without it builds without the licence.
+    // Only the composer draws diagrams, so the canvas libraries stay out of the other features' bundles.
     // This rule only sees static imports; the workspaces step (#7461) also catches import() and vi.mock.
     files: ["{src,packages,apps}/**/*.ts", "{src,packages,apps}/**/*.tsx"],
     ignores: ["packages/features/composer/**"],
@@ -222,8 +222,9 @@ export default [
         {
           patterns: [
             {
-              group: ["@joint/*", "@rappidcss"],
-              message: "Only the composer feature (packages/features/composer) imports JointJS.",
+              group: ["@xyflow/*", "@dagrejs/*"],
+              message:
+                "Only the composer feature (packages/features/composer) imports the canvas libraries.",
             },
           ],
         },

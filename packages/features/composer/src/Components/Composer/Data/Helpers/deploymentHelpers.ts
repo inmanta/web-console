@@ -1,35 +1,28 @@
-import { dia } from "@joint/plus";
 import { v4 as uuidv4 } from "uuid";
 import { ServiceOrderItemAction, ServiceOrderItemRequest } from "@inmanta/web-console-core";
-import { ServiceEntityShape } from "../../UI";
+import { ServiceEntityShape } from "../ServiceEntityShape";
 import { SavedCoordinates } from "./canvasLayoutUtils";
 
 /**
- * Gets the coordinates of all ServiceEntityShape cells in the graph.
+ * Gets the coordinates of all shapes on the canvas.
  *
- * @param {dia.Graph} graph - The graph from which to get the cells.
- * @returns {SavedCoordinates[]} An array of objects, each containing the id and coordinates of a cell.
+ * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas.
+ * @returns {SavedCoordinates[]} An array of objects, each containing the id and coordinates of a shape.
  */
-export const getCellsCoordinates = (graph: dia.Graph): SavedCoordinates[] => {
-  const cells = graph.getCells();
+export const getCellsCoordinates = (
+  canvasState: Map<string, ServiceEntityShape>
+): SavedCoordinates[] =>
+  Array.from(canvasState.values()).map((shape) => {
+    const position = shape.position();
 
-  return cells
-    .filter((cell) => {
-      // Check if it's a ServiceEntityShape
-      return cell.get("type") === "app.ServiceEntityShape";
-    })
-    .map((cell) => {
-      const position = cell.position();
-
-      return {
-        id: String(cell.id),
-        coordinates: {
-          x: position.x,
-          y: position.y,
-        },
-      };
-    });
-};
+    return {
+      id: String(shape.id),
+      coordinates: {
+        x: position.x,
+        y: position.y,
+      },
+    };
+  });
 
 /**
  * Converts canvasState (Map of ServiceEntityShape) to serviceOrderItems (Map of ServiceOrderItemRequest)

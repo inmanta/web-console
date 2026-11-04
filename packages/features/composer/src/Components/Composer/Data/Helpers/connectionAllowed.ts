@@ -1,53 +1,31 @@
-import { dia } from "@joint/plus";
-import { isServiceEntityShapeCell } from "./getEntitiesFromCanvas";
-import { RelationsDictionary } from ".";
+import { ServiceEntityShape } from "../ServiceEntityShape";
+import { RelationsDictionary } from "./createRelationsDictionary";
 
 /**
  * Checks whether a new link between two shapes is allowed on the canvas.
  *
- * @param graph - JointJS graph containing all shapes and links.
- * @param targetView - Cell/element view that is the potential link target; if undefined, connection is not allowed.
- * @param sourceView - Cell/element view that is the link source.
+ * @param sourceShape - The shape the link starts from.
+ * @param targetShape - The shape that is the potential link target; if undefined, connection is not allowed.
  * @param relationsDictionary - Dictionary describing allowed relations between service entities.
  * @returns `true` if the connection is valid and not already present, otherwise `false`.
  */
 export const checkIfConnectionIsAllowed = (
-  graph: dia.Graph,
-  targetView: dia.CellView | dia.ElementView | undefined,
-  sourceView: dia.CellView | dia.ElementView,
+  sourceShape: ServiceEntityShape,
+  targetShape: ServiceEntityShape | undefined,
   relationsDictionary: RelationsDictionary
 ): boolean => {
-  if (!targetView) {
+  if (!targetShape) {
     return false;
   }
 
-  const sourceModel = sourceView.model;
-  const targetModel = targetView.model;
-
-  if (!isServiceEntityShapeCell(sourceModel) || !isServiceEntityShapeCell(targetModel)) {
+  if (sourceShape.id === targetShape.id) {
     return false;
   }
 
-  if (sourceModel.id === targetModel.id) {
-    return false;
-  }
-
-  const safeEntityType = (model: { getEntityType?: () => string; getEntityName: () => string }) => {
-    try {
-      if (typeof model.getEntityType === "function") {
-        return model.getEntityType();
-      }
-    } catch {
-      // Fallback for lightweight test doubles that don't carry full model internals
-    }
-
-    return model.getEntityName();
-  };
-
-  const sourceType = safeEntityType(sourceModel);
-  const sourceName = sourceModel.getEntityName();
-  const targetType = safeEntityType(targetModel);
-  const targetName = targetModel.getEntityName();
+  const sourceType = sourceShape.getEntityType();
+  const sourceName = sourceShape.getEntityName();
+  const targetType = targetShape.getEntityType();
+  const targetName = targetShape.getEntityName();
 
   const hasRelations = (type: string, name: string): boolean => {
     if (relationsDictionary[type] || relationsDictionary[name]) {
@@ -66,16 +44,16 @@ export const checkIfConnectionIsAllowed = (
     return false;
   }
 
-  const sourceElement = sourceModel as unknown as dia.Element;
-  const connectedElements = graph.getNeighbors(sourceElement);
-  const alreadyConnected = connectedElements.some((neighbor) => neighbor.id === targetModel.id);
+  const alreadyConnected = Array.from(sourceShape.connections.values()).some((ids) =>
+    ids.includes(targetShape.id)
+  );
 
   if (alreadyConnected) {
     return false;
   }
 
-  const sourceAllowed = sourceModel.validateConnection(targetModel);
-  const targetAllowed = targetModel.validateConnection(sourceModel);
+  const sourceAllowed = sourceShape.validateConnection(targetShape);
+  const targetAllowed = targetShape.validateConnection(sourceShape);
 
   return sourceAllowed && targetAllowed;
 };

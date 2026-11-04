@@ -101,8 +101,8 @@
     "crypto": false
   },
   "dependencies": {
+    "@dagrejs/dagre": "^1.1.8",
     "@graphiql/react": "^0.39.1",
-    "@joint/plus": "^4.3.4",
     "@monaco-editor/react": "^4.7.0",
     "@patternfly/react-charts": "^8.7.0",
     "@patternfly/react-code-editor": "^6.7.0",
@@ -115,6 +115,7 @@
     "@patternfly/react-tokens": "^6.7.0",
     "@react-keycloak/web": "^3.4.0",
     "@tanstack/react-query": "^5.105.0",
+    "@xyflow/react": "^12.12.1",
     "bignumber.js": "^11.1.5",
     "copy-to-clipboard": "^4.0.2",
     "dayjs": "^1.11.23",

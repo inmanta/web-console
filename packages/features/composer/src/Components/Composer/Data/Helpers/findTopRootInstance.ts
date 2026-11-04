@@ -1,4 +1,4 @@
-import type { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
+import type { ServiceEntityShape } from "../ServiceEntityShape";
 
 /**
  * The subset of a shape this walk needs: its id, its type, and the ids of the

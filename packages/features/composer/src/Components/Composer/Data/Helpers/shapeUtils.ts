@@ -1,34 +1,26 @@
-import { dia } from "@joint/plus";
 import { EmbeddedEntity, InterServiceRelation } from "@inmanta/web-console-core";
-import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config/shapeConfig";
+import type { ServiceEntityShape } from "../ServiceEntityShape";
 
 /**
- * Gets the bounding box of a shape with fallback to default dimensions.
- * This pattern is used in multiple places to safely get shape dimensions.
+ * Gets the size of a shape with fallback to default dimensions.
+ * The canvas stores the measured size on the shape once it has rendered the card;
+ * before that, the defaults apply.
  *
  * @param shape - The shape to get dimensions from
- * @returns Object with width and height, using defaults if bbox is unavailable
+ * @returns Object with width and height, using defaults if the size is unknown
  */
 export const getShapeDimensions = (
-  shape: ServiceEntityShape | dia.Element,
+  shape: Pick<ServiceEntityShape, "size">,
   defaultWidth: number = SHAPE_WIDTH,
   defaultHeight: number = SHAPE_MIN_HEIGHT
 ): { width: number; height: number } => {
-  let width = defaultWidth;
-  let height = defaultHeight;
+  const { width, height } = shape.size ?? { width: 0, height: 0 };
 
-  try {
-    const boundingBox = shape.getBBox();
-    if (boundingBox && boundingBox.width > 0 && boundingBox.height > 0) {
-      width = boundingBox.width;
-      height = boundingBox.height;
-    }
-  } catch {
-    // Fallback to default dimensions if bounding box is not available
-  }
-
-  return { width, height };
+  return {
+    width: width > 0 ? width : defaultWidth,
+    height: height > 0 ? height : defaultHeight,
+  };
 };
 
 /**

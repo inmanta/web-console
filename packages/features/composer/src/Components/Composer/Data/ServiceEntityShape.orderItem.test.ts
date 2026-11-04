@@ -1,5 +1,5 @@
 import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@inmanta/web-console-core";
-import { defineObjectsForJointJS } from "../../testSetup";
+import { defineCanvasTestObjects } from "../testSetup";
 import { ServiceEntityShape } from "./ServiceEntityShape";
 
 const createMockServiceModel = (
@@ -53,7 +53,7 @@ const createMockEmbeddedEntity = (
 
 describe("ServiceEntityShape order item serialization", () => {
   beforeAll(() => {
-    defineObjectsForJointJS();
+    defineCanvasTestObjects();
   });
 
   it("includes embedded inter-service-relations in parent attributes", () => {

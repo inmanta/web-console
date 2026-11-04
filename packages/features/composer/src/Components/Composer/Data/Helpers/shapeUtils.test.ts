@@ -1,7 +1,6 @@
-import { dia } from "@joint/plus";
-import { EmbeddedEntity, InterServiceRelation } from "@inmanta/web-console-core";
-import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
-import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config";
+import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@inmanta/web-console-core";
+import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT, SHAPE_HEADER_HEIGHT, SHAPE_ROW_HEIGHT } from "../../config";
+import { ServiceEntityShape } from "../ServiceEntityShape";
 import {
   getShapeDimensions,
   getEmbeddedEntityKey,
@@ -11,63 +10,72 @@ import {
 
 describe("shapeUtils", () => {
   describe("getShapeDimensions", () => {
-    it("should return default dimensions when bbox is unavailable", () => {
-      const mockShape = {
-        getBBox: vi.fn().mockImplementation(() => {
-          throw new Error("BBox not available");
-        }),
-      } as unknown as ServiceEntityShape;
+    it("should return default dimensions when the size is unknown", () => {
+      const shape = { size: undefined } as unknown as Pick<ServiceEntityShape, "size">;
 
-      const result = getShapeDimensions(mockShape);
+      const result = getShapeDimensions(shape);
 
       expect(result.width).toBe(SHAPE_WIDTH);
       expect(result.height).toBe(SHAPE_MIN_HEIGHT);
     });
 
-    it("should return default dimensions when bbox has zero dimensions", () => {
-      const mockShape = {
-        getBBox: vi.fn().mockReturnValue({ width: 0, height: 0 }),
-      } as unknown as ServiceEntityShape;
-
-      const result = getShapeDimensions(mockShape);
+    it("should return default dimensions when the size has zero dimensions", () => {
+      const result = getShapeDimensions({ size: { width: 0, height: 0 } });
 
       expect(result.width).toBe(SHAPE_WIDTH);
       expect(result.height).toBe(SHAPE_MIN_HEIGHT);
     });
 
-    it("should return bbox dimensions when available", () => {
-      const mockShape = {
-        getBBox: vi.fn().mockReturnValue({ width: 300, height: 150 }),
-      } as unknown as ServiceEntityShape;
-
-      const result = getShapeDimensions(mockShape);
+    it("should return the size when available", () => {
+      const result = getShapeDimensions({ size: { width: 300, height: 150 } });
 
       expect(result.width).toBe(300);
       expect(result.height).toBe(150);
     });
 
     it("should use custom default dimensions when provided", () => {
-      const mockShape = {
-        getBBox: vi.fn().mockImplementation(() => {
-          throw new Error("BBox not available");
-        }),
-      } as unknown as ServiceEntityShape;
-
-      const result = getShapeDimensions(mockShape, 200, 100);
+      const result = getShapeDimensions({ size: { width: 0, height: 0 } }, 200, 100);
 
       expect(result.width).toBe(200);
       expect(result.height).toBe(100);
     });
 
-    it("should work with dia.Element", () => {
-      const mockElement = {
-        getBBox: vi.fn().mockReturnValue({ width: 250, height: 120 }),
-      } as unknown as dia.Element;
+    it("should read the size of a ServiceEntityShape", () => {
+      const serviceModel: ServiceModel = {
+        name: "ServiceA",
+        environment: "test",
+        lifecycle: { initial_state: "active", states: [], transfers: [] },
+        attributes: [],
+        config: {},
+        embedded_entities: [],
+        inter_service_relations: [],
+        owned_entities: [],
+        owner: null,
+        key_attributes: ["name", "port"],
+      };
+      const shape = new ServiceEntityShape({
+        id: "shape-1",
+        entityType: "core",
+        serviceModel,
+        instanceAttributes: {},
+        readonly: false,
+        isNew: true,
+        lockedOnCanvas: false,
+        relationsDictionary: {},
+        rootEntities: {},
+        interServiceRelations: {},
+        embeddedEntities: {},
+      });
 
-      const result = getShapeDimensions(mockElement);
+      // Before the canvas measured the card, the size is estimated from the key attributes
+      expect(getShapeDimensions(shape)).toEqual({
+        width: SHAPE_WIDTH,
+        height: SHAPE_HEADER_HEIGHT + 2 * SHAPE_ROW_HEIGHT,
+      });
 
-      expect(result.width).toBe(250);
-      expect(result.height).toBe(120);
+      shape.size = { width: 250, height: 120 };
+
+      expect(getShapeDimensions(shape)).toEqual({ width: 250, height: 120 });
     });
   });
 
