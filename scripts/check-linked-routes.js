@@ -3,7 +3,7 @@
  * Checks that the routes a package declares for the pages of other features match those features.
  *
  * Each feature adds its routes to `RouteRegistry` (core's Domain/Route.ts) through declaration
- * merging. With TypeScript project references (#7461), a package only sees the routes of the
+ * merging. With TypeScript project references, a package only sees the routes of the
  * packages it depends on, and a feature never depends on another feature. So a package that names
  * another feature's route, for a link or as a parent page, declares that route itself in
  * `src/linkedRoutes.ts` (or `src/testTypes.ts` for routes only its tests name).
@@ -17,7 +17,7 @@ import { execSync } from "child_process";
 import { readFileSync } from "fs";
 import ts from "typescript";
 
-const linkerFile = /\/src\/(linkedRoutes|testTypes)\.ts$/;
+const linkedRoutesFilePattern = /\/src\/(linkedRoutes|testTypes)\.ts$/;
 const printer = ts.createPrinter({ removeComments: true });
 
 const files = execSync('git grep --untracked -l "RouteRegistry" -- packages apps', {
@@ -29,7 +29,8 @@ const files = execSync('git grep --untracked -l "RouteRegistry" -- packages apps
 
 /**
  * Every property of every `interface RouteRegistry` in the file, with its type printed the same
- * way whatever the formatting of the source.
+ * way whatever the formatting of the source. An optional route (`Kind?: ...`) gets a "?" in front:
+ * its params would accept `undefined` where the owner's don't.
  */
 const routeDeclarations = (file) => {
   const source = ts.createSourceFile(
@@ -46,7 +47,7 @@ const routeDeclarations = (file) => {
           const params = printer.printNode(ts.EmitHint.Unspecified, member.type, source);
           declarations.push({
             kind: member.name.getText(source),
-            params: params.replace(/\s+/g, " "),
+            params: (member.questionToken ? "?" : "") + params.replace(/\s+/g, " "),
           });
         }
       }
@@ -64,7 +65,7 @@ const problems = [];
 
 for (const file of files) {
   for (const { kind, params } of routeDeclarations(file)) {
-    if (linkerFile.test(file)) {
+    if (linkedRoutesFilePattern.test(file)) {
       linked.push({ file, kind, params });
     } else if (owners.has(kind)) {
       problems.push(`${kind} is declared by two features: ${owners.get(kind).file} and ${file}`);

@@ -2,7 +2,7 @@
 /**
  * Checks that the TypeScript project references match the workspace dependencies.
  *
- * Each package is its own TypeScript project (#7461) that references the projects of the packages it
+ * Each package is its own TypeScript project that references the projects of the packages it
  * depends on. TypeScript doesn't enforce that: an import of a package that isn't referenced still
  * compiles, by adding that package's source to the program. ESLint (import/no-extraneous-dependencies)
  * keeps the imports in step with package.json; this script keeps the references in step with
@@ -14,19 +14,29 @@
  */
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { dirname, join, posix, relative, resolve } from "path";
+import ts from "typescript";
 
-const workspaceDirs = [
-  ...["packages", "packages/features", "apps"].flatMap((parent) =>
-    readdirSync(parent, { withFileTypes: true })
-      .filter(
-        (entry) => entry.isDirectory() && existsSync(join(parent, entry.name, "package.json"))
-      )
-      .map((entry) => posix.join(parent, entry.name))
-  ),
-];
+const workspaceDirs = ["packages", "packages/features", "apps"].flatMap((parent) =>
+  readdirSync(parent, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && existsSync(join(parent, entry.name, "package.json")))
+    .map((entry) => posix.join(parent, entry.name))
+);
 const readJson = (file) => JSON.parse(readFileSync(file, "utf8"));
-const split = (dir) => existsSync(join(dir, "tsconfig.src.json"));
-const projectOf = (dir) => (split(dir) ? `${dir}/tsconfig.src.json` : `${dir}/tsconfig.json`);
+
+/**
+ * Reads a tsconfig file the way tsc does, so comments and trailing commas are fine.
+ */
+const readTsconfig = (file) => {
+  const { config, error } = ts.readConfigFile(file, ts.sys.readFile);
+  if (error) {
+    throw new Error(ts.flattenDiagnosticMessageText(error.messageText, "\n"));
+  }
+
+  return config;
+};
+const hasSeparateTestProject = (dir) => existsSync(join(dir, "tsconfig.src.json"));
+const projectOf = (dir) =>
+  hasSeparateTestProject(dir) ? `${dir}/tsconfig.src.json` : `${dir}/tsconfig.json`;
 const toProject = (fromFile, path) => {
   const target = resolve(dirname(fromFile), path);
 
@@ -35,7 +45,7 @@ const toProject = (fromFile, path) => {
     .join("/");
 };
 const referencesOf = (file) =>
-  (readJson(file).references ?? []).map(({ path }) => toProject(file, path));
+  (readTsconfig(file).references ?? []).map(({ path }) => toProject(file, path));
 
 const byName = new Map(workspaceDirs.map((dir) => [readJson(join(dir, "package.json")).name, dir]));
 const workspaceDeps = (deps = {}) =>
@@ -48,7 +58,7 @@ for (const dir of workspaceDirs) {
   const pkg = readJson(join(dir, "package.json"));
   const deps = workspaceDeps(pkg.dependencies);
   const devDeps = workspaceDeps(pkg.devDependencies);
-  if (split(dir)) {
+  if (hasSeparateTestProject(dir)) {
     expected.set(`${dir}/tsconfig.src.json`, deps);
     expected.set(`${dir}/tsconfig.test.json`, [`${dir}/tsconfig.src.json`, ...deps, ...devDeps]);
   } else {
