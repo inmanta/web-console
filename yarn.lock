@@ -861,6 +861,129 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@inmanta/web-console-app@workspace:apps/web-console":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-app@workspace:apps/web-console"
+  dependencies:
+    "@inmanta/web-console-core": "workspace:^"
+    "@inmanta/web-console-feature-composer": "workspace:^"
+    "@inmanta/web-console-feature-environment": "workspace:^"
+    "@inmanta/web-console-feature-graphiql": "workspace:^"
+    "@inmanta/web-console-feature-lsm": "workspace:^"
+    "@inmanta/web-console-feature-orchestration-engine": "workspace:^"
+    "@inmanta/web-console-feature-resource-manager": "workspace:^"
+    "@inmanta/web-console-feature-user-management": "workspace:^"
+    "@inmanta/web-console-shell": "workspace:^"
+    "@inmanta/web-console-test-utils": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@inmanta/web-console-core@workspace:^, @inmanta/web-console-core@workspace:packages/core":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-core@workspace:packages/core"
+  dependencies:
+    "@inmanta/web-console-test-utils": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@inmanta/web-console-feature-composer@workspace:^, @inmanta/web-console-feature-composer@workspace:packages/features/composer":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-feature-composer@workspace:packages/features/composer"
+  dependencies:
+    "@inmanta/web-console-core": "workspace:^"
+    "@inmanta/web-console-test-utils": "workspace:^"
+    "@inmanta/web-console-ui": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@inmanta/web-console-feature-environment@workspace:^, @inmanta/web-console-feature-environment@workspace:packages/features/environment":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-feature-environment@workspace:packages/features/environment"
+  dependencies:
+    "@inmanta/web-console-core": "workspace:^"
+    "@inmanta/web-console-test-utils": "workspace:^"
+    "@inmanta/web-console-ui": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@inmanta/web-console-feature-graphiql@workspace:^, @inmanta/web-console-feature-graphiql@workspace:packages/features/graphiql":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-feature-graphiql@workspace:packages/features/graphiql"
+  dependencies:
+    "@inmanta/web-console-core": "workspace:^"
+    "@inmanta/web-console-test-utils": "workspace:^"
+    "@inmanta/web-console-ui": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@inmanta/web-console-feature-lsm@workspace:^, @inmanta/web-console-feature-lsm@workspace:packages/features/lsm":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-feature-lsm@workspace:packages/features/lsm"
+  dependencies:
+    "@inmanta/web-console-core": "workspace:^"
+    "@inmanta/web-console-test-utils": "workspace:^"
+    "@inmanta/web-console-ui": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@inmanta/web-console-feature-orchestration-engine@workspace:^, @inmanta/web-console-feature-orchestration-engine@workspace:packages/features/orchestration-engine":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-feature-orchestration-engine@workspace:packages/features/orchestration-engine"
+  dependencies:
+    "@inmanta/web-console-core": "workspace:^"
+    "@inmanta/web-console-test-utils": "workspace:^"
+    "@inmanta/web-console-ui": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@inmanta/web-console-feature-resource-manager@workspace:^, @inmanta/web-console-feature-resource-manager@workspace:packages/features/resource-manager":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-feature-resource-manager@workspace:packages/features/resource-manager"
+  dependencies:
+    "@inmanta/web-console-core": "workspace:^"
+    "@inmanta/web-console-test-utils": "workspace:^"
+    "@inmanta/web-console-ui": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@inmanta/web-console-feature-user-management@workspace:^, @inmanta/web-console-feature-user-management@workspace:packages/features/user-management":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-feature-user-management@workspace:packages/features/user-management"
+  dependencies:
+    "@inmanta/web-console-core": "workspace:^"
+    "@inmanta/web-console-test-utils": "workspace:^"
+    "@inmanta/web-console-ui": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@inmanta/web-console-shell@workspace:^, @inmanta/web-console-shell@workspace:packages/shell":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-shell@workspace:packages/shell"
+  dependencies:
+    "@inmanta/web-console-core": "workspace:^"
+    "@inmanta/web-console-test-utils": "workspace:^"
+    "@inmanta/web-console-ui": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@inmanta/web-console-test-utils@workspace:^, @inmanta/web-console-test-utils@workspace:packages/test-utils":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-test-utils@workspace:packages/test-utils"
+  dependencies:
+    "@inmanta/web-console-core": "workspace:^"
+    "@inmanta/web-console-ui": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@inmanta/web-console-ui@workspace:^, @inmanta/web-console-ui@workspace:packages/ui":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-ui@workspace:packages/ui"
+  dependencies:
+    "@inmanta/web-console-core": "workspace:^"
+    "@inmanta/web-console-test-utils": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
 "@inmanta/web-console@workspace:.":
   version: 0.0.0-use.local
   resolution: "@inmanta/web-console@workspace:."

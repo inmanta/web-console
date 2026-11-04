@@ -67,10 +67,14 @@ export default [
       "import/resolver": {
         typescript: {
           alwaysTryTypes: true,
+          // Without "types": the workspace packages list their TypeScript fallbacks under
+          // "types", and the resolver only tries the first one. "default" ("./src/*") lets
+          // it find the file or the folder's index itself.
+          conditionNames: ["import", "require", "node", "browser", "default"],
         },
         node: {
           extensions: [".js", ".jsx", ".ts", ".tsx"],
-          moduleDirectory: ["node_modules", "src/"],
+          moduleDirectory: ["node_modules"],
         },
       },
     },
@@ -118,11 +122,11 @@ export default [
           ],
           pathGroups: [
             {
-              pattern: "@/**",
+              pattern: "@inmanta/web-console-*{,/**}",
               group: "internal",
             },
             {
-              pattern: "@inmanta/web-console-*{,/**}",
+              pattern: "@images/**",
               group: "internal",
             },
             {

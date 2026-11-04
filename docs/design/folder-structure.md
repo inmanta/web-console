@@ -65,4 +65,11 @@ apps/
 src/ - Only the global type declarations (typings.d.ts, vite-env.d.ts)
 ```
 
+Every package and app is a Yarn workspace with its own `package.json`. Another package imports it through a `workspace:^` dependency, not a path alias. A new package needs:
+
+- a `package.json` with its name (`@inmanta/web-console-...`) and an `exports` block like the other packages: `"./*"` maps a deep import such as `@inmanta/web-console-core/Queries/Slices/Resource` to `src/Queries/Slices/Resource`, and `"."` maps the package name to `src/index.ts` (only for a package that has one; `ui` doesn't);
+- a `workspace:^` dependency on it in every package that imports it, including `apps/web-console` for a feature, under `devDependencies` when only tests import it (like `test-utils`);
+- its zone in `eslint.layers.js`;
+- a `yarn install` after adding or changing a `package.json`, so `yarn.lock` has its entry; CI installs with `--immutable` and fails without it.
+
 Each slice (a folder in a package's `Slices/`) uses the same layers: `Core/` for its types and contracts, `Data/` for transformations and implementations, `UI/` for its components.

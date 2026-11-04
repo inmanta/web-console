@@ -206,50 +206,6 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-      { find: "@", replacement: resolve(__dirname, "./src") },
-      { find: "@S", replacement: resolve(__dirname, "./src/Slices") },
-      // The packages of the composition architecture (#7451), by the names they get as workspaces.
-      {
-        find: "@inmanta/web-console-core",
-        replacement: resolve(__dirname, "./packages/core/src"),
-      },
-      { find: "@inmanta/web-console-ui", replacement: resolve(__dirname, "./packages/ui/src") },
-      {
-        find: "@inmanta/web-console-shell",
-        replacement: resolve(__dirname, "./packages/shell/src"),
-      },
-      {
-        find: "@inmanta/web-console-feature-composer",
-        replacement: resolve(__dirname, "./packages/features/composer/src"),
-      },
-      {
-        find: "@inmanta/web-console-feature-environment",
-        replacement: resolve(__dirname, "./packages/features/environment/src"),
-      },
-      {
-        find: "@inmanta/web-console-feature-graphiql",
-        replacement: resolve(__dirname, "./packages/features/graphiql/src"),
-      },
-      {
-        find: "@inmanta/web-console-feature-lsm",
-        replacement: resolve(__dirname, "./packages/features/lsm/src"),
-      },
-      {
-        find: "@inmanta/web-console-feature-orchestration-engine",
-        replacement: resolve(__dirname, "./packages/features/orchestration-engine/src"),
-      },
-      {
-        find: "@inmanta/web-console-feature-resource-manager",
-        replacement: resolve(__dirname, "./packages/features/resource-manager/src"),
-      },
-      {
-        find: "@inmanta/web-console-feature-user-management",
-        replacement: resolve(__dirname, "./packages/features/user-management/src"),
-      },
-      {
-        find: "@inmanta/web-console-test-utils",
-        replacement: resolve(__dirname, "./packages/test-utils/src"),
-      },
       {
         find: "@assets",
         replacement: resolve(__dirname, "./node_modules/@patternfly/react-core/dist/styles/assets"),

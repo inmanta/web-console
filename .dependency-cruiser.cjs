@@ -7,7 +7,8 @@
  * (lazy-loaded pages) are excluded because they don't run at load time.
  *
  * The check fails on any cycle, so fix a cycle your change introduces instead
- * of ignoring it.
+ * of ignoring it. It also fails when an import of a workspace package doesn't
+ * resolve, because the cycle check can't see past such an import.
  *
  * @type {import('dependency-cruiser').IConfiguration}
  */
@@ -21,6 +22,14 @@ module.exports = {
       from: {},
       to: { circular: true },
     },
+    {
+      name: "no-unresolvable-workspace-import",
+      severity: "error",
+      comment:
+        "This import of a workspace package doesn't resolve, so the cycle check can't see past it. Check the package's `exports` in its package.json.",
+      from: {},
+      to: { couldNotResolve: true, path: "^@inmanta/web-console-" },
+    },
   ],
   options: {
     doNotFollow: { path: "node_modules" },
@@ -29,7 +38,10 @@ module.exports = {
     tsConfig: { fileName: "tsconfig.json" },
     enhancedResolveOptions: {
       exportsFields: ["exports"],
-      conditionNames: ["import", "require", "node", "default", "types"],
+      // No "types": the workspace packages list their TypeScript fallbacks under "types",
+      // and enhanced-resolve only tries the first one. "default" ("./src/*") lets it
+      // find the file or the folder's index itself.
+      conditionNames: ["import", "require", "node", "default"],
     },
     skipAnalysisNotInRules: true,
   },
