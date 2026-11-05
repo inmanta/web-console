@@ -2,8 +2,10 @@
 /// <reference types="vitest/config" />
 // Plain JavaScript, so Node loads it as it is when a Vite config imports it, whatever Vite's
 // config loader; the JSDoc types are checked by `yarn tsc`.
+import { readdirSync, readFileSync } from "fs";
 import { createRequire } from "module";
-import { join } from "path";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
 const require = createRequire(import.meta.url);
 
@@ -67,4 +69,52 @@ export const composerVitePlugin = () => {
       },
     }),
   };
+};
+
+/**
+ * The folder the composer is built into as a runtime plugin, see vite.config.ts.
+ */
+export const composerPluginDir = join(dirname(fileURLToPath(import.meta.url)), "dist");
+
+/**
+ * The modules the app shares with the composer plugin: every package the composer's code imports,
+ * except JointJS, which only the composer has. The app provides the only copy of each through
+ * its import map, so the composer uses the app's React, contexts and web-console packages.
+ *
+ * The list comes from the composer's source, so a new import is shared without anyone listing
+ * it: a module that isn't shared is bundled into the plugin as a second copy, with its own
+ * state and contexts. Type-only imports and stylesheets are left out.
+ *
+ * @returns {string[]} the shared import specifiers, sorted
+ */
+export const composerSharedModules = () => {
+  const src = join(dirname(fileURLToPath(import.meta.url)), "src");
+  const specifiers = new Set(["react/jsx-runtime"]);
+  const importPattern =
+    /(?:^|\n)\s*(?:import|export)\s+(?!type\s)(?:[^"';]*?\sfrom\s+)?["']([^"']+)["']|import\(\s*["']([^"']+)["']\s*\)/g;
+
+  for (const file of readdirSync(src, { recursive: true, encoding: "utf8" })) {
+    if (!/\.tsx?$/.test(file) || /\.(test|spec)\.tsx?$|(^|[\/])Mocks?([\/]|\.)/.test(file)) {
+      continue;
+    }
+
+    for (const [, staticImport, dynamicImport] of readFileSync(join(src, file), "utf8").matchAll(
+      importPattern
+    )) {
+      const specifier = staticImport ?? dynamicImport;
+
+      if (
+        specifier.startsWith(".") ||
+        specifier.startsWith("@joint/") ||
+        specifier.startsWith("@images/") ||
+        specifier.startsWith("@inmanta/web-console-feature-composer") ||
+        specifier.endsWith(".css")
+      ) {
+        continue;
+      }
+      specifiers.add(specifier);
+    }
+  }
+
+  return [...specifiers].sort();
 };
