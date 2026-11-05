@@ -37,8 +37,9 @@ const checkEditions = (Yarn) => {
       .map(({ ident }) => Yarn.workspace({ ident }))
       .filter(Boolean);
 
-  // The first path from the workspace to an ISO workspace, or undefined.
-  const pathToIso = (workspace, seen = new Set()) => {
+  // The first path from the workspace to an ISO workspace, or undefined. The workspace itself is
+  // seen already, so the path doesn't loop back through it (core and test-utils depend on each other).
+  const pathToIso = (workspace, seen = new Set([workspace.cwd])) => {
     for (const dependency of workspaceDependencies(workspace)) {
       if (seen.has(dependency.cwd)) {
         continue;

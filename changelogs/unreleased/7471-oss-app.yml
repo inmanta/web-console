@@ -1,5 +1,5 @@
 description: Add the OSS app (`apps/oss`), the web console with the OSS features only, which installs and builds without the JointJS token.
 issue-nr: 7471
-change-type: minor
+change-type: patch
 destination-branches: [master, iso9]
 sections: {}

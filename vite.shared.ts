@@ -3,6 +3,11 @@
  * the shared assets and the Monaco setup (`sharedConfig`). On top of those, `appConfig` holds the
  * dev server and build settings every app shares. Each app's vite.config.ts adds the plugins of
  * the features it ships; vitest.config.ts adds the test settings.
+ *
+ * Every app lists the packages this file imports (vite, @vitejs/plugin-react, vite-plugin-mkcert)
+ * in its own devDependencies, even though the root lists them too: `yarn workspaces focus` on an
+ * app, the OSS install without the JointJS token, doesn't install the root's devDependencies.
+ * A package added here goes into every app's devDependencies as well.
  */
 import { execSync } from "child_process";
 import { readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "fs";
