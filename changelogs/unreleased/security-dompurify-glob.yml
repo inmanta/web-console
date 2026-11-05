@@ -1,4 +1,0 @@
-description: Patched security vulnerabilities in transitive dependencies (dompurify, glob, minimatch).
-change-type: patch
-destination-branches: [master, iso9]
-sections: {}

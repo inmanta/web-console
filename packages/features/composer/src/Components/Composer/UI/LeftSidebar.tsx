@@ -126,11 +126,16 @@ class LeftSidebarElement {
          `;
 
     // Set the labels as text so no string ever reaches the HTML parser.
-    const [newTabLabel, inventoryTabLabel] = tabButtons.querySelectorAll(
-      ".pf-v6-c-tabs__item-text"
-    );
-    newTabLabel.textContent = words("instanceComposer.stencil.new");
-    inventoryTabLabel.textContent = words("instanceComposer.stencil.inventory");
+    const setTabLabel = (tabId: string, label: string) => {
+      const span = tabButtons.querySelector(`#${tabId} .pf-v6-c-tabs__item-text`);
+
+      if (span) {
+        span.textContent = label;
+      }
+    };
+
+    setTabLabel("new-tab", words("instanceComposer.stencil.new"));
+    setTabLabel("inventory-tab", words("instanceComposer.stencil.inventory"));
 
     tabButtons.addEventListener("click", (event: Event) => {
       !!event.target && this.toggleTab(event.target);
