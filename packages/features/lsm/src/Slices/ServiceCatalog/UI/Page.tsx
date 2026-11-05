@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Button, Stack, Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import { Button, Flex, Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { words } from "@inmanta/web-console-core";
 import { useGetServiceModels } from "@inmanta/web-console-core/Queries/Slices/Service";
 import { CatalogActions } from "@inmanta/web-console-feature-lsm/Components/CatalogActions";
@@ -70,14 +70,19 @@ export const Page: React.FC = () => {
       data.length <= 0 ? (
         <EmptyView aria-label="ServiceCatalog-Empty" message={words("catalog.empty.message")} />
       ) : (
-        <Stack hasGutter aria-label="ServiceCatalog-Success">
+        <Flex
+          direction={{ default: "column" }}
+          flexWrap={{ default: "nowrap" }}
+          gap={{ default: "gapMd" }}
+          aria-label="ServiceCatalog-Success"
+        >
           {toolbar}
           <CatalogSections
             sections={sections}
             expandedServiceNames={expandedServiceNames}
             onToggleOwnedServices={toggleOwnedServices}
           />
-        </Stack>
+        </Flex>
       );
   }
 
