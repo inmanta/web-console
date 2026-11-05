@@ -1,4 +1,6 @@
 import "vitest";
+// The jest-dom matchers (toBeInTheDocument, ...) for every test project that includes this file.
+import "@testing-library/jest-dom/vitest";
 import type { DetachedWindowAPI } from "happy-dom";
 
 declare global {

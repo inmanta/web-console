@@ -1,5 +1,8 @@
 import { within } from "@testing-library/react";
 import { words } from "@inmanta/web-console-core";
+// Loads the words of the shared components ("true", "false") into WordsRegistry: with project
+// references, a package only sees the declaration merging of the files it imports.
+import type {} from "@inmanta/web-console-ui/messages";
 
 export const getById = (id: string): HTMLElement => {
   const el = document.getElementById(id);

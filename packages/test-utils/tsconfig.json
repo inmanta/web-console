@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../.tsbuild/test-utils"
+  },
+  "include": [
+    "src",
+    "../../src/*.d.ts",
+    "src/vitest.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../core/tsconfig.src.json"
+    },
+    {
+      "path": "../ui/tsconfig.src.json"
+    }
+  ]
+}

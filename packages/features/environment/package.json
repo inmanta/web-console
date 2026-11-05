@@ -19,9 +19,28 @@
   },
   "dependencies": {
     "@inmanta/web-console-core": "workspace:^",
-    "@inmanta/web-console-ui": "workspace:^"
+    "@inmanta/web-console-ui": "workspace:^",
+    "@patternfly/react-charts": "^8.7.0",
+    "@patternfly/react-core": "^6.7.0",
+    "@patternfly/react-icons": "^6.7.0",
+    "@patternfly/react-table": "^6.7.0",
+    "@patternfly/react-tokens": "^6.7.0",
+    "@tanstack/react-query": "^5.105.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router": "^8.5.1",
+    "styled-components": "^6.6.0",
+    "victory": "^37.4.1"
   },
   "devDependencies": {
-    "@inmanta/web-console-test-utils": "workspace:^"
+    "@inmanta/web-console-test-utils": "workspace:^",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/jest-axe": "^3.5.9",
+    "jest-axe": "^11.0.0",
+    "msw": "^2.15.0",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
   }
 }

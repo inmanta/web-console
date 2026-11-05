@@ -1,0 +1,22 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../../.tsbuild/feature-lsm"
+  },
+  "include": [
+    "src",
+    "../../../src/*.d.ts",
+    "../../test-utils/src/vitest.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../core/tsconfig.src.json"
+    },
+    {
+      "path": "../../ui/tsconfig.src.json"
+    },
+    {
+      "path": "../../test-utils"
+    }
+  ]
+}

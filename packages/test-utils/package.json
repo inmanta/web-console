@@ -19,6 +19,27 @@
   },
   "dependencies": {
     "@inmanta/web-console-core": "workspace:^",
-    "@inmanta/web-console-ui": "workspace:^"
+    "@inmanta/web-console-ui": "workspace:^",
+    "@monaco-editor/react": "^4.7.0",
+    "@patternfly/react-code-editor": "^6.7.0",
+    "@patternfly/react-core": "^6.7.0",
+    "@patternfly/react-log-viewer": "^6.5.0",
+    "@tanstack/react-query": "^5.105.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@types/jest-axe": "^3.5.9",
+    "happy-dom": "^21.0.4",
+    "jest-axe": "^11.0.0",
+    "mermaid": "^12.2.0",
+    "monaco-editor": "^0.52.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router": "^8.5.1",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  },
+  "devDependencies": {
+    "@testing-library/user-event": "^14.6.8"
   }
 }

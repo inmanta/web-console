@@ -26,7 +26,10 @@ export interface JSONBigIntOptions {
 }
 
 export interface JSONBigInt {
-  parse: ReturnType<typeof jsonParse>;
+  // Typed here rather than as ReturnType<typeof jsonParse>: in the declarations generated from the
+  // JavaScript file, the optional reviver becomes a required parameter. Returns any, like JSON.parse.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  parse: (source: string, reviver?: (key: string, value: unknown) => unknown) => any;
   stringify: typeof jsonStringify;
 }
 

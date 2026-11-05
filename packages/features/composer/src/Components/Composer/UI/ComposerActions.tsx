@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react";
-import "@rappidcss";
+import "@joint/plus/joint-plus.css";
 import { useLocation, useNavigate } from "react-router";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { words } from "@inmanta/web-console-core";

@@ -1,4 +1,7 @@
 import { ParsedNumber } from "@inmanta/web-console-core";
+// Loads the words of the shared components into WordsRegistry: this package uses them, and with
+// project references a package only sees the declaration merging of the files it imports.
+import type {} from "@inmanta/web-console-ui/messages";
 
 /**
  * The English messages of the orchestration engine feature.

@@ -875,6 +875,21 @@ __metadata:
     "@inmanta/web-console-feature-user-management": "workspace:^"
     "@inmanta/web-console-shell": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
+    "@monaco-editor/react": "npm:^4.7.0"
+    "@patternfly/react-core": "npm:^6.7.0"
+    "@tanstack/react-query": "npm:^5.105.1"
+    "@testing-library/dom": "npm:^10.4.2"
+    "@testing-library/react": "npm:^16.3.3"
+    "@testing-library/user-event": "npm:^14.6.8"
+    "@types/jest-axe": "npm:^3.5.9"
+    jest-axe: "npm:^11.0.0"
+    monaco-editor: "npm:^0.52.2"
+    msw: "npm:^2.15.0"
+    react: "npm:^19.3.1"
+    react-dom: "npm:^19.3.1"
+    react-router: "npm:^8.5.1"
+    vite: "npm:^8.3.5"
+    vite-plugin-mkcert: "npm:^2.1.0"
   languageName: unknown
   linkType: soft
 
@@ -883,6 +898,27 @@ __metadata:
   resolution: "@inmanta/web-console-core@workspace:packages/core"
   dependencies:
     "@inmanta/web-console-test-utils": "workspace:^"
+    "@patternfly/react-core": "npm:^6.7.0"
+    "@tanstack/react-query": "npm:^5.105.1"
+    "@testing-library/dom": "npm:^10.4.2"
+    "@testing-library/react": "npm:^16.3.3"
+    "@types/file-saver": "npm:^2.0.7"
+    "@types/qs": "npm:^6.15.1"
+    bignumber.js: "npm:^11.1.5"
+    dayjs: "npm:^1.11.23"
+    file-saver: "npm:^2.0.5"
+    graphql: "npm:^17.0.2"
+    jsonpathly: "npm:^3.0.1"
+    keycloak-js: "npm:^26.2.5"
+    msw: "npm:^2.15.0"
+    qs: "npm:^6.17.0"
+    react: "npm:^19.3.1"
+    react-dom: "npm:^19.3.1"
+    react-router: "npm:^8.5.1"
+    uuid: "npm:^14.0.3"
+    vite: "npm:^8.3.5"
+    vitest: "npm:^5.0.5"
+    xml-formatter: "npm:^3.7.0"
   languageName: unknown
   linkType: soft
 
@@ -893,6 +929,19 @@ __metadata:
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
+    "@joint/plus": "npm:^4.3.4"
+    "@patternfly/react-core": "npm:^6.7.0"
+    "@patternfly/react-icons": "npm:^6.7.0"
+    "@patternfly/react-tokens": "npm:^6.7.0"
+    "@testing-library/dom": "npm:^10.4.2"
+    "@testing-library/react": "npm:^16.3.3"
+    react: "npm:^19.3.1"
+    react-dom: "npm:^19.3.1"
+    react-router: "npm:^8.5.1"
+    styled-components: "npm:^6.6.0"
+    uuid: "npm:^14.0.3"
+    vite: "npm:^8.3.5"
+    vitest: "npm:^5.0.5"
   languageName: unknown
   linkType: soft
 
@@ -903,6 +952,25 @@ __metadata:
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
+    "@patternfly/react-charts": "npm:^8.7.0"
+    "@patternfly/react-core": "npm:^6.7.0"
+    "@patternfly/react-icons": "npm:^6.7.0"
+    "@patternfly/react-table": "npm:^6.7.0"
+    "@patternfly/react-tokens": "npm:^6.7.0"
+    "@tanstack/react-query": "npm:^5.105.1"
+    "@testing-library/dom": "npm:^10.4.2"
+    "@testing-library/react": "npm:^16.3.3"
+    "@testing-library/user-event": "npm:^14.6.8"
+    "@types/jest-axe": "npm:^3.5.9"
+    jest-axe: "npm:^11.0.0"
+    msw: "npm:^2.15.0"
+    react: "npm:^19.3.1"
+    react-dom: "npm:^19.3.1"
+    react-router: "npm:^8.5.1"
+    styled-components: "npm:^6.6.0"
+    victory: "npm:^37.4.1"
+    vite: "npm:^8.3.5"
+    vitest: "npm:^5.0.5"
   languageName: unknown
   linkType: soft
 
@@ -910,9 +978,27 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@inmanta/web-console-feature-graphiql@workspace:packages/features/graphiql"
   dependencies:
+    "@graphiql/react": "npm:^0.39.1"
+    "@graphiql/toolkit": "npm:^0.12.1"
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
+    "@patternfly/react-icons": "npm:^6.7.0"
+    "@tanstack/react-query": "npm:^5.105.1"
+    "@testing-library/dom": "npm:^10.4.2"
+    "@testing-library/react": "npm:^16.3.3"
+    graphiql: "npm:^5.4.0"
+    graphql: "npm:^17.0.2"
+    monaco-editor: "npm:^0.52.2"
+    monaco-graphql: "npm:^1.9.0"
+    msw: "npm:^2.15.0"
+    prettier: "npm:^3.9.10"
+    react: "npm:^19.3.1"
+    react-dom: "npm:^19.3.1"
+    react-router: "npm:^8.5.1"
+    styled-components: "npm:^6.6.0"
+    vite: "npm:^8.3.5"
+    vitest: "npm:^5.0.5"
   languageName: unknown
   linkType: soft
 
@@ -923,6 +1009,35 @@ __metadata:
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
+    "@monaco-editor/react": "npm:^4.7.0"
+    "@patternfly/react-code-editor": "npm:^6.7.0"
+    "@patternfly/react-core": "npm:^6.7.0"
+    "@patternfly/react-icons": "npm:^6.7.0"
+    "@patternfly/react-table": "npm:^6.7.0"
+    "@patternfly/react-tokens": "npm:^6.7.0"
+    "@tanstack/react-query": "npm:^5.105.1"
+    "@testing-library/dom": "npm:^10.4.2"
+    "@testing-library/jest-dom": "npm:^7.0.1"
+    "@testing-library/react": "npm:^16.3.3"
+    "@testing-library/user-event": "npm:^14.6.8"
+    "@types/jest-axe": "npm:^3.5.9"
+    "@types/markdown-it-emoji": "npm:^3.0.1"
+    copy-to-clipboard: "npm:^4.0.2"
+    highlight.js: "npm:^11.12.0"
+    jest-axe: "npm:^11.0.0"
+    markdown-it: "npm:^15.0.3"
+    markdown-it-emoji: "npm:^3.1.0"
+    mermaid: "npm:^12.2.0"
+    monaco-editor: "npm:^0.52.2"
+    msw: "npm:^2.15.0"
+    react: "npm:^19.3.1"
+    react-dom: "npm:^19.3.1"
+    react-icons: "npm:^5.7.0"
+    react-router: "npm:^8.5.1"
+    styled-components: "npm:^6.6.0"
+    uuid: "npm:^14.0.3"
+    vite: "npm:^8.3.5"
+    vitest: "npm:^5.0.5"
   languageName: unknown
   linkType: soft
 
@@ -933,6 +1048,23 @@ __metadata:
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
+    "@patternfly/react-code-editor": "npm:^6.7.0"
+    "@patternfly/react-core": "npm:^6.7.0"
+    "@patternfly/react-icons": "npm:^6.7.0"
+    "@patternfly/react-log-viewer": "npm:^6.5.0"
+    "@patternfly/react-table": "npm:^6.7.0"
+    "@tanstack/react-query": "npm:^5.105.1"
+    "@testing-library/dom": "npm:^10.4.2"
+    "@testing-library/react": "npm:^16.3.3"
+    "@testing-library/user-event": "npm:^14.6.8"
+    "@types/jest-axe": "npm:^3.5.9"
+    jest-axe: "npm:^11.0.0"
+    msw: "npm:^2.15.0"
+    react: "npm:^19.3.1"
+    react-diff-viewer-continued: "npm:^4.4.0"
+    react-dom: "npm:^19.3.1"
+    react-router: "npm:^8.5.1"
+    styled-components: "npm:^6.6.0"
   languageName: unknown
   linkType: soft
 
@@ -943,6 +1075,22 @@ __metadata:
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
+    "@patternfly/react-core": "npm:^6.7.0"
+    "@patternfly/react-drag-drop": "npm:^6.7.0"
+    "@patternfly/react-icons": "npm:^6.7.0"
+    "@patternfly/react-table": "npm:^6.7.0"
+    "@patternfly/react-tokens": "npm:^6.7.0"
+    "@tanstack/react-query": "npm:^5.105.1"
+    "@testing-library/dom": "npm:^10.4.2"
+    "@testing-library/react": "npm:^16.3.3"
+    "@testing-library/user-event": "npm:^14.6.8"
+    "@types/jest-axe": "npm:^3.5.9"
+    jest-axe: "npm:^11.0.0"
+    msw: "npm:^2.15.0"
+    react: "npm:^19.3.1"
+    react-dom: "npm:^19.3.1"
+    react-router: "npm:^8.5.1"
+    styled-components: "npm:^6.6.0"
   languageName: unknown
   linkType: soft
 
@@ -953,6 +1101,18 @@ __metadata:
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
+    "@patternfly/react-core": "npm:^6.7.0"
+    "@patternfly/react-icons": "npm:^6.7.0"
+    "@patternfly/react-table": "npm:^6.7.0"
+    "@tanstack/react-query": "npm:^5.105.1"
+    "@testing-library/dom": "npm:^10.4.2"
+    "@testing-library/react": "npm:^16.3.3"
+    "@testing-library/user-event": "npm:^14.6.8"
+    "@types/jest-axe": "npm:^3.5.9"
+    jest-axe: "npm:^11.0.0"
+    msw: "npm:^2.15.0"
+    react: "npm:^19.3.1"
+    react-dom: "npm:^19.3.1"
   languageName: unknown
   linkType: soft
 
@@ -963,6 +1123,29 @@ __metadata:
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
+    "@patternfly/react-core": "npm:^6.7.0"
+    "@patternfly/react-icons": "npm:^6.7.0"
+    "@patternfly/react-tokens": "npm:^6.7.0"
+    "@react-keycloak/web": "npm:^3.4.0"
+    "@remix-run/router": "npm:^1.23.4"
+    "@tanstack/react-query": "npm:^5.105.1"
+    "@tanstack/react-query-devtools": "npm:^5.105.1"
+    "@testing-library/dom": "npm:^10.4.2"
+    "@testing-library/react": "npm:^16.3.3"
+    "@testing-library/user-event": "npm:^14.6.8"
+    "@types/jest-axe": "npm:^3.5.9"
+    jest-axe: "npm:^11.0.0"
+    keycloak-js: "npm:^26.2.5"
+    msw: "npm:^2.15.0"
+    oidc-client-ts: "npm:^3.5.0"
+    react: "npm:^19.3.1"
+    react-dom: "npm:^19.3.1"
+    react-oidc-context: "npm:^3.3.1"
+    react-router: "npm:^8.5.1"
+    styled-components: "npm:^6.6.0"
+    uuid: "npm:^14.0.3"
+    vite: "npm:^8.3.5"
+    vitest: "npm:^5.0.5"
   languageName: unknown
   linkType: soft
 
@@ -972,6 +1155,25 @@ __metadata:
   dependencies:
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
+    "@monaco-editor/react": "npm:^4.7.0"
+    "@patternfly/react-code-editor": "npm:^6.7.0"
+    "@patternfly/react-core": "npm:^6.7.0"
+    "@patternfly/react-log-viewer": "npm:^6.5.0"
+    "@tanstack/react-query": "npm:^5.105.1"
+    "@testing-library/dom": "npm:^10.4.2"
+    "@testing-library/jest-dom": "npm:^7.0.1"
+    "@testing-library/react": "npm:^16.3.3"
+    "@testing-library/user-event": "npm:^14.6.8"
+    "@types/jest-axe": "npm:^3.5.9"
+    happy-dom: "npm:^21.0.4"
+    jest-axe: "npm:^11.0.0"
+    mermaid: "npm:^12.2.0"
+    monaco-editor: "npm:^0.52.2"
+    react: "npm:^19.3.1"
+    react-dom: "npm:^19.3.1"
+    react-router: "npm:^8.5.1"
+    vite: "npm:^8.3.5"
+    vitest: "npm:^5.0.5"
   languageName: unknown
   linkType: soft
 
@@ -981,6 +1183,27 @@ __metadata:
   dependencies:
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
+    "@patternfly/react-code-editor": "npm:^6.7.0"
+    "@patternfly/react-core": "npm:^6.7.0"
+    "@patternfly/react-icons": "npm:^6.7.0"
+    "@patternfly/react-table": "npm:^6.7.0"
+    "@patternfly/react-tokens": "npm:^6.7.0"
+    "@tanstack/react-query": "npm:^5.105.1"
+    "@testing-library/dom": "npm:^10.4.2"
+    "@testing-library/react": "npm:^16.3.3"
+    "@testing-library/user-event": "npm:^14.6.8"
+    "@types/jest-axe": "npm:^3.5.9"
+    copy-to-clipboard: "npm:^4.0.2"
+    highlight.js: "npm:^11.12.0"
+    jest-axe: "npm:^11.0.0"
+    msw: "npm:^2.15.0"
+    react: "npm:^19.3.1"
+    react-dom: "npm:^19.3.1"
+    react-router: "npm:^8.5.1"
+    styled-components: "npm:^6.6.0"
+    uuid: "npm:^14.0.3"
+    vite: "npm:^8.3.5"
+    vitest: "npm:^5.0.5"
   languageName: unknown
   linkType: soft
 
@@ -989,41 +1212,19 @@ __metadata:
   resolution: "@inmanta/web-console@workspace:."
   dependencies:
     "@eslint/compat": "npm:^2.1.1"
-    "@graphiql/react": "npm:^0.39.1"
-    "@joint/plus": "npm:^4.3.4"
-    "@monaco-editor/react": "npm:^4.7.0"
-    "@patternfly/react-charts": "npm:^8.7.0"
-    "@patternfly/react-code-editor": "npm:^6.7.0"
-    "@patternfly/react-core": "npm:^6.7.0"
-    "@patternfly/react-drag-drop": "npm:^6.7.0"
-    "@patternfly/react-icons": "npm:^6.7.0"
-    "@patternfly/react-log-viewer": "npm:^6.5.0"
+    "@inmanta/web-console-feature-composer": "workspace:^"
+    "@inmanta/web-console-feature-graphiql": "workspace:^"
     "@patternfly/react-styles": "npm:^6.7.0"
-    "@patternfly/react-table": "npm:^6.7.0"
-    "@patternfly/react-tokens": "npm:^6.7.0"
-    "@react-keycloak/web": "npm:^3.4.0"
-    "@remix-run/router": "npm:^1.23.4"
     "@stylistic/eslint-plugin-ts": "npm:^4.4.1"
-    "@tanstack/react-query": "npm:^5.105.1"
-    "@tanstack/react-query-devtools": "npm:^5.105.0"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/jest-dom": "npm:^7.0.1"
-    "@testing-library/react": "npm:^16.3.3"
-    "@testing-library/user-event": "npm:^14.6.8"
-    "@types/file-saver": "npm:^2.0.7"
-    "@types/jest-axe": "npm:^3.5.9"
-    "@types/markdown-it-emoji": "npm:^3.0.1"
     "@types/node": "npm:^26.6.6"
-    "@types/qs": "npm:^6.15.1"
     "@types/react": "npm:^19.3.0"
     "@types/react-dom": "npm:^19.3.0"
     "@vitejs/plugin-react": "npm:^6.1.2"
     "@vitest/coverage-v8": "npm:^5.0.5"
     "@vitest/ui": "npm:^5.0.5"
-    bignumber.js: "npm:^11.1.5"
-    copy-to-clipboard: "npm:^4.0.2"
     cypress: "npm:^16.2.1"
-    dayjs: "npm:^1.11.23"
     dependency-cruiser: "npm:^18.7.0"
     dotenv: "npm:^18.0.9"
     eslint: "npm:^10.2.1"
@@ -1033,42 +1234,17 @@ __metadata:
     eslint-plugin-react: "npm:^7.37.5"
     eslint-plugin-react-hooks: "npm:^7.1.1"
     eslint-plugin-testing-library: "npm:^7.16.2"
-    file-saver: "npm:^2.0.5"
-    graphiql: "npm:^5.4.0"
-    graphql: "npm:^17.0.2"
     happy-dom: "npm:^21.0.4"
-    highlight.js: "npm:^11.12.0"
-    jest-axe: "npm:^11.0.0"
-    jsonpathly: "npm:^3.0.1"
-    keycloak-js: "npm:^26.2.5"
-    markdown-it: "npm:^15.0.3"
-    markdown-it-emoji: "npm:^3.1.0"
-    mermaid: "npm:^12.2.0"
-    monaco-editor: "npm:^0.52.2"
-    monaco-graphql: "npm:^1.9.0"
-    msw: "npm:^2.15.0"
-    oidc-client-ts: "npm:^3.5.0"
     prettier: "npm:^3.9.10"
     process: "npm:^0.11.10"
-    qs: "npm:^6.17.0"
     react: "npm:^19.3.1"
-    react-diff-viewer-continued: "npm:^4.4.0"
-    react-dom: "npm:^19.3.1"
-    react-icons: "npm:^5.7.0"
     react-is: "npm:^19.3.1"
-    react-oidc-context: "npm:^3.3.1"
-    react-router: "npm:^8.5.1"
     rimraf: "npm:^6.1.3"
-    styled-components: "npm:^6.6.0"
     typescript: "npm:@typescript/typescript6@^6.0.2"
     typescript-7: "npm:typescript@^7.0.2"
     typescript-eslint: "npm:^8.72.1"
-    uuid: "npm:^14.0.3"
-    victory: "npm:^37.4.1"
     vite: "npm:^8.3.5"
-    vite-plugin-mkcert: "npm:^2.1.0"
     vitest: "npm:^5.0.5"
-    xml-formatter: "npm:^3.7.0"
   languageName: unknown
   linkType: soft
 
@@ -2730,13 +2906,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.105.0":
-  version: 5.105.0
-  resolution: "@tanstack/query-core@npm:5.105.0"
-  checksum: 10/1a52f339f4e05cae0667b41e091fa6ec4c12b159a95cf54fde9d39204aff461e214a9f59513fdbb4b715ba9cbed60b31012d058ac8d22cd88b59247be6e890fc
-  languageName: node
-  linkType: hard
-
 "@tanstack/query-core@npm:5.105.1":
   version: 5.105.1
   resolution: "@tanstack/query-core@npm:5.105.1"
@@ -2744,38 +2913,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-devtools@npm:5.105.0":
-  version: 5.105.0
-  resolution: "@tanstack/query-devtools@npm:5.105.0"
+"@tanstack/query-devtools@npm:5.105.1":
+  version: 5.105.1
+  resolution: "@tanstack/query-devtools@npm:5.105.1"
   dependencies:
     "@kobalte/core": "npm:^0.13.14"
     "@solid-primitives/keyed": "npm:^1.5.3"
     "@solid-primitives/resize-observer": "npm:^2.2.0"
     "@solid-primitives/storage": "npm:^1.3.11"
     "@tanstack/match-sorter-utils": "npm:^9.1.2"
-    "@tanstack/query-core": "npm:5.105.0"
+    "@tanstack/query-core": "npm:5.105.1"
     clsx: "npm:^2.1.1"
     goober: "npm:^2.1.19"
     solid-js: "npm:^1.9.15"
     solid-transition-group: "npm:^0.2.3"
     superjson: "npm:^2.2.6"
-  checksum: 10/521d4b792b850cfe1b80d5e342efa253cce57154f3bb549ba81eda2471253c70598bd14b73c81392cb037a7b9e8aed0799c645fd814ad0d75c41e3cc234b8122
+  checksum: 10/66fddd4aab54465b5a62560cc233af1c601f169a7b5872725c35cc2371875e830e44be39a2de6c7132cb00a574fd1ef10d929d37e33a9cdbedb23ef48b898ded
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:^5.105.0":
-  version: 5.105.0
-  resolution: "@tanstack/react-query-devtools@npm:5.105.0"
+"@tanstack/react-query-devtools@npm:^5.105.1":
+  version: 5.105.1
+  resolution: "@tanstack/react-query-devtools@npm:5.105.1"
   dependencies:
-    "@tanstack/query-devtools": "npm:5.105.0"
+    "@tanstack/query-devtools": "npm:5.105.1"
   peerDependencies:
-    "@tanstack/react-query": ^5.105.0
+    "@tanstack/react-query": ^5.105.1
     "@types/react": ^18 || ^19
     react: ^18 || ^19
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/2830024dd03d13d8d7ddeabcc82006dc20def5a4208711aad88bca6b8b9b226afdc1c828174c99025bc19bc8fcdca09f87543f59763a64cf26598f55902bc38a
+  checksum: 10/ca5dcbf9194115472e63ae8e7398fcde40a11c048001defb0f1cbecdd0dbd662f7406369fc0d3fe96050328f4cb87c95401776ed1866b593d68a4916acdfba16
   languageName: node
   linkType: hard
 

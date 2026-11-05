@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": ".tsbuild/root",
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "vite.shared.ts",
+    "vitest.config.ts",
+    "apps/*/vite.config.ts",
+    "packages/features/*/vite.js",
+    "__mocks__/**/*.ts",
+    "src",
+    "cypress/support"
+  ]
+}
