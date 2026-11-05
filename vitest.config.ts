@@ -13,9 +13,13 @@ import { composerVitePlugin } from "@inmanta/web-console-feature-composer/vite";
 import { graphiqlVitePlugin } from "@inmanta/web-console-feature-graphiql/vite";
 import { repoRoot, sharedConfig } from "./vite.shared.ts";
 
+// Relative to the repository root, whatever folder the config is loaded from.
 const workspaces = ["packages", "packages/features", "apps"].flatMap((parent) =>
-  readdirSync(parent, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && existsSync(join(parent, entry.name, "package.json")))
+  readdirSync(resolve(repoRoot, parent), { withFileTypes: true })
+    .filter(
+      (entry) =>
+        entry.isDirectory() && existsSync(join(repoRoot, parent, entry.name, "package.json"))
+    )
     .map((entry) => posix.join(parent, entry.name))
 );
 
@@ -24,6 +28,7 @@ const projectName = (dir: string): string =>
 
 export default defineConfig(
   mergeConfig(sharedConfig, {
+    root: repoRoot,
     plugins: [composerVitePlugin(), graphiqlVitePlugin()],
     test: {
       globals: true,
