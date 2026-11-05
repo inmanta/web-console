@@ -32,6 +32,7 @@ packages/
     Components/ - The app frame (header, sidebar, breadcrumbs, banners, blocking modal, initializer)
     Auth/ - The auth providers
     Slices/ - The shell's own pages: login, not found, notifications, status
+    monaco.ts - The Monaco setup every app imports at startup (@inmanta/web-console-shell/monaco)
   test-utils/src/ - @inmanta/web-console-test-utils, common test data, mock implementations, testing utilities, test setup
   features/ - One folder per feature, imported as @inmanta/web-console-feature-<name>
     composer/src/ - The Instance Composer, the only code that imports JointJS (@joint/*)
@@ -61,26 +62,28 @@ packages/
       index.ts - userManagementFeature, its FeatureModule
       Slices/ - The user management page
 apps/
-  web-console/ - The app: its Vite config (vite.config.ts) and index.html
-    src/ - Its composition (app.ts: createApp with the features it ships and the shell options), its entry (index.tsx), Monaco setup, config.js and app-level tests
+  oss/ - The OSS app, with the OSS features only: its Vite config (vite.config.ts) and index.html
+    src/ - Its composition (app.ts: createApp with the features it ships), its entry (index.tsx), config.js and tests
+  web-console/ - The ISO app, with every feature: its Vite config (vite.config.ts) and index.html
+    src/ - Its composition (app.ts: createApp with the features it ships and the shell options), its entry (index.tsx), config.js and app-level tests
 src/ - Only the global type declarations (typings.d.ts, vite-env.d.ts)
 ```
 
 Every package and app is a Yarn workspace with its own `package.json`. Another package imports it through a `workspace:^` dependency, not a path alias. A new package needs:
 
-- a `package.json` with its name (`@inmanta/web-console-...`) and an `exports` block like the other packages: `"./*"` maps a deep import such as `@inmanta/web-console-core/Queries/Slices/Resource` to `src/Queries/Slices/Resource`, and `"."` maps the package name to `src/index.ts` (only for a package that has one; `ui` doesn't);
-- a `workspace:^` dependency on it in every package that imports it, including `apps/web-console` for a feature, under `devDependencies` when only tests import it (like `test-utils`);
+- a `package.json` with its name (`@inmanta/web-console-...`), its edition (`"inmanta": { "edition": "oss" }`, or `"iso"` for a package only the ISO app may ship) and an `exports` block like the other packages: `"./*"` maps a deep import such as `@inmanta/web-console-core/Queries/Slices/Resource` to `src/Queries/Slices/Resource`, and `"."` maps the package name to `src/index.ts` (only for a package that has one; `ui` doesn't);
+- a `workspace:^` dependency on it in every package that imports it, including the apps that ship it for a feature (`apps/web-console`, and `apps/oss` for an OSS feature), under `devDependencies` when only tests import it (like `test-utils`);
 - its zone in `eslint.layers.js`;
 - a `tsconfig.json` that extends `tsconfig.base.json` and references the projects of the packages it depends on, and an entry in the root `tsconfig.json`;
 - a `yarn install` after adding or changing a `package.json`, so `yarn.lock` has its entry; CI installs with `--immutable` and fails without it.
 
-Each package also lists the third-party packages it imports in its own `package.json`: `dependencies` for the code that ships, `devDependencies` for tests and test helpers. Two cases are easy to miss: a package also lists the required peer dependencies of what it uses (e.g. `oidc-client-ts` for `react-oidc-context`, `victory` for `@patternfly/react-charts`), and `test-utils` lists what its helpers import as `dependencies`, because other packages' tests run them. `yarn lint` checks this (`import/no-extraneous-dependencies`) and runs the Yarn constraints (`yarn.config.cjs`): every package uses the same version of a dependency, and JointJS and the GraphiQL packages are only allowed in the composer and graphiql features. The root `package.json` keeps the build, lint and test tools.
+Each package also lists the third-party packages it imports in its own `package.json`: `dependencies` for the code that ships, `devDependencies` for tests and test helpers. Two cases are easy to miss: a package also lists the required peer dependencies of what it uses (e.g. `oidc-client-ts` for `react-oidc-context`, `victory` for `@patternfly/react-charts`), and `test-utils` lists what its helpers import as `dependencies`, because other packages' tests run them. `yarn lint` checks this (`import/no-extraneous-dependencies`) and runs the Yarn constraints (`yarn.config.cjs`): every package uses the same version of a dependency, JointJS and the GraphiQL packages are only allowed in the composer and graphiql features, and an OSS package never depends on an ISO one, directly or through other packages. The root `package.json` keeps the build, lint and test tools.
 
 Each slice (a folder in a package's `Slices/`) uses the same layers: `Core/` for its types and contracts, `Data/` for transformations and implementations, `UI/` for its components.
 
 ## Builds and tests
 
-Each app has its own Vite config, `apps/<app>/vite.config.ts`. It builds on `vite.shared.ts` at the root (React, the global constants, the shared assets, Monaco) and adds the Vite plugins of the features it ships: a feature that needs Vite settings exports a plugin as `<package>/vite` (`vite.js`, plain JavaScript so Node loads it in any Vite config), like the composer's JointJS aliases and chunk. The root scripts (`yarn build`, `yarn start`, ...) run the app's scripts; the build goes to `dist/` at the root.
+Each app has its own Vite config, `apps/<app>/vite.config.ts`. It builds on `appConfig` from `vite.shared.ts` at the root (React, the global constants, the shared assets, Monaco, the dev server and the build settings) and adds the Vite plugins of the features it ships: a feature that needs Vite settings exports a plugin as `<package>/vite` (`vite.js`, plain JavaScript so Node loads it in any Vite config), like the composer's JointJS aliases and chunk. The root scripts run the apps' scripts: `yarn build` and `yarn start` the ISO app's, which builds to `dist/` at the root; `yarn build:oss` and `yarn start:oss` the OSS app's, which builds to `apps/oss/dist/`.
 
 `vitest.config.ts` at the root has one Vitest project per package, named after it (`core`, `feature-lsm`, ...). `yarn test` runs them all, `yarn test --project feature-lsm` one of them.
 
