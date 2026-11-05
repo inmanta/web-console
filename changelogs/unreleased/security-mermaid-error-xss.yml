@@ -1,0 +1,5 @@
+description: A Mermaid diagram that fails to render in the service documentation now shows its error message as plain text, so markup in the diagram can no longer be injected into the page.
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"
