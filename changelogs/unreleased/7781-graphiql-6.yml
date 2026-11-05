@@ -1,0 +1,5 @@
+description: The GraphQL editor is upgraded to GraphiQL 6, with a redesigned interface, a query builder and saved operation collections. The code editors use Monaco 0.57.
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"
