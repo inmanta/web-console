@@ -11,6 +11,8 @@ import CustomRouter from "@inmanta/web-console-core/Routing/CustomRouter";
 import ErrorBoundary from "@inmanta/web-console-ui/Utils/ErrorBoundary";
 import { AuthProvider } from "./Auth/AuthProvider";
 import { Injector } from "./Injector";
+import { AppFeaturesProvider, useAppFeatures } from "./Plugins/AppFeatures";
+import { AppPlugin } from "./Plugins/AppPlugin";
 import { Root } from "./Root";
 import { createRootRoutes } from "./RootRoutes";
 import { AuthConfig, ShellOptions, ShellOptionsContext } from "./ShellOptions";
@@ -32,6 +34,13 @@ export interface AppOptions {
   features: FeatureModule[];
 
   /**
+   * The features the app loads at runtime instead of shipping them, e.g. the composer. They are
+   * loaded while the app starts, once the server status says which ones are enabled, and added
+   * after `features`. A plugin that isn't installed, or was built for another version, is left out.
+   */
+  plugins?: AppPlugin[];
+
+  /**
    * How the shell is set up. Leaving it out uses the shell's defaults.
    */
   shell?: ShellOptions;
@@ -42,7 +51,8 @@ export interface AppOptions {
  */
 export interface App {
   /**
-   * The features of the app: the shell's own, then the given ones.
+   * The features of the app: the shell's own, then the given ones. The features of the plugins
+   * are only known once the app runs.
    */
   features: FeatureModule[];
 
@@ -72,7 +82,7 @@ export const getAuthConfig = (auth: ShellOptions["auth"]): AuthConfig | undefine
  * @example
  * createApp({ features: [environmentFeature, lsmFeature] }).render(document.getElementById("root"));
  */
-export const createApp = ({ features, shell = {} }: AppOptions): App => {
+export const createApp = ({ features, plugins = [], shell = {} }: AppOptions): App => {
   const appFeatures = [shellFeature, ...features];
 
   return {
@@ -112,9 +122,11 @@ export const createApp = ({ features, shell = {} }: AppOptions): App => {
                         direction={{ default: "column" }}
                         style={{ height: "100%" }}
                       >
-                        <Injector features={appFeatures}>
-                          <Root />
-                        </Injector>
+                        <AppFeaturesProvider features={appFeatures} plugins={plugins}>
+                          <AppInjector>
+                            <Root />
+                          </AppInjector>
+                        </AppFeaturesProvider>
                       </Flex>
                     </AuthProvider>
                   }
@@ -135,4 +147,13 @@ export const createApp = ({ features, shell = {} }: AppOptions): App => {
       return () => root.unmount();
     },
   };
+};
+
+/**
+ * The `Injector` with every feature of the running app, which includes the plugins once loaded.
+ */
+const AppInjector: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const { features } = useAppFeatures();
+
+  return <Injector features={features}>{children}</Injector>;
 };

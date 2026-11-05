@@ -1,0 +1,5 @@
+description: Let an app load features at runtime as plugins, checked against the app's version, as a first step to shipping the composer separately.
+issue-nr: 7472
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}
