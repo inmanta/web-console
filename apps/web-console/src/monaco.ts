@@ -3,7 +3,6 @@
  * the locally-bundled copy for the loader. It lives in the app because Vite bundles the workers
  * with the app's build.
  */
-import "monaco-editor/min/vs/editor/editor.main.css";
 import { loader } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { createMonacoWorker } from "./monaco-workers";
