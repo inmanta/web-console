@@ -26,7 +26,6 @@ const jsonFormatter = new JsonFormatter();
 
 interface Props {
   row: ServiceOrderItem;
-  serviceTitle: string;
   orderItems: ServiceOrderItem[];
   isExpanded: boolean;
   onToggle: () => void;
@@ -41,7 +40,6 @@ interface Props {
  * Displays all the details in expandable rows about the service_order_item
  *
  * @param row  ServiceOrderItem
- * @param serviceTitle the `web_title` of the service of the row, or its name when it has none
  * @param orderItems all service_order_items of the order, used to resolve the identity of dependencies
  * @param isExpanded boolean
  * @param onToggle callback method
@@ -52,7 +50,6 @@ interface Props {
  */
 export const OrderDetailsRow: React.FC<Props> = ({
   row,
-  serviceTitle,
   orderItems,
   isExpanded,
   onToggle,
@@ -69,8 +66,8 @@ export const OrderDetailsRow: React.FC<Props> = ({
         <Td width={35} dataLabel={words("orders.column.instance")}>
           <OrderInstanceLink row={row} />
         </Td>
-        <Td width={25} dataLabel={words("orders.column.service")}>
-          {serviceTitle}
+        <Td width={25} dataLabel={words("orders.column.serviceEntity")}>
+          {row.service_entity}
         </Td>
         <Td width={20} dataLabel={words("orders.column.action")}>
           {row.action.toUpperCase()}

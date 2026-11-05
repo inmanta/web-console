@@ -1,4 +1,4 @@
-description: Services show their title everywhere in the console.
+description: Services show their title in page titles, forms and dialogs.
 issue-nr: 7625
 change-type: minor
 destination-branches: [master, iso9]

@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
-import { useLocation } from "react-router";
-import { Breadcrumb } from "@patternfly/react-core";
+import { useLocation, NavLink } from "react-router";
+import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { SearchSanitizer } from "@inmanta/web-console-core/Routing";
-import { PageCrumb } from "./PageCrumb";
 
 export const PageBreadcrumbs: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
@@ -14,7 +13,20 @@ export const PageBreadcrumbs: React.FC = () => {
   return (
     <Breadcrumb>
       {crumbs.map((crumb) => (
-        <PageCrumb key={crumb.kind} crumb={crumb} search={sanitizer.sanitize(crumb.kind, search)} />
+        <BreadcrumbItem key={crumb.kind} isActive={crumb.active} aria-label={"BreadcrumbItem"}>
+          {crumb.active ? (
+            decodeURIComponent(crumb.label)
+          ) : (
+            <NavLink
+              to={{
+                pathname: crumb.url,
+                search: sanitizer.sanitize(crumb.kind, search),
+              }}
+            >
+              {decodeURIComponent(crumb.label)}
+            </NavLink>
+          )}
+        </BreadcrumbItem>
       ))}
     </Breadcrumb>
   );

@@ -6,8 +6,6 @@ import {
   isServiceEntityShapeCell,
   removeConnectionsBetweenShapes,
   canRemoveLink,
-  escapeHtml,
-  getMissingConnectionName,
 } from "../../Data/Helpers";
 import { RelationsDictionary } from "../../Data/Helpers/createRelationsDictionary";
 import { LinkShape } from "./LinkShape";
@@ -261,7 +259,10 @@ export class ComposerPaper {
           missingConnections.map(({ entityType, name }) => ({ entityType, name }))
         );
         const connectionLines = missingConnections.map((conn) => {
-          const displayName = getMissingConnectionName(conn, this._serviceCatalogRef.current);
+          const displayName =
+            conn.entityType && conn.entityType !== conn.name
+              ? `${conn.name} (${conn.entityType})`
+              : conn.name;
           const line =
             conn.required === 1
               ? words("instanceComposer.tooltip.missingConnectionSingle")(displayName)
@@ -271,7 +272,7 @@ export class ComposerPaper {
                   conn.required
                 );
 
-          return `<div>${escapeHtml(line)}</div>`;
+          return `<div>${line}</div>`;
         });
         parts.push(...connectionLines);
       }

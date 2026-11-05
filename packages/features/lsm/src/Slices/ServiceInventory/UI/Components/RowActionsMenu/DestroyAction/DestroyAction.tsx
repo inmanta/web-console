@@ -1,0 +1,110 @@
+import React, { useContext } from "react";
+import { MenuItem, Content } from "@patternfly/react-core";
+import { WarningTriangleIcon } from "@patternfly/react-icons";
+import { useQueryClient } from "@tanstack/react-query";
+import { VersionedServiceInstanceIdentifier, words } from "@inmanta/web-console-core";
+import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
+import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import {
+  useDestroyInstance,
+  getInstanceKey,
+} from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { ConfirmUserActionForm } from "@inmanta/web-console-ui/Components/ConfirmUserActionForm";
+
+interface Props extends VersionedServiceInstanceIdentifier {
+  instance_identity: string;
+
+  /** The `web_title` of the service, or its name when it has none. */
+  serviceTitle: string;
+}
+
+/**
+ * DestroyAction is a component that allows the user to destroy a service instance.
+ *
+ * @props {Props} props - The props of the component.
+ * @prop {string} service_entity - The service entity of the service instance.
+ * @prop {string} serviceTitle - The `web_title` of the service, or its name when it has none.
+ * @prop {string} id - The id of the service instance.
+ * @prop {string} instance_identity - The instance identity of the service instance.
+ * @prop {string} version - The version of the service instance.
+ *
+ * @returns {React.FC<Props>} A React component that allows the user to destroy a service instance.
+ */
+export const DestroyAction: React.FC<Props> = ({
+  id,
+  instance_identity,
+  version,
+  service_entity,
+  serviceTitle,
+}) => {
+  const { triggerModal, closeModal } = useContext(ModalContext);
+  const { authHelper } = useContext(DependencyContext);
+  const client = useQueryClient();
+  const { notifyError } = useAppAlert();
+  const username = authHelper.getUser();
+  const message = words("instanceDetails.API.message.update")(username);
+
+  const { mutate } = useDestroyInstance(id, service_entity, version, message, {
+    onError: (error) => {
+      notifyError({
+        title: words("inventory.destroyInstance.failed"),
+        message: error.message,
+      });
+    },
+    onSuccess: () => {
+      client.refetchQueries({
+        queryKey: getInstanceKey.root(),
+      });
+    },
+  });
+
+  /**
+   * async method that is closing modal and sending out the request to destroy the instance
+   * if there is an error, it will set the error message
+   *
+   * @returns {Promise<void>}  A Promise that resolves when the operation is complete.
+   */
+  const onSubmit = async (): Promise<void> => {
+    closeModal();
+    mutate();
+  };
+
+  /**
+   * Opens a modal with a confirmation form.
+   *
+   * @returns {void}
+   */
+  const openModal = (): void => {
+    triggerModal({
+      title: words("inventory.destroyInstance.title"),
+      iconVariant: "danger",
+      content: (
+        <>
+          <Content component="p">
+            {words("inventory.destroyInstance.header")(instance_identity, serviceTitle)}
+          </Content>
+          <br />
+          <Content component="p">{words("inventory.destroyInstance.text")}</Content>
+          <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
+        </>
+      ),
+    });
+  };
+
+  return (
+    <>
+      <MenuItem
+        itemId="expert-destroy"
+        style={{
+          backgroundColor: "var(--pf-t--global--color--nonstatus--red--default)",
+        }}
+        isDanger
+        onClick={openModal}
+        icon={<WarningTriangleIcon />}
+      >
+        {words("inventory.destroyInstance.button")}
+      </MenuItem>
+    </>
+  );
+};

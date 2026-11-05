@@ -81,7 +81,7 @@ if (isIso) {
 
       // Go back to inventory using the breadcrumbs
       cy.get('[aria-label="BreadcrumbItem"]')
-        .contains("Service Inventory: Embedded entity")
+        .contains("Service Inventory: embedded-entity-service")
         .click();
 
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();

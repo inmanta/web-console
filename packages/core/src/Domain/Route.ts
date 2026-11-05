@@ -28,13 +28,6 @@ export interface Route<K extends RouteKind = RouteKind> {
   parent?: RouteKind;
   path: string;
   generateLabel(params: RouteParams<K>): string;
-
-  /**
-   * A React hook that returns the breadcrumb label from data the app loads, such as the title of
-   * a service. When set, the breadcrumb shows it instead of the label from `generateLabel`.
-   * The params come URL-encoded from the url, so the hook decodes the values it uses.
-   */
-  useLabel?(params: RouteParams<K>): string;
   environmentRole: EnvironmentRole;
 }
 
@@ -57,15 +50,6 @@ export interface RouteMatch {
 export interface Crumb {
   kind: RouteKind;
   label: string;
-
-  /**
-   * Returns the label the breadcrumb shows, called as a hook with `params`. It is the `useLabel`
-   * hook of the route when it has one, otherwise it returns the decoded `label`.
-   */
-  useLabel: (params: RouteParams<RouteKind>) => string;
-
-  /** The params of the url the crumb was built from, still URL-encoded. */
-  params: RouteParams<RouteKind>;
   url: string;
   active: boolean;
 }

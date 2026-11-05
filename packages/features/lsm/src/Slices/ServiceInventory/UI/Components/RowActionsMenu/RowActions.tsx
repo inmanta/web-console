@@ -12,6 +12,7 @@ import { ParsedNumber, words } from "@inmanta/web-console-core";
 import { DependencyContext, useVisibleLinkActions } from "@inmanta/web-console-core/Dependency";
 import { Link } from "@inmanta/web-console-ui/Components/Link";
 import { DeleteAction } from "./DeleteAction";
+import { DestroyAction } from "./DestroyAction";
 
 interface InstanceActionsProps {
   instanceId: string;
@@ -34,7 +35,8 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   diagnoseDisabled,
   version,
 }) => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, environmentHandler } = useContext(DependencyContext);
+  const isExpertModeEnabled = environmentHandler.useIsExpertModeEnabled();
 
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -133,6 +135,15 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
           id={instanceId}
           version={version}
         />
+        {isExpertModeEnabled && (
+          <DestroyAction
+            service_entity={entity}
+            serviceTitle={serviceTitle}
+            instance_identity={service_identity_attribute_value ?? instanceId}
+            id={instanceId}
+            version={version}
+          />
+        )}
       </DropdownList>
     </Dropdown>
   );

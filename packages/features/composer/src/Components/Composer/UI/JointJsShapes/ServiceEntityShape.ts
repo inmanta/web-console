@@ -29,7 +29,6 @@ import {
   getInterServiceRelationMissingConnections,
 } from "../../Data/Helpers/connectionValidationUtils";
 import { findTopRootInstance } from "../../Data/Helpers/findTopRootInstance";
-import { getEntityDisplayName } from "../../Data/Helpers/getEntityDisplayName";
 import { getEmbeddedEntityKey } from "../../Data/Helpers/shapeUtils";
 
 /**
@@ -61,26 +60,6 @@ interface ColumnData {
 }
 
 export type EntityShapeType = "core" | "embedded" | "relation";
-
-/**
- * A connection a shape still needs before it is valid.
- */
-export interface MissingConnection {
-  /** Where the connection is missing: an embedded entity, an inter-service relation or a parent. */
-  type: "embedded" | "relation" | "parent";
-
-  /** The entity the connection points to: a service entity name, or an embedded entity type. */
-  entityType: string;
-
-  /** The attribute name of the connection, the same as `entityType` for a parent. */
-  name: string;
-
-  /** How many connections are still missing. */
-  missing: number;
-
-  /** How many connections are required in total. */
-  required: number;
-}
 
 export const HeaderColors: Record<EntityShapeType, string> = {
   core: t_chart_color_yellow_300.var,
@@ -378,14 +357,17 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   }
 
   /**
-   * Sets the header label to the display name of the entity, shortened when it doesn't fit, and
-   * sets the header test id. A service keeps its entity name in the test id, so the id doesn't
-   * change with its `web_title`.
+   * Sets the display name of the header label with a shortened version if necessary.
    *
+   * @param {string} name - The name to set for the entity.
+   * @param {object} [options] - Optional settings for the attribute update.
    * @returns {this} The current instance for method chaining.
    */
   setDisplayName(): this {
-    const name = getEntityDisplayName(this.serviceModel);
+    const typeName =
+      "type" in this.serviceModel && this.serviceModel.type ? this.serviceModel.type : undefined;
+    const serviceName = this.serviceModel.name;
+    const name = typeName && serviceName ? `${typeName} - ${serviceName}` : typeName || serviceName;
     const shortenName = util.breakText(
       name,
       { width: 140, height: 30 },
@@ -398,10 +380,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
       }
     );
 
-    this.attr(
-      ["headerLabel", "data-testid"],
-      "header-" + ("type" in this.serviceModel ? name : this.serviceModel.name)
-    );
+    this.attr(["headerLabel", "data-testid"], "header-" + name);
 
     if (shortenName.includes("\u2026")) {
       return this.attr(["headerLabel", "text"], name.replace(/\s+/g, " ").slice(0, 16) + "\u2026");
@@ -631,11 +610,24 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   }
 
   /**
-   * Returns the connections this shape still needs before it is valid, each with how many are
-   * missing and how many are required.
+   * Gets a list of missing connections for this shape.
+   * Returns an array of objects containing the connection name and how many are missing.
+   * @returns Array of { name: string, missing: number, required: number } objects
    */
-  getMissingConnections(): MissingConnection[] {
-    const missing: MissingConnection[] = [];
+  getMissingConnections(): Array<{
+    type: "embedded" | "relation" | "parent";
+    entityType: string;
+    name: string;
+    missing: number;
+    required: number;
+  }> {
+    const missing: Array<{
+      type: "embedded" | "relation" | "parent";
+      entityType: string;
+      name: string;
+      missing: number;
+      required: number;
+    }> = [];
 
     // Embedded entities can never be standalone - they must always have at least one connection.
     // When an embedded entity is standalone, we want to show which parent entities (core, embedded,

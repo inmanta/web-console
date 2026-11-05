@@ -7,7 +7,7 @@ describe("buildInstanceResourceActionScopes", () => {
     const scopes = buildInstanceResourceActionScopes({
       instanceId: "abc",
       total: 3,
-      ownedServiceTitles: [],
+      ownedEntities: [],
     });
 
     expect(scopes).toEqual([
@@ -24,7 +24,7 @@ describe("buildInstanceResourceActionScopes", () => {
     const scopes = buildInstanceResourceActionScopes({
       instanceId: "abc",
       total: 3,
-      ownedServiceTitles: ["l2Connect", "vlan"],
+      ownedEntities: ["l2Connect", "vlan"],
     });
 
     expect(scopes).toHaveLength(2);
@@ -40,7 +40,7 @@ describe("buildInstanceResourceActionScopes", () => {
     const scopes = buildInstanceResourceActionScopes({
       instanceId: "abc",
       total: null,
-      ownedServiceTitles: [],
+      ownedEntities: [],
     });
 
     expect(scopes[0].count).toBeUndefined();

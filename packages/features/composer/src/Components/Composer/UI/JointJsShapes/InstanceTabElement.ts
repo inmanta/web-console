@@ -20,7 +20,6 @@ import {
 import { HORIZONTAL_SPACING } from "../../config";
 import { ServiceEntityOptions, ServiceEntityShape } from "./ServiceEntityShape";
 import { updateAllMissingConnectionsHighlights } from "./createHalo";
-import { createStencilGroups } from "./createStencilGroups";
 import { createSidebarItem } from "./sidebarItem";
 
 export class InstanceTabElement {
@@ -52,7 +51,7 @@ export class InstanceTabElement {
         sorting: dia.Paper.sorting.NONE,
         cellViewNamespace: shapes,
       },
-      groups: createStencilGroups(Object.keys(groups), serviceModels),
+      groups: groups as unknown as { [key: string]: ui.Stencil.Group },
       canDrag: (cellView) => {
         return !cellView.model.get("disabled");
       },

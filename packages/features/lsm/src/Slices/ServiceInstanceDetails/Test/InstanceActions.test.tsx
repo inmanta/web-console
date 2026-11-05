@@ -77,52 +77,12 @@ describe("Page Actions - Success", () => {
     );
   });
 
-  it("Deploy actions - skips the service catalog request when the service type owns nothing", async () => {
-    let catalogRequestCount = 0;
-
-    server.use(
-      http.get("/lsm/v1/service_catalog/mobileCore", () =>
-        HttpResponse.json({ data: { ...serviceModel, owned_entities: [] } })
-      ),
-      http.get("/lsm/v1/service_catalog", () => {
-        catalogRequestCount += 1;
-
-        return HttpResponse.json({ data: [] });
-      })
-    );
-
-    render(setupServiceInstanceDetails());
-
-    expect(
-      await screen.findByRole("region", { name: "Instance-Details-Success" })
-    ).toBeInTheDocument();
-    // the Deploy button is enabled once the service model has loaded
-    await waitFor(() =>
-      expect(
-        screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
-      ).toBeEnabled()
-    );
-
-    expect(catalogRequestCount).toEqual(0);
-  });
-
   it("Deploy actions - offers the owned-services scope when the service type owns entities", async () => {
     let body: unknown;
 
     server.use(
       http.get("/lsm/v1/service_catalog/mobileCore", () =>
         HttpResponse.json({ data: { ...serviceModel, owned_entities: ["l2Connect"] } })
-      ),
-      http.get("/lsm/v1/service_catalog", () =>
-        HttpResponse.json({
-          data: [
-            {
-              ...serviceModel,
-              name: "l2Connect",
-              entity_annotations: Service.EntityAnnotations.valid,
-            },
-          ],
-        })
       ),
       http.post("/api/v2/deploy_filtered", async ({ request }) => {
         body = await request.json();
@@ -145,15 +105,7 @@ describe("Page Actions - Success", () => {
 
     const dialog = await screen.findByRole("dialog");
 
-    // The catalog declares an owned entity, so the dialog offers the wider "owned services" scope,
-    // naming the owned service by its web_title.
-    expect(
-      await within(dialog).findByText(
-        words("resources.resourceActions.confirm.owned.description")(
-          Service.EntityAnnotations.valid.web_title
-        )
-      )
-    ).toBeVisible();
+    // The catalog declares an owned entity, so the dialog offers the wider "owned services" scope.
     await userEvent.click(
       within(dialog).getByRole("radio", {
         name: new RegExp(words("resources.resourceActions.confirm.owned.title"), "i"),

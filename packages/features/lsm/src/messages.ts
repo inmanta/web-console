@@ -189,7 +189,7 @@ export const lsmMessages = {
   "orders.column.progress": "Deployment Progress",
   "orders.column.description": "Description / Order Id",
   "orders.column.action": "Action",
-  "orders.column.service": "Service",
+  "orders.column.serviceEntity": "Service Entity",
   "orders.column.instance": "Instance",
   "orders.row.dependencies": "Dependencies",
   "orders.row.config": "Config",

@@ -14,7 +14,6 @@ import {
 import { PADDING_S, HORIZONTAL_SPACING } from "../../config";
 import { ServiceEntityOptions, ServiceEntityShape } from "./ServiceEntityShape";
 import { updateAllMissingConnectionsHighlights } from "./createHalo";
-import { createStencilGroups } from "./createStencilGroups";
 import { createSidebarItem } from "./sidebarItem";
 
 export class InventoryTabElement {
@@ -66,7 +65,7 @@ export class InventoryTabElement {
       paperOptions: {
         sorting: dia.Paper.sorting.NONE,
       },
-      groups: createStencilGroups(Object.keys(groups), serviceModels),
+      groups: groups as unknown as { [key: string]: ui.Stencil.Group },
       search: {
         "*": ["attrs/label/text"],
         "standard.Image": ["description"],

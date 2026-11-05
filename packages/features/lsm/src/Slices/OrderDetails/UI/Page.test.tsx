@@ -7,7 +7,7 @@ import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { getFeatureRoutes, words } from "@inmanta/web-console-core";
 import { lsmFeature } from "@inmanta/web-console-feature-lsm";
-import { Service, stubRoute } from "@inmanta/web-console-test-utils";
+import { stubRoute } from "@inmanta/web-console-test-utils";
 import { baseSetup } from "@inmanta/web-console-test-utils/Utils/base-setup";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import {
@@ -120,35 +120,6 @@ describe("Order Details", () => {
       expect(results).toHaveNoViolations();
     });
   });
-
-  test.each`
-    case                   | entityAnnotations                  | serviceTitle
-    ${"with web_title"}    | ${Service.EntityAnnotations.valid} | ${Service.EntityAnnotations.valid.web_title}
-    ${"without web_title"} | ${undefined}                       | ${responseOrderFailed.service_order_items[0].service_entity}
-  `(
-    "GIVEN OrderDetailsView WHEN the service of a row $case is in the catalog THEN the row names it by $serviceTitle",
-    async ({ entityAnnotations, serviceTitle }) => {
-      const serviceEntity = responseOrderFailed.service_order_items[0].service_entity;
-
-      server.use(
-        http.get("/lsm/v2/order/1234", () => HttpResponse.json({ data: responseOrderFailed })),
-        http.get("/lsm/v1/service_catalog", () =>
-          HttpResponse.json({
-            data: [{ ...Service.a, name: serviceEntity, entity_annotations: entityAnnotations }],
-          })
-        )
-      );
-
-      const { component } = baseSetup(DetailsPage, [lsmFeature], routes);
-
-      render(component);
-
-      const [row] = await screen.findAllByRole("row", { name: "ServiceOrderDetailsRow" });
-
-      await waitFor(() => expect(testClient.isFetching()).toEqual(0));
-      expect(within(row).getByText(serviceTitle)).toBeVisible();
-    }
-  );
 
   test("OrderDetailsView shows view for a partial order", async () => {
     server.use(

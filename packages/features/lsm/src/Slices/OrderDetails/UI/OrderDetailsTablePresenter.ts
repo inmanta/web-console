@@ -11,7 +11,7 @@ export const createOrderDetailsTablePresenter = () =>
   createTablePresenter<ServiceOrderItem, ServiceOrderItem>({
     columnHeads: [
       { displayName: words("orders.column.instance"), apiName: "instance" },
-      { displayName: words("orders.column.service"), apiName: "service_entity" },
+      { displayName: words("orders.column.serviceEntity"), apiName: "service_entity" },
       { displayName: words("orders.column.action"), apiName: "action" },
       { displayName: words("status"), apiName: "status" },
     ],
