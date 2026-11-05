@@ -40,7 +40,8 @@ if (isIso) {
       // click on service catalog in breadcrumb
       cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
 
-      // click Inventory on child-service
+      // child-service is owned by parent-service, so expand the owners to show it
+      cy.get("button").contains("Expand all").click();
       cy.get("#child-service").contains("Inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
       // Add an instance and fill form
@@ -56,6 +57,7 @@ if (isIso) {
       }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+      cy.get("button").contains("Expand all").click();
       cy.get("#child-service").contains("Inventory").click();
 
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
@@ -81,6 +83,7 @@ if (isIso) {
       // click on service catalog in breadcrumb
       cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
 
+      cy.get("button").contains("Expand all").click();
       cy.get("#child-service").contains("Inventory").click();
       cy.get('[data-label="State"]').eq(0, { timeout: 90000 }).should("have.text", "up");
       // try delete item (Should be possible)
