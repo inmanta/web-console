@@ -25,11 +25,14 @@ const testFiles = [
   "{src,packages,apps}/**/Spec/**/*.{ts,tsx}",
 ];
 
-// The files that may import a workspace's devDependencies: the test files above and the test setup.
+// The files that may import a workspace's devDependencies: the test files above, the test setup
+// and the Vite config of the apps and the features.
 const devDependencyFiles = [
   ...testFiles,
   "apps/web-console/src/test-setup.ts",
   "packages/features/composer/src/**/globalTestMocks.ts",
+  "apps/*/vite.config.ts",
+  "packages/features/*/vite.js",
 ];
 
 export default [
@@ -235,7 +238,7 @@ export default [
         {
           patterns: [
             {
-              group: ["@joint/*", "@rappidcss"],
+              group: ["@joint/*"],
               message: "Only the composer feature (packages/features/composer) imports JointJS.",
             },
             {

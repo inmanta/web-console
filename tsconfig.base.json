@@ -34,9 +34,6 @@
       ],
       "@images/*": [
         "./public/images/*"
-      ],
-      "@rappidcss": [
-        "./node_modules/@joint/plus/joint-plus.css"
       ]
     },
     "composite": true,

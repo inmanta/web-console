@@ -1,0 +1,5 @@
+description: Give the app its own Vite config, move the composer's and GraphiQL's Vite settings into those features, and run the tests as one Vitest project per package.
+issue-nr: 7461
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}
