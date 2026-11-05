@@ -1,5 +1,5 @@
 import React, { useContext, useLayoutEffect } from "react";
-import { Navigate } from "react-router";
+import { Navigate, useLocation } from "react-router";
 import { EnvironmentRole, words } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
@@ -7,7 +7,11 @@ import { EnvironmentPreview } from "@inmanta/web-console-core/Queries/Slices/Env
 import { PageFrame } from "./PageFrame";
 
 interface Props {
-  environmentRole: EnvironmentRole;
+  /**
+   * Whether the page needs an environment. Left out, it is the role of the route that matches
+   * the url, or "Required" when none does (the not-found page).
+   */
+  environmentRole?: EnvironmentRole;
 }
 
 export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
@@ -15,10 +19,15 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
   environmentRole,
 }) => {
   const { environmentHandler, routeManager } = useContext(DependencyContext);
+  const { pathname } = useLocation();
+  const role =
+    environmentRole ??
+    routeManager.getRouteMatchFromUrl(pathname)?.route.environmentRole ??
+    "Required";
   const environment = environmentHandler.useSelected();
   const allEnvironments = environmentHandler.useAll();
   const { notifyInfo } = useAppAlert();
-  const environmentId = getEnvironmentId(environmentRole, environment);
+  const environmentId = getEnvironmentId(role, environment);
 
   const redirectingToCreateEnv =
     environmentId === words("error.environment.missing") && allEnvironments.length === 0;

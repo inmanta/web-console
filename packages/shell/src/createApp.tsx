@@ -11,10 +11,10 @@ import CustomRouter from "@inmanta/web-console-core/Routing/CustomRouter";
 import ErrorBoundary from "@inmanta/web-console-ui/Utils/ErrorBoundary";
 import { AuthProvider } from "./Auth/AuthProvider";
 import { Injector } from "./Injector";
-import { AppFeaturesProvider, useAppFeatures } from "./Plugins/AppFeatures";
-import { AppPlugin } from "./Plugins/AppPlugin";
 import { Root } from "./Root";
 import { createRootRoutes } from "./RootRoutes";
+import { AppFeaturesProvider, useAppFeatures } from "./RuntimeFeatures/AppFeatures";
+import { RuntimeFeature } from "./RuntimeFeatures/RuntimeFeature";
 import { AuthConfig, ShellOptions, ShellOptionsContext } from "./ShellOptions";
 import { registerAppMessages } from "./registerAppMessages";
 import { shellFeature } from "./shellFeature";
@@ -34,11 +34,12 @@ export interface AppOptions {
   features: FeatureModule[];
 
   /**
-   * The features the app loads at runtime instead of shipping them, e.g. the composer. They are
-   * loaded while the app starts, once the server status says which ones are enabled, and added
-   * after `features`. A plugin that isn't installed, or was built for another version, is left out.
+   * The features the app loads at runtime from a separate build, instead of bundling them, e.g.
+   * the composer, so a deployment can leave them out or install them later. They are loaded while
+   * the app starts, once the server status says which ones are enabled, and added after
+   * `features`. A feature that isn't installed, or was built for another version, is left out.
    */
-  plugins?: AppPlugin[];
+  runtimeFeatures?: RuntimeFeature[];
 
   /**
    * How the shell is set up. Leaving it out uses the shell's defaults.
@@ -51,8 +52,8 @@ export interface AppOptions {
  */
 export interface App {
   /**
-   * The features of the app: the shell's own, then the given ones. The features of the plugins
-   * are only known once the app runs.
+   * The features of the app: the shell's own, then the given ones. The features loaded at
+   * runtime are only known once the app runs.
    */
   features: FeatureModule[];
 
@@ -82,7 +83,7 @@ export const getAuthConfig = (auth: ShellOptions["auth"]): AuthConfig | undefine
  * @example
  * createApp({ features: [environmentFeature, lsmFeature] }).render(document.getElementById("root"));
  */
-export const createApp = ({ features, plugins = [], shell = {} }: AppOptions): App => {
+export const createApp = ({ features, runtimeFeatures = [], shell = {} }: AppOptions): App => {
   const appFeatures = [shellFeature, ...features];
 
   return {
@@ -122,7 +123,10 @@ export const createApp = ({ features, plugins = [], shell = {} }: AppOptions): A
                         direction={{ default: "column" }}
                         style={{ height: "100%" }}
                       >
-                        <AppFeaturesProvider features={appFeatures} plugins={plugins}>
+                        <AppFeaturesProvider
+                          features={appFeatures}
+                          runtimeFeatures={runtimeFeatures}
+                        >
                           <AppInjector>
                             <Root />
                           </AppInjector>
@@ -150,7 +154,7 @@ export const createApp = ({ features, plugins = [], shell = {} }: AppOptions): A
 };
 
 /**
- * The `Injector` with every feature of the running app, which includes the plugins once loaded.
+ * The `Injector` with every feature of the running app, including the ones loaded at runtime.
  */
 const AppInjector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { features } = useAppFeatures();

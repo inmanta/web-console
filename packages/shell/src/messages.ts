@@ -13,11 +13,11 @@ export const shellMessages = {
   "notFound.home": "Go home",
 
   /**
-   * Runtime plugins
+   * Features loaded at runtime
    */
-  "plugins.versionMismatch.title": (id: string) => `${id} version mismatch`,
-  "plugins.versionMismatch.message": (id: string, version: string, appVersion: string) =>
-    `The ${id} plugin is version ${version}, but the web console is version ${appVersion}, so the ${id} isn't available. Install the ${id} plugin of version ${appVersion}.`,
+  "runtimeFeatures.versionMismatch.title": (id: string) => `${id} version mismatch`,
+  "runtimeFeatures.versionMismatch.message": (id: string, version: string, appVersion: string) =>
+    `The ${id} is version ${version}, but the web console is version ${appVersion}, so the ${id} isn't available. Install the ${id} of version ${appVersion}.`,
 
   /**
    * Dashboard
