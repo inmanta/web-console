@@ -5,9 +5,9 @@ import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRo
 import { LoginPage } from "@inmanta/web-console-shell/Slices/Login";
 import { PageFrame } from "./Components";
 import { DefaultRoute } from "./Components/DefaultRoute";
-import { PluginRoutes } from "./Plugins/PluginRoutes";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 import { RouteOutlet } from "./RouteOutlet";
+import { RuntimeFeatureRoutes } from "./RuntimeFeatures/RuntimeFeatureRoutes";
 
 /**
  * Builds the route objects of the app, to be rendered inside the `Root` layout.
@@ -20,7 +20,7 @@ import { RouteOutlet } from "./RouteOutlet";
  * @param basePathname - The base pathname the app is served from, e.g. "/console".
  * @param features - The features the app ships. The pages are built from their routes.
  * @returns The route objects of the login page, the default route, the pages, and the catch-all
- *   route with the pages of the plugins and the not-found page.
+ *   route with the pages of the features loaded at runtime and the not-found page.
  */
 export const createRootRoutes = (
   basePathname: string,
@@ -41,8 +41,17 @@ export const createRootRoutes = (
           path,
           element: <PageFrame environmentRole={environmentRole}>{element}</PageFrame>,
         })),
-        // The pages of the plugins, which load after the route table is built, and not-found.
-        { path: "*", element: <PluginRoutes /> },
+        // The pages of the features loaded at runtime, which aren't known yet when the route table
+        // is built, and not-found. The same page frame as the other pages, so it stays mounted
+        // when navigating between them.
+        {
+          path: "*",
+          element: (
+            <PageFrame>
+              <RuntimeFeatureRoutes />
+            </PageFrame>
+          ),
+        },
       ],
     },
   ];

@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from "react";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { useGetEnvironmentPreview } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { useGetServerStatus } from "@inmanta/web-console-core/Queries/Slices/Server";
-import { usePlugins } from "@inmanta/web-console-shell/Plugins/usePlugins";
+import { useRuntimeFeatures } from "@inmanta/web-console-shell/RuntimeFeatures/useRuntimeFeatures";
 import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 
@@ -10,8 +10,8 @@ import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
  * Initializer component
  *
  * It handles different states of the server status and environments data fetching (loading, error, success)
- * and renders the appropriate UI for each state. Once the server status is known, it loads the app's
- * plugins, and only renders the pages when they are loaded.
+ * and renders the appropriate UI for each state. Once the server status is known, it loads the
+ * features the app loads at runtime, and only renders the pages when they are loaded.
  *
  * @returns {React.FC<React.PropsWithChildren<unknown>>} The Initializer component
  */
@@ -22,7 +22,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
   const serverStatus = useGetServerStatus().useOneTime();
   const EnvironmentPreview = useGetEnvironmentPreview().useContinuous();
   const logout = authHelper.isDisabled() ? undefined : () => authHelper.logout();
-  const arePluginsLoaded = usePlugins(isInitialized);
+  const areRuntimeFeaturesLoaded = useRuntimeFeatures(isInitialized);
 
   useEffect(() => {
     if (serverStatus.data) {
@@ -82,7 +82,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     );
   }
 
-  if (isInitialized && isEnvironmentPreviewInitialized && arePluginsLoaded) {
+  if (isInitialized && isEnvironmentPreviewInitialized && areRuntimeFeaturesLoaded) {
     return <>{children}</>;
   }
 

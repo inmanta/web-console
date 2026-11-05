@@ -81,14 +81,14 @@ There are two apps: `apps/oss`, the open-source web console with the OSS feature
 
 The settings both apps share live outside them: the Vite settings in `vite.shared.ts` (`appConfig`) and the Monaco setup in the shell (`@inmanta/web-console-shell/monaco`). An app's `vite.config.ts` only adds the Vite plugins of its features.
 
-### Runtime plugins
+### Features loaded at runtime
 
-An app can also load a feature at runtime instead of shipping it, with the `plugins` option of `createApp`:
+A feature is always a `FeatureModule`. An app either bundles it (`features`), or loads it at runtime from a separate build (`runtimeFeatures`), so a deployment can leave it out or install it later, like the composer. The feature itself is the same either way:
 
 ```ts
 createApp({
   features: [environmentFeature, lsmFeature],
-  plugins: [
+  runtimeFeatures: [
     {
       id: "composer",
       // Fetched only when the server status enables it.
@@ -99,12 +99,12 @@ createApp({
 });
 ```
 
-The shell loads the enabled plugins once the server status is known, before it shows the pages. A plugin's entry module exports a `PluginModule` (`@inmanta/web-console-core`): its `feature`, and `sharedInstances: getSharedInstances()`.
+The shell loads the enabled runtime features once the server status is known, before it shows the pages. The separate build's entry module exports a `RuntimeFeatureEntry` (`@inmanta/web-console-core`): the `feature`, and `singletons: getSingletons()`.
 
-- A plugin that fails to load, e.g. because it isn't installed, is left out: the app starts without it.
-- A plugin whose feature has another `version` than the app is left out with a version mismatch notice.
-- In development, a plugin with its own copy of React or of the web-console core layer (other `sharedInstances` than the app's) stops the app with an error, instead of silently reading other contexts.
-- The plugin's routes, sidebar entries, contributions and messages are added like those of the app's features. Its pages render under the catch-all route (`PluginRoutes`), so unlike the other pages they don't match a url whose decoded path contains a newline.
+- A feature that fails to load, e.g. because it isn't installed, or whose module isn't an entry, is left out: the app starts without it.
+- A feature with another `version` than the app is left out with a version mismatch notice.
+- A build with its own copy of React or of the web-console core layer (other `singletons` than the app's) would read other contexts than the app. In development that stops the app with an error; in production the feature is left out with an error in the console.
+- Its routes, sidebar entries, contributions and messages are added like those of the bundled features. Its pages render in the catch-all route (`RuntimeFeatureRoutes`, inside the same page frame), so unlike the other pages they don't match a url whose decoded path contains a newline.
 
 ## Features and routes in tests
 
