@@ -1,4 +1,0 @@
-description: Updated rimraf to 6.1.4 (glob 14), which removes the vulnerable glob 10 and minimatch 9 versions from the development dependencies, and pinned the dompurify package to 3.4.17.
-change-type: patch
-destination-branches: [master, iso9]
-sections: {}
