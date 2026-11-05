@@ -77,6 +77,10 @@ export const app = createApp({
 
 `createApp` adds the shell's own pages (status, notifications) in front of the features and builds the routes, pages and sidebar from them. Nothing starts until `app.render(element)` is called, so tests can look at `app.features` and `app.routes` without starting the app. Leaving `shell` out uses the shell's defaults.
 
+There are two apps: `apps/oss`, the open-source web console with the OSS features, and `apps/web-console`, the ISO web console with every feature. Each one is its own composition, so the ISO features (lsm and the composer) are not in the OSS app's dependencies, install or bundle. Every package declares its edition in its `package.json` (`"inmanta": { "edition": "oss" }` or `"iso"`), and a Yarn constraint (`yarn.config.cjs`) fails when an OSS package depends on an ISO one, directly or through other packages. A new feature declares its edition, and goes in the OSS app too when it is OSS.
+
+The settings both apps share live outside them: the Vite settings in `vite.shared.ts` (`appConfig`) and the Monaco setup in the shell (`@inmanta/web-console-shell/monaco`). An app's `vite.config.ts` only adds the Vite plugins of its features.
+
 ## Features and routes in tests
 
 Tests follow the same import boundaries as the code they test (see `eslint.layers.js`), and may also import `@inmanta/web-console-test-utils`. A feature's tests only depend on that feature:
