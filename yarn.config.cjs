@@ -21,8 +21,66 @@ const restrictedPackages = [
   },
 ];
 
+const editions = ["oss", "iso"];
+
+/**
+ * Every package and app declares its edition in its package.json (`"inmanta": { "edition":
+ * "oss" }`), and an OSS one never depends on an ISO one, directly or through other workspaces.
+ * That keeps the ISO features out of the OSS app's install and bundle. The root workspace only
+ * holds the tooling and isn't checked.
+ */
+const checkEditions = (Yarn) => {
+  const editionOf = (workspace) => workspace.manifest.inmanta?.edition;
+  const workspaceDependencies = (workspace) =>
+    Yarn.dependencies({ workspace })
+      .filter(({ type }) => type !== "peerDependencies")
+      .map(({ ident }) => Yarn.workspace({ ident }))
+      .filter(Boolean);
+
+  // The first path from the workspace to an ISO workspace, or undefined.
+  const pathToIso = (workspace, seen = new Set()) => {
+    for (const dependency of workspaceDependencies(workspace)) {
+      if (seen.has(dependency.cwd)) {
+        continue;
+      }
+      seen.add(dependency.cwd);
+      if (editionOf(dependency) === "iso") {
+        return [dependency.ident];
+      }
+      const rest = pathToIso(dependency, seen);
+      if (rest) {
+        return [dependency.ident, ...rest];
+      }
+    }
+
+    return undefined;
+  };
+
+  for (const workspace of Yarn.workspaces()) {
+    if (workspace.cwd === ".") {
+      continue;
+    }
+    if (!editions.includes(editionOf(workspace))) {
+      workspace.error(
+        `Declare the edition of ${workspace.ident} in its package.json: "inmanta": { "edition": "oss" } or "iso".`
+      );
+      continue;
+    }
+    if (editionOf(workspace) === "oss") {
+      const path = pathToIso(workspace);
+      if (path) {
+        workspace.error(
+          `${workspace.ident} is OSS but depends on the ISO workspace ${path.at(-1)} (${[workspace.ident, ...path].join(" -> ")}).`
+        );
+      }
+    }
+  }
+};
+
 module.exports = {
   async constraints({ Yarn }) {
+    checkEditions(Yarn);
+
     for (const dependency of Yarn.dependencies()) {
       if (dependency.type === "peerDependencies") {
         continue;

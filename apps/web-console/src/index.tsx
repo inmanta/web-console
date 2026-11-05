@@ -1,4 +1,4 @@
+import "@inmanta/web-console-shell/monaco";
 import { app } from "./app";
-import "./monaco";
 
 app.render(document.getElementById("root"));

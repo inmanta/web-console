@@ -1,0 +1,34 @@
+import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
+import { app } from "./app";
+
+const { features, routes } = app;
+
+describe("app", () => {
+  test("GIVEN the features of the app THEN it ships the OSS features only", () => {
+    expect(features.map(({ id }) => id)).toEqual([
+      "shell",
+      "environment",
+      "graphiql",
+      "user-management",
+      "resource-manager",
+      "orchestration-engine",
+    ]);
+  });
+
+  test("GIVEN the features of the app THEN every feature has a unique id", () => {
+    const ids = features.map(({ id }) => id);
+
+    expect(new Set(ids).size).toEqual(ids.length);
+  });
+
+  test("GIVEN the routes of the features THEN they build a route table", () => {
+    expect(PrimaryRouteManager("", routes).getRoutes()).toHaveLength(routes.length);
+  });
+
+  test("GIVEN the navigation of the features THEN every entry links to a route of the app", () => {
+    const routeManager = PrimaryRouteManager("", routes);
+    const kinds = features.flatMap(({ navigation = [] }) => navigation.map(({ kind }) => kind));
+
+    expect(kinds.filter((kind) => !routeManager.has(kind))).toEqual([]);
+  });
+});
