@@ -1,5 +1,5 @@
 /**
- * The Vite config of the open-source app: the settings every app shares (vite.shared.ts at the
+ * The Vite config of the OSS app: the settings every app shares (vite.shared.ts at the
  * root) and the Vite plugins of the features it ships. The build goes to apps/oss/dist/.
  */
 import { resolve } from "path";
