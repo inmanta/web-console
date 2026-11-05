@@ -6,7 +6,7 @@
     "edition": "iso"
   },
   "scripts": {
-    "start": "dotenv run -f ../../.env -- vite",
+    "start": "vite",
     "build": "vite build",
     "build:ci": "NODE_OPTIONS=--max-old-space-size=6144 vite build",
     "build:bundle-profile": "vite build --mode analyze"
@@ -32,7 +32,6 @@
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",
     "@types/jest-axe": "^3.5.9",
-    "dotenv": "^18.0.9",
     "jest-axe": "^11.0.0",
     "msw": "^2.15.0",
     "react-router": "^8.5.1",

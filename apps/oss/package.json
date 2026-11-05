@@ -6,7 +6,7 @@
     "edition": "oss"
   },
   "scripts": {
-    "start": "dotenv run -f ../../.env -- vite",
+    "start": "vite",
     "build": "vite build",
     "build:ci": "NODE_OPTIONS=--max-old-space-size=6144 vite build"
   },
@@ -22,7 +22,6 @@
     "@inmanta/web-console-core": "workspace:^",
     "@inmanta/web-console-test-utils": "workspace:^",
     "@vitejs/plugin-react": "^6.1.2",
-    "dotenv": "^18.0.9",
     "vite": "^8.3.5",
     "vite-plugin-mkcert": "^2.1.0"
   }

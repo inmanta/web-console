@@ -11,8 +11,6 @@
     "apps/*"
   ],
   "scripts": {
-    "setup": "yarn workspaces focus @inmanta/web-console-oss",
-    "setup:iso": "yarn install",
     "prebuild": "yarn clean",
     "build": "yarn workspace @inmanta/web-console-app build",
     "build:ci": "yarn workspace @inmanta/web-console-app build:ci && yarn build:sbom",

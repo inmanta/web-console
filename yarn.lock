@@ -881,7 +881,6 @@ __metadata:
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
     "@types/jest-axe": "npm:^3.5.9"
-    dotenv: "npm:^18.0.9"
     jest-axe: "npm:^11.0.0"
     msw: "npm:^2.15.0"
     react: "npm:^19.3.1"
@@ -1128,7 +1127,6 @@ __metadata:
     "@inmanta/web-console-shell": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@vitejs/plugin-react": "npm:^6.1.2"
-    dotenv: "npm:^18.0.9"
     vite: "npm:^8.3.5"
     vite-plugin-mkcert: "npm:^2.1.0"
   languageName: unknown
@@ -6072,15 +6070,6 @@ __metadata:
     "@types/trusted-types":
       optional: true
   checksum: 10/ae03c068bd351d1201a24a9667cb302c65939f45a0c357edec8b84133108e19ac74f355c2d8b0f30baadadd7f0be2db300d269aa80d3ee15872712ca9ff4e1a8
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^18.0.9":
-  version: 18.0.9
-  resolution: "dotenv@npm:18.0.9"
-  bin:
-    dotenv: dist/index.cjs
-  checksum: 10/585a2667f55791c4eb854114d56af8dc26fc4f936b829cbd1974e42e74218a98158cbf0d495e1eec517e5dac9a425902cc16646a86a18a077d2cd403a5552dcc
   languageName: node
   linkType: hard
 

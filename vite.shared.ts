@@ -9,6 +9,7 @@ import { readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync 
 import { resolve } from "path";
 import react from "@vitejs/plugin-react";
 import {
+  loadEnv,
   LogOptions,
   mergeConfig,
   PluginOption,
@@ -263,11 +264,11 @@ const blockMonacoCDNPlugin = () => ({
  * We proxy the two base urls to be able the access the endpoints when running the app locally.
  * If we do not proxy both endpoints; we face cors issues.
  */
-const apiProxy = (): ProxyOptions => ({
-  target: process.env.VITE_API_BASEURL || process.env.PROXY_TARGET || "https://localhost:8888",
+const apiProxy = (env: Record<string, string | undefined>): ProxyOptions => ({
+  target: env.VITE_API_BASEURL || env.PROXY_TARGET || "https://localhost:8888",
   changeOrigin: true,
   secure: false,
-  protocolRewrite: process.env.HTTPS === "true" ? "https" : "http",
+  protocolRewrite: env.HTTPS === "true" ? "https" : "http",
   configure: (proxy) => {
     proxy.on("error", (err) => {
       console.log("proxy error", err);
@@ -288,11 +289,16 @@ const apiProxy = (): ProxyOptions => ({
  * @param outDir - the folder the app is built into
  */
 export const appConfig = (appDir: string, outDir: string): UserConfig => {
+  // The variables of the .env file at the root (if there is one), for the dev server's proxy and
+  // HTTPS; the variables of the shell win. The app's code gets the VITE_ ones through envDir.
+  const env = { ...loadEnv("development", repoRoot, ""), ...process.env };
+  const https = env.HTTPS === "true";
+
   const plugins: PluginOption[] = [
     blockMonacoCDNPlugin(),
     moveAssetsToRootPlugin(outDir),
     copyConfigPlugin(appDir, outDir),
-    process.env.HTTPS === "true" ? mkcert() : undefined,
+    https ? mkcert() : undefined,
   ].filter(Boolean);
 
   return mergeConfig(sharedConfig, {
@@ -305,10 +311,10 @@ export const appConfig = (appDir: string, outDir: string): UserConfig => {
     server: {
       port: 9000,
       host: true,
-      https: process.env.HTTPS === "true" ? true : undefined,
+      https: https ? true : undefined,
       proxy: {
-        "/api": apiProxy(),
-        "/lsm": apiProxy(),
+        "/api": apiProxy(env),
+        "/lsm": apiProxy(env),
       },
     },
     build: {
