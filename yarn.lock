@@ -1035,7 +1035,7 @@ __metadata:
     graphiql: "npm:^5.4.0"
     graphql: "npm:^17.0.2"
     monaco-editor: "npm:^0.52.2"
-    monaco-graphql: "npm:^1.9.0"
+    monaco-graphql: "npm:^2.0.1"
     msw: "npm:^2.15.0"
     prettier: "npm:^3.9.10"
     react: "npm:^19.3.1"
