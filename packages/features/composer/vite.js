@@ -2,10 +2,11 @@
 /// <reference types="vitest/config" />
 // Plain JavaScript, so Node loads it as it is when a Vite config imports it, whatever Vite's
 // config loader; the JSDoc types are checked by `yarn tsc`.
-import { readdirSync, readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { createRequire } from "module";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import ts from "typescript";
 
 const require = createRequire(import.meta.url);
 
@@ -84,45 +85,113 @@ export const composerBuildDir = join(dirname(fileURLToPath(import.meta.url)), "d
 export const composerEntry = join(dirname(fileURLToPath(import.meta.url)), "src/entry.ts");
 
 /**
- * The modules the app shares with the composer's separate build: every package the composer's
- * code imports, except JointJS, which only the composer has. The app provides the only copy of
+ * The modules the app shares with the composer's separate build: every package the code of that
+ * build imports, except JointJS, which only the composer has. The app provides the only copy of
  * each through its import map, so the composer uses the app's React, contexts and web-console
  * packages.
  *
  * The list comes from the composer's source, so a new import is shared without anyone listing
- * it: a module that isn't shared is bundled into that build as a second copy, with its own
- * state and contexts. Type-only imports and stylesheets are left out.
+ * it: a module that isn't shared would be bundled into that build as a second copy, with its own
+ * state and contexts (the build fails on that, see vite.config.ts). It follows the imports from
+ * the build's entry (`composerEntry`) with TypeScript's parser, so it sees exactly the code the
+ * build bundles, and not the tests or their mocks. Type-only imports and stylesheets are left
+ * out.
  *
  * @returns {string[]} the shared import specifiers, sorted
+ * @throws {Error} when the code imports a module with a computed specifier, which can't be shared
  */
 export const composerSharedModules = () => {
-  const src = join(dirname(fileURLToPath(import.meta.url)), "src");
   const specifiers = new Set(["react/jsx-runtime"]);
-  const importPattern =
-    /(?:^|\n)\s*(?:import|export)\s+(?!type\s)(?:[^"';]*?\sfrom\s+)?["']([^"']+)["']|import\(\s*["']([^"']+)["']\s*\)/g;
+  const visited = new Set();
+  const pending = [composerEntry];
 
-  for (const file of readdirSync(src, { recursive: true, encoding: "utf8" })) {
-    if (!/\.tsx?$/.test(file) || /\.(test|spec)\.tsx?$|(^|[\/])Mocks?([\/]|\.)/.test(file)) {
+  while (pending.length > 0) {
+    const file = /** @type {string} */ (pending.pop());
+
+    if (visited.has(file)) {
       continue;
     }
+    visited.add(file);
 
-    for (const [, staticImport, dynamicImport] of readFileSync(join(src, file), "utf8").matchAll(
-      importPattern
-    )) {
-      const specifier = staticImport ?? dynamicImport;
+    for (const specifier of importsOf(file)) {
+      const ownPath = specifier.startsWith(".")
+        ? join(dirname(file), specifier)
+        : specifier.startsWith(`${composerPackage}/`)
+          ? join(composerSrc, specifier.slice(composerPackage.length + 1))
+          : undefined;
 
-      if (
-        specifier.startsWith(".") ||
-        specifier.startsWith("@joint/") ||
-        specifier.startsWith("@images/") ||
-        specifier.startsWith("@inmanta/web-console-feature-composer") ||
-        specifier.endsWith(".css")
+      if (ownPath !== undefined) {
+        const resolved = resolveSource(ownPath);
+
+        if (resolved !== undefined) {
+          pending.push(resolved);
+        }
+      } else if (
+        !specifier.startsWith("@joint/") &&
+        !specifier.startsWith("@images/") &&
+        !specifier.endsWith(".css")
       ) {
-        continue;
+        specifiers.add(specifier);
       }
-      specifiers.add(specifier);
     }
   }
 
   return [...specifiers].sort();
+};
+
+const composerPackage = "@inmanta/web-console-feature-composer";
+const composerSrc = join(dirname(fileURLToPath(import.meta.url)), "src");
+
+/**
+ * The source file of an import of the composer's own code, or undefined for an asset (an image or
+ * a stylesheet), which has no imports to follow.
+ *
+ * @param {string} path - the imported path, without extension
+ * @returns {string | undefined} the file
+ */
+const resolveSource = (path) =>
+  [path, `${path}.ts`, `${path}.tsx`, join(path, "index.ts"), join(path, "index.tsx")].find(
+    (candidate) => /\.tsx?$/.test(candidate) && existsSync(candidate)
+  );
+
+/**
+ * The specifiers a module imports at runtime: its import and export declarations, except
+ * type-only ones, and its `import()` calls.
+ *
+ * @param {string} file - the module
+ * @returns {string[]} the specifiers
+ * @throws {Error} for an `import()` whose specifier isn't a string literal
+ */
+const importsOf = (file) => {
+  const source = ts.createSourceFile(file, readFileSync(file, "utf8"), ts.ScriptTarget.Latest);
+
+  /** @type {string[]} */
+  const specifiers = [];
+
+  /** @param {import("typescript").Node} node */
+  const visit = (node) => {
+    if (ts.isImportDeclaration(node) && !node.importClause?.isTypeOnly) {
+      specifiers.push(
+        /** @type {import("typescript").StringLiteral} */ (node.moduleSpecifier).text
+      );
+    } else if (ts.isExportDeclaration(node) && node.moduleSpecifier && !node.isTypeOnly) {
+      specifiers.push(
+        /** @type {import("typescript").StringLiteral} */ (node.moduleSpecifier).text
+      );
+    } else if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) {
+      const [argument] = node.arguments;
+
+      if (!argument || !ts.isStringLiteralLike(argument)) {
+        throw new Error(
+          `${file}: import() with a computed specifier; the composer's build can't share it with the app.`
+        );
+      }
+      specifiers.push(argument.text);
+    }
+    ts.forEachChild(node, visit);
+  };
+
+  visit(source);
+
+  return specifiers;
 };
