@@ -9,6 +9,7 @@
     "vitest.config.ts",
     "apps/*/vite.config.ts",
     "packages/features/*/vite.js",
+    "packages/features/*/vite.config.ts",
     "__mocks__/**/*.ts",
     "src",
     "cypress/support"

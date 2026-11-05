@@ -1,3 +1,5 @@
+// The composer is loaded at runtime, which registers its messages when it loads.
+import { feature as composerFeature } from "composer/feature";
 import * as WordsModule from "@inmanta/web-console-core/I18n/Words";
 import { registerAppMessages } from "@inmanta/web-console-shell/registerAppMessages";
 import { app } from "./app";
@@ -15,7 +17,7 @@ it("registers the messages of every layer and feature the app ships", () => {
   // The test setup registers every message, so look at what the app itself registers.
   const registerMessages = vi.spyOn(WordsModule, "registerMessages");
 
-  registerAppMessages(app.features);
+  registerAppMessages([...app.features, composerFeature]);
 
   const registered = new Set(
     registerMessages.mock.calls.flatMap(([messages]) => Object.keys(messages))

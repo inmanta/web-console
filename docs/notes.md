@@ -106,6 +106,14 @@ The shell loads the enabled runtime features once the server status is known, be
 - A build with its own copy of React or of the web-console core layer (other `singletons` than the app's) would read other contexts than the app. In development that stops the app with an error; in production the feature is left out with an error in the console.
 - Its routes, sidebar entries, contributions and messages are added like those of the bundled features. Its pages render in the catch-all route (`RuntimeFeatureRoutes`, inside the same page frame), so unlike the other pages they don't match a url whose decoded path contains a newline.
 
+The ISO app loads the composer this way. The composer has its own Vite config (`packages/features/composer/vite.config.ts`), which builds `src/entry.ts` into `packages/features/composer/dist/`. Its files all start with `composer-`, in one folder: the orchestrator serves every file of the web console by its name from one folder. The ISO app's build runs it first, gets an import map that provides the composer with the app's modules (`composerSharedModules`) and maps `composer/feature` to `composer-feature.js`, and copies the composer's files next to its own. So:
+
+- `dist/` as built ships with the composer;
+- without the `composer-*` files, the app starts without it;
+- copying the files of `packages/features/composer/dist/` (except `mf-manifest.json`) into the web console's folder installs it later, for the same version.
+
+The dev server and the tests resolve `composer/feature` to the composer's source instead, like a bundled feature.
+
 ## Features and routes in tests
 
 Tests follow the same import boundaries as the code they test (see `eslint.layers.js`), and may also import `@inmanta/web-console-test-utils`. A feature's tests only depend on that feature:

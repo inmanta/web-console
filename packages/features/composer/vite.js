@@ -72,17 +72,25 @@ export const composerVitePlugin = () => {
 };
 
 /**
- * The folder the composer is built into as a runtime plugin, see vite.config.ts.
+ * The folder of the composer's separate build (vite.config.ts), which the ISO app loads at
+ * runtime.
  */
-export const composerPluginDir = join(dirname(fileURLToPath(import.meta.url)), "dist");
+export const composerBuildDir = join(dirname(fileURLToPath(import.meta.url)), "dist");
 
 /**
- * The modules the app shares with the composer plugin: every package the composer's code imports,
- * except JointJS, which only the composer has. The app provides the only copy of each through
- * its import map, so the composer uses the app's React, contexts and web-console packages.
+ * The entry module of the composer's separate build. The ISO app's dev server and the tests
+ * resolve `composer/feature` to it, instead of the separate build.
+ */
+export const composerEntry = join(dirname(fileURLToPath(import.meta.url)), "src/entry.ts");
+
+/**
+ * The modules the app shares with the composer's separate build: every package the composer's
+ * code imports, except JointJS, which only the composer has. The app provides the only copy of
+ * each through its import map, so the composer uses the app's React, contexts and web-console
+ * packages.
  *
  * The list comes from the composer's source, so a new import is shared without anyone listing
- * it: a module that isn't shared is bundled into the plugin as a second copy, with its own
+ * it: a module that isn't shared is bundled into that build as a second copy, with its own
  * state and contexts. Type-only imports and stylesheets are left out.
  *
  * @returns {string[]} the shared import specifiers, sorted

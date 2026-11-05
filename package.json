@@ -29,7 +29,7 @@
     "tsc": "node scripts/check-project-references.js && tsc -b && node scripts/check-linked-routes.js",
     "build:bundle-profile": "yarn workspace @inmanta/web-console-app build:bundle-profile",
     "bundle-profile:analyze": "yarn build:bundle-profile",
-    "clean": "rimraf dist apps/oss/dist .tsbuild",
+    "clean": "rimraf dist apps/oss/dist packages/features/composer/dist .tsbuild",
     "delete:reports": "rm -r cypress/reports/* || true",
     "precypress-test": "yarn run delete:reports",
     "cypress-test:oss": "yarn cypress run --config-file cypress.config.oss.cjs",
