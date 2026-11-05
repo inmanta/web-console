@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @graphiql/toolkit from 0.12.1 to 1.0.0
+destination-branches:
+- master
+- iso9
+sections: {}
