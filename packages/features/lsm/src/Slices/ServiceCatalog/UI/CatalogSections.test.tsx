@@ -1,4 +1,4 @@
-import { act } from "react";
+import React, { act, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -11,7 +11,6 @@ import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-se
 import { CatalogSections } from "./CatalogSections";
 import {
   aviLoadBalancerCluster,
-  aviVirtualIp,
   deployment,
   deploymentTree,
   dnsRecord,
@@ -21,6 +20,7 @@ import {
   router,
   vpn,
 } from "./Mock";
+import { createCatalogSections } from "./helpers";
 import { ownerServiceFallbackIconName, serviceFallbackIconName } from "./types";
 
 const axe = configureAxe({
@@ -32,12 +32,41 @@ const axe = configureAxe({
 
 const search = "?env=aaa";
 
+/**
+ * Holds the expanded owners the way the page does, so the row toggles work.
+ */
+const StatefulCatalogSections: React.FC<{ serviceModels: ServiceModel[] }> = ({
+  serviceModels,
+}) => {
+  const [expandedServiceNames, setExpandedServiceNames] = useState<Set<string>>(new Set());
+
+  return (
+    <CatalogSections
+      sections={createCatalogSections(serviceModels)}
+      expandedServiceNames={expandedServiceNames}
+      onToggleOwnedServices={(serviceName) =>
+        setExpandedServiceNames((current) => {
+          const updated = new Set(current);
+
+          if (updated.has(serviceName)) {
+            updated.delete(serviceName);
+          } else {
+            updated.add(serviceName);
+          }
+
+          return updated;
+        })
+      }
+    />
+  );
+};
+
 const Component = (serviceModels: ServiceModel[]) => {
   return (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={["/lsm/catalog" + search]}>
         <MockedDependencyProvider features={[lsmFeature]}>
-          <CatalogSections serviceModels={serviceModels} />
+          <StatefulCatalogSections serviceModels={serviceModels} />
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
@@ -48,15 +77,14 @@ afterEach(() => {
   testClient.clear();
 });
 
-test("GIVEN CatalogSections WHEN no service has a group THEN one table without section headings is shown", async () => {
+test("GIVEN CatalogSections WHEN no service has a group THEN one list without section headings is shown", async () => {
   render(Component([Service.a, Service.b]));
 
-  const table = screen.getByRole("grid", { name: words("catalog.title") });
+  const list = screen.getByRole("list", { name: words("catalog.title") });
 
-  expect(within(table).getByTestId(Service.a.name + "-item")).toBeInTheDocument();
-  expect(within(table).getByTestId(Service.b.name + "-item")).toBeInTheDocument();
-  expect(screen.queryByRole("heading")).not.toBeInTheDocument();
-  expect(screen.queryByRole("button", { name: words("expandAll") })).not.toBeInTheDocument();
+  expect(within(list).getByTestId(Service.a.name + "-item")).toBeInTheDocument();
+  expect(within(list).getByTestId(Service.b.name + "-item")).toBeInTheDocument();
+  expect(screen.queryByText(words("catalog.section.ungrouped"))).not.toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -88,12 +116,12 @@ test("GIVEN CatalogSections WHEN services have groups THEN each group gets a hea
     )
   ).toBeVisible();
 
-  const networkTable = screen.getByRole("grid", {
+  const networkList = screen.getByRole("list", {
     name: router.entity_annotations?.web_group,
   });
 
-  expect(within(networkTable).getByTestId(router.name + "-item")).toBeInTheDocument();
-  expect(within(networkTable).getByTestId(vpn.name + "-item")).toBeInTheDocument();
+  expect(within(networkList).getByTestId(router.name + "-item")).toBeInTheDocument();
+  expect(within(networkList).getByTestId(vpn.name + "-item")).toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -105,11 +133,12 @@ test("GIVEN CatalogSections WHEN services have groups THEN each group gets a hea
 test("GIVEN CatalogSections WHEN services own other services THEN they are nested under their owner and collapsed", async () => {
   render(Component([linuxVm, ...deploymentTree]));
 
-  const table = screen.getByRole("treegrid", { name: words("catalog.title") });
+  const list = screen.getByRole("list", { name: words("catalog.title") });
   const getVisibleServiceNames = () =>
-    within(table)
-      .getAllByRole("row")
-      .map((row) => row.id);
+    within(list)
+      .getAllByRole("listitem")
+      .map((item) => item.id)
+      .filter((id) => id !== "");
 
   expect(getVisibleServiceNames()).toEqual([deployment.name, linuxVm.name]);
   expect(
@@ -130,43 +159,15 @@ test("GIVEN CatalogSections WHEN services own other services THEN they are neste
     aviLoadBalancerCluster.name,
     linuxVm.name,
   ]);
-  expect(screen.getByTestId(dnsRecord.name + "-item")).toHaveAttribute("aria-level", "2");
+  expect(
+    within(screen.getByTestId(deployment.name + "-item")).getByTestId(dnsRecord.name + "-item")
+  ).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
-});
-
-test("GIVEN CatalogSections WHEN the expand all toggle is clicked twice THEN every level expands and collapses", async () => {
-  render(Component(deploymentTree));
-
-  expect(screen.queryByRole("button", { name: words("collapseAll") })).not.toBeInTheDocument();
-
-  await userEvent.click(screen.getByRole("button", { name: words("expandAll") }));
-
-  expect(screen.getByTestId(aviVirtualIp.name + "-item")).toHaveAttribute("aria-level", "3");
-  expect(screen.getAllByRole("row")).toHaveLength(deploymentTree.length);
-  expect(screen.queryByRole("button", { name: words("expandAll") })).not.toBeInTheDocument();
-
-  await userEvent.click(screen.getByRole("button", { name: words("collapseAll") }));
-
-  expect(screen.getAllByRole("row").map((row) => row.id)).toEqual([deployment.name]);
-});
-
-test("GIVEN CatalogSections WHEN every owner is expanded one by one THEN the toggle offers Collapse all", async () => {
-  render(Component(deploymentTree));
-
-  for (const owner of [deployment, aviLoadBalancerCluster]) {
-    await userEvent.click(
-      screen.getByRole("button", {
-        name: words("catalog.ownedServices.expand")(String(owner.entity_annotations?.web_title)),
-      })
-    );
-  }
-
-  expect(screen.getByRole("button", { name: words("collapseAll") })).toBeVisible();
 });
 
 test("GIVEN CatalogSections WHEN a service has entity annotations THEN its title, raw name and description are shown", async () => {

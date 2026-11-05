@@ -126,12 +126,12 @@ describe("ServiceCatalog", () => {
 
     render(component);
 
-    const networkTable = await screen.findByRole("grid", {
+    const networkList = await screen.findByRole("list", {
       name: router.entity_annotations?.web_group,
     });
 
-    expect(within(networkTable).getByTestId(router.name + "-item")).toBeInTheDocument();
-    expect(within(networkTable).getByTestId(vpn.name + "-item")).toBeInTheDocument();
+    expect(within(networkList).getByTestId(router.name + "-item")).toBeInTheDocument();
+    expect(within(networkList).getByTestId(vpn.name + "-item")).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -151,20 +151,44 @@ describe("ServiceCatalog", () => {
 
     render(component);
 
-    const table = await screen.findByRole("treegrid", { name: words("catalog.title") });
+    const list = await screen.findByRole("list", { name: words("catalog.title") });
 
-    expect(within(table).getByTestId(deployment.name + "-item")).toBeInTheDocument();
-    expect(within(table).queryByTestId(dnsRecord.name + "-item")).not.toBeInTheDocument();
+    expect(within(list).getByTestId(deployment.name + "-item")).toBeVisible();
+    expect(within(list).getByTestId(dnsRecord.name + "-item")).not.toBeVisible();
 
     await userEvent.click(screen.getByRole("button", { name: words("expandAll") }));
 
-    expect(within(table).getByTestId(aviVirtualIp.name + "-item")).toBeInTheDocument();
+    deploymentTree.forEach((service) =>
+      expect(within(list).getByTestId(service.name + "-item")).toBeVisible()
+    );
 
     await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
+
+    await userEvent.click(screen.getByRole("button", { name: words("collapseAll") }));
+
+    expect(within(list).getByTestId(deployment.name + "-item")).toBeVisible();
+    expect(within(list).getByTestId(dnsRecord.name + "-item")).not.toBeVisible();
+    expect(within(list).getByTestId(aviVirtualIp.name + "-item")).not.toBeVisible();
+  });
+
+  test("GIVEN ServiceCatalog WHEN no service owns another THEN there is no Expand all", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog", () => {
+        return HttpResponse.json({ data: [linuxVm, vpn] });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByTestId(linuxVm.name + "-item");
+
+    expect(screen.queryByRole("button", { name: words("expandAll") })).not.toBeInTheDocument();
   });
 
   test("GIVEN ServiceCatalog WHEN service is deleted THEN UI is updated", async () => {

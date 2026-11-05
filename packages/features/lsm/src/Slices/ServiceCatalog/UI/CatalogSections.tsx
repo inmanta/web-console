@@ -1,152 +1,76 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import {
-  Button,
   Content,
   ContentVariants,
+  DataList,
   Flex,
   Stack,
   StackItem,
   Title,
 } from "@patternfly/react-core";
-import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
-import { Table, Tbody, Td, TdProps, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
-import { ServiceModel, words } from "@inmanta/web-console-core";
-import { ServiceRow } from "./ServiceRow";
-import {
-  createCatalogSections,
-  getAllCatalogServices,
-  getSectionInstanceCount,
-  getSectionTitle,
-} from "./helpers";
-import { CatalogSection, CatalogService, serviceRowColumnCount } from "./types";
+import { words } from "@inmanta/web-console-core";
+import { ServiceDataListItem } from "./ServiceDataListItem";
+import { getAllCatalogServices, getSectionInstanceCount, getSectionTitle } from "./helpers";
+import { CatalogSection } from "./types";
 
 interface Props {
-  serviceModels: ServiceModel[];
+  sections: CatalogSection[];
+  expandedServiceNames: Set<string>;
+  onToggleOwnedServices: (serviceName: string) => void;
 }
 
 /**
- * The service catalog: one table per section, each under a heading with its service and
+ * The service catalog: one data list per section, each under a heading with its service and
  * instance count. A section is a `web_group`, or "Other services" for the services without one.
- * Owned services are nested under their owner, collapsed by default, with one button above the
- * tables that expands every owner, or collapses them once all are expanded. Without any group,
- * the catalog is a single table without heading, and without any owned service, there is no
- * expand column and no such button. When any service has a `web_icon`, every row shows an icon,
- * with a fallback for the services without one; otherwise the rows have no icon.
+ * Owned services are a nested data list under their owner. Without any group, the catalog is a
+ * single list without heading, and without any owned service, there is no toggle column.
+ * When any service has a `web_icon`, every row shows an icon, with a fallback for the services
+ * without one; otherwise the rows have no icon.
  *
  * @props {Props} props - The props of the component.
- *  @prop {ServiceModel[]} serviceModels - The services in the catalog.
+ *  @prop {CatalogSection[]} sections - The catalog sections, from createCatalogSections.
+ *  @prop {Set<string>} expandedServiceNames - The names of the services whose owned services are expanded.
+ *  @prop {function} onToggleOwnedServices - Expands or collapses the owned services of a service.
  *
  * @returns {React.FC<Props>} The service catalog sections.
  */
-export const CatalogSections: React.FC<Props> = ({ serviceModels }) => {
-  const sections = useMemo(() => createCatalogSections(serviceModels), [serviceModels]);
-  const allServices = useMemo(() => getAllCatalogServices(sections), [sections]);
-  const [expandedServiceNames, setExpandedServiceNames] = useState<Set<string>>(new Set());
-  const ownerServiceNames = allServices
-    .filter((service) => service.ownedServices.length > 0)
-    .map((service) => service.serviceModel.name);
+export const CatalogSections: React.FC<Props> = ({
+  sections,
+  expandedServiceNames,
+  onToggleOwnedServices,
+}) => {
+  const allServices = getAllCatalogServices(sections);
   const hasGroups = sections.some((section) => section.kind === "Group");
-  const hasOwnedServices = ownerServiceNames.length > 0;
-  const isEveryOwnerExpanded = ownerServiceNames.every((name) => expandedServiceNames.has(name));
+  const hasOwnedServices = allServices.some((service) => service.ownedServices.length > 0);
   const hasServiceIcons = allServices.some(
     ({ resolvedAnnotations }) => resolvedAnnotations.web_icon !== undefined
   );
 
-  /**
-   * Expands the owned services of a service when they are collapsed, and collapses them otherwise.
-   */
-  const toggleOwnedServices = (serviceName: string): void => {
-    setExpandedServiceNames((previous) => {
-      const next = new Set(previous);
-
-      if (next.has(serviceName)) {
-        next.delete(serviceName);
-      } else {
-        next.add(serviceName);
-      }
-
-      return next;
-    });
-  };
-
-  /**
-   * Renders the row of a service and, when its owned services are expanded, their rows below
-   * it, one level deeper.
-   */
-  const renderServiceRows = (
-    service: CatalogService,
-    level: number,
-    positionInSet: number
-  ): React.ReactNode[] => {
-    const serviceName = service.serviceModel.name;
-    const isExpanded = expandedServiceNames.has(serviceName);
-    const treeRow: TdProps["treeRow"] = {
-      onCollapse: () => toggleOwnedServices(serviceName),
-      props: {
-        isExpanded,
-        "aria-level": level,
-        "aria-posinset": positionInSet,
-        "aria-setsize": service.ownedServices.length,
-        toggleAriaLabel: words(
-          isExpanded ? "catalog.ownedServices.collapse" : "catalog.ownedServices.expand"
-        )(service.resolvedAnnotations.web_title),
-      },
-    };
-    const row = (
-      <ServiceRow
-        key={serviceName}
-        service={service}
-        hasServiceIcons={hasServiceIcons}
-        treeRow={hasOwnedServices ? treeRow : undefined}
-      />
-    );
-
-    if (!isExpanded) {
-      return [row];
-    }
-
-    return [
-      row,
-      ...service.ownedServices.flatMap((ownedService, index) =>
-        renderServiceRows(ownedService, level + 1, index + 1)
-      ),
-    ];
-  };
-
   return (
     <Stack hasGutter>
-      {hasOwnedServices && (
-        <StackItem>
-          <Button
-            variant="link"
-            isInline
-            icon={isEveryOwnerExpanded ? <AngleDownIcon /> : <AngleRightIcon />}
-            onClick={() =>
-              setExpandedServiceNames(new Set(isEveryOwnerExpanded ? [] : ownerServiceNames))
-            }
-          >
-            {words(isEveryOwnerExpanded ? "collapseAll" : "expandAll")}
-          </Button>
-        </StackItem>
-      )}
       {sections.map((section) => (
         <StackItem key={`${section.kind}-${getSectionTitle(section)}`}>
-          <CatalogTable
-            isTreeTable={hasOwnedServices}
-            aria-label={hasGroups ? getSectionTitle(section) : words("catalog.title")}
-          >
-            <Tbody>
-              {hasGroups && (
-                <Tr>
-                  <Td colSpan={serviceRowColumnCount}>{renderSectionHeading(section)}</Td>
-                </Tr>
-              )}
-              {section.services.flatMap((service, index) =>
-                renderServiceRows(service, 1, index + 1)
-              )}
-            </Tbody>
-          </CatalogTable>
+          <Stack hasGutter>
+            {hasGroups && renderSectionHeading(section)}
+            <CatalogDataList
+              isCompact
+              aria-label={hasGroups ? getSectionTitle(section) : words("catalog.title")}
+            >
+              {section.services.map((service) => (
+                <ServiceDataListItem
+                  key={service.serviceModel.name}
+                  service={service}
+                  hasServiceIcons={hasServiceIcons}
+                  hasToggleColumn={hasOwnedServices}
+                  isOwnedService={false}
+                  titleHeadingLevel={hasGroups ? "h3" : "h2"}
+                  expandedServiceNames={expandedServiceNames}
+                  onToggleOwnedServices={onToggleOwnedServices}
+                />
+              ))}
+            </CatalogDataList>
+          </Stack>
         </StackItem>
       ))}
     </Stack>
@@ -168,19 +92,15 @@ const renderSectionHeading = (section: CatalogSection): React.ReactNode => (
 );
 
 /**
- * Adjusts the PatternFly tree table, which has no props for this. A catalog row is two lines
- * with an icon, so the toggle is centered on the row, in line with the icon, instead of on the
- * first text line. Only the toggle expands a row, so the cell drops PatternFly's pointer cursor.
- * This overrides the PF-internal `pf-v6-c-table__tree-view-main`, `pf-v6-c-table__toggle` and
- * `pf-v6-c-button` classes, so check it after a PatternFly upgrade.
+ * Centers the toggle, cells and actions of every row, nested ones included, as in the design.
+ * PatternFly aligns them to the top of the row and has no prop for this. This overrides the
+ * PF-internal `pf-v6-c-data-list__item-row`, `__item-content` and `__item-action` classes, so
+ * check it after a PatternFly upgrade.
  */
-const CatalogTable = styled(Table)`
-  .pf-v6-c-table__tree-view-main {
+const CatalogDataList = styled(DataList)`
+  .pf-v6-c-data-list__item-row,
+  .pf-v6-c-data-list__item-content,
+  .pf-v6-c-data-list__item-action {
     align-items: center;
-    cursor: auto;
-  }
-
-  .pf-v6-c-table__tree-view-main > .pf-v6-c-table__toggle .pf-v6-c-button {
-    margin-block-start: 0;
   }
 `;
