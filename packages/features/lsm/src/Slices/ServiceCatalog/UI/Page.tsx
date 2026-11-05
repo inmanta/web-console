@@ -13,49 +13,41 @@ import { createCatalogSections, getAllCatalogServices } from "./helpers";
 export const Page: React.FC = () => {
   const { data, isError, error, isSuccess, refetch } = useGetServiceModels().useContinuous();
   const sections = useMemo(() => createCatalogSections(data ?? []), [data]);
-  const [expandedServiceNames, setExpandedServiceNames] = useState<Set<string>>(new Set());
-  const ownerServiceNames = getAllCatalogServices(sections)
-    .filter((service) => service.ownedServices.length > 0)
-    .map((service) => service.serviceModel.name);
+  const [ownedServicesExpansion, setOwnedServicesExpansion] = useState({
+    isExpandedByDefault: false,
+    resetCount: 0,
+  });
+  const [isToolbarStuck, setIsToolbarStuck] = useState(false);
+  const hasOwnedServices = getAllCatalogServices(sections).some(
+    (service) => service.ownedServices.length > 0
+  );
 
   /**
-   * Expands the owned services of a service when they are collapsed, and collapses them otherwise.
+   * Remounts the catalog so every row starts again with its owned services expanded or collapsed.
    */
-  const toggleOwnedServices = (serviceName: string): void => {
-    setExpandedServiceNames((currentExpandedServiceNames) => {
-      const updatedExpandedServiceNames = new Set(currentExpandedServiceNames);
-
-      if (updatedExpandedServiceNames.has(serviceName)) {
-        updatedExpandedServiceNames.delete(serviceName);
-      } else {
-        updatedExpandedServiceNames.add(serviceName);
-      }
-
-      return updatedExpandedServiceNames;
-    });
+  const resetOwnedServicesExpansion = (isExpandedByDefault: boolean): void => {
+    setOwnedServicesExpansion(({ resetCount }) => ({
+      isExpandedByDefault,
+      resetCount: resetCount + 1,
+    }));
   };
 
-  const toolbar =
-    ownerServiceNames.length > 0 ? (
-      <Toolbar isSticky>
-        <ToolbarContent>
-          <ToolbarItem>
-            <Button
-              variant="link"
-              isInline
-              onClick={() => setExpandedServiceNames(new Set(ownerServiceNames))}
-            >
-              {words("expandAll")}
-            </Button>
-          </ToolbarItem>
-          <ToolbarItem>
-            <Button variant="link" isInline onClick={() => setExpandedServiceNames(new Set())}>
-              {words("collapseAll")}
-            </Button>
-          </ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
-    ) : undefined;
+  const toolbar = hasOwnedServices ? (
+    <Toolbar isStickyBase isStickyStuck={isToolbarStuck}>
+      <ToolbarContent>
+        <ToolbarItem>
+          <Button variant="link" isInline onClick={() => resetOwnedServicesExpansion(true)}>
+            {words("expandAll")}
+          </Button>
+        </ToolbarItem>
+        <ToolbarItem>
+          <Button variant="link" isInline onClick={() => resetOwnedServicesExpansion(false)}>
+            {words("collapseAll")}
+          </Button>
+        </ToolbarItem>
+      </ToolbarContent>
+    </Toolbar>
+  ) : undefined;
 
   let component: React.JSX.Element = <LoadingView ariaLabel="ServiceCatalog-Loading" />;
 
@@ -78,9 +70,9 @@ export const Page: React.FC = () => {
         >
           {toolbar}
           <CatalogSections
+            key={ownedServicesExpansion.resetCount}
             sections={sections}
-            expandedServiceNames={expandedServiceNames}
-            onToggleOwnedServices={toggleOwnedServices}
+            isExpandedByDefault={ownedServicesExpansion.isExpandedByDefault}
           />
         </Flex>
       );
@@ -90,6 +82,7 @@ export const Page: React.FC = () => {
     <PageContainer
       pageTitle={words("catalog.title")}
       actions={<CatalogActions />}
+      onScroll={(event) => setIsToolbarStuck(event.currentTarget.scrollTop > 0)}
       // The sticky toolbar brings its own top padding; the section's would leave a strip above it where scrolled rows show.
       style={isSuccess && toolbar ? { paddingBlockStart: 0 } : undefined}
     >

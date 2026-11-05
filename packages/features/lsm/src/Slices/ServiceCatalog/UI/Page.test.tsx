@@ -158,8 +158,10 @@ describe("ServiceCatalog", () => {
 
     await userEvent.click(screen.getByRole("button", { name: words("expandAll") }));
 
+    const expandedList = screen.getByRole("list", { name: words("catalog.title") });
+
     deploymentTree.forEach((service) =>
-      expect(within(list).getByTestId(service.name + "-item")).toBeVisible()
+      expect(within(expandedList).getByTestId(service.name + "-item")).toBeVisible()
     );
 
     await act(async () => {
@@ -170,9 +172,11 @@ describe("ServiceCatalog", () => {
 
     await userEvent.click(screen.getByRole("button", { name: words("collapseAll") }));
 
-    expect(within(list).getByTestId(deployment.name + "-item")).toBeVisible();
-    expect(within(list).getByTestId(dnsRecord.name + "-item")).not.toBeVisible();
-    expect(within(list).getByTestId(aviVirtualIp.name + "-item")).not.toBeVisible();
+    const collapsedList = screen.getByRole("list", { name: words("catalog.title") });
+
+    expect(within(collapsedList).getByTestId(deployment.name + "-item")).toBeVisible();
+    expect(within(collapsedList).getByTestId(dnsRecord.name + "-item")).not.toBeVisible();
+    expect(within(collapsedList).getByTestId(aviVirtualIp.name + "-item")).not.toBeVisible();
   });
 
   test("GIVEN ServiceCatalog WHEN no service owns another THEN there is no Expand all", async () => {

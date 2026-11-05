@@ -16,33 +16,26 @@ import { CatalogSection } from "./types";
 
 interface Props {
   sections: CatalogSection[];
-  expandedServiceNames: Set<string>;
-  onToggleOwnedServices: (serviceName: string) => void;
+  isExpandedByDefault: boolean;
 }
 
 /**
  * The service catalog: one data list per section, each under a heading with its service and
  * instance count. A section is a `web_group`, or "Other services" for the services without one.
  * Owned services are a nested data list under their owner. Without any group, the catalog is a
- * single list without heading, and without any owned service, there is no toggle column.
+ * single list without heading.
  * When any service has a `web_icon`, every row shows an icon, with a fallback for the services
  * without one; otherwise the rows have no icon.
  *
  * @props {Props} props - The props of the component.
  *  @prop {CatalogSection[]} sections - The catalog sections, from createCatalogSections.
- *  @prop {Set<string>} expandedServiceNames - The names of the services whose owned services are expanded.
- *  @prop {function} onToggleOwnedServices - Expands or collapses the owned services of a service.
+ *  @prop {boolean} isExpandedByDefault - Whether the owned services of every service start expanded.
  *
  * @returns {React.FC<Props>} The service catalog sections.
  */
-export const CatalogSections: React.FC<Props> = ({
-  sections,
-  expandedServiceNames,
-  onToggleOwnedServices,
-}) => {
+export const CatalogSections: React.FC<Props> = ({ sections, isExpandedByDefault }) => {
   const allServices = getAllCatalogServices(sections);
   const hasGroups = sections.some((section) => section.kind === "Group");
-  const hasOwnedServices = allServices.some((service) => service.ownedServices.length > 0);
   const hasServiceIcons = allServices.some(
     ({ resolvedAnnotations }) => resolvedAnnotations.web_icon !== undefined
   );
@@ -62,11 +55,9 @@ export const CatalogSections: React.FC<Props> = ({
                   key={service.serviceModel.name}
                   service={service}
                   hasServiceIcons={hasServiceIcons}
-                  hasToggleColumn={hasOwnedServices}
                   isOwnedService={false}
                   titleHeadingLevel={hasGroups ? "h3" : "h2"}
-                  expandedServiceNames={expandedServiceNames}
-                  onToggleOwnedServices={onToggleOwnedServices}
+                  isExpandedByDefault={isExpandedByDefault}
                 />
               ))}
             </CatalogDataList>
