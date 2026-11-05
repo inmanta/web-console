@@ -1,5 +1,0 @@
-description: Upgrade GraphiQL to 6 and Monaco to 0.57.
-change-type: minor
-destination-branches: [master, iso9]
-sections:
-  feature: "{{description}}"
