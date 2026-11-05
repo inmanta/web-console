@@ -17,6 +17,7 @@ import {
   ServiceModel,
   ServiceOrderItemAction,
   ServiceOrderItemRequest,
+  resolveEntityAnnotations,
 } from "@inmanta/web-console-core";
 import { sanitizeAttributes } from "@inmanta/web-console-core/Common";
 import { CreateModifierHandler, FieldCreator } from "@inmanta/web-console-core/FormState";
@@ -74,6 +75,9 @@ export const HeaderColors: Record<EntityShapeType, string> = {
 export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   connections: Map<string, string[]>;
   serviceModel: ServiceModel | EmbeddedEntity;
+
+  /** The name the header shows: the `web_title` of a service, or "type - name" of an embedded entity. */
+  displayName: string;
   relationsDictionary: RelationsDictionary;
   instanceAttributes: InstanceAttributeModel;
   sanitizedAttrs: InstanceAttributeModel;
@@ -93,6 +97,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
 
     this.connections = new Map<string, string[]>();
     this.serviceModel = initializationOptions.serviceModel;
+    this.displayName = ServiceEntityShape.getDisplayName(initializationOptions.serviceModel);
     this.relationsDictionary = initializationOptions.relationsDictionary;
     this.instanceAttributes = initializationOptions.instanceAttributes;
     this.sanitizedAttrs = JSON.parse(JSON.stringify(initializationOptions.instanceAttributes));
@@ -357,17 +362,25 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   }
 
   /**
-   * Sets the display name of the header label with a shortened version if necessary.
+   * Returns the name an entity shows on the canvas and in the stencil: the `web_title` of a
+   * service, or "type - name" of an embedded entity, or only its name when it has no type.
+   */
+  static getDisplayName(serviceModel: ServiceModel | EmbeddedEntity): string {
+    if (!("type" in serviceModel)) {
+      return resolveEntityAnnotations(serviceModel).web_title;
+    }
+
+    return serviceModel.type ? `${serviceModel.type} - ${serviceModel.name}` : serviceModel.name;
+  }
+
+  /**
+   * Sets the header label to the display name, shortened when it doesn't fit. The header test id
+   * keeps the name of a service, so it doesn't change with its `web_title`.
    *
-   * @param {string} name - The name to set for the entity.
-   * @param {object} [options] - Optional settings for the attribute update.
    * @returns {this} The current instance for method chaining.
    */
   setDisplayName(): this {
-    const typeName =
-      "type" in this.serviceModel && this.serviceModel.type ? this.serviceModel.type : undefined;
-    const serviceName = this.serviceModel.name;
-    const name = typeName && serviceName ? `${typeName} - ${serviceName}` : typeName || serviceName;
+    const name = this.displayName;
     const shortenName = util.breakText(
       name,
       { width: 140, height: 30 },
@@ -380,7 +393,10 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
       }
     );
 
-    this.attr(["headerLabel", "data-testid"], "header-" + name);
+    this.attr(
+      ["headerLabel", "data-testid"],
+      "header-" + ("type" in this.serviceModel ? name : this.serviceModel.name)
+    );
 
     if (shortenName.includes("\u2026")) {
       return this.attr(["headerLabel", "text"], name.replace(/\s+/g, " ").slice(0, 16) + "\u2026");

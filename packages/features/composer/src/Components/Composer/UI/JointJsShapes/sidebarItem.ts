@@ -6,7 +6,7 @@ import {
   t_global_text_color_regular,
 } from "@patternfly/react-tokens";
 import { v4 as uuidv4 } from "uuid";
-import { HeaderColors, ServiceEntityBase } from "./ServiceEntityShape";
+import { HeaderColors, ServiceEntityBase, ServiceEntityShape } from "./ServiceEntityShape";
 
 export interface SidebarItemOptions extends ServiceEntityBase {
   isDisabled: boolean;
@@ -15,16 +15,7 @@ export interface SidebarItemOptions extends ServiceEntityBase {
 }
 
 export const createSidebarItem = (options: SidebarItemOptions) => {
-  const typeName =
-    "type" in options.serviceModel && options.serviceModel.type
-      ? options.serviceModel.type
-      : undefined;
-  const serviceName = options.serviceModel.name;
-
-  const defaultName =
-    typeName && serviceName ? `${typeName} - ${serviceName}` : typeName || serviceName;
-
-  const name = options.label || defaultName;
+  const name = options.label || ServiceEntityShape.getDisplayName(options.serviceModel);
 
   const id = options.id || uuidv4();
 
