@@ -105,33 +105,28 @@ export const composerSharedModules = () => {
   const visited = new Set();
   const pending = [composerEntry];
 
-  while (pending.length > 0) {
-    const file = /** @type {string} */ (pending.pop());
-
+  for (let file = pending.pop(); file !== undefined; file = pending.pop()) {
     if (visited.has(file)) {
       continue;
     }
     visited.add(file);
 
     for (const specifier of importsOf(file)) {
-      const ownPath = specifier.startsWith(".")
-        ? join(dirname(file), specifier)
-        : specifier.startsWith(`${composerPackage}/`)
-          ? join(composerSrc, specifier.slice(composerPackage.length + 1))
-          : undefined;
+      const ownPath = ownModulePath(file, specifier);
 
-      if (ownPath !== undefined) {
-        const resolved = resolveSource(ownPath);
-
-        if (resolved !== undefined) {
-          pending.push(resolved);
+      if (ownPath === undefined) {
+        if (!/^@joint\/|^@images\/|\.css$/.test(specifier)) {
+          specifiers.add(specifier);
         }
-      } else if (
-        !specifier.startsWith("@joint/") &&
-        !specifier.startsWith("@images/") &&
-        !specifier.endsWith(".css")
-      ) {
-        specifiers.add(specifier);
+        continue;
+      }
+
+      const resolved = resolveSource(ownPath);
+
+      if (resolved !== undefined) {
+        pending.push(resolved);
+      } else if (!isAsset(ownPath)) {
+        throw new Error(`${file}: can't resolve ${specifier} to a file of the composer.`);
       }
     }
   }
@@ -141,6 +136,37 @@ export const composerSharedModules = () => {
 
 const composerPackage = "@inmanta/web-console-feature-composer";
 const composerSrc = join(dirname(fileURLToPath(import.meta.url)), "src");
+
+/**
+ * The path of an import of the composer's own code (relative, or through its package name),
+ * without extension, or undefined for an import of another package.
+ *
+ * @param {string} file - the importing module
+ * @param {string} specifier - what it imports
+ * @returns {string | undefined} the path
+ */
+const ownModulePath = (file, specifier) => {
+  if (specifier.startsWith(".")) {
+    return join(dirname(file), specifier);
+  }
+  if (specifier === composerPackage) {
+    return join(composerSrc, "index");
+  }
+  if (specifier.startsWith(`${composerPackage}/`)) {
+    return join(composerSrc, specifier.slice(composerPackage.length + 1));
+  }
+
+  return undefined;
+};
+
+/**
+ * Whether an import of the composer's own code is an asset (a stylesheet or an image), which
+ * the build bundles as it is and has no imports to follow.
+ *
+ * @param {string} path - the imported path
+ * @returns {boolean} whether it is an asset
+ */
+const isAsset = (path) => /\.(css|svg|png|jpe?g|gif)$/.test(path);
 
 /**
  * The source file of an import of the composer's own code, or undefined for an asset (an image or
@@ -170,14 +196,19 @@ const importsOf = (file) => {
 
   /** @param {import("typescript").Node} node */
   const visit = (node) => {
-    if (ts.isImportDeclaration(node) && !node.importClause?.isTypeOnly) {
-      specifiers.push(
-        /** @type {import("typescript").StringLiteral} */ (node.moduleSpecifier).text
-      );
-    } else if (ts.isExportDeclaration(node) && node.moduleSpecifier && !node.isTypeOnly) {
-      specifiers.push(
-        /** @type {import("typescript").StringLiteral} */ (node.moduleSpecifier).text
-      );
+    if (
+      ts.isImportDeclaration(node) &&
+      ts.isStringLiteral(node.moduleSpecifier) &&
+      !node.importClause?.isTypeOnly
+    ) {
+      specifiers.push(node.moduleSpecifier.text);
+    } else if (
+      ts.isExportDeclaration(node) &&
+      node.moduleSpecifier &&
+      ts.isStringLiteral(node.moduleSpecifier) &&
+      !node.isTypeOnly
+    ) {
+      specifiers.push(node.moduleSpecifier.text);
     } else if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) {
       const [argument] = node.arguments;
 

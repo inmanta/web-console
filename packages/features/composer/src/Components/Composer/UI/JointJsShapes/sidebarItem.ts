@@ -1,10 +1,8 @@
 import { shapes } from "@joint/plus";
-import {
-  t_global_background_color_primary_default,
-  t_global_border_color_200,
-  t_global_font_size_body_default,
-  t_global_text_color_regular,
-} from "@patternfly/react-tokens";
+import { t_global_background_color_primary_default } from "@patternfly/react-tokens/dist/esm/t_global_background_color_primary_default";
+import { t_global_border_color_200 } from "@patternfly/react-tokens/dist/esm/t_global_border_color_200";
+import { t_global_font_size_body_default } from "@patternfly/react-tokens/dist/esm/t_global_font_size_body_default";
+import { t_global_text_color_regular } from "@patternfly/react-tokens/dist/esm/t_global_text_color_regular";
 import { v4 as uuidv4 } from "uuid";
 import { HeaderColors, ServiceEntityBase } from "./ServiceEntityShape";
 

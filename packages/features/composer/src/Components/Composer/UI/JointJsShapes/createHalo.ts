@@ -1,5 +1,5 @@
 import { dia, highlighters, ui } from "@joint/plus";
-import { t_global_border_radius_small } from "@patternfly/react-tokens";
+import { t_global_border_radius_small } from "@patternfly/react-tokens/dist/esm/t_global_border_radius_small";
 import { words } from "@inmanta/web-console-core";
 import { RelationsDictionary, checkIfConnectionIsAllowed } from "../../Data/Helpers";
 import { isServiceEntityShapeCell } from "../../Data/Helpers/getEntitiesFromCanvas";

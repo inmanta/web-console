@@ -89,7 +89,6 @@ export default defineConfig(
     build: {
       outDir: composerBuildDir,
       emptyOutDir: true,
-      target: "esnext",
       assetsDir: "",
       rollupOptions: {
         // The federation plugin adds the entry of each exposed module; there is no page.

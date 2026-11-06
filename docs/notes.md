@@ -91,15 +91,13 @@ createApp({
   runtimeFeatures: [
     {
       id: "composer",
-      // Fetched only when the server status enables it.
-      isEnabled: (orchestratorProvider) => orchestratorProvider.isComposerEnabled(),
       load: () => import("composer/feature"),
     },
   ],
 });
 ```
 
-The shell loads the enabled runtime features once the server status is known, before it shows the pages. The separate build's entry module exports a `RuntimeFeatureEntry` (`@inmanta/web-console-core`): the `feature`, and `singletons: getSingletons()`.
+The shell loads them once the server status is known, before it shows the pages. A runtime feature can also have `isEnabled: (orchestratorProvider) => boolean`, to only fetch it when the server status calls for it; the composer doesn't, because it also has something to show without its licence. The separate build's entry module exports a `RuntimeFeatureEntry` (`@inmanta/web-console-core`): the `feature`, and `singletons: getSingletons()`.
 
 - A feature that fails to load (e.g. it isn't installed, or doesn't answer within 15 seconds), or whose module isn't its entry (a `RuntimeFeatureEntry` with the same `id`), is left out: the app starts without it.
 - A feature with another `version` than the app is left out with a version mismatch notice.

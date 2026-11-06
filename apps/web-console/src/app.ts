@@ -23,7 +23,8 @@ export const app = createApp({
   runtimeFeatures: [
     {
       id: "composer",
-      isEnabled: (orchestratorProvider) => orchestratorProvider.isComposerEnabled(),
+      // Loaded whenever it is installed, also without the licence: its pages then say that it
+      // isn't licensed, and it adds the read-only "Show in Composer" action.
       // The composer's separate build, see vite.config.ts.
       load: () => import("composer/feature"),
     },
