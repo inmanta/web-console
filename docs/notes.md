@@ -81,6 +81,31 @@ There are two apps: `apps/oss`, the open-source web console with the OSS feature
 
 The settings both apps share live outside them: the Vite settings in `vite.shared.ts` (`appConfig`) and the Monaco setup in the shell (`@inmanta/web-console-shell/monaco`). An app's `vite.config.ts` only adds the Vite plugins of its features.
 
+### Features loaded at runtime
+
+A feature is always a `FeatureModule`. An app either bundles it (`features`), or loads it at runtime from a separate build (`runtimeFeatures`), so a deployment can leave it out or install it later, like the composer. The feature itself is the same either way:
+
+```ts
+createApp({
+  features: [environmentFeature, lsmFeature],
+  runtimeFeatures: [
+    {
+      id: "composer",
+      // Fetched only when the server status enables it.
+      isEnabled: (orchestratorProvider) => orchestratorProvider.isComposerEnabled(),
+      load: () => import("composer/feature"),
+    },
+  ],
+});
+```
+
+The shell loads the enabled runtime features once the server status is known, before it shows the pages. The separate build's entry module exports a `RuntimeFeatureEntry` (`@inmanta/web-console-core`): the `feature`, and `singletons: getSingletons()`.
+
+- A feature that fails to load (e.g. it isn't installed, or doesn't answer within 15 seconds), or whose module isn't its entry (a `RuntimeFeatureEntry` with the same `id`), is left out: the app starts without it.
+- A feature with another `version` than the app is left out with a version mismatch notice.
+- A build with its own copy of React, React Router or the web-console core layer (other `singletons` than the app's) would read other contexts than the app. In development that stops the app with an error; in production the feature is left out with an error in the console.
+- Its routes, sidebar entries, contributions and messages are added like those of the bundled features. Its pages render in the catch-all route (`RuntimeFeatureRoutes`, inside the same page frame), so unlike the other pages they don't match a url whose decoded path contains a newline.
+
 ## Features and routes in tests
 
 Tests follow the same import boundaries as the code they test (see `eslint.layers.js`), and may also import `@inmanta/web-console-test-utils`. A feature's tests only depend on that feature:

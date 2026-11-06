@@ -98,7 +98,7 @@ export const setLocale = (locale: string): void => {
  * Returns the message of a key, in the active language when it has one, in English otherwise.
  *
  * Don't call it while a module loads, e.g. to build a constant: the messages are only registered
- * once the app starts, and features loaded as a plugin even later.
+ * once the app starts, and features loaded at runtime even later.
  *
  * @param key - the key of the message
  * @returns the message: a string, or a function that builds one. When no message is registered for

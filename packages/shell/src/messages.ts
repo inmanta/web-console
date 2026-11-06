@@ -13,6 +13,13 @@ export const shellMessages = {
   "notFound.home": "Go home",
 
   /**
+   * Features loaded at runtime
+   */
+  "runtimeFeatures.versionMismatch.title": (id: string) => `${id} version mismatch`,
+  "runtimeFeatures.versionMismatch.message": (id: string, version: string, appVersion: string) =>
+    `The ${id} is version ${version}, but the web console is version ${appVersion}, so the ${id} isn't available. Install the ${id} of version ${appVersion}.`,
+
+  /**
    * Dashboard
    */
   "dashboard.documentation.tooltip": "Documentation",
