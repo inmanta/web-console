@@ -113,7 +113,7 @@ export const JSONEditor: React.FC<Props> = ({
   // and see https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.json.DiagnosticsOptions.html
   useEffect(() => {
     if (monaco) {
-      monaco.languages.json.jsonDefaults.setModeConfiguration({
+      monaco.json.jsonDefaults.setModeConfiguration({
         colors: true,
         completionItems: true,
         diagnostics: true,
@@ -122,7 +122,7 @@ export const JSONEditor: React.FC<Props> = ({
         selectionRanges: true,
         tokens: true,
       });
-      monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      monaco.json.jsonDefaults.setDiagnosticsOptions({
         validate: true,
         schemaValidation: "error",
         schemas: [

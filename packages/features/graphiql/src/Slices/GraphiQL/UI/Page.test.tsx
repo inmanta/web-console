@@ -12,7 +12,10 @@ import { Page } from "./Page";
 
 // Stub out the heavy GraphiQL editor — we only test the page shell here.
 vi.mock("graphiql", () => ({
-  GraphiQL: () => <div data-testid="graphiql-editor" />,
+  HISTORY_PLUGIN: { title: "History" },
+  GraphiQL: ({ plugins }: { plugins: { title: string }[] }) => (
+    <div data-testid="graphiql-editor" data-plugins={plugins.map(({ title }) => title).join(",")} />
+  ),
 }));
 
 function setup(search = "") {
@@ -58,6 +61,13 @@ describe("GraphiQL Page", () => {
     render(component);
 
     expect(await screen.findByTestId("graphiql-editor")).toBeInTheDocument();
+  });
+
+  test("GIVEN the page THEN the editor only has the history plugin, not the query builder or collections", async () => {
+    const { component } = setup();
+    render(component);
+
+    expect(await screen.findByTestId("graphiql-editor")).toHaveAttribute("data-plugins", "History");
   });
 
   test("renders correctly with an env query param", async () => {

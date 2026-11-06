@@ -46,3 +46,23 @@ Cypress.Commands.add("assertNoCDNDownloads", () => {
     expect(_monacoFromCDN, label).to.have.length(0);
   });
 });
+
+/**
+ * Types text into the focused Monaco editor.
+ *
+ * Since 0.56, Monaco takes text input through the browser's EditContext API, which ignores the
+ * synthetic key events `cy.type()` sends: shortcuts and keys like {backspace} still work, but
+ * characters never reach the editor. This inserts the text through the Chrome DevTools Protocol
+ * instead, the way real keyboard input arrives. Focus the editor (or the spot to type at) first.
+ *
+ * @param {string} text - The text to insert at the cursor.
+ */
+Cypress.Commands.add("typeInMonaco", (text) => {
+  cy.wrap(
+    Cypress.automation("remote:debugger:protocol", {
+      command: "Input.insertText",
+      params: { text },
+    }),
+    { log: false }
+  );
+});

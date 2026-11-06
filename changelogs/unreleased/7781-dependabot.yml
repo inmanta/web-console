@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump graphiql from 5.4.0 to 6.0.0 and monaco-editor from 0.52.2 to 0.57.0
+destination-branches:
+- master
+- iso9
+sections: {}
