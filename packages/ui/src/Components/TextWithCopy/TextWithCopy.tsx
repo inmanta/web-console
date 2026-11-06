@@ -26,17 +26,14 @@ export const TextWithCopy: React.FC<React.PropsWithChildren<Props>> = ({
     <span {...props}>
       {children || value}
       <RowHoverReveal>
-        <CopyButton value={value} tooltipContent={tooltipContent} />
+        {/* No padding, so the button doesn't make the line taller than the text. */}
+        <CopyButton value={value} tooltipContent={tooltipContent} hasNoPadding />
       </RowHoverReveal>
     </span>
   );
 };
 
-// The negative block margin cancels the vertical padding of the small (size="sm") button, so it
-// doesn't make the line taller than the text (in a table, rows with and without it then have the
-// same height). It uses the token PF's small button padding is built from.
 const CopyButton = styled(ClipboardCopyButton)`
-  margin-block: calc(-1 * var(--pf-t--global--spacer--control--vertical--compact));
   opacity: 0.6;
 
   &:hover {
