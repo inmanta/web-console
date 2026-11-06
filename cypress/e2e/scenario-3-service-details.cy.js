@@ -20,8 +20,8 @@ if (isIso) {
       cy.get("#basic-service", { timeout: 60000 }).find('[aria-label="Actions-dropdown"]').click();
       cy.get("button").contains("Show Details").click();
 
-      // Expect to be redirected on Service Details: basic-service
-      cy.get("h1").contains("Service Details: basic-service").should("to.exist");
+      // Expect to be redirected on Service Details: Basic service
+      cy.get("h1").contains("Service Details: Basic service").should("to.exist");
 
       // Expect  the current tab to be Details
       cy.get(".pf-m-current").should("contain", "Details");
@@ -142,9 +142,9 @@ if (isIso) {
       cy.get("#basic-service", { timeout: 60000 }).find('[aria-label="Actions-dropdown"]').click();
       cy.get("button").contains("Show Details").click();
 
-      // Expect to be redirected on Service Details: basic-service
+      // Expect to be redirected on Service Details: Basic service
       cy.get("h1", { timeout: 20000 })
-        .contains("Service Details: basic-service")
+        .contains("Service Details: Basic service")
         .should("to.exist");
 
       // Click on Details tab
@@ -223,8 +223,8 @@ if (isIso) {
       cy.get("#basic-service", { timeout: 60000 }).find('[aria-label="Actions-dropdown"]').click();
       cy.get("button").contains("Show Details").click();
 
-      // Expect to be redirected on Service Details: basic-service
-      cy.get("h1").contains("Service Details: basic-service").should("to.exist");
+      // Expect to be redirected on Service Details: Basic service
+      cy.get("h1").contains("Service Details: Basic service").should("to.exist");
 
       // Expect to be Details tab
       cy.get(".pf-m-current").should("contain", "Details");
@@ -244,9 +244,9 @@ if (isIso) {
       cy.get("#basic-service", { timeout: 60000 }).find('[aria-label="Actions-dropdown"]').click();
       cy.get("button").contains("Show Details").click();
 
-      // Expect to be redirected on Service Details: basic-service
+      // Expect to be redirected on Service Details: Basic service
       cy.get("h1", { timeout: 20000 })
-        .contains("Service Details: basic-service")
+        .contains("Service Details: Basic service")
         .should("to.exist");
 
       // Go to the callback tab
@@ -352,7 +352,7 @@ if (isIso) {
       // Confirm modal
       cy.get("#submit").click();
 
-      // Expect Toast : Deleting service entity failed
+      // Expect Toast : Deleting service failed
       cy.get('[data-testid="ToastAlert"]').should("to.be.visible");
 
       // Click on Inventory on basic-service

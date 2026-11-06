@@ -13,6 +13,9 @@ import {
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { ServiceInstanceDetails } from "../UI/Page";
 
+/** The display name of the instance the Instance Details setup opens. */
+export const instanceName = "core1";
+
 /**
  * Mock setup for the test cases of the Instance Details page.
  *
@@ -28,7 +31,7 @@ export const setupServiceInstanceDetails = (
     <SetupWrapper expertMode={expertMode} features={features}>
       <Page>
         <ServiceInstanceDetails
-          instance="core1"
+          instance={instanceName}
           service="mobileCore"
           instanceId="1d96a1ab"
           version="1"

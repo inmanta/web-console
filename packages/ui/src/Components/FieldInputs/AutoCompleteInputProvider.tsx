@@ -7,6 +7,7 @@ import { AutoCompleteInput } from "./AutoCompleteInput";
 
 interface Props {
   serviceName: string;
+  serviceTitle: string;
   attributeName: string;
   attributeValue: string | string[] | null;
   description?: string | null;
@@ -23,6 +24,7 @@ interface Props {
  *
  * @props {object} props - The properties passed to the component.
  * @prop {string} serviceName - The name of the service.
+ * @prop {string} serviceTitle - The `web_title` of the service, or its name when it has none.
  * @prop {string} attributeName - The name of the attribute.
  * @prop {string | string[] | null} attributeValue - The value of the attribute.
  * @prop {string | null} description - The description of the attribute.
@@ -37,6 +39,7 @@ interface Props {
  */
 export const AutoCompleteInputProvider: React.FC<Props> = ({
   serviceName,
+  serviceTitle,
   attributeName,
   attributeValue,
   description,
@@ -68,7 +71,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
       <AutoCompleteInput
         options={[]}
         selected={attributeValue}
-        serviceEntity={serviceName}
+        serviceTitle={serviceTitle}
         attributeName={attributeName}
         isOptional={isOptional}
         shouldBeDisabled={isDisabled}
@@ -99,7 +102,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
       <AutoCompleteInput
         options={options}
         attributeName={attributeName}
-        serviceEntity={serviceName}
+        serviceTitle={serviceTitle}
         selected={attributeValue}
         isOptional={isOptional}
         shouldBeDisabled={isDisabled}
