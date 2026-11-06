@@ -2,6 +2,9 @@
   "name": "@inmanta/web-console-feature-lsm",
   "private": true,
   "type": "module",
+  "inmanta": {
+    "edition": "iso"
+  },
   "exports": {
     ".": {
       "types": "./src/index.ts",

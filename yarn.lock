@@ -905,15 +905,14 @@ __metadata:
     "@inmanta/web-console-feature-user-management": "workspace:^"
     "@inmanta/web-console-shell": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
-    "@monaco-editor/react": "npm:^4.7.0"
     "@patternfly/react-core": "npm:^6.7.0"
     "@tanstack/react-query": "npm:^5.105.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
     "@types/jest-axe": "npm:^3.5.9"
+    "@vitejs/plugin-react": "npm:^6.2.1"
     jest-axe: "npm:^11.0.0"
-    monaco-editor: "npm:^0.57.0"
     msw: "npm:^2.15.0"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
@@ -1146,6 +1145,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@inmanta/web-console-oss@workspace:apps/oss":
+  version: 0.0.0-use.local
+  resolution: "@inmanta/web-console-oss@workspace:apps/oss"
+  dependencies:
+    "@inmanta/web-console-core": "workspace:^"
+    "@inmanta/web-console-feature-environment": "workspace:^"
+    "@inmanta/web-console-feature-graphiql": "workspace:^"
+    "@inmanta/web-console-feature-orchestration-engine": "workspace:^"
+    "@inmanta/web-console-feature-resource-manager": "workspace:^"
+    "@inmanta/web-console-feature-user-management": "workspace:^"
+    "@inmanta/web-console-shell": "workspace:^"
+    "@inmanta/web-console-test-utils": "workspace:^"
+    "@vitejs/plugin-react": "npm:^6.2.1"
+    vite: "npm:^8.3.5"
+    vite-plugin-mkcert: "npm:^2.1.0"
+  languageName: unknown
+  linkType: soft
+
 "@inmanta/web-console-shell@workspace:^, @inmanta/web-console-shell@workspace:packages/shell":
   version: 0.0.0-use.local
   resolution: "@inmanta/web-console-shell@workspace:packages/shell"
@@ -1153,6 +1170,7 @@ __metadata:
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
+    "@monaco-editor/react": "npm:^4.7.0"
     "@patternfly/react-core": "npm:^6.7.0"
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
@@ -1166,6 +1184,7 @@ __metadata:
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
     keycloak-js: "npm:^26.2.5"
+    monaco-editor: "npm:^0.57.0"
     msw: "npm:^2.15.0"
     oidc-client-ts: "npm:^3.5.0"
     react: "npm:^19.3.1"
@@ -1274,6 +1293,7 @@ __metadata:
     typescript-7: "npm:typescript@^7.0.2"
     typescript-eslint: "npm:^8.72.1"
     vite: "npm:^8.3.5"
+    vite-plugin-mkcert: "npm:^2.1.0"
     vitest: "npm:^5.0.5"
   languageName: unknown
   linkType: soft

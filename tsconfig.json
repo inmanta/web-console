@@ -41,6 +41,9 @@
       "path": "./packages/features/user-management"
     },
     {
+      "path": "./apps/oss"
+    },
+    {
       "path": "./apps/web-console"
     },
     {

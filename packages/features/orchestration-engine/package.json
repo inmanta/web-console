@@ -2,6 +2,9 @@
   "name": "@inmanta/web-console-feature-orchestration-engine",
   "private": true,
   "type": "module",
+  "inmanta": {
+    "edition": "oss"
+  },
   "exports": {
     ".": {
       "types": "./src/index.ts",

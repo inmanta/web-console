@@ -3,7 +3,12 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider, ServiceInstance } from "@inmanta/web-console-test-utils";
+import { words } from "@inmanta/web-console-core";
+import {
+  MockedDependencyProvider,
+  Service,
+  ServiceInstance,
+} from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
@@ -44,6 +49,7 @@ const TestWrapper = () => {
             description={""}
             handleInputChange={setValue}
             serviceName={"test_entity"}
+            serviceTitle={Service.EntityAnnotations.valid.web_title}
             isDisabled={false}
             multi={false}
           />
@@ -59,7 +65,7 @@ test("Given the AutoCompleteInputProvider When typing an instance name or id The
   render(<TestWrapper />);
 
   const relationInputField = await screen.findByPlaceholderText(
-    "Select an instance of test_entity"
+    words("common.serviceInstance.relation")(Service.EntityAnnotations.valid.web_title)
   );
 
   expect(relationInputField).toBeInTheDocument();

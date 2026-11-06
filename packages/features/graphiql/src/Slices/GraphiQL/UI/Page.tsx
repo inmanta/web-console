@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 import { Fetcher } from "@graphiql/toolkit";
-import { GraphiQL } from "graphiql";
+import { GraphiQL, HISTORY_PLUGIN } from "graphiql";
 import graphiqlCSS from "graphiql/style.css?inline";
 import styled, { createGlobalStyle } from "styled-components";
 import { words } from "@inmanta/web-console-core";
@@ -86,6 +86,10 @@ export const Page: React.FC = () => {
           defaultEditorToolsVisibility="headers"
           isHeadersEditorEnabled
           defaultQuery={DEFAULT_QUERY}
+          // Only the query history, as before: GraphiQL 6 also turns on the query builder and the
+          // saved-operation collections by default. Collections live in localStorage, shared by every
+          // environment in the browser. Whether we want them is evaluated separately.
+          plugins={[HISTORY_PLUGIN]}
         />
       </EditorContainer>
     </PageContainer>

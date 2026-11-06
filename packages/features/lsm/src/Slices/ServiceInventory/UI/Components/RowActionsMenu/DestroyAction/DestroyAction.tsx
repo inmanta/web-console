@@ -14,6 +14,9 @@ import { ConfirmUserActionForm } from "@inmanta/web-console-ui/Components/Confir
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
+
+  /** The `web_title` of the service, or its name when it has none. */
+  serviceTitle: string;
 }
 
 /**
@@ -21,6 +24,7 @@ interface Props extends VersionedServiceInstanceIdentifier {
  *
  * @props {Props} props - The props of the component.
  * @prop {string} service_entity - The service entity of the service instance.
+ * @prop {string} serviceTitle - The `web_title` of the service, or its name when it has none.
  * @prop {string} id - The id of the service instance.
  * @prop {string} instance_identity - The instance identity of the service instance.
  * @prop {string} version - The version of the service instance.
@@ -32,6 +36,7 @@ export const DestroyAction: React.FC<Props> = ({
   instance_identity,
   version,
   service_entity,
+  serviceTitle,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { authHelper } = useContext(DependencyContext);
@@ -77,7 +82,7 @@ export const DestroyAction: React.FC<Props> = ({
       content: (
         <>
           <Content component="p">
-            {words("inventory.destroyInstance.header")(instance_identity, service_entity)}
+            {words("inventory.destroyInstance.header")(instance_identity, serviceTitle)}
           </Content>
           <br />
           <Content component="p">{words("inventory.destroyInstance.text")}</Content>

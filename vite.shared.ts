@@ -1,14 +1,28 @@
 /**
- * The Vite settings every app and the tests share: React, the global constants, the
- * aliases of the shared assets and the Monaco setup. Each app's vite.config.ts adds its own build
- * and dev server settings and the plugins of the features it ships; vitest.config.ts adds the
- * test settings.
+ * The Vite settings every app and the tests share: React, the global constants, the aliases of
+ * the shared assets and the Monaco setup (`sharedConfig`). On top of those, `appConfig` holds the
+ * dev server and build settings every app shares. Each app's vite.config.ts adds the plugins of
+ * the features it ships; vitest.config.ts adds the test settings.
+ *
+ * Every app lists the packages this file imports (vite, @vitejs/plugin-react, vite-plugin-mkcert)
+ * in its own devDependencies, even though the root lists them too: `yarn workspaces focus` on an
+ * app, the OSS install without the JointJS token, doesn't install the root's devDependencies.
+ * A package added here goes into every app's devDependencies as well.
  */
 import { execSync } from "child_process";
-import { readFileSync } from "fs";
+import { readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import react from "@vitejs/plugin-react";
-import { LogOptions, UserConfig, ViteDevServer } from "vite";
+import {
+  loadEnv,
+  LogOptions,
+  mergeConfig,
+  PluginOption,
+  ProxyOptions,
+  UserConfig,
+  ViteDevServer,
+} from "vite";
+import mkcert from "vite-plugin-mkcert";
 
 export const repoRoot = import.meta.dirname;
 
@@ -162,4 +176,215 @@ export const sharedConfig: UserConfig = {
   css: {
     devSourcemap: false,
   },
+};
+
+// Moves the assets to the root of the build and rewrites the references to them.
+const moveAssetsToRootPlugin = (outDir: string) => ({
+  name: "move-assets-to-root",
+  closeBundle() {
+    const assetsDir = resolve(outDir, "assets");
+
+    // Move all files from assets to the root of the build
+    if (statSync(assetsDir, { throwIfNoEntry: false })) {
+      const files = readdirSync(assetsDir);
+      for (const file of files) {
+        renameSync(resolve(assetsDir, file), resolve(outDir, file));
+      }
+      // Remove the assets directory
+      rmSync(assetsDir, { recursive: true, force: true });
+    }
+
+    // Rewrite references in all files of the build
+    const distFiles = readdirSync(outDir);
+    for (const file of distFiles) {
+      if (file.endsWith(".js") || file.endsWith(".html") || file.endsWith(".css")) {
+        const filePath = resolve(outDir, file);
+        let content = readFileSync(filePath, "utf-8");
+        // Replace assets/filename with filename
+        content = content.replace(/assets\//g, "");
+        writeFileSync(filePath, content, "utf-8");
+      }
+    }
+  },
+});
+
+// Copies the app's config.js and the favicon to the build output, and loads config.js first.
+const copyConfigPlugin = (appDir: string, outDir: string) => ({
+  name: "copy-config",
+  closeBundle() {
+    const configSource = resolve(appDir, "src/config.js");
+    const configDest = resolve(outDir, "config.js");
+    const htmlFile = resolve(outDir, "index.html");
+    // Copy favicon.ico from public/images/ to the root of the build
+    const faviconSource = resolve(repoRoot, "public/images/favicon.ico");
+    const faviconDest = resolve(outDir, "favicon.ico");
+    try {
+      // Copy config.js to the root of the build
+      writeFileSync(configDest, readFileSync(configSource, "utf-8"));
+      console.log("config.js copied to build output");
+      // Copy favicon.ico to the root of the build
+      if (statSync(faviconSource, { throwIfNoEntry: false })) {
+        writeFileSync(faviconDest, readFileSync(faviconSource));
+        console.log("favicon.ico copied to build output root");
+      }
+      // Update HTML to include config.js script before the main script in the head section,
+      // once: closeBundle can run more than once in a build.
+      if (statSync(htmlFile, { throwIfNoEntry: false })) {
+        let htmlContent = readFileSync(htmlFile, "utf-8");
+        if (htmlContent.includes('src="./config.js"')) {
+          return;
+        }
+        // Insert config.js script before the main script in the head section
+        htmlContent = htmlContent.replace(
+          /(<script type="module" crossorigin src="\.\/[^\"]+\.js"><\/script>)/,
+          '  <script type="module" src="./config.js"></script>\n$1'
+        );
+        writeFileSync(htmlFile, htmlContent, "utf-8");
+        console.log("HTML updated to include config.js script");
+      }
+    } catch (error) {
+      console.error("Failed to copy config.js, favicon.ico, or update HTML:", error);
+    }
+  },
+});
+
+// Physically remove Monaco CDN URL strings from the production bundle so they
+// can never be used even if a loader instance slips through deduplication or
+// loader.config() is called too late. The URLs only exist as dead string
+// literals in @monaco-editor/loader's default config; removing them has no
+// runtime side-effect beyond making CDN loading impossible.
+const blockMonacoCDNPlugin = () => ({
+  name: "block-monaco-cdn",
+  renderChunk(code: string) {
+    const cleaned = code.replace(
+      /https:\/\/cdn\.jsdelivr\.net\/npm\/monaco-editor@[^/'"]+\/min\/vs/g,
+      ""
+    );
+
+    return cleaned !== code ? { code: cleaned, map: null } : null;
+  },
+});
+
+/**
+ * We proxy the two base urls to be able the access the endpoints when running the app locally.
+ * If we do not proxy both endpoints; we face cors issues.
+ */
+const apiProxy = (env: Record<string, string | undefined>): ProxyOptions => ({
+  target: env.VITE_API_BASEURL || env.PROXY_TARGET || "https://localhost:8888",
+  changeOrigin: true,
+  secure: false,
+  protocolRewrite: env.HTTPS === "true" ? "https" : "http",
+  configure: (proxy) => {
+    proxy.on("error", (err) => {
+      console.log("proxy error", err);
+    });
+    proxy.on("proxyReq", (_proxyReq, req) => {
+      console.log("Sending Request to the Target:", req.method, req.url);
+    });
+    proxy.on("proxyRes", (proxyRes, req) => {
+      console.log("Received Response from the Target:", proxyRes.statusCode, req.url);
+    });
+  },
+});
+
+/**
+ * The Vite settings of an app: the shared settings above, its dev server and its build.
+ *
+ * @param appDir - the folder of the app, which holds its index.html and src/config.js
+ * @param outDir - the folder the app is built into
+ */
+export const appConfig = (appDir: string, outDir: string): UserConfig => {
+  // The variables of the .env file at the root (if there is one), for the dev server's proxy and
+  // HTTPS; the variables of the shell win. The app's code gets the VITE_ ones through envDir.
+  const env = { ...loadEnv("development", repoRoot, ""), ...process.env };
+  const https = env.HTTPS === "true";
+
+  const plugins: PluginOption[] = [
+    blockMonacoCDNPlugin(),
+    moveAssetsToRootPlugin(outDir),
+    copyConfigPlugin(appDir, outDir),
+    https ? mkcert() : undefined,
+  ].filter(Boolean);
+
+  return mergeConfig(sharedConfig, {
+    root: appDir,
+    // The .env file and the shared public folder are at the root of the repository.
+    envDir: repoRoot,
+    publicDir: resolve(repoRoot, "public"),
+    plugins,
+    base: "./",
+    server: {
+      port: 9000,
+      host: true,
+      https: https ? true : undefined,
+      proxy: {
+        "/api": apiProxy(env),
+        "/lsm": apiProxy(env),
+      },
+    },
+    build: {
+      outDir,
+      // The build folder can be outside the app's folder, so Vite only empties it when asked to.
+      emptyOutDir: true,
+      sourcemap: false,
+      assetsInlineLimit: 4096, // Inline assets smaller than 4kb
+      cssCodeSplit: true, // Enable CSS code splitting
+      rollupOptions: {
+        output: {
+          assetFileNames: (assetInfo) => {
+            if (!assetInfo.names || assetInfo.names.length === 0) {
+              return "assets/[name].[hash].[ext]";
+            }
+            const baseName = assetInfo.names[0];
+            // Try to get extension from the last element, or fallback to splitting baseName
+            const ext = baseName.includes(".") ? baseName.split(".").pop() : "";
+            // Handle CSS, images, and other assets
+            if (/(\.(css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))$/.test(baseName)) {
+              return `${baseName}`;
+            }
+
+            return `${baseName}${ext ? "." + ext : ""}`;
+          },
+          chunkFileNames: "[name].[hash].js",
+          entryFileNames: "[name].[hash].js",
+          codeSplitting: {
+            groups: [
+              { name: "vendor", test: /node_modules[\\/](react|react-dom)[\\/]/, priority: 80 },
+              { name: "patternfly", test: /node_modules[\\/]@patternfly[\\/]/, priority: 70 },
+              {
+                name: "monaco",
+                test: /node_modules[\\/](monaco-editor|@monaco-editor)[\\/]/,
+                priority: 60,
+              },
+              {
+                name: "utils",
+                test: /node_modules[\\/](uuid|dayjs|bignumber\.js)[\\/]/,
+                priority: 40,
+              },
+              {
+                name: "graphql",
+                test: /node_modules[\\/]graphql[\\/]/,
+                priority: 30,
+              },
+              { name: "routing", test: /node_modules[\\/]react-router[\\/]/, priority: 20 },
+              { name: "state", test: /node_modules[\\/]@tanstack[\\/]/, priority: 10 },
+            ],
+          },
+        },
+      },
+    },
+    optimizeDeps: {
+      include: [
+        "react",
+        "react-dom",
+        "react-dom/client",
+        "monaco-editor",
+        "@monaco-editor/react",
+        "@braintree/sanitize-url",
+        "@patternfly/react-styles",
+        "react-diff-viewer-continued",
+      ],
+      force: true,
+    },
+  });
 };
