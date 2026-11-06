@@ -926,7 +926,7 @@ __metadata:
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
     "@types/jest-axe": "npm:^3.5.9"
-    "@vitejs/plugin-react": "npm:^6.1.2"
+    "@vitejs/plugin-react": "npm:^6.2.1"
     jest-axe: "npm:^11.0.0"
     msw: "npm:^2.15.0"
     react: "npm:^19.3.1"
@@ -1172,7 +1172,7 @@ __metadata:
     "@inmanta/web-console-feature-user-management": "workspace:^"
     "@inmanta/web-console-shell": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
-    "@vitejs/plugin-react": "npm:^6.1.2"
+    "@vitejs/plugin-react": "npm:^6.2.1"
     vite: "npm:^8.3.5"
     vite-plugin-mkcert: "npm:^2.1.0"
   languageName: unknown
