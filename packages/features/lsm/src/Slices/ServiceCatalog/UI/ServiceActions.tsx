@@ -62,7 +62,7 @@ export const ServiceActions: React.FC<Props> = ({ service, titleId }) => {
       title: words("catalog.delete.modal.title"),
       content: (
         <>
-          {words("catalog.delete.title")(serviceName)}
+          {words("catalog.delete.title")(service.resolvedAnnotations.web_title)}
           <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
         </>
       ),

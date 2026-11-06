@@ -1,8 +1,13 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { HttpResponse, http } from "msw";
 import { words } from "@inmanta/web-console-core";
-import { instanceData } from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Test/mockData";
+import {
+  instanceData,
+  serviceModel,
+} from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Test/mockData";
 import { defaultServer } from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Test/mockServer";
 import { SetupWrapper } from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Test/mockSetup";
+import { Service } from "@inmanta/web-console-test-utils";
 import { useTheme } from "@inmanta/web-console-ui/Components/DarkmodeOption";
 import { MarkdownPreviewer } from "./MarkdownPreviewer";
 
@@ -47,7 +52,29 @@ describe("MarkdownPreviewer", () => {
   });
 
   afterEach(() => {
+    defaultServer.resetHandlers();
     defaultServer.close();
+  });
+
+  it("should name the service by its web_title in the page title", async () => {
+    defaultServer.use(
+      http.get(`/lsm/v1/service_catalog/${instanceData.service_entity}`, () =>
+        HttpResponse.json({
+          data: { ...serviceModel, entity_annotations: Service.EntityAnnotations.valid },
+        })
+      )
+    );
+
+    render(setup());
+
+    expect(
+      await screen.findByText(
+        words("markdownPreviewer.pageTitle")(
+          Service.EntityAnnotations.valid.web_title,
+          instanceData.service_identity_attribute_value ?? instanceData.id
+        )
+      )
+    ).toBeVisible();
   });
 
   it("should render successfully with all required props", async () => {

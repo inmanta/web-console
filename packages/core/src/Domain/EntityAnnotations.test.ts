@@ -1,6 +1,10 @@
 import { ServiceModel } from "@inmanta/web-console-core";
 import * as Test from "@inmanta/web-console-test-utils";
-import { compareEntityAnnotations, resolveEntityAnnotations } from "./EntityAnnotations";
+import {
+  compareEntityAnnotations,
+  getServiceTitle,
+  resolveEntityAnnotations,
+} from "./EntityAnnotations";
 
 const service = Test.Service.a;
 const validAnnotations = Test.Service.EntityAnnotations.valid;
@@ -63,6 +67,17 @@ describe("resolveEntityAnnotations", () => {
     expect(
       resolveEntityAnnotations({ ...service, description: null }).web_description
     ).toBeUndefined();
+  });
+});
+
+describe("getServiceTitle", () => {
+  it.each`
+    case                  | serviceModel                            | serviceTitle
+    ${"has a web_title"}  | ${serviceWith({ ...validAnnotations })} | ${validAnnotations.web_title}
+    ${"has no web_title"} | ${service}                              | ${service.name}
+    ${"is not available"} | ${undefined}                            | ${service.name}
+  `("returns $serviceTitle when the service model $case", ({ serviceModel, serviceTitle }) => {
+    expect(getServiceTitle(service.name, serviceModel)).toBe(serviceTitle);
   });
 });
 

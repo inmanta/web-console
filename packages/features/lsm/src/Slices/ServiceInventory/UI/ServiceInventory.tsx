@@ -4,6 +4,7 @@ import {
   ServiceModel,
   ServiceInstanceParams,
   hasAnySetValue,
+  resolveEntityAnnotations,
   words,
 } from "@inmanta/web-console-core";
 import { usePaginatedTable } from "@inmanta/web-console-core/Common";
@@ -131,7 +132,9 @@ export const ServiceInventory: React.FunctionComponent<{
             </Stack>
           ) : (
             <EmptyView
-              message={words("inventory.empty.message")(serviceName)}
+              message={words("inventory.empty.message")(
+                resolveEntityAnnotations(service).web_title
+              )}
               aria-label="ServiceInventory-Empty"
               onResetFilters={onResetFilters}
             />

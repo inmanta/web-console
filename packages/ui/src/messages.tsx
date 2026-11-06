@@ -329,10 +329,10 @@ export const uiMessages = {
    * Common
    */
   "common.serviceInstance.select": (attribute: string) => `Select value for ${attribute}`,
-  "common.serviceInstance.relation": (serviceEntity: string) =>
-    `Select an instance of ${serviceEntity}`,
-  "common.serviceInstance.relations": (serviceEntity: string) =>
-    `Select instances of ${serviceEntity}`,
+  "common.serviceInstance.relation": (serviceTitle: string) =>
+    `Select an instance of ${serviceTitle}`,
+  "common.serviceInstance.relations": (serviceTitle: string) =>
+    `Select instances of ${serviceTitle}`,
   "common.compileWidget.recompile": "Recompile",
   "common.compileWidget.toast": (update: boolean, reinstall) =>
     `${update ? "Update and " : reinstall ? "Cleanup and " : ""}Recompile triggered`,

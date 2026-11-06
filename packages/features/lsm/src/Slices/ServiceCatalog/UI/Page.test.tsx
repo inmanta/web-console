@@ -234,6 +234,32 @@ describe("ServiceCatalog", () => {
     });
   });
 
+  test.each`
+    case                   | service                                                                  | serviceTitle
+    ${"with web_title"}    | ${{ ...Service.a, entity_annotations: Service.EntityAnnotations.valid }} | ${Service.EntityAnnotations.valid.web_title}
+    ${"without web_title"} | ${Service.a}                                                             | ${Service.a.name}
+  `(
+    "GIVEN ServiceCatalog WHEN deleting a service $case THEN the confirmation names it by $serviceTitle",
+    async ({ service, serviceTitle }) => {
+      server.use(
+        http.get("/lsm/v1/service_catalog", () => {
+          return HttpResponse.json({ data: [service] });
+        })
+      );
+
+      const { component } = setup();
+
+      render(component);
+
+      await userEvent.click(await screen.findByLabelText("Actions-dropdown"));
+      await userEvent.click(screen.getByLabelText(Service.a.name + "-deleteButton"));
+
+      expect(
+        await screen.findByText(words("catalog.delete.title")(serviceTitle), { exact: false })
+      ).toBeVisible();
+    }
+  );
+
   test("GIVEN ServiceCatalog WHEN update fo catalog is triggered successfully THEN UI is updated", async () => {
     const data: ServiceModel[] = [];
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { words } from "@inmanta/web-console-core";
+import { getServiceTitle, words } from "@inmanta/web-console-core";
 import { useUrlStateWithString } from "@inmanta/web-console-core/Common";
 import { useGetServiceModel } from "@inmanta/web-console-core/Queries/Slices/Service";
 import {
@@ -41,7 +41,10 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
 
   const serviceModelQuery = useGetServiceModel(service).useOneTime();
 
-  const pageTitle = `${service}: ${instance}`;
+  const pageTitle = words("instanceDetails.page.title")(
+    getServiceTitle(service, serviceModelQuery.data),
+    instance
+  );
 
   if (instanceDetails.isError) {
     return (
