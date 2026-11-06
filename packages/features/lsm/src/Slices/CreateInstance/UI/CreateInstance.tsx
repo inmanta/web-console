@@ -1,6 +1,11 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { InstanceAttributeModel, ServiceModel, words } from "@inmanta/web-console-core";
+import {
+  InstanceAttributeModel,
+  ServiceModel,
+  resolveEntityAnnotations,
+  words,
+} from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import {
@@ -76,7 +81,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
   return (
     <>
       <Description withSpace>
-        {words("inventory.addInstance.title")(serviceEntity.name)}
+        {words("inventory.addInstance.title")(resolveEntityAnnotations(serviceEntity).web_title)}
       </Description>
       <ServiceInstanceForm
         service_entity={serviceEntity.name}

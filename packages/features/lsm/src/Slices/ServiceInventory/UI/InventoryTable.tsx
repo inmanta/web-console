@@ -1,6 +1,12 @@
 import React from "react";
 import { Table, Thead, Tr, Th, OnSort } from "@patternfly/react-table";
-import { Row, ServiceModel, Sort, words } from "@inmanta/web-console-core";
+import {
+  Row,
+  ServiceModel,
+  Sort,
+  resolveEntityAnnotations,
+  words,
+} from "@inmanta/web-console-core";
 import { InstanceRow } from "./InstanceRow";
 import { InventoryTablePresenter } from "./Presenters";
 
@@ -37,6 +43,7 @@ export const InventoryTable: React.FC<Props> = ({
         return undefined;
     }
   };
+  const serviceTitle = resolveEntityAnnotations(service).web_title;
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
   const heads = tablePresenter.getColumnHeads().map((column, columnIndex) => {
     const sortParams = tablePresenter.getSortableColumnNames().includes(column.apiName)
@@ -74,6 +81,7 @@ export const InventoryTable: React.FC<Props> = ({
           shouldUseServiceIdentity={tablePresenter.shouldUseServiceIdentity()}
           idDataLabel={tablePresenter.getIdColumnName()}
           service={service}
+          serviceTitle={serviceTitle}
         />
       ))}
     </Table>

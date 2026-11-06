@@ -16,7 +16,7 @@ interface Option {
 interface Props {
   options: Option[];
   selected: string | string[] | null;
-  serviceEntity: string;
+  serviceTitle: string;
   attributeName: string;
   description?: string | null;
   isOptional: boolean;
@@ -33,7 +33,7 @@ interface Props {
  * @param props - The props of the component.
  *  @prop {Option[]} options - The options to be displayed in the autocomplete.
  *  @prop {string | string[] | null} selected - The selected value.
- *  @prop {string} serviceEntity - The entity that the autocomplete is related to.
+ *  @prop {string} serviceTitle - The `web_title` of the service the autocomplete picks instances of, or its name when it has none.
  *  @prop {string} attributeName - The name of the attribute.
  *  @prop {string | null} description - The description of the attribute.
  *  @prop {boolean} isOptional - Whether the attribute is optional.
@@ -48,7 +48,7 @@ interface Props {
 export const AutoCompleteInput: React.FC<Props> = ({
   options,
   selected,
-  serviceEntity,
+  serviceTitle,
   attributeName,
   description,
   isOptional,
@@ -87,7 +87,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
           isDisabled={shouldBeDisabled}
           setSelected={handleInputChange}
           selected={selected as string[]}
-          placeholderText={words("common.serviceInstance.relations")(serviceEntity)}
+          placeholderText={words("common.serviceInstance.relations")(serviceTitle)}
           onSearchTextChanged={onSearchTextChanged}
           hasChips
         />
@@ -98,7 +98,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
           isDisabled={shouldBeDisabled}
           setSelected={handleInputChange}
           selected={selected as string | null}
-          placeholderText={words("common.serviceInstance.relation")(serviceEntity)}
+          placeholderText={words("common.serviceInstance.relation")(serviceTitle)}
           onSearchTextChanged={onSearchTextChanged}
         />
       )}

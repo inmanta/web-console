@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@patternfly/react-core";
-import { words } from "@inmanta/web-console-core";
+import { resolveEntityAnnotations, words } from "@inmanta/web-console-core";
 import { useGetServiceModel } from "@inmanta/web-console-core/Queries/Slices/Service";
 import { AppAlert } from "../AppAlert";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
@@ -46,7 +46,8 @@ export const RelatedServiceProvider: React.FC<Props> = ({
   multi,
   validationError,
 }) => {
-  const { isError, error, isSuccess, refetch } = useGetServiceModel(serviceName).useContinuous();
+  const { data, isError, error, isSuccess, refetch } =
+    useGetServiceModel(serviceName).useContinuous();
 
   if (isError) {
     return (
@@ -69,6 +70,7 @@ export const RelatedServiceProvider: React.FC<Props> = ({
         handleInputChange={handleInputChange}
         isDisabled={isDisabled}
         serviceName={serviceName}
+        serviceTitle={resolveEntityAnnotations(data).web_title}
         multi={multi}
         validationError={validationError}
       />

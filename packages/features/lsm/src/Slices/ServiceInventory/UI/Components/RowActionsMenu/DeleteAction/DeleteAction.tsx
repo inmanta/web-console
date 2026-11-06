@@ -15,6 +15,9 @@ import { ConfirmUserActionForm } from "@inmanta/web-console-ui/Components/Confir
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
+
+  /** The `web_title` of the service, or its name when it has none. */
+  serviceTitle: string;
   isDisabled?: boolean;
 }
 
@@ -24,6 +27,7 @@ export const DeleteAction: React.FC<Props> = ({
   instance_identity,
   version,
   service_entity,
+  serviceTitle,
 }) => {
   const client = useQueryClient();
   const { triggerModal, closeModal } = useContext(ModalContext);
@@ -58,7 +62,7 @@ export const DeleteAction: React.FC<Props> = ({
       title: words("inventory.deleteInstance.title"),
       content: (
         <>
-          {words("inventory.deleteInstance.header")(instance_identity, service_entity)}
+          {words("inventory.deleteInstance.header")(instance_identity, serviceTitle)}
           <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
         </>
       ),

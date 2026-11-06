@@ -2,9 +2,10 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { words } from "@inmanta/web-console-core";
+import { Service } from "@inmanta/web-console-test-utils";
 import { instanceData, serviceModel } from "./mockData";
 import { defaultServer, serverFailedActions } from "./mockServer";
-import { setupServiceInstanceDetails } from "./mockSetup";
+import { instanceName, setupServiceInstanceDetails } from "./mockSetup";
 
 const mockedUsedNavigate = vi.hoisted(() => vi.fn());
 
@@ -331,6 +332,43 @@ describe("Page Actions - Success", () => {
         "/console/lsm/catalog/mobileCore/inventory?env=c85c0a64-ed45-4cba-bdc5-703f65a225f7"
       )
     );
+  });
+
+  it("Expert actions - Destroy names the service by its web_title in the confirmation", async () => {
+    const serviceTitle = Service.EntityAnnotations.valid.web_title;
+
+    server.use(
+      http.get(`/lsm/v1/service_catalog/${serviceModel.name}`, () =>
+        HttpResponse.json({
+          data: { ...serviceModel, entity_annotations: Service.EntityAnnotations.valid },
+        })
+      )
+    );
+
+    render(setupServiceInstanceDetails(true));
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+    // the page title shows the web_title once the service model is loaded
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: words("instanceDetails.page.title")(serviceTitle, instanceName),
+      })
+    ).toBeVisible();
+
+    await userEvent.click(screen.getByRole("button", { name: "Expert-Actions-Toggle" }));
+    await userEvent.click(screen.getByRole("menuitem", { name: /destroy/i }));
+
+    expect(
+      within(screen.getByRole("dialog")).getByText(
+        words("inventory.destroyInstance.header")(
+          instanceData.service_identity_attribute_value ?? instanceData.id,
+          serviceTitle
+        )
+      )
+    ).toBeVisible();
   });
 
   it("Expert actions - collapses the toggle when an action opens its modal", async () => {

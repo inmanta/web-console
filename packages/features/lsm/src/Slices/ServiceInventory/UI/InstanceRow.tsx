@@ -16,6 +16,9 @@ interface Props {
   shouldUseServiceIdentity?: boolean;
   idDataLabel: string;
   service: ServiceModel;
+
+  /** The `web_title` of the service, or its name when it has none. */
+  serviceTitle: string;
 }
 
 export const InstanceRow: React.FC<Props> = ({
@@ -23,6 +26,7 @@ export const InstanceRow: React.FC<Props> = ({
   shouldUseServiceIdentity,
   idDataLabel,
   service,
+  serviceTitle,
 }) => {
   const { routeManager } = useContext(DependencyContext);
 
@@ -90,6 +94,7 @@ export const InstanceRow: React.FC<Props> = ({
                 instanceId={row.id.full}
                 service_identity_attribute_value={row.serviceIdentityValue}
                 entity={service.name}
+                serviceTitle={serviceTitle}
                 editDisabled={row.editDisabled}
                 deleteDisabled={row.deleteDisabled}
                 diagnoseDisabled={row.deleted}
