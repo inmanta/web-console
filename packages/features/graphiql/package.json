@@ -47,6 +47,6 @@
     "@testing-library/react": "^16.3.3",
     "msw": "^2.15.0",
     "vite": "^8.3.5",
-    "vitest": "^5.0.5"
+    "vitest": "^5.1.0"
   }
 }
