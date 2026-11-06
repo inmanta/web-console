@@ -2,7 +2,7 @@ import GraphQLWorker from "monaco-graphql/esm/graphql.worker.js?worker";
 
 /**
  * Lets Monaco start the GraphQL language worker that the GraphiQL editor uses. The app sets up
- * Monaco's other workers (apps/web-console/src/monaco.ts); this adds the "graphql" label on top,
+ * Monaco's other workers (packages/shell/src/monaco.ts); this adds the "graphql" label on top,
  * so the worker is only bundled in an app that includes GraphiQL, and only loaded with its page.
  *
  * It must run after the app's Monaco setup, which assigns `self.MonacoEnvironment` outright. The
