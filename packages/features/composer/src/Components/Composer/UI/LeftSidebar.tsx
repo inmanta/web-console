@@ -109,7 +109,7 @@ class LeftSidebarElement {
                   role="tab"
                   name="new_tab"
                 >
-                  <span class="pf-v6-c-tabs__item-text">${words("instanceComposer.stencil.new")}</span>
+                  <span class="pf-v6-c-tabs__item-text"></span>
                 </button>
               </li>
               <li class="pf-v6-c-tabs__item" role="presentation" id="inventory-tab">
@@ -119,11 +119,23 @@ class LeftSidebarElement {
                   role="tab"
                   name="inventory_tab"
                 >
-                  <span class="pf-v6-c-tabs__item-text">${words("instanceComposer.stencil.inventory")}</span>
+                  <span class="pf-v6-c-tabs__item-text"></span>
                 </button>
               </li>
             </ul>
          `;
+
+    // Set the labels as text so no string ever reaches the HTML parser.
+    const setTabLabel = (tabId: string, label: string) => {
+      const span = tabButtons.querySelector(`#${tabId} .pf-v6-c-tabs__item-text`);
+
+      if (span) {
+        span.textContent = label;
+      }
+    };
+
+    setTabLabel("new-tab", words("instanceComposer.stencil.new"));
+    setTabLabel("inventory-tab", words("instanceComposer.stencil.inventory"));
 
     tabButtons.addEventListener("click", (event: Event) => {
       !!event.target && this.toggleTab(event.target);
