@@ -13,9 +13,10 @@ export interface RuntimeFeatureEntry {
 
   /**
    * The singletons the separate build uses: `getSingletons()` from
-   * `@inmanta/web-console-core/Dependency`, called in that build. In development the app checks
-   * they are its own, so a build with its own copy of React or of the web-console core layer
-   * fails at startup instead of reading other contexts than the app.
+   * `@inmanta/web-console-core/Dependency`, called in that build. The app checks they are its
+   * own. A build with its own copy of React, React Router or the web-console core layer would
+   * read other contexts than the app, so it stops the app in development and is left out in
+   * production.
    */
   singletons: Singletons;
 }

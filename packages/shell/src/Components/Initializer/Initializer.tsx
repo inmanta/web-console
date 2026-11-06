@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from "react";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { useGetEnvironmentPreview } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { useGetServerStatus } from "@inmanta/web-console-core/Queries/Slices/Server";
-import { useRuntimeFeatures } from "@inmanta/web-console-shell/RuntimeFeatures/useRuntimeFeatures";
+import { useLoadRuntimeFeatures } from "@inmanta/web-console-shell/RuntimeFeatures/useLoadRuntimeFeatures";
 import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 
@@ -22,7 +22,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
   const serverStatus = useGetServerStatus().useOneTime();
   const EnvironmentPreview = useGetEnvironmentPreview().useContinuous();
   const logout = authHelper.isDisabled() ? undefined : () => authHelper.logout();
-  const areRuntimeFeaturesLoaded = useRuntimeFeatures(isInitialized);
+  const areRuntimeFeaturesLoaded = useLoadRuntimeFeatures(isInitialized);
 
   useEffect(() => {
     if (serverStatus.data) {

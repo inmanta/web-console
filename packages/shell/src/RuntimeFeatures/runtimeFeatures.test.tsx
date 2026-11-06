@@ -133,13 +133,19 @@ describe("runtime features", () => {
   });
 
   test("GIVEN a runtime feature that isn't installed THEN the app starts without it", async () => {
-    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const load = vi.fn(() => Promise.reject(new Error("404")));
 
-    cleanup = await renderApp([runtimeFeature({ load: () => Promise.reject(new Error("404")) })]);
+    cleanup = await renderApp([runtimeFeature({ load })]);
 
     expect(
       await screen.findByText("404: We couldn't find that page", {}, appTimeout)
     ).toBeVisible();
+    expect(load).toHaveBeenCalled();
+    expect(warn).toHaveBeenCalledWith(
+      "The test-feature feature could not be loaded, the app starts without it.",
+      new Error("404")
+    );
   });
 
   test("GIVEN a runtime feature built for another version THEN it is left out with a version mismatch notice", async () => {
