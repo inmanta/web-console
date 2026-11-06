@@ -1,54 +1,67 @@
-import React, { useMemo } from "react";
-import { Content, ContentVariants, Flex, Stack, StackItem, Title } from "@patternfly/react-core";
-import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
-import { ServiceModel, words } from "@inmanta/web-console-core";
-import { ServiceRow } from "./ServiceRow";
-import { createCatalogSections, getSectionInstanceCount, getSectionTitle } from "./helpers";
-import { CatalogSection, serviceRowColumnCount } from "./types";
+import React from "react";
+import {
+  Content,
+  ContentVariants,
+  DataList,
+  Flex,
+  Stack,
+  StackItem,
+  Title,
+} from "@patternfly/react-core";
+import styled from "styled-components";
+import { words } from "@inmanta/web-console-core";
+import { ServiceDataListItem } from "./ServiceDataListItem";
+import { getAllCatalogServices, getSectionInstanceCount, getSectionTitle } from "./helpers";
+import { CatalogSection } from "./types";
 
 interface Props {
-  serviceModels: ServiceModel[];
+  sections: CatalogSection[];
+  isExpandedByDefault: boolean;
 }
 
 /**
- * The service catalog: one table per section, each under a heading with its service and
+ * The service catalog: one data list per section, each under a heading with its service and
  * instance count. A section is a `web_group`, or "Other services" for the services without one.
- * Without any group, the catalog is a single table without heading. When any service has a
- * `web_icon`, every row shows an icon, with a fallback for the services without one; otherwise
- * the rows have no icon.
+ * Owned services are a nested data list under their owner. Without any group, the catalog is a
+ * single list without heading.
+ * When any service has a `web_icon`, every row shows an icon, with a fallback for the services
+ * without one; otherwise the rows have no icon.
  *
  * @props {Props} props - The props of the component.
- *  @prop {ServiceModel[]} serviceModels - The services in the catalog.
+ *  @prop {CatalogSection[]} sections - The catalog sections, from createCatalogSections.
+ *  @prop {boolean} isExpandedByDefault - Whether the owned services of every service start expanded.
  *
  * @returns {React.FC<Props>} The service catalog sections.
  */
-export const CatalogSections: React.FC<Props> = ({ serviceModels }) => {
-  const sections = useMemo(() => createCatalogSections(serviceModels), [serviceModels]);
+export const CatalogSections: React.FC<Props> = ({ sections, isExpandedByDefault }) => {
+  const allServices = getAllCatalogServices(sections);
   const hasGroups = sections.some((section) => section.kind === "Group");
-  const hasServiceIcons = sections.some((section) =>
-    section.services.some(({ resolvedAnnotations }) => resolvedAnnotations.web_icon !== undefined)
+  const hasServiceIcons = allServices.some(
+    ({ resolvedAnnotations }) => resolvedAnnotations.web_icon !== undefined
   );
 
   return (
     <Stack hasGutter>
       {sections.map((section) => (
         <StackItem key={`${section.kind}-${getSectionTitle(section)}`}>
-          <Table aria-label={hasGroups ? getSectionTitle(section) : words("catalog.title")}>
-            <Tbody>
-              {hasGroups && (
-                <Tr>
-                  <Td colSpan={serviceRowColumnCount}>{renderSectionHeading(section)}</Td>
-                </Tr>
-              )}
+          <Stack hasGutter>
+            {hasGroups && renderSectionHeading(section)}
+            <CatalogDataList
+              isCompact
+              aria-label={hasGroups ? getSectionTitle(section) : words("catalog.title")}
+            >
               {section.services.map((service) => (
-                <ServiceRow
+                <ServiceDataListItem
                   key={service.serviceModel.name}
                   service={service}
                   hasServiceIcons={hasServiceIcons}
+                  isOwnedService={false}
+                  titleHeadingLevel={hasGroups ? "h3" : "h2"}
+                  isExpandedByDefault={isExpandedByDefault}
                 />
               ))}
-            </Tbody>
-          </Table>
+            </CatalogDataList>
+          </Stack>
         </StackItem>
       ))}
     </Stack>
@@ -68,3 +81,17 @@ const renderSectionHeading = (section: CatalogSection): React.ReactNode => (
     </Content>
   </Flex>
 );
+
+/**
+ * Centers the toggle, cells and actions of every row, nested ones included, as in the design.
+ * PatternFly aligns them to the top of the row and has no prop for this. This overrides the
+ * PF-internal `pf-v6-c-data-list__item-row`, `__item-content` and `__item-action` classes, so
+ * check it after a PatternFly upgrade.
+ */
+const CatalogDataList = styled(DataList)`
+  .pf-v6-c-data-list__item-row,
+  .pf-v6-c-data-list__item-content,
+  .pf-v6-c-data-list__item-action {
+    align-items: center;
+  }
+`;

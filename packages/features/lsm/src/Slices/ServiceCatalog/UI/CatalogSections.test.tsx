@@ -1,4 +1,4 @@
-import { act } from "react";
+import React, { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -9,7 +9,18 @@ import { MockedDependencyProvider, Service } from "@inmanta/web-console-test-uti
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { CatalogSections } from "./CatalogSections";
-import { firewall, linuxVm, loadBalancer, router, vpn } from "./Mock";
+import {
+  aviLoadBalancerCluster,
+  deployment,
+  deploymentTree,
+  dnsRecord,
+  firewall,
+  linuxVm,
+  loadBalancer,
+  router,
+  vpn,
+} from "./Mock";
+import { createCatalogSections } from "./helpers";
 import { ownerServiceFallbackIconName, serviceFallbackIconName } from "./types";
 
 const axe = configureAxe({
@@ -26,7 +37,10 @@ const Component = (serviceModels: ServiceModel[]) => {
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={["/lsm/catalog" + search]}>
         <MockedDependencyProvider features={[lsmFeature]}>
-          <CatalogSections serviceModels={serviceModels} />
+          <CatalogSections
+            sections={createCatalogSections(serviceModels)}
+            isExpandedByDefault={false}
+          />
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
@@ -37,14 +51,14 @@ afterEach(() => {
   testClient.clear();
 });
 
-test("GIVEN CatalogSections WHEN no service has a group THEN one table without section headings is shown", async () => {
+test("GIVEN CatalogSections WHEN no service has a group THEN one list without section headings is shown", async () => {
   render(Component([Service.a, Service.b]));
 
-  const table = screen.getByRole("grid", { name: words("catalog.title") });
+  const list = screen.getByRole("list", { name: words("catalog.title") });
 
-  expect(within(table).getByTestId(Service.a.name + "-item")).toBeInTheDocument();
-  expect(within(table).getByTestId(Service.b.name + "-item")).toBeInTheDocument();
-  expect(screen.queryByRole("heading")).not.toBeInTheDocument();
+  expect(within(list).getByTestId(Service.a.name + "-item")).toBeInTheDocument();
+  expect(within(list).getByTestId(Service.b.name + "-item")).toBeInTheDocument();
+  expect(screen.queryByText(words("catalog.section.ungrouped"))).not.toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -76,12 +90,51 @@ test("GIVEN CatalogSections WHEN services have groups THEN each group gets a hea
     )
   ).toBeVisible();
 
-  const networkTable = screen.getByRole("grid", {
+  const networkList = screen.getByRole("list", {
     name: router.entity_annotations?.web_group,
   });
 
-  expect(within(networkTable).getByTestId(router.name + "-item")).toBeInTheDocument();
-  expect(within(networkTable).getByTestId(vpn.name + "-item")).toBeInTheDocument();
+  expect(within(networkList).getByTestId(router.name + "-item")).toBeInTheDocument();
+  expect(within(networkList).getByTestId(vpn.name + "-item")).toBeInTheDocument();
+
+  await act(async () => {
+    const results = await axe(document.body);
+
+    expect(results).toHaveNoViolations();
+  });
+});
+
+test("GIVEN CatalogSections WHEN services own other services THEN they are nested under their owner and collapsed", async () => {
+  render(Component([linuxVm, ...deploymentTree]));
+
+  const list = screen.getByRole("list", { name: words("catalog.title") });
+  const getVisibleServiceNames = () =>
+    within(list)
+      .getAllByRole("listitem")
+      .map((item) => item.id)
+      .filter((id) => id !== "");
+
+  expect(getVisibleServiceNames()).toEqual([deployment.name, linuxVm.name]);
+  const ownedServicesToggle = within(screen.getByTestId(deployment.name + "-item")).getByRole(
+    "button",
+    { name: words("catalog.ownedServices.count")(deployment.owned_entities.length) }
+  );
+
+  expect(ownedServicesToggle).toHaveAttribute("aria-expanded", "false");
+
+  await userEvent.click(ownedServicesToggle);
+
+  expect(ownedServicesToggle).toHaveAttribute("aria-expanded", "true");
+
+  expect(getVisibleServiceNames()).toEqual([
+    deployment.name,
+    dnsRecord.name,
+    aviLoadBalancerCluster.name,
+    linuxVm.name,
+  ]);
+  expect(
+    within(screen.getByTestId(deployment.name + "-item")).getByTestId(dnsRecord.name + "-item")
+  ).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
