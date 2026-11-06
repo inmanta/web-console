@@ -32,7 +32,10 @@ export const TextWithCopy: React.FC<React.PropsWithChildren<Props>> = ({
   );
 };
 
+// The negative block margin cancels the button's vertical padding, so the button doesn't make
+// the line taller than the text (in a table, rows with and without it then have the same height).
 const CopyButton = styled(ClipboardCopyButton)`
+  margin-block: calc(-1 * var(--pf-t--global--spacer--xs));
   opacity: 0.6;
 
   &:hover {

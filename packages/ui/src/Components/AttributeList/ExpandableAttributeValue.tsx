@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Button, Truncate } from "@patternfly/react-core";
+import { Button } from "@patternfly/react-core";
 import { ExpandableRowContent, Td, Tr } from "@patternfly/react-table";
 import { ClassifiedAttribute } from "@inmanta/web-console-core/Common";
 import { AttributeClassifier } from "@inmanta/web-console-core/Common/AttributeClassifier/AttributeClassifier";
@@ -7,6 +7,8 @@ import { AttributeValue } from "./AttributeList";
 import { isEditorKind } from "./helpers";
 
 const classifier = new AttributeClassifier();
+
+const PREVIEW_LENGTH = 30;
 
 /**
  * A table row paired with the classification of its value, as produced by
@@ -87,6 +89,8 @@ export const AttributeExpandTd: React.FC<{
  * The content of a value cell. Expandable kinds (JSON, XML, multiline code)
  * show a truncated preview button that toggles the expansion row; everything
  * else renders inline via {@link AttributeValue} (copyable text, file block, ...).
+ * The preview is cut in plain text rather than with PF's Truncate, whose
+ * screen-reader copy of the full value never wraps and widens the table.
  *
  * @param value - The raw value, shown truncated in the preview button.
  * @param attribute - The classified attribute.
@@ -100,12 +104,14 @@ export const AttributeValueCell: React.FC<{
   onToggle: () => void;
 }> = ({ value, attribute, isExpanded, onToggle }) =>
   isEditorKind(attribute.kind) ? (
-    <Button variant="link" isInline onClick={onToggle} aria-expanded={isExpanded}>
-      <Truncate
-        content={value}
-        maxCharsDisplayed={30}
-        tooltipProps={{ isVisible: false, trigger: "manual" }}
-      />
+    <Button
+      variant="link"
+      isInline
+      onClick={onToggle}
+      aria-expanded={isExpanded}
+      aria-label={value}
+    >
+      {value.length > PREVIEW_LENGTH ? `${value.slice(0, PREVIEW_LENGTH)}…` : value}
     </Button>
   ) : (
     <AttributeValue attribute={attribute} />
