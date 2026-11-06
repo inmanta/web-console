@@ -1,15 +1,13 @@
 import { dia, shapes, util } from "@joint/plus";
-import {
-  t_chart_color_yellow_300,
-  t_chart_color_blue_400,
-  t_chart_color_purple_300,
-  t_chart_global_fill_color_white,
-  t_global_background_color_primary_default,
-  t_global_border_radius_small,
-  t_global_font_family_mono,
-  t_global_font_size_body_default,
-  t_global_font_size_body_lg,
-} from "@patternfly/react-tokens";
+import { t_chart_color_blue_400 } from "@patternfly/react-tokens/dist/esm/t_chart_color_blue_400";
+import { t_chart_color_purple_300 } from "@patternfly/react-tokens/dist/esm/t_chart_color_purple_300";
+import { t_chart_color_yellow_300 } from "@patternfly/react-tokens/dist/esm/t_chart_color_yellow_300";
+import { t_chart_global_fill_color_white } from "@patternfly/react-tokens/dist/esm/t_chart_global_fill_color_white";
+import { t_global_background_color_primary_default } from "@patternfly/react-tokens/dist/esm/t_global_background_color_primary_default";
+import { t_global_border_radius_small } from "@patternfly/react-tokens/dist/esm/t_global_border_radius_small";
+import { t_global_font_family_mono } from "@patternfly/react-tokens/dist/esm/t_global_font_family_mono";
+import { t_global_font_size_body_default } from "@patternfly/react-tokens/dist/esm/t_global_font_size_body_default";
+import { t_global_font_size_body_lg } from "@patternfly/react-tokens/dist/esm/t_global_font_size_body_lg";
 import {
   EmbeddedEntity,
   Field,
