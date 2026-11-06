@@ -25,12 +25,12 @@
     }
   },
   "dependencies": {
-    "@graphiql/react": "^0.39.1",
+    "@graphiql/react": "^1.0.1",
     "@graphiql/toolkit": "^0.12.1",
     "@inmanta/web-console-core": "workspace:^",
     "@inmanta/web-console-ui": "workspace:^",
     "@patternfly/react-icons": "^6.7.0",
-    "@tanstack/react-query": "^5.105.0",
+    "@tanstack/react-query": "^5.105.1",
     "graphiql": "^5.4.0",
     "graphql": "^17.0.2",
     "monaco-editor": "^0.52.2",
