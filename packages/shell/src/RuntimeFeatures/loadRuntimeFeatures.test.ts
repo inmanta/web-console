@@ -1,14 +1,16 @@
-import {
-  FeatureModule,
-  OrchestratorProvider,
-  RuntimeFeatureEntry,
-} from "@inmanta/web-console-core";
+import { FeatureModule, RuntimeFeatureEntry } from "@inmanta/web-console-core";
+import { DummyOrchestratorProvider } from "@inmanta/web-console-core/Dependency/Dummy";
 import { RuntimeFeature } from "./RuntimeFeature";
 import { loadRuntimeFeatures } from "./loadRuntimeFeatures";
 
-const orchestratorProvider = {} as OrchestratorProvider;
+const orchestratorProvider = new DummyOrchestratorProvider();
 const singletons = { react: {}, dependencyContext: {} };
-const options = { version: "1.0.0", singletons, onSingletonMismatch: "throw" } as const;
+const options: Parameters<typeof loadRuntimeFeatures>[2] = {
+  version: "1.0.0",
+  singletons,
+  onSingletonMismatch: "throw",
+  timeout: 1000,
+};
 
 const feature = (id: string, version = "1.0.0"): FeatureModule => ({ id, version, routes: [] });
 
@@ -25,7 +27,7 @@ describe("loadRuntimeFeatures", () => {
       options
     );
 
-    expect(result).toEqual({ features: [feature("a"), feature("b")], mismatches: [] });
+    expect(result).toEqual({ features: [feature("a"), feature("b")], versionMismatches: [] });
   });
 
   test("GIVEN a feature that isn't enabled THEN it is never fetched", async () => {
@@ -56,29 +58,49 @@ describe("loadRuntimeFeatures", () => {
     );
   });
 
-  test("GIVEN a module that isn't an entry THEN it is left out with a warning", async () => {
+  test("GIVEN a feature that doesn't answer in time THEN it is left out like a failed load", async () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-    const wrongShape = {
-      id: "a",
-      load: () => Promise.resolve({ default: feature("a") }),
-    } as unknown as RuntimeFeature;
+    const hanging: RuntimeFeature = { id: "a", load: () => new Promise(() => {}) };
 
-    const result = await loadRuntimeFeatures([wrongShape], orchestratorProvider, options);
+    const result = await loadRuntimeFeatures([hanging, runtimeFeature("b")], orchestratorProvider, {
+      ...options,
+      timeout: 10,
+    });
 
-    expect(result.features).toEqual([]);
+    expect(result.features).toEqual([feature("b")]);
     expect(warn).toHaveBeenCalledWith(
-      "The a feature isn't a runtime feature entry, the app starts without it."
+      "The a feature could not be loaded, the app starts without it.",
+      new Error("No response after 10 ms.")
     );
   });
 
-  test("GIVEN a feature built for another version THEN it is left out as a mismatch", async () => {
+  test.each`
+    description                       | module
+    ${"a module that isn't an entry"} | ${{ default: feature("a") }}
+    ${"the entry of another feature"} | ${{ feature: feature("b"), singletons }}
+  `("GIVEN $description THEN it is left out with a warning", async ({ module }) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const result = await loadRuntimeFeatures(
+      [{ id: "a", load: () => Promise.resolve(module) }],
+      orchestratorProvider,
+      options
+    );
+
+    expect(result.features).toEqual([]);
+    expect(warn).toHaveBeenCalledWith(
+      "The a feature's module isn't its entry, the app starts without it."
+    );
+  });
+
+  test("GIVEN a feature built for another version THEN it is left out as a version mismatch", async () => {
     const result = await loadRuntimeFeatures(
       [runtimeFeature("a", { feature: feature("a", "0.9.0") })],
       orchestratorProvider,
       options
     );
 
-    expect(result).toEqual({ features: [], mismatches: [{ id: "a", version: "0.9.0" }] });
+    expect(result).toEqual({ features: [], versionMismatches: [{ id: "a", version: "0.9.0" }] });
   });
 
   test("GIVEN a feature built with its own singletons WHEN mismatches throw THEN loading fails and names them", async () => {

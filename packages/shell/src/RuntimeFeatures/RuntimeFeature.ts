@@ -1,4 +1,4 @@
-import { OrchestratorProvider, RuntimeFeatureEntry } from "@inmanta/web-console-core";
+import { OrchestratorProvider } from "@inmanta/web-console-core";
 
 /**
  * A feature the app loads at runtime from a separate build, instead of bundling it, e.g. the
@@ -7,7 +7,8 @@ import { OrchestratorProvider, RuntimeFeatureEntry } from "@inmanta/web-console-
  */
 export interface RuntimeFeature {
   /**
-   * The name of the feature, as users see it in the notice when its version doesn't match.
+   * The id of the feature: the entry must contain the feature with this id. Users also see it in
+   * the notice when the feature's version doesn't match the app's.
    */
   id: string;
 
@@ -18,8 +19,9 @@ export interface RuntimeFeature {
   isEnabled?: (orchestratorProvider: OrchestratorProvider) => boolean;
 
   /**
-   * Fetches the entry module of the feature's build. When it fails, e.g. because the feature
+   * Fetches the entry module of the feature's build (a `RuntimeFeatureEntry`). A separate build
+   * can return anything, so the shell checks what it gets. When it fails, e.g. because the feature
    * isn't installed, the app starts without it.
    */
-  load: () => Promise<RuntimeFeatureEntry>;
+  load: () => Promise<unknown>;
 }

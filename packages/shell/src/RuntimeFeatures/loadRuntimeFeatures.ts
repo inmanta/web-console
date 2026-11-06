@@ -9,7 +9,7 @@ import { RuntimeFeature } from "./RuntimeFeature";
 /**
  * What loading the runtime features of an app gave.
  */
-export interface LoadedRuntimeFeatures {
+export interface RuntimeFeatureLoadResult {
   /**
    * The features that loaded and match the app's version, in the order they are listed.
    */
@@ -18,7 +18,7 @@ export interface LoadedRuntimeFeatures {
   /**
    * The features that loaded but were built for another version, so they are left out.
    */
-  mismatches: { id: string; version: string }[];
+  versionMismatches: { id: string; version: string }[];
 }
 
 interface Options {
@@ -39,48 +39,68 @@ interface Options {
    * console.
    */
   onSingletonMismatch: "throw" | "leaveOut";
+
+  /**
+   * How long a feature may take to load, in ms. The app shows its pages once every enabled
+   * feature has loaded, so a request that hangs counts as a failed load after this time.
+   */
+  timeout: number;
 }
 
 /**
  * Whether a loaded module has the shape of an entry: a feature with a version, and singletons.
  */
-const isEntry = (module: unknown): module is RuntimeFeatureEntry => {
-  const { feature, singletons } = (module ?? {}) as Partial<RuntimeFeatureEntry>;
-
-  return (
-    typeof feature?.version === "string" && typeof singletons === "object" && singletons !== null
-  );
-};
+const isEntry = (module: unknown): module is RuntimeFeatureEntry =>
+  typeof module === "object" &&
+  module !== null &&
+  "feature" in module &&
+  "singletons" in module &&
+  typeof module.feature === "object" &&
+  module.feature !== null &&
+  "version" in module.feature &&
+  typeof module.feature.version === "string" &&
+  typeof module.singletons === "object" &&
+  module.singletons !== null;
 
 /**
- * Loads the enabled runtime features of an app, in parallel. A feature that fails to load, e.g.
- * because it isn't installed, or whose module isn't an entry (`RuntimeFeatureEntry`), is left out
- * with a warning in the console, so the app starts without it.
+ * Rejects when the promise doesn't settle within the given time.
+ */
+const withTimeout = <T>(promise: Promise<T>, timeout: number): Promise<T> =>
+  new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`No response after ${timeout} ms.`)), timeout);
+
+    promise.then(resolve, reject).finally(() => clearTimeout(timer));
+  });
+
+/**
+ * Loads the enabled runtime features of an app, in parallel. A feature that fails to load (e.g.
+ * because it isn't installed, or doesn't answer in time), or whose module isn't the entry of that
+ * feature (a `RuntimeFeatureEntry` with the same id), is left out with a warning in the console,
+ * so the app starts without it.
  *
  * @param runtimeFeatures - the runtime features of the app
  * @param orchestratorProvider - the server status, to decide which features are enabled
- * @param options - the version and singletons of the app, and what to do with other singletons
+ * @param options - the version and singletons of the app, what to do with other singletons, and
+ *   how long a feature may take to load
  * @returns the loaded features and the ones left out for their version
  * @throws when a feature was built with other singletons and `onSingletonMismatch` is "throw"
  */
 export const loadRuntimeFeatures = async (
   runtimeFeatures: RuntimeFeature[],
   orchestratorProvider: OrchestratorProvider,
-  { version, singletons, onSingletonMismatch }: Options
-): Promise<LoadedRuntimeFeatures> => {
+  { version, singletons, onSingletonMismatch, timeout }: Options
+): Promise<RuntimeFeatureLoadResult> => {
   const enabled = runtimeFeatures.filter(
     ({ isEnabled }) => !isEnabled || isEnabled(orchestratorProvider)
   );
   const entries = await Promise.all(
     enabled.map(({ id, load }) =>
-      load().then(
-        (entry: unknown) => {
-          if (isEntry(entry)) {
-            return entry;
+      withTimeout(load(), timeout).then(
+        (module) => {
+          if (isEntry(module) && module.feature.id === id) {
+            return module;
           }
-          console.warn(
-            `The ${id} feature isn't a runtime feature entry, the app starts without it.`
-          );
+          console.warn(`The ${id} feature's module isn't its entry, the app starts without it.`);
 
           return undefined;
         },
@@ -92,7 +112,7 @@ export const loadRuntimeFeatures = async (
       )
     )
   );
-  const result: LoadedRuntimeFeatures = { features: [], mismatches: [] };
+  const result: RuntimeFeatureLoadResult = { features: [], versionMismatches: [] };
 
   enabled.forEach(({ id }, index) => {
     const entry = entries[index];
@@ -102,7 +122,7 @@ export const loadRuntimeFeatures = async (
     }
 
     if (entry.feature.version !== version) {
-      result.mismatches.push({ id, version: entry.feature.version });
+      result.versionMismatches.push({ id, version: entry.feature.version });
 
       return;
     }

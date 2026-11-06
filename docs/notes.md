@@ -101,9 +101,9 @@ createApp({
 
 The shell loads the enabled runtime features once the server status is known, before it shows the pages. The separate build's entry module exports a `RuntimeFeatureEntry` (`@inmanta/web-console-core`): the `feature`, and `singletons: getSingletons()`.
 
-- A feature that fails to load, e.g. because it isn't installed, or whose module isn't an entry, is left out: the app starts without it.
+- A feature that fails to load (e.g. it isn't installed, or doesn't answer within 15 seconds), or whose module isn't its entry (a `RuntimeFeatureEntry` with the same `id`), is left out: the app starts without it.
 - A feature with another `version` than the app is left out with a version mismatch notice.
-- A build with its own copy of React or of the web-console core layer (other `singletons` than the app's) would read other contexts than the app. In development that stops the app with an error; in production the feature is left out with an error in the console.
+- A build with its own copy of React, React Router or the web-console core layer (other `singletons` than the app's) would read other contexts than the app. In development that stops the app with an error; in production the feature is left out with an error in the console.
 - Its routes, sidebar entries, contributions and messages are added like those of the bundled features. Its pages render in the catch-all route (`RuntimeFeatureRoutes`, inside the same page frame), so unlike the other pages they don't match a url whose decoded path contains a newline.
 
 ## Features and routes in tests
