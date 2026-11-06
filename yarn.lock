@@ -734,7 +734,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphiql/react@npm:^0.39.0, @graphiql/react@npm:^0.39.1":
+"@graphiql/react@npm:^0.39.0":
   version: 0.39.1
   resolution: "@graphiql/react@npm:0.39.1"
   dependencies:
@@ -763,6 +763,35 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphiql/react@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@graphiql/react@npm:1.0.1"
+  dependencies:
+    "@graphiql/toolkit": "npm:^1.0.0"
+    "@radix-ui/react-dialog": "npm:^1.1"
+    "@radix-ui/react-dropdown-menu": "npm:^2.1"
+    "@radix-ui/react-tooltip": "npm:^1.2"
+    "@radix-ui/react-visually-hidden": "npm:^1.2"
+    clsx: "npm:^2.1.1"
+    framer-motion: "npm:^14.8.0"
+    get-value: "npm:^4.1.0"
+    graphql-language-service: "npm:^6.0.1"
+    jsonc-parser: "npm:^3.3.1"
+    markdown-it: "npm:^15.0.3"
+    monaco-editor: "npm:>=0.56.0 <0.58.0"
+    monaco-graphql: "npm:^2.0.1"
+    prettier: "npm:^3.5.3"
+    react-compiler-runtime: "npm:^1.0.0"
+    set-value: "npm:^4.1.0"
+    zustand: "npm:^5"
+  peerDependencies:
+    graphql: ^16.11.0 || ^17.0.0
+    react: ^18 || ^19
+    react-dom: ^18 || ^19
+  checksum: 10/09d2af0330d8d8e5ce0a44f71f52fd20e03063c31a022c988d2924128e98308e91b6b3c73c36cb87181563113e0104ce93457a8a4aa8c12a0ec5b0184a4967f1
+  languageName: node
+  linkType: hard
+
 "@graphiql/toolkit@npm:^0.12.0, @graphiql/toolkit@npm:^0.12.1":
   version: 0.12.1
   resolution: "@graphiql/toolkit@npm:0.12.1"
@@ -776,6 +805,22 @@ __metadata:
     graphql-ws:
       optional: true
   checksum: 10/b0dfacdbb795dbe1d08eb570cc3ab360575e61c3eb429b63a4cb51b24ef0160dd4073bce5de98a44baac3fa9bac9321177069332121455f80cc490f196dced8d
+  languageName: node
+  linkType: hard
+
+"@graphiql/toolkit@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@graphiql/toolkit@npm:1.0.0"
+  dependencies:
+    "@n1ru4l/push-pull-async-iterable-iterator": "npm:^3.1.0"
+    meros: "npm:^1.1.4"
+  peerDependencies:
+    graphql: ^16.11.0 || ^17.0.0
+    graphql-ws: ">= 4.5.0"
+  peerDependenciesMeta:
+    graphql-ws:
+      optional: true
+  checksum: 10/d41cf9a78805a6f7276d9fbd1b112157150ebf909ad19107378db3c0a415ba3e4af4c7eaa7bc6cef92d7a756f4241df154ff9f927d2694112b18bbdf20554fd7
   languageName: node
   linkType: hard
 
@@ -876,7 +921,7 @@ __metadata:
     "@inmanta/web-console-shell": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@patternfly/react-core": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.0"
+    "@tanstack/react-query": "npm:^5.105.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -898,7 +943,7 @@ __metadata:
   dependencies:
     "@inmanta/web-console-test-utils": "workspace:^"
     "@patternfly/react-core": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.0"
+    "@tanstack/react-query": "npm:^5.105.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@types/file-saver": "npm:^2.0.7"
@@ -956,7 +1001,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.0"
+    "@tanstack/react-query": "npm:^5.105.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -977,13 +1022,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@inmanta/web-console-feature-graphiql@workspace:packages/features/graphiql"
   dependencies:
-    "@graphiql/react": "npm:^0.39.1"
+    "@graphiql/react": "npm:^1.0.1"
     "@graphiql/toolkit": "npm:^0.12.1"
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
     "@patternfly/react-icons": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.0"
+    "@tanstack/react-query": "npm:^5.105.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     graphiql: "npm:^5.4.0"
@@ -1014,7 +1059,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.0"
+    "@tanstack/react-query": "npm:^5.105.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/jest-dom": "npm:^7.0.1"
     "@testing-library/react": "npm:^16.3.3"
@@ -1052,7 +1097,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-log-viewer": "npm:^6.5.0"
     "@patternfly/react-table": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.0"
+    "@tanstack/react-query": "npm:^5.105.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -1079,7 +1124,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.0"
+    "@tanstack/react-query": "npm:^5.105.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -1103,7 +1148,7 @@ __metadata:
     "@patternfly/react-core": "npm:^6.7.0"
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.0"
+    "@tanstack/react-query": "npm:^5.105.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -1146,7 +1191,7 @@ __metadata:
     "@patternfly/react-tokens": "npm:^6.7.0"
     "@react-keycloak/web": "npm:^3.4.0"
     "@remix-run/router": "npm:^1.23.4"
-    "@tanstack/react-query": "npm:^5.105.0"
+    "@tanstack/react-query": "npm:^5.105.1"
     "@tanstack/react-query-devtools": "npm:^5.105.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
@@ -1178,7 +1223,7 @@ __metadata:
     "@patternfly/react-code-editor": "npm:^6.7.0"
     "@patternfly/react-core": "npm:^6.7.0"
     "@patternfly/react-log-viewer": "npm:^6.5.0"
-    "@tanstack/react-query": "npm:^5.105.0"
+    "@tanstack/react-query": "npm:^5.105.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/jest-dom": "npm:^7.0.1"
     "@testing-library/react": "npm:^16.3.3"
@@ -1207,7 +1252,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.0"
+    "@tanstack/react-query": "npm:^5.105.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -1240,7 +1285,7 @@ __metadata:
     "@types/node": "npm:^26.6.6"
     "@types/react": "npm:^19.3.0"
     "@types/react-dom": "npm:^19.3.0"
-    "@vitejs/plugin-react": "npm:^6.1.2"
+    "@vitejs/plugin-react": "npm:^6.2.1"
     "@vitest/coverage-v8": "npm:^5.0.5"
     "@vitest/ui": "npm:^5.0.5"
     cypress: "npm:^16.2.1"
@@ -1358,6 +1403,13 @@ __metadata:
   dependencies:
     minipass: "npm:^7.0.4"
   checksum: 10/4412e9e6713c89c1e66d80bb0bb5a2a93192f10477623a27d08f228ba0316bb880affabc5bfe7f838f58a34d26c2c190da726e576cdfc18c49a72e89adabdcf5
+  languageName: node
+  linkType: hard
+
+"@isaacs/nonrecursive-glob-match@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@isaacs/nonrecursive-glob-match@npm:1.0.3"
+  checksum: 10/b163380c2a4eab632b180c3dace65443e3064ebb58e228b5eab5630ceafd4581356aa63eb624d5634876c729e0797c45462ef2ef3ef35df0bb1bddbda6380447
   languageName: node
   linkType: hard
 
@@ -2926,13 +2978,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.105.0":
-  version: 5.105.0
-  resolution: "@tanstack/query-core@npm:5.105.0"
-  checksum: 10/1a52f339f4e05cae0667b41e091fa6ec4c12b159a95cf54fde9d39204aff461e214a9f59513fdbb4b715ba9cbed60b31012d058ac8d22cd88b59247be6e890fc
-  languageName: node
-  linkType: hard
-
 "@tanstack/query-core@npm:5.105.1":
   version: 5.105.1
   resolution: "@tanstack/query-core@npm:5.105.1"
@@ -2975,18 +3020,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.105.0":
-  version: 5.105.0
-  resolution: "@tanstack/react-query@npm:5.105.0"
+"@tanstack/react-query@npm:^5.105.1":
+  version: 5.105.1
+  resolution: "@tanstack/react-query@npm:5.105.1"
   dependencies:
-    "@tanstack/query-core": "npm:5.105.0"
+    "@tanstack/query-core": "npm:5.105.1"
   peerDependencies:
     "@types/react": ^18 || ^19
     react: ^18 || ^19
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/a7655514d0778fd3e58fe27f9d5b0aaac1d399336f3cbfaf98de99c0b240368395501e95dc1b5d89e0980f40a3754fdac7a216b92d2d8b520199e91a697fff1b
+  checksum: 10/0e8f7367cf5237e2f0e3ccb8584d59edf1dd8dcac0ddd05d3e404da18408cfb71d783f1bf7b3696b1c5bbbdf8ad3bfb2fc75ae057e8b42f3ac8afaf7cb500d95
   languageName: node
   linkType: hard
 
@@ -4202,15 +4247,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react@npm:^6.1.2":
-  version: 6.1.2
-  resolution: "@vitejs/plugin-react@npm:6.1.2"
+"@vitejs/plugin-react@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "@vitejs/plugin-react@npm:6.2.1"
   dependencies:
     "@rolldown/pluginutils": "npm:^1.0.1"
   peerDependencies:
-    "@rolldown/plugin-babel": ^0.1.7 || ^0.2.0
+    "@rolldown/plugin-babel": ^0.1.7 || ^0.2.0 || ^0.3.0
     babel-plugin-react-compiler: ^1.0.0
-    oxc-transform-react: ^0.152.0
+    oxc-transform-react: ">=0.152.0 <0.157.0"
     vite: ^8.0.0
   peerDependenciesMeta:
     "@rolldown/plugin-babel":
@@ -4219,7 +4264,7 @@ __metadata:
       optional: true
     oxc-transform-react:
       optional: true
-  checksum: 10/3d80e79bf54450b09019c158a817d299903a1352c06fa537d8ca774ab0de1461492944eb00029974099f18eeee41a45fc238400035c98cbf371fdc103622b45b
+  checksum: 10/7274c52ad63fa5c28af0dc26451858456aa2c910a3a8c6957fd0a568fc1630e825865eeab2663c78f6cbc8f778b9dd59299c5b176bc16b39e21926208fc54460
   languageName: node
   linkType: hard
 
@@ -4823,7 +4868,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"brace-expansion@npm:^5.0.8":
+"brace-expansion@npm:^5.0.12, brace-expansion@npm:^5.0.8":
   version: 5.0.12
   resolution: "brace-expansion@npm:5.0.12"
   dependencies:
@@ -6064,6 +6109,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dompurify@npm:3.4.15":
+  version: 3.4.15
+  resolution: "dompurify@npm:3.4.15"
+  dependencies:
+    "@types/trusted-types": "npm:^2.0.7"
+  dependenciesMeta:
+    "@types/trusted-types":
+      optional: true
+  checksum: 10/159f592307578405c5217ba40ab467d4ac35f23eb20abc7f32b85698b8c1aff92f71b00c80779f891a8e463edafab05d9a4db53052d5c67005240ac4fff7fc72
+  languageName: node
+  linkType: hard
+
 "dompurify@npm:^3.4.12":
   version: 3.4.17
   resolution: "dompurify@npm:3.4.17"
@@ -6992,6 +7049,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"framer-motion@npm:^14.8.0":
+  version: 14.9.1
+  resolution: "framer-motion@npm:14.9.1"
+  dependencies:
+    motion-dom: "npm:14.9.1"
+    motion-utils: "npm:14.7.0"
+    tslib: "npm:^2.4.0"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+    remix: ^3.1.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    react-dom:
+      optional: true
+    remix:
+      optional: true
+  checksum: 10/e0b07b882922a90c05d8f0b03cdca559fe570b157633f18291431ee33efdc9964cabd15bfc5ce54ed90f9c760e38388d237fd458f9915fca2337d56b372994ba
+  languageName: node
+  linkType: hard
+
 "fs-extra@npm:^9.1.0":
   version: 9.1.0
   resolution: "fs-extra@npm:9.1.0"
@@ -7281,6 +7360,18 @@ __metadata:
   bin:
     graphql: dist/temp-bin.js
   checksum: 10/7e0620aa09910326b0ab81da54bb4571d09e5de08816efd26740f3daa977abf0cbc4ee1145d4b57f32b580be88a80fb66eebf315b7fe9e6c504bf8730843b824
+  languageName: node
+  linkType: hard
+
+"graphql-language-service@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "graphql-language-service@npm:6.0.1"
+  dependencies:
+    debounce-promise: "npm:^3.1.2"
+    vscode-languageserver-types: "npm:^3.18.5"
+  peerDependencies:
+    graphql: ^16.11.0 || ^17.0.0
+  checksum: 10/9d82e6f24a88de6d8348946736fdc2b986addd99aceaaded0cbc724ad71c32d7ab53bb59805c2de0fc43f437a2eec9e9cd97365e08558faca71cf8ed706827ea
   languageName: node
   linkType: hard
 
@@ -8720,6 +8811,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"marked@npm:14.0.0":
+  version: 14.0.0
+  resolution: "marked@npm:14.0.0"
+  bin:
+    marked: bin/marked.js
+  checksum: 10/5f69e58e177bde75fb6145127c939c096d05494c5dff92d73af8a550097d6631c82e919f8a375e3743379a2623418151086b925a902a2be123590b887716f2bb
+  languageName: node
+  linkType: hard
+
 "marked@npm:^16.3.0":
   version: 16.4.2
   resolution: "marked@npm:16.4.2"
@@ -8863,6 +8963,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:^11.0.3":
+  version: 11.0.4
+  resolution: "minimatch@npm:11.0.4"
+  dependencies:
+    "@isaacs/nonrecursive-glob-match": "npm:^1.0.3"
+    brace-expansion: "npm:^5.0.12"
+  checksum: 10/a6f56790748cfa06e20ce0fd718fc311cb862415d5ece7b7e09f9e83c9d594e070570eee1d32b3e0dbf9656b7def66d9aba3ab1567f5fe091377132ba813e39a
+  languageName: node
+  linkType: hard
+
 "minimatch@npm:^3.1.2":
   version: 3.1.5
   resolution: "minimatch@npm:3.1.5"
@@ -9002,6 +9112,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"monaco-editor@npm:>=0.56.0 <0.58.0":
+  version: 0.57.0
+  resolution: "monaco-editor@npm:0.57.0"
+  dependencies:
+    dompurify: "npm:3.4.15"
+    marked: "npm:14.0.0"
+  checksum: 10/190a681cb01c8b862875803ca4fedcd6a945c90c09dad3c8c8932d37b9510ccb82991cab0177b8c98be7deb74d49e4727fb6d43c2fc6ed94f712beb9fb1ccec3
+  languageName: node
+  linkType: hard
+
 "monaco-graphql@npm:^1.9.0":
   version: 1.9.0
   resolution: "monaco-graphql@npm:1.9.0"
@@ -9016,6 +9136,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"monaco-graphql@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "monaco-graphql@npm:2.0.1"
+  dependencies:
+    graphql-language-service: "npm:^6.0.1"
+    minimatch: "npm:^11.0.3"
+  peerDependencies:
+    graphql: ^16.11.0 || ^17.0.0
+    monaco-editor: ">=0.56.0 <0.58.0"
+    prettier: ^2.8.0 || ^3.0.0
+  checksum: 10/aac5d5e05fb750c4381555bf1a8b4f6401b27ed317b3a29aeac800c81b8256fa388afb9f876ff46f946bf4be8acddb282bb6afad848e33505fddac54cbd7a309
+  languageName: node
+  linkType: hard
+
 "motion-dom@npm:13.5.1":
   version: 13.5.1
   resolution: "motion-dom@npm:13.5.1"
@@ -9025,10 +9159,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"motion-dom@npm:14.9.1":
+  version: 14.9.1
+  resolution: "motion-dom@npm:14.9.1"
+  dependencies:
+    motion-utils: "npm:14.7.0"
+  checksum: 10/09c86dad604db12c0ce96e84b195e9a7a60f43a301c3a06eb8f8975c191aaeb3a2a885f6ef010a0886808ae6422ba3bdb30f3b2bedfa3de24e576d8eeb8b55f9
+  languageName: node
+  linkType: hard
+
 "motion-utils@npm:13.5.0":
   version: 13.5.0
   resolution: "motion-utils@npm:13.5.0"
   checksum: 10/ccdba6179ddd7b22913bb81ca4961df5218efca2d754bfe72e63c90b50ff273666cb06d83319f2299a88263b8f5779ea45ae9e7113b7c893b3515aa2970f8fb0
+  languageName: node
+  linkType: hard
+
+"motion-utils@npm:14.7.0":
+  version: 14.7.0
+  resolution: "motion-utils@npm:14.7.0"
+  checksum: 10/411e24ba7f1bd736180a9bcf2dec92f41fc6300fa92c89e3cc6dc384e20fd2961314da2daf147750b3fc80739190f2693c7cbb696d0176905c1a9d54ad22bef6
   languageName: node
   linkType: hard
 
@@ -9767,6 +9917,15 @@ __metadata:
   peerDependencies:
     react: ^17.0.0 || ^18.0.0 || ^19.0.0 || ^0.0.0-experimental
   checksum: 10/ee9085e070eec4135bad982f47a82a4fc28c0c6d7111b3ec93354dab61bd56f9da0bde18af2ab0ee84f5ff9e71026cbfa58513ce8ac7c0290979a84199970ab6
+  languageName: node
+  linkType: hard
+
+"react-compiler-runtime@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "react-compiler-runtime@npm:1.0.0"
+  peerDependencies:
+    react: ^17.0.0 || ^18.0.0 || ^19.0.0 || ^0.0.0-experimental
+  checksum: 10/7d85297de255c39f1aca3dd4942fbf59253e127db8abef1ad7fe3eb329e39aab4c30656ff77751165e2b21263d96836f44699777ca40c9a717ffe42c6c355543
   languageName: node
   linkType: hard
 
@@ -12295,6 +12454,13 @@ __metadata:
   version: 3.17.5
   resolution: "vscode-languageserver-types@npm:3.17.5"
   checksum: 10/900d0b81df5bef8d90933e75be089142f6989cc70fdb2d5a3a5f11fa20feb396aaea23ccffc8fbcc83a2f0e1b13c6ee48ff8151f236cbd6e61a4f856efac1a58
+  languageName: node
+  linkType: hard
+
+"vscode-languageserver-types@npm:^3.18.5":
+  version: 3.18.5
+  resolution: "vscode-languageserver-types@npm:3.18.5"
+  checksum: 10/d2ffa55219ee0b51545e204f7e6653d0d7c88cf6e429a805d199f859e833804750376dbd698fd6d5546d3008115ce358698e1282e6ccb51cf88e3c4f5f8bc852
   languageName: node
   linkType: hard
 
