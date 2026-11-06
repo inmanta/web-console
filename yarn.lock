@@ -922,7 +922,7 @@ __metadata:
     "@inmanta/web-console-shell": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@patternfly/react-core": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.1"
+    "@tanstack/react-query": "npm:^5.105.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -944,7 +944,7 @@ __metadata:
   dependencies:
     "@inmanta/web-console-test-utils": "workspace:^"
     "@patternfly/react-core": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.1"
+    "@tanstack/react-query": "npm:^5.105.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@types/file-saver": "npm:^2.0.7"
@@ -1002,7 +1002,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.1"
+    "@tanstack/react-query": "npm:^5.105.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -1029,7 +1029,7 @@ __metadata:
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
     "@patternfly/react-icons": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.1"
+    "@tanstack/react-query": "npm:^5.105.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     graphiql: "npm:^6.0.0"
@@ -1060,7 +1060,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.1"
+    "@tanstack/react-query": "npm:^5.105.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/jest-dom": "npm:^7.0.1"
     "@testing-library/react": "npm:^16.3.3"
@@ -1098,7 +1098,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-log-viewer": "npm:^6.5.0"
     "@patternfly/react-table": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.1"
+    "@tanstack/react-query": "npm:^5.105.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -1125,7 +1125,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.1"
+    "@tanstack/react-query": "npm:^5.105.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -1149,7 +1149,7 @@ __metadata:
     "@patternfly/react-core": "npm:^6.7.0"
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.1"
+    "@tanstack/react-query": "npm:^5.105.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -1192,7 +1192,7 @@ __metadata:
     "@patternfly/react-tokens": "npm:^6.7.0"
     "@react-keycloak/web": "npm:^3.4.0"
     "@remix-run/router": "npm:^1.23.4"
-    "@tanstack/react-query": "npm:^5.105.1"
+    "@tanstack/react-query": "npm:^5.105.3"
     "@tanstack/react-query-devtools": "npm:^5.105.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
@@ -1224,7 +1224,7 @@ __metadata:
     "@patternfly/react-code-editor": "npm:^6.7.0"
     "@patternfly/react-core": "npm:^6.7.0"
     "@patternfly/react-log-viewer": "npm:^6.5.0"
-    "@tanstack/react-query": "npm:^5.105.1"
+    "@tanstack/react-query": "npm:^5.105.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/jest-dom": "npm:^7.0.1"
     "@testing-library/react": "npm:^16.3.3"
@@ -1253,7 +1253,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.105.1"
+    "@tanstack/react-query": "npm:^5.105.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -2979,13 +2979,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.105.1":
-  version: 5.105.1
-  resolution: "@tanstack/query-core@npm:5.105.1"
-  checksum: 10/19a2695d20eee78ae7163558497a01b9161094c6fa315bbcf4f677a83e79bb5bce5888b6300368a7d2ffb95eca72ade94349b315e5014c667c0921078ef0fcdd
-  languageName: node
-  linkType: hard
-
 "@tanstack/query-core@npm:5.105.3":
   version: 5.105.3
   resolution: "@tanstack/query-core@npm:5.105.3"
@@ -3028,18 +3021,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.105.1":
-  version: 5.105.1
-  resolution: "@tanstack/react-query@npm:5.105.1"
+"@tanstack/react-query@npm:^5.105.3":
+  version: 5.105.3
+  resolution: "@tanstack/react-query@npm:5.105.3"
   dependencies:
-    "@tanstack/query-core": "npm:5.105.1"
+    "@tanstack/query-core": "npm:5.105.3"
   peerDependencies:
     "@types/react": ^18 || ^19
     react: ^18 || ^19
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/0e8f7367cf5237e2f0e3ccb8584d59edf1dd8dcac0ddd05d3e404da18408cfb71d783f1bf7b3696b1c5bbbdf8ad3bfb2fc75ae057e8b42f3ac8afaf7cb500d95
+  checksum: 10/18764c2130d5962e6ab1d709673ea47f79d9c381c7000c77d6a4bb6927d632803c2916f62221d3295626def23d3bb4e816da494ba3d2af7bee42a6907ae12e12
   languageName: node
   linkType: hard
 
