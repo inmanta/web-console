@@ -1,4 +1,4 @@
-description: Fixed an XSS in the Mermaid error message of the service documentation, and patched vulnerable dependencies (dompurify, glob, minimatch).
+description: Fixed an XSS in the Mermaid error message of the service documentation, and updated glob.
 change-type: patch
 destination-branches: [master, iso9]
 sections:
