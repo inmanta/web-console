@@ -11,6 +11,9 @@ interface Props {
   isDisabled?: boolean;
   className?: string;
   variant?: ButtonProps["variant"];
+
+  /** Drops the button's padding, for a plain button placed inline with text (PF `hasNoPadding`). */
+  hasNoPadding?: boolean;
   style?: React.CSSProperties;
 }
 
@@ -20,6 +23,7 @@ export const ClipboardCopyButton: React.FC<Props> = ({
   tooltipContent,
   isDisabled,
   variant,
+  hasNoPadding,
   ...props
 }) => {
   const [copied, setCopied] = useState(false);
@@ -45,6 +49,7 @@ export const ClipboardCopyButton: React.FC<Props> = ({
         className={className}
         onClick={onClick}
         isDisabled={isDisabled}
+        hasNoPadding={hasNoPadding}
         size="sm"
       />
     </WidthLimitedTooltip>

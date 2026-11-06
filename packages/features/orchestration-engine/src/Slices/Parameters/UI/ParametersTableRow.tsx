@@ -47,7 +47,7 @@ export const ParametersTableRow: React.FC<Props> = ({
         <Td dataLabel={words("parameters.columns.source")} width={10}>
           {row.source}
         </Td>
-        <Td modifier="breakWord" dataLabel={words("value")}>
+        <Td modifier={isExpandable ? "truncate" : "breakWord"} dataLabel={words("value")}>
           <AttributeValueCell
             value={row.value}
             attribute={attribute}

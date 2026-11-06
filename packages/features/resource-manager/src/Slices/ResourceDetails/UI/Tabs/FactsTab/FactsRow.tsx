@@ -42,7 +42,7 @@ export const FactsRow: React.FC<Props> = ({
         )}
         <Td>{row.name}</Td>
         <Td>{row.updated && datePresenter.getFull(row.updated)}</Td>
-        <Td modifier="breakWord">
+        <Td modifier={isExpandable ? "truncate" : "breakWord"}>
           <AttributeValueCell
             value={row.value}
             attribute={attribute}
