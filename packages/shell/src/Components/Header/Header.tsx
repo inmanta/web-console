@@ -72,10 +72,11 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
         </MastheadMain>
         <MastheadContent>
           <Toolbar id="uncontrolled-toolbar" isStatic>
-            <ToolbarContent>
+            <ToolbarContent alignItems="center">
               <ToolbarGroup
                 variant="action-group-plain"
                 align={{ default: "alignEnd" }}
+                alignItems="center"
                 gap={{ default: "gapNone", md: "gapMd" }}
               >
                 {!noEnv && (
