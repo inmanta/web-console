@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump jsonpathly from 3.0.1 to 3.2.1
+destination-branches:
+- master
+- iso9
+sections: {}
