@@ -1072,7 +1072,7 @@ __metadata:
     jest-axe: "npm:^11.0.0"
     markdown-it: "npm:^15.0.3"
     markdown-it-emoji: "npm:^3.1.0"
-    mermaid: "npm:^12.2.0"
+    mermaid: "npm:^12.3.0"
     monaco-editor: "npm:^0.52.2"
     msw: "npm:^2.15.0"
     react: "npm:^19.3.1"
@@ -1232,7 +1232,7 @@ __metadata:
     "@types/jest-axe": "npm:^3.5.9"
     happy-dom: "npm:^21.0.4"
     jest-axe: "npm:^11.0.0"
-    mermaid: "npm:^12.2.0"
+    mermaid: "npm:^12.3.0"
     monaco-editor: "npm:^0.52.2"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
@@ -6122,7 +6122,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dompurify@npm:^3.4.12":
+"dompurify@npm:^3.4.17":
   version: 3.4.17
   resolution: "dompurify@npm:3.4.17"
   dependencies:
@@ -6178,10 +6178,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"elkjs@npm:^0.9.3":
-  version: 0.9.3
-  resolution: "elkjs@npm:0.9.3"
-  checksum: 10/397986e271827a5e13d2722b1883aea3557006d2777be8c34568f8fe743e81f4f71210e4e81b9958f597b0af8e96afaa883d2705eba84a3d5d0973bcb02fa59e
+"elkjs@npm:^0.12.0":
+  version: 0.12.1
+  resolution: "elkjs@npm:0.12.1"
+  checksum: 10/2821902e3c1bf9bf73fa1f7393b7ba0a2252bb4c934f4731f197b0d3362852b953a16d0c3f6003e33ac30f78cc0c16a85ba9bf9d544fc0a1e8ef46ffb3adb811
   languageName: node
   linkType: hard
 
@@ -8849,9 +8849,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mermaid@npm:^12.2.0":
-  version: 12.2.0
-  resolution: "mermaid@npm:12.2.0"
+"mermaid@npm:^12.3.0":
+  version: 12.3.0
+  resolution: "mermaid@npm:12.3.0"
   dependencies:
     "@braintree/sanitize-url": "npm:^7.1.2"
     "@iconify/utils": "npm:^3.0.2"
@@ -8866,8 +8866,8 @@ __metadata:
     d3-sankey: "npm:^0.12.3"
     dagre-d3-es: "npm:7.0.14"
     dayjs: "npm:^1.11.21"
-    dompurify: "npm:^3.4.12"
-    elkjs: "npm:^0.9.3"
+    dompurify: "npm:^3.4.17"
+    elkjs: "npm:^0.12.0"
     es-toolkit: "npm:^1.45.1"
     katex: "npm:^0.18.0"
     khroma: "npm:^2.1.0"
@@ -8875,8 +8875,7 @@ __metadata:
     roughjs: "npm:^4.6.6"
     stylis: "npm:^4.3.6"
     ts-dedent: "npm:^2.2.0"
-    uuid: "npm:^11.1.0 || ^12 || ^13 || ^14.0.0"
-  checksum: 10/1455be6bdd83826b1b70925998bcc6ed85e915de90b49ee9758e7644a88fd16bf78f84ac1a209435089e7ca21d6b5926c18077b4183fb219541102f43da34584
+  checksum: 10/f267d73ca6c2b18d1a653f6599bca45fbada70028523b5da895568c4c9d807fe5a1372e848f9fe8cc49d3ebaece1ef10598dddf95513abd8eb4c36ebae0804a5
   languageName: node
   linkType: hard
 
@@ -11824,15 +11823,6 @@ __metadata:
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
   checksum: 10/474acf1146cb2701fe3b074892217553dfcf9a031280919ba1b8d651a068c9b15d863b7303cb15bd00a862b498e6cf4ad7b4a08fb134edd5a6f7641681cb54a2
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^11.1.0 || ^12 || ^13 || ^14.0.0":
-  version: 14.0.0
-  resolution: "uuid@npm:14.0.0"
-  bin:
-    uuid: dist-node/bin/uuid
-  checksum: 10/8ee9b98f9650e25555515f7a28d3c3ae9364e72f7bb19b9e08b681bc135338beba5509b2830f6ae1cfaba4d45401da0d16d4d109b977097bc3d6ba0c5583341b
   languageName: node
   linkType: hard
 
