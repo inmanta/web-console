@@ -953,7 +953,7 @@ __metadata:
     dayjs: "npm:^1.11.23"
     file-saver: "npm:^2.0.5"
     graphql: "npm:^17.0.2"
-    jsonpathly: "npm:^3.0.1"
+    jsonpathly: "npm:^3.2.1"
     keycloak-js: "npm:^26.2.5"
     msw: "npm:^2.15.0"
     qs: "npm:^6.17.0"
@@ -8375,10 +8375,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonpathly@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "jsonpathly@npm:3.0.1"
-  checksum: 10/30ce20168434df57f15b706f2c7b0b77c16940e8b43047153096249c0c0a2120cda9b21bde957fedb756f3de69ab926ae4d7a0c1cca2ce2a5428a2ffcdfb966a
+"jsonpathly@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "jsonpathly@npm:3.2.1"
+  checksum: 10/24e0900859edc84e3dbfd391ac7f1ef67103e5c16a3a1fb8889ea046e52855dc561c8aae17b047ef564130b62e868fd75ca6e744906d3000d02f025c8b27cf2b
   languageName: node
   linkType: hard
 
