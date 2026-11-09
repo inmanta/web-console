@@ -1,112 +1,102 @@
 import React, { ReactElement } from "react";
 import { Label, LabelProps, FlexItem, Flex, Tooltip } from "@patternfly/react-core";
-import { InfoAltIcon, OutlinedCircleIcon } from "@patternfly/react-icons";
-import { InstancesByLabel, words } from "@inmanta/web-console-core";
-
-/**
- * A lifecycle state label that instances can be counted by.
- */
-export type SummaryLabel = keyof InstancesByLabel;
-
-/**
- * Turns the labels into filter toggles. `activeLabel` is the label whose filter is on, or null
- * when none is.
- */
-export interface LabelFiltering {
-  activeLabel: SummaryLabel | null;
-  onToggle: (label: SummaryLabel) => void;
-}
+import { InstanceSummary, StateModel, words } from "@inmanta/web-console-core";
+import { LabelIcon } from "./LabelIcon";
+import { StateCountsTooltipContent } from "./StateCountsTooltipContent";
+import { getLabelColorProps, getLabelName, getStateCounts } from "./helpers";
+import { LabelFiltering, StateCountsTooltipRow, SummaryLabel, summaryLabels } from "./types";
 
 interface Props {
-  byLabel: InstancesByLabel;
+  summary: InstanceSummary;
+  states: StateModel[];
   filtering?: LabelFiltering;
 }
 
 /**
- * The summary labels in display order, most severe first.
- */
-export const summaryLabels: SummaryLabel[] = ["danger", "warning", "success", "info", "no_label"];
-
-/**
- * Shows one status label per lifecycle label with a non-zero instance count.
- * With `filtering` the labels become toggle buttons and the active one is filled.
+ * Shows one status label per lifecycle label with a non-zero instance count, most severe first.
+ * The tooltip of a label breaks its count down per lifecycle state. With `filtering` the labels
+ * become toggle buttons and the active one is filled.
  *
  * @props {Props} props - The props of the component.
- *  @prop {InstancesByLabel} byLabel - The number of instances per label.
+ *  @prop {InstanceSummary} summary - The instance summary of the service.
+ *  @prop {StateModel[]} states - The lifecycle states of the service, for the state names and labels.
  *  @prop {LabelFiltering} [filtering] - Makes the labels toggle a filter.
  *
  * @returns {React.FC<Props>} The rendered labels.
  */
-export const InstanceSummaryLabels: React.FC<Props> = ({ byLabel, filtering }) => (
-  <Flex
-    aria-label={words("catalog.summary.title")}
-    gap={{ default: "gapSm" }}
-    flexWrap={{ default: "nowrap" }}
-  >
-    {summaryLabels
-      .filter((label) => Number(byLabel[label]) > 0)
-      .map((label) => (
-        <FlexItem key={label}>
-          <Tooltip content={getLabelName(label)} entryDelay={200}>
-            {getLabel(label, Number(byLabel[label]), filtering)}
-          </Tooltip>
-        </FlexItem>
-      ))}
-  </Flex>
-);
+export const InstanceSummaryLabels: React.FC<Props> = ({ summary, states, filtering }) => {
+  const stateCounts = getStateCounts(summary, states);
+
+  return (
+    <Flex
+      aria-label={words("catalog.summary.title")}
+      gap={{ default: "gapSm" }}
+      flexWrap={{ default: "nowrap" }}
+    >
+      {summaryLabels
+        .filter((label) => Number(summary.by_label[label]) > 0)
+        .map((label) => {
+          const tooltipRows: StateCountsTooltipRow[] = stateCounts
+            .filter((stateCount) => stateCount.label === label)
+            .map(({ stateName, stateDisplayName, count }) => ({
+              key: stateName,
+              displayName: stateDisplayName,
+              count,
+            }));
+
+          return (
+            <FlexItem key={label}>
+              <Tooltip
+                content={
+                  <StateCountsTooltipContent title={getLabelName(label)} rows={tooltipRows} />
+                }
+                entryDelay={200}
+              >
+                {renderLabel(label, Number(summary.by_label[label]), filtering)}
+              </Tooltip>
+            </FlexItem>
+          );
+        })}
+    </Flex>
+  );
+};
 
 /**
- * Gets the display name of a label.
- *
- * @example getLabelName("no_label") // "no label"
+ * Renders the PatternFly label for a count. It is a toggle button when filtering is given, and
+ * focusable otherwise, so its tooltip also opens from the keyboard.
  */
-const getLabelName = (label: SummaryLabel): string =>
-  label === "no_label" ? words("catalog.summary.noLabel") : label;
-
-/**
- * Builds the PatternFly label for a count. It is a toggle button when filtering is given.
- *
- * @example getLabel("danger", 3) // <Label status="danger" variant="outline">3</Label>
- */
-function getLabel(label: SummaryLabel, value: number, filtering?: LabelFiltering): ReactElement {
+const renderLabel = (
+  label: SummaryLabel,
+  value: number,
+  filtering?: LabelFiltering
+): ReactElement => {
   const isActive = filtering?.activeLabel === label;
-  const toggleProps: Partial<LabelProps> | undefined = filtering && {
-    isClickable: true,
-    render: ({ className, content, componentRef }) => (
-      <button
-        type="button"
-        ref={componentRef}
-        className={className}
-        aria-label={`${getLabelName(label)}: ${value}`}
-        aria-pressed={isActive}
-        onClick={() => filtering.onToggle(label)}
-      >
-        {content}
-      </button>
-    ),
-  };
-  const variant = isActive ? "filled" : "outline";
+  const interactionProps: Partial<LabelProps> = filtering
+    ? {
+        isClickable: true,
+        render: ({ className, content, componentRef }) => (
+          <button
+            type="button"
+            ref={componentRef}
+            className={className}
+            aria-label={`${getLabelName(label)}: ${value}`}
+            aria-pressed={isActive}
+            onClick={() => filtering.onToggle(label)}
+          >
+            {content}
+          </button>
+        ),
+      }
+    : { tabIndex: 0 };
 
-  switch (label) {
-    case "danger":
-    case "warning":
-    case "success":
-      return (
-        <Label status={label} variant={variant} {...toggleProps}>
-          {value}
-        </Label>
-      );
-    case "info":
-      return (
-        <Label color="blue" variant={variant} icon={<InfoAltIcon />} {...toggleProps}>
-          {value}
-        </Label>
-      );
-    case "no_label":
-      return (
-        <Label variant={variant} icon={<OutlinedCircleIcon />} {...toggleProps}>
-          {value}
-        </Label>
-      );
-  }
-}
+  return (
+    <Label
+      variant={isActive ? "filled" : "outline"}
+      icon={<LabelIcon label={label} />}
+      {...getLabelColorProps(label)}
+      {...interactionProps}
+    >
+      {value}
+    </Label>
+  );
+};

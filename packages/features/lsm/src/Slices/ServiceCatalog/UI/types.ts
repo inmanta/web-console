@@ -1,4 +1,8 @@
 import { ResolvedEntityAnnotations, ServiceModel } from "@inmanta/web-console-core";
+import {
+  StateCount,
+  SummaryLabel,
+} from "@inmanta/web-console-feature-lsm/Components/InstanceSummaryLabels";
 
 /**
  * A service in the catalog together with its resolved entity annotations and the services
@@ -26,6 +30,26 @@ export type CatalogSection =
       services: CatalogService[];
     }
   | { kind: "Ungrouped"; services: CatalogService[] };
+
+/**
+ * The number of instances of an owned service in one lifecycle state, shown in the tooltip of
+ * the "not success" label of a collapsed owner.
+ */
+export interface OwnedServiceStateCount extends StateCount {
+  /** The service entity name of the owned service. */
+  ownedServiceName: string;
+
+  /** The `web_title` of the owned service. */
+  ownedServiceTitle: string;
+}
+
+/**
+ * The number of instances with one lifecycle label, summed over several states or services.
+ */
+export interface LabelCount {
+  label: SummaryLabel;
+  count: number;
+}
 
 /** The icon of a service that owns other services and has no `web_icon`. */
 export const ownerServiceFallbackIconName = "FaFolder";

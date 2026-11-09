@@ -98,6 +98,7 @@ export const ServiceInventory: React.FunctionComponent<{
             service.instance_summary && (
               <InstanceCounts
                 summary={service.instance_summary}
+                states={service.lifecycle.states}
                 filtering={{ activeLabel, onToggle: onToggleLabel }}
               />
             )

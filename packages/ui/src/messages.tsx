@@ -159,7 +159,11 @@ export const uiMessages = {
    * Catalog related text
    */
   "catalog.summary.title": "Number of instances by label",
-  "catalog.summary.noLabel": "no label",
+  "catalog.summary.label.danger": "danger",
+  "catalog.summary.label.warning": "warning",
+  "catalog.summary.label.info": "info",
+  "catalog.summary.label.success": "success",
+  "catalog.summary.label.no_label": "no label",
   "catalog.summary.total": (total: number) => (
     <>
       <b>{total}</b> {total === 1 ? "instance" : "instances"}

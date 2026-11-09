@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import {
   Button,
   Content,
@@ -22,8 +22,9 @@ import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { DynamicFAIcon } from "@inmanta/web-console-feature-lsm/Components/FaIcon";
 import { InstanceSummaryLabels } from "@inmanta/web-console-feature-lsm/Components/InstanceSummaryLabels";
 import { Link } from "@inmanta/web-console-ui/Components/Link";
+import { OwnedServicesNotSuccessLabel } from "./OwnedServicesNotSuccessLabel";
 import { ServiceActions } from "./ServiceActions";
-import { formatDescriptionLine, getServiceIconName } from "./helpers";
+import { formatDescriptionLine, getOwnedServicesStateCounts, getServiceIconName } from "./helpers";
 import { CatalogService } from "./types";
 
 interface Props {
@@ -38,7 +39,9 @@ interface Props {
  * A service in the catalog data list: an icon, the title with the entity name and the description
  * below, the instance summary with the inventory link, and an actions menu. A service with owned
  * services also shows their count, which expands or collapses them as a nested data list in the
- * expandable content. Rows without owned services get no toggle, so they look like a plain list.
+ * expandable content. While collapsed, a "not success" label before the own labels counts the owned
+ * services' instances that are not in a "success" state. Rows without owned services get no
+ * toggle, so they look like a plain list.
  *
  * @props {Props} props - The props of the component.
  *  @prop {CatalogService} service - The service, its resolved entity annotations and its owned services.
@@ -64,6 +67,7 @@ export const ServiceDataListItem: React.FC<Props> = ({
   const instanceSummary = serviceModel.instance_summary;
   const hasOwnedServices = service.ownedServices.length > 0;
   const [isExpanded, setIsExpanded] = useState(isExpandedByDefault);
+  const ownedServicesStateCounts = useMemo(() => getOwnedServicesStateCounts(service), [service]);
   const titleId = `${serviceName}-title`;
   const inventoryPathname = useContext(DependencyContext).routeManager.getUrl("Inventory", {
     service: serviceName,
@@ -142,9 +146,17 @@ export const ServiceDataListItem: React.FC<Props> = ({
             </DataListCell>,
             <DataListCell isFilled={false} alignRight key="secondary content">
               <Flex alignItems={{ default: "alignItemsCenter" }}>
+                {!isExpanded && ownedServicesStateCounts.length > 0 && (
+                  <FlexItem>
+                    <OwnedServicesNotSuccessLabel stateCounts={ownedServicesStateCounts} />
+                  </FlexItem>
+                )}
                 <FlexItem>
                   {instanceSummary && Number(instanceSummary.total) > 0 ? (
-                    <InstanceSummaryLabels byLabel={instanceSummary.by_label} />
+                    <InstanceSummaryLabels
+                      summary={instanceSummary}
+                      states={serviceModel.lifecycle.states}
+                    />
                   ) : (
                     <Content component={ContentVariants.small}>
                       {words("catalog.instances.none")}
