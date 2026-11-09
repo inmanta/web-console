@@ -51,6 +51,32 @@ export interface LabelCount {
   count: number;
 }
 
+/**
+ * The filter of the service catalog, kept in the URL.
+ */
+export interface CatalogFilter {
+  /** The text to match, case-insensitive, against the `web_title` and the name of a service. */
+  text?: string;
+}
+
+/**
+ * The catalog sections after filtering, with the owners to expand so every match is visible.
+ */
+export interface FilteredCatalogSections {
+  sections: CatalogSection[];
+
+  /** The names of the services that own, at any depth, a service matching the filter text. */
+  ownerNamesOfMatchingServices: Set<string>;
+}
+
+/**
+ * Which services start with their owned services expanded. "FilterMatches" expands the owners
+ * of the services matching the filter, which are none without a filter. "All" follows the last
+ * click on Expand all or Collapse all, until the filter text changes.
+ */
+export type OwnedServicesExpansion =
+  { kind: "FilterMatches" } | { kind: "All"; isExpanded: boolean };
+
 /** The icon of a service that owns other services and has no `web_icon`. */
 export const ownerServiceFallbackIconName = "FaFolder";
 

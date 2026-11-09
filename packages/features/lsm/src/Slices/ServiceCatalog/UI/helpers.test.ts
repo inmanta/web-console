@@ -18,10 +18,12 @@ import {
 } from "./Mock";
 import {
   createCatalogSections,
+  filterCatalogSections,
   formatDescriptionLine,
   getAllCatalogServices,
   getLabelCounts,
   getOwnedServicesStateCounts,
+  getOwnerServiceNames,
   getSectionInstanceCount,
   getSectionTitle,
 } from "./helpers";
@@ -132,6 +134,76 @@ describe("getAllCatalogServices", () => {
       aviVirtualIp.name,
       linuxVm.name,
     ]);
+  });
+});
+
+describe("filterCatalogSections", () => {
+  const sections = createCatalogSections([router, vpn, firewall, linuxVm, ...deploymentTree]);
+
+  it("matches the web_title, ignoring case and surrounding spaces", () => {
+    const filtered = filterCatalogSections(
+      sections,
+      `  ${firewall.entity_annotations?.web_title?.toUpperCase()} `
+    );
+
+    expect(filtered.sections.map(getSectionTitle)).toEqual([
+      firewall.entity_annotations?.web_group,
+    ]);
+    expect(getServiceNames(filtered.sections[0])).toEqual([firewall.name]);
+  });
+
+  it("matches the service name", () => {
+    const filtered = filterCatalogSections(sections, linuxVm.name);
+
+    expect(filtered.sections.flatMap(getServiceNames)).toEqual([linuxVm.name]);
+  });
+
+  it("keeps the owners on the path to a matching owned service and hides other branches", () => {
+    const filtered = filterCatalogSections(sections, aviVirtualIp.name);
+    const [deploymentService] = filtered.sections[0].services;
+
+    expect(filtered.sections.flatMap(getServiceNames)).toEqual([deployment.name]);
+    expect(getOwnedServiceNames(deploymentService)).toEqual([aviLoadBalancerCluster.name]);
+    expect(getOwnedServiceNames(deploymentService.ownedServices[0])).toEqual([aviVirtualIp.name]);
+  });
+
+  it("returns every owner on the path to a matching owned service", () => {
+    const filtered = filterCatalogSections(sections, aviVirtualIp.name);
+
+    expect(filtered.ownerNamesOfMatchingServices).toEqual(
+      new Set([deployment.name, aviLoadBalancerCluster.name])
+    );
+  });
+
+  it("keeps all owned services of a matching service, without expanding it", () => {
+    const filtered = filterCatalogSections(sections, deployment.name);
+
+    expect(getOwnedServiceNames(filtered.sections[0].services[0])).toEqual([
+      dnsRecord.name,
+      aviLoadBalancerCluster.name,
+    ]);
+    expect(filtered.ownerNamesOfMatchingServices).toEqual(new Set());
+  });
+
+  it("returns no sections when nothing matches", () => {
+    expect(filterCatalogSections(sections, "no service has this text").sections).toEqual([]);
+  });
+
+  it("returns the sections unchanged and no owners for a blank filter text", () => {
+    const filtered = filterCatalogSections(sections, " ");
+
+    expect(filtered.sections).toBe(sections);
+    expect(filtered.ownerNamesOfMatchingServices).toEqual(new Set());
+  });
+});
+
+describe("getOwnerServiceNames", () => {
+  it("returns every service that owns other services, at any depth", () => {
+    const sections = createCatalogSections([linuxVm, ...deploymentTree]);
+
+    expect(getOwnerServiceNames(sections)).toEqual(
+      new Set([deployment.name, aviLoadBalancerCluster.name])
+    );
   });
 });
 

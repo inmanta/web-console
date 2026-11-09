@@ -16,7 +16,7 @@ import { CatalogSection } from "./types";
 
 interface Props {
   sections: CatalogSection[];
-  isExpandedByDefault: boolean;
+  serviceNamesExpandedByDefault: Set<string>;
 }
 
 /**
@@ -29,11 +29,12 @@ interface Props {
  *
  * @props {Props} props - The props of the component.
  *  @prop {CatalogSection[]} sections - The catalog sections, from createCatalogSections.
- *  @prop {boolean} isExpandedByDefault - Whether the owned services of every service start expanded.
+ *  @prop {Set<string>} serviceNamesExpandedByDefault - The names of the services whose owned
+ *  services start expanded.
  *
  * @returns {React.FC<Props>} The service catalog sections.
  */
-export const CatalogSections: React.FC<Props> = ({ sections, isExpandedByDefault }) => {
+export const CatalogSections: React.FC<Props> = ({ sections, serviceNamesExpandedByDefault }) => {
   const allServices = getAllCatalogServices(sections);
   const hasGroups = sections.some((section) => section.kind === "Group");
   const hasServiceIcons = allServices.some(
@@ -57,7 +58,7 @@ export const CatalogSections: React.FC<Props> = ({ sections, isExpandedByDefault
                   hasServiceIcons={hasServiceIcons}
                   isOwnedService={false}
                   titleHeadingLevel={hasGroups ? "h3" : "h2"}
-                  isExpandedByDefault={isExpandedByDefault}
+                  serviceNamesExpandedByDefault={serviceNamesExpandedByDefault}
                 />
               ))}
             </CatalogDataList>

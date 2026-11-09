@@ -41,7 +41,7 @@ const Component = (serviceModels: ServiceModel[]) => {
         <MockedDependencyProvider features={[lsmFeature]}>
           <CatalogSections
             sections={createCatalogSections(serviceModels)}
-            isExpandedByDefault={false}
+            serviceNamesExpandedByDefault={new Set()}
           />
         </MockedDependencyProvider>
       </TestMemoryRouter>

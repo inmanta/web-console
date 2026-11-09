@@ -32,7 +32,7 @@ interface Props {
   hasServiceIcons: boolean;
   isOwnedService: boolean;
   titleHeadingLevel: "h2" | "h3";
-  isExpandedByDefault: boolean;
+  serviceNamesExpandedByDefault: Set<string>;
 }
 
 /**
@@ -50,8 +50,8 @@ interface Props {
  *  indented one level further than its owner's.
  *  @prop {"h2" | "h3"} titleHeadingLevel - The heading level of the service title, one below the
  *  section heading when there is one.
- *  @prop {boolean} isExpandedByDefault - Whether the owned services start expanded. The row keeps
- *  its own expanded state after that.
+ *  @prop {Set<string>} serviceNamesExpandedByDefault - The names of the services whose owned
+ *  services start expanded. The row keeps its own expanded state after that.
  *
  * @returns {React.FC<Props>} A data list item for the service.
  */
@@ -60,13 +60,13 @@ export const ServiceDataListItem: React.FC<Props> = ({
   hasServiceIcons,
   isOwnedService,
   titleHeadingLevel,
-  isExpandedByDefault,
+  serviceNamesExpandedByDefault,
 }) => {
   const { serviceModel, resolvedAnnotations } = service;
   const serviceName = serviceModel.name;
   const instanceSummary = serviceModel.instance_summary;
   const hasOwnedServices = service.ownedServices.length > 0;
-  const [isExpanded, setIsExpanded] = useState(isExpandedByDefault);
+  const [isExpanded, setIsExpanded] = useState(serviceNamesExpandedByDefault.has(serviceName));
   const ownedServicesStateCounts = useMemo(() => getOwnedServicesStateCounts(service), [service]);
   const titleId = `${serviceName}-title`;
   const inventoryPathname = useContext(DependencyContext).routeManager.getUrl("Inventory", {
@@ -194,7 +194,7 @@ export const ServiceDataListItem: React.FC<Props> = ({
                 hasServiceIcons={hasServiceIcons}
                 isOwnedService
                 titleHeadingLevel={titleHeadingLevel}
-                isExpandedByDefault={isExpandedByDefault}
+                serviceNamesExpandedByDefault={serviceNamesExpandedByDefault}
               />
             ))}
           </DataList>
