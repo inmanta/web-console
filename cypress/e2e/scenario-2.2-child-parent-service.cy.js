@@ -30,6 +30,15 @@ if (isIso) {
       cy.get('[aria-label="History-Row"]', { timeout: 90000 }).should("contain", "up");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+
+      // The catalog row of the parent counts its instance in a status label, whose tooltip
+      // breaks the count down per state.
+      cy.get('#parent-service [aria-label="Number of instances by label"]')
+        .should("have.text", "1")
+        .find('[tabindex="0"]')
+        .trigger("mouseenter");
+      cy.contains('[role="tooltip"]', "success").should("be.visible").and("contain", "up");
+
       cy.get("#parent-service").contains("Inventory").click();
 
       // Should show the ServiceInventory-Success Component.
@@ -40,7 +49,12 @@ if (isIso) {
       // click on service catalog in breadcrumb
       cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
 
-      // child-service is owned by parent-service, so expand the owners to show it
+      // child-service is owned by parent-service, so it stays hidden until its owner is expanded
+      cy.get("#child-service").should("not.be.visible");
+      cy.get("#parent-service-toggle").should("have.text", "1 owned service").click();
+      cy.get("#child-service").should("be.visible");
+      cy.get("#parent-service-toggle").click();
+      cy.get("#child-service").should("not.be.visible");
       cy.get("button").contains("Expand all").click();
       cy.get("#child-service").contains("Inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
@@ -57,7 +71,15 @@ if (isIso) {
       }).should("to.be.visible");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("button").contains("Expand all").click();
+      // Filtering on an owned service shows it under its expanded owner.
+      cy.get('[aria-label="Filter services"]').type("child-service");
+      cy.get("#basic-service").should("not.exist");
+      cy.get("#child-service").should("be.visible");
+      // The clear button of the filter brings back the whole catalog.
+      cy.get('[aria-label="ServiceCatalog-Success"]').find('button[aria-label="Reset"]').click();
+      cy.get('[aria-label="Filter services"]').should("have.value", "");
+      cy.get("#basic-service").should("be.visible");
+      cy.get('[aria-label="Filter services"]').type("child-service");
       cy.get("#child-service").contains("Inventory").click();
 
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
