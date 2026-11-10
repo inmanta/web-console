@@ -86,6 +86,10 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                     }
                 }
                 stage('Testing with cypress') {
+                    options {
+                        // One orchestrator per agent: the nightly jobs in jenkins/ take the same lock.
+                        lock(resource: "orchestrator-${env.NODE_NAME}")
+                    }
                     steps {
                         script {
                             if (env.CHANGELOG_ONLY == 'true') {

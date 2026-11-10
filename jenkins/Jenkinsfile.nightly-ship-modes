@@ -53,18 +53,21 @@ pipeline {
                         stage("Ship mode: ${mode}") {
                             // A failing mode fails the build, and the other modes still run.
                             catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                                timeout(time: 30, unit: 'MINUTES') {
-                                    dir('web-console') {
-                                        try {
-                                            sh """
-                                            sudo systemctl restart docker && sudo docker network prune -f
-                                            yarn run install:orchestrator:ci
-                                            yarn composer-ship-mode ${mode} --container inmanta_orchestrator
-                                            yarn run cypress-test:iso --expose edition=iso,composerShipMode=${mode} --reporter-options 'mochaFile=cypress/reports/junit/${mode}-[hash].xml'
-                                            """
-                                        } finally {
-                                            sh 'yarn run kill-server'
-                                            junit allowEmptyResults: true, testResults: "cypress/reports/junit/${mode}-*.xml"
+                                // One orchestrator per agent: the main job's Cypress stage takes the same lock.
+                                lock(resource: "orchestrator-${env.NODE_NAME}") {
+                                    timeout(time: 30, unit: 'MINUTES') {
+                                        dir('web-console') {
+                                            try {
+                                                sh """
+                                                sudo systemctl restart docker && sudo docker network prune -f
+                                                yarn run install:orchestrator:ci
+                                                yarn composer-ship-mode ${mode} --container inmanta_orchestrator
+                                                yarn run cypress-test:iso --expose edition=iso,composerShipMode=${mode} --config screenshotsFolder=cypress/screenshots/${mode} --reporter-options 'mochaFile=cypress/reports/junit/${mode}-[hash].xml'
+                                                """
+                                            } finally {
+                                                junit allowEmptyResults: true, testResults: "cypress/reports/junit/${mode}-*.xml"
+                                                sh 'yarn run kill-server || true; rm -rf temp'
+                                            }
                                         }
                                     }
                                 }

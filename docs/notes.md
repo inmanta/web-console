@@ -134,6 +134,8 @@ These Jenkins jobs run from this repository:
 - `jenkins/Jenkinsfile.nightly-ship-modes`, every night on master and the iso branches: the ISO end-to-end tests once per ship mode of the composer (combined, without, mismatch), each on a fresh orchestrator.
 - `jenkins/Jenkinsfile.nightly-auth`, every night on master: the end-to-end tests of each authentication method (Keycloak, OIDC, local authentication), each on a fresh OSS orchestrator set up for it (`yarn install:orchestrator:<method>`), with the build's `dist/`.
 
+Every run that starts an orchestrator (the main job's Cypress stage and each run of the nightly jobs) takes the lock `orchestrator-<agent>` (Lockable Resources), since they all use the same container names on the agent.
+
 ## Minimum browser versions
 
 We decided to use the last 2 versions of the following browsers: Chrome, Firefox, Safari, Edge.

@@ -58,18 +58,21 @@ pipeline {
                         stage("Authentication: ${method.name}") {
                             // A failing method fails the build, and the other methods still run.
                             catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                                timeout(time: 20, unit: 'MINUTES') {
-                                    dir('web-console') {
-                                        try {
-                                            sh """
-                                            yarn run install:orchestrator:${method.name}
-                                            sleep ${method.startupSeconds}
-                                            yarn update:dist
-                                            yarn run cypress-test:${method.name} --reporter-options 'mochaFile=cypress/reports/junit/${method.name}-[hash].xml'
-                                            """
-                                        } finally {
-                                            sh 'yarn run kill-server'
-                                            junit allowEmptyResults: true, testResults: "cypress/reports/junit/${method.name}-*.xml"
+                                // One orchestrator per agent: the main job's Cypress stage takes the same lock.
+                                lock(resource: "orchestrator-${env.NODE_NAME}") {
+                                    timeout(time: 20, unit: 'MINUTES') {
+                                        dir('web-console') {
+                                            try {
+                                                sh """
+                                                yarn run install:orchestrator:${method.name}
+                                                sleep ${method.startupSeconds}
+                                                yarn update:dist
+                                                yarn run cypress-test:${method.name} --config screenshotsFolder=cypress/screenshots/${method.name} --reporter-options 'mochaFile=cypress/reports/junit/${method.name}-[hash].xml'
+                                                """
+                                            } finally {
+                                                junit allowEmptyResults: true, testResults: "cypress/reports/junit/${method.name}-*.xml"
+                                                sh 'yarn run kill-server || true; rm -rf temp'
+                                            }
                                         }
                                     }
                                 }
