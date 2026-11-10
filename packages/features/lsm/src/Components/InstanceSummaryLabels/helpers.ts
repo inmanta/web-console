@@ -1,4 +1,3 @@
-import { LabelProps } from "@patternfly/react-core";
 import { InstanceSummary, StateModel, words } from "@inmanta/web-console-core";
 import { StateCount, SummaryLabel, summaryLabelSeverity } from "./types";
 
@@ -37,10 +36,3 @@ export const getStateCounts = (summary: InstanceSummary, states: StateModel[]): 
  */
 export const getLabelName = (label: SummaryLabel): string =>
   words(`catalog.summary.label.${label}`);
-
-/**
- * Gets the PatternFly status of a label, the same one `InstanceStateLabel` uses for a lifecycle
- * state. It colors both a PatternFly `Label` and `Icon`; "no_label" has none, so it stays grey.
- */
-export const getLabelStatus = (label: SummaryLabel): LabelProps["status"] =>
-  label === "no_label" ? undefined : label;

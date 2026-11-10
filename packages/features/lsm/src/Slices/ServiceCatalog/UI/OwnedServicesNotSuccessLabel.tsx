@@ -6,10 +6,10 @@ import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import {
   getLabelName,
-  getLabelStatus,
   LabelIcon,
   StateCountsTooltipContent,
   StateCountsTooltipRow,
+  summaryLabelColors,
 } from "@inmanta/web-console-feature-lsm/Components/InstanceSummaryLabels";
 import { getLabelCounts } from "./helpers";
 import { OwnedServiceStateCount } from "./types";
@@ -64,7 +64,7 @@ export const OwnedServicesNotSuccessLabel: React.FC<Props> = ({ stateCounts }) =
         role="group"
         aria-label={words("catalog.ownedServices.notSuccess")}
         tabIndex={0}
-        status={getLabelStatus(labelCounts[0].label)}
+        {...summaryLabelColors[labelCounts[0].label]}
       >
         <Flex component="span" gap={{ default: "gapSm" }} flexWrap={{ default: "nowrap" }}>
           {labelCounts.map(({ label, count }) => (
@@ -75,7 +75,7 @@ export const OwnedServicesNotSuccessLabel: React.FC<Props> = ({ stateCounts }) =
               alignItems={{ default: "alignItemsCenter" }}
               flexWrap={{ default: "nowrap" }}
             >
-              <Icon status={getLabelStatus(label)} isInline>
+              <Icon status={summaryLabelColors[label].status} isInline>
                 <LabelIcon label={label} title={getLabelName(label)} />
               </Icon>
               <FlexItem component="span">{count}</FlexItem>

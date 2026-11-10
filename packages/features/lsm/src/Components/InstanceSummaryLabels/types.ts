@@ -1,3 +1,4 @@
+import { LabelProps } from "@patternfly/react-core";
 import { InstancesByLabel } from "@inmanta/web-console-core";
 
 /**
@@ -25,6 +26,18 @@ const isSummaryLabel = (key: string): key is SummaryLabel => key in summaryLabel
 export const summaryLabels: SummaryLabel[] = Object.keys(summaryLabelSeverity)
   .filter(isSummaryLabel)
   .sort((a, b) => summaryLabelSeverity[a] - summaryLabelSeverity[b]);
+
+/**
+ * The PatternFly `Label` color of each summary label. Info is blue like the other info labels in
+ * the app, not PatternFly's purple info status, and "no_label" has no color, so it stays grey.
+ */
+export const summaryLabelColors: Record<SummaryLabel, Pick<LabelProps, "status" | "color">> = {
+  danger: { status: "danger" },
+  warning: { status: "warning" },
+  info: { color: "blue" },
+  success: { status: "success" },
+  no_label: {},
+};
 
 /**
  * Turns the labels into filter toggles. `activeLabel` is the label whose filter is on, or null
