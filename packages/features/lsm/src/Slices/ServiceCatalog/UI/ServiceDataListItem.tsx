@@ -15,7 +15,7 @@ import {
   Title,
   Truncate,
 } from "@patternfly/react-core";
-import { RhMicronsCaretDownIcon, RhMicronsCaretRightIcon } from "@patternfly/react-icons";
+import { RhMicronsCaretDownIcon, RhMicronsCaretUpIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
@@ -116,9 +116,7 @@ export const ServiceDataListItem: React.FC<Props> = ({
                           id={`${serviceName}-toggle`}
                           variant="link"
                           isInline
-                          icon={
-                            isExpanded ? <RhMicronsCaretDownIcon /> : <RhMicronsCaretRightIcon />
-                          }
+                          icon={isExpanded ? <RhMicronsCaretUpIcon /> : <RhMicronsCaretDownIcon />}
                           iconPosition="end"
                           aria-expanded={isExpanded}
                           aria-controls={`${serviceName}-owned-services`}

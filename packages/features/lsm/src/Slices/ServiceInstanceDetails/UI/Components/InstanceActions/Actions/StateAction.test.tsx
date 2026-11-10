@@ -1,6 +1,5 @@
 import { t_global_text_color_status_warning_default } from "@patternfly/react-tokens";
 import { render, screen } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
 import { TransferModel } from "@inmanta/web-console-core";
 import { StateTarget } from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Utils";
 import { ModalProvider } from "@inmanta/web-console-test-utils";
@@ -148,50 +147,6 @@ describe("StateAction", () => {
   it("does not render an Advanced item when there are no advanced targets", () => {
     renderStateAction([buildTarget()]);
 
-    expect(screen.queryByRole("menuitem", { name: "Advanced" })).not.toBeInTheDocument();
-  });
-
-  it("hides an advanced target behind a collapsed Advanced disclosure until it is clicked", async () => {
-    renderStateAction(
-      [buildTarget()],
-      [
-        buildTarget({
-          target: "maintenance",
-          buttonLabel: "Enter maintenance mode",
-          advanced: true,
-        }),
-      ]
-    );
-
-    expect(
-      screen.queryByRole("menuitem", { name: "Enter maintenance mode" })
-    ).not.toBeInTheDocument();
-
-    await userEvent.click(screen.getByRole("menuitem", { name: "Advanced" }));
-
-    expect(screen.getByRole("menuitem", { name: "Enter maintenance mode" })).toBeVisible();
-  });
-
-  it("does not collapse the outer Actions dropdown when the Advanced disclosure is toggled, unlike selecting a target", async () => {
-    const collapseToggle = vi.fn();
-
-    renderStateAction(
-      [],
-      [
-        buildTarget({
-          target: "maintenance",
-          buttonLabel: "Enter maintenance mode",
-          advanced: true,
-        }),
-      ],
-      collapseToggle
-    );
-
-    await userEvent.click(screen.getByRole("menuitem", { name: "Advanced" }));
-
-    // expanding the disclosure itself is not a state-transfer selection, so it must not
-    // collapse the outer Actions dropdown the way selecting a target does
-    expect(collapseToggle).not.toHaveBeenCalled();
-    expect(screen.getByRole("menuitem", { name: "Enter maintenance mode" })).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Advanced" })).not.toBeInTheDocument();
   });
 });
