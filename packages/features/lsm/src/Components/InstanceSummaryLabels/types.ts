@@ -28,8 +28,8 @@ export const summaryLabels: SummaryLabel[] = Object.keys(summaryLabelSeverity)
   .sort((a, b) => summaryLabelSeverity[a] - summaryLabelSeverity[b]);
 
 /**
- * The PatternFly `Label` color of each summary label. Info is blue like the other info labels in
- * the app, not PatternFly's purple info status, and "no_label" has no color, so it stays grey.
+ * The PatternFly `Label` color of each summary label. Info is blue, not PatternFly's purple info
+ * status, and "no_label" has no color, so it stays grey.
  */
 export const summaryLabelColors: Record<SummaryLabel, Pick<LabelProps, "status" | "color">> = {
   danger: { status: "danger" },
