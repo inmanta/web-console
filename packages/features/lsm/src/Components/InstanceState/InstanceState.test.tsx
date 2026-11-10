@@ -1,4 +1,5 @@
 import React from "react";
+import { t_global_icon_color_brand_default } from "@patternfly/react-tokens";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { list } from "@inmanta/web-console-test-utils/Data/Service/State";
@@ -8,7 +9,7 @@ const infoStates = list.filter((state) => state.label === "info");
 const warningStates = list.filter((state) => state.label === "warning");
 
 test.each(infoStates)(
-  "GIVEN State label WHEN the state $name has the info label THEN it is a blue label with an icon instead of PatternFly's info status",
+  "GIVEN State label WHEN the state $name has the info label THEN it is a blue label with a blue icon instead of PatternFly's info status",
   (state) => {
     render(<InstanceStateLabel {...state} />);
 
@@ -16,7 +17,23 @@ test.each(infoStates)(
 
     expect(badge).toHaveClass("pf-m-blue");
     expect(badge).not.toHaveClass("pf-m-info");
-    expect(badge?.querySelector(".pf-v6-c-label__icon")).toBeInTheDocument();
+    expect(badge?.querySelector(".pf-v6-c-label__icon svg")).toHaveAttribute(
+      "color",
+      t_global_icon_color_brand_default.var
+    );
+  }
+);
+
+test.each(infoStates)(
+  "GIVEN State label WHEN the info state $name has a web_icon annotation THEN that icon is blue",
+  (state) => {
+    const webIcon = "FaCogs";
+
+    render(<InstanceStateLabel {...state} annotations={{ web_icon: webIcon }} />);
+
+    expect(screen.getByTestId(webIcon).querySelector("svg")?.style.color).toBe(
+      t_global_icon_color_brand_default.var
+    );
   }
 );
 
