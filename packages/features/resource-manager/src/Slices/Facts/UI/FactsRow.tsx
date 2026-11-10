@@ -42,7 +42,7 @@ export const FactsRow: React.FC<Props> = memo(
           <Td dataLabel={words("updated")}>
             {row.updated && <DateWithTooltip timestamp={row.updated} />}
           </Td>
-          <Td modifier="breakWord" dataLabel={words("value")}>
+          <Td modifier={isExpandable ? "truncate" : "breakWord"} dataLabel={words("value")}>
             <AttributeValueCell
               value={row.value}
               attribute={attribute}

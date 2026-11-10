@@ -26,7 +26,8 @@ export const TextWithCopy: React.FC<React.PropsWithChildren<Props>> = ({
     <span {...props}>
       {children || value}
       <RowHoverReveal>
-        <CopyButton value={value} tooltipContent={tooltipContent} />
+        {/* No padding, so the button doesn't make the line taller than the text. */}
+        <CopyButton value={value} tooltipContent={tooltipContent} hasNoPadding />
       </RowHoverReveal>
     </span>
   );
