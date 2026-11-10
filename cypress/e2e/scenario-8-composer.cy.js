@@ -10,7 +10,7 @@ import environmentHelpers from "../support/environmentHelpers.js";
 const { selectEnvironment, waitForServiceCatalogUpdate } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
-// The nightly build runs the suite in each of the composer's ship modes (jenkins/Jenkinsfile.nightly).
+// The nightly build runs the suite in each of the composer's ship modes (jenkins/Jenkinsfile.nightly-ship-modes).
 // This scenario needs the composer, so it only runs when the web console ships with it.
 const shipsComposer = (Cypress.expose("composerShipMode") ?? "combined") === "combined";
 const PXSDC_ENV_NAME = "Test PXSDC";

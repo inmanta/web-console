@@ -5,7 +5,7 @@
 // The job must not have the `jointjs-npm-token` credential. Yarn also reuses the packages that
 // earlier installs on the agent mirrored into its global folder (~/.yarn/berry by default), the
 // JointJS ones included, so every build gets an empty global folder of its own. Otherwise the
-// install would pass for the wrong reason.
+// install would pass for the wrong reason. See "CI" in docs/notes.md.
 pipeline {
     agent any
 
