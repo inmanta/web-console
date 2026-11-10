@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
-import { graphql, HttpResponse } from "msw";
+import { HttpResponse } from "msw";
+import { graphql } from "msw/graphql";
 import { setupServer } from "msw/node";
 import { NotificationsResponse } from "@inmanta/web-console-core/Queries/Slices/Notification";
 import * as Mock from "@inmanta/web-console-shell/Slices/Notification/Core/Mock";
