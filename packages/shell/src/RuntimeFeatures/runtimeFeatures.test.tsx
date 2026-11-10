@@ -1,6 +1,7 @@
 import { act, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { graphql, http, HttpResponse } from "msw";
+import { http, HttpResponse } from "msw";
+import { graphql } from "msw/graphql";
 import { setupServer } from "msw/node";
 import { FeatureModule, RuntimeFeatureEntry, words } from "@inmanta/web-console-core";
 import { getSingletons } from "@inmanta/web-console-core/Dependency";
@@ -93,7 +94,7 @@ const renderApp = async (runtimeFeatures: RuntimeFeature[], url = "/console/agen
 describe("runtime features", () => {
   let cleanup = () => {};
 
-  beforeAll(() => server.listen({ onUnhandledRequest: "bypass" }));
+  beforeAll(() => server.listen({ onUnhandledFrame: "bypass" }));
   afterEach(() => cleanup());
   afterAll(() => server.close());
 
