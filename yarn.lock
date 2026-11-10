@@ -1237,6 +1237,7 @@ __metadata:
     jest-axe: "npm:^11.0.0"
     mermaid: "npm:^12.3.0"
     monaco-editor: "npm:^0.57.0"
+    msw: "npm:^3.0.4"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"

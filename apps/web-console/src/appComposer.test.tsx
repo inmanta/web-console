@@ -3,7 +3,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { ServiceModel } from "@inmanta/web-console-core";
 import { composerFeature } from "@inmanta/web-console-feature-composer";
 import { lsmFeature } from "@inmanta/web-console-feature-lsm";
@@ -19,6 +18,7 @@ import {
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 
 /**
  * The composer adds its actions to the pages of lsm. Neither feature imports the other, so these
@@ -41,7 +41,7 @@ function setup(service: ServiceModel = Service.a) {
 }
 
 describe("ServiceInventory with the composer", () => {
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/lsm/v1/service_inventory/service_name_a", () => {
       return HttpResponse.json({
         data: [{ ...ServiceInstance.a, id: "a" }],
@@ -51,7 +51,7 @@ describe("ServiceInventory with the composer", () => {
     })
   );
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterEach(() => {
     server.resetHandlers();
     testClient.clear();
@@ -98,7 +98,7 @@ describe("ServiceInventory with the composer", () => {
 describe("Instance details with the composer", () => {
   const server = defaultServer;
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

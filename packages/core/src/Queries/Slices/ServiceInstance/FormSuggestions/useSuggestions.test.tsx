@@ -2,10 +2,10 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { FormSuggestion, words } from "@inmanta/web-console-core";
 import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { SUGGESTION_NAMESPACES } from "./suggestionVariables";
 import { useSuggestedValues } from "./useSuggestions";
 
@@ -36,7 +36,7 @@ const toSuggestions = (values: string[]) => values.map((value) => ({ label: valu
 describe("useSuggestedValues templated parameter names", () => {
   const requestedPaths: string[] = [];
 
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/api/v1/parameter/*", ({ request }) => {
       const path = new URL(request.url).pathname;
 
@@ -53,7 +53,7 @@ describe("useSuggestedValues templated parameter names", () => {
     })
   );
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterEach(() => {
     server.resetHandlers();
     testClient.clear();
@@ -251,7 +251,7 @@ const graphql = (query: FormSuggestion["query"]): FormSuggestion => ({ type: "gr
 describe("useSuggestedValues graphql flavor", () => {
   const sentQueries: string[] = [];
 
-  const server = setupServer(
+  const server = setupTestServer(
     http.post("/api/v2/graphql", async ({ request }) => {
       const body = (await request.json()) as { query: string };
 
@@ -268,7 +268,7 @@ describe("useSuggestedValues graphql flavor", () => {
     })
   );
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterEach(() => {
     server.resetHandlers();
     testClient.clear();

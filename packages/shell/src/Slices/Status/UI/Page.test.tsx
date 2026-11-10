@@ -5,7 +5,6 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { PrimaryArchiveHelper } from "@inmanta/web-console-core/Common/PrimaryArchiveHelper";
 import {
@@ -14,6 +13,7 @@ import {
   ServerStatus,
 } from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { StatusPage } from ".";
 
 function setup() {
@@ -33,13 +33,13 @@ function setup() {
 }
 
 describe("StatusPage", () => {
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/api/v1/serverstatus", () => {
       return HttpResponse.json({ data: ServerStatus.withLsm });
     })
   );
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   beforeEach(() => server.resetHandlers());
 
   afterAll(() => {

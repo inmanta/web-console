@@ -30,7 +30,7 @@ describe("ServiceInstanceDetailsPage", () => {
   it("Should render the view in its loading states", async () => {
     const server = loadingServer;
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -55,7 +55,7 @@ describe("ServiceInstanceDetailsPage", () => {
   it("Should render an error view when the query isError", async () => {
     const server = errorServerInstance;
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -83,7 +83,7 @@ describe("ServiceInstanceDetailsPage", () => {
   it("Should render success view without config when there's instance data, but error view in the history section when there are no logs", async () => {
     const server = errorServerHistory;
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -130,7 +130,7 @@ describe("ServiceInstanceDetailsPage", () => {
         })
       )
     );
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -152,7 +152,7 @@ describe("ServiceInstanceDetailsPage", () => {
   it("Should render a success view without config", async () => {
     const server = defaultServer;
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -322,7 +322,7 @@ describe("ServiceInstanceDetailsPage", () => {
   it("Should render a success view with documentation", async () => {
     const server = serverWithDocumentation;
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -530,7 +530,7 @@ describe("ServiceInstanceDetailsPage", () => {
   it("Resolves the doc-tab setState button's label/style/confirm-prompt from the transfer's annotations", async () => {
     const server = serverWithDocumentation;
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -557,7 +557,7 @@ describe("ServiceInstanceDetailsPage", () => {
   it("Should render documentation sections in web_order sort order with the default-open section expanded", async () => {
     const server = serverWithMultipleDocumentation;
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -591,7 +591,7 @@ describe("ServiceInstanceDetailsPage", () => {
   it("Should allow multiple documentation sections to be open simultaneously", async () => {
     const server = serverWithMultipleDocumentation;
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -620,7 +620,7 @@ describe("ServiceInstanceDetailsPage", () => {
   it("Should collapse a documentation section when its open toggle is clicked again", async () => {
     const server = serverWithMultipleDocumentation;
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -750,7 +750,7 @@ describe("sortDocAttributeDescriptors", () => {
   it("Should hide the Markdown Previewer button on older versions when expert mode is enabled", async () => {
     const server = serverWithDocumentation;
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     const component = setupServiceInstanceDetails(true);
 
     render(component);

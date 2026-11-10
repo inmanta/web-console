@@ -5,7 +5,6 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { FlatEnvironment, getFeatureRoutes, words } from "@inmanta/web-console-core";
 import { SearchHelper } from "@inmanta/web-console-core/Routing";
 import { PrimaryRouteManager } from "@inmanta/web-console-core/Routing/PrimaryRouteManager";
@@ -17,6 +16,7 @@ import {
 } from "@inmanta/web-console-test-utils";
 import * as DesiredStateVersions from "@inmanta/web-console-test-utils/Data/DesiredStateVersions";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Page } from "./Page";
 
 const axe = configureAxe({
@@ -69,7 +69,7 @@ describe("DesiredStatesView", () => {
   let POSTRequestsFired = 0;
   let DELETERequestsFired = 0;
 
-  const server = setupServer();
+  const server = setupTestServer();
 
   server.events.on("request:start", async ({ request }) => {
     switch (request.method) {
@@ -88,7 +88,7 @@ describe("DesiredStatesView", () => {
   });
 
   beforeAll(() => {
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
   });
 
   afterEach(() => {

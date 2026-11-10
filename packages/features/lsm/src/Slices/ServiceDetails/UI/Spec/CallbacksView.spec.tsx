@@ -3,7 +3,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { getShortUuidFromRaw } from "@inmanta/web-console-core";
 import { CallbacksView } from "@inmanta/web-console-feature-lsm/Slices/ServiceDetails/UI/Tabs/Callbacks";
 import {
@@ -14,6 +13,7 @@ import {
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 
 const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);
 
@@ -37,7 +37,7 @@ function setup() {
 
 test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback is created", async () => {
   const data = Callback.list;
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("lsm/v1/callbacks", async () => {
       return HttpResponse.json({ data });
     }),
@@ -47,7 +47,7 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
       return HttpResponse.json();
     })
   );
-  server.listen({ onUnhandledFrame: "error" });
+  server.listen();
   const { component } = setup();
 
   render(component);
@@ -96,7 +96,7 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
 
 test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is deleted", async () => {
   let data = Callback.list;
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("lsm/v1/callbacks", async () => {
       return HttpResponse.json({ data });
     }),
@@ -106,7 +106,7 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
       return HttpResponse.json();
     })
   );
-  server.listen({ onUnhandledFrame: "error" });
+  server.listen();
   const { component } = setup();
 
   render(component);

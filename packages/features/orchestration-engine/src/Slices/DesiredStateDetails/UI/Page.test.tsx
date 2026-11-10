@@ -4,11 +4,11 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { orchestrationEngineFeature } from "@inmanta/web-console-feature-orchestration-engine";
 import { MockedDependencyProvider, Resource } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Page } from "./Page";
 
 const axe = configureAxe({
@@ -32,10 +32,10 @@ function setup() {
   return { component };
 }
 describe("DesiredStateDetails", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => {
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
   });
   afterEach(() => {
     server.resetHandlers();

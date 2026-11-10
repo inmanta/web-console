@@ -4,12 +4,12 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { InstanceEvent } from "@inmanta/web-console-core";
 import { REFETCH_INTERVAL } from "@inmanta/web-console-core/Queries/Helpers";
 import { MockedDependencyProvider, Service } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Events } from "./Events";
 
 const axe = configureAxe({
@@ -52,10 +52,10 @@ describe("Events Page", () => {
       is_error_transition: false,
     } as InstanceEvent,
   ];
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => {
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
   });
   beforeEach(() => {
     server.resetHandlers();

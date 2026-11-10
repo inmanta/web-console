@@ -4,12 +4,12 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { getFeatureRoutes, words } from "@inmanta/web-console-core";
 import { lsmFeature } from "@inmanta/web-console-feature-lsm";
 import { stubRoute } from "@inmanta/web-console-test-utils";
 import { baseSetup } from "@inmanta/web-console-test-utils/Utils/base-setup";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import {
   responseCompletedOrder,
   responseInProgressOrder,
@@ -37,10 +37,10 @@ const DetailsPage = (
 const routes = [...getFeatureRoutes([lsmFeature]), stubRoute("CompileDetails")];
 
 describe("Order Details", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => {
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
   });
   beforeEach(() => {
     server.resetHandlers();

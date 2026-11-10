@@ -5,13 +5,13 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import * as Mock from "@inmanta/web-console-shell/Slices/Notification/Core/Mock";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { links, metadata } from "@inmanta/web-console-test-utils/Data/Pagination";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { NotificationCenterPage } from ".";
 
 const axe = configureAxe({
@@ -44,10 +44,10 @@ const openFilters = async () => {
   await userEvent.click(filterToggle());
 };
 
-const server = setupServer();
+const server = setupTestServer();
 
 describe("NotificationCenterPage", () => {
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

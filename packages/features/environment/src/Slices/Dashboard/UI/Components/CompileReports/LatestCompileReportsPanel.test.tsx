@@ -2,15 +2,15 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { environmentFeature } from "@inmanta/web-console-feature-environment";
 import { MockedDependencyProvider, stubRoute } from "@inmanta/web-console-test-utils";
 import * as Mock from "@inmanta/web-console-test-utils/Data/CompileReports";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { LatestCompileReportsPanel } from "./LatestCompileReportsPanel";
 
-const server = setupServer();
+const server = setupTestServer();
 
 // The compile report pages belong to the orchestration engine.
 const linkedRoutes = [
@@ -48,7 +48,7 @@ function respondWith(data: typeof Mock.response.data) {
 }
 
 describe("LatestCompileReportsPanel", () => {
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

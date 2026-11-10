@@ -5,7 +5,6 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { graphql } from "msw/graphql";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import {
   PageInfo,
@@ -18,8 +17,12 @@ import {
   Resource,
   ModalProvider,
 } from "@inmanta/web-console-test-utils";
-import { createMockResourceSummary } from "@inmanta/web-console-test-utils/Data/Resource";
+import {
+  createGetResourcesResponse,
+  createMockResourceSummary,
+} from "@inmanta/web-console-test-utils/Data/Resource";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Page } from "./Page";
 
 const axe = configureAxe({
@@ -94,15 +97,6 @@ const gqlUpdatedSummary = toGqlResponse({
   }),
 });
 
-const emptyGql = toGqlResponse({
-  resources: {
-    totalCount: 0,
-    pageInfo: { hasNextPage: false, hasPreviousPage: false, endCursor: "", startCursor: "" },
-    edges: [],
-  },
-  resourceSummary: createMockResourceSummary(),
-});
-
 /** Cursor-paginated first page — 3 edges, next page available */
 function gqlFirstPage(endCursor = "fake-cursor") {
   return toGqlResponse(
@@ -175,10 +169,10 @@ async function applyResourceFilter(placeholderText: string, value: string) {
 // ---------------------------------------------------------------------------
 
 describe("ResourcesPage", () => {
-  const server = setupServer();
+  const server = setupTestServer();
   const queryLink = graphql.link("/api/v2/graphql");
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
@@ -189,7 +183,9 @@ describe("ResourcesPage", () => {
   // --- Loading states ---
 
   test("shows loading state then empty table", async () => {
-    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: emptyGql })));
+    server.use(
+      queryLink.query("GetResources", () => HttpResponse.json(createGetResourcesResponse()))
+    );
 
     const { component } = setup();
 
@@ -207,7 +203,9 @@ describe("ResourcesPage", () => {
   });
 
   test("shows no Reset Filters button in the empty view with only the default filter", async () => {
-    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: emptyGql })));
+    server.use(
+      queryLink.query("GetResources", () => HttpResponse.json(createGetResourcesResponse()))
+    );
 
     const { component } = setup();
 
@@ -225,11 +223,11 @@ describe("ResourcesPage", () => {
   test("resets a filter that leaves no results from the empty view", async () => {
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) =>
-        HttpResponse.json({
-          data: (variables.filter?.agent?.contains ?? []).some((agent) => agent.includes("unknown"))
-            ? emptyGql
-            : gqlFirst3,
-        })
+        HttpResponse.json(
+          (variables.filter?.agent?.contains ?? []).some((agent) => agent.includes("unknown"))
+            ? createGetResourcesResponse()
+            : { data: gqlFirst3 }
+        )
       )
     );
 

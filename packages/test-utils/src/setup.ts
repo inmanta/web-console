@@ -3,6 +3,11 @@ import React from "react";
 import { loader } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import dayjs from "@inmanta/web-console-core/dayjs";
+import {
+  isTestServerListening,
+  recordUnmockedRequest,
+  takeUnmockedRequests,
+} from "./Utils/setupTestServer";
 
 import "jest-axe/extend-expect";
 
@@ -116,6 +121,32 @@ const userAgentStyles = document.createElement("style");
 
 userAgentStyles.textContent = "span { display: inline; } [hidden] { display: none; }";
 document.head.append(userAgentStyles);
+
+// msw intercepts requests below happy-dom's fetch, so this only answers the requests sent while no
+// test server listens, such as a query retry after a test file's server closed. Without it, they
+// would reach a real server on localhost.
+window.happyDOM.settings.fetch.interceptor = {
+  beforeAsyncRequest: async ({ request, window }) => {
+    if (isTestServerListening() || !request.url.startsWith("http")) {
+      return undefined;
+    }
+
+    recordUnmockedRequest(`${request.method} ${request.url} (no test server listening)`);
+
+    return window.Response.error();
+  },
+};
+
+// A request without a mock fails the test that sent it.
+afterEach(() => {
+  const unmockedRequests = takeUnmockedRequests();
+
+  if (unmockedRequests.length > 0) {
+    throw new Error(
+      `Requests that no test server answered: ${unmockedRequests.join(", ")}. Mock them with setupTestServer, and wait for them before the test ends.`
+    );
+  }
+});
 
 // Set window size for tests
 Object.defineProperty(window, "innerWidth", {

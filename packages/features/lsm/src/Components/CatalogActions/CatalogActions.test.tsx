@@ -4,11 +4,11 @@ import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { defaultAuthContext } from "@inmanta/web-console-core/Auth";
 import { MockedDependencyProvider, ModalProvider } from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { CatalogActions } from "./CatalogActions";
 
 const axe = configureAxe({
@@ -33,9 +33,9 @@ function setup() {
 }
 
 describe("CatalogActions", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
 
   beforeEach(() => {
     server.resetHandlers();

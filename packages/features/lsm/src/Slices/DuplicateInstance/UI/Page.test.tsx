@@ -14,7 +14,6 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { lsmFeature } from "@inmanta/web-console-feature-lsm";
 import {
@@ -24,6 +23,7 @@ import {
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Page } from "./Page";
 
 const axe = configureAxe({
@@ -55,7 +55,7 @@ function setup() {
 
 describe("DuplicateInstancePage", () => {
   const instance = "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3";
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/lsm/v1/service_catalog/service_name_a", () => {
       return HttpResponse.json({ data: Service.a });
     }),
@@ -70,7 +70,7 @@ describe("DuplicateInstancePage", () => {
   });
 
   beforeAll(() => {
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
   });
 
   afterEach(() => {

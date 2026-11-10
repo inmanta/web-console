@@ -3,13 +3,13 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { getFeatureRoutes } from "@inmanta/web-console-core";
 import { lsmFeature } from "@inmanta/web-console-feature-lsm";
 import { failureAndRejection } from "@inmanta/web-console-feature-lsm/Slices/Diagnose/Data/Mock";
 import { MockedDependencyProvider, Service, stubRoute } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Diagnose } from "./Diagnose";
 
 const axe = configureAxe({
@@ -46,7 +46,7 @@ function setup(routes = linkedRoutes) {
   return { component };
 }
 
-const server = setupServer(
+const server = setupTestServer(
   http.get(
     "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose",
     () => {
@@ -62,7 +62,7 @@ const server = setupServer(
 
 describe("Diagnose", () => {
   // Establish API mocking before all tests.
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   // Reset any request handlers that we may add during the tests,
   // so they don't affect other tests.
   afterEach(() => server.resetHandlers());

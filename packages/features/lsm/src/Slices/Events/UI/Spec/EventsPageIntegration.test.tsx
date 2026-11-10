@@ -2,16 +2,16 @@ import { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import * as InstanceEvent from "@inmanta/web-console-feature-lsm/Slices/Events/Data/Mock";
 import { Service, Pagination } from "@inmanta/web-console-test-utils";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { EventsPageComposer } from "./EventsPageComposer";
 
 /** Test with the whole events page rendered */
 describe("Given the Events Page", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   beforeEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

@@ -3,10 +3,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { Token } from "@inmanta/web-console-core/Domain";
 import { MockedDependencyProvider, ModalProvider } from "@inmanta/web-console-test-utils";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import { TokenTable } from "./TokenTable";
 
@@ -39,9 +39,9 @@ function setup() {
 }
 
 describe("TokenTable", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

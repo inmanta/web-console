@@ -48,7 +48,7 @@ const setup = (props = defaultProps) => {
 
 describe("MarkdownPreviewer", () => {
   beforeEach(() => {
-    defaultServer.listen({ onUnhandledFrame: "error" });
+    defaultServer.listen();
   });
 
   afterEach(() => {

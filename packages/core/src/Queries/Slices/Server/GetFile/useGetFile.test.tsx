@@ -2,10 +2,10 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { useGetFile } from "./useGetFile";
 
 const wrapper = ({ children }: { children: React.ReactNode }) => {
@@ -17,9 +17,9 @@ const wrapper = ({ children }: { children: React.ReactNode }) => {
 };
 
 describe("useGetFile", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

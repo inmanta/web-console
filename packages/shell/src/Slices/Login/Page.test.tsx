@@ -4,12 +4,12 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { KeycloakAuthConfig, LocalConfig } from "@inmanta/web-console-core/Auth";
 import * as CookieHelper from "@inmanta/web-console-core/Common/CookieHelper";
 import { AuthProvider } from "@inmanta/web-console-shell/Auth/AuthProvider";
 import { AuthTestWrapper } from "@inmanta/web-console-test-utils/Inject";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Login } from "./Page";
 
 const mockedUsedNavigate = vi.hoisted(() => vi.fn());
@@ -59,7 +59,7 @@ describe("Login", () => {
   it("if user login with valid credentials we should set the cookie and navigate to home", async () => {
     const spiedCreateCookie = vi.spyOn(CookieHelper, "createCookie");
 
-    const server = setupServer(
+    const server = setupTestServer(
       http.post("/api/v2/login", async ({ request }) => {
         const reqBody = await request.json();
 
@@ -82,7 +82,7 @@ describe("Login", () => {
 
     const component = setup({ method: "database" });
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     render(component);
 
     const usernameInput = screen.getByRole("textbox", { name: "Username" });
@@ -109,7 +109,7 @@ describe("Login", () => {
   });
 
   it("If the user try to login with invalid credentials it should show error message", async () => {
-    const server = setupServer(
+    const server = setupTestServer(
       http.post("/api/v2/login", async ({ request }) => {
         const reqBody = await request.json();
 
@@ -131,7 +131,7 @@ describe("Login", () => {
 
     const component = setup({ method: "database" });
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
     render(component);
 
     const usernameInput = screen.getByRole("textbox", { name: "Username" });
@@ -158,7 +158,7 @@ describe("Login", () => {
   });
 
   it("If the user try to login with empty credentials it should show error message", async () => {
-    const server = setupServer(
+    const server = setupTestServer(
       http.post("/api/v2/login", async ({ request }) => {
         const reqBody = await request.json();
 
@@ -178,7 +178,7 @@ describe("Login", () => {
       })
     );
 
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
 
     const component = setup({ method: "database" });
 

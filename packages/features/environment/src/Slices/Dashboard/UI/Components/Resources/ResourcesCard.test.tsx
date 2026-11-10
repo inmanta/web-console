@@ -5,40 +5,26 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse } from "msw";
 import { graphql } from "msw/graphql";
-import { setupServer } from "msw/node";
 import { words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { SearchHelper } from "@inmanta/web-console-core/Routing/SearchHelper";
 import { environmentFeature } from "@inmanta/web-console-feature-environment";
 import { MockedDependencyProvider, stubRoute } from "@inmanta/web-console-test-utils";
-import { createMockResourceSummary } from "@inmanta/web-console-test-utils/Data/Resource";
+import {
+  createGetResourcesResponse,
+  createMockResourceSummary,
+} from "@inmanta/web-console-test-utils/Data/Resource";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { ResourcesCard } from "./ResourcesCard";
 
-const server = setupServer();
+const server = setupTestServer();
 const queryLink = graphql.link("/api/v2/graphql");
 const searchHelper = new SearchHelper();
-
-// useGraphQLRequest returns the body's outer "data", and useGetResources's `select`
-// destructures a further `data.data` - so the mocked body needs a second, outer "data" wrapper
-// to end up matching ResourcesGraphQLResponse once useGraphQLRequest strips its own layer (same
-// double-wrap convention as Resource/UI/ResourcesPage/Page.test.tsx's toGqlResponse usage).
-function toGqlResponse(resourceSummary: ReturnType<typeof createMockResourceSummary>) {
-  return {
-    data: {
-      resources: {
-        totalCount: resourceSummary.totalCount,
-        pageInfo: { hasNextPage: false, hasPreviousPage: false, endCursor: "", startCursor: "" },
-        edges: [],
-      },
-      resourceSummary,
-    },
-  };
-}
 
 function respondWith(resourceSummary: ReturnType<typeof createMockResourceSummary>) {
   server.use(
     queryLink.query("GetResources", () =>
-      HttpResponse.json({ data: toGqlResponse(resourceSummary) })
+      HttpResponse.json(createGetResourcesResponse(resourceSummary, resourceSummary.totalCount))
     )
   );
 }
@@ -81,7 +67,7 @@ function setup(routes = [...getFeatureRoutes([environmentFeature]), stubRoute("R
 }
 
 describe("ResourcesCard", () => {
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

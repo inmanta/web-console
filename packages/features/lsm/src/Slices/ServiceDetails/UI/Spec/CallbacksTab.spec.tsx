@@ -3,14 +3,14 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, delay, http } from "msw";
-import { setupServer } from "msw/node";
 import { getShortUuidFromRaw } from "@inmanta/web-console-core";
 import { Page } from "@inmanta/web-console-feature-lsm/Slices/ServiceDetails/UI/Page";
 import { Service, Callback, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 
-const server = setupServer();
+const server = setupTestServer();
 
 function setup() {
   const component = (
@@ -41,7 +41,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
       return HttpResponse.json({ data: Callback.list });
     })
   );
-  server.listen({ onUnhandledFrame: "error" });
+  server.listen();
   const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);
 
   const { component } = setup();

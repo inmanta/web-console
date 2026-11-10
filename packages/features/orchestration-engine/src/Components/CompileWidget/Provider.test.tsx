@@ -2,10 +2,10 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Provider } from "./Provider";
 
 function setup({ serverCompileEnabled = true } = {}) {
@@ -26,14 +26,14 @@ function setup({ serverCompileEnabled = true } = {}) {
 
   return { component, afterTrigger };
 }
-const server = setupServer(
+const server = setupTestServer(
   http.post("/api/v1/notify/c85c0a64-ed45-4cba-bdc5-703f65a225f7", async () => {
     return HttpResponse.json({});
   })
 );
 
 describe("CompileWidgetProvider", () => {
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterAll(() => {
     server.close();
     vi.clearAllMocks();

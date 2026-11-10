@@ -22,7 +22,7 @@ describe("Page Actions - Success", () => {
   const server = defaultServer;
 
   // Establish API mocking before all tests.
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
 
   // Reset any request handlers that we may add during the tests,
   // so they don't affect other tests.
@@ -702,7 +702,7 @@ describe("Page Actions - Failed", () => {
   const server = serverFailedActions;
 
   // Establish API mocking before all tests.
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
 
   // Reset any request handlers that we may add during the tests,
   // so they don't affect other tests.

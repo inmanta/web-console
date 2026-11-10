@@ -5,7 +5,6 @@ import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { graphql } from "msw/graphql";
-import { setupServer } from "msw/node";
 import { defaultAuthContext } from "@inmanta/web-console-core/Auth/AuthContext";
 import { EnvironmentPreviewResponse } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { Root } from "@inmanta/web-console-shell/Root";
@@ -18,6 +17,7 @@ import {
   Project,
   ServerStatus,
 } from "@inmanta/web-console-test-utils";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { app } from "./app";
 
 // The header only shows once the whole app has rendered, which can take over the default 1 s on
@@ -56,7 +56,7 @@ function setup() {
 
 describe("Root", () => {
   const queryBase = graphql.link("/api/v2/graphql");
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/api/v1/serverstatus", async () => {
       return HttpResponse.json({ data: ServerStatus.withLsm });
     }),
@@ -100,7 +100,7 @@ describe("Root", () => {
     })
   );
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => {
     server.close();

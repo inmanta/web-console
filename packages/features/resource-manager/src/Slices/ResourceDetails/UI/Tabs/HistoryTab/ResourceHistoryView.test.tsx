@@ -3,7 +3,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http, delay } from "msw";
-import { setupServer } from "msw/node";
 import {
   environmentReferences,
   referenceAttributes,
@@ -13,6 +12,7 @@ import { ResourceDetails } from "@inmanta/web-console-feature-resource-manager/S
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { ResourceHistoryView } from "./ResourceHistoryView";
 
 function setup() {
@@ -30,9 +30,9 @@ function setup() {
 }
 
 describe("ResourceHistoryView", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   beforeEach(() => server.resetHandlers());
   afterEach(() => testClient.clear());
   afterAll(() => server.close());

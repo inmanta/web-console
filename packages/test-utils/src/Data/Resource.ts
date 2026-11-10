@@ -112,6 +112,29 @@ export const createMockResourceSummary = (overrides?: Overrides): Resource.Resou
   };
 };
 
+/**
+ * The body of a GetResources GraphQL response without resources, for an msw handler.
+ * `data` is doubled because the orchestrator wraps the GraphQL result in its own `data`.
+ *
+ * @param resourceSummary - the summary of the resources
+ * @param totalCount - the number of resources the filter matches
+ */
+export const createGetResourcesResponse = (
+  resourceSummary: Resource.ResourceSummary = createMockResourceSummary(),
+  totalCount = 0
+) => ({
+  data: {
+    data: {
+      resources: {
+        totalCount,
+        pageInfo: { hasNextPage: false, hasPreviousPage: false, endCursor: "", startCursor: "" },
+        edges: [],
+      },
+      resourceSummary,
+    },
+  },
+});
+
 export const response = {
   data: {
     resources: {

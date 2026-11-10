@@ -2,14 +2,14 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { ServiceInstanceModel } from "@inmanta/web-console-core";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { testInstance, testService, childModel } from "./Mock";
 import { useGetInstanceWithRelations } from "./useGetInstanceWithRelations";
 
-export const server = setupServer(
+export const server = setupTestServer(
   http.get("/lsm/v1/service_inventory", async (params) => {
     if (params.request.url.match(/test_id/)) {
       return HttpResponse.json({
@@ -75,7 +75,7 @@ const createWrapper = () => {
 
 describe("useGetInstanceWithRelations", () => {
   // Establish API mocking before all tests.
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   // Reset any request handlers that we may add during the tests,
   // so they don't affect other tests.
   afterEach(() => server.resetHandlers());

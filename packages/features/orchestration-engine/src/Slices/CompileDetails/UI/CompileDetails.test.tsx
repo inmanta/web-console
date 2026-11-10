@@ -3,11 +3,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import * as Mock from "@inmanta/web-console-feature-orchestration-engine/Slices/CompileDetails/Core/Mock";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { CompileDetails } from "./CompileDetails";
 import { getDuration } from "./CompileStageReportTable";
 
@@ -31,10 +31,10 @@ function setup() {
 
   return { component };
 }
-const server = setupServer();
+const server = setupTestServer();
 
 describe("CompileDetails", () => {
-  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+  beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

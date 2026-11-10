@@ -3,11 +3,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { ServiceModel, words } from "@inmanta/web-console-core";
 import { REFETCH_INTERVAL } from "@inmanta/web-console-core/Queries/Helpers";
 import { MockedDependencyProvider, Service } from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { ServiceProvider } from "./ServiceProvider";
 
 const Wrapper: React.FC<{ name: string; children?: React.ReactNode }> = ({ children }) => (
@@ -29,10 +29,10 @@ function setup() {
 }
 
 describe("ServiceProvider", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => {
-    server.listen({ onUnhandledFrame: "error" });
+    server.listen();
   });
   afterEach(() => {
     vi.useRealTimers();
