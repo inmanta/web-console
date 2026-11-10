@@ -82,7 +82,11 @@ export interface OwnedServicesExpansion {
    */
   isExpandedByDefault?: boolean;
 
-  /** Goes up on every Expand all, Collapse all and filter change, to remount the rows. */
+  /**
+   * Goes up on every Expand all and Collapse all, to remount the rows. A filter change remounts
+   * them through the filter text in the URL instead, so they only start again once the new
+   * matches are known.
+   */
   resetCount: number;
 }
 

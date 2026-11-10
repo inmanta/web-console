@@ -54,7 +54,7 @@ export const Page: React.FC = () => {
    */
   const updateFilterText = (text: string): void => {
     setFilter(text === "" ? {} : { text });
-    setOwnedServicesExpansion(({ resetCount }) => ({ resetCount: resetCount + 1 }));
+    setOwnedServicesExpansion(({ resetCount }) => ({ isExpandedByDefault: undefined, resetCount }));
   };
 
   const toolbar = (
@@ -116,7 +116,7 @@ export const Page: React.FC = () => {
           {toolbar}
           {filteredCatalogSections.sections.length > 0 ? (
             <CatalogSections
-              key={ownedServicesExpansion.resetCount}
+              key={`${filterText}-${ownedServicesExpansion.resetCount}`}
               sections={filteredCatalogSections.sections}
               isExpandedByDefault={ownedServicesExpansion.isExpandedByDefault}
               ownerNamesOfMatchingServices={filteredCatalogSections.ownerNamesOfMatchingServices}
