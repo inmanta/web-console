@@ -23,7 +23,6 @@ import {
   getAllCatalogServices,
   getLabelCounts,
   getOwnedServicesStateCounts,
-  getOwnerServiceNames,
   getSectionInstanceCount,
   getSectionTitle,
 } from "./helpers";
@@ -185,24 +184,26 @@ describe("filterCatalogSections", () => {
     expect(filtered.ownerNamesOfMatchingServices).toEqual(new Set());
   });
 
-  it("returns no sections when nothing matches", () => {
-    expect(filterCatalogSections(sections, "no service has this text").sections).toEqual([]);
+  it("counts the matching services at any depth, not the owners on the path", () => {
+    const filtered = filterCatalogSections(sections, aviVirtualIp.name);
+
+    expect(filtered.matchingServiceCount).toBe([aviVirtualIp].length);
   });
 
-  it("returns the sections unchanged and no owners for a blank filter text", () => {
+  it("returns no sections when nothing matches", () => {
+    const filtered = filterCatalogSections(sections, "no service has this text");
+
+    expect(filtered.sections).toEqual([]);
+    expect(filtered.matchingServiceCount).toBe(0);
+  });
+
+  it("returns the sections unchanged, no owners and every service as a match for a blank filter text", () => {
     const filtered = filterCatalogSections(sections, " ");
 
     expect(filtered.sections).toBe(sections);
     expect(filtered.ownerNamesOfMatchingServices).toEqual(new Set());
-  });
-});
-
-describe("getOwnerServiceNames", () => {
-  it("returns every service that owns other services, at any depth", () => {
-    const sections = createCatalogSections([linuxVm, ...deploymentTree]);
-
-    expect(getOwnerServiceNames(sections)).toEqual(
-      new Set([deployment.name, aviLoadBalancerCluster.name])
+    expect(filtered.matchingServiceCount).toBe(
+      [router, vpn, firewall, linuxVm, ...deploymentTree].length
     );
   });
 });

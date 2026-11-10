@@ -67,15 +67,24 @@ export interface FilteredCatalogSections {
 
   /** The names of the services that own, at any depth, a service matching the filter text. */
   ownerNamesOfMatchingServices: Set<string>;
+
+  /** The number of services, at any depth, matching the filter text. All of them without a filter. */
+  matchingServiceCount: number;
 }
 
 /**
- * Which services start with their owned services expanded. "FilterMatches" expands the owners
- * of the services matching the filter, which are none without a filter. "All" follows the last
- * click on Expand all or Collapse all, until the filter text changes.
+ * Whether the catalog rows start with their owned services expanded.
  */
-export type OwnedServicesExpansion =
-  { kind: "FilterMatches" } | { kind: "All"; isExpanded: boolean };
+export interface OwnedServicesExpansion {
+  /**
+   * Set by the last Expand all or Collapse all. `undefined` until then, and again after a
+   * filter change, so only the owners of the filter matches start expanded.
+   */
+  isExpandedByDefault?: boolean;
+
+  /** Goes up on every Expand all, Collapse all and filter change, to remount the rows. */
+  resetCount: number;
+}
 
 /** The icon of a service that owns other services and has no `web_icon`. */
 export const ownerServiceFallbackIconName = "FaFolder";

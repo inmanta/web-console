@@ -219,8 +219,10 @@ export const lsmMessages = {
   "catalog.column.instances": "Instances",
   "catalog.instances.none": "No instances",
   "catalog.filter.placeholder": "Filter services",
-  "catalog.serviceCount": (rootServiceCount: number, serviceCount: number) =>
-    `${rootServiceCount} top-level · ${serviceCount} ${serviceCount === 1 ? "entity" : "entities"}`,
+  "catalog.serviceCount": (serviceCount: number) =>
+    `${serviceCount} ${serviceCount === 1 ? "service" : "services"}`,
+  "catalog.serviceCount.filtered": (matchingServiceCount: number, serviceCount: number) =>
+    `${matchingServiceCount} of ${serviceCount} ${serviceCount === 1 ? "service" : "services"}`,
   "catalog.section.ungrouped": "Other services",
   "catalog.section.count": (serviceCount: number, instanceCount: number) =>
     `${serviceCount} ${serviceCount === 1 ? "service" : "services"} · ${instanceCount} ${instanceCount === 1 ? "instance" : "instances"}`,

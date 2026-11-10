@@ -212,10 +212,12 @@ describe("ServiceCatalog", () => {
     expect(within(collapsedList).getByTestId(aviVirtualIp.name + "-item")).not.toBeVisible();
   });
 
-  test("GIVEN ServiceCatalog WHEN services own other services THEN the toolbar shows the top-level and total service count", async () => {
+  test("GIVEN ServiceCatalog WHEN a filter is set THEN the toolbar count goes from all services to the matches of all services", async () => {
+    const serviceModels = [linuxVm, ...deploymentTree];
+
     server.use(
       http.get("/lsm/v1/service_catalog", () => {
-        return HttpResponse.json({ data: [linuxVm, ...deploymentTree] });
+        return HttpResponse.json({ data: serviceModels });
       })
     );
 
@@ -225,12 +227,16 @@ describe("ServiceCatalog", () => {
 
     await screen.findByTestId(linuxVm.name + "-item");
 
+    expect(screen.getByText(words("catalog.serviceCount")(serviceModels.length))).toBeVisible();
+
+    await userEvent.type(
+      screen.getByRole("textbox", { name: words("catalog.filter.placeholder") }),
+      aviVirtualIp.name
+    );
+
     expect(
       screen.getByText(
-        words("catalog.serviceCount")(
-          [linuxVm, deployment].length,
-          [linuxVm, ...deploymentTree].length
-        )
+        words("catalog.serviceCount.filtered")([aviVirtualIp].length, serviceModels.length)
       )
     ).toBeVisible();
   });

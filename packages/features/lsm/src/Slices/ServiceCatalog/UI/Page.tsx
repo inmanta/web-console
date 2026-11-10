@@ -18,12 +18,7 @@ import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { CatalogSections } from "./CatalogSections";
-import {
-  createCatalogSections,
-  filterCatalogSections,
-  getAllCatalogServices,
-  getOwnerServiceNames,
-} from "./helpers";
+import { createCatalogSections, filterCatalogSections, getAllCatalogServices } from "./helpers";
 import { CatalogFilter, OwnedServicesExpansion } from "./types";
 
 export const Page: React.FC = () => {
@@ -35,29 +30,22 @@ export const Page: React.FC = () => {
     () => filterCatalogSections(sections, filterText),
     [sections, filterText]
   );
-  const ownerServiceNames = useMemo(() => getOwnerServiceNames(sections), [sections]);
   const [ownedServicesExpansion, setOwnedServicesExpansion] = useState<OwnedServicesExpansion>({
-    kind: "FilterMatches",
+    resetCount: 0,
   });
-  const [ownedServicesExpansionResetCount, setOwnedServicesExpansionResetCount] = useState(0);
   const [isToolbarStuck, setIsToolbarStuck] = useState(false);
-  const allServiceCount = getAllCatalogServices(sections).length;
-  const rootServiceCount = sections.reduce((count, section) => count + section.services.length, 0);
-
-  let serviceNamesExpandedByDefault = filteredCatalogSections.ownerNamesOfMatchingServices;
-
-  if (ownedServicesExpansion.kind === "All") {
-    serviceNamesExpandedByDefault = ownedServicesExpansion.isExpanded
-      ? ownerServiceNames
-      : new Set();
-  }
+  const allServices = getAllCatalogServices(sections);
+  const hasOwnedServices = allServices.some((service) => service.ownedServices.length > 0);
+  const { matchingServiceCount } = filteredCatalogSections;
 
   /**
    * Remounts the catalog so every row starts again with its owned services expanded or collapsed.
    */
-  const resetOwnedServicesExpansion = (isExpanded: boolean): void => {
-    setOwnedServicesExpansion({ kind: "All", isExpanded });
-    setOwnedServicesExpansionResetCount((resetCount) => resetCount + 1);
+  const resetOwnedServicesExpansion = (isExpandedByDefault: boolean): void => {
+    setOwnedServicesExpansion(({ resetCount }) => ({
+      isExpandedByDefault,
+      resetCount: resetCount + 1,
+    }));
   };
 
   /**
@@ -66,7 +54,7 @@ export const Page: React.FC = () => {
    */
   const updateFilterText = (text: string): void => {
     setFilter(text === "" ? {} : { text });
-    setOwnedServicesExpansion({ kind: "FilterMatches" });
+    setOwnedServicesExpansion(({ resetCount }) => ({ resetCount: resetCount + 1 }));
   };
 
   const toolbar = (
@@ -81,7 +69,7 @@ export const Page: React.FC = () => {
             onClear={() => updateFilterText("")}
           />
         </ToolbarItem>
-        {ownerServiceNames.size > 0 && (
+        {hasOwnedServices && (
           <>
             <ToolbarItem>
               <Button variant="link" isInline onClick={() => resetOwnedServicesExpansion(true)}>
@@ -97,7 +85,9 @@ export const Page: React.FC = () => {
         )}
         <ToolbarItem align={{ default: "alignEnd" }}>
           <Content component={ContentVariants.small}>
-            {words("catalog.serviceCount")(rootServiceCount, allServiceCount)}
+            {matchingServiceCount < allServices.length
+              ? words("catalog.serviceCount.filtered")(matchingServiceCount, allServices.length)
+              : words("catalog.serviceCount")(allServices.length)}
           </Content>
         </ToolbarItem>
       </ToolbarContent>
@@ -126,9 +116,10 @@ export const Page: React.FC = () => {
           {toolbar}
           {filteredCatalogSections.sections.length > 0 ? (
             <CatalogSections
-              key={`${ownedServicesExpansionResetCount}-${filterText}`}
+              key={ownedServicesExpansion.resetCount}
               sections={filteredCatalogSections.sections}
-              serviceNamesExpandedByDefault={serviceNamesExpandedByDefault}
+              isExpandedByDefault={ownedServicesExpansion.isExpandedByDefault}
+              ownerNamesOfMatchingServices={filteredCatalogSections.ownerNamesOfMatchingServices}
             />
           ) : (
             <EmptyView

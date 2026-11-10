@@ -217,22 +217,27 @@ export const getLabelCounts = (stateCounts: StateCount[]): LabelCount[] => {
  * Filters the sections down to the services that match the filter text and the owners on the
  * path to them, and collects those owners so they can start expanded. A matching service keeps
  * all its owned services; sections left without services are dropped. A blank filter text
- * returns the sections unchanged and no owners.
+ * returns the sections unchanged, no owners, and every service as a match.
  *
  * @example
  * filterCatalogSections([{ kind: "Ungrouped", services: [deployment (owns dns_record, virtual_ip)] }], "dns")
  * // { sections: [{ kind: "Ungrouped", services: [deployment (ownedServices: [dns_record])] }],
- * //   ownerNamesOfMatchingServices: Set { "deployment" } }
+ * //   ownerNamesOfMatchingServices: Set { "deployment" }, matchingServiceCount: 1 }
  */
 export const filterCatalogSections = (
   sections: CatalogSection[],
   filterText: string
 ): FilteredCatalogSections => {
-  const normalizedFilterText = normalizeFilterText(filterText);
+  const normalizedFilterText = filterText.trim().toLowerCase();
   const ownerNamesOfMatchingServices = new Set<string>();
+  let matchingServiceCount = 0;
 
   if (normalizedFilterText === "") {
-    return { sections, ownerNamesOfMatchingServices };
+    return {
+      sections,
+      ownerNamesOfMatchingServices,
+      matchingServiceCount: getAllCatalogServices(sections).length,
+    };
   }
 
   const filterServices = (services: CatalogService[]): CatalogService[] => {
@@ -246,6 +251,7 @@ export const filterCatalogSections = (
       }
 
       if (isCatalogServiceMatch(service, normalizedFilterText)) {
+        matchingServiceCount += 1;
         filteredServices.push(service);
       } else if (filteredOwnedServices.length > 0) {
         filteredServices.push({ ...service, ownedServices: filteredOwnedServices });
@@ -265,28 +271,8 @@ export const filterCatalogSections = (
     }
   }
 
-  return { sections: filteredSections, ownerNamesOfMatchingServices };
+  return { sections: filteredSections, ownerNamesOfMatchingServices, matchingServiceCount };
 };
-
-/**
- * Gets the names of the services that own other services, at any depth.
- */
-export const getOwnerServiceNames = (sections: CatalogSection[]): Set<string> => {
-  const ownerServiceNames = new Set<string>();
-
-  for (const service of getAllCatalogServices(sections)) {
-    if (service.ownedServices.length > 0) {
-      ownerServiceNames.add(service.serviceModel.name);
-    }
-  }
-
-  return ownerServiceNames;
-};
-
-/**
- * Gets the filter text as it is matched: trimmed and lowercase.
- */
-const normalizeFilterText = (filterText: string): string => filterText.trim().toLowerCase();
 
 /**
  * Whether the `web_title` or the name of a service contains the normalized filter text,
