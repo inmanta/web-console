@@ -93,6 +93,7 @@ export const InstanceActions: React.FC = () => {
           isOpen={isExpertDropdownOpen}
           onOpenChange={(isOpen: boolean) => !blockedInterface && setIsExpertDropdownOpen(isOpen)}
           toggle={expertToggle}
+          isScrollable
         >
           <DropdownList>
             <DestroyAction
