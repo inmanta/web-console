@@ -28,7 +28,7 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Ship modes: Checkout') {
             steps {
                 deleteDir()
                 dir('web-console') {
@@ -36,7 +36,7 @@ pipeline {
                 }
             }
         }
-        stage('Build') {
+        stage('Ship modes: Build') {
             steps {
                 dir('web-console') {
                     sh '''
@@ -46,7 +46,7 @@ pipeline {
                 }
             }
         }
-        stage('End-to-end tests per ship mode') {
+        stage('Ship modes: End-to-end tests') {
             steps {
                 script {
                     for (mode in shipModes) {

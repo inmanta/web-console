@@ -33,7 +33,7 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Auth: Checkout') {
             steps {
                 deleteDir()
                 dir('web-console') {
@@ -41,7 +41,7 @@ pipeline {
                 }
             }
         }
-        stage('Build') {
+        stage('Auth: Build') {
             steps {
                 dir('web-console') {
                     sh '''
@@ -51,7 +51,7 @@ pipeline {
                 }
             }
         }
-        stage('End-to-end tests per authentication method') {
+        stage('Auth: End-to-end tests') {
             steps {
                 script {
                     for (method in authMethods) {

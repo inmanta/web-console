@@ -6,6 +6,9 @@
 // earlier installs on the agent mirrored into its global folder (~/.yarn/berry by default), the
 // JointJS ones included, so every build gets an empty global folder of its own. Otherwise the
 // install would pass for the wrong reason. See "CI" in docs/notes.md.
+//
+// The stage names start with "OSS:": GitHub shows a check per stage, and the main job has a
+// "Checkout" stage too.
 pipeline {
     agent any
 
@@ -25,7 +28,7 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('OSS: Checkout') {
             steps {
                 deleteDir()
                 dir('web-console') {
@@ -33,7 +36,7 @@ pipeline {
                 }
             }
         }
-        stage('Check the environment has no JointJS token') {
+        stage('OSS: No JointJS token') {
             steps {
                 dir('web-console') {
                     sh '''
@@ -54,7 +57,7 @@ pipeline {
                 }
             }
         }
-        stage('Lockfile drift') {
+        stage('OSS: Lockfile drift') {
             steps {
                 dir('web-console') {
                     // Fails when yarn.lock misses a change of a package.json, or when completing it
@@ -67,7 +70,7 @@ pipeline {
                 }
             }
         }
-        stage('Install the OSS app') {
+        stage('OSS: Install') {
             steps {
                 dir('web-console') {
                     // Fails when the OSS app or one of its packages depends on a JointJS package.
@@ -78,7 +81,7 @@ pipeline {
                 }
             }
         }
-        stage('Build, type-check and test the OSS app') {
+        stage('OSS: Build, type-check and test') {
             steps {
                 dir('web-console') {
                     sh '''
