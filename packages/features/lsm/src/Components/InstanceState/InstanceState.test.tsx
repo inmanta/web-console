@@ -1,7 +1,33 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { list } from "@inmanta/web-console-test-utils/Data/Service/State";
 import { InstanceStateLabel } from "./InstanceStateLabel";
+
+const infoStates = list.filter((state) => state.label === "info");
+const warningStates = list.filter((state) => state.label === "warning");
+
+test.each(infoStates)(
+  "GIVEN State label WHEN the state $name has the info label THEN it is a blue label with an icon instead of PatternFly's info status",
+  (state) => {
+    render(<InstanceStateLabel {...state} />);
+
+    const badge = screen.getByText(state.name).closest(".pf-v6-c-label");
+
+    expect(badge).toHaveClass("pf-m-blue");
+    expect(badge).not.toHaveClass("pf-m-info");
+    expect(badge?.querySelector(".pf-v6-c-label__icon")).toBeInTheDocument();
+  }
+);
+
+test.each(warningStates)(
+  "GIVEN State label WHEN the state $name has the warning label THEN it keeps PatternFly's warning status",
+  (state) => {
+    render(<InstanceStateLabel {...state} />);
+
+    expect(screen.getByText(state.name).closest(".pf-v6-c-label")).toHaveClass("pf-m-warning");
+  }
+);
 
 test("GIVEN State label WHEN (name,label) is ('up','success') THEN name is visible", async () => {
   render(<InstanceStateLabel name="up" label="success" />);
