@@ -6,6 +6,7 @@ import dayjs from "@inmanta/web-console-core/dayjs";
 import {
   isTestServerListening,
   recordUnmockedRequest,
+  stopFallbackServer,
   takeUnmockedRequests,
 } from "./Utils/setupTestServer";
 
@@ -136,6 +137,9 @@ window.happyDOM.settings.fetch.interceptor = {
     return window.Response.error();
   },
 };
+
+// Runs after the test file's own afterAll, which closes its test server.
+afterAll(() => stopFallbackServer());
 
 // A request without a mock fails the test that sent it.
 afterEach(() => {

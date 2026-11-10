@@ -2,13 +2,14 @@
 import { setupServer, SetupServer } from "msw/node";
 
 let listeningServers = 0;
+let fallbackListening = false;
 const unmockedRequests: string[] = [];
 
 /**
  * Creates an msw server for a test, like msw's `setupServer`, with these defaults:
  * - `listen()` makes a request without a handler fail instead of passing it through to the network.
  * - That request also fails the running test, through the `afterEach` of the test setup.
- * - While no test server listens, the test setup answers every request with a network error.
+ * - While no test server listens, a request fails too, see `fallbackServer` and the test setup.
  *
  * @param handlers - the handlers the server starts with, which survive `resetHandlers()`
  * @returns the msw server
@@ -20,15 +21,12 @@ const unmockedRequests: string[] = [];
  * afterAll(() => server.close());
  */
 export const setupTestServer = (...handlers: Parameters<typeof setupServer>): SetupServer => {
-  const server = setupServer(...handlers);
+  const server = createServer("", handlers);
   const listen = server.listen;
   const close = server.close;
 
-  server.events.on("request:unhandled", ({ request }) => {
-    recordUnmockedRequest(`${request.method} ${request.url}`);
-  });
-
   server.listen = (options) => {
+    stopFallbackServer();
     listen({ onUnhandledFrame: "error", ...options });
     listeningServers++;
   };
@@ -36,9 +34,44 @@ export const setupTestServer = (...handlers: Parameters<typeof setupServer>): Se
   server.close = () => {
     close();
     listeningServers--;
+
+    if (listeningServers === 0) {
+      fallbackServer.listen({ onUnhandledFrame: "error" });
+      fallbackListening = true;
+    }
   };
 
   return server;
+};
+
+/**
+ * Creates an msw server that records the requests it has no handler for.
+ */
+const createServer = (label: string, handlers: Parameters<typeof setupServer>): SetupServer => {
+  const server = setupServer(...handlers);
+
+  server.events.on("request:unhandled", ({ request }) => {
+    recordUnmockedRequest(`${request.method} ${request.url}${label}`);
+  });
+
+  return server;
+};
+
+/**
+ * Listens while no test server does, from the moment the last one closes. It fails a request that
+ * was sent just before, which would otherwise reach the network after its test server closed.
+ */
+const fallbackServer = createServer(" (no test server listening)", []);
+
+/**
+ * Stops the fallback server when a test file is done, so it doesn't answer the requests of the next
+ * test file that runs in the same process.
+ */
+export const stopFallbackServer = (): void => {
+  if (fallbackListening) {
+    fallbackServer.close();
+    fallbackListening = false;
+  }
 };
 
 /**

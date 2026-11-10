@@ -65,20 +65,17 @@ function TestWrapper({ initialUser }: { initialUser: UserInfo }) {
 }
 
 describe("NestedUserRoleTable (with MSW)", () => {
-  let server: ReturnType<typeof setupTestServer>;
+  const server = setupTestServer();
 
-  afterEach(() => {
-    if (server) {
-      server.close();
-    }
-  });
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
   it("renders environments and roles", async () => {
-    server = setupTestServer(
+    server.use(
       http.get("/api/v2/environment", () => HttpResponse.json({ data: mockEnvironments })),
       http.get("/api/v2/role", () => HttpResponse.json({ data: mockRoles }))
     );
-    server.listen();
 
     renderWithClient(<NestedUserRoleTable {...mockUser} />);
 
@@ -89,18 +86,17 @@ describe("NestedUserRoleTable (with MSW)", () => {
   });
 
   it("shows 'roles unavailable' if no roles and not loading", async () => {
-    server = setupTestServer(
+    server.use(
       http.get("/api/v2/environment", () => HttpResponse.json({ data: mockEnvironments })),
       http.get("/api/v2/role", () => HttpResponse.json({ data: undefined }))
     );
-    server.listen();
     renderWithClient(<NestedUserRoleTable {...mockUser} />);
     expect(await screen.findByText(/no roles available/i)).toBeInTheDocument();
   });
 
   it("If a role is not yet assigned, it should be added", async () => {
     let addedRole: unknown;
-    server = setupTestServer(
+    server.use(
       http.get("/api/v2/environment", () => HttpResponse.json({ data: mockEnvironments })),
       http.get("/api/v2/role", () => HttpResponse.json({ data: mockRoles })),
       http.post("/api/v2/role_assignment/:username", async ({ request }) => {
@@ -109,7 +105,6 @@ describe("NestedUserRoleTable (with MSW)", () => {
         return HttpResponse.json({}, { status: 204 });
       })
     );
-    server.listen();
     render(<TestWrapper initialUser={{ ...mockUser, roles: { env1: [] } }} />);
     const editDropdowns = await screen.findAllByLabelText("role-selector");
     fireEvent.click(editDropdowns[0]);
@@ -133,7 +128,7 @@ describe("NestedUserRoleTable (with MSW)", () => {
 
   it("If a role is already assigned, it should be removed", async () => {
     let removedRole: string | null = null;
-    server = setupTestServer(
+    server.use(
       http.get("/api/v2/environment", () => HttpResponse.json({ data: mockEnvironments })),
       http.get("/api/v2/role", () => HttpResponse.json({ data: mockRoles })),
       http.delete("/api/v2/role_assignment/:username", ({ request }) => {
@@ -142,7 +137,6 @@ describe("NestedUserRoleTable (with MSW)", () => {
         return HttpResponse.json({}, { status: 204 });
       })
     );
-    server.listen();
     render(<TestWrapper initialUser={mockUser} />);
     const editButtons = await screen.findAllByLabelText("role-selector");
     fireEvent.click(editButtons[0]); // env1
@@ -164,7 +158,7 @@ describe("NestedUserRoleTable (with MSW)", () => {
   });
 
   it("shows error alert if addRole fails", async () => {
-    server = setupTestServer(
+    server.use(
       http.get("/api/v2/environment", () => HttpResponse.json({ data: mockEnvironments })),
       http.get("/api/v2/role", () => HttpResponse.json({ data: mockRoles })),
       http.post("/api/v2/role_assignment/:username", async () => {
@@ -172,7 +166,6 @@ describe("NestedUserRoleTable (with MSW)", () => {
       })
     );
 
-    server.listen();
     renderWithClient(<TestWrapper initialUser={{ ...mockUser, roles: { env1: [] } }} />);
     const editDropdowns = await screen.findAllByLabelText("role-selector");
     fireEvent.click(editDropdowns[1]); // env2
@@ -190,14 +183,13 @@ describe("NestedUserRoleTable (with MSW)", () => {
   });
 
   it("shows error alert if deleteRole fails", async () => {
-    server = setupTestServer(
+    server.use(
       http.get("/api/v2/environment", () => HttpResponse.json({ data: mockEnvironments })),
       http.get("/api/v2/role", () => HttpResponse.json({ data: mockRoles })),
       http.delete("/api/v2/role_assignment/:username", () => {
         return HttpResponse.json({ message: "Delete failed" }, { status: 500 });
       })
     );
-    server.listen();
     renderWithClient(<NestedUserRoleTable {...mockUser} />);
     const editDropdowns = await screen.findAllByLabelText("role-selector");
     fireEvent.click(editDropdowns[0]); // env1
@@ -218,22 +210,26 @@ describe("NestedUserRoleTable (with MSW)", () => {
       ...mockUser,
       roles: { env1: ["admin", "observer"], env2: [] },
     };
-    server = setupTestServer(
+    server.use(
       http.get("/api/v2/environment", () => HttpResponse.json({ data: mockEnvironments })),
       http.get("/api/v2/role", () => HttpResponse.json({ data: mockRoles }))
     );
-    server.listen();
     renderWithClient(<NestedUserRoleTable {...multiRoleUser} />);
     expect(await screen.findByText("admin")).toBeInTheDocument();
     expect(screen.getByText("observer")).toBeInTheDocument();
   });
 
   it("renders no rows if no environments", async () => {
-    server = setupTestServer(
-      http.get("/api/v2/environment", () => HttpResponse.json({ data: [] }))
+    let environmentsAnswered = false;
+    server.use(
+      http.get("/api/v2/environment", () => {
+        environmentsAnswered = true;
+
+        return HttpResponse.json({ data: [] });
+      })
     );
-    server.listen();
     renderWithClient(<NestedUserRoleTable {...mockUser} />);
+    await waitFor(() => expect(environmentsAnswered).toBe(true));
     expect(screen.queryByText("Production")).not.toBeInTheDocument();
     expect(screen.queryByText("Staging")).not.toBeInTheDocument();
   });
