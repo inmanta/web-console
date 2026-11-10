@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Verifies that no CDN URLs survived into the production bundle.
+ * Verifies that no CDN URLs survived into the production builds.
  *
  * Our customers run the web console in controlled
  * environments where outbound internet access is restricted. Requests to
@@ -10,23 +10,36 @@
  * locally — no runtime CDN fetches allowed.
  *
  * Run this after every production build (yarn build:ci) to catch regressions
- * early, before they reach a customer environment.
+ * early, before they reach a customer environment. It checks every build that
+ * `yarn build:ci` makes: the ISO app (dist), the OSS app (apps/oss/dist) and the
+ * composer's separate build (packages/features/composer/dist), or the folders given
+ * as arguments, e.g. `yarn check-no-cdn apps/oss/dist`.
  */
-import { readdirSync, readFileSync } from "fs";
+import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 
-const distDir = "dist";
+const defaultDistDirs = ["dist", "apps/oss/dist", "packages/features/composer/dist"];
+const distDirs = process.argv.length > 2 ? process.argv.slice(2) : defaultDistDirs;
 const cdnPatterns = ["esm.sh", "cdn.jsdelivr.net"];
 
-const jsFiles = readdirSync(distDir).filter((f) => f.endsWith(".js"));
+const missing = distDirs.filter((dir) => !existsSync(dir));
+
+if (missing.length) {
+  console.error(`ERROR: no build in ${missing.join(", ")}, run \`yarn build:ci\` first.`);
+  process.exit(1);
+}
 
 const hits = [];
-for (const file of jsFiles) {
-  const content = readFileSync(join(distDir, file), "utf8");
-  for (const pattern of cdnPatterns) {
-    if (content.includes(pattern)) {
-      hits.push(`${file} (contains "${pattern}")`);
-      break;
+for (const distDir of distDirs) {
+  const jsFiles = readdirSync(distDir).filter((f) => f.endsWith(".js"));
+
+  for (const file of jsFiles) {
+    const content = readFileSync(join(distDir, file), "utf8");
+    for (const pattern of cdnPatterns) {
+      if (content.includes(pattern)) {
+        hits.push(`${join(distDir, file)} (contains "${pattern}")`);
+        break;
+      }
     }
   }
 }
@@ -39,4 +52,4 @@ if (hits.length) {
   process.exit(1);
 }
 
-console.log("OK: no CDN URLs in bundle");
+console.log(`OK: no CDN URLs in ${distDirs.join(", ")}`);

@@ -1,0 +1,86 @@
+// The nightly checks of the composer's ship modes: the ISO end-to-end suite once for each mode
+// the ISO web console can run in (see "Features loaded at runtime" in docs/notes.md):
+// - combined: dist/ as built, with the composer;
+// - without: no composer files;
+// - mismatch: a composer of another version, which the app leaves out with a notice.
+// Each mode gets a fresh orchestrator. Installing the composer later is covered by
+// `yarn cypress-test:ship-modes` in the main job. The scenario of the composer itself
+// (scenario-8-composer) only runs in the combined mode.
+//
+// Its own job, for master and the iso branches; it needs the same credentials as the main job.
+def shipModes = ['combined', 'without', 'mismatch']
+
+pipeline {
+    agent any
+
+    options {
+        disableConcurrentBuilds()
+        checkoutToSubdirectory('web-console')
+        skipDefaultCheckout()
+        ansiColor('xterm')
+    }
+    triggers {
+        cron(BRANCH_NAME ==~ /master|iso[0-9]+/ ? 'H H(0-2) * * *' : '')
+    }
+    environment {
+        GITLAB_TOKEN = credentials('jenkins_on_gitlab')
+        JOINTJS_NPM_TOKEN = credentials('jointjs-npm-token')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                deleteDir()
+                dir('web-console') {
+                    checkout scm
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                dir('web-console') {
+                    sh '''
+                    yarn install --immutable
+                    yarn build:ci
+                    '''
+                }
+            }
+        }
+        stage('End-to-end tests per ship mode') {
+            steps {
+                script {
+                    for (mode in shipModes) {
+                        stage("Ship mode: ${mode}") {
+                            // A failing mode fails the build, and the other modes still run.
+                            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                                timeout(time: 30, unit: 'MINUTES') {
+                                    dir('web-console') {
+                                        try {
+                                            sh """
+                                            sudo systemctl restart docker && sudo docker network prune -f
+                                            yarn run install:orchestrator:ci
+                                            yarn composer-ship-mode ${mode} --container inmanta_orchestrator
+                                            yarn run cypress-test:iso --expose edition=iso,composerShipMode=${mode} --reporter-options 'mochaFile=cypress/reports/junit/${mode}-[hash].xml'
+                                            """
+                                        } finally {
+                                            sh 'yarn run kill-server'
+                                            junit allowEmptyResults: true, testResults: "cypress/reports/junit/${mode}-*.xml"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'web-console/cypress/screenshots/**', allowEmptyArchive: true
+        }
+        cleanup {
+            deleteDir()
+        }
+    }
+}

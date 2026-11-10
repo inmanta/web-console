@@ -79,6 +79,7 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                                 yarn check-circular-deps;
                                 yarn build:ci;
                                 yarn check-no-cdn;
+                                yarn check-dist-versions;
                                 yarn test:ci ${vitestCoverageArgs}"""
                             }
                         }
