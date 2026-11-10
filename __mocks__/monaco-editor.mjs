@@ -70,13 +70,15 @@ const editor = {
   getModelMarkers: vi.fn().mockReturnValue([]),
 };
 
-const languages = {
-  json: {
-    jsonDefaults: {
-      setModeConfiguration: vi.fn(),
-      setDiagnosticsOptions: vi.fn(),
-    },
+// Since monaco-editor 0.56 the JSON language service is the top-level "json" namespace.
+const json = {
+  jsonDefaults: {
+    setModeConfiguration: vi.fn(),
+    setDiagnosticsOptions: vi.fn(),
   },
+};
+
+const languages = {
   register: vi.fn(),
   setMonarchTokensProvider: vi.fn(),
   setLanguageConfiguration: vi.fn(),
@@ -100,9 +102,10 @@ const KeyCode = {
 
 export {
   editor,
+  json,
   languages,
   Uri,
   KeyMod,
   KeyCode,
 };
-export default { editor, languages, Uri, KeyMod, KeyCode };
+export default { editor, json, languages, Uri, KeyMod, KeyCode };

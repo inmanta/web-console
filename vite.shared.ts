@@ -382,8 +382,6 @@ export const appConfig = (appDir: string, outDir: string): UserConfig => {
         "@monaco-editor/react",
         "@braintree/sanitize-url",
         "@patternfly/react-styles",
-        "nullthrows",
-        "picomatch-browser",
         "react-diff-viewer-continued",
       ],
       force: true,

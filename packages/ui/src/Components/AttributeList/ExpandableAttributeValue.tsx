@@ -87,6 +87,9 @@ export const AttributeExpandTd: React.FC<{
  * The content of a value cell. Expandable kinds (JSON, XML, multiline code)
  * show a truncated preview button that toggles the expansion row; everything
  * else renders inline via {@link AttributeValue} (copyable text, file block, ...).
+ * The preview is cut with CSS to the column width, so render it in a cell with
+ * PF's `truncate` modifier. Don't add Truncate's `maxCharsDisplayed`: its
+ * screen-reader copy of the full value never wraps and widens the table.
  *
  * @param value - The raw value, shown truncated in the preview button.
  * @param attribute - The classified attribute.
@@ -101,9 +104,9 @@ export const AttributeValueCell: React.FC<{
 }> = ({ value, attribute, isExpanded, onToggle }) =>
   isEditorKind(attribute.kind) ? (
     <Button variant="link" isInline onClick={onToggle} aria-expanded={isExpanded}>
+      {/* Truncate keeps line breaks (white-space: pre), so collapse them to keep the preview on one line. */}
       <Truncate
-        content={value}
-        maxCharsDisplayed={30}
+        content={value.replace(/\s+/g, " ")}
         tooltipProps={{ isVisible: false, trigger: "manual" }}
       />
     </Button>

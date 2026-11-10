@@ -793,22 +793,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphiql/toolkit@npm:^0.12.1":
-  version: 0.12.1
-  resolution: "@graphiql/toolkit@npm:0.12.1"
-  dependencies:
-    "@n1ru4l/push-pull-async-iterable-iterator": "npm:^3.1.0"
-    meros: "npm:^1.1.4"
-  peerDependencies:
-    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
-    graphql-ws: ">= 4.5.0"
-  peerDependenciesMeta:
-    graphql-ws:
-      optional: true
-  checksum: 10/b0dfacdbb795dbe1d08eb570cc3ab360575e61c3eb429b63a4cb51b24ef0160dd4073bce5de98a44baac3fa9bac9321177069332121455f80cc490f196dced8d
-  languageName: node
-  linkType: hard
-
 "@graphiql/toolkit@npm:^1.0.0":
   version: 1.0.0
   resolution: "@graphiql/toolkit@npm:1.0.0"
@@ -1027,7 +1011,7 @@ __metadata:
   resolution: "@inmanta/web-console-feature-graphiql@workspace:packages/features/graphiql"
   dependencies:
     "@graphiql/react": "npm:^1.0.1"
-    "@graphiql/toolkit": "npm:^0.12.1"
+    "@graphiql/toolkit": "npm:^1.0.0"
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
@@ -1037,8 +1021,8 @@ __metadata:
     "@testing-library/react": "npm:^16.3.3"
     graphiql: "npm:^6.0.0"
     graphql: "npm:^17.0.2"
-    monaco-editor: "npm:^0.52.2"
-    monaco-graphql: "npm:^1.9.0"
+    monaco-editor: "npm:^0.57.0"
+    monaco-graphql: "npm:^2.0.1"
     msw: "npm:^2.15.0"
     prettier: "npm:^3.9.10"
     react: "npm:^19.3.1"
@@ -1076,7 +1060,7 @@ __metadata:
     markdown-it: "npm:^15.0.3"
     markdown-it-emoji: "npm:^3.1.0"
     mermaid: "npm:^12.3.0"
-    monaco-editor: "npm:^0.52.2"
+    monaco-editor: "npm:^0.57.0"
     msw: "npm:^2.15.0"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
@@ -1203,7 +1187,7 @@ __metadata:
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
     keycloak-js: "npm:^26.2.5"
-    monaco-editor: "npm:^0.52.2"
+    monaco-editor: "npm:^0.57.0"
     msw: "npm:^2.15.0"
     oidc-client-ts: "npm:^3.5.0"
     react: "npm:^19.3.1"
@@ -1236,7 +1220,7 @@ __metadata:
     happy-dom: "npm:^21.0.4"
     jest-axe: "npm:^11.0.0"
     mermaid: "npm:^12.3.0"
-    monaco-editor: "npm:^0.52.2"
+    monaco-editor: "npm:^0.57.0"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
@@ -7394,21 +7378,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-language-service@npm:^5.7.0":
-  version: 5.7.0
-  resolution: "graphql-language-service@npm:5.7.0"
-  dependencies:
-    debounce-promise: "npm:^3.1.2"
-    nullthrows: "npm:^1.0.0"
-    vscode-languageserver-types: "npm:^3.17.1"
-  peerDependencies:
-    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
-  bin:
-    graphql: dist/temp-bin.js
-  checksum: 10/7e0620aa09910326b0ab81da54bb4571d09e5de08816efd26740f3daa977abf0cbc4ee1145d4b57f32b580be88a80fb66eebf315b7fe9e6c504bf8730843b824
-  languageName: node
-  linkType: hard
-
 "graphql-language-service@npm:^6.0.1":
   version: 6.0.1
   resolution: "graphql-language-service@npm:6.0.1"
@@ -9166,34 +9135,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"monaco-editor@npm:>=0.56.0 <0.58.0":
+"monaco-editor@npm:>=0.56.0 <0.58.0, monaco-editor@npm:^0.57.0":
   version: 0.57.0
   resolution: "monaco-editor@npm:0.57.0"
   dependencies:
     dompurify: "npm:3.4.15"
     marked: "npm:14.0.0"
   checksum: 10/190a681cb01c8b862875803ca4fedcd6a945c90c09dad3c8c8932d37b9510ccb82991cab0177b8c98be7deb74d49e4727fb6d43c2fc6ed94f712beb9fb1ccec3
-  languageName: node
-  linkType: hard
-
-"monaco-editor@npm:^0.52.2":
-  version: 0.52.2
-  resolution: "monaco-editor@npm:0.52.2"
-  checksum: 10/0d4962d69ffa0a8df040faa9c582cef1893fa3fb617feca8f1425c5e670e74c2856104b9a2b01cbda0103a5e5f92f58843206bc9a0e070471c0c1270d7f52a96
-  languageName: node
-  linkType: hard
-
-"monaco-graphql@npm:^1.9.0":
-  version: 1.9.0
-  resolution: "monaco-graphql@npm:1.9.0"
-  dependencies:
-    graphql-language-service: "npm:^5.7.0"
-    picomatch-browser: "npm:^2.2.6"
-  peerDependencies:
-    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
-    monaco-editor: ">= 0.20.0 < 0.53"
-    prettier: ^2.8.0 || ^3.0.0
-  checksum: 10/de73bb50507fdaf55cc537bfc6406a6ca51842c031fbb7ceab2f8ad0c3a4342456dfc0257471c6fb8d823aa21f0349b5cbb0d53f0941f21732e16df7e17fb254
   languageName: node
   linkType: hard
 
@@ -9369,13 +9317,6 @@ __metadata:
     gauge: "npm:^4.0.3"
     set-blocking: "npm:^2.0.0"
   checksum: 10/82b123677e62deb9e7472e27b92386c09e6e254ee6c8bcd720b3011013e4168bc7088e984f4fbd53cb6e12f8b4690e23e4fa6132689313e0d0dc4feea45489bb
-  languageName: node
-  linkType: hard
-
-"nullthrows@npm:^1.0.0":
-  version: 1.1.1
-  resolution: "nullthrows@npm:1.1.1"
-  checksum: 10/c7cf377a095535dc301d81cf7959d3784d090a609a2a4faa40b6121a0c1d7f70d3a3aa534a34ab852e8553b66848ec503c28f2c19efd617ed564dc07dfbb6d33
   languageName: node
   linkType: hard
 
@@ -9704,13 +9645,6 @@ __metadata:
   version: 1.1.1
   resolution: "picocolors@npm:1.1.1"
   checksum: 10/e1cf46bf84886c79055fdfa9dcb3e4711ad259949e3565154b004b260cd356c5d54b31a1437ce9782624bf766272fe6b0154f5f0c744fb7af5d454d2b60db045
-  languageName: node
-  linkType: hard
-
-"picomatch-browser@npm:^2.2.6":
-  version: 2.2.6
-  resolution: "picomatch-browser@npm:2.2.6"
-  checksum: 10/0136abee4bbef256e9b6b20676873807e11cc6d04d52d4cd4e9e5c7b48b0888e67f224873eb7eaba6da2a5356647e5aa9a2ef62ad98a675c7940344bfae0238e
   languageName: node
   linkType: hard
 
@@ -12459,13 +12393,6 @@ __metadata:
   bin:
     vitest: ./vitest.mjs
   checksum: 10/1e04646b4953e10625794fba01f8393145d617700974b8622ef6966b380bb5271c4e0df79b644d9355b08345cc6d4e5e6ef76004bb5d343fe4cee0f707105cbe
-  languageName: node
-  linkType: hard
-
-"vscode-languageserver-types@npm:^3.17.1":
-  version: 3.17.5
-  resolution: "vscode-languageserver-types@npm:3.17.5"
-  checksum: 10/900d0b81df5bef8d90933e75be089142f6989cc70fdb2d5a3a5f11fa20feb396aaea23ccffc8fbcc83a2f0e1b13c6ee48ff8151f236cbd6e61a4f856efac1a58
   languageName: node
   linkType: hard
 
