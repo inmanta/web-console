@@ -91,20 +91,26 @@ createApp({
   runtimeFeatures: [
     {
       id: "composer",
-      // Fetched only when the server status enables it.
-      isEnabled: (orchestratorProvider) => orchestratorProvider.isComposerEnabled(),
       load: () => import("composer/feature"),
     },
   ],
 });
 ```
 
-The shell loads the enabled runtime features once the server status is known, before it shows the pages. The separate build's entry module exports a `RuntimeFeatureEntry` (`@inmanta/web-console-core`): the `feature`, and `singletons: getSingletons()`.
+The shell loads them once the server status is known, before it shows the pages. A runtime feature can also have `isEnabled: (orchestratorProvider) => boolean`, to only fetch it when the server status calls for it; the composer doesn't, because it also has something to show without its licence. The separate build's entry module exports a `RuntimeFeatureEntry` (`@inmanta/web-console-core`): the `feature`, and `singletons: getSingletons()`.
 
 - A feature that fails to load (e.g. it isn't installed, or doesn't answer within 15 seconds), or whose module isn't its entry (a `RuntimeFeatureEntry` with the same `id`), is left out: the app starts without it.
 - A feature with another `version` than the app is left out with a version mismatch notice.
 - A build with its own copy of React, React Router or the web-console core layer (other `singletons` than the app's) would read other contexts than the app. In development that stops the app with an error; in production the feature is left out with an error in the console.
 - Its routes, sidebar entries, contributions and messages are added like those of the bundled features. Its pages render in the catch-all route (`RuntimeFeatureRoutes`, inside the same page frame), so unlike the other pages they don't match a url whose decoded path contains a newline.
+
+The ISO app loads the composer this way. The composer has its own Vite config (`packages/features/composer/vite.config.ts`), which builds `src/entry.ts` into `packages/features/composer/dist/`. Its files all start with `composer-`, in one folder: the orchestrator serves every file of the web console by its name from one folder. The ISO app's build runs it first, gets an import map that provides the composer with the app's modules (`composerSharedModules`) and maps `composer/feature` to `composer-feature.js`, and copies the composer's files next to its own. So:
+
+- `dist/` as built ships with the composer;
+- without the `composer-*` files, the app starts without it;
+- copying the files of `packages/features/composer/dist/` (except `mf-manifest.json`) into the web console's folder installs it later, for the same version.
+
+The dev server and the tests resolve `composer/feature` to the composer's source instead, like a bundled feature.
 
 ## Features and routes in tests
 

@@ -9,7 +9,7 @@
 import { existsSync, readdirSync } from "fs";
 import { join, posix, resolve } from "path";
 import { defineConfig, mergeConfig } from "vitest/config";
-import { composerVitePlugin } from "@inmanta/web-console-feature-composer/vite";
+import { composerEntry, composerVitePlugin } from "@inmanta/web-console-feature-composer/vite";
 import { graphiqlVitePlugin } from "@inmanta/web-console-feature-graphiql/vite";
 import { repoRoot, sharedConfig } from "./vite.shared.ts";
 
@@ -30,6 +30,13 @@ export default defineConfig(
   mergeConfig(sharedConfig, {
     root: repoRoot,
     plugins: [composerVitePlugin(), graphiqlVitePlugin()],
+    resolve: {
+      alias: [
+        // The web-console app loads the composer at runtime from its separate build; the tests
+        // load it from its source, like the app's dev server.
+        { find: /^composer\/feature$/, replacement: composerEntry },
+      ],
+    },
     test: {
       globals: true,
       environment: "happy-dom",

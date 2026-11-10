@@ -7,11 +7,12 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "vite build",
-    "build:ci": "NODE_OPTIONS=--max-old-space-size=6144 vite build",
-    "build:bundle-profile": "vite build --mode analyze"
+    "build": "yarn workspace @inmanta/web-console-feature-composer build && vite build",
+    "build:ci": "yarn workspace @inmanta/web-console-feature-composer build && NODE_OPTIONS=--max-old-space-size=6144 vite build",
+    "build:bundle-profile": "yarn workspace @inmanta/web-console-feature-composer build && vite build --mode analyze"
   },
   "dependencies": {
+    "@inmanta/web-console-core": "workspace:^",
     "@inmanta/web-console-feature-composer": "workspace:^",
     "@inmanta/web-console-feature-environment": "workspace:^",
     "@inmanta/web-console-feature-graphiql": "workspace:^",
@@ -24,8 +25,8 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
-    "@inmanta/web-console-core": "workspace:^",
     "@inmanta/web-console-test-utils": "workspace:^",
+    "@module-federation/vite": "1.23.9",
     "@patternfly/react-core": "^6.7.0",
     "@tanstack/react-query": "^5.105.1",
     "@testing-library/dom": "^10.4.2",

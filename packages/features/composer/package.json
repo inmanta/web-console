@@ -5,6 +5,9 @@
   "inmanta": {
     "edition": "iso"
   },
+  "scripts": {
+    "build": "vite build"
+  },
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -39,8 +42,10 @@
   },
   "devDependencies": {
     "@inmanta/web-console-test-utils": "workspace:^",
+    "@module-federation/vite": "1.23.9",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "vite": "^8.3.6",
     "vitest": "^5.1.0"
   }

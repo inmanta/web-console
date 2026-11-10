@@ -32,6 +32,7 @@ const devDependencyFiles = [
   "apps/web-console/src/test-setup.ts",
   "packages/features/composer/src/**/globalTestMocks.ts",
   "apps/*/vite.config.ts",
+  "packages/features/*/vite.config.ts",
   "packages/features/*/vite.js",
 ];
 
@@ -76,6 +77,10 @@ export default [
 
       // The shared images in public/images, not a package: no-extraneous-dependencies skips them.
       "import/internal-regex": "^@images/",
+
+      // The composer's separate build, which the web-console app loads at runtime: the build's
+      // import map provides it, and the dev server and tests resolve it to the composer's entry.
+      "import/core-modules": ["composer/feature"],
 
       "import/resolver": {
         typescript: {

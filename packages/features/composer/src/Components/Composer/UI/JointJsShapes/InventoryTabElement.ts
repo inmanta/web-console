@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { dia, mvc, ui } from "@joint/plus";
-import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
+import { t_global_background_color_primary_default } from "@patternfly/react-tokens/dist/esm/t_global_background_color_primary_default";
 import { ServiceInstanceModel, ServiceModel } from "@inmanta/web-console-core";
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { RelationsDictionary } from "../../Data";

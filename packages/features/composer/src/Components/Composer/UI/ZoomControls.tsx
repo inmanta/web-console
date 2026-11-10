@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Button } from "@patternfly/react-core";
-import { PlusIcon, MinusIcon } from "@patternfly/react-icons";
+import { MinusIcon } from "@patternfly/react-icons/dist/esm/icons/minus-icon";
+import { PlusIcon } from "@patternfly/react-icons/dist/esm/icons/plus-icon";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import { MIN_ZOOM, MAX_ZOOM, SLIDER_MIN, SLIDER_MAX, ZOOM_TO_FIT_PADDING_BUTTON } from "../config";
