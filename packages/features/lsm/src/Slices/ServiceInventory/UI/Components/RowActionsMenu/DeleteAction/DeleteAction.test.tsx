@@ -3,6 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { words } from "@inmanta/web-console-core";
 import {
+  Service,
   ServiceInstance,
   MockedDependencyProvider,
   EnvironmentDetails,
@@ -31,6 +32,7 @@ function setup(halted: boolean = false) {
               version={ServiceInstance.a.version}
               isDisabled={isDisabled}
               service_entity={ServiceInstance.a.service_entity}
+              serviceTitle={Service.EntityAnnotations.valid.web_title}
             />
           </ModalProvider>
         </MockedDependencyProvider>
@@ -50,6 +52,15 @@ describe("DeleteModal ", () => {
 
     expect(await screen.findByText(words("yes"))).toBeVisible();
     expect(await screen.findByText(words("no"))).toBeVisible();
+    expect(
+      screen.getByText(
+        words("inventory.deleteInstance.header")(
+          ServiceInstance.a.service_identity_attribute_value ?? ServiceInstance.a.id,
+          Service.EntityAnnotations.valid.web_title
+        ),
+        { exact: false }
+      )
+    ).toBeVisible();
   });
 
   it("Closes modal when cancelled", async () => {

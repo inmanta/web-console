@@ -16,14 +16,33 @@ The frontend uses (Patternfly)[https://www.patternfly.org/] for its UI component
 - Use by many (mostly RedHat backed) infra products (Cockpit, OpenStack, OpenShift, Keycloak, etc.). The advantage of this is that the scope of the component is similar and the design will have some familiarity.
 - There are extensive UX guidelines included with the project both in general and per component.
 
+## Installing
+
+The repository holds two apps:
+
+- `apps/oss` (`@inmanta/web-console-oss`): the open-source web console, with the OSS features only.
+- `apps/web-console` (`@inmanta/web-console-app`): the ISO web console, with every feature. The composer needs JointJS+, which needs a licence token to install.
+
+To install the OSS app only, which needs no token:
+
+    yarn workspaces focus @inmanta/web-console-oss
+
+That installs what the OSS app and its packages use, so `yarn build:oss` and `yarn start:oss` work. The checks that cover every package (`yarn lint`, `yarn tsc`, `yarn test`) and the ISO app need the full install, with the JointJS token exported in your shell (see [ENV Tokens and PAT](#env-tokens-and-pat)):
+
+    yarn install
+
+Every package declares whether it is OSS or ISO in its `package.json` (`"inmanta": { "edition": "oss" }`), and `yarn constraints` fails when an OSS package depends on an ISO one.
+
 ## Development setup/ Scripts
 
 | Command                         | Description                                                                                                                                                                                                           |
 | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `prebuild`                      | runs `yarn clean`                                                                                                                                                                                                     |
-| `build`                         | builds the app (`apps/web-console`, through its `build` script) with Vite in production mode, into `dist/`                                                                                                            |
-| `start`                         | starts the app's development server with Vite over HTTP                                                                                                                                                               |
-| `start:https`                   | starts the app's development server with Vite over HTTPS (`HTTPS=true`)                                                                                                                                               |
+| `build`                         | builds the ISO app (`apps/web-console`, through its `build` script) with Vite in production mode, into `dist/`                                                                                                        |
+| `build:oss`                     | builds the OSS app (`apps/oss`) with Vite in production mode, into `apps/oss/dist/`                                                                                                                                   |
+| `start`                         | starts the ISO app's development server with Vite over HTTP                                                                                                                                                           |
+| `start:https`                   | starts the ISO app's development server with Vite over HTTPS (`HTTPS=true`)                                                                                                                                           |
+| `start:oss`                     | starts the OSS app's development server with Vite over HTTP                                                                                                                                                           |
 | `test`                          | runs the test suite with Vitest, one project per package (`yarn test --project feature-lsm` runs one)                                                                                                                 |
 | `test:ci`                       | runs the test suite with Vitest in CI mode (`CI=true`, `--silent`)                                                                                                                                                    |
 | `test:ui`                       | runs Vitest in UI mode                                                                                                                                                                                                |
@@ -34,7 +53,7 @@ The frontend uses (Patternfly)[https://www.patternfly.org/] for its UI component
 | `tsc`                           | type-checks every package as its own TypeScript project (`tsc -b`) and checks the project references and the linked routes                                                                                            |
 | `build:bundle-profile`          | builds the app with Vite in analyze mode (`vite build --mode analyze`)                                                                                                                                                |
 | `bundle-profile:analyze`        | runs `yarn build:bundle-profile` to generate a bundle profile                                                                                                                                                         |
-| `clean`                         | runs `rimraf dist`                                                                                                                                                                                                    |
+| `clean`                         | removes the builds (`dist`, `apps/oss/dist`) and the TypeScript build info (`.tsbuild`)                                                                                                                               |
 | `delete:reports`                | deletes the Cypress reports in `cypress/reports`                                                                                                                                                                      |
 | `precypress-test`               | runs `yarn run delete:reports` before Cypress tests                                                                                                                                                                   |
 | `cypress-test:oss`              | runs the Cypress tests headless for OSS (requires `install:orchestrator:oss`)                                                                                                                                         |
@@ -58,7 +77,7 @@ You will need to create a file `env.sh` in `shell-scripts` folder containing the
 `export GITLAB_TOKEN=xxxxxxxxxxxxxxxxx`
 (xxxx equals your PAT token, of course.)
 
-If you want to run the ISO version of the application, you will need to add a npm access token to the JointJS Plus library in your env file.
+If you want to install the ISO version of the application, you will need to add a npm access token to the JointJS Plus library in your env file, and export it in the shell you install from. The OSS app installs without it.
 `JOINTJS_NPM_TOKEN=jjs-xxxxxxxxxxxxxx`
 
 ## Authentication
@@ -66,7 +85,6 @@ If you want to run the ISO version of the application, you will need to add a np
 To enable authentication with keycloak, you can use environment variables, e.g. add the following variable to a dotenv (`.env` in the root of the project) file (further information on <https://github.com/motdotla/dotenv>)
 
     VITE_SHOULD_USE_AUTH=true
-
 
 The keycloak parameters need to be specified in an external file in the production environment, called config.js, following the example apps/web-console/src/config.js file.
 

@@ -2,6 +2,9 @@
   "name": "@inmanta/web-console-app",
   "private": true,
   "type": "module",
+  "inmanta": {
+    "edition": "iso"
+  },
   "scripts": {
     "start": "vite",
     "build": "vite build",
@@ -17,8 +20,6 @@
     "@inmanta/web-console-feature-resource-manager": "workspace:^",
     "@inmanta/web-console-feature-user-management": "workspace:^",
     "@inmanta/web-console-shell": "workspace:^",
-    "@monaco-editor/react": "^4.7.0",
-    "monaco-editor": "^0.52.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
@@ -31,6 +32,7 @@
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",
     "@types/jest-axe": "^3.5.9",
+    "@vitejs/plugin-react": "^6.2.1",
     "jest-axe": "^11.0.0",
     "msw": "^2.15.0",
     "react-router": "^8.5.1",

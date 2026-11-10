@@ -1,7 +1,7 @@
 /**
  * Sets up Monaco for the editors of every feature: its workers, the languages they highlight, and
- * the locally-bundled copy for the loader. It lives in the app because Vite bundles the workers
- * with the app's build.
+ * the locally-bundled copy for the loader. Every app imports it once at startup
+ * (`import "@inmanta/web-console-shell/monaco"`); Vite bundles the workers with the app's build.
  */
 import "monaco-editor/min/vs/editor/editor.main.css";
 import { loader } from "@monaco-editor/react";

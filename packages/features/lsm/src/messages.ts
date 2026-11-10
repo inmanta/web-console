@@ -27,8 +27,9 @@ export const lsmMessages = {
    */
   "id.copy": "Copy full service instance id to clipboard",
   "serviceIdentity.copy": "Copy identifier to clipboard",
-  "inventory.title": (name: string) => `Service Inventory: ${name}`,
-  "inventory.empty.message": (service: string) => `No instances found for service ${service}`,
+  "inventory.title": (serviceTitle: string) => `Service Inventory: ${serviceTitle}`,
+  "inventory.empty.message": (serviceTitle: string) =>
+    `No instances found for service ${serviceTitle}`,
   "inventory.column.state": "State",
   "inventory.collumn.deploymentProgress": "Deployment Progress",
   "inventory.statustab.diagnose": "Diagnose",
@@ -43,8 +44,8 @@ export const lsmMessages = {
   "inventory.deploymentProgress.deployed": "Ready",
   "inventory.deploymentProgress.notFound": "No resources available yet",
   "inventory.addInstance.failed": "Creating instance failed",
-  "inventory.addInstance.title": (serviceName: string) =>
-    `Create a new instance of ${serviceName} with the following parameters`,
+  "inventory.addInstance.title": (serviceTitle: string) =>
+    `Create a new instance of ${serviceTitle} with the following parameters`,
   "inventory.addInstance.button": "Add instance",
   "inventory.createInstance.title": "Create instance",
   "inventory.editInstance.button": "Edit",
@@ -56,13 +57,13 @@ export const lsmMessages = {
     `Create an instance based of instance ${instanceId}`,
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
-  "inventory.deleteInstance.header": (instanceName: string, serviceName: string) =>
-    `Are you sure you want to delete instance ${instanceName} of service entity ${serviceName}?`,
+  "inventory.deleteInstance.header": (instanceName: string, serviceTitle: string) =>
+    `Are you sure you want to delete instance ${instanceName} of service ${serviceTitle}?`,
   "inventory.destroyInstance.button": "Destroy",
   "inventory.destroyInstance.failed": "Destroying instance failed",
   "inventory.destroyInstance.title": "Destroy instance",
-  "inventory.destroyInstance.header": (instanceName: string, serviceName: string) =>
-    `Are you absolutely sure you want to permanently destroy instance ${instanceName} of service entity ${serviceName}?`,
+  "inventory.destroyInstance.header": (instanceName: string, serviceTitle: string) =>
+    `Are you absolutely sure you want to permanently destroy instance ${instanceName} of service ${serviceTitle}?`,
   "inventory.destroyInstance.text": "This action cannot be undone.",
   "inventory.filters.state.label": "State",
   "inventory.filters.state.placeholder": "Select a state...",
@@ -79,13 +80,15 @@ export const lsmMessages = {
   "inventory.filters.deleted.include.description": "Also include deleted instances",
   "inventory.filters.deleted.only.label": "Only",
   "inventory.filters.deleted.only.description": "Only show deleted instances",
-  "ServiceDetails.title": (name: string) => `Service Details: ${name}`,
+  "ServiceDetails.title": (serviceTitle: string) => `Service Details: ${serviceTitle}`,
   "inventory.test.creating": "creating",
 
   /**
    * Service Instance Details text
    */
   "instanceDetails.button": "Show instance",
+  "instanceDetails.page.title": (serviceTitle: string, instance: string) =>
+    `${serviceTitle}: ${instance}`,
   "instanceDetails.page.errorFallback": "Something went wrong retrieving the instance details",
   "instanceDetails.page.errorFallback.title": "Error",
   "instanceDetails.page.noData": "There is no data available to display.",
@@ -218,10 +221,12 @@ export const lsmMessages = {
   "catalog.section.ungrouped": "Other services",
   "catalog.section.count": (serviceCount: number, instanceCount: number) =>
     `${serviceCount} ${serviceCount === 1 ? "service" : "services"} · ${instanceCount} ${instanceCount === 1 ? "instance" : "instances"}`,
+  "catalog.ownedServices.count": (ownedServiceCount: number) =>
+    `${ownedServiceCount} owned ${ownedServiceCount === 1 ? "service" : "services"}`,
   "catalog.delete.modal.title": "Delete Service",
-  "catalog.delete.title": (serviceName: string) =>
-    `Are you sure you want to delete service entity ${serviceName}?`,
-  "catalog.delete.failed": "Deleting service entity failed",
+  "catalog.delete.title": (serviceTitle: string) =>
+    `Are you sure you want to delete service ${serviceTitle}?`,
+  "catalog.delete.failed": "Deleting service failed",
   "catalog.callbacks.delete.title": "Delete Callback",
   "catalog.callbacks.delete": (url: string) =>
     `Are you sure you want to delete callback with url "${url}"?`,
@@ -255,8 +260,8 @@ export const lsmMessages = {
   "markdownPreviewer.hint.title": "Preview Only",
   "markdownPreviewer.hint.body":
     "This editor is for preview purposes only. Changes made here will not be saved into the service attributes.",
-  "markdownPreviewer.pageTitle": (service: string, instance: string) =>
-    `Markdown Preview: ${service} - ${instance}`,
+  "markdownPreviewer.pageTitle": (serviceTitle: string, instance: string) =>
+    `Markdown Preview: ${serviceTitle} - ${instance}`,
   "markdownPreviewer.route.label": (instance: string) => `Markdown Preview: ${instance}`,
 };
 

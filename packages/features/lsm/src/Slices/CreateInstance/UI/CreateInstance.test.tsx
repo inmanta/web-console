@@ -74,6 +74,21 @@ describe("CreateInstance", () => {
     postMock.mockClear();
   });
 
+  test.each`
+    case                   | service                                                                  | serviceTitle
+    ${"with web_title"}    | ${{ ...Service.a, entity_annotations: Service.EntityAnnotations.valid }} | ${Service.EntityAnnotations.valid.web_title}
+    ${"without web_title"} | ${Service.a}                                                             | ${Service.a.name}
+  `(
+    "Given the CreateInstance View $case Then the header names the service by $serviceTitle",
+    ({ service, serviceTitle }) => {
+      const { component } = setup(service);
+
+      render(component);
+
+      expect(screen.getByText(words("inventory.addInstance.title")(serviceTitle))).toBeVisible();
+    }
+  );
+
   test("Given the CreateInstance View When creating an instance with attributes Then the correct request is fired", async () => {
     const { component } = setup(Service.a);
 
@@ -138,7 +153,13 @@ describe("CreateInstance", () => {
         return HttpResponse.json({ data: Service.withRelationsOnly });
       }),
       http.get("/lsm/v1/service_catalog/test_entity", () => {
-        return HttpResponse.json({ data: Service.withRelationsOnly });
+        return HttpResponse.json({
+          data: {
+            ...Service.withRelationsOnly,
+            name: "test_entity",
+            entity_annotations: Service.EntityAnnotations.valid,
+          },
+        });
       }),
       http.get("/lsm/v1/service_inventory/test_entity", () => {
         return HttpResponse.json({
@@ -156,7 +177,10 @@ describe("CreateInstance", () => {
 
     render(component);
 
-    await screen.findByPlaceholderText("Select instances of test_entity"); // await for the relation input be rendered
+    // await for the relation input be rendered, named by the web_title of the related service
+    await screen.findByPlaceholderText(
+      words("common.serviceInstance.relations")(Service.EntityAnnotations.valid.web_title)
+    );
 
     const relationInputField = await screen.findByRole("button", {
       name: "test_entity-select-toggle",
