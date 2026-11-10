@@ -1177,7 +1177,7 @@ __metadata:
     "@react-keycloak/web": "npm:^3.4.0"
     "@remix-run/router": "npm:^1.23.4"
     "@tanstack/react-query": "npm:^5.105.1"
-    "@tanstack/react-query-devtools": "npm:^5.105.3"
+    "@tanstack/react-query-devtools": "npm:^5.107.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.8"
@@ -2956,45 +2956,46 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.105.3":
-  version: 5.105.3
-  resolution: "@tanstack/query-core@npm:5.105.3"
-  checksum: 10/e564581869b5b2f9800e762ac1203ab5915f6cc2530822d1cbaa4b05c598bd9423f2ad06adc8fd36ae25fd6fe4715caef0420774aa814b1c7c633aab7c00d9f5
+"@tanstack/query-core@npm:5.107.1":
+  version: 5.107.1
+  resolution: "@tanstack/query-core@npm:5.107.1"
+  checksum: 10/a0346fb46f2d2326409d15c7b82e818c2c85770e3624989e9f4a8ca2bd631d31fa051d176c31ef1f98487487313a5d352bf10cab1d123d5ead5461f52748cc4a
   languageName: node
   linkType: hard
 
-"@tanstack/query-devtools@npm:5.105.3":
-  version: 5.105.3
-  resolution: "@tanstack/query-devtools@npm:5.105.3"
+"@tanstack/query-devtools@npm:5.107.1":
+  version: 5.107.1
+  resolution: "@tanstack/query-devtools@npm:5.107.1"
   dependencies:
     "@kobalte/core": "npm:^0.13.14"
     "@solid-primitives/keyed": "npm:^1.5.3"
     "@solid-primitives/resize-observer": "npm:^2.2.0"
     "@solid-primitives/storage": "npm:^1.3.11"
     "@tanstack/match-sorter-utils": "npm:^9.1.2"
-    "@tanstack/query-core": "npm:5.105.3"
+    "@tanstack/query-core": "npm:5.107.1"
+    "@tanstack/solid-virtual": "npm:^3.13.52"
     clsx: "npm:^2.1.1"
     goober: "npm:^2.1.19"
     solid-js: "npm:^1.9.15"
     solid-transition-group: "npm:^0.2.3"
     superjson: "npm:^2.2.6"
-  checksum: 10/21844825050f37d28a04f5829cc524ad021e6916908cfa57900d9fba7ef7640536e121447d7a67ca7d641bf1b706cd54ba423e4c369dad1b9bbbd711eda90129
+  checksum: 10/1b3f587a69574e5a72185adbe06f78d15ba95d6307f80763f825e36a7dd6b48fad28333fa5fa6669c7fe77435194b97569deb4ec345bfe133f08f67276d0f093
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:^5.105.3":
-  version: 5.105.3
-  resolution: "@tanstack/react-query-devtools@npm:5.105.3"
+"@tanstack/react-query-devtools@npm:^5.107.1":
+  version: 5.107.1
+  resolution: "@tanstack/react-query-devtools@npm:5.107.1"
   dependencies:
-    "@tanstack/query-devtools": "npm:5.105.3"
+    "@tanstack/query-devtools": "npm:5.107.1"
   peerDependencies:
-    "@tanstack/react-query": ^5.105.3
+    "@tanstack/react-query": ^5.107.1
     "@types/react": ^18 || ^19
     react: ^18 || ^19
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/aedbe6c2ee1fcee7e49e6a1d74b6d0496d7c82d47694e806974ed38b4bd55b0b55af96bc08025dbda25fd193c77f53285fddfa55a976d3ba80bcb591acfe0434
+  checksum: 10/5a3385bd9cf7414d2fd8916281ef6a82a64deb46cb0c0236518e7915737785200864a641e6fb33ae99ee4c7efb46e903e61484780f920917ef856aa87f5a97ca
   languageName: node
   linkType: hard
 
@@ -3025,10 +3026,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/solid-virtual@npm:^3.13.52":
+  version: 3.13.53
+  resolution: "@tanstack/solid-virtual@npm:3.13.53"
+  dependencies:
+    "@tanstack/virtual-core": "npm:3.19.11"
+  peerDependencies:
+    solid-js: ^1.3.0
+  checksum: 10/fa27b7e7951c90e2351cc2f649c997f53e9a376a546d02fb9deb9d0abeb9dc550aba65daf49d7b608878fd3fc9f18763a688eacdefa01eecafb511d9cb8eb948
+  languageName: node
+  linkType: hard
+
 "@tanstack/virtual-core@npm:3.13.21":
   version: 3.13.21
   resolution: "@tanstack/virtual-core@npm:3.13.21"
   checksum: 10/efd45e986dcfbd4aaa33537e255ccb3fc847b1a5eba1d7e73cd397f354b4622ecb824acb94f173dc3c8607e3094aa3a5b153e8a94d0839d0fa106f4f741d0c1f
+  languageName: node
+  linkType: hard
+
+"@tanstack/virtual-core@npm:3.19.11":
+  version: 3.19.11
+  resolution: "@tanstack/virtual-core@npm:3.19.11"
+  checksum: 10/10047d9bca6e97c5562e96dcca92eaeb80ee895a50641ce88c6ce596faf532901f48d5ee03806e452ee9e5e068f94d99f50531f7637a533c32585a7cc23db10c
   languageName: node
   linkType: hard
 
