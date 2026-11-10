@@ -141,10 +141,14 @@ export function showMermaidError(block: HTMLElement, error: unknown): void {
       ? String((error as { message: unknown }).message)
       : String(error)) || words("error.unknown");
 
-  errorDiv.innerHTML = `
-    <strong>${words("markdownContainer.error.mermaid.title")}</strong><br/>
-    <code>${errorMessage}</code>
-  `;
+  // Mermaid's parse errors quote the diagram source, so the message must be set as text, never as HTML.
+  const title = document.createElement("strong");
+  title.textContent = words("markdownContainer.error.mermaid.title");
+
+  const message = document.createElement("code");
+  message.textContent = errorMessage;
+
+  errorDiv.append(title, document.createElement("br"), message);
 
   block.appendChild(errorDiv);
 }
