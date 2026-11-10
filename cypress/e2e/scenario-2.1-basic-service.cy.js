@@ -53,7 +53,7 @@ if (isIso) {
       cy.get("#basic-service")
         .should("contain", "basic-service")
         .and("contain", "Plain attributes on two routers.");
-      cy.get("#basic-service").find('[data-testid="FaCube"]').should("be.visible");
+      cy.get("#custom-agent-service").find('[data-testid="FaUserCog"]').should("be.visible");
 
       cy.get("#basic-service").contains("Inventory").click();
 
