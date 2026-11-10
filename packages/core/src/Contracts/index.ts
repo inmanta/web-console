@@ -10,3 +10,4 @@ export * from "./RouteManager";
 export * from "./UrlManager";
 export * from "./EnvironmentHandler";
 export * from "./JsonParser";
+export * from "./RuntimeFeatureEntry";

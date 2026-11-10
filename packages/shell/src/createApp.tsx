@@ -13,6 +13,8 @@ import { AuthProvider } from "./Auth/AuthProvider";
 import { Injector } from "./Injector";
 import { Root } from "./Root";
 import { createRootRoutes } from "./RootRoutes";
+import { AppFeaturesProvider, useAppFeatures } from "./RuntimeFeatures/AppFeatures";
+import { RuntimeFeature } from "./RuntimeFeatures/RuntimeFeature";
 import { AuthConfig, ShellOptions, ShellOptionsContext } from "./ShellOptions";
 import { registerAppMessages } from "./registerAppMessages";
 import { shellFeature } from "./shellFeature";
@@ -32,6 +34,14 @@ export interface AppOptions {
   features: FeatureModule[];
 
   /**
+   * The features the app loads at runtime from a separate build, instead of bundling them, e.g.
+   * the composer, so a deployment can leave them out or install them later. They are loaded while
+   * the app starts, once the server status says which ones are enabled, and added after
+   * `features`. A feature that isn't installed, or was built for another version, is left out.
+   */
+  runtimeFeatures?: RuntimeFeature[];
+
+  /**
    * How the shell is set up. Leaving it out uses the shell's defaults.
    */
   shell?: ShellOptions;
@@ -42,7 +52,8 @@ export interface AppOptions {
  */
 export interface App {
   /**
-   * The features of the app: the shell's own, then the given ones.
+   * The features of the app: the shell's own, then the given ones. The features loaded at
+   * runtime are only known once the app runs.
    */
   features: FeatureModule[];
 
@@ -72,7 +83,7 @@ export const getAuthConfig = (auth: ShellOptions["auth"]): AuthConfig | undefine
  * @example
  * createApp({ features: [environmentFeature, lsmFeature] }).render(document.getElementById("root"));
  */
-export const createApp = ({ features, shell = {} }: AppOptions): App => {
+export const createApp = ({ features, runtimeFeatures = [], shell = {} }: AppOptions): App => {
   const appFeatures = [shellFeature, ...features];
 
   return {
@@ -112,9 +123,14 @@ export const createApp = ({ features, shell = {} }: AppOptions): App => {
                         direction={{ default: "column" }}
                         style={{ height: "100%" }}
                       >
-                        <Injector features={appFeatures}>
-                          <Root />
-                        </Injector>
+                        <AppFeaturesProvider
+                          features={appFeatures}
+                          runtimeFeatures={runtimeFeatures}
+                        >
+                          <AppInjector>
+                            <Root />
+                          </AppInjector>
+                        </AppFeaturesProvider>
                       </Flex>
                     </AuthProvider>
                   }
@@ -135,4 +151,13 @@ export const createApp = ({ features, shell = {} }: AppOptions): App => {
       return () => root.unmount();
     },
   };
+};
+
+/**
+ * The `Injector` with every feature of the running app, including the ones loaded at runtime.
+ */
+const AppInjector: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const { features } = useAppFeatures();
+
+  return <Injector features={features}>{children}</Injector>;
 };
