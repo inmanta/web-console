@@ -51,7 +51,7 @@ describe("ServiceInventory with the composer", () => {
     })
   );
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => {
     server.resetHandlers();
     testClient.clear();
@@ -98,7 +98,7 @@ describe("ServiceInventory with the composer", () => {
 describe("Instance details with the composer", () => {
   const server = defaultServer;
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

@@ -48,7 +48,7 @@ describe("InstanceCellButton", () => {
   );
 
   beforeAll(() => {
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
   });
 
   afterAll(() => {

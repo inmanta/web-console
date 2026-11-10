@@ -48,7 +48,7 @@ function respondWith(data: typeof Mock.response.data) {
 }
 
 describe("LatestCompileReportsPanel", () => {
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

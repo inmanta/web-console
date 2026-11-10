@@ -88,7 +88,7 @@ function setup(resourceId = "test-resource-id") {
 describe("ResourceDiscoveryDetailsPage", () => {
   const server = setupServer();
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
@@ -105,6 +105,7 @@ describe("ResourceDiscoveryDetailsPage", () => {
     render(component);
 
     expect(screen.getByLabelText("DiscoveredResourceDetails-Loading")).toBeVisible();
+    expect(await screen.findByText(mockResourceDetails.discovered_resource_id)).toBeVisible();
   });
 
   test("GIVEN ResourceDiscoveryDetails page WHEN API returns error AND user clicks retry THEN refetches data", async () => {

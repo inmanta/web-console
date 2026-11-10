@@ -39,7 +39,7 @@ describe("StatusPage", () => {
     })
   );
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   beforeEach(() => server.resetHandlers());
 
   afterAll(() => {

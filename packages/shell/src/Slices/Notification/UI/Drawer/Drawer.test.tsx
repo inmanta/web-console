@@ -93,7 +93,7 @@ const server = setupServer(
 
 describe("Drawer", () => {
   beforeAll(() => {
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
   });
   beforeEach(() => {
     response = [Mock.unread, Mock.error, Mock.read, Mock.withoutUri];

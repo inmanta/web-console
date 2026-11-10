@@ -35,7 +35,7 @@ function setup(search = "") {
 describe("GraphiQL Page", () => {
   const server = setupServer();
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   beforeEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
@@ -64,6 +64,10 @@ describe("GraphiQL Page", () => {
   });
 
   test("GIVEN the page THEN the editor only has the history plugin, not the query builder or collections", async () => {
+    server.use(
+      http.get("/api/v2/graphql/schema", () => HttpResponse.json({ data: {} }, { status: 200 }))
+    );
+
     const { component } = setup();
     render(component);
 

@@ -86,7 +86,7 @@ const server = setupServer(
 );
 
 beforeAll(() => {
-  server.listen();
+  server.listen({ onUnhandledFrame: "error" });
 });
 
 beforeEach(() => {

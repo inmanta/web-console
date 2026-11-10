@@ -114,6 +114,11 @@ function gqlFirstPage(endCursor = "fake-cursor") {
 
 const agentsMock = http.get("/api/v2/agents", () => HttpResponse.json(response));
 
+// The service filter tab lists the services of the catalog.
+const serviceCatalogMock = http.get("/lsm/v1/service_catalog", () =>
+  HttpResponse.json({ data: [] })
+);
+
 // ---------------------------------------------------------------------------
 // Test setup
 // ---------------------------------------------------------------------------
@@ -173,12 +178,12 @@ describe("ResourcesPage", () => {
   const server = setupServer();
   const queryLink = graphql.link("/api/v2/graphql");
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
   beforeEach(() => {
-    server.use(agentsMock);
+    server.use(agentsMock, serviceCatalogMock);
   });
 
   // --- Loading states ---

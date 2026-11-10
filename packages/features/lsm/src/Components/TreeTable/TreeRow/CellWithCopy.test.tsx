@@ -59,7 +59,7 @@ describe("CellWithCopy", () => {
   );
 
   beforeAll(() => {
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
   });
   afterAll(() => {
     server.close();

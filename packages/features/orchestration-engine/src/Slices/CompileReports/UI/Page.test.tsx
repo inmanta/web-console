@@ -51,7 +51,7 @@ function setup(serverCompileEnabled: boolean = false) {
 }
 
 describe("CompileReports", () => {
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => {
     vi.useRealTimers();
     server.resetHandlers();

@@ -32,7 +32,7 @@ describe("ServiceProvider", () => {
   const server = setupServer();
 
   beforeAll(() => {
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
   });
   afterEach(() => {
     vi.useRealTimers();

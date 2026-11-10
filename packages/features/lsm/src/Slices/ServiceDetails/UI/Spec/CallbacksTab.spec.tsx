@@ -41,7 +41,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
       return HttpResponse.json({ data: Callback.list });
     })
   );
-  server.listen();
+  server.listen({ onUnhandledFrame: "error" });
   const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);
 
   const { component } = setup();

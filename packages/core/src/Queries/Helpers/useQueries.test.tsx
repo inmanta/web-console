@@ -19,7 +19,7 @@ const wrapper = ({ children }) => (
 describe("useQueries", () => {
   const server = setupServer();
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => {
     server.resetHandlers();
     testClient.clear();

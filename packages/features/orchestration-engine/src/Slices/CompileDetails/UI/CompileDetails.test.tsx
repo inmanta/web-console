@@ -34,7 +34,7 @@ function setup() {
 const server = setupServer();
 
 describe("CompileDetails", () => {
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

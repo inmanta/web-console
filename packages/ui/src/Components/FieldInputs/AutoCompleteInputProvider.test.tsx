@@ -60,7 +60,7 @@ const TestWrapper = () => {
 };
 
 test("Given the AutoCompleteInputProvider When typing an instance name or id Then the correct request is fired", async () => {
-  server.listen();
+  server.listen({ onUnhandledFrame: "error" });
 
   render(<TestWrapper />);
 

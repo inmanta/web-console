@@ -123,7 +123,7 @@ describe("ConfigSectionContent", () => {
   );
 
   beforeAll(() => {
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
   });
 
   beforeEach(() => {

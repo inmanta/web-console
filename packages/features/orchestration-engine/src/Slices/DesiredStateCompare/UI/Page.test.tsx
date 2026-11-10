@@ -67,7 +67,7 @@ describe("DesiredStateCompare", () => {
   );
 
   beforeAll(() => {
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
   });
 
   afterAll(() => {

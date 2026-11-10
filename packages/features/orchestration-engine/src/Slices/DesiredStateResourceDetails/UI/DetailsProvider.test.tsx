@@ -41,7 +41,7 @@ describe("DetailsProvider", () => {
   );
 
   beforeAll(() => {
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
   });
   afterEach(() => {
     server.resetHandlers();

@@ -147,7 +147,7 @@ describe("EditInstancePage", () => {
   );
 
   beforeAll(() => {
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
   });
   beforeEach(() => {
     vi.clearAllMocks();

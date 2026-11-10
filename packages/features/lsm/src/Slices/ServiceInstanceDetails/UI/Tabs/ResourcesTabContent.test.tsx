@@ -34,7 +34,7 @@ const setup = (instance: ServiceInstanceModel) => {
 it("should render error view correctly", async () => {
   const server = errorServerInstance;
 
-  server.listen();
+  server.listen({ onUnhandledFrame: "error" });
 
   render(setup(instanceData));
 
@@ -47,7 +47,7 @@ it("should render error view correctly", async () => {
 it("in case of version conflict, should render loading view correctly", async () => {
   const server = versionErrorResourceServerInstance;
 
-  server.listen();
+  server.listen({ onUnhandledFrame: "error" });
 
   render(setup(instanceData));
 
@@ -59,7 +59,7 @@ it("in case of version conflict, should render loading view correctly", async ()
 it("should render information about no resources correctly", async () => {
   const server = emptyResourcesServer;
 
-  server.listen();
+  server.listen({ onUnhandledFrame: "error" });
 
   render(setup({ ...instanceData, deployment_progress: null }));
 
@@ -72,7 +72,7 @@ it("should render information about no resources correctly", async () => {
 it("should render information about no deployment progress data correctly", async () => {
   const server = defaultServer;
 
-  server.listen();
+  server.listen({ onUnhandledFrame: "error" });
 
   render(setup({ ...instanceData, deployment_progress: undefined }));
 

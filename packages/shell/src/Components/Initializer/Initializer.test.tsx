@@ -66,7 +66,7 @@ function setup(queryClient: QueryClient, authHelper: AuthContextInterface = defa
 describe("Initializer", () => {
   const server = setupServer();
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

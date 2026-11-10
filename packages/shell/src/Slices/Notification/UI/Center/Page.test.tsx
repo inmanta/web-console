@@ -47,7 +47,7 @@ const openFilters = async () => {
 const server = setupServer();
 
 describe("NotificationCenterPage", () => {
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 

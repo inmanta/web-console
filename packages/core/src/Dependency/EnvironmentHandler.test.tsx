@@ -15,7 +15,7 @@ describe("EnvironmentHandler", () => {
   const server = setupServer();
 
   beforeAll(() => {
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
   });
 
   beforeEach(() => {
@@ -35,6 +35,11 @@ describe("EnvironmentHandler", () => {
   );
 
   test("GIVEN the url changes to a known environment THEN localStorage is updated", async () => {
+    server.use(
+      http.get("/api/v2/environment_settings", () =>
+        HttpResponse.json({ data: EnvironmentSettings.base })
+      )
+    );
     const history = createMemoryHistory();
     const nextEnv = Environment.previewFilterable[1];
 

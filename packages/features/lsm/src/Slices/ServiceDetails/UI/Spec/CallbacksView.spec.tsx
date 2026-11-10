@@ -47,7 +47,7 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
       return HttpResponse.json();
     })
   );
-  server.listen();
+  server.listen({ onUnhandledFrame: "error" });
   const { component } = setup();
 
   render(component);
@@ -106,7 +106,7 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
       return HttpResponse.json();
     })
   );
-  server.listen();
+  server.listen({ onUnhandledFrame: "error" });
   const { component } = setup();
 
   render(component);

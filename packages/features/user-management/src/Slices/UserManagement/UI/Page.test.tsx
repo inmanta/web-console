@@ -48,7 +48,7 @@ describe("UserManagementPage", () => {
       })
     );
 
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
     const component = setup();
 
     render(component);
@@ -86,7 +86,7 @@ describe("UserManagementPage", () => {
       })
     );
 
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
     const component = setup();
 
     render(component);
@@ -131,7 +131,7 @@ describe("UserManagementPage", () => {
       })
     );
 
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
     const component = setup();
 
     render(component);
@@ -214,7 +214,7 @@ describe("UserManagementPage", () => {
       })
     );
 
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
     const component = setup();
 
     render(component);
@@ -300,7 +300,7 @@ describe("UserManagementPage", () => {
       })
     );
 
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
     const component = setup();
 
     render(component);
@@ -351,7 +351,7 @@ describe("UserManagementPage", () => {
       })
     );
 
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
     const component = setup();
 
     render(component);
@@ -401,7 +401,7 @@ describe("UserManagementPage", () => {
       })
     );
 
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
     const component = setup();
 
     render(component);

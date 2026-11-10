@@ -6,7 +6,14 @@ import { setupServer } from "msw/node";
 import { FeatureModule, RuntimeFeatureEntry, words } from "@inmanta/web-console-core";
 import { getSingletons } from "@inmanta/web-console-core/Dependency";
 import { EnvironmentPreviewResponse } from "@inmanta/web-console-core/Queries/Slices/Environment";
-import { ServerStatus, stubRoute } from "@inmanta/web-console-test-utils";
+import {
+  Environment,
+  EnvironmentDetails,
+  EnvironmentSettings,
+  Project,
+  ServerStatus,
+  stubRoute,
+} from "@inmanta/web-console-test-utils";
 import { createApp, RuntimeFeature } from "..";
 
 // Once the whole app has rendered, which can take over the default 1 s on slow CI runners.
@@ -43,6 +50,13 @@ const runtimeFeature = (overrides: Partial<RuntimeFeature> = {}, version?: strin
 
 const server = setupServer(
   http.get("/api/v1/serverstatus", () => HttpResponse.json({ data: ServerStatus.withLsm })),
+  http.get("/api/v2/project", () => HttpResponse.json({ data: Project.list })),
+  http.get("/api/v2/environment", () => HttpResponse.json({ data: Environment.filterable })),
+  http.get("/api/v2/environment/:id", () => HttpResponse.json({ data: EnvironmentDetails.a })),
+  http.get("/api/v2/environment_settings", () =>
+    HttpResponse.json({ data: EnvironmentSettings.base })
+  ),
+  http.get("/api/v2/health", () => HttpResponse.json({})),
   graphql.link("/api/v2/graphql").operation(({ query }) =>
     query.includes("notifications")
       ? HttpResponse.json({
@@ -94,7 +108,7 @@ const renderApp = async (runtimeFeatures: RuntimeFeature[], url = "/console/agen
 describe("runtime features", () => {
   let cleanup = () => {};
 
-  beforeAll(() => server.listen({ onUnhandledFrame: "bypass" }));
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => cleanup());
   afterAll(() => server.close());
 

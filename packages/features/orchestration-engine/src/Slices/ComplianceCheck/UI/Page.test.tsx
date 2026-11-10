@@ -96,7 +96,7 @@ describe("ComplianceCheck page", () => {
     })
   );
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => {
     server.resetHandlers();
     testClient.clear();

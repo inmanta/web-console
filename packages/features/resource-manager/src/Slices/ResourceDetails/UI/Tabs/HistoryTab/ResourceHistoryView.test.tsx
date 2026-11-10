@@ -32,7 +32,7 @@ function setup() {
 describe("ResourceHistoryView", () => {
   const server = setupServer();
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   beforeEach(() => server.resetHandlers());
   afterEach(() => testClient.clear());
   afterAll(() => server.close());

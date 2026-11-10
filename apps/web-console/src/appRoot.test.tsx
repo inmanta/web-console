@@ -12,6 +12,7 @@ import { Root } from "@inmanta/web-console-shell/Root";
 import { createRootRoutes } from "@inmanta/web-console-shell/RootRoutes";
 import {
   Environment,
+  EnvironmentDetails,
   EnvironmentSettings,
   MockedDependencyProvider,
   Project,
@@ -88,12 +89,18 @@ describe("Root", () => {
     http.get("/api/v2/environment", async () => {
       return HttpResponse.json({ data: Environment.filterable });
     }),
+    http.get("/api/v2/environment/:id", async () => {
+      return HttpResponse.json({ data: EnvironmentDetails.a });
+    }),
+    http.get("/api/v2/health", async () => {
+      return HttpResponse.json({});
+    }),
     http.get("/api/v2/environment_settings", async () => {
       return HttpResponse.json({ data: EnvironmentSettings.base });
     })
   );
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => server.resetHandlers());
   afterAll(() => {
     server.close();

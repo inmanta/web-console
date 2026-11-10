@@ -67,7 +67,7 @@ describe("DatabaseAuthProvider session renewal", () => {
         })
       )
     );
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
 
     render(setup(30));
     await userEvent.click(screen.getByRole("button", { name: "login" }));
@@ -86,7 +86,7 @@ describe("DatabaseAuthProvider session renewal", () => {
     const server = setupServer(
       http.post("/api/v2/login/renew", () => new HttpResponse(null, { status: 401 }))
     );
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
 
     render(setup(30));
     await userEvent.click(screen.getByRole("button", { name: "login" }));
@@ -114,7 +114,7 @@ describe("DatabaseAuthProvider session renewal", () => {
         });
       })
     );
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
 
     render(setup(null));
     await userEvent.click(screen.getByRole("button", { name: "login" }));

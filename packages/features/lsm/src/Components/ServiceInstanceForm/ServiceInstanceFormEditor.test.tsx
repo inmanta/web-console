@@ -94,7 +94,7 @@ it("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads wit
   );
 
   // Start the interception.
-  server.listen();
+  server.listen({ onUnhandledFrame: "error" });
 
   const { component } = setup([Test.Field.text]);
 

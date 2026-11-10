@@ -70,7 +70,7 @@ describe("DuplicateInstancePage", () => {
   });
 
   beforeAll(() => {
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
   });
 
   afterEach(() => {

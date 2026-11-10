@@ -38,7 +38,7 @@ describe("ServiceCatalog", () => {
         return HttpResponse.json({ data: { test: Service.a.config } });
       })
     );
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
   });
 
   afterAll(() => {

@@ -25,7 +25,7 @@ function setup() {
 describe("Token Tab", () => {
   const server = setupServer();
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   // The tab also renders the registered-token list; give it a default (empty) response.
   beforeEach(() =>
     server.use(http.get("/api/v2/environment_auth", () => HttpResponse.json({ data: [] })))

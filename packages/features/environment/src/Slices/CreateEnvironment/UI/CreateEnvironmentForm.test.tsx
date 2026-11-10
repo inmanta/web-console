@@ -50,7 +50,7 @@ function setup(routes: RouteFactory[] = linkedRoutes) {
 describe("CreateEnvironmentForm", () => {
   const server = setupServer();
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   beforeEach(() => {
     server.resetHandlers();
     vi.clearAllMocks();

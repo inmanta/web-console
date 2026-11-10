@@ -33,7 +33,7 @@ const server = setupServer(
 );
 
 describe("CompileWidgetProvider", () => {
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterAll(() => {
     server.close();
     vi.clearAllMocks();

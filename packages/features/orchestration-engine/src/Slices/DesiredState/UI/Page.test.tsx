@@ -88,7 +88,7 @@ describe("DesiredStatesView", () => {
   });
 
   beforeAll(() => {
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
   });
 
   afterEach(() => {

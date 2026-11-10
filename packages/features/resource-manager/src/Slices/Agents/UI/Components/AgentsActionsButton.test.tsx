@@ -42,7 +42,7 @@ async function openDropdown() {
 describe("AgentsActionsButton", () => {
   const server = setupServer();
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
 
   beforeEach(() => {
     server.resetHandlers();

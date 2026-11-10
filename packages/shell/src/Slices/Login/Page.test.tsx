@@ -82,7 +82,7 @@ describe("Login", () => {
 
     const component = setup({ method: "database" });
 
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
     render(component);
 
     const usernameInput = screen.getByRole("textbox", { name: "Username" });
@@ -131,7 +131,7 @@ describe("Login", () => {
 
     const component = setup({ method: "database" });
 
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
     render(component);
 
     const usernameInput = screen.getByRole("textbox", { name: "Username" });
@@ -178,7 +178,7 @@ describe("Login", () => {
       })
     );
 
-    server.listen();
+    server.listen({ onUnhandledFrame: "error" });
 
     const component = setup({ method: "database" });
 

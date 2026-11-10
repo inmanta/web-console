@@ -53,7 +53,7 @@ describe("useSuggestedValues templated parameter names", () => {
     })
   );
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => {
     server.resetHandlers();
     testClient.clear();
@@ -268,7 +268,7 @@ describe("useSuggestedValues graphql flavor", () => {
     })
   );
 
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => {
     server.resetHandlers();
     testClient.clear();

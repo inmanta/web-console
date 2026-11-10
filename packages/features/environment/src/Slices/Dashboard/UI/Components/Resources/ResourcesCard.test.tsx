@@ -81,7 +81,7 @@ function setup(routes = [...getFeatureRoutes([environmentFeature]), stubRoute("R
 }
 
 describe("ResourcesCard", () => {
-  beforeAll(() => server.listen());
+  beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
