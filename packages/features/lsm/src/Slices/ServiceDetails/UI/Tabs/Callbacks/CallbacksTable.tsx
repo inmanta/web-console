@@ -18,6 +18,8 @@ interface Props {
   service_entity: string;
 }
 
+const numberOfColumns = 6;
+
 /**
  * CallbacksTable is a component that displays a list of callbacks in a table format.
  * Each callback is rendered as a row using the Row component.
@@ -36,6 +38,7 @@ export const CallbacksTable: React.FC<Props> = ({ callbacks, service_entity }) =
     <Table aria-label="CallbacksTable">
       <Thead>
         <Tr>
+          <Th aria-hidden screenReaderText={words("common.emptyColumnHeader")} />
           <Th>{words("catalog.callbacks.url")}</Th>
           <Th>{words("id")}</Th>
           <Th>{words("catalog.callbacks.minimalLogLevel")}</Th>
@@ -43,14 +46,15 @@ export const CallbacksTable: React.FC<Props> = ({ callbacks, service_entity }) =
           <Th>{words("actions")}</Th>
         </Tr>
       </Thead>
-      <CreateCallbackForm service_entity={service_entity} numberOfColumns={5} />
-      {callbacks.map((cb) => (
+      <CreateCallbackForm service_entity={service_entity} numberOfColumns={numberOfColumns} />
+      {callbacks.map((cb, rowIndex) => (
         <Row
+          rowIndex={rowIndex}
           onToggle={onExpansion(cb.callback_id)}
           isExpanded={isExpanded(cb.callback_id)}
           key={cb.callback_id}
           callback={cb}
-          numberOfColumns={5}
+          numberOfColumns={numberOfColumns}
         />
       ))}
     </Table>

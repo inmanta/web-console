@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { DropdownGroup, DropdownItem } from "@patternfly/react-core";
-import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
+import { RhMicronsCaretDownIcon, RhMicronsCaretUpIcon } from "@patternfly/react-icons";
 import styled, { css } from "styled-components";
 import { ParsedNumber, words } from "@inmanta/web-console-core";
 import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
@@ -121,7 +121,7 @@ export const StateAction: React.FC<Props> = ({
           <DropdownItem
             key="advanced-state-toggle"
             onClick={() => setIsAdvancedOpen((open) => !open)}
-            icon={isAdvancedOpen ? <AngleDownIcon /> : <AngleRightIcon />}
+            icon={isAdvancedOpen ? <RhMicronsCaretUpIcon /> : <RhMicronsCaretDownIcon />}
           >
             {words("instanceDetails.setState.advanced")}
           </DropdownItem>

@@ -44,12 +44,17 @@ test("TreeTable 1st level of nested property can be expanded", async () => {
     })
   );
   expect(screen.queryByRole("row", { name: "Row-a$b" })).not.toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Toggle-a" })).toHaveAttribute(
+    "aria-expanded",
+    "false"
+  );
 
   // Act
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
 
   // Assert
   expect(screen.getByRole("row", { name: "Row-a$b" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Toggle-a" })).toHaveAttribute("aria-expanded", "true");
 });
 
 test("TreeTable with 1st level of attributes containing annotations should not render a value but be a link to the right tab.", async () => {

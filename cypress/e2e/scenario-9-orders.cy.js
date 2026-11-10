@@ -114,10 +114,7 @@ if (isIso) {
       cy.get('[aria-label="ServiceOrderDetailsRow"]').eq(2).should("include.text", "completed");
 
       // expand the failed row
-      cy.get('[aria-label="ServiceOrderDetailsRow"]')
-        .eq(0)
-        .find('[aria-label="Toggle-DetailsRow"]')
-        .click();
+      cy.get('[aria-label="ServiceOrderDetailsRow"]').eq(0).find('[aria-label="Details"]').click();
 
       // should have a detail section with Failure Type, Reason, and show compile button
       cy.get('[aria-label="Expanded-Discovered-Row"]')
@@ -160,10 +157,7 @@ if (isIso) {
         .should("contain", "parent_entity");
 
       // expand second row
-      cy.get('[aria-label="ServiceOrderDetailsRow"]')
-        .eq(1)
-        .find('[aria-label="Toggle-DetailsRow"]')
-        .click();
+      cy.get('[aria-label="ServiceOrderDetailsRow"]').eq(1).find('[aria-label="Details"]').click();
 
       // in the detail section, this row should only contain the compile report button
       cy.get('[aria-label="Expanded-Discovered-Row"]')
