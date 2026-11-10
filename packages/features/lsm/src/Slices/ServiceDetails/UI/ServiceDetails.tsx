@@ -9,7 +9,7 @@ export const ServiceDetails: React.FunctionComponent<{
   service: ServiceModel;
 }> = ({ serviceName, service }) => {
   return (
-    <Wrapper name={serviceName}>
+    <Wrapper name={serviceName} service={service}>
       <CatalogTabs service={service} />
     </Wrapper>
   );

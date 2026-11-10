@@ -3,6 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { words } from "@inmanta/web-console-core";
 import {
+  Service,
   ServiceInstance,
   MockedDependencyProvider,
   EnvironmentDetails,
@@ -30,6 +31,7 @@ function setup(halted: boolean = false) {
               }
               version={ServiceInstance.a.version}
               service_entity={ServiceInstance.a.service_entity}
+              serviceTitle={Service.EntityAnnotations.valid.web_title}
             />
           </ModalProvider>
         </MockedDependencyProvider>
@@ -38,7 +40,7 @@ function setup(halted: boolean = false) {
   };
 }
 
-describe("DeleteModal ", () => {
+describe("DestroyModal ", () => {
   it("Shows form when clicking on modal button", async () => {
     const { component } = setup();
 
@@ -49,6 +51,14 @@ describe("DeleteModal ", () => {
 
     expect(await screen.findByText(words("yes"))).toBeVisible();
     expect(await screen.findByText(words("no"))).toBeVisible();
+    expect(
+      screen.getByText(
+        words("inventory.destroyInstance.header")(
+          ServiceInstance.a.service_identity_attribute_value ?? ServiceInstance.a.id,
+          Service.EntityAnnotations.valid.web_title
+        )
+      )
+    ).toBeVisible();
   });
 
   it("Closes modal when cancelled", async () => {

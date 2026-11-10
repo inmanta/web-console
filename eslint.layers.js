@@ -31,7 +31,7 @@ const ui = ["./packages/ui"];
 
 const shell = ["./packages/shell"];
 
-const app = ["./apps/web-console"];
+const app = ["./apps/oss", "./apps/web-console"];
 
 /**
  * The package folder of each feature in `packages/features`.

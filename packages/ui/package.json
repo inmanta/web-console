@@ -2,6 +2,9 @@
   "name": "@inmanta/web-console-ui",
   "private": true,
   "type": "module",
+  "inmanta": {
+    "edition": "oss"
+  },
   "exports": {
     "./*": {
       "types": [
@@ -38,6 +41,6 @@
     "jest-axe": "^11.0.0",
     "msw": "^2.15.0",
     "vite": "^8.3.5",
-    "vitest": "^5.0.5"
+    "vitest": "^5.1.0"
   }
 }
