@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump vite from 8.3.5 to 8.3.6
+destination-branches:
+- master
+- iso9
+sections: {}
