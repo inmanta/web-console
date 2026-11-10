@@ -39,7 +39,7 @@
     "@testing-library/user-event": "^14.6.8",
     "@types/jest-axe": "^3.5.9",
     "jest-axe": "^11.0.0",
-    "msw": "^2.15.0",
+    "msw": "^3.0.4",
     "vite": "^8.3.6",
     "vitest": "^5.1.0"
   }
