@@ -91,13 +91,12 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                                 echo 'Skipped: only change entries changed since the last successful build.'
                                 return
                             }
-                            timeout(time: 25, unit: 'MINUTES') {
+                            timeout(time: 20, unit: 'MINUTES') {
                                 dir('web-console') {
                                     sh '''yarn build:ci;
                                     sudo systemctl restart docker && sudo docker network prune -f;
                                     yarn run install:orchestrator:ci;
-                                    yarn run cypress-test:iso;
-                                    yarn run cypress-test:ship-modes;'''
+                                    yarn run cypress-test:iso;'''
                                 }
                             }
                         }

@@ -16,7 +16,15 @@
  *        [--container <name>]
  */
 import { execFileSync } from "child_process";
-import { copyFileSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
+import {
+  chmodSync,
+  copyFileSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "fs";
 import { tmpdir } from "os";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -60,6 +68,9 @@ const stageComposerFiles = (mode) => {
     "g"
   );
   const stageDir = mkdtempSync(join(tmpdir(), "composer-ship-mode-"));
+
+  // `docker cp <folder>/.` may give the target folder the mode of this one, which is 0700 on Linux.
+  chmodSync(stageDir, 0o755);
   let stamped = 0;
 
   for (const file of files) {

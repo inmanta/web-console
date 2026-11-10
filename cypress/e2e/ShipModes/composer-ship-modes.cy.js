@@ -2,13 +2,14 @@
  * The composer's ship modes (see "Features loaded at runtime" in docs/notes.md). Each block puts
  * the web console under test in a mode with the `setComposerShipMode` task
  * (cypress.config.ship-modes.cjs), then checks what users get:
- * - combined: the composer's actions and pages;
+ * - combined: the composer's actions and its read-only view;
  * - without: no composer action, link or page, and no link to a missing page;
  * - installed later: the composer's actions and pages once its files are copied next to the
  *   running web console and the page is loaded again;
  * - version mismatch: no composer, and a notice that its version doesn't match.
  *
- * It ends in the "combined" mode, as the web console is built.
+ * It ends in the "combined" mode, as the web console is built. After an aborted run, restore it
+ * with `yarn composer-ship-mode combined --container inmanta_orchestrator` (or `--dir`).
  */
 import environmentHelpers from "../../support/environmentHelpers.js";
 
@@ -68,22 +69,26 @@ const openInstanceActions = () => {
 };
 
 /**
- * Checks that the composer's actions are on the inventory and the instance details page, and
- * that its editor opens with the instance.
+ * Checks that the composer's actions are on the instance details page and the inventory, and
+ * that its read-only view opens with the instance. Editing may be disabled while the new instance
+ * deploys, so this doesn't open the editor.
  */
 const assertComposer = () => {
   visitInventory();
+  // The pages show once the composer has loaded, so a notice would be on screen by now.
+  cy.get('[data-testid="version-mismatch-composer"]').should("not.exist");
   cy.get('[aria-label="AddInstanceToggle"]').click();
   cy.get("#add-instance-composer-button").should("be.visible");
   cy.get('[aria-label="AddInstanceToggle"]').click();
 
+  openInstanceActions();
+  cy.get('[role="menu"]').contains("Edit in Composer").should("be.visible");
+  cy.go("back");
+  cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+
   openRowActions();
   cy.get('[role="menu"]').contains("Edit in Composer").should("be.visible");
-  cy.get('[role="menu"]').contains("Show in Composer").should("be.visible");
-  cy.get('[aria-label="row actions toggle"]').click();
-
-  openInstanceActions();
-  cy.get('[role="menu"]').contains("Edit in Composer").click();
+  cy.get('[role="menu"]').contains("Show in Composer").click();
   cy.get(`g[data-type="app.ServiceEntityShape"] [data-testid="header-${SERVICE}"]`, {
     timeout: 30000,
   }).should("be.visible");
@@ -174,7 +179,6 @@ describe("Composer ship modes", () => {
 
     it("has the composer's actions and pages", () => {
       assertComposer();
-      cy.get('[data-testid="version-mismatch-composer"]').should("not.exist");
     });
   });
 
@@ -224,7 +228,6 @@ describe("Composer ship modes", () => {
       setShipMode("combined");
 
       assertComposer();
-      cy.get('[data-testid="version-mismatch-composer"]').should("not.exist");
     });
   });
 
