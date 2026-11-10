@@ -6,8 +6,10 @@
  * - without: no `composer-*` files, so the app starts without the composer;
  * - combined: the composer's build (packages/features/composer/dist) next to the app's files, as
  *   `yarn build` ships it. Applied to a running web console, this installs the composer later;
- * - mismatch: the composer's build, stamped with another version than the app's, so the app
- *   leaves it out with a version mismatch notice.
+ * - mismatch: a second build of the composer with another version than the app's
+ *   (`COMPOSER_VERSION_OVERRIDE`, see its vite.config.ts) next to the app's files, so the app
+ *   leaves it out with a version mismatch notice. It builds into a temporary folder, so
+ *   packages/features/composer/dist stays the real build.
  *
  * The target is a web console folder, `dist/` by default, or the folder an orchestrator's Docker
  * container serves it from.
@@ -16,21 +18,15 @@
  *        [--container <name>]
  */
 import { execFileSync } from "child_process";
-import {
-  chmodSync,
-  copyFileSync,
-  mkdtempSync,
-  readdirSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from "fs";
+import { chmodSync, copyFileSync, mkdtempSync, readdirSync, readFileSync, rmSync } from "fs";
+import { createRequire } from "module";
 import { tmpdir } from "os";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const composerBuildDir = join(repoRoot, "packages/features/composer/dist");
+const composerDir = join(repoRoot, "packages/features/composer");
+const composerBuildDir = join(composerDir, "dist");
 
 /**
  * The folder an orchestrator's container serves the web console from (see `update:dist`).
@@ -47,53 +43,84 @@ export const shipModes = ["without", "combined", "mismatch"];
 const isComposerFile = (file) => file.startsWith("composer-");
 
 /**
- * Copies the composer's build into a new temporary folder, without the manifest the app's build
- * reads, as the app's build copies it. In the "mismatch" mode, the composer's version (the app's
- * version at build time, `APP_VERSION`) is replaced with `mismatchVersion`.
+ * Builds the composer with `mismatchVersion` into a new temporary folder.
  *
- * @param {"combined" | "mismatch"} mode - the ship mode
  * @returns {string} the temporary folder
  */
-const stageComposerFiles = (mode) => {
-  const files = readdirSync(composerBuildDir).filter(isComposerFile);
+const buildMismatchedComposer = () => {
+  const buildDir = mkdtempSync(join(tmpdir(), "composer-mismatch-build-"));
+  const viteBin = join(
+    dirname(createRequire(join(composerDir, "package.json")).resolve("vite/package.json")),
+    "bin/vite.js"
+  );
 
-  if (files.length === 0) {
-    throw new Error(`No composer build in ${composerBuildDir}, run \`yarn build\` first.`);
+  try {
+    execFileSync("node", [viteBin, "build", "--outDir", buildDir], {
+      cwd: composerDir,
+      env: { ...process.env, COMPOSER_VERSION_OVERRIDE: mismatchVersion },
+      stdio: "pipe",
+    });
+
+    if (!readFileSync(join(buildDir, "composer-feature.js"), "utf-8").includes(mismatchVersion)) {
+      throw new Error(`The composer's build doesn't have version "${mismatchVersion}".`);
+    }
+  } catch (error) {
+    rmSync(buildDir, { recursive: true, force: true });
+    throw error;
   }
 
-  const appVersion = JSON.parse(readFileSync(join(repoRoot, "package.json"), "utf-8")).version;
-  // The minifier may quote it with any of ", ' or `.
-  const versionPattern = new RegExp(
-    `version:\\s*(["'\`])${appVersion.replaceAll(".", "\\.")}\\1`,
-    "g"
-  );
+  return buildDir;
+};
+
+/**
+ * Copies the composer's files of a build into a new temporary folder, without the manifest the
+ * app's build reads, as the app's build copies them.
+ *
+ * @param {string} buildDir - the composer's build
+ * @returns {string} the temporary folder
+ */
+const stageComposerFiles = (buildDir) => {
+  const files = readdirSync(buildDir).filter(isComposerFile);
+
+  if (files.length === 0) {
+    throw new Error(`No composer build in ${buildDir}, run \`yarn build\` first.`);
+  }
+
   const stageDir = mkdtempSync(join(tmpdir(), "composer-ship-mode-"));
 
   // `docker cp <folder>/.` may give the target folder the mode of this one, which is 0700 on Linux.
   chmodSync(stageDir, 0o755);
-  let stamped = 0;
 
   for (const file of files) {
-    if (mode === "mismatch" && file.endsWith(".js")) {
-      const code = readFileSync(join(composerBuildDir, file), "utf-8");
-      const matches = code.match(versionPattern)?.length ?? 0;
-
-      stamped += matches;
-      writeFileSync(
-        join(stageDir, file),
-        matches > 0 ? code.replace(versionPattern, `version:$1${mismatchVersion}$1`) : code
-      );
-    } else {
-      copyFileSync(join(composerBuildDir, file), join(stageDir, file));
-    }
-  }
-
-  if (mode === "mismatch" && stamped === 0) {
-    rmSync(stageDir, { recursive: true, force: true });
-    throw new Error(`The composer's build has no version "${appVersion}" to replace.`);
+    copyFileSync(join(buildDir, file), join(stageDir, file));
   }
 
   return stageDir;
+};
+
+/**
+ * Stages the composer's files for a ship mode: none for "without", the real build for
+ * "combined", and a build with `mismatchVersion` for "mismatch".
+ *
+ * @param {string} mode - one of `shipModes`
+ * @returns {string | undefined} the temporary folder with the files, if any
+ */
+const stageForMode = (mode) => {
+  if (mode === "combined") {
+    return stageComposerFiles(composerBuildDir);
+  }
+
+  if (mode === "mismatch") {
+    const buildDir = buildMismatchedComposer();
+
+    try {
+      return stageComposerFiles(buildDir);
+    } finally {
+      rmSync(buildDir, { recursive: true, force: true });
+    }
+  }
+
+  return undefined;
 };
 
 /**
@@ -110,7 +137,7 @@ export const setComposerShipMode = (mode, { dir, container } = {}) => {
     throw new Error(`Unknown ship mode "${mode}", expected one of: ${shipModes.join(", ")}.`);
   }
 
-  const stageDir = mode === "without" ? undefined : stageComposerFiles(mode);
+  const stageDir = stageForMode(mode);
 
   try {
     if (container) {

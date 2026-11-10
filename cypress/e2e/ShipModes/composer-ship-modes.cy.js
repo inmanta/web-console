@@ -6,7 +6,8 @@
  * - without: no composer action, link or page, and no link to a missing page;
  * - installed later: the composer's actions and pages once its files are copied next to the
  *   running web console and the page is loaded again;
- * - version mismatch: no composer, and a notice that its version doesn't match.
+ * - version mismatch: with a second build of the composer that has another version, no composer,
+ *   and a notice that its version doesn't match.
  *
  * It ends in the "combined" mode, as the web console is built. After an aborted run, restore it
  * with `yarn composer-ship-mode combined --container inmanta_orchestrator` (or `--dir`).
