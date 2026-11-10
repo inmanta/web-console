@@ -3,12 +3,13 @@
 // - combined: dist/ as built, with the composer;
 // - without: no composer files;
 // - mismatch: a composer of another version, which the app leaves out with a notice.
-// Each mode gets a fresh orchestrator. Installing the composer later is covered by
-// `yarn cypress-test:ship-modes` in the main job. The scenario of the composer itself
-// (scenario-8-composer) only runs in the combined mode.
+// The scenario of the composer itself (scenario-8-composer) only runs in the combined mode.
+// Then `yarn cypress-test:ship-modes` (cypress/e2e/ShipModes), which switches between the modes
+// while the app runs, and also covers installing the composer later. Each run gets a fresh
+// orchestrator.
 //
 // Its own job, for master and the iso branches; it needs the same credentials as the main job.
-def shipModes = ['combined', 'without', 'mismatch']
+def runs = ['combined', 'without', 'mismatch', 'switching']
 
 pipeline {
     agent any
@@ -49,23 +50,31 @@ pipeline {
         stage('Ship modes: End-to-end tests') {
             steps {
                 script {
-                    for (mode in shipModes) {
-                        stage("Ship mode: ${mode}") {
-                            // A failing mode fails the build, and the other modes still run.
+                    for (run in runs) {
+                        stage("Ship mode: ${run}") {
+                            // A failing run fails the build, and the other runs still run.
                             catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                                 // One orchestrator per agent: the main job's Cypress stage takes the same lock.
                                 lock(resource: "orchestrator-${env.NODE_NAME}") {
                                     timeout(time: 30, unit: 'MINUTES') {
                                         dir('web-console') {
+                                            // Cypress empties its screenshots folder before each run.
+                                            def cypressOptions = "--config screenshotsFolder=cypress/screenshots/${run} --reporter-options 'mochaFile=cypress/reports/junit/${run}-[hash].xml'"
                                             try {
-                                                sh """
+                                                sh '''
                                                 sudo systemctl restart docker && sudo docker network prune -f
                                                 yarn run install:orchestrator:ci
-                                                yarn composer-ship-mode ${mode} --container inmanta_orchestrator
-                                                yarn run cypress-test:iso --expose edition=iso,composerShipMode=${mode} --config screenshotsFolder=cypress/screenshots/${mode} --reporter-options 'mochaFile=cypress/reports/junit/${mode}-[hash].xml'
-                                                """
+                                                '''
+                                                if (run == 'switching') {
+                                                    sh "yarn run cypress-test:ship-modes ${cypressOptions}"
+                                                } else {
+                                                    sh """
+                                                    yarn composer-ship-mode ${run} --container inmanta_orchestrator
+                                                    yarn run cypress-test:iso --expose edition=iso,composerShipMode=${run} ${cypressOptions}
+                                                    """
+                                                }
                                             } finally {
-                                                junit allowEmptyResults: true, testResults: "cypress/reports/junit/${mode}-*.xml"
+                                                junit allowEmptyResults: true, testResults: "cypress/reports/junit/${run}-*.xml"
                                                 sh 'yarn run kill-server || true; rm -rf temp'
                                             }
                                         }
