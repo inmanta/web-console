@@ -1,10 +1,10 @@
 import { LabelProps } from "@patternfly/react-core";
 import { InstanceSummary, StateModel, words } from "@inmanta/web-console-core";
-import { StateCount, SummaryLabel, summaryLabels } from "./types";
+import { StateCount, SummaryLabel, summaryLabelSeverity } from "./types";
 
 /**
  * Gets the instance count per lifecycle state of a service, leaving out states without instances.
- * The counts are ordered by label, most severe first, then in lifecycle order. A counted state
+ * The counts are ordered by `summaryLabelSeverity`, then in lifecycle order. A counted state
  * that is not in the lifecycle is left out, as its label is unknown.
  *
  * @example
@@ -29,9 +29,7 @@ export const getStateCounts = (summary: InstanceSummary, states: StateModel[]): 
     });
   }
 
-  return stateCounts.sort(
-    (a, b) => summaryLabels.indexOf(a.label) - summaryLabels.indexOf(b.label)
-  );
+  return stateCounts.sort((a, b) => summaryLabelSeverity[a.label] - summaryLabelSeverity[b.label]);
 };
 
 /**
@@ -41,18 +39,8 @@ export const getLabelName = (label: SummaryLabel): string =>
   words(`catalog.summary.label.${label}`);
 
 /**
- * Gets the PatternFly label props that color a status label for the given label. The `status`
- * also colors a PatternFly `Icon`.
+ * Gets the PatternFly status of a label, the same one `InstanceStateLabel` uses for a lifecycle
+ * state. It colors both a PatternFly `Label` and `Icon`; "no_label" has none, so it stays grey.
  */
-export const getLabelColorProps = (label: SummaryLabel): Pick<LabelProps, "status" | "color"> => {
-  switch (label) {
-    case "danger":
-    case "warning":
-    case "success":
-      return { status: label };
-    case "info":
-      return { color: "blue" };
-    case "no_label":
-      return {};
-  }
-};
+export const getLabelStatus = (label: SummaryLabel): LabelProps["status"] =>
+  label === "no_label" ? undefined : label;

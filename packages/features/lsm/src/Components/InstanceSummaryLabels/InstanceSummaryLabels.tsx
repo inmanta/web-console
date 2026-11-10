@@ -3,7 +3,7 @@ import { Label, LabelProps, FlexItem, Flex, Tooltip } from "@patternfly/react-co
 import { InstanceSummary, StateModel, words } from "@inmanta/web-console-core";
 import { LabelIcon } from "./LabelIcon";
 import { StateCountsTooltipContent } from "./StateCountsTooltipContent";
-import { getLabelColorProps, getLabelName, getStateCounts } from "./helpers";
+import { getLabelName, getLabelStatus, getStateCounts } from "./helpers";
 import { LabelFiltering, StateCountsTooltipRow, SummaryLabel, summaryLabels } from "./types";
 
 interface Props {
@@ -93,7 +93,7 @@ const renderLabel = (
     <Label
       variant={isActive ? "filled" : "outline"}
       icon={<LabelIcon label={label} />}
-      {...getLabelColorProps(label)}
+      status={getLabelStatus(label)}
       {...interactionProps}
     >
       {value}

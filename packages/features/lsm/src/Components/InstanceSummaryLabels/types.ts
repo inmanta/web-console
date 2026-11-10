@@ -6,9 +6,25 @@ import { InstancesByLabel } from "@inmanta/web-console-core";
 export type SummaryLabel = keyof InstancesByLabel;
 
 /**
+ * The severity rank of each summary label, 1 being the most severe. Every label needs a rank, so a
+ * new label in `InstancesByLabel` fails to compile until it gets one here.
+ */
+export const summaryLabelSeverity: Record<SummaryLabel, number> = {
+  danger: 1,
+  warning: 2,
+  info: 3,
+  success: 4,
+  no_label: 5,
+};
+
+const isSummaryLabel = (key: string): key is SummaryLabel => key in summaryLabelSeverity;
+
+/**
  * The summary labels in display order, most severe first.
  */
-export const summaryLabels: SummaryLabel[] = ["danger", "warning", "info", "success", "no_label"];
+export const summaryLabels: SummaryLabel[] = Object.keys(summaryLabelSeverity)
+  .filter(isSummaryLabel)
+  .sort((a, b) => summaryLabelSeverity[a] - summaryLabelSeverity[b]);
 
 /**
  * Turns the labels into filter toggles. `activeLabel` is the label whose filter is on, or null

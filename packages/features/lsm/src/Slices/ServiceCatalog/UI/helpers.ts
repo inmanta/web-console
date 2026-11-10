@@ -8,6 +8,7 @@ import {
   getStateCounts,
   StateCount,
   summaryLabels,
+  summaryLabelSeverity,
 } from "@inmanta/web-console-feature-lsm/Components/InstanceSummaryLabels";
 import {
   CatalogSection,
@@ -183,7 +184,7 @@ export const getOwnedServicesStateCounts = (service: CatalogService): OwnedServi
   service.ownedServices.forEach(addStateCounts);
 
   return ownedServicesStateCounts.sort(
-    (a, b) => summaryLabels.indexOf(a.label) - summaryLabels.indexOf(b.label)
+    (a, b) => summaryLabelSeverity[a.label] - summaryLabelSeverity[b.label]
   );
 };
 

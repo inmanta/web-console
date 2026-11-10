@@ -1,11 +1,12 @@
 import React from "react";
 import { Flex, FlexItem, Icon, Label, Tooltip } from "@patternfly/react-core";
 import { SitemapIcon } from "@patternfly/react-icons";
+import { t_global_icon_color_subtle } from "@patternfly/react-tokens";
 import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import {
-  getLabelColorProps,
   getLabelName,
+  getLabelStatus,
   LabelIcon,
   StateCountsTooltipContent,
   StateCountsTooltipRow,
@@ -20,7 +21,7 @@ interface Props {
 /**
  * The "not success" label of a collapsed service that owns other services: one count per label
  * over the instances of the owned services that are not in a "success" state. The border takes
- * the color of the most severe label, and the tooltip lists each owned service and state with its
+ * the color of the most severe label while the owned-services icon stays grey, and the tooltip lists each owned service and state with its
  * count. Renders nothing when there are no such instances.
  *
  * @props {Props} props - The props of the component.
@@ -59,11 +60,11 @@ export const OwnedServicesNotSuccessLabel: React.FC<Props> = ({ stateCounts }) =
     >
       <DashedLabel
         variant="outline"
-        icon={<SitemapIcon />}
+        icon={<SitemapIcon color={t_global_icon_color_subtle.var} />}
         role="group"
         aria-label={words("catalog.ownedServices.notSuccess")}
         tabIndex={0}
-        {...getLabelColorProps(labelCounts[0].label)}
+        status={getLabelStatus(labelCounts[0].label)}
       >
         <Flex component="span" gap={{ default: "gapSm" }} flexWrap={{ default: "nowrap" }}>
           {labelCounts.map(({ label, count }) => (
@@ -74,7 +75,7 @@ export const OwnedServicesNotSuccessLabel: React.FC<Props> = ({ stateCounts }) =
               alignItems={{ default: "alignItemsCenter" }}
               flexWrap={{ default: "nowrap" }}
             >
-              <Icon status={getLabelColorProps(label).status} isInline>
+              <Icon status={getLabelStatus(label)} isInline>
                 <LabelIcon label={label} title={getLabelName(label)} />
               </Icon>
               <FlexItem component="span">{count}</FlexItem>

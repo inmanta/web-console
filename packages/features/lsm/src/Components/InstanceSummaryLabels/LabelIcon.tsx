@@ -1,11 +1,12 @@
 import React from "react";
 import {
   CheckCircleIcon,
+  CircleIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   InfoAltIcon,
-  OutlinedCircleIcon,
 } from "@patternfly/react-icons";
+import { t_global_icon_color_subtle } from "@patternfly/react-tokens";
 import { SummaryLabel } from "./types";
 
 interface Props {
@@ -15,7 +16,8 @@ interface Props {
 
 /**
  * The icon of a lifecycle label, the same in every status label. It takes its color from where
- * it is placed, such as a status label or a PatternFly `Icon`.
+ * it is placed, such as a status label or a PatternFly `Icon`, except "no_label", which is always
+ * a grey dot.
  *
  * @props {Props} props - The props of the component.
  *  @prop {SummaryLabel} label - The label to show the icon of.
@@ -35,6 +37,6 @@ export const LabelIcon: React.FC<Props> = ({ label, title }) => {
     case "info":
       return <InfoAltIcon title={title} />;
     case "no_label":
-      return <OutlinedCircleIcon title={title} />;
+      return <CircleIcon title={title} color={t_global_icon_color_subtle.var} />;
   }
 };
