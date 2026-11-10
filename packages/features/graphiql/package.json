@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@graphiql/react": "^1.0.1",
-    "@graphiql/toolkit": "^1.0.0",
+    "@graphiql/toolkit": "^1.0.1",
     "@inmanta/web-console-core": "workspace:^",
     "@inmanta/web-console-ui": "workspace:^",
     "@patternfly/react-icons": "^6.7.0",
