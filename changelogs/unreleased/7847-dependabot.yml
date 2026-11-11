@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @module-federation/vite from 1.23.9 to 1.23.11
+destination-branches:
+- master
+- iso9
+sections: {}
