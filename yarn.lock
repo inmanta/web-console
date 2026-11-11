@@ -921,7 +921,7 @@ __metadata:
     "@inmanta/web-console-feature-user-management": "workspace:^"
     "@inmanta/web-console-shell": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
-    "@module-federation/vite": "npm:1.23.9"
+    "@module-federation/vite": "npm:1.23.11"
     "@patternfly/react-core": "npm:^6.7.0"
     "@tanstack/react-query": "npm:^5.107.1"
     "@testing-library/dom": "npm:^10.4.2"
@@ -976,7 +976,7 @@ __metadata:
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
     "@joint/plus": "npm:^4.3.4"
-    "@module-federation/vite": "npm:1.23.9"
+    "@module-federation/vite": "npm:1.23.11"
     "@patternfly/react-core": "npm:^6.7.0"
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
@@ -1673,16 +1673,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@module-federation/vite@npm:1.23.9":
-  version: 1.23.9
-  resolution: "@module-federation/vite@npm:1.23.9"
+"@module-federation/vite@npm:1.23.11":
+  version: 1.23.11
+  resolution: "@module-federation/vite@npm:1.23.11"
   dependencies:
     "@module-federation/dts-plugin": "npm:2.9.3"
     "@module-federation/runtime": "npm:2.9.3"
     "@module-federation/sdk": "npm:2.9.3"
   peerDependencies:
     vite: ^5.1.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
-  checksum: 10/62ac6cf186fdd27f68e7c438cc2355f5eb22d08fcbde45ab6cf5642720e7def465bf2a358f7c47f731fda01aac06de0f1b5005c8c77738eb57f1fd9936d3ed75
+  checksum: 10/64cd05c28d922f223a1b5697cfe75cb797282daadffb3bd2806a288668ff97ebdd82dbdd6f4ba91de95e9280cbf62368b8c9e61679d7c7ccb205d27ce1d25b67
   languageName: node
   linkType: hard
 

@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@inmanta/web-console-test-utils": "workspace:^",
-    "@module-federation/vite": "1.23.9",
+    "@module-federation/vite": "1.23.11",
     "@patternfly/react-core": "^6.7.0",
     "@tanstack/react-query": "^5.107.1",
     "@testing-library/dom": "^10.4.2",
