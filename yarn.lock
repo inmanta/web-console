@@ -764,7 +764,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphiql/react@npm:^1.0.0, @graphiql/react@npm:^1.0.1":
+"@graphiql/react@npm:^1.0.0":
   version: 1.0.1
   resolution: "@graphiql/react@npm:1.0.1"
   dependencies:
@@ -790,6 +790,35 @@ __metadata:
     react: ^18 || ^19
     react-dom: ^18 || ^19
   checksum: 10/09d2af0330d8d8e5ce0a44f71f52fd20e03063c31a022c988d2924128e98308e91b6b3c73c36cb87181563113e0104ce93457a8a4aa8c12a0ec5b0184a4967f1
+  languageName: node
+  linkType: hard
+
+"@graphiql/react@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@graphiql/react@npm:1.0.2"
+  dependencies:
+    "@graphiql/toolkit": "npm:^1.0.1"
+    "@radix-ui/react-dialog": "npm:^1.1"
+    "@radix-ui/react-dropdown-menu": "npm:^2.1"
+    "@radix-ui/react-tooltip": "npm:^1.2"
+    "@radix-ui/react-visually-hidden": "npm:^1.2"
+    clsx: "npm:^2.1.1"
+    framer-motion: "npm:^14.8.0"
+    get-value: "npm:^4.1.0"
+    graphql-language-service: "npm:^6.0.1"
+    jsonc-parser: "npm:^3.3.1"
+    markdown-it: "npm:^15.0.3"
+    monaco-editor: "npm:>=0.56.0 <0.58.0"
+    monaco-graphql: "npm:^2.0.1"
+    prettier: "npm:^3.5.3"
+    react-compiler-runtime: "npm:^1.0.0"
+    set-value: "npm:^4.1.0"
+    zustand: "npm:^5"
+  peerDependencies:
+    graphql: ^16.11.0 || ^17.0.0
+    react: ^18 || ^19
+    react-dom: ^18 || ^19
+  checksum: 10/6ded349e2057800b30f12c4f072cb661555f7bc6af1b99665e8ec80a2e74271694412fb55a5248f2880c0d6da5c51219e42e85dde8a9c35746acff61fe41a5e0
   languageName: node
   linkType: hard
 
@@ -1026,7 +1055,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@inmanta/web-console-feature-graphiql@workspace:packages/features/graphiql"
   dependencies:
-    "@graphiql/react": "npm:^1.0.1"
+    "@graphiql/react": "npm:^1.0.2"
     "@graphiql/toolkit": "npm:^1.0.1"
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
