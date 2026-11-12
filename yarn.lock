@@ -764,35 +764,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphiql/react@npm:^1.0.0":
-  version: 1.0.1
-  resolution: "@graphiql/react@npm:1.0.1"
-  dependencies:
-    "@graphiql/toolkit": "npm:^1.0.0"
-    "@radix-ui/react-dialog": "npm:^1.1"
-    "@radix-ui/react-dropdown-menu": "npm:^2.1"
-    "@radix-ui/react-tooltip": "npm:^1.2"
-    "@radix-ui/react-visually-hidden": "npm:^1.2"
-    clsx: "npm:^2.1.1"
-    framer-motion: "npm:^14.8.0"
-    get-value: "npm:^4.1.0"
-    graphql-language-service: "npm:^6.0.1"
-    jsonc-parser: "npm:^3.3.1"
-    markdown-it: "npm:^15.0.3"
-    monaco-editor: "npm:>=0.56.0 <0.58.0"
-    monaco-graphql: "npm:^2.0.1"
-    prettier: "npm:^3.5.3"
-    react-compiler-runtime: "npm:^1.0.0"
-    set-value: "npm:^4.1.0"
-    zustand: "npm:^5"
-  peerDependencies:
-    graphql: ^16.11.0 || ^17.0.0
-    react: ^18 || ^19
-    react-dom: ^18 || ^19
-  checksum: 10/09d2af0330d8d8e5ce0a44f71f52fd20e03063c31a022c988d2924128e98308e91b6b3c73c36cb87181563113e0104ce93457a8a4aa8c12a0ec5b0184a4967f1
-  languageName: node
-  linkType: hard
-
 "@graphiql/react@npm:^1.0.2":
   version: 1.0.2
   resolution: "@graphiql/react@npm:1.0.2"
@@ -1064,7 +1035,7 @@ __metadata:
     "@tanstack/react-query": "npm:^5.107.1"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
-    graphiql: "npm:^6.0.0"
+    graphiql: "npm:^6.0.1"
     graphql: "npm:^17.0.2"
     monaco-editor: "npm:^0.57.0"
     monaco-graphql: "npm:^2.0.1"
@@ -7408,22 +7379,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphiql@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "graphiql@npm:6.0.0"
+"graphiql@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "graphiql@npm:6.0.1"
   dependencies:
     "@graphiql/plugin-collections": "npm:^1.0.0"
     "@graphiql/plugin-doc-explorer": "npm:^1.0.0"
     "@graphiql/plugin-history": "npm:^1.0.0"
     "@graphiql/plugin-query-builder": "npm:^1.0.0"
-    "@graphiql/react": "npm:^1.0.0"
+    "@graphiql/react": "npm:^1.0.2"
     clsx: "npm:^2.1.1"
     react-compiler-runtime: "npm:^1.0.0"
   peerDependencies:
     graphql: ^16.11.0 || ^17.0.0
     react: ^18 || ^19
     react-dom: ^18 || ^19
-  checksum: 10/1e587a1eee20ba2d6f8a2a19e98b82462784d936d3cd79033523fb97eae5c7b258eb0c890e4de3acbf1414a41fe973598ffb128caa44282ab8badf7f067a63b2
+  checksum: 10/4a41c1b17e8f4a83626dfe055a2b93ca558da64194ed818b29f7719512c86f8563326ea6199f3b7da848cf136d3ee80b3154b239e6b39696ca6de47674ccc01b
   languageName: node
   linkType: hard
 
