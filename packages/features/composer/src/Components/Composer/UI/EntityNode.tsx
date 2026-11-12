@@ -1,16 +1,14 @@
 import React, { useContext, useState } from "react";
-import {
-  AngleDoubleDownIcon,
-  AngleDownIcon,
-  AngleUpIcon,
-  CubeIcon,
-  ExclamationCircleIcon,
-  LayerGroupIcon,
-  LinkIcon,
-  LockIcon,
-  PuzzlePieceIcon,
-  ServerIcon,
-} from "@patternfly/react-icons";
+import { AngleDoubleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-double-down-icon";
+import { AngleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-down-icon";
+import { AngleUpIcon } from "@patternfly/react-icons/dist/esm/icons/angle-up-icon";
+import { CubeIcon } from "@patternfly/react-icons/dist/esm/icons/cube-icon";
+import { ExclamationCircleIcon } from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
+import { LayerGroupIcon } from "@patternfly/react-icons/dist/esm/icons/layer-group-icon";
+import { LinkIcon } from "@patternfly/react-icons/dist/esm/icons/link-icon";
+import { LockIcon } from "@patternfly/react-icons/dist/esm/icons/lock-icon";
+import { PuzzlePieceIcon } from "@patternfly/react-icons/dist/esm/icons/puzzle-piece-icon";
+import { ServerIcon } from "@patternfly/react-icons/dist/esm/icons/server-icon";
 import { Handle, Node, NodeProps, Position, useStore } from "@xyflow/react";
 import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";

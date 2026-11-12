@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { Menu, MenuContent, MenuItem, MenuList } from "@patternfly/react-core";
-import { TimesIcon, TrashIcon } from "@patternfly/react-icons";
+import { TimesIcon } from "@patternfly/react-icons/dist/esm/icons/times-icon";
+import { TrashIcon } from "@patternfly/react-icons/dist/esm/icons/trash-icon";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import { canRemoveShape } from "../Data/Helpers";

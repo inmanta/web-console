@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { TimesIcon } from "@patternfly/react-icons";
+import { TimesIcon } from "@patternfly/react-icons/dist/esm/icons/times-icon";
 import {
   BaseEdge,
   Edge,

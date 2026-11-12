@@ -13,12 +13,10 @@ import {
   Tabs,
   TabTitleText,
 } from "@patternfly/react-core";
-import {
-  AngleDownIcon,
-  AngleRightIcon,
-  GripVerticalIcon,
-  PlusCircleIcon,
-} from "@patternfly/react-icons";
+import { AngleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-down-icon";
+import { AngleRightIcon } from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
+import { GripVerticalIcon } from "@patternfly/react-icons/dist/esm/icons/grip-vertical-icon";
+import { PlusCircleIcon } from "@patternfly/react-icons/dist/esm/icons/plus-circle-icon";
 import { useReactFlow } from "@xyflow/react";
 import styled from "styled-components";
 import { EmbeddedEntity, ServiceModel, words } from "@inmanta/web-console-core";
