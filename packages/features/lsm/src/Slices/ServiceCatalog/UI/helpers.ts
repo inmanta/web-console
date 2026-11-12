@@ -13,6 +13,7 @@ import {
 import {
   CatalogSection,
   CatalogService,
+  FilteredCatalogSections,
   LabelCount,
   OwnedServiceStateCount,
   ownerServiceFallbackIconName,
@@ -211,6 +212,78 @@ export const getLabelCounts = (stateCounts: StateCount[]): LabelCount[] => {
 
   return labelCounts;
 };
+
+/**
+ * Filters the sections down to the services that match the filter text and the owners on the
+ * path to them, and collects those owners so they can start expanded. A matching service keeps
+ * all its owned services; sections left without services are dropped. A blank filter text
+ * returns the sections unchanged, no owners, and every service as a match.
+ *
+ * @example
+ * filterCatalogSections([{ kind: "Ungrouped", services: [deployment (owns dns_record, virtual_ip)] }], "dns")
+ * // { sections: [{ kind: "Ungrouped", services: [deployment (ownedServices: [dns_record])] }],
+ * //   ownerNamesOfMatchingServices: Set { "deployment" }, matchingServiceCount: 1 }
+ */
+export const filterCatalogSections = (
+  sections: CatalogSection[],
+  filterText: string
+): FilteredCatalogSections => {
+  const normalizedFilterText = filterText.trim().toLowerCase();
+  const ownerNamesOfMatchingServices = new Set<string>();
+  let matchingServiceCount = 0;
+
+  if (normalizedFilterText === "") {
+    return {
+      sections,
+      ownerNamesOfMatchingServices,
+      matchingServiceCount: getAllCatalogServices(sections).length,
+    };
+  }
+
+  const filterServices = (services: CatalogService[]): CatalogService[] => {
+    const filteredServices: CatalogService[] = [];
+
+    for (const service of services) {
+      const filteredOwnedServices = filterServices(service.ownedServices);
+
+      if (filteredOwnedServices.length > 0) {
+        ownerNamesOfMatchingServices.add(service.serviceModel.name);
+      }
+
+      if (isCatalogServiceMatch(service, normalizedFilterText)) {
+        matchingServiceCount += 1;
+        filteredServices.push(service);
+      } else if (filteredOwnedServices.length > 0) {
+        filteredServices.push({ ...service, ownedServices: filteredOwnedServices });
+      }
+    }
+
+    return filteredServices;
+  };
+
+  const filteredSections: CatalogSection[] = [];
+
+  for (const section of sections) {
+    const services = filterServices(section.services);
+
+    if (services.length > 0) {
+      filteredSections.push({ ...section, services });
+    }
+  }
+
+  return { sections: filteredSections, ownerNamesOfMatchingServices, matchingServiceCount };
+};
+
+/**
+ * Whether the `web_title` or the name of a service contains the normalized filter text,
+ * ignoring case.
+ */
+const isCatalogServiceMatch = (
+  { serviceModel, resolvedAnnotations }: CatalogService,
+  normalizedFilterText: string
+): boolean =>
+  resolvedAnnotations.web_title.toLowerCase().includes(normalizedFilterText) ||
+  serviceModel.name.toLowerCase().includes(normalizedFilterText);
 
 /**
  * Sorts catalog services in place by `web_order`, then by title, and returns them.

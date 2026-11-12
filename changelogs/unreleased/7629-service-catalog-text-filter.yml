@@ -1,0 +1,5 @@
+description: The service catalog can be filtered by title or name and shows how many services match.
+issue-nr: 7629
+change-type: minor
+destination-branches: [master, iso9]
+sections: {}
