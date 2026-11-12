@@ -223,6 +223,11 @@ export const lsmMessages = {
     `${serviceCount} ${serviceCount === 1 ? "service" : "services"} · ${instanceCount} ${instanceCount === 1 ? "instance" : "instances"}`,
   "catalog.ownedServices.count": (ownedServiceCount: number) =>
     `${ownedServiceCount} owned ${ownedServiceCount === 1 ? "service" : "services"}`,
+  "catalog.ownedServices.notSuccess": "Owned services not up",
+  "catalog.ownedServices.ownedServiceState": (
+    ownedServiceTitle: string,
+    stateDisplayName: string
+  ) => `${ownedServiceTitle}: ${stateDisplayName}`,
   "catalog.delete.modal.title": "Delete Service",
   "catalog.delete.title": (serviceTitle: string) =>
     `Are you sure you want to delete service ${serviceTitle}?`,
