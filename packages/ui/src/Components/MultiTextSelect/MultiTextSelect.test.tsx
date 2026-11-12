@@ -8,7 +8,24 @@ const options = [
   { children: "Cherry", value: "cherry" },
 ];
 
-test("MultiTextSelect shows the picked options as labels", () => {
+test("MultiTextSelect shows the picked options as labels up to numLabels", () => {
+  const [apple, banana] = options;
+
+  render(
+    <MultiTextSelect
+      selected={[apple.value, banana.value]}
+      setSelected={vi.fn()}
+      options={options}
+      hasChips
+      numLabels={3}
+    />
+  );
+
+  expect(screen.getByText(apple.children)).toBeVisible();
+  expect(screen.getByText(banana.children)).toBeVisible();
+});
+
+test("MultiTextSelect collapses the picked options by default", () => {
   const [apple, banana] = options;
 
   render(
@@ -20,18 +37,30 @@ test("MultiTextSelect shows the picked options as labels", () => {
     />
   );
 
-  expect(screen.getByText(apple.children)).toBeVisible();
-  expect(screen.getByText(banana.children)).toBeVisible();
+  expect(screen.queryByText(apple.children)).not.toBeInTheDocument();
+  expect(screen.queryByText(banana.children)).not.toBeInTheDocument();
 });
 
 test("MultiTextSelect keeps the names of picked options when a search narrows the options without them", () => {
   const [apple, , cherry] = options;
   const { rerender } = render(
-    <MultiTextSelect selected={[apple.value]} setSelected={vi.fn()} options={options} hasChips />
+    <MultiTextSelect
+      selected={[apple.value]}
+      setSelected={vi.fn()}
+      options={options}
+      hasChips
+      numLabels={3}
+    />
   );
 
   rerender(
-    <MultiTextSelect selected={[apple.value]} setSelected={vi.fn()} options={[cherry]} hasChips />
+    <MultiTextSelect
+      selected={[apple.value]}
+      setSelected={vi.fn()}
+      options={[cherry]}
+      hasChips
+      numLabels={3}
+    />
   );
 
   expect(screen.getByText(apple.children)).toBeVisible();

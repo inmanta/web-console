@@ -31,6 +31,7 @@ interface Props {
   noInputField?: boolean;
   footer?: React.ReactNode;
   maxMenuHeight?: string;
+  numLabels?: number;
 }
 
 /**
@@ -50,6 +51,7 @@ interface Props {
  * @param noInputField To have a default select without filter-input field.
  * @param footer Component containing a footer element for the list
  * @param maxMenuHeight Maximum height of the scrollable options menu (defaults to 300px).
+ * @param numLabels How many chips are shown before the rest collapse into "N more" (defaults to 0, so all collapse).
  *
  * @returns MultiTextSelect Component
  */
@@ -63,6 +65,7 @@ export const MultiTextSelect: React.FC<Props> = ({
   hasChips = false,
   noInputField = false,
   maxMenuHeight = "300px",
+  numLabels = 0,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -223,7 +226,7 @@ export const MultiTextSelect: React.FC<Props> = ({
             disabled={props.isDisabled}
           >
             {hasChips && (
-              <LabelGroup aria-label="Current selections">
+              <LabelGroup aria-label="Current selections" numLabels={numLabels}>
                 {selected.map((selection) => (
                   <Label
                     variant="outline"
