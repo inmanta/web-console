@@ -8,7 +8,7 @@ import {
   LabelFiltering,
   StateCountsTooltipRow,
   SummaryLabel,
-  summaryLabelColors,
+  summaryLabelStatus,
   summaryLabels,
 } from "./types";
 
@@ -99,7 +99,7 @@ const renderLabel = (
     <Label
       variant={isActive ? "filled" : "outline"}
       icon={<LabelIcon label={label} />}
-      {...summaryLabelColors[label]}
+      status={summaryLabelStatus[label]}
       {...interactionProps}
     >
       {value}
