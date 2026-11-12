@@ -4,13 +4,13 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { REFETCH_INTERVAL } from "@inmanta/web-console-core/Queries/Helpers";
 import { orchestrationEngineFeature } from "@inmanta/web-console-feature-orchestration-engine";
 import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import * as Mock from "@inmanta/web-console-test-utils/Data/CompileReports";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Page } from "./Page";
 
 const axe = configureAxe({
@@ -20,7 +20,7 @@ const axe = configureAxe({
   },
 });
 
-const server = setupServer();
+const server = setupTestServer();
 
 function setup(serverCompileEnabled: boolean = false) {
   const queryClient = new QueryClient({

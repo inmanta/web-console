@@ -5,7 +5,6 @@ import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { cloneDeep } from "@inmanta/web-console-core/Language/collection";
 import { lsmFeature } from "@inmanta/web-console-feature-lsm";
@@ -18,6 +17,7 @@ import {
 import { multiNestedEditable } from "@inmanta/web-console-test-utils/Data/Service/EmbeddedEntity";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Page } from "./Page";
 
 // Mock usePatch and usePut before the test
@@ -85,7 +85,7 @@ function setup() {
 describe("EditInstancePage", () => {
   const instance = "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3";
 
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/lsm/v1/service_catalog/service_name_a", () => {
       return HttpResponse.json({ data: Service.a });
     }),

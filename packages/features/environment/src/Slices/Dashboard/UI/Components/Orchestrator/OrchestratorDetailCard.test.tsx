@@ -2,18 +2,18 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { ServerStatus as ServerStatusType } from "@inmanta/web-console-core/Domain";
 import { environmentFeature } from "@inmanta/web-console-feature-environment";
 import { MockedDependencyProvider, ServerStatus, stubRoute } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import { OrchestratorDetailCard } from "./OrchestratorDetailCard";
 
 const datePresenter = new CustomDatePresenter();
 
-const server = setupServer();
+const server = setupTestServer();
 
 function setup() {
   const queryClient = new QueryClient({

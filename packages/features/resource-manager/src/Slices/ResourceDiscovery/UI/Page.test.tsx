@@ -5,11 +5,11 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { resourceManagerFeature } from "@inmanta/web-console-feature-resource-manager";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import * as DiscoveredResources from "../Data/Mock";
 import { DiscoveredResourcesPage } from ".";
 
@@ -32,7 +32,7 @@ function setup() {
 }
 
 describe("DiscoveredResourcesPage", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());

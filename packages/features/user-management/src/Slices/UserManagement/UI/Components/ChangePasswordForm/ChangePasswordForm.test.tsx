@@ -3,9 +3,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { AuthContextInterface, defaultAuthContext } from "@inmanta/web-console-core/Auth";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { ChangePasswordForm } from "./ChangePasswordForm";
 
 function setup(user: string, authHelper: AuthContextInterface = defaultAuthContext) {
@@ -21,7 +21,7 @@ function setup(user: string, authHelper: AuthContextInterface = defaultAuthConte
 }
 
 describe("ChangePasswordForm", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());

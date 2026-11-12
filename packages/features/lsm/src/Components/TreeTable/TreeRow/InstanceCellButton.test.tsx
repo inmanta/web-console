@@ -1,10 +1,10 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { MockedDependencyProvider, ServiceInstance } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { InstanceCellButton } from "./InstanceCellButton";
 
 function setup(serviceName: string, id: string) {
@@ -23,7 +23,7 @@ function setup(serviceName: string, id: string) {
 }
 
 describe("InstanceCellButton", () => {
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/lsm/v1/service_inventory/service_name_a/service_instance_id_a", () => {
       return HttpResponse.json({ data: ServiceInstance.a });
     }),

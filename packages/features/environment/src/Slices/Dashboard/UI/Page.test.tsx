@@ -3,12 +3,17 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { MockedDependencyProvider, EnvironmentDetails } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Page } from "./Page";
+
+// The cards of the dashboard have their own tests, and send their own requests.
+vi.mock("./Dashboard", () => ({
+  Dashboard: () => <div aria-label="Dashboard-Body" />,
+}));
 
 const axe = configureAxe({
   rules: {
@@ -32,7 +37,7 @@ function setup() {
 }
 
 describe("Dashboard Page", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => {
     server.listen();
@@ -74,7 +79,7 @@ describe("Dashboard Page", () => {
 
   test("Shows the dashboard once the environment details fetch succeeds", async () => {
     server.use(
-      http.get("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7?", () => {
+      http.get("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", () => {
         return HttpResponse.json({
           data: EnvironmentDetails.a,
         });
@@ -86,6 +91,7 @@ describe("Dashboard Page", () => {
 
     expect(await screen.findByRole("region", { name: "Dashboard-Loading" })).toBeInTheDocument();
 
-    expect(await screen.findByText(words("dashboard.title"))).toBeInTheDocument();
+    expect(await screen.findByLabelText("Dashboard-Body")).toBeInTheDocument();
+    expect(screen.getByText(words("dashboard.title"))).toBeInTheDocument();
   });
 });

@@ -3,11 +3,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { TreeTableCellContext } from "@inmanta/web-console-feature-lsm/Components/TreeTable/RowReferenceContext";
 import { MockedDependencyProvider, ServiceInstance } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { CellWithCopy } from "./CellWithCopy";
 
 function setup(props) {
@@ -35,7 +35,7 @@ function setup(props) {
 }
 
 describe("CellWithCopy", () => {
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/lsm/v1/service_inventory/test_service/someValue", () => {
       return HttpResponse.json({
         data: {
