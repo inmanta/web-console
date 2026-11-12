@@ -338,6 +338,7 @@ export const LeftSidebar: React.FC = () => {
                           </Label>
                         )}
                         <Button
+                          className="palette-row-add"
                           variant="plain"
                           size="sm"
                           icon={<PlusCircleIcon />}
@@ -444,6 +445,13 @@ const Sidebar = styled.aside`
   .palette-row-grip {
     flex: none;
     color: var(--pf-t--global--icon--color--subtle);
+  }
+
+  // Every row has an add button, so it stays subtle until it is pointed at or focused.
+  .palette-row-add {
+    --pf-v6-c-button--m-plain__icon--Color: var(--pf-t--global--icon--color--subtle);
+    --pf-v6-c-button--hover__icon--Color: var(--pf-t--global--icon--color--regular);
+    --pf-v6-c-button--m-clicked__icon--Color: var(--pf-t--global--icon--color--regular);
   }
 
   .palette-row-label {
