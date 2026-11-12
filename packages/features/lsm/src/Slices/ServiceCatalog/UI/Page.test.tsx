@@ -16,7 +16,16 @@ import {
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
-import { firewall, linuxVm, router, vpn } from "./Mock";
+import {
+  aviVirtualIp,
+  deployment,
+  deploymentTree,
+  dnsRecord,
+  firewall,
+  linuxVm,
+  router,
+  vpn,
+} from "./Mock";
 import { ServiceCatalogPage } from ".";
 
 const [env1] = Environment.filterable.map((env) => env.id);
@@ -117,18 +126,73 @@ describe("ServiceCatalog", () => {
 
     render(component);
 
-    const networkTable = await screen.findByRole("grid", {
+    const networkList = await screen.findByRole("list", {
       name: router.entity_annotations?.web_group,
     });
 
-    expect(within(networkTable).getByTestId(router.name + "-item")).toBeInTheDocument();
-    expect(within(networkTable).getByTestId(vpn.name + "-item")).toBeInTheDocument();
+    expect(within(networkList).getByTestId(router.name + "-item")).toBeInTheDocument();
+    expect(within(networkList).getByTestId(vpn.name + "-item")).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("GIVEN ServiceCatalog WHEN services own other services THEN only the roots are listed until expanded", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog", () => {
+        return HttpResponse.json({ data: [linuxVm, ...deploymentTree] });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    const list = await screen.findByRole("list", { name: words("catalog.title") });
+
+    expect(within(list).getByTestId(deployment.name + "-item")).toBeVisible();
+    expect(within(list).getByTestId(dnsRecord.name + "-item")).not.toBeVisible();
+
+    await userEvent.click(screen.getByRole("button", { name: words("expandAll") }));
+
+    const expandedList = screen.getByRole("list", { name: words("catalog.title") });
+
+    deploymentTree.forEach((service) =>
+      expect(within(expandedList).getByTestId(service.name + "-item")).toBeVisible()
+    );
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    await userEvent.click(screen.getByRole("button", { name: words("collapseAll") }));
+
+    const collapsedList = screen.getByRole("list", { name: words("catalog.title") });
+
+    expect(within(collapsedList).getByTestId(deployment.name + "-item")).toBeVisible();
+    expect(within(collapsedList).getByTestId(dnsRecord.name + "-item")).not.toBeVisible();
+    expect(within(collapsedList).getByTestId(aviVirtualIp.name + "-item")).not.toBeVisible();
+  });
+
+  test("GIVEN ServiceCatalog WHEN no service owns another THEN there is no Expand all", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog", () => {
+        return HttpResponse.json({ data: [linuxVm, vpn] });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByTestId(linuxVm.name + "-item");
+
+    expect(screen.queryByRole("button", { name: words("expandAll") })).not.toBeInTheDocument();
   });
 
   test("GIVEN ServiceCatalog WHEN service is deleted THEN UI is updated", async () => {
@@ -169,6 +233,32 @@ describe("ServiceCatalog", () => {
       expect(results).toHaveNoViolations();
     });
   });
+
+  test.each`
+    case                   | service                                                                  | serviceTitle
+    ${"with web_title"}    | ${{ ...Service.a, entity_annotations: Service.EntityAnnotations.valid }} | ${Service.EntityAnnotations.valid.web_title}
+    ${"without web_title"} | ${Service.a}                                                             | ${Service.a.name}
+  `(
+    "GIVEN ServiceCatalog WHEN deleting a service $case THEN the confirmation names it by $serviceTitle",
+    async ({ service, serviceTitle }) => {
+      server.use(
+        http.get("/lsm/v1/service_catalog", () => {
+          return HttpResponse.json({ data: [service] });
+        })
+      );
+
+      const { component } = setup();
+
+      render(component);
+
+      await userEvent.click(await screen.findByLabelText("Actions-dropdown"));
+      await userEvent.click(screen.getByLabelText(Service.a.name + "-deleteButton"));
+
+      expect(
+        await screen.findByText(words("catalog.delete.title")(serviceTitle), { exact: false })
+      ).toBeVisible();
+    }
+  );
 
   test("GIVEN ServiceCatalog WHEN update fo catalog is triggered successfully THEN UI is updated", async () => {
     const data: ServiceModel[] = [];

@@ -33,6 +33,16 @@ export const coreMessages = {
     "The graphql suggested values annotation is malformed. It requires a 'query' with a 'root' and a 'value' projection.",
   "inventory.form.suggestions.unsupportedFieldPath": (paths: string) =>
     `Unsupported jsonpath in a cascading field reference: ${paths}. Only navigational paths (member access, array index, equality-filter selection) are supported.`,
+  "inventory.form.suggestions.missingDependency": (field: string, reference: string) =>
+    `The suggested values for '${field}' reference '${reference}', which is not a field in scope.`,
+  "inventory.form.suggestions.dependencyCycle": (cycle: string) =>
+    `The suggested values form a dependency cycle: ${cycle}. Dependencies between fields must be acyclic.`,
+  "inventory.form.tabs.invalidCatalog":
+    "The web_tabs entity annotation is malformed. Every tab requires a unique string 'key' and a string 'label'.",
+  "inventory.form.tabs.defaultRequired": (count: number) =>
+    `The web_tabs entity annotation must mark exactly one tab as default, but ${count} tabs are marked.`,
+  "inventory.form.tabs.unknownKey": (fieldName: string, tabKey: string) =>
+    `Field "${fieldName}" is assigned to tab "${tabKey}", which is not defined in the web_tabs entity annotation.`,
 
   /**
    * Login

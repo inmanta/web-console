@@ -1,3 +1,7 @@
+// Loads the words of the shared components into WordsRegistry: this package uses them, and with
+// project references a package only sees the declaration merging of the files it imports.
+import type {} from "@inmanta/web-console-ui/messages";
+
 /**
  * The English messages of the shell: the app frame, the header, the sidebar, login and the pages of the shell.
  */
@@ -9,9 +13,15 @@ export const shellMessages = {
   "notFound.home": "Go home",
 
   /**
+   * Features loaded at runtime
+   */
+  "runtimeFeatures.versionMismatch.title": (id: string) => `${id} version mismatch`,
+  "runtimeFeatures.versionMismatch.message": (id: string, version: string, appVersion: string) =>
+    `The ${id} is version ${version}, but the web console is version ${appVersion}, so the ${id} isn't available. Install the ${id} of version ${appVersion}.`,
+
+  /**
    * Dashboard
    */
-  "dashboard.logout": "Logout",
   "dashboard.documentation.tooltip": "Documentation",
   "dashboard.apiActions.tooltip": "Developer Tools",
   "dashboard.apiActions.restApi": "REST API / Swagger",

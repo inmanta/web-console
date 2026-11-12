@@ -133,7 +133,8 @@ if (isIso) {
         timeout: 120000,
       }).should("to.be.visible");
 
-      // Step 3: Open l3out inventory and start composer flow.
+      // Step 3: Open l3out inventory (an owned service, so expand the owners first) and start composer flow.
+      cy.get("button").contains("Expand all").click();
       cy.get("#l3out").contains("Inventory").click();
 
       cy.get('[aria-label="AddInstanceToggle"]').click();
@@ -231,6 +232,7 @@ if (isIso) {
       cy.visit("/console/");
       selectEnvironment(PXSDC_ENV_NAME);
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+      cy.get("button").contains("Expand all").click();
       cy.get("#l3out").contains("Inventory").click();
 
       cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 60000 }).should("contain", "pxs-l3out");
@@ -311,6 +313,7 @@ if (isIso) {
         .should("have.length", 1)
         .and("have.text", "1");
 
+      cy.get("button").contains("Expand all").click();
       cy.get("#l3out").should("contain", "No instances");
       cy.get("#network").should("contain", "No instances");
       cy.get("#virtualmachine").should("contain", "No instances");

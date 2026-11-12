@@ -1,4 +1,7 @@
 import { ReactNode } from "react";
+// Loads the core layer's own keys into WordsRegistry for every package that uses words(). With
+// project references, a package only sees the declaration merging of the files it imports.
+import type {} from "../messages";
 
 /**
  * A message: a string, or a function that builds one from its arguments. A function may return
@@ -95,7 +98,7 @@ export const setLocale = (locale: string): void => {
  * Returns the message of a key, in the active language when it has one, in English otherwise.
  *
  * Don't call it while a module loads, e.g. to build a constant: the messages are only registered
- * once the app starts, and features loaded as a plugin even later.
+ * once the app starts, and features loaded at runtime even later.
  *
  * @param key - the key of the message
  * @returns the message: a string, or a function that builds one. When no message is registered for

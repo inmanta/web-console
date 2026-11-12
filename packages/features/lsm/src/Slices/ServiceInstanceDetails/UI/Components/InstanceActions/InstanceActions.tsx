@@ -10,7 +10,7 @@ import {
 } from "@patternfly/react-core";
 import { CopyIcon, ToolsIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { words } from "@inmanta/web-console-core";
+import { getServiceTitle, words } from "@inmanta/web-console-core";
 import { DependencyContext, useVisibleLinkActions } from "@inmanta/web-console-core/Dependency";
 import { InstanceDetailsContext } from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Core/Context";
 import {
@@ -45,6 +45,7 @@ export const InstanceActions: React.FC = () => {
     instance.deleted || isTransferDisabled(instance, "on_update", serviceModelQuery.data);
   const deleteTransfer = getTransferForType(instance, "on_delete", serviceModelQuery.data);
   const deleteDisabled = instance.deleted || deleteTransfer === undefined;
+  const serviceTitle = getServiceTitle(instance.service_entity, serviceModelQuery.data);
 
   const actions = useVisibleLinkActions("instance.actions");
   const context = { service: instance.service_entity, instance: instance.id, editDisabled };
@@ -92,12 +93,14 @@ export const InstanceActions: React.FC = () => {
           isOpen={isExpertDropdownOpen}
           onOpenChange={(isOpen: boolean) => !blockedInterface && setIsExpertDropdownOpen(isOpen)}
           toggle={expertToggle}
+          isScrollable
         >
           <DropdownList>
             <DestroyAction
               instance_display_identity={instance.service_identity_attribute_value ?? instance.id}
               instance_id={instance.id}
               service_entity={instance.service_entity}
+              serviceTitle={serviceTitle}
               version={instance.version}
               collapseToggle={() => setIsExpertDropdownOpen(false)}
               setInterfaceBlocked={setBlockedInterface}
@@ -166,6 +169,7 @@ export const InstanceActions: React.FC = () => {
           <DeleteAction
             isDisabled={deleteDisabled}
             service_entity={instance.service_entity}
+            serviceTitle={serviceTitle}
             instance_display_identity={instance.service_identity_attribute_value ?? instance.id}
             instance_id={instance.id}
             version={instance.version}

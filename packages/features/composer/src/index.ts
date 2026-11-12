@@ -1,4 +1,6 @@
-import { EyeIcon, PlusIcon, ToolsIcon } from "@patternfly/react-icons";
+import { EyeIcon } from "@patternfly/react-icons/dist/esm/icons/eye-icon";
+import { PlusIcon } from "@patternfly/react-icons/dist/esm/icons/plus-icon";
+import { ToolsIcon } from "@patternfly/react-icons/dist/esm/icons/tools-icon";
 import {
   FeatureModule,
   InstanceLinkContext,

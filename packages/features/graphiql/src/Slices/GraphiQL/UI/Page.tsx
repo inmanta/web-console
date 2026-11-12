@@ -1,18 +1,19 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 import { Fetcher } from "@graphiql/toolkit";
-import { useQueryClient } from "@tanstack/react-query";
-import { GraphiQL } from "graphiql";
+import { GraphiQL, HISTORY_PLUGIN } from "graphiql";
 import graphiqlCSS from "graphiql/style.css?inline";
 import styled, { createGlobalStyle } from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import {
   useGetGraphQLSchema,
   usePostGraphQL,
-  graphQLSchemaKey,
 } from "@inmanta/web-console-core/Queries/Slices/GraphiQL";
 import { useTheme } from "@inmanta/web-console-ui/Components/DarkmodeOption";
 import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
+import { registerGraphQLWorker } from "./graphqlWorker";
+
+registerGraphQLWorker();
 
 // ?inline tells Vite to give us the CSS as a plain string instead of injecting
 // it as a global stylesheet. We inject it ourselves (wrapped in @layer so its
@@ -40,11 +41,6 @@ const DEFAULT_QUERY = `{
  * Theme is kept in sync with the app's dark/light mode by observing class
  * changes on <html> (tracked by useTheme) and forwarding the value to
  * GraphiQL's forcedTheme prop.
- *
- * The sidebar's "Re-fetch schema" button is intercepted via event delegation
- * because GraphiQL's internal introspect() is a no-op when a schema prop is
- * provided. Clicking that button instead invalidates the React Query cache,
- * triggering a fresh GET to /api/v2/graphql/schema.
  */
 export const Page: React.FC = () => {
   const { search } = useLocation();
@@ -69,7 +65,6 @@ export const Page: React.FC = () => {
     return () => style.remove();
   }, []);
 
-  const queryClient = useQueryClient();
   const { data: schema, isPending: isSchemaPending } = useGetGraphQLSchema(env);
   const { mutateAsync } = usePostGraphQL(env);
 
@@ -80,28 +75,10 @@ export const Page: React.FC = () => {
     [mutateAsync]
   );
 
-  // GraphiQL's internal introspect() is a no-op when a schema prop is provided
-  // (shouldIntrospect is set to false). Intercept the sidebar button click via
-  // event delegation and invalidate the React Query cache instead.
-  // NOTE: The aria-label selector below is an internal implementation detail of
-  // graphiql@5.x. If a future upgrade silently breaks the Re-fetch button,
-  // verify that GraphiQL's ToolbarButton aria-label hasn't changed.
-  const handleRefetchSchema = useCallback(
-    (e: React.MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('[aria-label^="Re-fetch GraphQL schema"]')) {
-        queryClient.invalidateQueries({
-          queryKey: graphQLSchemaKey.single("schema", [env ?? ""]),
-        });
-      }
-    },
-    [queryClient, env]
-  );
-
   return (
     <PageContainer pageTitle={words("graphiql.title")} padding={{ default: "noPadding" }}>
       <GraphiQLGlobalStyle />
-      <EditorContainer onClick={handleRefetchSchema}>
+      <EditorContainer>
         <GraphiQL
           fetcher={fetcher}
           schema={isSchemaPending ? null : (schema ?? null)}
@@ -109,6 +86,10 @@ export const Page: React.FC = () => {
           defaultEditorToolsVisibility="headers"
           isHeadersEditorEnabled
           defaultQuery={DEFAULT_QUERY}
+          // Only the query history, as before: GraphiQL 6 also turns on the query builder and the
+          // saved-operation collections by default. Collections live in localStorage, shared by every
+          // environment in the browser. Whether we want them is evaluated separately.
+          plugins={[HISTORY_PLUGIN]}
         />
       </EditorContainer>
     </PageContainer>

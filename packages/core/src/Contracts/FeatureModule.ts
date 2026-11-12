@@ -16,7 +16,7 @@ export interface FeatureModule {
 
   /**
    * The version the feature was built with. Checked against the host when the feature is loaded
-   * as a runtime plugin.
+   * at runtime (see `RuntimeFeatureEntry`).
    */
   version: string;
 

@@ -83,6 +83,30 @@ describe("ServiceInventory", () => {
     ).toBeInTheDocument();
   });
 
+  test.each`
+    case                   | service                                                                  | serviceTitle
+    ${"with web_title"}    | ${{ ...Service.a, entity_annotations: Service.EntityAnnotations.valid }} | ${Service.EntityAnnotations.valid.web_title}
+    ${"without web_title"} | ${Service.a}                                                             | ${Service.a.name}
+  `(
+    "GIVEN ServiceInventory $case WHEN there are no instances THEN the title and empty message name the service by $serviceTitle",
+    async ({ service, serviceTitle }) => {
+      server.use(
+        http.get("/lsm/v1/service_inventory/service_name_a", () => {
+          return HttpResponse.json({ data: [], metadata: Pagination.metadata });
+        })
+      );
+
+      const { component } = setup(service);
+
+      render(component);
+
+      expect(await screen.findByText(words("inventory.empty.message")(serviceTitle))).toBeVisible();
+      expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+        words("inventory.title")(serviceTitle)
+      );
+    }
+  );
+
   test("ServiceInventory shows error with retry", async () => {
     let queryCount = 0;
 
@@ -192,7 +216,7 @@ describe("ServiceInventory", () => {
     expect(await screen.findByText(String(summary.total), { selector: "b" })).toBeVisible();
     expect(
       screen.getByRole("button", {
-        name: `${words("catalog.summary.noLabel")}: ${summary.by_label.no_label}`,
+        name: `${words("catalog.summary.label.no_label")}: ${summary.by_label.no_label}`,
       })
     ).toBeVisible();
     expect(screen.getByText(description)).toBeVisible();

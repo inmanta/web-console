@@ -5,32 +5,66 @@ import {
   words,
 } from "@inmanta/web-console-core";
 import {
+  getStateCounts,
+  StateCount,
+  summaryLabels,
+  summaryLabelSeverity,
+} from "@inmanta/web-console-feature-lsm/Components/InstanceSummaryLabels";
+import {
   CatalogSection,
   CatalogService,
+  LabelCount,
+  OwnedServiceStateCount,
   ownerServiceFallbackIconName,
   serviceFallbackIconName,
 } from "./types";
 
 /**
- * Splits the services into catalog sections by `web_group`, which only applies to root
- * services. Group sections are ordered by the lowest `web_order` of their services, then by
- * name, and the ungrouped services come last. Services within a section are ordered by
- * `web_order`, then by title.
+ * Nests the owned services under their owner and splits the root services into catalog
+ * sections by `web_group`, which only applies to roots. A service whose owner is not in the
+ * catalog counts as a root, so it is never lost. Group sections are ordered by the lowest
+ * `web_order` of their services, then by name, and the ungrouped services come last. Services
+ * within a section and owned services under an owner are ordered by `web_order`, then by title.
  *
  * @example
- * createCatalogSections([vpn (web_group "Network"), router (no group)])
- * // [{ kind: "Group", name: "Network", services: [vpn] }, { kind: "Ungrouped", services: [router] }]
+ * createCatalogSections([vpn (web_group "Network"), vpn_tunnel (owner vpn), router (no group)])
+ * // [{ kind: "Group", name: "Network", services: [vpn (ownedServices: [vpn_tunnel])] }, { kind: "Ungrouped", services: [router] }]
  */
 export const createCatalogSections = (serviceModels: ServiceModel[]): CatalogSection[] => {
+  const servicesByName = new Map<string, CatalogService>();
+
+  for (const serviceModel of serviceModels) {
+    servicesByName.set(serviceModel.name, {
+      serviceModel,
+      resolvedAnnotations: resolveEntityAnnotations(serviceModel),
+      ownedServices: [],
+    });
+  }
+
+  const rootServices: CatalogService[] = [];
+
+  for (const service of servicesByName.values()) {
+    const owner =
+      service.serviceModel.owner === null
+        ? undefined
+        : servicesByName.get(service.serviceModel.owner);
+
+    if (owner === undefined) {
+      rootServices.push(service);
+    } else {
+      owner.ownedServices.push(service);
+    }
+  }
+
+  for (const service of servicesByName.values()) {
+    sortCatalogServices(service.ownedServices);
+  }
+
   const servicesByGroup = new Map<string, CatalogService[]>();
   const ungroupedServices: CatalogService[] = [];
 
-  for (const serviceModel of serviceModels) {
-    const service: CatalogService = {
-      serviceModel,
-      resolvedAnnotations: resolveEntityAnnotations(serviceModel),
-    };
-    const group = serviceModel.owner === null ? service.resolvedAnnotations.web_group : undefined;
+  for (const service of rootServices) {
+    const group = service.resolvedAnnotations.web_group;
 
     if (group === undefined) {
       ungroupedServices.push(service);
@@ -67,6 +101,23 @@ export const getSectionTitle = (section: CatalogSection): string =>
   section.kind === "Group" ? section.name : words("catalog.section.ungrouped");
 
 /**
+ * Gets every service in the sections, the owned services at any depth included, each owner
+ * before the services it owns.
+ */
+export const getAllCatalogServices = (sections: CatalogSection[]): CatalogService[] => {
+  const allServices: CatalogService[] = [];
+
+  const addWithOwnedServices = (service: CatalogService): void => {
+    allServices.push(service);
+    service.ownedServices.forEach(addWithOwnedServices);
+  };
+
+  sections.forEach((section) => section.services.forEach(addWithOwnedServices));
+
+  return allServices;
+};
+
+/**
  * Gets the icon name of a service: its `web_icon`, or a fallback that shows whether the service
  * owns other services.
  */
@@ -97,6 +148,69 @@ export const getSectionInstanceCount = (section: CatalogSection): number =>
     (count, { serviceModel }) => count + Number(serviceModel.instance_summary?.total ?? 0),
     0
   );
+
+/**
+ * Gets the instance counts of the services a service owns, at any depth, in the states that are
+ * not labeled "success". The counts are ordered by label, most severe first, then in catalog
+ * order of the owned services.
+ *
+ * @example
+ * getOwnedServicesStateCounts(deployment (owns dns_record: 2 up, 1 creating; virtual_ip: 1 failed))
+ * // [{ ownedServiceTitle: "Virtual IP", stateName: "failed", label: "danger", count: 1, ... },
+ * //  { ownedServiceTitle: "DNS record", stateName: "creating", label: "info", count: 1, ... }]
+ */
+export const getOwnedServicesStateCounts = (service: CatalogService): OwnedServiceStateCount[] => {
+  const ownedServicesStateCounts: OwnedServiceStateCount[] = [];
+
+  const addStateCounts = ({ serviceModel, resolvedAnnotations, ownedServices }: CatalogService) => {
+    if (serviceModel.instance_summary) {
+      for (const stateCount of getStateCounts(
+        serviceModel.instance_summary,
+        serviceModel.lifecycle.states
+      )) {
+        if (stateCount.label !== "success") {
+          ownedServicesStateCounts.push({
+            ...stateCount,
+            ownedServiceName: serviceModel.name,
+            ownedServiceTitle: resolvedAnnotations.web_title,
+          });
+        }
+      }
+    }
+
+    ownedServices.forEach(addStateCounts);
+  };
+
+  service.ownedServices.forEach(addStateCounts);
+
+  return ownedServicesStateCounts.sort(
+    (a, b) => summaryLabelSeverity[a.label] - summaryLabelSeverity[b.label]
+  );
+};
+
+/**
+ * Gets the total instance count per label over the given state counts, most severe first,
+ * leaving out labels without any.
+ *
+ * @example
+ * getLabelCounts([{ label: "danger", count: 1, ... }, { label: "info", count: 2, ... }, { label: "danger", count: 3, ... }])
+ * // [{ label: "danger", count: 4 }, { label: "info", count: 2 }]
+ */
+export const getLabelCounts = (stateCounts: StateCount[]): LabelCount[] => {
+  const labelCounts: LabelCount[] = [];
+
+  for (const label of summaryLabels) {
+    const count = stateCounts
+      .filter((stateCount) => stateCount.label === label)
+      .reduce((total, stateCount) => total + stateCount.count, 0);
+
+    if (count > 0) {
+      labelCounts.push({ label, count });
+    }
+  }
+
+  return labelCounts;
+};
 
 /**
  * Sorts catalog services in place by `web_order`, then by title, and returns them.

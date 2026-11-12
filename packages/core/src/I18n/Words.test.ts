@@ -11,39 +11,37 @@ describe("words", () => {
   it("returns the registered English message", async () => {
     const { registerMessages, words } = await loadRegistry();
 
-    registerMessages({ "instanceComposer.editButton": "Edit in Composer" });
+    registerMessages({ "login.title": "Log in to your account" });
 
-    expect(words("instanceComposer.editButton")).toBe("Edit in Composer");
+    expect(words("login.title")).toBe("Log in to your account");
   });
 
   it("logs an error and returns the key for a key without a registered message", async () => {
     const { words } = await loadRegistry();
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    expect(words("instanceComposer.editButton")).toBe("instanceComposer.editButton");
-    expect(consoleError).toHaveBeenCalledWith(
-      'No message is registered for "instanceComposer.editButton".'
-    );
+    expect(words("login.title")).toBe("login.title");
+    expect(consoleError).toHaveBeenCalledWith('No message is registered for "login.title".');
   });
 
   it("returns the message of the active language, and English for the keys it lacks", async () => {
     const { registerMessages, registerLocale, setLocale, words } = await loadRegistry();
 
     registerMessages({
-      "instanceComposer.editButton": "Edit in Composer",
-      "instanceComposer.showButton": "Show in Composer",
+      "login.title": "Log in to your account",
+      "login.fallback.local": "Sign in with a local account",
     });
     registerLocale({
       locale: "nl",
       label: "Nederlands",
-      messages: { "instanceComposer.editButton": "Bewerken in Composer" },
+      messages: { "login.title": "Meld je aan bij je account" },
     });
 
-    expect(words("instanceComposer.editButton")).toBe("Edit in Composer");
+    expect(words("login.title")).toBe("Log in to your account");
 
     setLocale("nl");
 
-    expect(words("instanceComposer.editButton")).toBe("Bewerken in Composer");
-    expect(words("instanceComposer.showButton")).toBe("Show in Composer");
+    expect(words("login.title")).toBe("Meld je aan bij je account");
+    expect(words("login.fallback.local")).toBe("Sign in with a local account");
   });
 });

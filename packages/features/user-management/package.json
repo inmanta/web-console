@@ -1,0 +1,42 @@
+{
+  "name": "@inmanta/web-console-feature-user-management",
+  "private": true,
+  "type": "module",
+  "inmanta": {
+    "edition": "oss"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "types": [
+        "./src/*.ts",
+        "./src/*.tsx",
+        "./src/*/index.ts",
+        "./src/*/index.tsx"
+      ],
+      "default": "./src/*"
+    }
+  },
+  "dependencies": {
+    "@inmanta/web-console-core": "workspace:^",
+    "@inmanta/web-console-ui": "workspace:^",
+    "@patternfly/react-core": "^6.7.0",
+    "@patternfly/react-icons": "^6.7.0",
+    "@patternfly/react-table": "^6.7.0",
+    "@tanstack/react-query": "^5.107.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@inmanta/web-console-test-utils": "workspace:^",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/jest-axe": "^3.5.9",
+    "jest-axe": "^11.0.0",
+    "msw": "^3.0.4"
+  }
+}

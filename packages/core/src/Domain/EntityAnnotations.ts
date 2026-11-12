@@ -33,6 +33,13 @@ export const resolveEntityAnnotations = (serviceModel: ServiceModel): ResolvedEn
 };
 
 /**
+ * Returns the `web_title` of a service, or its name when it has none or while the service model
+ * is not available (loading, failed or missing from the catalog).
+ */
+export const getServiceTitle = (serviceName: string, serviceModel?: ServiceModel): string =>
+  serviceModel ? resolveEntityAnnotations(serviceModel).web_title : serviceName;
+
+/**
  * Comparator that sorts services by ascending `web_order`, services without an order
  * last, and falls back to the title when the order is equal or missing.
  */

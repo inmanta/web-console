@@ -1,0 +1,43 @@
+{
+  "name": "@inmanta/web-console-app",
+  "private": true,
+  "type": "module",
+  "inmanta": {
+    "edition": "iso"
+  },
+  "scripts": {
+    "start": "vite",
+    "build": "yarn workspace @inmanta/web-console-feature-composer build && vite build",
+    "build:ci": "yarn workspace @inmanta/web-console-feature-composer build && NODE_OPTIONS=--max-old-space-size=6144 vite build",
+    "build:bundle-profile": "yarn workspace @inmanta/web-console-feature-composer build && vite build --mode analyze"
+  },
+  "dependencies": {
+    "@inmanta/web-console-core": "workspace:^",
+    "@inmanta/web-console-feature-composer": "workspace:^",
+    "@inmanta/web-console-feature-environment": "workspace:^",
+    "@inmanta/web-console-feature-graphiql": "workspace:^",
+    "@inmanta/web-console-feature-lsm": "workspace:^",
+    "@inmanta/web-console-feature-orchestration-engine": "workspace:^",
+    "@inmanta/web-console-feature-resource-manager": "workspace:^",
+    "@inmanta/web-console-feature-user-management": "workspace:^",
+    "@inmanta/web-console-shell": "workspace:^",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@inmanta/web-console-test-utils": "workspace:^",
+    "@module-federation/vite": "1.23.11",
+    "@patternfly/react-core": "^6.7.0",
+    "@tanstack/react-query": "^5.107.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/jest-axe": "^3.5.9",
+    "@vitejs/plugin-react": "^6.2.1",
+    "jest-axe": "^11.0.0",
+    "msw": "^3.0.4",
+    "react-router": "^8.5.1",
+    "vite": "^8.3.6",
+    "vite-plugin-mkcert": "^2.1.0"
+  }
+}

@@ -55,7 +55,7 @@ const e: AttributeModel = {
   validation_type: "enum",
 };
 
-export const list = [a, b, c, d, e];
+export const list: AttributeModel[] = [a, b, c, d, e];
 
 export const nestedEditable: AttributeModel[] = [
   {
@@ -248,7 +248,7 @@ const editableOptionalTextareaString: AttributeModel = {
   modifier: "rw+",
 };
 
-export const attributesList = [
+export const attributesList: AttributeModel[] = [
   string,
   editableString,
   optionalString,

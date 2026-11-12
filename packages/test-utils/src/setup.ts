@@ -88,8 +88,8 @@ const codeEditorMock = vi.hoisted(() => ({
   },
 }));
 
-// Give the Monaco loader the mocked monaco-editor, like apps/web-console/src/index.tsx gives it the
-// bundled copy, so editors load without fetching the loader script from the CDN.
+// Give the Monaco loader the mocked monaco-editor, like the shell's Monaco setup (monaco.ts) gives
+// it the bundled copy, so editors load without fetching the loader script from the CDN.
 loader.config({ monaco });
 
 // Fix timezone to Europe/Brussels for all tests so date-related assertions are deterministic.
@@ -109,13 +109,6 @@ Object.defineProperty(window, "matchMedia", {
     dispatchEvent: vi.fn(),
   })),
 });
-
-// Requests that no msw handler answers, such as query retries after a test file's server closed,
-// would reach a real server on localhost. Answer them with a network error instead.
-window.happyDOM.settings.fetch.interceptor = {
-  beforeAsyncRequest: async ({ request, window }) =>
-    request.url.startsWith("http") ? window.Response.error() : undefined,
-};
 
 // happy-dom's default stylesheet lacks two browser rules: spans get no display instead of inline,
 // and [hidden] elements stay displayed. Accessible names and axe checks rely on both.

@@ -13,7 +13,9 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@patternfly/react-core";
-import { MinusIcon, PlusIcon, SitemapIcon } from "@patternfly/react-icons";
+import { MinusIcon } from "@patternfly/react-icons/dist/esm/icons/minus-icon";
+import { PlusIcon } from "@patternfly/react-icons/dist/esm/icons/plus-icon";
+import { SitemapIcon } from "@patternfly/react-icons/dist/esm/icons/sitemap-icon";
 import { useReactFlow, useViewport } from "@xyflow/react";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";

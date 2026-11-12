@@ -1,135 +1,53 @@
 {
-  "compilerOptions": {
-    "module": "ESNext",
-    "target": "ES2020",
-    "lib": [
-      "ES2020",
-      "dom"
-    ],
-    "sourceMap": true,
-    "jsx": "react-jsx",
-    "moduleResolution": "bundler",
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": false,
-    "allowJs": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "rootDir": ".",
-    "outDir": "dist",
-    "types": [
-      "vitest/globals",
-      "@testing-library/jest-dom",
-      "node"
-    ],
-    "typeRoots": [
-      "./node_modules/@types",
-      "./node_modules",
-      "./src"
-    ],
-    "paths": {
-      "@assets/*": [
-        "./node_modules/@patternfly/react-core/dist/styles/assets/*"
-      ],
-      "@/*": [
-        "./src/*"
-      ],
-      "@S/*": [
-        "./src/Slices/*"
-      ],
-      "@inmanta/web-console-core": [
-        "./packages/core/src"
-      ],
-      "@inmanta/web-console-core/*": [
-        "./packages/core/src/*"
-      ],
-      "@inmanta/web-console-ui/*": [
-        "./packages/ui/src/*"
-      ],
-      "@inmanta/web-console-shell": [
-        "./packages/shell/src"
-      ],
-      "@inmanta/web-console-shell/*": [
-        "./packages/shell/src/*"
-      ],
-      "@inmanta/web-console-feature-composer": [
-        "./packages/features/composer/src"
-      ],
-      "@inmanta/web-console-feature-composer/*": [
-        "./packages/features/composer/src/*"
-      ],
-      "@inmanta/web-console-feature-environment": [
-        "./packages/features/environment/src"
-      ],
-      "@inmanta/web-console-feature-environment/*": [
-        "./packages/features/environment/src/*"
-      ],
-      "@inmanta/web-console-feature-graphiql": [
-        "./packages/features/graphiql/src"
-      ],
-      "@inmanta/web-console-feature-graphiql/*": [
-        "./packages/features/graphiql/src/*"
-      ],
-      "@inmanta/web-console-feature-lsm": [
-        "./packages/features/lsm/src"
-      ],
-      "@inmanta/web-console-feature-lsm/*": [
-        "./packages/features/lsm/src/*"
-      ],
-      "@inmanta/web-console-feature-orchestration-engine": [
-        "./packages/features/orchestration-engine/src"
-      ],
-      "@inmanta/web-console-feature-orchestration-engine/*": [
-        "./packages/features/orchestration-engine/src/*"
-      ],
-      "@inmanta/web-console-feature-resource-manager": [
-        "./packages/features/resource-manager/src"
-      ],
-      "@inmanta/web-console-feature-resource-manager/*": [
-        "./packages/features/resource-manager/src/*"
-      ],
-      "@inmanta/web-console-feature-user-management": [
-        "./packages/features/user-management/src"
-      ],
-      "@inmanta/web-console-feature-user-management/*": [
-        "./packages/features/user-management/src/*"
-      ],
-      "@inmanta/web-console-test-utils": [
-        "./packages/test-utils/src"
-      ],
-      "@inmanta/web-console-test-utils/*": [
-        "./packages/test-utils/src/*"
-      ],
-      "@images/*": [
-        "./public/images/*"
-      ]
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/core/tsconfig.src.json"
+    },
+    {
+      "path": "./packages/core/tsconfig.test.json"
+    },
+    {
+      "path": "./packages/ui/tsconfig.src.json"
+    },
+    {
+      "path": "./packages/ui/tsconfig.test.json"
+    },
+    {
+      "path": "./packages/shell"
+    },
+    {
+      "path": "./packages/test-utils"
+    },
+    {
+      "path": "./packages/features/composer"
+    },
+    {
+      "path": "./packages/features/environment"
+    },
+    {
+      "path": "./packages/features/graphiql"
+    },
+    {
+      "path": "./packages/features/lsm"
+    },
+    {
+      "path": "./packages/features/orchestration-engine"
+    },
+    {
+      "path": "./packages/features/resource-manager"
+    },
+    {
+      "path": "./packages/features/user-management"
+    },
+    {
+      "path": "./apps/oss"
+    },
+    {
+      "path": "./apps/web-console"
+    },
+    {
+      "path": "./tsconfig.node.json"
     }
-  },
-  "include": [
-    "src/vite-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.jsx",
-    "cypress/support/e2e.js",
-    "./packages/test-utils/src/setup.ts",
-    "./packages/test-utils/src/vitest.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "ESNext",
-      "target": "ES2020",
-      "esModuleInterop": true,
-      "types": [
-        "vitest"
-      ]
-    }
-  }
+  ]
 }

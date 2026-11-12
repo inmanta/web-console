@@ -1,0 +1,37 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../.tsbuild/oss"
+  },
+  "include": [
+    "src",
+    "../../src/*.d.ts",
+    "../../packages/test-utils/src/vitest.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../packages/features/environment"
+    },
+    {
+      "path": "../../packages/features/graphiql"
+    },
+    {
+      "path": "../../packages/features/orchestration-engine"
+    },
+    {
+      "path": "../../packages/features/resource-manager"
+    },
+    {
+      "path": "../../packages/features/user-management"
+    },
+    {
+      "path": "../../packages/shell"
+    },
+    {
+      "path": "../../packages/core/tsconfig.src.json"
+    },
+    {
+      "path": "../../packages/test-utils"
+    }
+  ]
+}

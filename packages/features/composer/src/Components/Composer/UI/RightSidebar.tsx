@@ -13,7 +13,7 @@ import {
   Label,
   Title,
 } from "@patternfly/react-core";
-import { CubesIcon } from "@patternfly/react-icons";
+import { CubesIcon } from "@patternfly/react-icons/dist/esm/icons/cubes-icon";
 import { useReactFlow } from "@xyflow/react";
 import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";

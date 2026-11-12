@@ -25,10 +25,20 @@ const testFiles = [
   "{src,packages,apps}/**/Spec/**/*.{ts,tsx}",
 ];
 
+// The files that may import a workspace's devDependencies: the test files above, the test setup
+// and the Vite config of the apps and the features.
+const devDependencyFiles = [
+  ...testFiles,
+  "apps/web-console/src/test-setup.ts",
+  "apps/*/vite.config.ts",
+  "packages/features/*/vite.config.ts",
+  "packages/features/*/vite.js",
+];
+
 export default [
   {
     // Ignore files/folders
-    ignores: ["**/dist", "**/.yarn"],
+    ignores: ["**/dist", "**/.yarn", ".tsbuild"],
   },
 
   // Apply recommended configurations
@@ -64,13 +74,24 @@ export default [
         "@typescript-eslint/parser": [".ts", ".tsx"],
       },
 
+      // The shared images in public/images, not a package: no-extraneous-dependencies skips them.
+      "import/internal-regex": "^@images/",
+
+      // The composer's separate build, which the web-console app loads at runtime: the build's
+      // import map provides it, and the dev server and tests resolve it to the composer's entry.
+      "import/core-modules": ["composer/feature"],
+
       "import/resolver": {
         typescript: {
           alwaysTryTypes: true,
+          // Without "types": the workspace packages list their TypeScript fallbacks under
+          // "types", and the resolver only tries the first one. "default" ("./src/*") lets
+          // it find the file or the folder's index itself.
+          conditionNames: ["import", "require", "node", "browser", "default"],
         },
         node: {
           extensions: [".js", ".jsx", ".ts", ".tsx"],
-          moduleDirectory: ["node_modules", "src/"],
+          moduleDirectory: ["node_modules"],
         },
       },
     },
@@ -118,11 +139,11 @@ export default [
           ],
           pathGroups: [
             {
-              pattern: "@/**",
+              pattern: "@inmanta/web-console-*{,/**}",
               group: "internal",
             },
             {
-              pattern: "@inmanta/web-console-*{,/**}",
+              pattern: "@images/**",
               group: "internal",
             },
             {
@@ -208,10 +229,13 @@ export default [
     },
   },
   {
-    // Only the composer draws diagrams, so the canvas libraries stay out of the other features' bundles.
-    // This rule only sees static imports; the workspaces step (#7461) also catches import() and vi.mock.
+    // Only the composer draws diagrams, so the canvas libraries stay out of the other features'
+    // bundles, and only the GraphiQL feature depends on the GraphiQL packages. This rule gives the
+    // clearest message for a static import; the Yarn constraints (yarn.config.cjs) and
+    // import/no-extraneous-dependencies below also catch import() and a dependency in the wrong
+    // package.json.
     files: ["{src,packages,apps}/**/*.ts", "{src,packages,apps}/**/*.tsx"],
-    ignores: ["packages/features/composer/**"],
+    ignores: ["packages/features/composer/**", "packages/features/graphiql/**"],
     rules: {
       "no-restricted-imports": [
         "error",
@@ -222,7 +246,51 @@ export default [
               message:
                 "Only the composer feature (packages/features/composer) imports the canvas libraries.",
             },
+            {
+              group: [
+                "graphiql",
+                "graphiql/*",
+                "@graphiql/*",
+                "monaco-graphql",
+                "monaco-graphql/*",
+              ],
+              message:
+                "Only the GraphiQL feature (packages/features/graphiql) imports the GraphiQL packages.",
+            },
           ],
+        },
+      ],
+    },
+  },
+  {
+    // Every workspace declares the packages it imports in its own package.json, so that
+    // installing one app only installs what its packages use. Tests and test helpers may use
+    // devDependencies. includeTypes: a type-only import needs the package installed too.
+    files: ["{packages,apps}/**/*.{ts,tsx,js}"],
+    rules: {
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          devDependencies: devDependencyFiles,
+          peerDependencies: false,
+          optionalDependencies: false,
+          includeTypes: true,
+        },
+      ],
+    },
+  },
+  {
+    // The test helpers are what other packages' tests import, so what they use are dependencies
+    // of test-utils. Only its own tests may use its devDependencies.
+    files: ["packages/test-utils/**/*.{ts,tsx,js}"],
+    rules: {
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          devDependencies: ["packages/test-utils/**/*.test.{ts,tsx}"],
+          peerDependencies: false,
+          optionalDependencies: false,
+          includeTypes: true,
         },
       ],
     },

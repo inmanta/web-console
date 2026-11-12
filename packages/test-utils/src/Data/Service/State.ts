@@ -58,6 +58,19 @@ export const withAnnotations: StateModel = {
   },
 };
 
+/**
+ * A lifecycle with a state for every label, one unlabeled state, and two info states of which
+ * only one has a `web_label`.
+ */
+export const withEachLabel: StateModel[] = [
+  { ...a, label: null },
+  { ...b, annotations: { web_label: "Creating" } },
+  { ...a, name: "update_inprogress" },
+  { ...a, name: "up", label: "success", annotations: { web_label: "Up" } },
+  d,
+  { ...a, name: "failed", label: "danger", annotations: { web_label: "Failed" } },
+];
+
 export const nestedEditable: StateModel[] = [
   {
     name: "a",

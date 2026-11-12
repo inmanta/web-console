@@ -77,6 +77,41 @@ export const app = createApp({
 
 `createApp` adds the shell's own pages (status, notifications) in front of the features and builds the routes, pages and sidebar from them. Nothing starts until `app.render(element)` is called, so tests can look at `app.features` and `app.routes` without starting the app. Leaving `shell` out uses the shell's defaults.
 
+There are two apps: `apps/oss`, the open-source web console with the OSS features, and `apps/web-console`, the ISO web console with every feature. Each one is its own composition, so the ISO features (lsm and the composer) are not in the OSS app's dependencies, install or bundle. Every package declares its edition in its `package.json` (`"inmanta": { "edition": "oss" }` or `"iso"`), and a Yarn constraint (`yarn.config.cjs`) fails when an OSS package depends on an ISO one, directly or through other packages. A new feature declares its edition, and goes in the OSS app too when it is OSS.
+
+The settings both apps share live outside them: the Vite settings in `vite.shared.ts` (`appConfig`) and the Monaco setup in the shell (`@inmanta/web-console-shell/monaco`). An app's `vite.config.ts` only adds the Vite plugins of its features.
+
+### Features loaded at runtime
+
+A feature is always a `FeatureModule`. An app either bundles it (`features`), or loads it at runtime from a separate build (`runtimeFeatures`), so a deployment can leave it out or install it later, like the composer. The feature itself is the same either way:
+
+```ts
+createApp({
+  features: [environmentFeature, lsmFeature],
+  runtimeFeatures: [
+    {
+      id: "composer",
+      load: () => import("composer/feature"),
+    },
+  ],
+});
+```
+
+The shell loads them once the server status is known, before it shows the pages. A runtime feature can also have `isEnabled: (orchestratorProvider) => boolean`, to only fetch it when the server status calls for it; the composer doesn't, because it also has something to show without its licence. The separate build's entry module exports a `RuntimeFeatureEntry` (`@inmanta/web-console-core`): the `feature`, and `singletons: getSingletons()`.
+
+- A feature that fails to load (e.g. it isn't installed, or doesn't answer within 15 seconds), or whose module isn't its entry (a `RuntimeFeatureEntry` with the same `id`), is left out: the app starts without it.
+- A feature with another `version` than the app is left out with a version mismatch notice.
+- A build with its own copy of React, React Router or the web-console core layer (other `singletons` than the app's) would read other contexts than the app. In development that stops the app with an error; in production the feature is left out with an error in the console.
+- Its routes, sidebar entries, contributions and messages are added like those of the bundled features. Its pages render in the catch-all route (`RuntimeFeatureRoutes`, inside the same page frame), so unlike the other pages they don't match a url whose decoded path contains a newline.
+
+The ISO app loads the composer this way. The composer has its own Vite config (`packages/features/composer/vite.config.ts`), which builds `src/entry.ts` into `packages/features/composer/dist/`. Its files all start with `composer-`, in one folder: the orchestrator serves every file of the web console by its name from one folder. The ISO app's build runs it first, gets an import map that provides the composer with the app's modules (`composerSharedModules`) and maps `composer/feature` to `composer-feature.js`, and copies the composer's files next to its own. So:
+
+- `dist/` as built ships with the composer;
+- without the `composer-*` files, the app starts without it;
+- copying the files of `packages/features/composer/dist/` (except `mf-manifest.json`) into the web console's folder installs it later, for the same version.
+
+The dev server and the tests resolve `composer/feature` to the composer's source instead, like a bundled feature.
+
 ## Features and routes in tests
 
 Tests follow the same import boundaries as the code they test (see `eslint.layers.js`), and may also import `@inmanta/web-console-test-utils`. A feature's tests only depend on that feature:
@@ -88,7 +123,7 @@ Tests follow the same import boundaries as the code they test (see `eslint.layer
 - A test that needs several features together, like the composer's actions on lsm's pages, is an app-level test next to `apps/web-console/src/app.ts`.
 - The lint rule only sees `import` statements. Keep the paths in `vi.mock`, `vi.importActual` and `typeof import()` within the same boundaries.
 
-`apps/web-console/src/test-setup.ts` holds the setup that depends on the app's features, like registering every feature's messages. A feature's own global mocks go in a setup file of that feature, like the composer's `globalTestMocks.ts`.
+`apps/web-console/src/test-setup.ts` holds the setup that depends on the app's features, like registering every feature's messages. A feature's own global mocks go in a setup file of that feature.
 
 ## Minimum browser versions
 

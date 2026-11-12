@@ -122,11 +122,8 @@ if (isIso) {
       const clearEditorShortcut =
         Cypress.platform === "darwin" ? "{meta+a}{backspace}" : "{ctrl+a}{backspace}";
       // Edit the markdown text
-      cy.get(".monaco-editor")
-        .click()
-        .focused()
-        .type(clearEditorShortcut) // Clear existing content
-        .type("# Test Heading\n\nThis is a test paragraph with **bold** text.");
+      cy.get(".monaco-editor").click().focused().type(clearEditorShortcut); // Clear existing content
+      cy.typeInMonaco("# Test Heading\n\nThis is a test paragraph with **bold** text.");
 
       // Verify the preview updates with the new content
       cy.get(".markdown-body")
@@ -170,10 +167,11 @@ if (isIso) {
       // expect the Force Update to be disabled
       cy.get('[aria-label="Expert-Submit-Button"]').should("be.disabled");
 
-      const shortcutToFixEditor =
-        Cypress.platform === "darwin" ? "{alt+rightArrow}e" : "{ctrl+rightArrow}e";
+      const wordEndShortcut =
+        Cypress.platform === "darwin" ? "{alt+rightArrow}" : "{ctrl+rightArrow}";
       // Adjust the name property of the instance and make editor valid again
-      cy.get(".mtk20").contains("nam").type(shortcutToFixEditor);
+      cy.get(".mtk20").contains("nam").type(wordEndShortcut);
+      cy.typeInMonaco("e");
 
       cy.wait(1000);
 
