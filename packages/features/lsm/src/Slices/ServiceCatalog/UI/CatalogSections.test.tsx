@@ -5,12 +5,14 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { ServiceModel, words } from "@inmanta/web-console-core";
 import { lsmFeature } from "@inmanta/web-console-feature-lsm";
+import { getLabelName } from "@inmanta/web-console-feature-lsm/Components/InstanceSummaryLabels";
 import { MockedDependencyProvider, Service } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { CatalogSections } from "./CatalogSections";
 import {
   aviLoadBalancerCluster,
+  aviVirtualIp,
   deployment,
   deploymentTree,
   dnsRecord,
@@ -39,7 +41,7 @@ const Component = (serviceModels: ServiceModel[]) => {
         <MockedDependencyProvider features={[lsmFeature]}>
           <CatalogSections
             sections={createCatalogSections(serviceModels)}
-            isExpandedByDefault={false}
+            ownerNamesOfMatchingServices={new Set()}
           />
         </MockedDependencyProvider>
       </TestMemoryRouter>
@@ -102,6 +104,71 @@ test("GIVEN CatalogSections WHEN services have groups THEN each group gets a hea
 
     expect(results).toHaveNoViolations();
   });
+});
+
+test("GIVEN CatalogSections WHEN an owner is collapsed THEN a not success label counts the non-success instances below it", async () => {
+  render(Component(deploymentTree));
+
+  const getNotSuccessLabels = () =>
+    screen.queryAllByRole("group", {
+      name: words("catalog.ownedServices.notSuccess"),
+      hidden: true,
+    });
+  const getItemId = (element: HTMLElement) => element.closest("li")?.id;
+  const virtualIpFailedCount = Number(aviVirtualIp.instance_summary?.by_state.failed);
+  const dnsRecordFailedCount = Number(dnsRecord.instance_summary?.by_state.failed);
+  const creatingCount = Number(dnsRecord.instance_summary?.by_state.creating);
+  const startCount = Number(aviVirtualIp.instance_summary?.by_state.start);
+
+  expect(getNotSuccessLabels().map(getItemId)).toEqual([
+    deployment.name,
+    aviLoadBalancerCluster.name,
+  ]);
+
+  const [deploymentNotSuccessLabel, clusterNotSuccessLabel] = getNotSuccessLabels();
+
+  expect(deploymentNotSuccessLabel).toBeVisible();
+  expect(clusterNotSuccessLabel).not.toBeVisible();
+  // Each count follows the accessible name of its label icon.
+  expect(deploymentNotSuccessLabel.textContent).toBe(
+    `${getLabelName("danger")}${dnsRecordFailedCount + virtualIpFailedCount}` +
+      `${getLabelName("info")}${creatingCount}` +
+      `${getLabelName("no_label")}${startCount}`
+  );
+
+  act(() => deploymentNotSuccessLabel.focus());
+
+  const tooltip = await screen.findByRole("tooltip");
+  const getOwnedServiceState = (service: ServiceModel, stateName: string) =>
+    words("catalog.ownedServices.ownedServiceState")(
+      String(service.entity_annotations?.web_title),
+      service.lifecycle.states.find(({ name }) => name === stateName)?.annotations?.web_label ||
+        stateName
+    );
+
+  expect(within(tooltip).getByText(words("catalog.ownedServices.notSuccess"))).toBeInTheDocument();
+  expect(
+    within(tooltip)
+      .getAllByText(/: /)
+      .map((ownedServiceState) => [
+        ownedServiceState.textContent,
+        ownedServiceState.nextElementSibling?.textContent,
+      ])
+  ).toEqual([
+    [getOwnedServiceState(dnsRecord, "failed"), String(dnsRecordFailedCount)],
+    [getOwnedServiceState(aviVirtualIp, "failed"), String(virtualIpFailedCount)],
+    [getOwnedServiceState(dnsRecord, "creating"), String(creatingCount)],
+    [getOwnedServiceState(aviVirtualIp, "start"), String(startCount)],
+  ]);
+
+  await userEvent.click(
+    screen.getByRole("button", {
+      name: words("catalog.ownedServices.count")(deployment.owned_entities.length),
+    })
+  );
+
+  expect(getNotSuccessLabels().map(getItemId)).toEqual([aviLoadBalancerCluster.name]);
+  expect(getNotSuccessLabels()[0]).toBeVisible();
 });
 
 test("GIVEN CatalogSections WHEN services own other services THEN they are nested under their owner and collapsed", async () => {

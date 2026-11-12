@@ -218,11 +218,21 @@ export const lsmMessages = {
   "catalog.column.service": "Service",
   "catalog.column.instances": "Instances",
   "catalog.instances.none": "No instances",
+  "catalog.filter.placeholder": "Filter services",
+  "catalog.serviceCount": (serviceCount: number) =>
+    `${serviceCount} ${serviceCount === 1 ? "service" : "services"}`,
+  "catalog.serviceCount.filtered": (matchingServiceCount: number, serviceCount: number) =>
+    `${matchingServiceCount} of ${serviceCount} ${serviceCount === 1 ? "service" : "services"}`,
   "catalog.section.ungrouped": "Other services",
   "catalog.section.count": (serviceCount: number, instanceCount: number) =>
     `${serviceCount} ${serviceCount === 1 ? "service" : "services"} · ${instanceCount} ${instanceCount === 1 ? "instance" : "instances"}`,
   "catalog.ownedServices.count": (ownedServiceCount: number) =>
     `${ownedServiceCount} owned ${ownedServiceCount === 1 ? "service" : "services"}`,
+  "catalog.ownedServices.notSuccess": "Owned services not up",
+  "catalog.ownedServices.ownedServiceState": (
+    ownedServiceTitle: string,
+    stateDisplayName: string
+  ) => `${ownedServiceTitle}: ${stateDisplayName}`,
   "catalog.delete.modal.title": "Delete Service",
   "catalog.delete.title": (serviceTitle: string) =>
     `Are you sure you want to delete service ${serviceTitle}?`,

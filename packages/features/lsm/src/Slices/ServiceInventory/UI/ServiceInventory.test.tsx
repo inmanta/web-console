@@ -216,7 +216,7 @@ describe("ServiceInventory", () => {
     expect(await screen.findByText(String(summary.total), { selector: "b" })).toBeVisible();
     expect(
       screen.getByRole("button", {
-        name: `${words("catalog.summary.noLabel")}: ${summary.by_label.no_label}`,
+        name: `${words("catalog.summary.label.no_label")}: ${summary.by_label.no_label}`,
       })
     ).toBeVisible();
     expect(screen.getByText(description)).toBeVisible();
