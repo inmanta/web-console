@@ -11,8 +11,6 @@ import { CreateModifierHandler, FieldCreator } from "@inmanta/web-console-core/F
 import { SuggestionVariables } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { SHAPE_HEADER_HEIGHT, SHAPE_ROW_HEIGHT, SHAPE_WIDTH } from "../config/shapeConfig";
 import {
-  checkEmbeddedEntityConnections,
-  checkInterServiceRelationConnections,
   getEmbeddedEntityMissingConnections,
   getInterServiceRelationMissingConnections,
 } from "./Helpers/connectionValidationUtils";
@@ -395,50 +393,17 @@ export class ServiceEntityShape {
   }
 
   /**
-   * Checks if this shape is missing required connections (lower_limit not met)
-   * Uses the shape's serviceModel to determine required connections instead of the relationsDictionary
-   * @returns true if the shape is missing required connections, false otherwise
+   * Whether this shape is missing required connections: whether getMissingConnections lists any,
+   * so the order and the card agree on what is valid.
    */
-  /**
-   * Helper method to check if a required connection type has enough connections
-   */
-
   isMissingConnections(): boolean {
-    // Embedded entities can never be standalone - they must always have at least one connection
-    if (this.entityType === "embedded") {
-      const totalConnections = Array.from(this.connections.values()).reduce(
-        (sum, array) => sum + array.length,
-        0
-      );
-      if (totalConnections === 0) {
-        return true;
-      }
-    }
-
-    // Check embedded entities
-    if ("embedded_entities" in this.serviceModel) {
-      for (const embeddedEntity of this.serviceModel.embedded_entities) {
-        if (checkEmbeddedEntityConnections(this, embeddedEntity)) {
-          return true;
-        }
-      }
-    }
-
-    // Check inter-service relations
-    if ("inter_service_relations" in this.serviceModel) {
-      for (const relation of this.serviceModel.inter_service_relations) {
-        if (checkInterServiceRelationConnections(this, relation)) {
-          return true;
-        }
-      }
-    }
-
-    return false;
+    return this.getMissingConnections().length > 0;
   }
 
   /**
-   * Gets a list of missing connections for this shape.
-   * Returns an array of objects containing the connection name and how many are missing.
+   * Gets a list of missing connections for this shape: the relations and embedded entities
+   * below their lower limit, and, for an embedded entity on its own, a parent. An embedded entity
+   * can never stand alone: when none of its parents requires it, it still needs one of them.
    * @returns Array of { name: string, missing: number, required: number } objects
    */
   getMissingConnections(): Array<{
@@ -478,22 +443,32 @@ export class ServiceEntityShape {
             : []
         );
 
-        if (relationsForEmbedded) {
-          Object.entries(relationsForEmbedded).forEach(([parentName, parentRules]) => {
-            // Do not report declared inter-service targets as missing "parent" relations.
-            if (interServiceTargets.has(parentName.toLowerCase())) {
-              return;
-            }
-            if (parentRules.lower_limit <= 0) {
-              return;
-            }
-            missing.push({
-              type: "parent",
-              entityType: parentName,
-              name: parentName,
-              missing: parentRules.lower_limit,
-              required: parentRules.lower_limit,
-            });
+        // Do not report declared inter-service targets as missing "parent" relations.
+        const parents = Object.entries(relationsForEmbedded ?? {}).filter(
+          ([parentName]) => !interServiceTargets.has(parentName.toLowerCase())
+        );
+        const requiredParents = parents.filter(([, parentRules]) => parentRules.lower_limit > 0);
+
+        requiredParents.forEach(([parentName, parentRules]) => {
+          missing.push({
+            type: "parent",
+            entityType: parentName,
+            name: parentName,
+            missing: parentRules.lower_limit,
+            required: parentRules.lower_limit,
+          });
+        });
+
+        // None of its parents requires it, but it still needs one of them.
+        if (requiredParents.length === 0) {
+          const parentNames = parents.map(([parentName]) => parentName).join(" or ");
+
+          missing.push({
+            type: "parent",
+            entityType: "",
+            name: parentNames || this.getEntityName(),
+            missing: 1,
+            required: 1,
           });
         }
       }

@@ -34,29 +34,6 @@ const buildConnectionCheckConfig = (
 };
 
 /**
- * Checks if a connection requirement is satisfied
- */
-const checkConnectionRequirement = (
-  shape: ServiceEntityShape,
-  configuration: ConnectionCheckConfig
-): boolean => {
-  // Skip read-only for existing entities
-  if (configuration.skipReadOnly) {
-    return false;
-  }
-
-  // If lower_limit is 0 or undefined, no connection is required
-  if (configuration.lowerLimit === 0) {
-    return false;
-  }
-
-  const connectionsForType = shape.connections.get(configuration.connectionKey) || [];
-  const connectedCount = connectionsForType.length;
-
-  return connectedCount < configuration.lowerLimit;
-};
-
-/**
  * Gets missing connection details for a requirement
  */
 const getMissingConnectionDetails = (
@@ -86,40 +63,6 @@ const getMissingConnectionDetails = (
   }
 
   return null;
-};
-
-/**
- * Helper to check if an embedded entity is missing connections
- */
-export const checkEmbeddedEntityConnections = (
-  shape: ServiceEntityShape,
-  embeddedEntity: EmbeddedEntity
-): boolean => {
-  const configuration = buildConnectionCheckConfig(
-    shape,
-    embeddedEntity,
-    getEmbeddedEntityKey(embeddedEntity),
-    getEmbeddedEntityKey(embeddedEntity)
-  );
-
-  return checkConnectionRequirement(shape, configuration);
-};
-
-/**
- * Helper to check if an inter-service relation is missing connections
- */
-export const checkInterServiceRelationConnections = (
-  shape: ServiceEntityShape,
-  relation: InterServiceRelation
-): boolean => {
-  const configuration = buildConnectionCheckConfig(
-    shape,
-    relation,
-    getInterServiceRelationKey(relation),
-    relation.name
-  );
-
-  return checkConnectionRequirement(shape, configuration);
 };
 
 /**
