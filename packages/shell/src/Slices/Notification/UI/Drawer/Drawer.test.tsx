@@ -7,12 +7,12 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { getFeatureRoutes } from "@inmanta/web-console-core";
 import * as Mock from "@inmanta/web-console-shell/Slices/Notification/Core/Mock";
 import { shellFeature } from "@inmanta/web-console-shell/shellFeature";
 import { MockedDependencyProvider, stubRoute } from "@inmanta/web-console-test-utils";
 import { links, metadata } from "@inmanta/web-console-test-utils/Data/Pagination";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Drawer } from "./Drawer";
 
 const axe = configureAxe({
@@ -66,7 +66,7 @@ function setup() {
 }
 
 let response = [Mock.unread, Mock.error, Mock.read, Mock.withoutUri];
-const server = setupServer(
+const server = setupTestServer(
   http.get("/api/v2/notification", () => {
     return HttpResponse.json({ data: response, links, metadata });
   }),

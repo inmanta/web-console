@@ -3,11 +3,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { Page } from "@inmanta/web-console-feature-lsm/Slices/ServiceDetails/UI/Page";
 import { MockedDependencyProvider, Service } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 
 function setup() {
   const component = (
@@ -27,7 +27,7 @@ function setup() {
   };
 }
 describe("ServiceCatalog", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => {
     server.use(

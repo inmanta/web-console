@@ -39,6 +39,8 @@
     "cypress-test:keycloak": "yarn cypress run --config-file cypress.config.keycloak.cjs",
     "cypress-test:local-auth": "yarn cypress run --config-file cypress.config.local-auth.cjs",
     "cypress-test:oidc": "yarn cypress run --config-file cypress.config.oidc.cjs",
+    "cypress-test:ship-modes": "yarn cypress run --config-file cypress.config.ship-modes.cjs",
+    "composer-ship-mode": "node scripts/composer-ship-mode.js",
     "package-cleanup": "node clean_up_packages",
     "check-circular-deps": "depcruise src packages apps",
     "check-no-cdn": "node scripts/check-no-cdn.js",

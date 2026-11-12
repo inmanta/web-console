@@ -12,7 +12,6 @@ import { Route, Routes } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import {
   BooleanField,
   DictListField,
@@ -26,6 +25,7 @@ import * as Test from "@inmanta/web-console-test-utils";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 import type { Mock } from "vitest";
 
@@ -69,7 +69,7 @@ const setup = (
 
 it("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads without errors", async () => {
   // Provide the server-side API with the request handlers to get the schema
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/lsm/v1/service_catalog/:id/schema", async ({ params }) => {
       expect(params.id).toEqual("service_entity");
 

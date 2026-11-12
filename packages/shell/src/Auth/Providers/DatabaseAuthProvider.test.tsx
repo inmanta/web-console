@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { AuthContext } from "@inmanta/web-console-core/Auth/AuthContext";
 import * as CookieHelper from "@inmanta/web-console-core/Common/CookieHelper";
 import { AuthProvider } from "@inmanta/web-console-shell/Auth/AuthProvider";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 
 const mockedUsedNavigate = vi.hoisted(() => vi.fn());
 
@@ -56,7 +56,7 @@ describe("DatabaseAuthProvider session renewal", () => {
 
   it("renews the token shortly before the session expires", async () => {
     const spiedCreateCookie = vi.spyOn(CookieHelper, "createCookie");
-    const server = setupServer(
+    const server = setupTestServer(
       http.post("/api/v2/login/renew", () =>
         HttpResponse.json({
           data: {
@@ -83,7 +83,7 @@ describe("DatabaseAuthProvider session renewal", () => {
 
   it("logs the user out when renewal fails", async () => {
     const spiedRemoveCookie = vi.spyOn(CookieHelper, "removeCookie");
-    const server = setupServer(
+    const server = setupTestServer(
       http.post("/api/v2/login/renew", () => new HttpResponse(null, { status: 401 }))
     );
     server.listen();
@@ -101,7 +101,7 @@ describe("DatabaseAuthProvider session renewal", () => {
 
   it("does not schedule renewal for a session without an expiry", async () => {
     let renewCalls = 0;
-    const server = setupServer(
+    const server = setupTestServer(
       http.post("/api/v2/login/renew", () => {
         renewCalls += 1;
 

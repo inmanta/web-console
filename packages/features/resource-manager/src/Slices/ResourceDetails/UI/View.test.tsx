@@ -5,13 +5,13 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { Resource } from "@inmanta/web-console-core/Domain";
 import { ResourceDetails } from "@inmanta/web-console-feature-resource-manager/Slices/ResourceDetails/Data/Mock";
 import { EnvironmentDetails, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { View } from "./View";
 
 function setup(halted = false) {
@@ -30,7 +30,7 @@ function setup(halted = false) {
   return { component };
 }
 describe("ResourceDetailsView", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => server.listen());
   beforeEach(() => server.resetHandlers());

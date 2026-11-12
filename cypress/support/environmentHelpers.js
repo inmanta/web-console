@@ -131,6 +131,7 @@ const forceUpdateEnvironment = (nameEnvironment = getDefaultEnvName()) => {
 export default {
   getDefaultEnvName,
   selectEnvironment,
+  getEnvironmentId,
   clearEnvironment,
   waitForServiceCatalogUpdate,
   forceUpdateEnvironment,

@@ -4,7 +4,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { DryRunContext, Resource, ResourceActionFilter, words } from "@inmanta/web-console-core";
 import { NonEmptyArray } from "@inmanta/web-console-core/Language";
 import { getDesiredStateVersionKey } from "@inmanta/web-console-core/Queries/Slices/DesiredState";
@@ -21,6 +20,7 @@ import * as DesiredStatesMock from "@inmanta/web-console-test-utils/Data/Desired
 import { historyData } from "@inmanta/web-console-test-utils/Data/InstanceHistory";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import { ResourceActionScope } from "./ResourceActionConfirmModal";
 import { ResourceActions } from "./ResourceActions";
@@ -141,7 +141,7 @@ function setup(
 }
 
 describe("ResourceActions", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => server.listen());
   beforeEach(() => server.resetHandlers());

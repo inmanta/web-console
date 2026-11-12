@@ -4,7 +4,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { delay, http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import {
   BooleanField,
   DictListField,
@@ -24,6 +23,7 @@ import * as Test from "@inmanta/web-console-test-utils";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 import type { Mock } from "vitest";
 
@@ -77,7 +77,7 @@ const setup = (
   return { component };
 };
 
-const server = setupServer(
+const server = setupTestServer(
   http.get("/api/v1/parameter/param_name", () => {
     return HttpResponse.json({
       parameter: undefined,

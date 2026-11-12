@@ -24,6 +24,7 @@ module.exports = defineConfig({
       "cypress/e2e/Keycloak/**",
       "cypress/e2e/LocalAuth/**",
       "cypress/e2e/Oidc/**",
+      "cypress/e2e/ShipModes/**",
       "cypress/e2e/scenario-2.1-basic-service.cy.js",
       "cypress/e2e/scenario-2.2-child-parent-service.cy.js",
       "cypress/e2e/scenario-2.4-expert-mode.cy.js",

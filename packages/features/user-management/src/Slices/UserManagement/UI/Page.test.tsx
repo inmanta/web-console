@@ -5,11 +5,11 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { DefaultBodyType, HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { UserInfo } from "@inmanta/web-console-core/Queries/Slices/Auth";
 import { MockedDependencyProvider, ModalProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { UserManagementPage } from "./Page";
 
 const setup = () => {
@@ -40,7 +40,7 @@ const setup = () => {
 
 describe("UserManagementPage", () => {
   it("should render empty view when no users are returned by API", async () => {
-    const server = setupServer(
+    const server = setupTestServer(
       http.get("/api/v2/user", async () => {
         return HttpResponse.json({
           data: [],
@@ -75,7 +75,7 @@ describe("UserManagementPage", () => {
   });
 
   it("should display user list when users are returned by API", async () => {
-    const server = setupServer(
+    const server = setupTestServer(
       http.get("/api/v2/user", async () => {
         return HttpResponse.json({
           data: [
@@ -118,7 +118,7 @@ describe("UserManagementPage", () => {
   });
 
   it("should display error view when API call fails", async () => {
-    const server = setupServer(
+    const server = setupTestServer(
       http.get("/api/v2/user", async () => {
         return HttpResponse.json(
           {
@@ -164,7 +164,7 @@ describe("UserManagementPage", () => {
       { username: "test_user", auth_method: "database", is_admin: false, roles: {} },
       { username: "test_user2", auth_method: "oidc", is_admin: false, roles: {} },
     ];
-    const server = setupServer(
+    const server = setupTestServer(
       http.get("/api/v2/user", async () => {
         return HttpResponse.json({
           data,
@@ -267,7 +267,7 @@ describe("UserManagementPage", () => {
   });
 
   it("should sent request to change user password", async () => {
-    const server = setupServer(
+    const server = setupTestServer(
       http.get("/api/v2/user", async () => {
         return HttpResponse.json({ data: [{ username: "test_user", auth_method: "database" }] });
       }),
@@ -338,7 +338,7 @@ describe("UserManagementPage", () => {
       { username: "test_user", auth_method: "database", is_admin: false, roles: {} },
       { username: "test_user2", auth_method: "oidc", is_admin: false, roles: {} },
     ];
-    const server = setupServer(
+    const server = setupTestServer(
       http.get("/api/v2/user", async (): Promise<HttpResponse<DefaultBodyType>> => {
         return HttpResponse.json({
           data,
@@ -390,7 +390,7 @@ describe("UserManagementPage", () => {
       { username: "test_user", auth_method: "database", is_admin: false, roles: {} },
       { username: "test_user2", auth_method: "oidc", is_admin: false, roles: {} },
     ];
-    const server = setupServer(
+    const server = setupTestServer(
       http.get("/api/v2/user", async (): Promise<HttpResponse<DefaultBodyType>> => {
         return HttpResponse.json({
           data,

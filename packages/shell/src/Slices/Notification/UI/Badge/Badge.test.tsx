@@ -2,10 +2,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { HttpResponse } from "msw";
 import { graphql } from "msw/graphql";
-import { setupServer } from "msw/node";
 import { NotificationsResponse } from "@inmanta/web-console-core/Queries/Slices/Notification";
 import * as Mock from "@inmanta/web-console-shell/Slices/Notification/Core/Mock";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Badge } from "./Badge";
 
 function setup() {
@@ -27,7 +27,7 @@ function setup() {
 
   return { component, queryClient };
 }
-const server = setupServer();
+const server = setupTestServer();
 
 describe("Badge", () => {
   const queryBase = graphql.link("/api/v2/graphql");

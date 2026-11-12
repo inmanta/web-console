@@ -4,7 +4,6 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { RouteFactory, getFeatureRoutes, words } from "@inmanta/web-console-core";
 import * as routing from "@inmanta/web-console-core/Routing/Utils";
 import { environmentFeature } from "@inmanta/web-console-feature-environment";
@@ -16,6 +15,7 @@ import {
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Page } from "./Page";
 
 const axe = configureAxe({
@@ -48,7 +48,7 @@ function setup(routes: RouteFactory[] = linkedRoutes) {
 }
 
 describe("CreateEnvironmentForm", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => server.listen());
   beforeEach(() => {
