@@ -1,5 +1,5 @@
 change-type: patch
-description: Bump graphql from 17.0.2 to 17.1.0
+description: 'Build(deps): bump graphql from 17.0.2 to 17.1.0'
 destination-branches:
 - master
 - iso9
