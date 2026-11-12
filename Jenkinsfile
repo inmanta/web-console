@@ -79,6 +79,7 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                                 yarn check-circular-deps;
                                 yarn build:ci;
                                 yarn check-no-cdn;
+                                yarn check-dist-versions;
                                 yarn test:ci ${vitestCoverageArgs}"""
                             }
                         }
@@ -91,22 +92,21 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                                 echo 'Skipped: only change entries changed since the last successful build.'
                                 return
                             }
-                            timeout(time: 20, unit: 'MINUTES') {
-                                dir('web-console') {
-                                    sh '''yarn build:ci;
-                                    sudo systemctl restart docker && sudo docker network prune -f;
-                                    yarn run install:orchestrator:ci;
-                                    yarn run cypress-test:iso;'''
-                                }
-                            }
-                        }
-                    }
-                    post {
-                        always {
-                            script {
-                                if (env.CHANGELOG_ONLY != 'true') {
+                            // One orchestrator per agent: the nightly jobs in jenkins/ take the same lock.
+                            // Taken here, on the agent: a stage option can't see NODE_NAME yet.
+                            lock(resource: "orchestrator-${env.NODE_NAME}") {
+                                try {
+                                    timeout(time: 20, unit: 'MINUTES') {
+                                        dir('web-console') {
+                                            sh '''yarn build:ci;
+                                            sudo systemctl restart docker && sudo docker network prune -f;
+                                            yarn run install:orchestrator:ci;
+                                            yarn run cypress-test:iso;'''
+                                        }
+                                    }
+                                } finally {
                                     dir('web-console') {
-                                        sh'yarn run kill-server'
+                                        sh 'yarn run kill-server'
                                     }
                                 }
                             }

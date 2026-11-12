@@ -1,0 +1,125 @@
+// The OSS checks: the OSS app installs, builds, type-checks and passes its tests without the
+// JointJS licence token, and the lockfile is complete without it. Its own multibranch job, next
+// to the main one (Jenkinsfile at the root): that one has the token, so it can't check this.
+//
+// The job must not have the `jointjs-npm-token` credential. Yarn also reuses the packages that
+// earlier installs on the agent mirrored into its global folder (~/.yarn/berry by default), the
+// JointJS ones included, so every build gets an empty global folder of its own. Otherwise the
+// install would pass for the wrong reason. Whatever credentials the agent has, the install fails
+// when it contains a JointJS package. See "CI" in docs/notes.md.
+//
+// The stage names start with "OSS": GitHub shows a check per stage, and the main job has a
+// "Checkout" stage too.
+pipeline {
+    agent any
+
+    options {
+        disableConcurrentBuilds()
+        checkoutToSubdirectory('web-console')
+        skipDefaultCheckout()
+        ansiColor('xterm')
+        timeout(time: 40, unit: 'MINUTES')
+    }
+    triggers {
+        pollSCM('* * * * *')
+    }
+    environment {
+        // Inside the workspace, which every build starts by deleting.
+        YARN_GLOBAL_FOLDER = "${env.WORKSPACE}/yarn-global"
+    }
+
+    stages {
+        stage('OSS') {
+            when {
+                anyOf {
+                    triggeredBy 'UserIdCause'
+                    // skip builds for next and stable branches unless triggered manually, like the main job
+                    not {
+                        branch pattern: 'iso\\d+-(next|stable)', comparator: 'REGEXP'
+                    }
+                }
+            }
+            stages {
+                stage('OSS: Checkout') {
+                    steps {
+                        deleteDir()
+                        dir('web-console') {
+                            checkout scm
+                        }
+                    }
+                }
+                stage('OSS: No JointJS token') {
+                    steps {
+                        dir('web-console') {
+                            // Fails early on the usual ways a token gets in; the install stage checks
+                            // the result whatever the way.
+                            sh '''
+                            if [ -n "${JOINTJS_NPM_TOKEN:-}" ]; then
+                                echo "JOINTJS_NPM_TOKEN is set: the OSS job must run without the JointJS token."
+                                exit 1
+                            fi
+                            if [ -f "$HOME/.yarnrc.yml" ] && grep -q "joint" "$HOME/.yarnrc.yml"; then
+                                echo "$HOME/.yarnrc.yml configures the @joint scope: the OSS job must run without the JointJS token."
+                                exit 1
+                            fi
+                            mkdir -p "$YARN_GLOBAL_FOLDER"
+                            if [ -n "$(ls -A "$YARN_GLOBAL_FOLDER")" ]; then
+                                echo "The Yarn global folder $YARN_GLOBAL_FOLDER isn't empty."
+                                exit 1
+                            fi
+                            '''
+                        }
+                    }
+                }
+                stage('OSS: Lockfile drift') {
+                    steps {
+                        dir('web-console') {
+                            // Fails when yarn.lock misses a change of a package.json, or when completing
+                            // it needs a JointJS package, which can't be fetched without the token.
+                            sh '''
+                            unset JOINTJS_NPM_TOKEN
+                            yarn install --mode=update-lockfile
+                            git diff --exit-code yarn.lock
+                            '''
+                        }
+                    }
+                }
+                stage('OSS: Install') {
+                    steps {
+                        dir('web-console') {
+                            // Fails when the OSS app or one of its packages depends on a JointJS
+                            // package: without the token Yarn can't fetch it, and if a token got in
+                            // anyway, the check after the install finds it.
+                            sh '''
+                            unset JOINTJS_NPM_TOKEN
+                            yarn workspaces focus @inmanta/web-console-oss
+                            if find . -path '*/node_modules/@joint' -prune -print | grep .; then
+                                echo "The OSS install has a JointJS package."
+                                exit 1
+                            fi
+                            '''
+                        }
+                    }
+                }
+                stage('OSS: Build, type-check and test') {
+                    steps {
+                        dir('web-console') {
+                            sh '''
+                            unset JOINTJS_NPM_TOKEN
+                            yarn workspace @inmanta/web-console-oss build:ci
+                            yarn check-no-cdn apps/oss/dist
+                            yarn tsc:oss
+                            yarn test:oss
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        cleanup {
+            deleteDir()
+        }
+    }
+}

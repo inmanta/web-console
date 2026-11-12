@@ -29,7 +29,7 @@ const testFiles = [
 // and the Vite config of the apps and the features.
 const devDependencyFiles = [
   ...testFiles,
-  "apps/web-console/src/test-setup.ts",
+  "apps/*/src/test-setup.ts",
   "packages/features/composer/src/**/globalTestMocks.ts",
   "apps/*/vite.config.ts",
   "packages/features/*/vite.config.ts",
