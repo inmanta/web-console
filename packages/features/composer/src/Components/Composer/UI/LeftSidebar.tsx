@@ -17,7 +17,7 @@ import { AngleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-down
 import { AngleRightIcon } from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
 import { GripVerticalIcon } from "@patternfly/react-icons/dist/esm/icons/grip-vertical-icon";
 import { PlusCircleIcon } from "@patternfly/react-icons/dist/esm/icons/plus-circle-icon";
-import { useReactFlow } from "@xyflow/react";
+import { useReactFlow, useStore } from "@xyflow/react";
 import styled from "styled-components";
 import { EmbeddedEntity, ServiceModel, words } from "@inmanta/web-console-core";
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
@@ -160,6 +160,7 @@ export const LeftSidebar: React.FC = () => {
   } = useContext(ComposerContext);
   const addPaletteItem = useAddPaletteItem();
   const { screenToFlowPosition } = useReactFlow();
+  const canvasElement = useStore((state) => state.domNode);
   const [activeTab, setActiveTab] = useState<PaletteTab>("new");
   const [queries, setQueries] = useState<Record<PaletteTab, string>>({ new: "", inventory: "" });
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
@@ -195,7 +196,7 @@ export const LeftSidebar: React.FC = () => {
     });
 
   const addAtCentre = (item: PaletteItem) => {
-    const bounds = document.querySelector('[data-testid="canvas"]')?.getBoundingClientRect();
+    const bounds = canvasElement?.getBoundingClientRect();
 
     if (!bounds) {
       return;
@@ -210,7 +211,7 @@ export const LeftSidebar: React.FC = () => {
 
   return (
     <Sidebar
-      className={`left_sidebar ${!editable && "view_mode"}`}
+      className={editable ? "left_sidebar" : "left_sidebar view_mode"}
       data-testid="left_sidebar"
       aria-label={words("instanceComposer.palette")}
     >
