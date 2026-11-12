@@ -3,7 +3,6 @@ export * from "./connectionAllowed";
 export * from "./initializeCanvasFromInstance";
 export * from "./createPlaceholderInstance";
 export * from "./canvasLayoutUtils";
-export * from "./arrangeScope";
 export * from "./deploymentHelpers";
 export * from "./shapeUtils";
 export * from "./linkUtils";

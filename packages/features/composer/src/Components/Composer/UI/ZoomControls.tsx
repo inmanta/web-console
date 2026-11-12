@@ -10,10 +10,8 @@ import {
   DropdownItem,
   DropdownList,
   MenuToggle,
-  MenuToggleAction,
   ToggleGroup,
   ToggleGroupItem,
-  Tooltip,
 } from "@patternfly/react-core";
 import { MinusIcon } from "@patternfly/react-icons/dist/esm/icons/minus-icon";
 import { PlusIcon } from "@patternfly/react-icons/dist/esm/icons/plus-icon";
@@ -21,7 +19,7 @@ import { SitemapIcon } from "@patternfly/react-icons/dist/esm/icons/sitemap-icon
 import { useReactFlow, useViewport } from "@xyflow/react";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
-import { applyLayeredLayout, getArrangeScope, LayoutDirection } from "../Data/Helpers";
+import { applyLayeredLayout, LayoutDirection } from "../Data/Helpers";
 import { Point } from "../Data/ServiceEntityShape";
 import { MIN_ZOOM, MAX_ZOOM, SLIDER_MIN, SLIDER_MAX, ZOOM_TO_FIT_PADDING_BUTTON } from "../config";
 import { ZoomControlsContainer } from "./ZoomControls.styles";
@@ -38,31 +36,10 @@ export const ZoomControls: React.FC = () => {
   const { zoom } = useViewport();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isArrangeOpen, setIsArrangeOpen] = useState(false);
-  // The tooltip of the Arrange button, hidden while its menu is open
-  const [isArrangeHovered, setIsArrangeHovered] = useState(false);
   const [direction, setDirection] = useState<LayoutDirection>("LR");
   // The positions before the last arrangement, to undo it
   const [previousPositions, setPreviousPositions] = useState<Map<string, Point> | null>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
-  const arrangeRef = useRef<HTMLSpanElement>(null);
-  const scope = getArrangeScope(canvasState, activeCell);
-  const directionLabel = (
-    direction === "LR"
-      ? words("instanceComposer.arrange.leftToRight")
-      : words("instanceComposer.arrange.topToBottom")
-  ).toLowerCase();
-  // Says what the Arrange button does right now, or why it can't
-  const arrangeTooltip = !scope.canArrangeAll
-    ? words("instanceComposer.arrange.tooltip.disabled")
-    : scope.rootId && activeCell
-      ? words("instanceComposer.arrange.tooltip.below")(activeCell.getDisplayName(), directionLabel)
-      : [
-          words("instanceComposer.arrange.tooltip.all")(directionLabel),
-          activeCell &&
-            words("instanceComposer.arrange.tooltip.nothingBelow")(activeCell.getDisplayName()),
-        ]
-          .filter(Boolean)
-          .join(" ");
 
   const zoomPercentage = Math.round(zoom * 100);
   const sliderValue = Math.max(SLIDER_MIN, Math.min(SLIDER_MAX, zoomPercentage));
@@ -167,102 +144,64 @@ export const ZoomControls: React.FC = () => {
 
   return (
     <ZoomControlsContainer>
-      <Tooltip
-        content={arrangeTooltip}
-        triggerRef={arrangeRef}
-        position="top"
-        trigger="manual"
-        isVisible={isArrangeHovered && !isArrangeOpen}
-      >
-        <span
-          ref={arrangeRef}
-          className="arrange-control"
-          data-testid="arrange-control"
-          onMouseEnter={() => setIsArrangeHovered(true)}
-          onMouseLeave={() => setIsArrangeHovered(false)}
-          onFocus={() => setIsArrangeHovered(true)}
-          onBlur={() => setIsArrangeHovered(false)}
-        >
-          <Dropdown
-            isOpen={isArrangeOpen}
-            onOpenChange={setIsArrangeOpen}
-            popperProps={{ direction: "up", position: "start" }}
-            toggle={(toggleRef) => (
-              <MenuToggle
-                ref={toggleRef}
-                className="arrange-toggle"
-                isExpanded={isArrangeOpen}
-                isDisabled={!scope.canArrangeAll}
-                onClick={() => setIsArrangeOpen(!isArrangeOpen)}
-                aria-label={words("instanceComposer.arrange.options")}
-                data-testid="arrange-toggle"
-                splitButtonItems={[
-                  <MenuToggleAction
-                    key="arrange"
-                    onClick={() => arrange(scope.rootId)}
-                    isDisabled={!scope.canArrangeAll}
-                    id="composer-arrange-action"
-                  >
-                    <SitemapIcon />
-                    {scope.rootId
-                      ? words("instanceComposer.arrange.action.below")
-                      : words("instanceComposer.arrange.action.all")}
-                  </MenuToggleAction>,
-                ]}
-              />
-            )}
+      <Dropdown
+        isOpen={isArrangeOpen}
+        onOpenChange={setIsArrangeOpen}
+        popperProps={{ direction: "up", position: "start" }}
+        toggle={(toggleRef) => (
+          <MenuToggle
+            ref={toggleRef}
+            className="arrange-toggle"
+            variant="plainText"
+            icon={<SitemapIcon />}
+            isExpanded={isArrangeOpen}
+            onClick={() => setIsArrangeOpen(!isArrangeOpen)}
+            data-testid="arrange-toggle"
           >
-            <DropdownGroup label={words("instanceComposer.arrange.scope")} labelHeadingLevel="h3">
-              <DropdownList>
-                <DropdownItem
-                  description={words("instanceComposer.arrange.all.description")}
-                  onClick={() => arrange()}
-                >
-                  {words("instanceComposer.arrange.all")}
-                </DropdownItem>
-                <DropdownItem
-                  isDisabled={!scope.canArrangeBelow}
-                  description={
-                    !activeCell
-                      ? words("instanceComposer.arrange.below.disabled")
-                      : scope.canArrangeBelow
-                        ? words("instanceComposer.arrange.below.description")
-                        : words("instanceComposer.arrange.below.nothingBelow")
-                  }
-                  onClick={() => scope.canArrangeBelow && arrange(activeCell?.id)}
-                >
-                  {words("instanceComposer.arrange.below")(
-                    activeCell ? activeCell.getDisplayName() : "…"
-                  )}
-                </DropdownItem>
-              </DropdownList>
-            </DropdownGroup>
-            <DropdownGroup
-              label={words("instanceComposer.arrange.direction")}
-              labelHeadingLevel="h3"
-            >
-              <ToggleGroup
-                isCompact
-                aria-label={words("instanceComposer.arrange.direction")}
-                style={{
-                  padding: "0 var(--pf-t--global--spacer--md) var(--pf-t--global--spacer--sm)",
-                }}
-              >
-                <ToggleGroupItem
-                  text={words("instanceComposer.arrange.leftToRight")}
-                  isSelected={direction === "LR"}
-                  onChange={() => setDirection("LR")}
-                />
-                <ToggleGroupItem
-                  text={words("instanceComposer.arrange.topToBottom")}
-                  isSelected={direction === "TB"}
-                  onChange={() => setDirection("TB")}
-                />
-              </ToggleGroup>
-            </DropdownGroup>
-          </Dropdown>
-        </span>
-      </Tooltip>
+            {words("instanceComposer.arrange")}
+          </MenuToggle>
+        )}
+      >
+        <DropdownList>
+          <DropdownItem
+            description={words("instanceComposer.arrange.all.description")}
+            onClick={() => arrange()}
+          >
+            {words("instanceComposer.arrange.all")}
+          </DropdownItem>
+          <DropdownItem
+            isDisabled={!activeCell}
+            description={
+              activeCell
+                ? words("instanceComposer.arrange.below.description")
+                : words("instanceComposer.arrange.below.disabled")
+            }
+            onClick={() => activeCell && arrange(activeCell.id)}
+          >
+            {words("instanceComposer.arrange.below")(
+              activeCell ? activeCell.getDisplayName() : "…"
+            )}
+          </DropdownItem>
+        </DropdownList>
+        <DropdownGroup label={words("instanceComposer.arrange.direction")} labelHeadingLevel="h3">
+          <ToggleGroup
+            isCompact
+            aria-label={words("instanceComposer.arrange.direction")}
+            style={{ padding: "0 var(--pf-t--global--spacer--md) var(--pf-t--global--spacer--sm)" }}
+          >
+            <ToggleGroupItem
+              text={words("instanceComposer.arrange.leftToRight")}
+              isSelected={direction === "LR"}
+              onChange={() => setDirection("LR")}
+            />
+            <ToggleGroupItem
+              text={words("instanceComposer.arrange.topToBottom")}
+              isSelected={direction === "TB"}
+              onChange={() => setDirection("TB")}
+            />
+          </ToggleGroup>
+        </DropdownGroup>
+      </Dropdown>
       <span className="toolbar-divider" aria-hidden />
       <Button
         variant="control"
