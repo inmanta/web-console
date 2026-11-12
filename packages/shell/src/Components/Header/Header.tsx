@@ -80,11 +80,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
               >
                 {!noEnv && (
                   <ToolbarItem>
-                    <Tooltip
-                      content={words("dashboard.notifications.tooltip")}
-                      position="bottom"
-                      entryDelay={500}
-                    >
+                    <Tooltip content={words("dashboard.notifications.tooltip")} position="bottom">
                       <Badge onClick={onNotificationsToggle} />
                     </Tooltip>
                   </ToolbarItem>

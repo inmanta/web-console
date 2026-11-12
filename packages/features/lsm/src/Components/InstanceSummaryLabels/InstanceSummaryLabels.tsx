@@ -56,7 +56,6 @@ export const InstanceSummaryLabels: React.FC<Props> = ({ summary, states, filter
                 content={
                   <StateCountsTooltipContent title={getLabelName(label)} rows={tooltipRows} />
                 }
-                entryDelay={200}
               >
                 {renderLabel(label, Number(summary.by_label[label]), filtering)}
               </Tooltip>

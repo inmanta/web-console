@@ -56,7 +56,6 @@ export const OwnedServicesNotSuccessLabel: React.FC<Props> = ({ stateCounts }) =
           rows={tooltipRows}
         />
       }
-      entryDelay={200}
     >
       <DashedLabel
         variant="outline"

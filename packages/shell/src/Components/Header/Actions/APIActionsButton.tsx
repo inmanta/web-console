@@ -40,7 +40,6 @@ export const APIActionsButton: React.FC = () => {
       <Tooltip
         content={words("dashboard.apiActions.tooltip")}
         position="bottom"
-        entryDelay={1000}
         isVisible={isOpen ? false : undefined}
       >
         <Dropdown

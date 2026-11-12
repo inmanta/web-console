@@ -207,7 +207,7 @@ export const AttributesTable: React.FC<Props> = ({
 
     if (unitCell) {
       return (
-        <Tooltip content={unitCell.tooltip} entryDelay={200}>
+        <Tooltip content={unitCell.tooltip}>
           <span>{unitCell.text}</span>
         </Tooltip>
       );

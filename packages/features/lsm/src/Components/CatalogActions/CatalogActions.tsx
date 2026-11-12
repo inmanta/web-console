@@ -93,7 +93,7 @@ export const CatalogActions: React.FC = () => {
   return (
     <Flex rowGap={{ default: "rowGap" }}>
       <FlexItem>
-        <Tooltip content={words("catalog.API.tooltip")} entryDelay={500}>
+        <Tooltip content={words("catalog.API.tooltip")}>
           <Button
             variant="plain"
             aria-label="API-Documentation"
