@@ -27,6 +27,7 @@ import { getUnavailableInventoryItems } from "../Data/Helpers";
 import { useAddPaletteItem } from "../Data/Hooks";
 import { LEFT_SIDEBAR_WIDTH, SHAPE_WIDTH } from "../config";
 import { EntityIcon } from "./EntityIcon";
+import { entityColorVariables } from "./entityColors";
 
 interface PaletteRow {
   key: string;
@@ -145,6 +146,12 @@ const buildInventoryGroups = (
       },
     ];
   });
+
+/**
+ * The kind of entity a row adds: inventory rows add existing services.
+ */
+const getRowKind = (row: PaletteRow): "core" | "embedded" =>
+  row.item.kind === "new" ? row.item.entityType : "core";
 
 const filterGroups = (groups: PaletteGroup[], query: string): PaletteGroup[] => {
   const needle = query.trim().toLowerCase();
@@ -321,10 +328,15 @@ export const LeftSidebar: React.FC = () => {
                       <li
                         key={row.key}
                         className="palette-row is-unavailable"
+                        style={entityColorVariables(getRowKind(row))}
                         aria-disabled="true"
                         data-testid={`palette-item-${row.label}`}
                       >
-                        <span className="palette-row-icon" aria-hidden>
+                        <span
+                          className="palette-row-icon"
+                          title={words(`instanceComposer.label.${getRowKind(row)}`)}
+                          aria-hidden
+                        >
                           <EntityIcon serviceModel={row.item.serviceModel} />
                         </span>
                         <PaletteRowText row={row} />
@@ -336,6 +348,7 @@ export const LeftSidebar: React.FC = () => {
                       <li
                         key={row.key}
                         className="palette-row"
+                        style={entityColorVariables(getRowKind(row))}
                         data-testid={`palette-item-${row.label}`}
                         draggable
                         onDragStart={(event) => {
@@ -348,7 +361,11 @@ export const LeftSidebar: React.FC = () => {
                         }}
                       >
                         {/* The grip takes the icon's place while the row is pointed at */}
-                        <span className="palette-row-icon" aria-hidden>
+                        <span
+                          className="palette-row-icon"
+                          title={words(`instanceComposer.label.${getRowKind(row)}`)}
+                          aria-hidden
+                        >
                           <EntityIcon serviceModel={row.item.serviceModel} />
                           <GripVerticalIcon className="palette-row-grip" />
                         </span>
@@ -472,12 +489,20 @@ const Sidebar = styled.aside`
     }
   }
 
+  // The icon tile in the colours of the entity's kind, like on the cards (entityColors)
   .palette-row-icon {
     flex: none;
-    display: inline-flex;
-    justify-content: center;
-    width: var(--pf-t--global--icon--size--md);
-    color: var(--pf-t--global--icon--color--subtle);
+    display: grid;
+    place-items: center;
+    width: var(--pf-t--global--spacer--lg);
+    height: var(--pf-t--global--spacer--lg);
+    border-radius: var(--pf-t--global--border--radius--small);
+    background: var(--entity-icon-background);
+    color: var(--entity-icon-color);
+  }
+
+  .is-unavailable .palette-row-icon {
+    opacity: 0.5;
   }
 
   .palette-row-grip {

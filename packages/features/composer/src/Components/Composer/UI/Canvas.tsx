@@ -33,8 +33,9 @@ import {
   SHAPE_WIDTH,
 } from "../config";
 import { EntityContextMenu } from "./EntityContextMenu";
-import { EntityNode, EntityNodeData, EntityNodeType, HeaderColors } from "./EntityNode";
+import { EntityNode, EntityNodeData, EntityNodeType } from "./EntityNode";
 import { RelationEdge, RelationEdgeType } from "./RelationEdge";
+import { HeaderColors } from "./entityColors";
 
 const nodeTypes = { entity: EntityNode };
 const edgeTypes = { relation: RelationEdge };
