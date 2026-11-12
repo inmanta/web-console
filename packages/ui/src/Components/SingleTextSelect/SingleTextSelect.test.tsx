@@ -139,3 +139,69 @@ test("SingleTextSelect keeps typed text while nothing is selected", async () => 
 
   expect(screen.getByRole("combobox")).toHaveValue("Ban");
 });
+
+test("SingleTextSelect drops typed text that was not picked when the menu closes", async () => {
+  const setSelected = vi.fn();
+
+  render(<SingleTextSelect selected={null} setSelected={setSelected} options={options} />);
+
+  await userEvent.type(screen.getByRole("combobox"), "Ban");
+  await userEvent.click(document.body);
+
+  expect(screen.getByRole("combobox")).toHaveValue("");
+  expect(setSelected).not.toHaveBeenCalled();
+});
+
+test("SingleTextSelect shows the selected option again when the menu closes", async () => {
+  const [apple] = options;
+
+  render(<SingleTextSelect selected={apple.value} setSelected={vi.fn()} options={options} />);
+
+  await userEvent.clear(screen.getByRole("combobox"));
+  await userEvent.type(screen.getByRole("combobox"), "Ch");
+  await userEvent.keyboard("{Escape}");
+
+  expect(screen.getByRole("combobox")).toHaveValue(apple.children);
+});
+
+test("SingleTextSelect searches for the selected value until the options give its name", () => {
+  const [apple, banana] = options;
+  const onSearchTextChanged = vi.fn();
+  const { rerender } = render(
+    <SingleTextSelect
+      selected={apple.value}
+      setSelected={vi.fn()}
+      options={[banana]}
+      onSearchTextChanged={onSearchTextChanged}
+    />
+  );
+
+  expect(onSearchTextChanged).toHaveBeenLastCalledWith(apple.value);
+  expect(screen.getByRole("combobox")).toHaveValue(apple.value);
+
+  rerender(
+    <SingleTextSelect
+      selected={apple.value}
+      setSelected={vi.fn()}
+      options={[apple]}
+      onSearchTextChanged={onSearchTextChanged}
+    />
+  );
+
+  expect(onSearchTextChanged).toHaveBeenLastCalledWith("");
+  expect(screen.getByRole("combobox")).toHaveValue(apple.children);
+});
+
+test("SingleTextSelect keeps the selected option's name when a search narrows the options without it", async () => {
+  const [apple, , cherry] = options;
+  const { rerender } = render(
+    <SingleTextSelect selected={apple.value} setSelected={vi.fn()} options={options} />
+  );
+
+  await userEvent.clear(screen.getByRole("combobox"));
+  await userEvent.type(screen.getByRole("combobox"), "Ch");
+  rerender(<SingleTextSelect selected={apple.value} setSelected={vi.fn()} options={[cherry]} />);
+  await userEvent.keyboard("{Escape}");
+
+  expect(screen.getByRole("combobox")).toHaveValue(apple.children);
+});

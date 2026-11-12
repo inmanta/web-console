@@ -5,5 +5,6 @@ export * from "./UrlManager";
 export * from "./ScrollRowIntoView";
 export * from "./ResourceId";
 export * from "./useTicker";
+export * from "./useOptionDisplayNames";
 export * from "./displayValueConverter";
 export * from "./preventNumberInputScroll";

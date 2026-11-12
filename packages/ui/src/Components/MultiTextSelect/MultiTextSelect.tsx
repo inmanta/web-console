@@ -15,6 +15,7 @@ import {
 } from "@patternfly/react-core";
 
 import { TimesIcon } from "@patternfly/react-icons";
+import { useOptionDisplayNames } from "@inmanta/web-console-ui/Utils";
 import { checkIfOptionMatchInput } from "../SingleTextSelect";
 
 interface Props {
@@ -35,6 +36,7 @@ interface Props {
 /**
  * The implementation mostly follows the suggested implementation from PF5.
  * Except that the selected state is handled at a higher level in our case.
+ * Typed text stays while the menu is open, so several similar options can be picked, and is dropped when it closes.
  *
  * @param selected string[] of selected elements
  * @param setSelected state callback method
@@ -69,6 +71,7 @@ export const MultiTextSelect: React.FC<Props> = ({
   const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const textInputRef = useRef<HTMLInputElement | null>(null);
+  const getDisplayName = useOptionDisplayNames(options);
 
   useEffect(() => {
     if (inputValue && !isOpen) {
@@ -95,12 +98,6 @@ export const MultiTextSelect: React.FC<Props> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options]);
-
-  const getDisplayValue = (value: string | number | undefined) => {
-    const selectedItem = options.find((option) => option.value === value);
-
-    return selectedItem?.children || value;
-  };
 
   const handleMenuArrowKeys = (key: string) => {
     let indexToFocus;
@@ -152,8 +149,7 @@ export const MultiTextSelect: React.FC<Props> = ({
         break;
       case "Tab":
       case "Escape":
-        setIsOpen(false);
-        setActiveItem(null);
+        closeMenu();
         break;
       case "ArrowUp":
       case "ArrowDown":
@@ -163,8 +159,27 @@ export const MultiTextSelect: React.FC<Props> = ({
     }
   };
 
+  const closeMenu = () => {
+    setIsOpen(false);
+    setFocusedItemIndex(null);
+    setActiveItem(null);
+    setInputValue("");
+  };
+
   const onToggleClick = () => {
-    setIsOpen(!isOpen);
+    if (isOpen) {
+      closeMenu();
+    } else {
+      setIsOpen(true);
+    }
+  };
+
+  const onInputClick = () => {
+    if (!isOpen) {
+      setIsOpen(true);
+    } else if (!inputValue) {
+      closeMenu();
+    }
   };
 
   const onTextInputChange = (_event: React.FormEvent<HTMLInputElement>, value: string) => {
@@ -194,7 +209,7 @@ export const MultiTextSelect: React.FC<Props> = ({
         <TextInputGroup isPlain>
           <TextInputGroupMain
             value={inputValue}
-            onClick={onToggleClick}
+            onClick={onInputClick}
             onChange={onTextInputChange}
             onKeyDown={onInputKeyDown}
             autoComplete="off"
@@ -208,7 +223,7 @@ export const MultiTextSelect: React.FC<Props> = ({
             disabled={props.isDisabled}
           >
             {hasChips && (
-              <LabelGroup aria-label="Current selections" numLabels={0}>
+              <LabelGroup aria-label="Current selections">
                 {selected.map((selection) => (
                   <Label
                     variant="outline"
@@ -219,7 +234,7 @@ export const MultiTextSelect: React.FC<Props> = ({
                       onSelect(selection);
                     }}
                   >
-                    {getDisplayValue(selection)}
+                    {getDisplayName(selection) ?? selection}
                   </Label>
                 ))}
               </LabelGroup>
@@ -249,7 +264,7 @@ export const MultiTextSelect: React.FC<Props> = ({
       id={`multi-select-${toggleAriaLabel}`}
       isOpen={isOpen}
       onSelect={(_ev, selection) => onSelect(selection as string)}
-      onOpenChange={() => setIsOpen(false)}
+      onOpenChange={closeMenu}
       toggle={toggle}
       isScrollable
       maxMenuHeight={maxMenuHeight}
