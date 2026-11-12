@@ -74,7 +74,6 @@ export const composerMessages = {
   "instanceComposer.palette.results": (count: number) =>
     count === 1 ? "1 result" : `${count} results`,
   "instanceComposer.palette.add": (label: string) => `Add ${label} to canvas`,
-  "instanceComposer.palette.unavailable": (label: string) => `${label} can't be added again`,
   "instanceComposer.palette.onCanvas": "On canvas",
   "instanceComposer.palette.markedForDeletion": "Marked for deletion",
   "instanceComposer.palette.noResults.title": (query: string) => `No entities match “${query}”`,
@@ -92,7 +91,6 @@ export const composerMessages = {
     `Remove the relation between ${source} and ${target}`,
   "instanceComposer.canvas": "Canvas",
   "instanceComposer.overview": "Overview",
-  "instanceComposer.zoomHandler.percentage": "Zoom percentage",
   "instanceComposer.arrange": "Arrange",
   "instanceComposer.arrange.all": "Arrange all",
   "instanceComposer.arrange.all.description": "Lays out every entity by relation depth",
