@@ -20,9 +20,11 @@ import {
   countHiddenLayers,
   getConnectedLayerData,
   getLinks,
+  getRemoveActions,
   getValidationMessages,
 } from "../Data/Helpers";
 import { useAddPaletteItem } from "../Data/Hooks";
+import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import {
   LEFT_SIDEBAR_WIDTH,
   MAX_ZOOM,
@@ -31,13 +33,41 @@ import {
   SHAPE_WIDTH,
 } from "../config";
 import { EntityContextMenu } from "./EntityContextMenu";
-import { EntityNode, EntityNodeType, HeaderColors } from "./EntityNode";
+import { EntityNode, EntityNodeData, EntityNodeType, HeaderColors } from "./EntityNode";
 import { RelationEdge, RelationEdgeType } from "./RelationEdge";
 
 const nodeTypes = { entity: EntityNode };
 const edgeTypes = { relation: RelationEdge };
 const fitViewOptions = { padding: 0.2, maxZoom: 1 };
 const proOptions = { hideAttribution: true };
+
+type CardData = Omit<EntityNodeData, "shape">;
+
+/**
+ * What each card shows that depends on the other shapes: its problems, what is hidden below it,
+ * and its relations. Validating a shape refreshes its attribute validation, so this changes the
+ * shapes; it runs once per change of the shapes, not on every render or selection.
+ */
+const deriveCardData = (canvasState: Map<string, ServiceEntityShape>): Map<string, CardData> => {
+  const relationCounts = new Map<string, number>();
+
+  getLinks(canvasState).forEach(({ source, target }) => {
+    relationCounts.set(source, (relationCounts.get(source) ?? 0) + 1);
+    relationCounts.set(target, (relationCounts.get(target) ?? 0) + 1);
+  });
+
+  return new Map(
+    Array.from(canvasState.values()).map((shape) => [
+      shape.id,
+      {
+        validationMessages: getValidationMessages(shape, canvasState),
+        hiddenCount: countHiddenLayers(canvasState, shape),
+        relationCount: relationCounts.get(shape.id) ?? 0,
+        hasLayers: getConnectedLayerData(canvasState, shape).shapes.length > 0,
+      },
+    ])
+  );
+};
 
 /**
  * The composer canvas: the shapes as cards and their relations as lines, on a pannable,
@@ -52,9 +82,10 @@ export const Canvas: React.FC = () => {
     activeCell,
     setActiveCell,
     relationsDictionary,
+    serviceCatalog,
     draggedItemRef,
   } = useContext(ComposerContext);
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, flowToScreenPosition, getInternalNode } = useReactFlow();
   const isConnecting = useStore((state) => state.connection.inProgress);
   const addPaletteItem = useAddPaletteItem();
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -62,18 +93,23 @@ export const Canvas: React.FC = () => {
   const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [contextMenu, setContextMenu] = useState<{ shapeId: string; x: number; y: number }>();
+  // The card data of the current shapes (deriveCardData)
+  const cardDataRef = useRef<{
+    canvasState: Map<string, ServiceEntityShape>;
+    data: Map<string, CardData>;
+  }>(null);
 
-  // Rebuild the cards whenever the shapes change. React Flow keeps the size it measured on
-  // the previous card, so it is carried over.
+  // Rebuild the cards whenever the shapes or the selection change. Only a change of the shapes
+  // derives their data again. React Flow keeps the size it measured on the previous card, so it
+  // is carried over.
   useEffect(() => {
+    if (cardDataRef.current?.canvasState !== canvasState) {
+      cardDataRef.current = { canvasState, data: deriveCardData(canvasState) };
+    }
+    const cardData = cardDataRef.current.data;
+
     setNodes((previousNodes) => {
       const measured = new Map(previousNodes.map((node) => [node.id, node.measured]));
-      const relationCounts = new Map<string, number>();
-
-      getLinks(canvasState).forEach(({ source, target }) => {
-        relationCounts.set(source, (relationCounts.get(source) ?? 0) + 1);
-        relationCounts.set(target, (relationCounts.get(target) ?? 0) + 1);
-      });
 
       return Array.from(canvasState.values()).map((shape) => ({
         id: shape.id,
@@ -83,13 +119,7 @@ export const Canvas: React.FC = () => {
         hidden: shape.isHidden,
         selected: shape.id === activeCell?.id,
         connectable: editable,
-        data: {
-          shape,
-          validationMessages: getValidationMessages(shape, canvasState),
-          hiddenCount: countHiddenLayers(canvasState, shape),
-          relationCount: relationCounts.get(shape.id) ?? 0,
-          hasLayers: getConnectedLayerData(canvasState, shape).shapes.length > 0,
-        },
+        data: { shape, ...(cardData.get(shape.id) as CardData) },
       }));
     });
   }, [canvasState, activeCell, editable]);
@@ -125,7 +155,18 @@ export const Canvas: React.FC = () => {
         }
       });
 
-      // Selection follows the active cell, and removing goes through the context menu.
+      // Selection follows the active cell: selecting a card with the keyboard (Enter or Space on
+      // a focused card) selects its shape, and Escape unselects it. Clicks are handled by
+      // onNodeClick and onPaneClick. Removing goes through getRemoveActions (onKeyDown).
+      const selections = changes.filter((change) => change.type === "select");
+      const selected = selections.filter((change) => change.selected).pop();
+
+      if (selected) {
+        setActiveCell(canvasState.get(selected.id) || null);
+      } else if (selections.some((change) => change.id === activeCell?.id)) {
+        setActiveCell(null);
+      }
+
       setNodes((current) =>
         applyNodeChanges(
           changes.filter((change) => change.type !== "select" && change.type !== "remove"),
@@ -133,7 +174,7 @@ export const Canvas: React.FC = () => {
         )
       );
     },
-    [canvasState]
+    [canvasState, activeCell, setActiveCell]
   );
 
   const isValidConnection = useCallback(
@@ -188,16 +229,66 @@ export const Canvas: React.FC = () => {
     addPaletteItem(item, { x: position.x - SHAPE_WIDTH / 2, y: position.y - 20 });
   };
 
+  /**
+   * Delete or Backspace takes the selected shape off the canvas, by the rules of its menu: a new
+   * shape is removed right away. Otherwise the menu opens on the card, to delete the shape
+   * permanently, or to say why it can't be removed.
+   */
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    if (
+      (event.key !== "Delete" && event.key !== "Backspace") ||
+      !editable ||
+      !activeCell ||
+      contextMenu ||
+      event.target instanceof HTMLInputElement ||
+      event.target instanceof HTMLTextAreaElement
+    ) {
+      return;
+    }
+    event.preventDefault();
+
+    const { canRemoveFromCanvas } = getRemoveActions(
+      activeCell,
+      canvasState,
+      relationsDictionary,
+      serviceCatalog
+    );
+
+    if (canRemoveFromCanvas) {
+      canvasActions.removeShape(activeCell, false);
+      setActiveCell(null);
+      // Keep the focus in the canvas, where it was on the removed card
+      wrapperRef.current?.focus();
+
+      return;
+    }
+
+    const node = getInternalNode(activeCell.id);
+    const bounds = wrapperRef.current?.getBoundingClientRect();
+
+    if (node && bounds) {
+      const corner = flowToScreenPosition(node.internals.positionAbsolute);
+
+      setContextMenu({
+        shapeId: activeCell.id,
+        x: corner.x - bounds.left + 24,
+        y: corner.y - bounds.top + 24,
+      });
+    }
+  };
+
   const contextMenuShape = contextMenu && canvasState.get(contextMenu.shapeId);
 
   return (
     <CanvasContainer
       ref={wrapperRef}
-      className={`canvas ${!editable && "view_mode"}`}
+      className={editable ? "canvas" : "canvas view_mode"}
       data-testid="canvas"
+      tabIndex={-1}
       aria-label={words("instanceComposer.canvas")}
       onDragOver={onDragOver}
       onDrop={onDrop}
+      onKeyDown={onKeyDown}
     >
       <ReactFlow<EntityNodeType, RelationEdgeType>
         className={isConnecting ? "is-connecting" : undefined}
@@ -232,6 +323,7 @@ export const Canvas: React.FC = () => {
         isValidConnection={isValidConnection}
         nodesConnectable={editable}
         deleteKeyCode={null}
+        selectNodesOnDrag={false}
         minZoom={MIN_ZOOM}
         maxZoom={MAX_ZOOM}
         fitView
@@ -265,6 +357,11 @@ const CanvasContainer = styled.div`
   // Leave room for both flanking sidebars so the canvas never runs under them.
   width: calc(100% - ${LEFT_SIDEBAR_WIDTH + RIGHT_SIDEBAR_WIDTH}px);
   height: 100%;
+
+  // Only focused when the focused card is removed, to keep the focus in the canvas
+  &:focus {
+    outline: none;
+  }
 
   // The left sidebar is hidden in view mode, so only reserve the right sidebar.
   &.view_mode {

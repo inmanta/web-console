@@ -4,7 +4,7 @@ import { TimesIcon } from "@patternfly/react-icons/dist/esm/icons/times-icon";
 import { TrashIcon } from "@patternfly/react-icons/dist/esm/icons/trash-icon";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
-import { canRemoveShape } from "../Data/Helpers";
+import { getRemoveActions } from "../Data/Helpers";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 
 interface Props {
@@ -15,23 +15,23 @@ interface Props {
 }
 
 /**
- * The right-click menu of a shape. A new shape can be removed from the canvas: nothing is
- * sent to the orchestrator for it. An existing service or relation can be deleted
- * permanently: the order deletes it on deploy. When the relations require the shape,
- * the menu says it can't be removed.
+ * The menu of a shape, opened with a right-click, or with the Delete key when the selected shape
+ * can't simply be removed. A new shape can be removed from the canvas: nothing is sent to the
+ * orchestrator for it. An existing service or relation can be deleted permanently: the order
+ * deletes it on deploy. When the relations require the shape, the menu says it can't be removed
+ * (getRemoveActions).
  */
 export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => {
   const { canvasState, canvasActions, relationsDictionary, serviceCatalog } =
     useContext(ComposerContext);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const canRemove = canRemoveShape(shape, canvasState, relationsDictionary, serviceCatalog);
-  // Only allow "Remove from canvas" for new shapes to prevent unwanted side-effects
-  const canRemoveFromCanvas = canRemove && shape.isNew;
-  // Only core and relation entities can be permanently deleted. New shapes haven't been
-  // persisted yet, so there's nothing to delete permanently.
-  const canDelete =
-    canRemove && !shape.isNew && (shape.entityType === "core" || shape.entityType === "relation");
+  const { canRemoveFromCanvas, canDelete } = getRemoveActions(
+    shape,
+    canvasState,
+    relationsDictionary,
+    serviceCatalog
+  );
 
   // Close on a click outside the menu, or on Escape
   useEffect(() => {

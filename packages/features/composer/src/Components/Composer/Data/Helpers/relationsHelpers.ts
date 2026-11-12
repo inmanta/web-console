@@ -336,6 +336,35 @@ export const canRemoveShape = (
 };
 
 /**
+ * How a shape can be taken off the canvas, the rules of its right-click menu and of the Delete
+ * key. A new shape is only removed from the canvas: nothing is sent to the orchestrator for it.
+ * An existing service or relation is deleted permanently: the order deletes it on deploy. An
+ * existing embedded entity can't be taken off on its own, and neither can a shape the relations
+ * require (canRemoveShape).
+ *
+ * @param {ServiceEntityShape} shape - The shape to take off the canvas
+ * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas
+ * @param {RelationsDictionary} relationsDictionary - The relations dictionary
+ * @param {ServiceModel[]} serviceCatalog - The service catalog
+ * @returns {{ canRemoveFromCanvas: boolean, canDelete: boolean }} Which of the two is allowed;
+ *   at most one is
+ */
+export const getRemoveActions = (
+  shape: ServiceEntityShape,
+  canvasState: Map<string, ServiceEntityShape>,
+  relationsDictionary: RelationsDictionary,
+  serviceCatalog: ServiceModel[]
+): { canRemoveFromCanvas: boolean; canDelete: boolean } => {
+  const canRemove = canRemoveShape(shape, canvasState, relationsDictionary, serviceCatalog);
+
+  return {
+    canRemoveFromCanvas: canRemove && shape.isNew,
+    canDelete:
+      canRemove && !shape.isNew && (shape.entityType === "core" || shape.entityType === "relation"),
+  };
+};
+
+/**
  * Checks if a link can be removed between two shapes without violating relation requirements.
  * Prevents removal if:
  * 1. Removing would cause the shape to fall below the required lower_limit

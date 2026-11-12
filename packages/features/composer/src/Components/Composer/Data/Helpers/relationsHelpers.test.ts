@@ -9,6 +9,7 @@ import {
   getRelationInfo,
   canRemoveShape,
   canRemoveLink,
+  getRemoveActions,
 } from "./relationsHelpers";
 
 describe("relationsHelpers", () => {
@@ -543,6 +544,87 @@ describe("relationsHelpers", () => {
       );
 
       expect(result).toBe(false);
+    });
+  });
+
+  describe("getRemoveActions", () => {
+    it("removes a new shape from the canvas, whatever its kind", () => {
+      (["core", "embedded", "relation"] as const).forEach((entityType) => {
+        const shape = createMockShape(
+          "shape-1",
+          entityType,
+          true,
+          new Map(),
+          createMockServiceModel("ServiceA")
+        );
+
+        expect(getRemoveActions(shape, toCanvas(shape), {}, [])).toEqual({
+          canRemoveFromCanvas: true,
+          canDelete: false,
+        });
+      });
+    });
+
+    it("deletes an existing service or relation permanently", () => {
+      (["core", "relation"] as const).forEach((entityType) => {
+        const shape = createMockShape(
+          "shape-1",
+          entityType,
+          false,
+          new Map(),
+          createMockServiceModel("ServiceA")
+        );
+
+        expect(getRemoveActions(shape, toCanvas(shape), {}, [])).toEqual({
+          canRemoveFromCanvas: false,
+          canDelete: true,
+        });
+      });
+    });
+
+    it("can't take an existing embedded entity off on its own", () => {
+      const shape = createMockShape(
+        "shape-1",
+        "embedded",
+        false,
+        new Map(),
+        createMockServiceModel("ServiceA")
+      );
+
+      expect(getRemoveActions(shape, toCanvas(shape), {}, [])).toEqual({
+        canRemoveFromCanvas: false,
+        canDelete: false,
+      });
+    });
+
+    it("can't take off an existing shape the relations require", () => {
+      const serviceModelB = createMockServiceModel("ServiceB", {
+        inter_service_relations: [createMockInterServiceRelation("rel1", "ServiceA", "rw+")],
+      });
+      const sourceShape = createMockShape(
+        "source-1",
+        "core",
+        false,
+        new Map([["ServiceB", ["target-1"]]]),
+        createMockServiceModel("ServiceA")
+      );
+      const targetShape = createMockShape(
+        "target-1",
+        "core",
+        false,
+        new Map([["ServiceA", ["source-1"]]]),
+        serviceModelB
+      );
+      const relationsDictionary: RelationsDictionary = {
+        ServiceB: { ServiceA: { lower_limit: 1, upper_limit: 1 } },
+      };
+
+      expect(
+        getRemoveActions(sourceShape, toCanvas(sourceShape, targetShape), relationsDictionary, [
+          createMockServiceModel("ServiceA"),
+          serviceModelB,
+        ])
+      ).toEqual({ canRemoveFromCanvas: false, canDelete: false });
     });
   });
 
