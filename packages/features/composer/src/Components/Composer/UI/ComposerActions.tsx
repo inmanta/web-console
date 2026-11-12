@@ -1,5 +1,4 @@
 import React, { useCallback, useContext } from "react";
-import "@joint/plus/joint-plus.css";
 import { useLocation, useNavigate } from "react-router";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { words } from "@inmanta/web-console-core";
@@ -12,7 +11,7 @@ import {
   useGetInstanceWithRelations,
 } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { ComposerContext } from "../Data/Context";
-import { getServiceOrderItemsArray, SavedCoordinates } from "../Data/Helpers";
+import { getCellsCoordinates, getServiceOrderItemsArray } from "../Data/Helpers";
 
 /**
  * Properties for the ComposerActions component.
@@ -40,7 +39,7 @@ interface Props {
  * @returns {React.FC} The ComposerActions component.
  */
 export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
-  const { mainService, serviceInstanceId, serviceOrderItems, canvasHandlers, hasValidationErrors } =
+  const { mainService, serviceInstanceId, serviceOrderItems, canvasState, hasValidationErrors } =
     useContext(ComposerContext);
   const { routeManager } = useContext(DependencyContext);
   const { notifyError } = useAppAlert();
@@ -82,16 +81,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
    *
    */
   const handleDeploy = () => {
-    let coordinates: SavedCoordinates[] = [];
-
-    if (!canvasHandlers) {
-      notifyError({
-        title: words("instanceComposer.failed.title"),
-        message: words("instanceComposer.errorMessage.coordinatesRequest"),
-      });
-    } else {
-      coordinates = canvasHandlers.getCoordinates();
-    }
+    const coordinates = getCellsCoordinates(canvasState);
 
     const orderItems = getServiceOrderItemsArray(serviceOrderItems).map((instance) => ({
       ...instance,

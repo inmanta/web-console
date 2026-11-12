@@ -12,7 +12,13 @@ import { relative, sep } from "path";
 import { federation } from "@module-federation/vite";
 import { defineConfig, mergeConfig, Plugin } from "vite";
 import { repoRoot, sharedConfig } from "../../../vite.shared.ts";
-import { composerBuildDir, composerSharedModules, composerVitePlugin } from "./vite.js";
+import {
+  canvasPackages,
+  composerBuildDir,
+  composerSharedModules,
+  composerVitePlugin,
+  packageOf,
+} from "./vite.js";
 
 /**
  * Names every file "composer-..." in the root of the build. The federation plugin names the
@@ -35,22 +41,25 @@ const flatFileNames = (): Plugin => ({
 
 /**
  * Fails the build when it bundles code the app should provide: any installed package other than
- * JointJS, or the code of another workspace package. That code would be a second copy, with its
- * own state and contexts, e.g. a module the composer imports that isn't in
- * `composerSharedModules`, or one only a package it depends on imports.
+ * the canvas libraries and what they depend on (`canvasPackages`), or the code of another
+ * workspace package. That code would be a second copy, with its own state and contexts, e.g. a
+ * module the composer imports that isn't in `composerSharedModules`, or one only a package it
+ * depends on imports.
  */
 const onlyComposerCode = (): Plugin => ({
   name: "composer-only-own-code",
   enforce: "post",
   generateBundle(_options, bundle) {
     const foreign = new Set<string>();
+    const canvas = new Set(canvasPackages().packages);
 
     for (const output of Object.values(bundle)) {
       for (const id of output.type === "chunk" ? output.moduleIds : []) {
         const path = relative(repoRoot, id.split("?")[0]).split(sep).join("/");
+        const inModules = path.split("node_modules/");
 
         if (
-          (path.includes("node_modules/") && !path.includes("node_modules/@joint/")) ||
+          (inModules.length > 1 && !canvas.has(packageOf(inModules[inModules.length - 1]))) ||
           (path.startsWith("packages/") && !path.startsWith("packages/features/composer/"))
         ) {
           foreign.add(path);
@@ -64,6 +73,30 @@ const onlyComposerCode = (): Plugin => ({
           "The composer's build bundles code the app should provide, so it would run on a second copy of it. Share these modules (composerSharedModules in vite.js):",
           ...[...foreign].sort(),
         ].join("\n")
+      );
+    }
+  },
+});
+
+/**
+ * Fails the build when a bundled CommonJS module `require`s a module the app provides: the app
+ * provides ES modules through its import map, so that `require` throws at runtime. Rolldown only
+ * adds its `require` fallback, with this message, to a build that has such a `require`. The app
+ * provides those CommonJS modules instead (`canvasCommonJsModules` in vite.js).
+ */
+const noRequireOfShared = (): Plugin => ({
+  name: "composer-no-require-of-shared",
+  enforce: "post",
+  generateBundle(_options, bundle) {
+    const requiring = Object.values(bundle).filter(
+      (output) =>
+        output.type === "chunk" &&
+        output.code.includes("in an environment that doesn't expose the `require` function")
+    );
+
+    if (requiring.length > 0) {
+      this.error(
+        `A CommonJS module in the composer's build requires a module the app provides, which fails at runtime. Let the app provide that CommonJS module (canvasCommonJsModules in vite.js). Chunks: ${requiring.map(({ fileName }) => fileName).join(", ")}`
       );
     }
   },
@@ -85,6 +118,7 @@ export default defineConfig(
       }),
       flatFileNames(),
       onlyComposerCode(),
+      noRequireOfShared(),
     ],
     build: {
       outDir: composerBuildDir,

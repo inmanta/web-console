@@ -35,7 +35,7 @@ const showInComposer: LinkAction<InstanceLinkContext> = {
 };
 
 /**
- * The Instance Composer. Its pages pull in @joint/plus, so they are not preloaded: they are only
+ * The Instance Composer. Its pages pull in the canvas libraries, so they are not preloaded: they are only
  * fetched when a composer route is opened.
  */
 export const composerFeature: FeatureModule = {

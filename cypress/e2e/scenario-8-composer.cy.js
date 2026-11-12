@@ -2,12 +2,62 @@
  * This scenario tests the Service Composer functionality.
  * It requires the PXSDC Project to be installed.
  *
- * Note: Several interactions use force:true because SVG/canvas drag handles
- * can intermittently fail Cypress actionability checks (overlap/re-render timing).
+ * Note: clicks on cards use force:true, because a card can sit under the minimap, the zoom
+ * toolbar or another card's toolbar.
  */
 import environmentHelpers from "../support/environmentHelpers.js";
 
 const { selectEnvironment, waitForServiceCatalogUpdate } = environmentHelpers;
+
+/**
+ * Selects the card of an entity on the canvas by its display name.
+ */
+const entity = (name) => `[data-testid="entity-${name}"]`;
+
+/**
+ * Selects the cards of an embedded entity whose display name contains the given name.
+ */
+const entityContaining = (name) => `[data-testid^="entity-"][data-testid*="${name}"]`;
+
+/**
+ * Drags a link from the link action of the selected card onto the target card, the way
+ * a user does: press on the link action, move onto the target, release.
+ */
+const linkSelectedEntityTo = (targetSelector) => {
+  cy.get(".react-flow__node.selected .link-handle").then(($handle) => {
+    const from = $handle[0].getBoundingClientRect();
+    const fromX = from.left + from.width / 2;
+    const fromY = from.top + from.height / 2;
+
+    cy.get(targetSelector).then(($target) => {
+      const to = $target[0].getBoundingClientRect();
+      const toX = to.left + to.width / 2;
+      const toY = to.top + to.height / 2;
+
+      cy.wrap($handle).trigger("mousedown", { button: 0, clientX: fromX, clientY: fromY });
+      cy.document().trigger("mousemove", { button: 0, clientX: fromX + 20, clientY: fromY + 20 });
+      cy.document().trigger("mousemove", { button: 0, clientX: toX, clientY: toY });
+      cy.document().trigger("mouseup", { button: 0, clientX: toX, clientY: toY });
+    });
+  });
+};
+
+/**
+ * Drags an item of the palette onto the canvas, at the position getPosition yields.
+ */
+const dropPaletteItem = (group, item, getPosition) => {
+  const dataTransfer = new DataTransfer();
+
+  cy.get(`[data-testid="palette-group-${group}"] [data-testid="palette-item-${item}"]`)
+    .first()
+    .trigger("dragstart", { dataTransfer });
+
+  getPosition().then(({ x, y }) => {
+    cy.get('[data-testid="canvas"]')
+      .trigger("dragover", { dataTransfer, clientX: x, clientY: y })
+      .trigger("drop", { dataTransfer, clientX: x, clientY: y });
+  });
+};
 
 const isIso = Cypress.expose("edition") === "iso";
 const PXSDC_ENV_NAME = "Test PXSDC";
@@ -93,91 +143,37 @@ if (isIso) {
       cy.get('[data-testid="deploy-button"]').should("be.disabled");
       cy.get('[aria-label="service-description"]').should("have.text", "Telco cloud l3out");
 
-      cy.get("#instance-tab-element").within(() => {
-        cy.get('.group[data-name="l3out"]').should("exist");
-        cy.get('.group[data-name="network"]').should("exist");
-        cy.get('.group[data-name="project"]').should("exist");
-        cy.get('.group[data-name="virtualmachine"]').should("exist");
-        cy.get(".group").should("have.length", 4);
+      cy.get('[data-testid="left_sidebar"]').within(() => {
+        cy.get('[data-testid="palette-group-l3out"]').should("exist");
+        cy.get('[data-testid="palette-group-network"]').should("exist");
+        cy.get('[data-testid="palette-group-project"]').should("exist");
+        cy.get('[data-testid="palette-group-virtualmachine"]').should("exist");
+        cy.get('[data-testid^="palette-group-"]').should("have.length", 4);
       });
 
       // Assert: Initial composer graph for l3out is loaded.
-      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-l3out"])')
-        .should("exist")
-        .and("have.attr", "cursor", "move")
-        .and("have.class", "joint-cell")
-        .and("have.class", "joint-type-app-serviceentityshape");
-
-      cy.get('g[data-type="app.ServiceEntityShape"] [data-testid="header-l3out"]')
-        .should("be.visible")
-        .and("have.text", "l3out");
+      cy.get(entity("l3out")).should("be.visible");
+      cy.get('[data-testid="header-l3out"]').should("contain", "l3out");
 
       // The related entities render only after the composer's compile finishes (l3out shows first),
       // so give these canvas shapes room to appear instead of the default 10s.
-      cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "project", { timeout: 60000 })
-        .closest('g[data-type="app.ServiceEntityShape"]')
+      cy.get(entity("project"), { timeout: 60000 })
         .as("projectEntity")
-        .within(() => {
-          cy.get("rect.joint-halo-highlight-missing").should("exist");
-        });
+        .should("have.attr", "data-invalid", "true");
 
-      cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "ProjectNaming", {
-        timeout: 60000,
-      })
-        .closest('g[data-type="app.ServiceEntityShape"]')
-        .as("projectNamingEntity");
+      cy.get(entityContaining("ProjectNaming"), { timeout: 60000 }).as("projectNamingEntity");
 
       // Step 4: Connect project -> l3out.
       cy.get("@projectEntity").click({ force: true });
-
-      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-l3out"])').as(
-        "l3outEntity"
-      );
-
-      cy.get("@l3outEntity").then(($target) => {
-        const targetRect = $target[0].getBoundingClientRect();
-        const targetX = targetRect.left + targetRect.width / 2;
-        const targetY = targetRect.top + targetRect.height / 2;
-
-        cy.get('div.handle.link.e[data-action="link"]', { timeout: 10000 })
-          .should("be.visible")
-          .trigger("mousedown", {
-            button: 0,
-            which: 1,
-            force: true,
-          });
-
-        cy.get("body").trigger("mousemove", {
-          button: 0,
-          which: 1,
-          clientX: targetX,
-          clientY: targetY,
-          force: true,
-        });
-
-        cy.get("@l3outEntity").trigger("mouseup", {
-          button: 0,
-          which: 1,
-          clientX: targetX,
-          clientY: targetY,
-          force: true,
-        });
-      });
+      cy.get(entity("l3out")).as("l3outEntity");
+      linkSelectedEntityTo(entity("l3out"));
 
       // Assert: Validation state before filling required fields.
       cy.get('[data-testid="deploy-button"]').should("be.disabled");
 
-      cy.get("@projectEntity").within(() => {
-        cy.get("rect.joint-halo-highlight-missing").should("exist");
-      });
-
-      cy.get("@l3outEntity").within(() => {
-        cy.get("rect.joint-halo-highlight-missing").should("exist");
-      });
-
-      cy.get("@projectNamingEntity").within(() => {
-        cy.get("rect.joint-halo-highlight-missing").should("not.exist");
-      });
+      cy.get("@projectEntity").should("have.attr", "data-invalid", "true");
+      cy.get("@l3outEntity").should("have.attr", "data-invalid", "true");
+      cy.get("@projectNamingEntity").should("have.attr", "data-invalid", "false");
 
       // Step 5: Fill Project form fields.
       cy.get("#name").clear().type("pxs-project");
@@ -185,18 +181,14 @@ if (isIso) {
       cy.get("#environment").click({ force: true });
       cy.contains('[role="menuitem"], [role="option"]', /lab/i).click();
 
-      cy.get("@projectNamingEntity").within(() => {
-        cy.get("rect.joint-halo-highlight-missing").should("not.exist");
-      });
+      cy.get("@projectNamingEntity").should("have.attr", "data-invalid", "false");
 
       // Step 6: Fill l3out form fields.
       cy.get("@l3outEntity").click({ force: true });
       cy.get("#name").clear().type("pxs-l3out");
       cy.get("#rd").clear().type("3");
 
-      cy.get("@l3outEntity").within(() => {
-        cy.get("rect.joint-halo-highlight-missing").should("not.exist");
-      });
+      cy.get("@l3outEntity").should("have.attr", "data-invalid", "false");
 
       // Step 7: Deploy and validate resulting order details.
       cy.get('[data-testid="deploy-button"]').should("be.enabled").click();
@@ -250,52 +242,32 @@ if (isIso) {
       cy.contains('[role="menuitem"]', "Edit in Composer").click();
 
       // Step 2: Validate current inventory tab disabled state.
-      cy.get("#inventory-tab", { timeout: 20000 }).click();
+      cy.contains('[role="tab"]', "Inventory", { timeout: 20000 }).click();
 
-      cy.contains('g[data-type="standard.Path"] tspan', "pxs-l3out", { timeout: 20000 })
-        .closest('g[data-type="standard.Path"]')
-        .as("pxsL3outInventoryItem");
+      cy.get('[data-testid="palette-item-pxs-l3out"]', { timeout: 20000 })
+        .should("have.attr", "aria-disabled", "true")
+        .and("contain", "On canvas");
 
-      cy.contains('g[data-type="standard.Path"] tspan', "pxs-project", { timeout: 20000 })
-        .closest('g[data-type="standard.Path"]')
-        .as("pxsProjectInventoryItem");
+      cy.get('[data-testid="palette-item-pxs-project"]', { timeout: 20000 })
+        .should("have.attr", "aria-disabled", "true")
+        .and("contain", "On canvas");
 
-      cy.get("@pxsL3outInventoryItem")
-        .find('rect[joint-selector="bodyTwo"]')
-        .should(($rect) => {
-          const value = $rect.attr("class") || $rect.attr("class-name") || "";
-          expect(value).to.contain("stencil_body-disabled");
-        });
-
-      cy.get("@pxsProjectInventoryItem")
-        .find('rect[joint-selector="bodyTwo"]')
-        .should(($rect) => {
-          const value = $rect.attr("class") || $rect.attr("class-name") || "";
-          expect(value).to.contain("stencil_body-disabled");
-        });
-
-      // Step 3: Delete l3out permanently from composer and verify it becomes available in inventory.
+      // Step 3: Delete l3out permanently from composer and verify it can't be added again.
       cy.get('[data-testid="deploy-button"]').should("be.enabled");
 
-      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-l3out"])')
-        .first()
-        .rightclick({ force: true });
+      cy.get(entity("l3out")).first().rightclick({ force: true });
 
-      cy.contains("div.entity-context-menu-item", "Delete permanently", { timeout: 10000 })
+      cy.get('[data-testid="entity-context-menu"]')
+        .contains("button", "Delete permanently")
         .should("be.visible")
         .click();
 
-      cy.get("#inventory-tab", { timeout: 20000 }).click();
+      cy.get(entity("l3out")).should("not.exist");
 
-      cy.contains('g[data-type="standard.Path"] tspan', "pxs-l3out", { timeout: 20000 })
-        .closest('g[data-type="standard.Path"]')
-        .find('rect[joint-selector="bodyTwo"]')
-        .should(($rect) => {
-          const value = $rect.attr("class") || $rect.attr("class-name") || "";
-          expect(value).to.contain("stencil_body-disabled");
-          // the instance is not present on the canvas, but is set te be deleted, so it shouldn't be available in the sidebar.
-          // we could improve this ux-wise, graying out a shape on the canvas instead of deleting it.
-        });
+      // The instance is not on the canvas, but is set to be deleted, so it can't be added again.
+      cy.get('[data-testid="palette-item-pxs-l3out"]')
+        .should("have.attr", "aria-disabled", "true")
+        .and("contain", "Marked for deletion");
 
       // Step 4: Deploy and validate resulting order details.
       cy.get('[data-testid="deploy-button"]').should("be.enabled").click();
@@ -365,60 +337,22 @@ if (isIso) {
       cy.contains('[role="menuitem"]', "Edit in Composer").click();
 
       // Assert: Existing project and ProjectNaming nodes are present.
-      cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "project", {
-        timeout: 20000,
-      }).should("be.visible");
-      cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "ProjectNaming", {
-        timeout: 20000,
-      }).should("be.visible");
+      cy.get(entity("project"), { timeout: 20000 })
+        .as("projectEntity")
+        .should("be.visible")
+        .and("contain", "pxs-project");
+      cy.get(entityContaining("ProjectNaming"), { timeout: 20000 }).should("be.visible");
 
-      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-project"])')
-        .should("exist")
-        .within(() => {
-          cy.get('rect[joint-selector="body"]').should("exist");
-          cy.contains("tspan", "pxs-project").should("be.visible");
-        });
+      // Step 2: Drag network from the palette onto the canvas, above project.
+      dropPaletteItem("network", "network", () =>
+        cy.get("@projectEntity").then(($projectEntity) => {
+          const rect = $projectEntity[0].getBoundingClientRect();
 
-      // Step 2: Drag network node above project.
-      cy.contains('g[data-type="standard.Path"] tspan', "network", { timeout: 20000 })
-        .closest('g[data-type="standard.Path"]')
-        .as("networkPath");
-
-      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-project"])').as(
-        "projectEntity"
+          return { x: rect.left + rect.width / 2, y: rect.top - 80 };
+        })
       );
 
-      cy.get("@projectEntity").then(($projectEntity) => {
-        const projectRect = $projectEntity[0].getBoundingClientRect();
-        const dropX = projectRect.left + projectRect.width / 2;
-        const dropY = projectRect.top - 80;
-
-        cy.get("@networkPath").trigger("mousedown", {
-          button: 0,
-          which: 1,
-          force: true,
-        });
-
-        cy.get("body").trigger("mousemove", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-
-        cy.get('[data-testid="canvas"]').trigger("mouseup", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-      });
-
-      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-network"])', {
-        timeout: 20000,
-      }).as("networkEntity");
+      cy.get(entity("network"), { timeout: 20000 }).as("networkEntity");
 
       // Step 3: Fill network form fields.
       cy.get("@networkEntity").click({ force: true });
@@ -426,35 +360,7 @@ if (isIso) {
       cy.get("#prefix_size").clear().type("5");
 
       // Step 4: Connect network -> project.
-      cy.get("@projectEntity").then(($target) => {
-        const targetRect = $target[0].getBoundingClientRect();
-        const targetX = targetRect.left + targetRect.width / 2;
-        const targetY = targetRect.top + targetRect.height / 2;
-
-        cy.get('div.handle.link.e[data-action="link"]', { timeout: 10000 })
-          .should("be.visible")
-          .trigger("mousedown", {
-            button: 0,
-            which: 1,
-            force: true,
-          });
-
-        cy.get("body").trigger("mousemove", {
-          button: 0,
-          which: 1,
-          clientX: targetX,
-          clientY: targetY,
-          force: true,
-        });
-
-        cy.get("@projectEntity").trigger("mouseup", {
-          button: 0,
-          which: 1,
-          clientX: targetX,
-          clientY: targetY,
-          force: true,
-        });
-      });
+      linkSelectedEntityTo(entity("project"));
 
       // Step 5: Deploy and validate resulting order details.
       cy.get('[data-testid="deploy-button"]').should("be.enabled").click();
@@ -513,63 +419,25 @@ if (isIso) {
       cy.contains('[role="menuitem"]', "Edit in Composer").click();
 
       // Assert: Existing project node is present on the canvas.
-      cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "project", {
-        timeout: 20000,
-      }).should("be.visible");
+      cy.get(entity("project"), { timeout: 20000 }).should("be.visible");
 
-      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-project"])').as(
-        "existingProjectEntity"
-      );
-
-      // Step 3: Zoom out to create more room on the canvas. ( to 60%)
+      // Step 3: Zoom out to create more room on the canvas.
       cy.get('[data-testid="zoom-out"]').click().click().click().click();
 
-      // Alias stencil items.
-      cy.contains('g[data-type="standard.Path"] tspan', "project")
-        .closest('g[data-type="standard.Path"]')
-        .as("projectPath");
-
       // Step 4: Duo 1 - The existing project already has a ProjectNaming loaded from the instance.
-      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid*="ProjectNaming"])', {
-        timeout: 10000,
-      })
-        .should("have.length", 1)
-        .eq(0)
-        .as("firstProjectNamingEntity");
+      cy.get(entityContaining("ProjectNaming"), { timeout: 10000 }).should("have.length", 1);
 
-      // Step 5: Duo 2 - Drag a second project. Its ProjectNaming is auto-added to the canvas.
-      cy.get("@existingProjectEntity").then(($existingProject) => {
-        const rect = $existingProject[0].getBoundingClientRect();
-        const dropX = rect.left + rect.width / 2;
-        const dropY = rect.top - 120;
+      // Step 5: Duo 2 - Add a second project with its + button. Its ProjectNaming is auto-added.
+      cy.get('[data-testid="palette-group-project"]')
+        .find('button[aria-label="Add project to canvas"]')
+        .click();
 
-        cy.get("@projectPath").trigger("mousedown", { button: 0, which: 1, force: true });
-        cy.get("body").trigger("mousemove", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-        cy.get('[data-testid="canvas"]').trigger("mouseup", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-      });
-
-      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-project"])', {
-        timeout: 10000,
-      })
+      cy.get(entity("project"), { timeout: 10000 })
         .should("have.length", 2)
         .eq(1)
         .as("secondProjectEntity");
 
-      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid*="ProjectNaming"])', {
-        timeout: 10000,
-      }).should("have.length", 2);
+      cy.get(entityContaining("ProjectNaming"), { timeout: 10000 }).should("have.length", 2);
 
       // Fill second project form fields.
       cy.get("@secondProjectEntity").click({ force: true });
@@ -577,39 +445,24 @@ if (isIso) {
       cy.get("#environment").click({ force: true });
       cy.contains('[role="menuitem"], [role="option"]', /lab/i).click();
 
-      // Step 6: Duo 3 - Drag a third project. Its ProjectNaming is auto-added to the canvas.
-      cy.get("@existingProjectEntity").then(($existingProject) => {
-        const rect = $existingProject[0].getBoundingClientRect();
-        const dropX = rect.left + rect.width / 2;
-        const dropY = rect.bottom + 120;
+      // Step 6: Duo 3 - Drag a third project below the first one. Its ProjectNaming is auto-added.
+      dropPaletteItem("project", "project", () =>
+        cy
+          .get(entity("project"))
+          .first()
+          .then(($existingProject) => {
+            const rect = $existingProject[0].getBoundingClientRect();
 
-        cy.get("@projectPath").trigger("mousedown", { button: 0, which: 1, force: true });
-        cy.get("body").trigger("mousemove", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-        cy.get('[data-testid="canvas"]').trigger("mouseup", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-      });
+            return { x: rect.left + rect.width / 2, y: rect.bottom + 120 };
+          })
+      );
 
-      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-project"])', {
-        timeout: 10000,
-      })
+      cy.get(entity("project"), { timeout: 10000 })
         .should("have.length", 3)
         .eq(2)
         .as("thirdProjectEntity");
 
-      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid*="ProjectNaming"])', {
-        timeout: 10000,
-      }).should("have.length", 3);
+      cy.get(entityContaining("ProjectNaming"), { timeout: 10000 }).should("have.length", 3);
 
       // Fill third project form fields.
       cy.get("@thirdProjectEntity").click({ force: true });

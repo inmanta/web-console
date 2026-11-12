@@ -1,6 +1,5 @@
-import { dia } from "@joint/plus";
 import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@inmanta/web-console-core";
-import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
+import { ServiceEntityShape } from "../ServiceEntityShape";
 import { RelationsDictionary, Rules } from "./createRelationsDictionary";
 
 /**
@@ -46,26 +45,32 @@ export const findFullInterServiceRelations = (
 };
 
 /**
- * Finds the parent shape for an embedded entity by looking at incoming links in the graph.
+ * Finds the parent shape of an embedded entity: the shape it hangs off.
+ * Uses the shape's known parents first, then any shape on the canvas that holds it as a child.
  *
  * @param {ServiceEntityShape} embeddedShape - The embedded entity shape
- * @param {dia.Graph} graph - The JointJS graph
+ * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas
  * @returns {ServiceEntityShape | null} The parent shape or null if not found
  */
 export const findParentShapeForEmbedded = (
   embeddedShape: ServiceEntityShape,
-  graph: dia.Graph
+  canvasState: Map<string, ServiceEntityShape>
 ): ServiceEntityShape | null => {
-  const links = graph.getLinks();
+  for (const parentId of embeddedShape.parentIds) {
+    const parent = canvasState.get(parentId);
+    if (parent) {
+      return parent;
+    }
+  }
 
-  for (const link of links) {
-    const sourceElement = link.getSourceElement();
-    const targetElement = link.getTargetElement();
-
-    if (targetElement && String(targetElement.id) === String(embeddedShape.id)) {
-      if (sourceElement && sourceElement instanceof ServiceEntityShape) {
-        return sourceElement;
-      }
+  for (const shape of canvasState.values()) {
+    if (shape.id === embeddedShape.id) {
+      continue;
+    }
+    // A parent stores its embedded children under the child's entity type.
+    const children = shape.connections.get(embeddedShape.getEntityType()) || [];
+    if (children.includes(embeddedShape.id)) {
+      return shape;
     }
   }
 
@@ -105,19 +110,19 @@ const findEmbeddedEntityRecursive = (
  * Finds the service model for a given shape, handling embedded entities by finding their parent.
  *
  * @param {ServiceEntityShape} shape - The shape to find the service model for
- * @param {dia.Graph} graph - The JointJS graph (for finding parent of embedded entities)
+ * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas (for finding parent of embedded entities)
  * @param {ServiceModel[]} serviceCatalog - The service catalog (for finding service models)
  * @returns {ServiceModel | EmbeddedEntity | null} The service model or embedded entity, or null if not found
  */
 const getServiceModelForShape = (
   shape: ServiceEntityShape,
-  graph: dia.Graph,
+  canvasState: Map<string, ServiceEntityShape>,
   serviceCatalog: ServiceModel[]
 ): ServiceModel | EmbeddedEntity | null => {
   const entityType = shape.getEntityType();
 
   if (shape.entityType === "embedded") {
-    const parentShape = findParentShapeForEmbedded(shape, graph);
+    const parentShape = findParentShapeForEmbedded(shape, canvasState);
     if (parentShape) {
       const parentServiceModel = parentShape.serviceModel;
       const embeddedEntity = findEmbeddedEntityRecursive(parentServiceModel, entityType);
@@ -191,34 +196,35 @@ const isRwModifierBlockingRemoval = (modifier: string | undefined, isNew: boolea
 };
 
 /**
- * Gets all shapes connected to a given shape via links in the graph.
+ * Gets all shapes on the canvas that a given shape is connected to, in either direction:
+ * a relation loaded from an instance is only recorded on the shape that holds it.
  *
  * @param {ServiceEntityShape} shape - The shape to find connected shapes for
- * @param {dia.Graph} graph - The JointJS graph
+ * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas
  * @returns {Set<ServiceEntityShape>} Set of connected shapes
  */
 const getConnectedShapes = (
   shape: ServiceEntityShape,
-  graph: dia.Graph
+  canvasState: Map<string, ServiceEntityShape>
 ): Set<ServiceEntityShape> => {
   const connectedShapes = new Set<ServiceEntityShape>();
-  const links = graph.getLinks();
-  const shapeId = String(shape.id);
 
-  for (const link of links) {
-    const sourceElement = link.getSourceElement();
-    const targetElement = link.getTargetElement();
-
-    if (sourceElement && String(sourceElement.id) === shapeId) {
-      if (targetElement && targetElement instanceof ServiceEntityShape) {
-        connectedShapes.add(targetElement);
+  shape.connections.forEach((ids) => {
+    ids.forEach((id) => {
+      const connectedShape = canvasState.get(id);
+      if (connectedShape && connectedShape.id !== shape.id) {
+        connectedShapes.add(connectedShape);
       }
-    } else if (targetElement && String(targetElement.id) === shapeId) {
-      if (sourceElement && sourceElement instanceof ServiceEntityShape) {
-        connectedShapes.add(sourceElement);
-      }
+    });
+  });
+  canvasState.forEach((otherShape) => {
+    const holdsShape = Array.from(otherShape.connections.values()).some((ids) =>
+      ids.includes(shape.id)
+    );
+    if (holdsShape && otherShape.id !== shape.id) {
+      connectedShapes.add(otherShape);
     }
-  }
+  });
 
   return connectedShapes;
 };
@@ -230,7 +236,7 @@ const getConnectedShapes = (
  * @param {ServiceEntityShape} sourceShape - The source shape
  * @param {ServiceEntityShape} targetShape - The target shape
  * @param {RelationsDictionary} relationsDictionary - The relations dictionary
- * @param {dia.Graph} graph - The JointJS graph (for finding parent of embedded entities)
+ * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas (for finding parent of embedded entities)
  * @param {ServiceModel[]} serviceCatalog - The service catalog (for finding modifiers)
  * @returns {{ rules: Rules; modifier: string | undefined } | null} The relation info or null if not found
  */
@@ -238,7 +244,7 @@ export const getRelationInfo = (
   sourceShape: ServiceEntityShape,
   targetShape: ServiceEntityShape,
   relationsDictionary: RelationsDictionary,
-  graph: dia.Graph,
+  canvasState: Map<string, ServiceEntityShape>,
   serviceCatalog: ServiceModel[]
 ): { rules: Rules; modifier: string | undefined } | null => {
   const sourceEntityType = sourceShape.getEntityType();
@@ -254,7 +260,7 @@ export const getRelationInfo = (
 
   // Find the modifier from the service model
   // For embedded entities, we need to find the parent and look in the parent's embedded_entities
-  const serviceModel = getServiceModelForShape(sourceShape, graph, serviceCatalog);
+  const serviceModel = getServiceModelForShape(sourceShape, canvasState, serviceCatalog);
 
   // Find the relation in the service model (or embedded entity). If it's not
   // actually declared on the source's service model, we treat it as
@@ -278,14 +284,14 @@ export const getRelationInfo = (
  * 2. The shape has any relation with modifier "rw" and the shape is not new
  *
  * @param {ServiceEntityShape} shape - The shape to check
- * @param {dia.Graph} graph - The JointJS graph (for finding connected shapes)
+ * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas (for finding connected shapes)
  * @param {RelationsDictionary} relationsDictionary - The relations dictionary
  * @param {ServiceModel[]} serviceCatalog - The service catalog (for finding modifiers)
  * @returns {boolean} True if the shape can be removed, false otherwise
  */
 export const canRemoveShape = (
   shape: ServiceEntityShape,
-  graph: dia.Graph,
+  canvasState: Map<string, ServiceEntityShape>,
   relationsDictionary: RelationsDictionary,
   serviceCatalog: ServiceModel[]
 ): boolean => {
@@ -297,7 +303,7 @@ export const canRemoveShape = (
   const shapeEntityType = shape.getEntityType();
 
   // Check all connected shapes - removing this shape shouldn't cause them to violate lower_limit
-  const connectedShapes = getConnectedShapes(shape, graph);
+  const connectedShapes = getConnectedShapes(shape, canvasState);
 
   // For each connected shape, check if removing this shape would violate its lower_limit
   for (const connectedShape of connectedShapes) {
@@ -306,7 +312,7 @@ export const canRemoveShape = (
       connectedShape,
       shape,
       relationsDictionary,
-      graph,
+      canvasState,
       serviceCatalog
     );
     if (relationInfo) {
@@ -337,7 +343,7 @@ export const canRemoveShape = (
  *
  * @param {ServiceEntityShape} sourceShape - The source shape
  * @param {ServiceEntityShape} targetShape - The target shape
- * @param {dia.Graph} graph - The JointJS graph
+ * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas
  * @param {RelationsDictionary} relationsDictionary - The relations dictionary
  * @param {ServiceModel[]} serviceCatalog - The service catalog (for finding modifiers)
  * @returns {boolean} True if the link can be removed, false otherwise
@@ -345,7 +351,7 @@ export const canRemoveShape = (
 export const canRemoveLink = (
   sourceShape: ServiceEntityShape,
   targetShape: ServiceEntityShape,
-  graph: dia.Graph,
+  canvasState: Map<string, ServiceEntityShape>,
   relationsDictionary: RelationsDictionary,
   serviceCatalog: ServiceModel[]
 ): boolean => {
@@ -357,7 +363,7 @@ export const canRemoveLink = (
     sourceShape,
     targetShape,
     relationsDictionary,
-    graph,
+    canvasState,
     serviceCatalog
   );
   if (sourceRelationInfo) {
@@ -377,7 +383,7 @@ export const canRemoveLink = (
     targetShape,
     sourceShape,
     relationsDictionary,
-    graph,
+    canvasState,
     serviceCatalog
   );
   if (targetRelationInfo) {

@@ -8,65 +8,137 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import ts from "typescript";
 
-const require = createRequire(import.meta.url);
+const composerDir = dirname(fileURLToPath(import.meta.url));
 
 /**
- * The folder of an installed package, found from its entry point, wherever Yarn installed it.
- *
- * @param {string} name - The name of the package.
- * @param {NodeJS.Require} [from] - Resolves the package from here, by default from the composer.
- * @returns {string} The path of its folder.
+ * The canvas libraries: React Flow draws the canvas and dagre lays it out. Only the composer uses
+ * them, so its separate build bundles them, with the packages they depend on, instead of sharing
+ * them with the app.
  */
-const packageDir = (name, from = require) => {
-  const entry = from.resolve(name);
-  const marker = join("node_modules", name);
+const canvasLibraries = ["@xyflow/react", "@dagrejs/dagre"];
 
-  return entry.slice(0, entry.lastIndexOf(marker) + marker.length);
+/**
+ * The CommonJS modules the canvas libraries import that `require` React: React Flow's store
+ * (zustand 4) imports this one. The composer's build can't bundle them: React comes from the app's
+ * import map as an ES module, which a `require` can't load (the build fails on such a `require`,
+ * see vite.config.ts). The app bundles them with its React and provides them instead.
+ */
+const canvasCommonJsModules = ["use-sync-external-store/shim/with-selector.js"];
+
+/**
+ * The package an import specifier, or a path inside node_modules, names: "@xyflow/react" for
+ * "@xyflow/react/dist/style.css".
+ *
+ * @param {string} specifier - the specifier, or the part of a path after "node_modules/"
+ * @returns {string} the package name
+ */
+export const packageOf = (specifier) =>
+  specifier
+    .split("/")
+    .slice(0, specifier.startsWith("@") ? 2 : 1)
+    .join("/");
+
+/**
+ * The package.json of an installed package, looked up the way Node looks up a package from a
+ * folder, so it also finds a package whose exports leave out its package.json.
+ *
+ * @param {string} name - the package
+ * @param {string} fromDir - the folder it is imported from
+ * @returns {string | undefined} the path of its package.json
+ */
+const findManifest = (name, fromDir) =>
+  (createRequire(join(fromDir, "package.json")).resolve.paths(name) ?? [])
+    .map((dir) => join(dir, name, "package.json"))
+    .find((path) => existsSync(path));
+
+/**
+ * The canvas libraries and every package they depend on (`packages`): the only installed packages
+ * the composer's build may bundle (see vite.config.ts). The modules the app provides to them
+ * (`shared`) aren't in it: their required peer dependencies, React and React DOM, and
+ * `canvasCommonJsModules`.
+ *
+ * @returns {{ packages: string[], shared: string[] }} the package names and shared specifiers,
+ *   sorted
+ * @throws {Error} when a package they depend on isn't installed
+ */
+export const canvasPackages = () => {
+  /** @type {Set<string>} */
+  const names = new Set();
+
+  /** @type {Set<string>} */
+  const peers = new Set();
+
+  /** @type {[string, string][]} */
+  const pending = canvasLibraries.map((name) => [name, composerDir]);
+
+  for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
+    const [name, fromDir] = next;
+
+    if (names.has(name)) {
+      continue;
+    }
+
+    const manifest = findManifest(name, fromDir);
+
+    if (manifest === undefined) {
+      throw new Error(`Can't find ${name}, which the composer's canvas libraries depend on.`);
+    }
+    names.add(name);
+
+    const {
+      dependencies = {},
+      peerDependencies = {},
+      peerDependenciesMeta = {},
+    } = JSON.parse(readFileSync(manifest, "utf8"));
+
+    for (const dependency of Object.keys(dependencies)) {
+      pending.push([dependency, dirname(manifest)]);
+    }
+    for (const peer of Object.keys(peerDependencies)) {
+      if (!peer.startsWith("@types/") && !peerDependenciesMeta[peer]?.optional) {
+        peers.add(peer);
+      }
+    }
+  }
+
+  const commonJsPackages = canvasCommonJsModules.map(packageOf);
+
+  return {
+    packages: [...names].filter((name) => !commonJsPackages.includes(name)).sort(),
+    shared: [...[...peers].filter((peer) => !names.has(peer)), ...canvasCommonJsModules].sort(),
+  };
 };
 
 /**
- * The Vite settings the composer needs in an app that ships it, and in the tests. They
- * live with the composer, so an app without it has no JointJS in its Vite config either.
+ * The Vite settings the composer needs in an app that ships it, and in the tests: the canvas
+ * libraries go into a chunk of their own.
  *
  * @returns {import("vite").Plugin} The Vite plugin.
  */
 export const composerVitePlugin = () => {
-  const jointPlus = packageDir("@joint/plus");
-  // The composer only depends on @joint/plus, so @joint/core is resolved from there.
-  const jointCore = packageDir("@joint/core", createRequire(join(jointPlus, "package.json")));
+  const names = new Set(canvasPackages().packages);
 
   return {
     name: "inmanta-composer",
     config: () => ({
-      resolve: {
-        alias: [
-          // Force JointJS's bare imports to the ESM entries (avoids dist/joint-plus.js and
-          // dist/joint.js). Regex matches only the exact specifier: a string alias
-          // prefix-replaces, mangling subpaths such as @joint/plus/joint-plus.css or
-          // @joint/plus >=4.3.0's deep imports (e.g. @joint/core/src/highlighters/index.mjs)
-          // into @joint/core/joint.mjs/src/... Subpaths resolve via the package's exports map.
-          { find: /^@joint\/plus$/, replacement: join(jointPlus, "joint-plus.mjs") },
-          { find: /^@joint\/core$/, replacement: join(jointCore, "joint.mjs") },
-        ],
-      },
-      optimizeDeps: {
-        include: ["@joint/plus"],
-        exclude: ["@joint/core"],
-      },
-      ssr: {
-        noExternal: ["@joint/plus"],
-      },
       build: {
         rollupOptions: {
           output: {
             codeSplitting: {
-              groups: [{ name: "jointjs", test: /node_modules[\\/]@joint[\\/]/, priority: 50 }],
+              groups: [
+                {
+                  name: "canvas",
+                  test: (/** @type {string} */ id) => {
+                    const parts = id.replaceAll("\\", "/").split("node_modules/");
+
+                    return parts.length > 1 && names.has(packageOf(parts[parts.length - 1]));
+                  },
+                  priority: 50,
+                },
+              ],
             },
           },
         },
-      },
-      test: {
-        deps: { optimizer: { client: { include: ["@joint/plus"] } } },
       },
     }),
   };
@@ -76,18 +148,19 @@ export const composerVitePlugin = () => {
  * The folder of the composer's separate build (vite.config.ts), which the ISO app loads at
  * runtime.
  */
-export const composerBuildDir = join(dirname(fileURLToPath(import.meta.url)), "dist");
+export const composerBuildDir = join(composerDir, "dist");
 
 /**
  * The entry module of the composer's separate build. The ISO app's dev server and the tests
  * resolve `composer/feature` to it, instead of the separate build.
  */
-export const composerEntry = join(dirname(fileURLToPath(import.meta.url)), "src/entry.ts");
+export const composerEntry = join(composerDir, "src/entry.ts");
 
 /**
  * The modules the app shares with the composer's separate build: every package the code of that
- * build imports, except JointJS, which only the composer has. The app provides the only copy of
- * each through its import map, so the composer uses the app's React, contexts and web-console
+ * build imports, except the canvas libraries, which only the composer has, plus the modules those
+ * libraries get from the app (`canvasPackages().shared`). The app provides the only copy of each
+ * through its import map, so the composer uses the app's React, contexts and web-console
  * packages.
  *
  * The list comes from the composer's source, so a new import is shared without anyone listing
@@ -101,7 +174,7 @@ export const composerEntry = join(dirname(fileURLToPath(import.meta.url)), "src/
  * @throws {Error} when the code imports a module with a computed specifier, which can't be shared
  */
 export const composerSharedModules = () => {
-  const specifiers = new Set(["react/jsx-runtime"]);
+  const specifiers = new Set(["react/jsx-runtime", ...canvasPackages().shared]);
   const visited = new Set();
   const pending = [composerEntry];
 
@@ -115,7 +188,10 @@ export const composerSharedModules = () => {
       const ownPath = ownModulePath(file, specifier);
 
       if (ownPath === undefined) {
-        if (!/^@joint\/|^@images\/|\.css$/.test(specifier)) {
+        if (
+          !canvasLibraries.includes(packageOf(specifier)) &&
+          !/^@images\/|\.css$/.test(specifier)
+        ) {
           specifiers.add(specifier);
         }
         continue;
@@ -135,7 +211,7 @@ export const composerSharedModules = () => {
 };
 
 const composerPackage = "@inmanta/web-console-feature-composer";
-const composerSrc = join(dirname(fileURLToPath(import.meta.url)), "src");
+const composerSrc = join(composerDir, "src");
 
 /**
  * The path of an import of the composer's own code (relative, or through its package name),

@@ -46,11 +46,7 @@ export default defineConfig(
           settings: { disableJavaScriptFileLoading: true, disableCSSFileLoading: true },
         },
       },
-      setupFiles: [
-        "./packages/test-utils/src/setup.ts",
-        "./apps/web-console/src/test-setup.ts",
-        "./packages/features/composer/src/Components/Composer/globalTestMocks.ts",
-      ],
+      setupFiles: ["./packages/test-utils/src/setup.ts", "./apps/web-console/src/test-setup.ts"],
       restoreMocks: true,
       projects: workspaces.map((dir) => ({
         extends: true,

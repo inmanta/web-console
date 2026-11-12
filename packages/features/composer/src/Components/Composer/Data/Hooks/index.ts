@@ -1,4 +1,4 @@
-export { useComposerGraph } from "./useComposerGraph";
-export { useCanvasInteractions } from "./useCanvasInteractions";
-export { useLinkInteractions } from "./useLinkInteractions";
+export { useComposerInitialization } from "./useComposerInitialization";
+export { useCanvasActions } from "./useCanvasActions";
 export { useServiceOrderItems } from "./useServiceOrderItems";
+export { useAddPaletteItem } from "./useAddPaletteItem";

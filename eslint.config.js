@@ -30,7 +30,6 @@ const testFiles = [
 const devDependencyFiles = [
   ...testFiles,
   "apps/web-console/src/test-setup.ts",
-  "packages/features/composer/src/**/globalTestMocks.ts",
   "apps/*/vite.config.ts",
   "packages/features/*/vite.config.ts",
   "packages/features/*/vite.js",
@@ -230,22 +229,17 @@ export default [
     },
   },
   {
-    // Only the composer depends on JointJS, so that an app without it builds without the licence,
-    // and only the GraphiQL feature depends on the GraphiQL packages. This rule gives the clearest
+    // Only the GraphiQL feature depends on the GraphiQL packages. This rule gives the clearest
     // message for a static import; the Yarn constraints (yarn.config.cjs) and
     // import/no-extraneous-dependencies below also catch import() and a dependency in the wrong
     // package.json.
     files: ["{src,packages,apps}/**/*.ts", "{src,packages,apps}/**/*.tsx"],
-    ignores: ["packages/features/composer/**", "packages/features/graphiql/**"],
+    ignores: ["packages/features/graphiql/**"],
     rules: {
       "no-restricted-imports": [
         "error",
         {
           patterns: [
-            {
-              group: ["@joint/*"],
-              message: "Only the composer feature (packages/features/composer) imports JointJS.",
-            },
             {
               group: [
                 "graphiql",

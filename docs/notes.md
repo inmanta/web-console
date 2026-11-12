@@ -123,7 +123,7 @@ Tests follow the same import boundaries as the code they test (see `eslint.layer
 - A test that needs several features together, like the composer's actions on lsm's pages, is an app-level test next to `apps/web-console/src/app.ts`.
 - The lint rule only sees `import` statements. Keep the paths in `vi.mock`, `vi.importActual` and `typeof import()` within the same boundaries.
 
-`apps/web-console/src/test-setup.ts` holds the setup that depends on the app's features, like registering every feature's messages. A feature's own global mocks go in a setup file of that feature, like the composer's `globalTestMocks.ts`.
+`apps/web-console/src/test-setup.ts` holds the setup that depends on the app's features, like registering every feature's messages. A feature's own global mocks go in a setup file of that feature.
 
 ## Minimum browser versions
 
