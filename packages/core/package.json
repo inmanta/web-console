@@ -37,7 +37,7 @@
     "dayjs": "^1.11.23",
     "file-saver": "^2.0.5",
     "graphql": "^17.0.2",
-    "jsonpathly": "^3.2.1",
+    "jsonpathly": "^4.0.0",
     "keycloak-js": "^26.2.5",
     "qs": "^6.17.0",
     "react": "^19.3.1",
