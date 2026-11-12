@@ -71,6 +71,9 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
   const attributes = shape.getDisplayAttributes().filter(({ name }) => name !== identity?.name);
   const isReadOnly = shape.entityType === "relation" && !shape.isNew;
   const KindIcon = KindIcons[shape.entityType];
+  // Only offered when the model lets the entity be linked at all; read-only cards keep it.
+  const canLink = editable && (isReadOnly || shape.canHaveConnections());
+  const hasActions = hasLayers || canLink;
 
   const fromShape = linkSourceId ? canvasState.get(linkSourceId) : undefined;
   const isLinkSource = linkSourceId === id;
@@ -112,45 +115,47 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
       className={classNames}
       style={{ "--entity-accent": HeaderColors[shape.entityType] } as React.CSSProperties}
     >
-      <Toolbar
-        className="nodrag nopan"
-        role="toolbar"
-        aria-label={words("instanceComposer.halo.actions")(displayName)}
-        aria-hidden={!selected}
-      >
-        {hasLayers && (
-          <>
-            <button
-              type="button"
-              onClick={toggleLayers}
-              aria-label={toggleLabel}
-              title={toggleLabel}
+      {hasActions && (
+        <Toolbar
+          className="nodrag nopan"
+          role="toolbar"
+          aria-label={words("instanceComposer.halo.actions")(displayName)}
+          aria-hidden={!selected}
+        >
+          {hasLayers && (
+            <>
+              <button
+                type="button"
+                onClick={toggleLayers}
+                aria-label={toggleLabel}
+                title={toggleLabel}
+              >
+                {shape.isLayersCollapsed ? <AngleDownIcon /> : <AngleUpIcon />}
+              </button>
+              <button
+                type="button"
+                onClick={expandAll}
+                aria-label={words("instanceComposer.halo.expandAllLayers")}
+                title={words("instanceComposer.halo.expandAllLayers")}
+              >
+                <AngleDoubleDownIcon />
+              </button>
+            </>
+          )}
+          {canLink && (
+            <Handle
+              id="link"
+              type="source"
+              position={Position.Top}
+              className="link-handle"
+              aria-label={words("instanceComposer.halo.link")}
+              title={words("instanceComposer.halo.link")}
             >
-              {shape.isLayersCollapsed ? <AngleDownIcon /> : <AngleUpIcon />}
-            </button>
-            <button
-              type="button"
-              onClick={expandAll}
-              aria-label={words("instanceComposer.halo.expandAllLayers")}
-              title={words("instanceComposer.halo.expandAllLayers")}
-            >
-              <AngleDoubleDownIcon />
-            </button>
-          </>
-        )}
-        {editable && (
-          <Handle
-            id="link"
-            type="source"
-            position={Position.Top}
-            className="link-handle"
-            aria-label={words("instanceComposer.halo.link")}
-            title={words("instanceComposer.halo.link")}
-          >
-            <LinkIcon />
-          </Handle>
-        )}
-      </Toolbar>
+              <LinkIcon />
+            </Handle>
+          )}
+        </Toolbar>
+      )}
       <Card
         className="entity-card"
         data-testid={`entity-${displayName}`}

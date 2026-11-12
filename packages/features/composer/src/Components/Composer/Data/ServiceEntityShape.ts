@@ -310,29 +310,12 @@ export class ServiceEntityShape {
     return matchedKey ? this.relationsDictionary[matchedKey] : undefined;
   }
 
-  validateConnection(targetEntity: ServiceEntityShape): boolean {
-    const relationType = targetEntity.getEntityType();
-    const allowedRelations = this.getAllowedRelations();
-
-    if (!allowedRelations) {
-      return false;
-    }
-
-    const relationKey = allowedRelations[relationType]
-      ? relationType
-      : Object.keys(allowedRelations).find(
-          (key) => key.toLowerCase() === relationType.toLowerCase()
-        );
-
-    const rules = relationKey ? allowedRelations[relationKey] : undefined;
-
-    if (!rules) {
-      return false;
-    }
-
-    /**
-     * Do not allow users to create new connections for relations marked as "rw" and not new.
-     */
+  /**
+   * Whether new connections of a relation type are blocked on this shape: a relation marked
+   * "rw" can only be set while the instance is created. New shapes are allowed to satisfy
+   * their own rw requirements.
+   */
+  private isLockedRelation(relationType: string): boolean {
     let modifier: string | undefined;
 
     if ("inter_service_relations" in this.serviceModel) {
@@ -355,9 +338,47 @@ export class ServiceEntityShape {
       }
     }
 
-    // For "rw" relations, only block creating new connections on existing shapes.
-    // New shapes are allowed to satisfy their own rw requirements.
-    if (modifier === "rw" && !this.isNew) {
+    return modifier === "rw" && !this.isNew;
+  }
+
+  /**
+   * Whether the service model lets this shape be linked to any other entity at all: through
+   * one of its own inter-service relations or embedded entities, by belonging to a parent as an
+   * embedded entity, or because another entity has a relation to it. It only looks at the
+   * models, not at what is on the canvas, so a shape that can be linked keeps the option even
+   * when its relations are full for now. Read-only ("r") relations never count, and neither do
+   * "rw" relations of an instance that already exists.
+   */
+  canHaveConnections(): boolean {
+    const allowedRelations = this.getAllowedRelations();
+
+    return (
+      !!allowedRelations &&
+      Object.keys(allowedRelations).some((relationType) => !this.isLockedRelation(relationType))
+    );
+  }
+
+  validateConnection(targetEntity: ServiceEntityShape): boolean {
+    const relationType = targetEntity.getEntityType();
+    const allowedRelations = this.getAllowedRelations();
+
+    if (!allowedRelations) {
+      return false;
+    }
+
+    const relationKey = allowedRelations[relationType]
+      ? relationType
+      : Object.keys(allowedRelations).find(
+          (key) => key.toLowerCase() === relationType.toLowerCase()
+        );
+
+    const rules = relationKey ? allowedRelations[relationKey] : undefined;
+
+    if (!rules) {
+      return false;
+    }
+
+    if (this.isLockedRelation(relationType)) {
       return false;
     }
 
