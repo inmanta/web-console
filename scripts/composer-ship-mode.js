@@ -31,14 +31,14 @@ const composerBuildDir = join(composerDir, "dist");
 /**
  * The folder an orchestrator's container serves the web console from (see `update:dist`).
  */
-export const containerWebConsoleDir = "/usr/share/inmanta/web-console";
+const containerWebConsoleDir = "/usr/share/inmanta/web-console";
 
 /**
  * The version the composer gets in the "mismatch" mode.
  */
-export const mismatchVersion = "0.0.0-mismatch";
+const mismatchVersion = "0.0.0-mismatch";
 
-export const shipModes = ["without", "combined", "mismatch"];
+const shipModes = ["without", "combined", "mismatch"];
 
 const isComposerFile = (file) => file.startsWith("composer-");
 
