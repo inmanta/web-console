@@ -38,10 +38,15 @@ export const ZoomControlsContainer = styled.div`
     }
   }
 
-  > .arrange-toggle {
-    width: auto;
+  // A disabled button gets no pointer events, so the tooltip that says why sits on this
+  .arrange-control {
+    display: inline-flex;
+  }
+
+  .arrange-toggle .pf-v6-c-menu-toggle__button:first-child {
+    display: inline-flex;
+    align-items: center;
     gap: var(--pf-t--global--spacer--sm);
-    padding-inline: var(--pf-t--global--spacer--md);
   }
 
   .toolbar-divider {
