@@ -1,0 +1,5 @@
+description: Collapsed services in the catalog show how many owned instances are not up.
+issue-nr: 7628
+change-type: minor
+destination-branches: [master, iso9]
+sections: {}

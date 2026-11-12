@@ -60,6 +60,13 @@ export const withInstanceSummary: ServiceModel = {
   instance_summary: InstanceSummary.a,
 };
 
+export const withEachLabel: ServiceModel = {
+  ...a,
+  name: "service_name_f",
+  lifecycle: { ...a.lifecycle, states: State.withEachLabel },
+  instance_summary: InstanceSummary.withEachLabel,
+};
+
 export const nestedEditable: ServiceModel = {
   attributes: Attribute.nestedEditable,
   embedded_entities: EmbeddedEntity.nestedEditable,
