@@ -3,11 +3,10 @@
 // - keycloak: cypress/e2e/Keycloak (cypress.config.keycloak.cjs);
 // - oidc: cypress/e2e/Oidc (cypress.config.oidc.cjs);
 // - local-auth: cypress/e2e/LocalAuth (cypress.config.local-auth.cjs).
-// It replaces the keycloak-e2e-test, oidc-e2e-test and frontend-local-auth jobs, and runs the
-// same steps. Its own job, on master.
+// Its own job, on master.
 //
 // The setup doesn't wait for the orchestrator and the identity provider to be ready, so each
-// method waits a fixed time before it installs the build, as those jobs did.
+// method waits a fixed time before it installs the build.
 def authMethods = [
     [name: 'keycloak', startupSeconds: 45],
     [name: 'oidc', startupSeconds: 20],
@@ -60,19 +59,20 @@ pipeline {
                             catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                                 // One orchestrator per agent: the main job's Cypress stage takes the same lock.
                                 lock(resource: "orchestrator-${env.NODE_NAME}") {
-                                    timeout(time: 20, unit: 'MINUTES') {
-                                        dir('web-console') {
-                                            try {
+                                    dir('web-console') {
+                                        // The cleanup is outside the timeout, so it also runs when a method times out.
+                                        try {
+                                            timeout(time: 20, unit: 'MINUTES') {
                                                 sh """
                                                 yarn run install:orchestrator:${method.name}
                                                 sleep ${method.startupSeconds}
                                                 yarn update:dist
                                                 yarn run cypress-test:${method.name} --config screenshotsFolder=cypress/screenshots/${method.name} --reporter-options 'mochaFile=cypress/reports/junit/${method.name}-[hash].xml'
                                                 """
-                                            } finally {
-                                                junit allowEmptyResults: true, testResults: "cypress/reports/junit/${method.name}-*.xml"
-                                                sh 'yarn run kill-server || true; rm -rf temp'
                                             }
+                                        } finally {
+                                            junit allowEmptyResults: true, testResults: "cypress/reports/junit/${method.name}-*.xml"
+                                            sh 'yarn run kill-server || true; rm -rf temp'
                                         }
                                     }
                                 }

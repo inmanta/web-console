@@ -30,9 +30,14 @@ if (missing.length) {
 }
 
 const hits = [];
+const withoutJs = [];
 for (const distDir of distDirs) {
   const jsFiles = readdirSync(distDir).filter((f) => f.endsWith(".js"));
 
+  // Otherwise a build whose scripts land in another folder would pass without being checked.
+  if (jsFiles.length === 0) {
+    withoutJs.push(distDir);
+  }
   for (const file of jsFiles) {
     const content = readFileSync(join(distDir, file), "utf8");
     for (const pattern of cdnPatterns) {
@@ -42,6 +47,11 @@ for (const distDir of distDirs) {
       }
     }
   }
+}
+
+if (withoutJs.length) {
+  console.error(`ERROR: no .js files in ${withoutJs.join(", ")}, nothing to check.`);
+  process.exit(1);
 }
 
 if (hits.length) {

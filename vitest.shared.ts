@@ -24,9 +24,11 @@ export const workspaces = ["packages", "packages/features", "apps"].flatMap((par
     )
     .map((entry) => {
       const dir = posix.join(parent, entry.name);
-      const manifest = JSON.parse(readFileSync(join(repoRoot, dir, "package.json"), "utf-8"));
+      const manifest: { inmanta?: { edition?: string } } = JSON.parse(
+        readFileSync(join(repoRoot, dir, "package.json"), "utf-8")
+      );
 
-      return { dir, edition: manifest.inmanta?.edition as string | undefined };
+      return { dir, edition: manifest.inmanta?.edition };
     })
 );
 
