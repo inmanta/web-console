@@ -27,3 +27,9 @@ export const RIGHT_SIDEBAR_WIDTH = 360;
  * outer edge needs the width plus that offset.
  */
 export const RIGHT_SIDEBAR_OFFSET = RIGHT_SIDEBAR_WIDTH + 1;
+
+/**
+ * The composer fills the page down to the bottom of the window, but never gets lower than
+ * this: a shorter window scrolls the page instead.
+ */
+export const COMPOSER_MIN_HEIGHT = 400;
