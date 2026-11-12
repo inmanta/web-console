@@ -33,7 +33,7 @@
     "react-dom": "^19.3.1",
     "react-router": "^8.5.1",
     "styled-components": "^6.6.0",
-    "victory": "^38.0.0"
+    "victory": "^38.0.1"
   },
   "devDependencies": {
     "@inmanta/web-console-test-utils": "workspace:^",
