@@ -1,0 +1,4 @@
+description: Info status labels in the service catalog use PatternFly's info color.
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}
