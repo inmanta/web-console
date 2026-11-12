@@ -78,6 +78,30 @@ const onlyComposerCode = (): Plugin => ({
   },
 });
 
+/**
+ * Fails the build when a bundled CommonJS module `require`s a module the app provides: the app
+ * provides ES modules through its import map, so that `require` throws at runtime. Rolldown only
+ * adds its `require` fallback, with this message, to a build that has such a `require`. The app
+ * provides those CommonJS modules instead (`canvasCommonJsModules` in vite.js).
+ */
+const noRequireOfShared = (): Plugin => ({
+  name: "composer-no-require-of-shared",
+  enforce: "post",
+  generateBundle(_options, bundle) {
+    const requiring = Object.values(bundle).filter(
+      (output) =>
+        output.type === "chunk" &&
+        output.code.includes("in an environment that doesn't expose the `require` function")
+    );
+
+    if (requiring.length > 0) {
+      this.error(
+        `A CommonJS module in the composer's build requires a module the app provides, which fails at runtime. Let the app provide that CommonJS module (canvasCommonJsModules in vite.js). Chunks: ${requiring.map(({ fileName }) => fileName).join(", ")}`
+      );
+    }
+  },
+});
+
 export default defineConfig(
   mergeConfig(sharedConfig, {
     root: import.meta.dirname,
@@ -94,6 +118,7 @@ export default defineConfig(
       }),
       flatFileNames(),
       onlyComposerCode(),
+      noRequireOfShared(),
     ],
     build: {
       outDir: composerBuildDir,

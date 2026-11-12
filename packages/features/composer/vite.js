@@ -18,6 +18,14 @@ const composerDir = dirname(fileURLToPath(import.meta.url));
 const canvasLibraries = ["@xyflow/react", "@dagrejs/dagre"];
 
 /**
+ * The CommonJS modules the canvas libraries import that `require` React: React Flow's store
+ * (zustand 4) imports this one. The composer's build can't bundle them: React comes from the app's
+ * import map as an ES module, which a `require` can't load (the build fails on such a `require`,
+ * see vite.config.ts). The app bundles them with its React and provides them instead.
+ */
+const canvasCommonJsModules = ["use-sync-external-store/shim/with-selector.js"];
+
+/**
  * The package an import specifier, or a path inside node_modules, names: "@xyflow/react" for
  * "@xyflow/react/dist/style.css".
  *
@@ -45,11 +53,12 @@ const findManifest = (name, fromDir) =>
 
 /**
  * The canvas libraries and every package they depend on (`packages`): the only installed packages
- * the composer's build may bundle (see vite.config.ts). Their required peer dependencies
- * (`peers`), React and React DOM, aren't in it: the app provides those, like the composer's own
- * imports.
+ * the composer's build may bundle (see vite.config.ts). The modules the app provides to them
+ * (`shared`) aren't in it: their required peer dependencies, React and React DOM, and
+ * `canvasCommonJsModules`.
  *
- * @returns {{ packages: string[], peers: string[] }} the package names, sorted
+ * @returns {{ packages: string[], shared: string[] }} the package names and shared specifiers,
+ *   sorted
  * @throws {Error} when a package they depend on isn't installed
  */
 export const canvasPackages = () => {
@@ -92,9 +101,11 @@ export const canvasPackages = () => {
     }
   }
 
+  const commonJsPackages = canvasCommonJsModules.map(packageOf);
+
   return {
-    packages: [...names].sort(),
-    peers: [...peers].filter((peer) => !names.has(peer)).sort(),
+    packages: [...names].filter((name) => !commonJsPackages.includes(name)).sort(),
+    shared: [...[...peers].filter((peer) => !names.has(peer)), ...canvasCommonJsModules].sort(),
   };
 };
 
@@ -147,9 +158,9 @@ export const composerEntry = join(composerDir, "src/entry.ts");
 
 /**
  * The modules the app shares with the composer's separate build: every package the code of that
- * build imports, except the canvas libraries, which only the composer has, and the peer
- * dependencies of those libraries. The app provides the only copy of
- * each through its import map, so the composer uses the app's React, contexts and web-console
+ * build imports, except the canvas libraries, which only the composer has, plus the modules those
+ * libraries get from the app (`canvasPackages().shared`). The app provides the only copy of each
+ * through its import map, so the composer uses the app's React, contexts and web-console
  * packages.
  *
  * The list comes from the composer's source, so a new import is shared without anyone listing
@@ -163,7 +174,7 @@ export const composerEntry = join(composerDir, "src/entry.ts");
  * @throws {Error} when the code imports a module with a computed specifier, which can't be shared
  */
 export const composerSharedModules = () => {
-  const specifiers = new Set(["react/jsx-runtime", ...canvasPackages().peers]);
+  const specifiers = new Set(["react/jsx-runtime", ...canvasPackages().shared]);
   const visited = new Set();
   const pending = [composerEntry];
 
