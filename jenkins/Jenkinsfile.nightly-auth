@@ -1,0 +1,94 @@
+// The nightly end-to-end tests of the authentication methods, each against a fresh OSS
+// orchestrator set up for it (shell-scripts/setup-auth.sh), with the web console of this build:
+// - keycloak: cypress/e2e/Keycloak (cypress.config.keycloak.cjs);
+// - oidc: cypress/e2e/Oidc (cypress.config.oidc.cjs);
+// - local-auth: cypress/e2e/LocalAuth (cypress.config.local-auth.cjs).
+// Its own job, on master.
+//
+// The setup doesn't wait for the orchestrator and the identity provider to be ready, so each
+// method waits a fixed time before it installs the build.
+def authMethods = [
+    [name: 'keycloak', startupSeconds: 45],
+    [name: 'oidc', startupSeconds: 20],
+    [name: 'local-auth', startupSeconds: 45],
+]
+
+pipeline {
+    agent any
+
+    options {
+        disableConcurrentBuilds()
+        checkoutToSubdirectory('web-console')
+        skipDefaultCheckout()
+        ansiColor('xterm')
+    }
+    triggers {
+        cron('H H(2-5) * * *')
+    }
+    environment {
+        GITLAB_TOKEN = credentials('jenkins_on_gitlab')
+        CLOUDSMITH_TOKEN = credentials('cloudsmith-token')
+        JOINTJS_NPM_TOKEN = credentials('jointjs-npm-token')
+    }
+
+    stages {
+        stage('Auth: Checkout') {
+            steps {
+                deleteDir()
+                dir('web-console') {
+                    checkout scm
+                }
+            }
+        }
+        stage('Auth: Build') {
+            steps {
+                dir('web-console') {
+                    sh '''
+                    yarn install --immutable
+                    yarn build:ci
+                    '''
+                }
+            }
+        }
+        stage('Auth: End-to-end tests') {
+            steps {
+                script {
+                    for (method in authMethods) {
+                        stage("Authentication: ${method.name}") {
+                            // A failing method fails the build, and the other methods still run.
+                            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                                // One orchestrator per agent: the main job's Cypress stage takes the same lock.
+                                lock(resource: "orchestrator-${env.NODE_NAME}") {
+                                    dir('web-console') {
+                                        // The cleanup is outside the timeout, so it also runs when a method times out.
+                                        try {
+                                            timeout(time: 20, unit: 'MINUTES') {
+                                                sh """
+                                                yarn run install:orchestrator:${method.name}
+                                                sleep ${method.startupSeconds}
+                                                yarn update:dist
+                                                yarn run cypress-test:${method.name} --config screenshotsFolder=cypress/screenshots/${method.name} --reporter-options 'mochaFile=cypress/reports/junit/${method.name}-[hash].xml'
+                                                """
+                                            }
+                                        } finally {
+                                            junit allowEmptyResults: true, testResults: "cypress/reports/junit/${method.name}-*.xml"
+                                            sh 'yarn run kill-server || true; rm -rf temp'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'web-console/cypress/screenshots/**', allowEmptyArchive: true
+        }
+        cleanup {
+            deleteDir()
+        }
+    }
+}
