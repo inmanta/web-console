@@ -1,4 +1,8 @@
 import { ServiceModel, words } from "@inmanta/web-console-core";
+import {
+  StateCount,
+  SummaryLabel,
+} from "@inmanta/web-console-feature-lsm/Components/InstanceSummaryLabels";
 import { Service } from "@inmanta/web-console-test-utils";
 import {
   aviLoadBalancerCluster,
@@ -14,8 +18,11 @@ import {
 } from "./Mock";
 import {
   createCatalogSections,
+  filterCatalogSections,
   formatDescriptionLine,
   getAllCatalogServices,
+  getLabelCounts,
+  getOwnedServicesStateCounts,
   getSectionInstanceCount,
   getSectionTitle,
 } from "./helpers";
@@ -129,11 +136,152 @@ describe("getAllCatalogServices", () => {
   });
 });
 
+describe("filterCatalogSections", () => {
+  const sections = createCatalogSections([router, vpn, firewall, linuxVm, ...deploymentTree]);
+
+  it("matches the web_title, ignoring case and surrounding spaces", () => {
+    const filtered = filterCatalogSections(
+      sections,
+      `  ${firewall.entity_annotations?.web_title?.toUpperCase()} `
+    );
+
+    expect(filtered.sections.map(getSectionTitle)).toEqual([
+      firewall.entity_annotations?.web_group,
+    ]);
+    expect(getServiceNames(filtered.sections[0])).toEqual([firewall.name]);
+  });
+
+  it("matches the service name", () => {
+    const filtered = filterCatalogSections(sections, linuxVm.name);
+
+    expect(filtered.sections.flatMap(getServiceNames)).toEqual([linuxVm.name]);
+  });
+
+  it("keeps the owners on the path to a matching owned service and hides other branches", () => {
+    const filtered = filterCatalogSections(sections, aviVirtualIp.name);
+    const [deploymentService] = filtered.sections[0].services;
+
+    expect(filtered.sections.flatMap(getServiceNames)).toEqual([deployment.name]);
+    expect(getOwnedServiceNames(deploymentService)).toEqual([aviLoadBalancerCluster.name]);
+    expect(getOwnedServiceNames(deploymentService.ownedServices[0])).toEqual([aviVirtualIp.name]);
+  });
+
+  it("returns every owner on the path to a matching owned service", () => {
+    const filtered = filterCatalogSections(sections, aviVirtualIp.name);
+
+    expect(filtered.ownerNamesOfMatchingServices).toEqual(
+      new Set([deployment.name, aviLoadBalancerCluster.name])
+    );
+  });
+
+  it("keeps all owned services of a matching service, without expanding it", () => {
+    const filtered = filterCatalogSections(sections, deployment.name);
+
+    expect(getOwnedServiceNames(filtered.sections[0].services[0])).toEqual([
+      dnsRecord.name,
+      aviLoadBalancerCluster.name,
+    ]);
+    expect(filtered.ownerNamesOfMatchingServices).toEqual(new Set());
+  });
+
+  it("counts the matching services at any depth, not the owners on the path", () => {
+    const filtered = filterCatalogSections(sections, aviVirtualIp.name);
+
+    expect(filtered.matchingServiceCount).toBe([aviVirtualIp].length);
+  });
+
+  it("returns no sections when nothing matches", () => {
+    const filtered = filterCatalogSections(sections, "no service has this text");
+
+    expect(filtered.sections).toEqual([]);
+    expect(filtered.matchingServiceCount).toBe(0);
+  });
+
+  it("returns the sections unchanged, no owners and every service as a match for a blank filter text", () => {
+    const filtered = filterCatalogSections(sections, " ");
+
+    expect(filtered.sections).toBe(sections);
+    expect(filtered.ownerNamesOfMatchingServices).toEqual(new Set());
+    expect(filtered.matchingServiceCount).toBe(
+      [router, vpn, firewall, linuxVm, ...deploymentTree].length
+    );
+  });
+});
+
 describe("formatDescriptionLine", () => {
   it("joins a multi-line description into one line", () => {
     expect(formatDescriptionLine("Edge router.\n\n  Handles   uplinks.")).toBe(
       "Edge router. Handles uplinks."
     );
+  });
+});
+
+describe("getOwnedServicesStateCounts", () => {
+  const getRows = (service: CatalogService) =>
+    getOwnedServicesStateCounts(service).map(({ ownedServiceTitle, stateName, label, count }) => [
+      ownedServiceTitle,
+      stateName,
+      label,
+      count,
+    ]);
+  const [deploymentService] = createCatalogSections(deploymentTree)[0].services;
+  const [, loadBalancerClusterService] = deploymentService.ownedServices;
+  const virtualIpTitle = aviVirtualIp.entity_annotations?.web_title;
+  const dnsRecordTitle = dnsRecord.entity_annotations?.web_title;
+
+  it("counts the non-success states of the owned services at any depth, most severe first", () => {
+    expect(getRows(deploymentService)).toEqual([
+      [dnsRecordTitle, "failed", "danger", dnsRecord.instance_summary?.by_state.failed],
+      [virtualIpTitle, "failed", "danger", aviVirtualIp.instance_summary?.by_state.failed],
+      [dnsRecordTitle, "creating", "info", dnsRecord.instance_summary?.by_state.creating],
+      [virtualIpTitle, "start", "no_label", aviVirtualIp.instance_summary?.by_state.start],
+    ]);
+  });
+
+  it("counts only the services below the given service", () => {
+    expect(getRows(loadBalancerClusterService)).toEqual([
+      [virtualIpTitle, "failed", "danger", aviVirtualIp.instance_summary?.by_state.failed],
+      [virtualIpTitle, "start", "no_label", aviVirtualIp.instance_summary?.by_state.start],
+    ]);
+  });
+
+  it("returns no counts when all instances of the owned services are in a success state", () => {
+    const successOnlyVpnTunnel: ServiceModel = {
+      ...vpnTunnel,
+      lifecycle: aviLoadBalancerCluster.lifecycle,
+      instance_summary: aviLoadBalancerCluster.instance_summary,
+    };
+    const [vpnService] = createCatalogSections([vpn, successOnlyVpnTunnel])[0].services;
+
+    expect(getOwnedServicesStateCounts(vpnService)).toEqual([]);
+  });
+});
+
+describe("getLabelCounts", () => {
+  const createStateCount = (stateName: string, label: SummaryLabel, count: number): StateCount => ({
+    stateName,
+    stateDisplayName: stateName,
+    label,
+    count,
+  });
+
+  it("sums the counts per label, most severe first", () => {
+    expect(
+      getLabelCounts([
+        createStateCount("start", "no_label", 4),
+        createStateCount("failed", "danger", 1),
+        createStateCount("creating", "info", 2),
+        createStateCount("rejected", "danger", 3),
+      ])
+    ).toEqual([
+      { label: "danger", count: 4 },
+      { label: "info", count: 2 },
+      { label: "no_label", count: 4 },
+    ]);
+  });
+
+  it("leaves out labels without instances", () => {
+    expect(getLabelCounts([createStateCount("failed", "danger", 0)])).toEqual([]);
   });
 });
 

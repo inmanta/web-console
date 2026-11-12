@@ -32,7 +32,7 @@ export const CatalogTabs: React.FunctionComponent<Props> = ({ service }) => {
       style={stickyTabsStyle}
     >
       <Tab eventKey="details" title="Details">
-        <Details instanceSummary={service.instance_summary} />
+        <Details instanceSummary={service.instance_summary} states={service.lifecycle.states} />
       </Tab>
       <Tab eventKey="attributes" title="Attributes">
         <TabContentBody hasPadding>

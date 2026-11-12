@@ -1,4 +1,8 @@
 import { ResolvedEntityAnnotations, ServiceModel } from "@inmanta/web-console-core";
+import {
+  StateCount,
+  SummaryLabel,
+} from "@inmanta/web-console-feature-lsm/Components/InstanceSummaryLabels";
 
 /**
  * A service in the catalog together with its resolved entity annotations and the services
@@ -26,6 +30,65 @@ export type CatalogSection =
       services: CatalogService[];
     }
   | { kind: "Ungrouped"; services: CatalogService[] };
+
+/**
+ * The number of instances of an owned service in one lifecycle state, shown in the tooltip of
+ * the "not success" label of a collapsed owner.
+ */
+export interface OwnedServiceStateCount extends StateCount {
+  /** The service entity name of the owned service. */
+  ownedServiceName: string;
+
+  /** The `web_title` of the owned service. */
+  ownedServiceTitle: string;
+}
+
+/**
+ * The number of instances with one lifecycle label, summed over several states or services.
+ */
+export interface LabelCount {
+  label: SummaryLabel;
+  count: number;
+}
+
+/**
+ * The filter of the service catalog, kept in the URL.
+ */
+export interface CatalogFilter {
+  /** The text to match, case-insensitive, against the `web_title` and the name of a service. */
+  text?: string;
+}
+
+/**
+ * The catalog sections after filtering, with the owners to expand so every match is visible.
+ */
+export interface FilteredCatalogSections {
+  sections: CatalogSection[];
+
+  /** The names of the services that own, at any depth, a service matching the filter text. */
+  ownerNamesOfMatchingServices: Set<string>;
+
+  /** The number of services, at any depth, matching the filter text. All of them without a filter. */
+  matchingServiceCount: number;
+}
+
+/**
+ * Whether the catalog rows start with their owned services expanded.
+ */
+export interface OwnedServicesExpansion {
+  /**
+   * Set by the last Expand all or Collapse all. `undefined` until then, and again after a
+   * filter change, so only the owners of the filter matches start expanded.
+   */
+  isExpandedByDefault?: boolean;
+
+  /**
+   * Goes up on every Expand all and Collapse all, to remount the rows. A filter change remounts
+   * them through the filter text in the URL instead, so they only start again once the new
+   * matches are known.
+   */
+  resetCount: number;
+}
 
 /** The icon of a service that owns other services and has no `web_icon`. */
 export const ownerServiceFallbackIconName = "FaFolder";

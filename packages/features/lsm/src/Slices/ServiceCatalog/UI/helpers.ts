@@ -5,8 +5,17 @@ import {
   words,
 } from "@inmanta/web-console-core";
 import {
+  getStateCounts,
+  StateCount,
+  summaryLabels,
+  summaryLabelSeverity,
+} from "@inmanta/web-console-feature-lsm/Components/InstanceSummaryLabels";
+import {
   CatalogSection,
   CatalogService,
+  FilteredCatalogSections,
+  LabelCount,
+  OwnedServiceStateCount,
   ownerServiceFallbackIconName,
   serviceFallbackIconName,
 } from "./types";
@@ -140,6 +149,141 @@ export const getSectionInstanceCount = (section: CatalogSection): number =>
     (count, { serviceModel }) => count + Number(serviceModel.instance_summary?.total ?? 0),
     0
   );
+
+/**
+ * Gets the instance counts of the services a service owns, at any depth, in the states that are
+ * not labeled "success". The counts are ordered by label, most severe first, then in catalog
+ * order of the owned services.
+ *
+ * @example
+ * getOwnedServicesStateCounts(deployment (owns dns_record: 2 up, 1 creating; virtual_ip: 1 failed))
+ * // [{ ownedServiceTitle: "Virtual IP", stateName: "failed", label: "danger", count: 1, ... },
+ * //  { ownedServiceTitle: "DNS record", stateName: "creating", label: "info", count: 1, ... }]
+ */
+export const getOwnedServicesStateCounts = (service: CatalogService): OwnedServiceStateCount[] => {
+  const ownedServicesStateCounts: OwnedServiceStateCount[] = [];
+
+  const addStateCounts = ({ serviceModel, resolvedAnnotations, ownedServices }: CatalogService) => {
+    if (serviceModel.instance_summary) {
+      for (const stateCount of getStateCounts(
+        serviceModel.instance_summary,
+        serviceModel.lifecycle.states
+      )) {
+        if (stateCount.label !== "success") {
+          ownedServicesStateCounts.push({
+            ...stateCount,
+            ownedServiceName: serviceModel.name,
+            ownedServiceTitle: resolvedAnnotations.web_title,
+          });
+        }
+      }
+    }
+
+    ownedServices.forEach(addStateCounts);
+  };
+
+  service.ownedServices.forEach(addStateCounts);
+
+  return ownedServicesStateCounts.sort(
+    (a, b) => summaryLabelSeverity[a.label] - summaryLabelSeverity[b.label]
+  );
+};
+
+/**
+ * Gets the total instance count per label over the given state counts, most severe first,
+ * leaving out labels without any.
+ *
+ * @example
+ * getLabelCounts([{ label: "danger", count: 1, ... }, { label: "info", count: 2, ... }, { label: "danger", count: 3, ... }])
+ * // [{ label: "danger", count: 4 }, { label: "info", count: 2 }]
+ */
+export const getLabelCounts = (stateCounts: StateCount[]): LabelCount[] => {
+  const labelCounts: LabelCount[] = [];
+
+  for (const label of summaryLabels) {
+    const count = stateCounts
+      .filter((stateCount) => stateCount.label === label)
+      .reduce((total, stateCount) => total + stateCount.count, 0);
+
+    if (count > 0) {
+      labelCounts.push({ label, count });
+    }
+  }
+
+  return labelCounts;
+};
+
+/**
+ * Filters the sections down to the services that match the filter text and the owners on the
+ * path to them, and collects those owners so they can start expanded. A matching service keeps
+ * all its owned services; sections left without services are dropped. A blank filter text
+ * returns the sections unchanged, no owners, and every service as a match.
+ *
+ * @example
+ * filterCatalogSections([{ kind: "Ungrouped", services: [deployment (owns dns_record, virtual_ip)] }], "dns")
+ * // { sections: [{ kind: "Ungrouped", services: [deployment (ownedServices: [dns_record])] }],
+ * //   ownerNamesOfMatchingServices: Set { "deployment" }, matchingServiceCount: 1 }
+ */
+export const filterCatalogSections = (
+  sections: CatalogSection[],
+  filterText: string
+): FilteredCatalogSections => {
+  const normalizedFilterText = filterText.trim().toLowerCase();
+  const ownerNamesOfMatchingServices = new Set<string>();
+  let matchingServiceCount = 0;
+
+  if (normalizedFilterText === "") {
+    return {
+      sections,
+      ownerNamesOfMatchingServices,
+      matchingServiceCount: getAllCatalogServices(sections).length,
+    };
+  }
+
+  const filterServices = (services: CatalogService[]): CatalogService[] => {
+    const filteredServices: CatalogService[] = [];
+
+    for (const service of services) {
+      const filteredOwnedServices = filterServices(service.ownedServices);
+
+      if (filteredOwnedServices.length > 0) {
+        ownerNamesOfMatchingServices.add(service.serviceModel.name);
+      }
+
+      if (isCatalogServiceMatch(service, normalizedFilterText)) {
+        matchingServiceCount += 1;
+        filteredServices.push(service);
+      } else if (filteredOwnedServices.length > 0) {
+        filteredServices.push({ ...service, ownedServices: filteredOwnedServices });
+      }
+    }
+
+    return filteredServices;
+  };
+
+  const filteredSections: CatalogSection[] = [];
+
+  for (const section of sections) {
+    const services = filterServices(section.services);
+
+    if (services.length > 0) {
+      filteredSections.push({ ...section, services });
+    }
+  }
+
+  return { sections: filteredSections, ownerNamesOfMatchingServices, matchingServiceCount };
+};
+
+/**
+ * Whether the `web_title` or the name of a service contains the normalized filter text,
+ * ignoring case.
+ */
+const isCatalogServiceMatch = (
+  { serviceModel, resolvedAnnotations }: CatalogService,
+  normalizedFilterText: string
+): boolean =>
+  resolvedAnnotations.web_title.toLowerCase().includes(normalizedFilterText) ||
+  serviceModel.name.toLowerCase().includes(normalizedFilterText);
 
 /**
  * Sorts catalog services in place by `web_order`, then by title, and returns them.
