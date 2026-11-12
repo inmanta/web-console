@@ -52,7 +52,8 @@ export default defineConfig(
         extends: true,
         test: {
           name: projectName(dir),
-          include: [`${dir}/src/**/*.{test,spec}.?(c|m)[jt]s?(x)`],
+          // The tests of the source, and of a feature's Vite plugin (vite.js)
+          include: [`${dir}/src/**/*.{test,spec}.?(c|m)[jt]s?(x)`, `${dir}/vite.test.ts`],
         },
       })),
       coverage: {

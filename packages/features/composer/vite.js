@@ -168,15 +168,17 @@ export const composerEntry = join(composerDir, "src/entry.ts");
  * state and contexts (the build fails on that, see vite.config.ts). It follows the imports from
  * the build's entry (`composerEntry`) with TypeScript's parser, so it sees exactly the code the
  * build bundles, and not the tests or their mocks. Type-only imports and stylesheets are left
- * out.
+ * out. vite.test.ts covers it on a module graph of its own.
  *
+ * @param {string} [entry] - the module to start from, `composerEntry` by default
  * @returns {string[]} the shared import specifiers, sorted
- * @throws {Error} when the code imports a module with a computed specifier, which can't be shared
+ * @throws {Error} when the code imports a module with a computed specifier, which can't be shared,
+ *   or one of its own modules that isn't a .ts or .tsx file or an asset
  */
-export const composerSharedModules = () => {
+export const composerSharedModules = (entry = composerEntry) => {
   const specifiers = new Set(["react/jsx-runtime", ...canvasPackages().shared]);
   const visited = new Set();
-  const pending = [composerEntry];
+  const pending = [entry];
 
   for (let file = pending.pop(); file !== undefined; file = pending.pop()) {
     if (visited.has(file)) {
