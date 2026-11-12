@@ -6,9 +6,9 @@ import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
 import { usePostStateTransfer } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
-import { DynamicFAIcon } from "@inmanta/web-console-feature-lsm/Components/FaIcon";
 import { StateTarget } from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Utils";
 import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
+import { DynamicFAIcon } from "@inmanta/web-console-ui/Components/FaIcon";
 import { iconColorFor } from "@inmanta/web-console-ui/Utils";
 
 interface Props extends VersionedServiceInstanceIdentifier {

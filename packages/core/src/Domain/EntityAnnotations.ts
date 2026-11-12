@@ -63,3 +63,17 @@ const getTrimmedString = (value: unknown): string | undefined => {
 
   return trimmed !== "" ? trimmed : undefined;
 };
+
+/** The icon of a service that owns other services and has no `web_icon`. */
+export const ownerServiceFallbackIconName = "FaFolder";
+
+/** The icon of a service that owns no other services and has no `web_icon`. */
+export const serviceFallbackIconName = "FaCube";
+
+/**
+ * Gets the icon name of a service: its `web_icon`, or a fallback that shows whether the service
+ * owns other services. The name is a React Icons Font Awesome icon, e.g. "FaCube".
+ */
+export const getServiceIconName = (serviceModel: ServiceModel): string =>
+  resolveEntityAnnotations(serviceModel).web_icon ??
+  (serviceModel.owned_entities.length > 0 ? ownerServiceFallbackIconName : serviceFallbackIconName);

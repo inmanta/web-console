@@ -1312,6 +1312,7 @@ __metadata:
     msw: "npm:^3.0.4"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
+    react-icons: "npm:^5.7.0"
     react-router: "npm:^8.5.1"
     styled-components: "npm:^6.6.0"
     uuid: "npm:^14.0.3"

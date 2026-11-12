@@ -4,8 +4,8 @@ import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
 import styled, { css } from "styled-components";
 import { ParsedNumber, words } from "@inmanta/web-console-core";
 import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
-import { DynamicFAIcon } from "@inmanta/web-console-feature-lsm/Components/FaIcon";
 import { StateTarget } from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Utils";
+import { DynamicFAIcon } from "@inmanta/web-console-ui/Components/FaIcon";
 import { iconColorFor } from "@inmanta/web-console-ui/Utils";
 import { StateTransferModalContent } from "./StateTransferModalContent";
 

@@ -1,5 +1,5 @@
 description: |
-  The Instance Composer has a new canvas that no longer needs the licensed JointJS+ library. Cards name each instance and show what is missing, relations are drawn by dragging from a card's link action, and an Arrange action lays out complex relation trees.
+  The Instance Composer has a new canvas that no longer needs the licensed JointJS+ library. Cards name each instance, show its service icon and what is missing, relations are drawn by dragging from a card's link action, and an Arrange action lays out complex relation trees.
 change-type: minor
 destination-branches: [master, iso9]
 sections:

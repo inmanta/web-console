@@ -2,8 +2,11 @@ import { ServiceModel } from "@inmanta/web-console-core";
 import * as Test from "@inmanta/web-console-test-utils";
 import {
   compareEntityAnnotations,
+  getServiceIconName,
   getServiceTitle,
+  ownerServiceFallbackIconName,
   resolveEntityAnnotations,
+  serviceFallbackIconName,
 } from "./EntityAnnotations";
 
 const service = Test.Service.a;
@@ -95,4 +98,23 @@ describe("compareEntityAnnotations", () => {
       [...resolvedAnnotationsList].sort(compareEntityAnnotations).map(({ web_title }) => web_title)
     ).toEqual(["Echo", "Alpha", "Charlie", "Bravo", "Delta"]);
   });
+});
+
+describe("getServiceIconName", () => {
+  it("uses the web_icon annotation, trimmed", () => {
+    expect(getServiceIconName(serviceWith({ web_icon: " FaServer " }))).toBe("FaServer");
+  });
+
+  it.each`
+    ownedEntities    | expected
+    ${[]}            | ${serviceFallbackIconName}
+    ${["child_svc"]} | ${ownerServiceFallbackIconName}
+  `(
+    "falls back to $expected without a web_icon when the service owns $ownedEntities",
+    ({ ownedEntities, expected }) => {
+      expect(
+        getServiceIconName({ ...serviceWith({ web_icon: "" }), owned_entities: ownedEntities })
+      ).toBe(expected);
+    }
+  );
 });

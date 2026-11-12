@@ -50,9 +50,3 @@ export interface LabelCount {
   label: SummaryLabel;
   count: number;
 }
-
-/** The icon of a service that owns other services and has no `web_icon`. */
-export const ownerServiceFallbackIconName = "FaFolder";
-
-/** The icon of a service that owns no other services and has no `web_icon`. */
-export const serviceFallbackIconName = "FaCube";

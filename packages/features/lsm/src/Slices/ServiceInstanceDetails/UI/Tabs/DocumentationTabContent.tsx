@@ -13,7 +13,6 @@ import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
 import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
 import { useNavigateTo } from "@inmanta/web-console-core/Routing";
-import { DynamicFAIcon } from "@inmanta/web-console-feature-lsm/Components/FaIcon";
 import { SetStateButtonDefaults } from "@inmanta/web-console-feature-lsm/Components/MarkdownContainer";
 import {
   getAvailableStateTargets,
@@ -21,6 +20,7 @@ import {
 } from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Utils";
 import { MarkdownCard } from "@inmanta/web-console-feature-lsm/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { DynamicFAIcon } from "@inmanta/web-console-ui/Components/FaIcon";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { StateTransferModalContent } from "../Components/InstanceActions/Actions/StateTransferModalContent";

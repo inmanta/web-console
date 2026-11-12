@@ -25,6 +25,7 @@ import { ComposerContext, PaletteItem } from "../Data/Context";
 import { getUnavailableInventoryItems } from "../Data/Helpers";
 import { useAddPaletteItem } from "../Data/Hooks";
 import { LEFT_SIDEBAR_WIDTH, SHAPE_WIDTH } from "../config";
+import { EntityIcon } from "./EntityIcon";
 
 interface PaletteRow {
   key: string;
@@ -303,6 +304,9 @@ export const LeftSidebar: React.FC = () => {
                         aria-disabled="true"
                         data-testid={`palette-item-${row.label}`}
                       >
+                        <span className="palette-row-icon" aria-hidden>
+                          <EntityIcon serviceModel={row.item.serviceModel} />
+                        </span>
                         <span className="palette-row-label">{row.label}</span>
                         <Label isCompact variant="outline">
                           {row.unavailableReason}
@@ -324,6 +328,9 @@ export const LeftSidebar: React.FC = () => {
                         }}
                       >
                         <GripVerticalIcon className="palette-row-grip" />
+                        <span className="palette-row-icon" aria-hidden>
+                          <EntityIcon serviceModel={row.item.serviceModel} />
+                        </span>
                         <span className="palette-row-label" title={row.label}>
                           {row.label}
                         </span>
@@ -444,6 +451,12 @@ const Sidebar = styled.aside`
 
   .palette-row-grip {
     flex: none;
+    color: var(--pf-t--global--icon--color--subtle);
+  }
+
+  .palette-row-icon {
+    flex: none;
+    display: inline-flex;
     color: var(--pf-t--global--icon--color--subtle);
   }
 

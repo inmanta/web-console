@@ -40,10 +40,10 @@ import { CustomError } from "@inmanta/web-console-core/Queries/Helpers";
 import { SuggestionVariables } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
 import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
+import { DynamicFAIcon } from "@inmanta/web-console-ui/Components/FaIcon";
 import { FieldInput } from "@inmanta/web-console-ui/Components/FieldInputs";
 import { ValidationErrorsContext } from "@inmanta/web-console-ui/Components/FieldInputs/ValidationErrorsContext";
 import { usePrompt } from "@inmanta/web-console-ui/Utils/usePrompt";
-import { DynamicFAIcon } from "../FaIcon";
 import { JSONEditor } from "../JSONEditor";
 
 interface Props {

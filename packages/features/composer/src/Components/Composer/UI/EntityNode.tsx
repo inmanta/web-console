@@ -2,13 +2,10 @@ import React, { useContext, useState } from "react";
 import { AngleDoubleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-double-down-icon";
 import { AngleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-down-icon";
 import { AngleUpIcon } from "@patternfly/react-icons/dist/esm/icons/angle-up-icon";
-import { CubeIcon } from "@patternfly/react-icons/dist/esm/icons/cube-icon";
 import { ExclamationCircleIcon } from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
 import { LayerGroupIcon } from "@patternfly/react-icons/dist/esm/icons/layer-group-icon";
 import { LinkIcon } from "@patternfly/react-icons/dist/esm/icons/link-icon";
 import { LockIcon } from "@patternfly/react-icons/dist/esm/icons/lock-icon";
-import { PuzzlePieceIcon } from "@patternfly/react-icons/dist/esm/icons/puzzle-piece-icon";
-import { ServerIcon } from "@patternfly/react-icons/dist/esm/icons/server-icon";
 import { Handle, Node, NodeProps, Position, useStore } from "@xyflow/react";
 import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
@@ -21,17 +18,12 @@ import {
 } from "../Data/Helpers";
 import { EntityShapeType, ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { SHAPE_WIDTH } from "../config";
+import { EntityIcon } from "./EntityIcon";
 
 export const HeaderColors: Record<EntityShapeType, string> = {
   core: "var(--pf-t--color--yellow--30)",
   embedded: "var(--pf-t--color--blue--50)",
   relation: "var(--pf-t--color--purple--50)",
-};
-
-const KindIcons: Record<EntityShapeType, React.ComponentType> = {
-  core: CubeIcon,
-  embedded: PuzzlePieceIcon,
-  relation: ServerIcon,
 };
 
 /**
@@ -70,7 +62,6 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
   // The identity is the card's title, so it isn't listed again below it.
   const attributes = shape.getDisplayAttributes().filter(({ name }) => name !== identity?.name);
   const isReadOnly = shape.entityType === "relation" && !shape.isNew;
-  const KindIcon = KindIcons[shape.entityType];
   // Only offered when the model lets the entity be linked at all; read-only cards keep it.
   const canLink = editable && (isReadOnly || shape.canHaveConnections());
   const hasActions = hasLayers || canLink;
@@ -165,7 +156,7 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
       >
         <header>
           <span className="kind-icon" aria-hidden>
-            <KindIcon />
+            <EntityIcon serviceModel={shape.serviceModel} />
           </span>
           <div className="heading">
             <span className="kind" data-testid={`header-${displayName}`} title={displayName}>

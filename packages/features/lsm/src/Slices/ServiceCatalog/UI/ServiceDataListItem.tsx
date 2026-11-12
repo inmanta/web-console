@@ -17,14 +17,14 @@ import {
 } from "@patternfly/react-core";
 import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { words } from "@inmanta/web-console-core";
+import { getServiceIconName, words } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
-import { DynamicFAIcon } from "@inmanta/web-console-feature-lsm/Components/FaIcon";
 import { InstanceSummaryLabels } from "@inmanta/web-console-feature-lsm/Components/InstanceSummaryLabels";
+import { DynamicFAIcon } from "@inmanta/web-console-ui/Components/FaIcon";
 import { Link } from "@inmanta/web-console-ui/Components/Link";
 import { OwnedServicesNotSuccessLabel } from "./OwnedServicesNotSuccessLabel";
 import { ServiceActions } from "./ServiceActions";
-import { formatDescriptionLine, getOwnedServicesStateCounts, getServiceIconName } from "./helpers";
+import { formatDescriptionLine, getOwnedServicesStateCounts } from "./helpers";
 import { CatalogService } from "./types";
 
 interface Props {
@@ -88,7 +88,7 @@ export const ServiceDataListItem: React.FC<Props> = ({
                   <DataListCell isIcon key="icon">
                     <ServiceIconTile iconSize="lg">
                       <DynamicFAIcon
-                        icon={getServiceIconName(service)}
+                        icon={getServiceIconName(serviceModel)}
                         isInline
                         color="var(--pf-t--global--icon--color--brand--default)"
                         attr={{ "aria-hidden": true }}
