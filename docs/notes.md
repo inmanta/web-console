@@ -112,6 +112,8 @@ The ISO app loads the composer this way. The composer has its own Vite config (`
 
 The dev server and the tests resolve `composer/feature` to the composer's source instead, like a bundled feature.
 
+`yarn cypress-test:ship-modes` checks these modes end to end (`cypress/e2e/ShipModes`) on the orchestrator's container, or on the folder in `WEB_CONSOLE_DIR`. It switches modes with `scripts/composer-ship-mode.js` (`yarn composer-ship-mode <mode>`): `without` removes the `composer-*` files, `combined` copies them in again (also how it installs the composer later), and `mismatch` builds the composer a second time with another version (`COMPOSER_VERSION_OVERRIDE`, one extra composer build of a few seconds) into a temporary folder and copies those files in. The rest of the end-to-end tests run on `dist/` as built, with the composer. After an aborted run, `yarn composer-ship-mode combined --container inmanta_orchestrator` restores the orchestrator's web console.
+
 ## Features and routes in tests
 
 Tests follow the same import boundaries as the code they test (see `eslint.layers.js`), and may also import `@inmanta/web-console-test-utils`. A feature's tests only depend on that feature:

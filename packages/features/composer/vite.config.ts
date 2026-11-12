@@ -7,6 +7,9 @@
  * import map, so the composer runs on the app's copy of React, the contexts and the web-console
  * packages. The files are flat and start with "composer-": the orchestrator serves every file of
  * the web console by its name from one folder, next to the app's own files.
+ *
+ * `COMPOSER_VERSION_OVERRIDE` builds the composer with another version than the app's
+ * (`APP_VERSION`), e.g. for the version mismatch test (scripts/composer-ship-mode.js).
  */
 import { relative, sep } from "path";
 import { federation } from "@module-federation/vite";
@@ -69,8 +72,11 @@ const onlyComposerCode = (): Plugin => ({
   },
 });
 
+const versionOverride = process.env.COMPOSER_VERSION_OVERRIDE;
+
 export default defineConfig(
   mergeConfig(sharedConfig, {
+    ...(versionOverride ? { define: { APP_VERSION: JSON.stringify(versionOverride) } } : {}),
     root: import.meta.dirname,
     base: "./",
     publicDir: false,

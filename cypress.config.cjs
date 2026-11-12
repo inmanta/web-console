@@ -26,6 +26,7 @@ module.exports = defineConfig({
       "cypress/e2e/Keycloak/**",
       "cypress/e2e/LocalAuth/**",
       "cypress/e2e/Oidc/**",
+      "cypress/e2e/ShipModes/**",
     ],
   },
 });
