@@ -37,11 +37,15 @@ const Container = styled.div`
   overflow: hidden;
   border: 1px solid var(--pf-t--global--border--color--default);
 
-  &.fullscreen {
+  // Full screen (the zoom toolbar) puts the whole document in full screen, so what PatternFly
+  // renders in the document body, like popovers, menus and toasts, still shows. The shell's
+  // page frame hides its banners, masthead and sidebar then; the composer covers the rest.
+  :root:fullscreen & {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    inset: 0;
+    z-index: var(--pf-t--global--z-index--lg);
+    border: 0;
+    border-radius: 0;
+    background: var(--pf-t--global--background--color--primary--default);
   }
 `;

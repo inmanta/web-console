@@ -19,124 +19,50 @@ export const ZoomControlsContainer = styled.div`
   filter: drop-shadow(0.05rem 0.2rem 0.2rem var(--pf-t--global--box-shadow--color--100));
   z-index: 10;
 
-  > button {
-    display: flex;
-    align-items: center;
+  // Every control is as high as a square icon button, whatever its PatternFly variant: the
+  // Arrange menu toggle has text and padding of its own.
+  --toolbar-control--size: var(--pf-t--global--spacer--xl);
+
+  .toolbar-control {
+    flex: none;
     justify-content: center;
-    padding: 0.25rem;
-    min-width: auto;
-    width: 2rem;
-    height: 2rem;
-
-    &:hover {
-      background: transparent;
-    }
-
-    img {
-      display: block;
-      margin: 0;
-    }
+    min-width: var(--toolbar-control--size);
+    height: var(--toolbar-control--size);
+    padding-block: 0;
   }
 
-  > .arrange-toggle {
-    width: auto;
-    gap: var(--pf-t--global--spacer--sm);
+  .pf-v6-c-button.toolbar-control {
+    width: var(--toolbar-control--size);
+    padding-inline: 0;
+  }
+
+  .pf-v6-c-menu-toggle.toolbar-control {
     padding-inline: var(--pf-t--global--spacer--md);
   }
 
   .toolbar-divider {
     width: 1px;
-    height: 1.5rem;
+    height: var(--pf-t--global--spacer--lg);
     margin: 0 var(--pf-t--global--spacer--xs);
     background: var(--pf-t--global--border--color--default);
   }
 
-  .zoom-slider-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  // PatternFly's slider leaves room above and below its rail for ticks and labels; the toolbar
+  // shows neither, so the slider fits in the height of a control.
+  .zoom-slider {
+    --pf-v6-c-slider__rail--PaddingBlockStart: var(--pf-t--global--spacer--sm);
+    --pf-v6-c-slider__rail--PaddingBlockEnd: var(--pf-t--global--spacer--sm);
+    --pf-v6-c-slider__thumb--InsetBlockStart: calc(
+      var(--pf-v6-c-slider__rail-track--Height) / 2 + var(--pf-t--global--spacer--sm)
+    );
+    width: 6rem;
+    margin-inline: var(--pf-t--global--spacer--sm);
+  }
 
-    output {
-      color: var(--pf-t--global--text--color--subtle);
-      min-width: 2.5rem;
-      text-align: right;
-      font-size: 0.875rem;
-    }
-
-    input[type="range"] {
-      -webkit-appearance: none;
-      appearance: none;
-      cursor: pointer;
-      width: 6rem;
-      height: 0.15rem;
-      margin-right: 0.5rem;
-      border-radius: 0.5rem;
-      --slider-background: linear-gradient(
-        to right,
-        var(--pf-t--global--border--color--brand--default) 0%,
-        var(--pf-t--global--border--color--brand--default) 20%,
-        var(--pf-t--global--border--color--nonstatus--gray--default) 20%,
-        var(--pf-t--global--border--color--nonstatus--gray--default) 100%
-      );
-    }
-
-    input[type="range"]:focus {
-      outline: none;
-    }
-
-    /* Chrome, Safari, Opera and Edge Chromium styles */
-    input[type="range"]::-webkit-slider-runnable-track {
-      background: var(
-        --slider-background,
-        linear-gradient(
-          to right,
-          var(--pf-t--global--border--color--brand--default) 0%,
-          var(--pf-t--global--border--color--brand--default) 20%,
-          var(--pf-t--global--border--color--nonstatus--gray--default) 20%,
-          var(--pf-t--global--border--color--nonstatus--gray--default) 100%
-        )
-      );
-      border-radius: 0.5rem;
-      height: 0.15rem;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      margin-top: -3.6px;
-      background-color: var(--pf-t--global--border--color--brand--default);
-      border-radius: 0.5rem;
-      height: 0.7rem;
-      width: 0.7rem;
-    }
-
-    /* Firefox styles */
-    input[type="range"]::-moz-range-track {
-      background: var(
-        --slider-background,
-        linear-gradient(
-          to right,
-          var(--pf-t--global--border--color--brand--default) 0%,
-          var(--pf-t--global--border--color--brand--default) 20%,
-          var(--pf-t--global--border--color--nonstatus--gray--default) 20%,
-          var(--pf-t--global--border--color--nonstatus--gray--default) 100%
-        )
-      );
-      border-radius: 0.5rem;
-      height: 0.15rem;
-    }
-
-    input[type="range"]::-moz-range-thumb {
-      background-color: var(--pf-t--global--border--color--brand--default);
-      border: none;
-      border-radius: 0.5rem;
-      height: 0.7rem;
-      width: 0.7rem;
-    }
-
-    input[type="range"]:focus::-moz-range-thumb {
-      outline: 3px solid var(--pf-t--global--border--color--brand--default);
-      outline-offset: 0.125rem;
-    }
+  .zoom-percentage {
+    min-width: 2.5rem;
+    color: var(--pf-t--global--text--color--subtle);
+    font-size: var(--pf-t--global--font--size--body--sm);
+    text-align: right;
   }
 `;

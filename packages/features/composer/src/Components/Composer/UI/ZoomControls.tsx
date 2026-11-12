@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   Alert,
   AlertActionCloseButton,
@@ -10,9 +10,13 @@ import {
   DropdownItem,
   DropdownList,
   MenuToggle,
+  Slider,
   ToggleGroup,
   ToggleGroupItem,
 } from "@patternfly/react-core";
+import { CompressIcon } from "@patternfly/react-icons/dist/esm/icons/compress-icon";
+import { ExpandArrowsAltIcon } from "@patternfly/react-icons/dist/esm/icons/expand-arrows-alt-icon";
+import { ExpandIcon } from "@patternfly/react-icons/dist/esm/icons/expand-icon";
 import { MinusIcon } from "@patternfly/react-icons/dist/esm/icons/minus-icon";
 import { PlusIcon } from "@patternfly/react-icons/dist/esm/icons/plus-icon";
 import { SitemapIcon } from "@patternfly/react-icons/dist/esm/icons/sitemap-icon";
@@ -23,9 +27,6 @@ import { applyLayeredLayout, LayoutDirection } from "../Data/Helpers";
 import { Point } from "../Data/ServiceEntityShape";
 import { MIN_ZOOM, MAX_ZOOM, SLIDER_MIN, SLIDER_MAX, ZOOM_TO_FIT_PADDING_BUTTON } from "../config";
 import { ZoomControlsContainer } from "./ZoomControls.styles";
-import exitFullscreenIcon from "./icons/exit-fullscreen.svg";
-import fitToScreenIcon from "./icons/fit-to-screen.svg";
-import requestFullscreenIcon from "./icons/request-fullscreen.svg";
 
 /**
  * The toolbar under the canvas: arrange the layout, full screen, fit to screen, and zoom.
@@ -34,67 +35,22 @@ export const ZoomControls: React.FC = () => {
   const { canvasState, canvasActions, activeCell } = useContext(ComposerContext);
   const { zoomTo, fitView } = useReactFlow();
   const { zoom } = useViewport();
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
   const [isArrangeOpen, setIsArrangeOpen] = useState(false);
   const [direction, setDirection] = useState<LayoutDirection>("LR");
   // The positions before the last arrangement, to undo it
   const [previousPositions, setPreviousPositions] = useState<Map<string, Point> | null>(null);
-  const sliderRef = useRef<HTMLInputElement>(null);
 
   const zoomPercentage = Math.round(zoom * 100);
   const sliderValue = Math.max(SLIDER_MIN, Math.min(SLIDER_MAX, zoomPercentage));
 
+  // While the document is full screen, the composer's frame covers the page (ComposerContainer).
   useEffect(() => {
-    if (!sliderRef.current) {
-      return;
-    }
-
-    const progress = ((sliderValue - SLIDER_MIN) / (SLIDER_MAX - SLIDER_MIN)) * 100;
-
-    sliderRef.current.style.setProperty(
-      "--slider-background",
-      `linear-gradient(to right,
-                var(--pf-t--global--border--color--brand--default) 0%,
-                var(--pf-t--global--border--color--brand--default) ${progress}%,
-                var(--pf-t--global--border--color--nonstatus--gray--default) ${progress}%,
-                var(--pf-t--global--border--color--nonstatus--gray--default) 100%)`
-    );
-  }, [sliderValue]);
-
-  // Listen for fullscreen changes and update styling
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      const isFullscreen = !!document.fullscreenElement;
-      setIsFullscreen(isFullscreen);
-
-      // Update canvas wrapper styling
-      const canvasWrapper = document.getElementById("canvas-wrapper");
-      if (canvasWrapper) {
-        canvasWrapper.classList.toggle("fullscreen", isFullscreen);
-      }
-
-      // Hide/show banners
-      const banners = document.querySelectorAll(".pf-v6-c-banner");
-      banners.forEach((el) => {
-        (el as HTMLElement).style.display = isFullscreen ? "none" : "block";
-      });
-
-      // Hide/show page sidebar and header
-      const pageSidebar = document.querySelector("#page-sidebar");
-      const pageHeader = document.querySelector("#page-header");
-      if (pageSidebar) {
-        (pageSidebar as HTMLElement).style.display = isFullscreen ? "none" : "flex";
-      }
-      if (pageHeader) {
-        (pageHeader as HTMLElement).style.display = isFullscreen ? "none" : "grid";
-      }
-    };
+    const handleFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
 
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-    };
+    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, []);
 
   const handleFullscreenToggle = () => {
@@ -142,6 +98,10 @@ export const ZoomControls: React.FC = () => {
     setPreviousPositions(null);
   };
 
+  const fullscreenLabel = isFullscreen
+    ? words("instanceComposer.zoomHandler.fullscreen.exit")
+    : words("instanceComposer.zoomHandler.fullscreen.toggle");
+
   return (
     <ZoomControlsContainer>
       <Dropdown
@@ -151,7 +111,7 @@ export const ZoomControls: React.FC = () => {
         toggle={(toggleRef) => (
           <MenuToggle
             ref={toggleRef}
-            className="arrange-toggle"
+            className="toolbar-control"
             variant="plainText"
             icon={<SitemapIcon />}
             isExpanded={isArrangeOpen}
@@ -204,70 +164,56 @@ export const ZoomControls: React.FC = () => {
       </Dropdown>
       <span className="toolbar-divider" aria-hidden />
       <Button
+        className="toolbar-control"
         variant="control"
+        icon={isFullscreen ? <CompressIcon /> : <ExpandIcon />}
         onClick={handleFullscreenToggle}
-        aria-label={
-          isFullscreen
-            ? words("instanceComposer.zoomHandler.fullscreen.exit")
-            : words("instanceComposer.zoomHandler.fullscreen.toggle")
-        }
+        aria-label={fullscreenLabel}
+        title={fullscreenLabel}
         data-testid="fullscreen"
-      >
-        <img
-          src={isFullscreen ? exitFullscreenIcon : requestFullscreenIcon}
-          alt={
-            isFullscreen
-              ? words("instanceComposer.zoomHandler.fullscreen.exit")
-              : words("instanceComposer.zoomHandler.fullscreen.toggle")
-          }
-          style={{ width: "16px", height: "16px" }}
-        />
-      </Button>
+      />
       <Button
+        className="toolbar-control"
         variant="control"
+        icon={<ExpandArrowsAltIcon />}
         onClick={handleFitToScreen}
         aria-label={words("instanceComposer.zoomHandler.zoomToFit")}
+        title={words("instanceComposer.zoomHandler.zoomToFit")}
         data-testid="fit-to-screen"
-      >
-        <img
-          src={fitToScreenIcon}
-          alt={words("instanceComposer.zoomHandler.zoomToFit")}
-          style={{ width: "16px", height: "16px" }}
-        />
-      </Button>
+      />
       <span className="toolbar-divider" aria-hidden />
       <Button
+        className="toolbar-control"
         variant="control"
+        icon={<MinusIcon />}
         onClick={() => handleZoom(-0.1)}
         aria-label={words("instanceComposer.zoomHandler.zoomOut")}
         data-testid="zoom-out"
         isDisabled={zoom <= MIN_ZOOM}
-      >
-        <MinusIcon />
-      </Button>
-      <div className="zoom-slider-container">
-        <input
-          ref={sliderRef}
-          type="range"
-          min={SLIDER_MIN}
-          max={SLIDER_MAX}
-          step="1"
-          value={sliderValue}
-          onChange={(event) => zoomTo(parseFloat(event.target.value) / 100)}
-          aria-label={words("instanceComposer.zoomHandler.zoom")}
-          data-testid="slider-input"
-        />
-        <output data-testid="slider-output">{zoomPercentage}%</output>
-      </div>
+      />
+      <Slider
+        className="zoom-slider"
+        min={SLIDER_MIN}
+        max={SLIDER_MAX}
+        value={sliderValue}
+        showBoundaries={false}
+        thumbAriaLabel={words("instanceComposer.zoomHandler.zoom")}
+        thumbAriaValueText={`${zoomPercentage}%`}
+        onChange={(_event, value) => zoomTo(value / 100)}
+        data-testid="slider-input"
+      />
+      <output className="zoom-percentage" data-testid="slider-output">
+        {zoomPercentage}%
+      </output>
       <Button
+        className="toolbar-control"
         variant="control"
+        icon={<PlusIcon />}
         onClick={() => handleZoom(0.1)}
         aria-label={words("instanceComposer.zoomHandler.zoomIn")}
         data-testid="zoom-in"
         isDisabled={zoom >= MAX_ZOOM}
-      >
-        <PlusIcon />
-      </Button>
+      />
       {previousPositions && (
         <AlertGroup isToast isLiveRegion>
           <Alert
