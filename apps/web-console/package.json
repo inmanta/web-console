@@ -37,7 +37,7 @@
     "jest-axe": "^11.0.0",
     "msw": "^3.0.4",
     "react-router": "^8.5.1",
-    "vite": "^8.3.6",
+    "vite": "^8.3.7",
     "vite-plugin-mkcert": "^2.1.0"
   }
 }
