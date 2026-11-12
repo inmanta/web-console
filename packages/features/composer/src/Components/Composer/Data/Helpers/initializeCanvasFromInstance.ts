@@ -116,14 +116,14 @@ export const createEmbeddedEntityShapes = (
           // Otherwise, find a new position for it
           const existingPosition = positionTracker.getPosition(cachedId);
           if (!existingPosition) {
-            const parentPos = parentShape.position();
+            const parentPos = parentShape.getPosition();
             const newY = positionTracker.findNextYPosition(
               offsetX,
               SHAPE_WIDTH,
               SHAPE_MIN_HEIGHT,
               parentPos.y + index * VERTICAL_SPACING
             );
-            cachedShape.position(offsetX, newY);
+            cachedShape.setPosition(offsetX, newY);
             const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(cachedShape);
             positionTracker.reserve(cachedId, offsetX, newY, bboxWidth, bboxHeight);
           }
@@ -202,7 +202,7 @@ export const createEmbeddedEntityShapes = (
     const shape = new ServiceEntityShape(shapeOptions);
 
     // Find a non-overlapping position for this shape
-    const parentPos = parentShape.position();
+    const parentPos = parentShape.getPosition();
     const startY = parentPos.y + index * VERTICAL_SPACING;
     const finalY = positionTracker.findNextYPosition(
       offsetX,
@@ -211,7 +211,7 @@ export const createEmbeddedEntityShapes = (
       startY
     );
 
-    shape.position(offsetX, finalY);
+    shape.setPosition(offsetX, finalY);
 
     // Get the actual bounding box to reserve the correct space
     const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(shape);
@@ -317,7 +317,7 @@ export const initializeCanvasFromInstance = (
 
     // Ensure the main instance doesn't overlap with existing shapes
     const finalY = positionTracker.findNextYPosition(shapeX, SHAPE_WIDTH, SHAPE_MIN_HEIGHT, shapeY);
-    shape.position(shapeX, finalY);
+    shape.setPosition(shapeX, finalY);
 
     // Reserve the position for the main instance
     const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(shape);
@@ -325,7 +325,7 @@ export const initializeCanvasFromInstance = (
 
     canvasState.set(instance.id, shape);
 
-    const parentPosition = shape.position();
+    const parentPosition = shape.getPosition();
 
     serviceModel.embedded_entities.forEach((embeddedEntity) => {
       if (embeddedEntity.modifier === "r") {

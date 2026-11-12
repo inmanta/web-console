@@ -25,7 +25,7 @@ const addEmbeddedEntities = (
   isNew: boolean
 ) => {
   const positionTracker = new PositionTracker();
-  const position = shape.position();
+  const position = shape.getPosition();
   const { width, height } = getShapeDimensions(shape);
 
   positionTracker.reserve(shape.id, position.x, position.y, width, height);
@@ -100,7 +100,7 @@ export const createNewEntityShapes = ({
     embeddedEntities: {},
   });
 
-  shape.position(position.x, position.y);
+  shape.setPosition(position.x, position.y);
 
   // Build placeholder attribute data for required embedded entities
   const placeholderAttrs: Record<string, unknown> = {};
@@ -159,7 +159,7 @@ export const createInventoryEntityShapes = ({
     embeddedEntities: {},
   });
 
-  shape.position(position.x, position.y);
+  shape.setPosition(position.x, position.y);
 
   const shapes = new Map<string, ServiceEntityShape>([[shape.id, shape]]);
   addEmbeddedEntities(shape, instanceAttributes, relationsDictionary, shapes, false);

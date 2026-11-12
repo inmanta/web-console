@@ -76,7 +76,7 @@ export const ZoomControls: React.FC = () => {
   const arrange = useCallback(
     (rootId?: string) => {
       const positions = new Map(
-        Array.from(canvasState.values()).map((shape) => [shape.id, shape.position()])
+        Array.from(canvasState.values()).map((shape) => [shape.id, shape.getPosition()])
       );
 
       applyLayeredLayout(canvasState, direction, rootId);
@@ -93,7 +93,7 @@ export const ZoomControls: React.FC = () => {
   );
 
   const undoArrange = () => {
-    previousPositions?.forEach(({ x, y }, id) => canvasState.get(id)?.position(x, y));
+    previousPositions?.forEach(({ x, y }, id) => canvasState.get(id)?.setPosition(x, y));
     canvasActions.refresh();
     setPreviousPositions(null);
   };

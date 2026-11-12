@@ -122,14 +122,18 @@ export class ServiceEntityShape {
   }
 
   /**
-   * Gets the position of the card's top-left corner, or moves it when given coordinates.
+   * The position of the card's top-left corner.
    */
-  position(): Point;
-  position(x: number, y: number): this;
-  position(x?: number, y?: number): Point | this {
-    if (x === undefined || y === undefined) {
-      return { ...this._position };
-    }
+  getPosition(): Point {
+    return { ...this._position };
+  }
+
+  /**
+   * Moves the card's top-left corner.
+   *
+   * @returns the shape, to chain calls
+   */
+  setPosition(x: number, y: number): this {
     this._position = { x, y };
 
     return this;

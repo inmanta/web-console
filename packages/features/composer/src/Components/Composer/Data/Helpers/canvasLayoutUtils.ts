@@ -42,7 +42,7 @@ export const applyCoordinatesFromMetadata = (
     if (!shape || shape.entityType === "embedded") {
       return;
     }
-    shape.position(savedCoord.coordinates.x, savedCoord.coordinates.y);
+    shape.setPosition(savedCoord.coordinates.x, savedCoord.coordinates.y);
   });
 };
 
@@ -67,7 +67,7 @@ export const applyAutoLayoutToEmbeddedEntities = (
   const positionTracker = new PositionTracker(VERTICAL_SPACING, SHAPE_WIDTH, SHAPE_MIN_HEIGHT);
   shapes.forEach((shape) => {
     if (shape.entityType !== "embedded") {
-      const pos = shape.position();
+      const pos = shape.getPosition();
       const { width, height } = getShapeDimensions(shape);
       positionTracker.reserve(shape.id, pos.x, pos.y, width, height);
     }
@@ -99,11 +99,11 @@ export const applyAutoLayoutToEmbeddedEntities = (
       return;
     }
 
-    const parentPos = parent.position();
+    const parentPos = parent.getPosition();
     const offsetX = parentPos.x + HORIZONTAL_SPACING;
 
     // Sort embedded entities by their current Y position to maintain relative order
-    embeddedList.sort((a, b) => a.position().y - b.position().y);
+    embeddedList.sort((a, b) => a.getPosition().y - b.getPosition().y);
 
     // Position each embedded entity, stacking them vertically
     embeddedList.forEach((embeddedEntity, index) => {
@@ -115,7 +115,7 @@ export const applyAutoLayoutToEmbeddedEntities = (
         startY
       );
 
-      embeddedEntity.position(offsetX, finalY);
+      embeddedEntity.setPosition(offsetX, finalY);
 
       const { width, height } = getShapeDimensions(embeddedEntity);
       positionTracker.reserve(embeddedEntity.id, offsetX, finalY, width, height);
@@ -183,13 +183,15 @@ export const applyLayeredLayout = (
       return [shape.id, { x: x - width / 2, y: y - height / 2 }];
     })
   );
-  const anchorBefore = root ? root.position() : topLeft(shapes.map((shape) => shape.position()));
+  const anchorBefore = root
+    ? root.getPosition()
+    : topLeft(shapes.map((shape) => shape.getPosition()));
   const anchorAfter = root ? laidOut.get(root.id)! : topLeft(Array.from(laidOut.values()));
 
   shapes.forEach((shape) => {
     const { x, y } = laidOut.get(shape.id)!;
 
-    shape.position(
+    shape.setPosition(
       Math.round(x - anchorAfter.x + anchorBefore.x),
       Math.round(y - anchorAfter.y + anchorBefore.y)
     );

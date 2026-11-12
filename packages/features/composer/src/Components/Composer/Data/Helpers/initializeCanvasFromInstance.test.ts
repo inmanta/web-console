@@ -209,7 +209,7 @@ describe("initializeCanvasFromInstance", () => {
     const result = initializeCanvasFromInstance(instanceData, serviceCatalog, relationsDictionary);
 
     // The layout is mocked, so this is the position before the layered layout runs
-    expect(result.get("instance-1")?.position()).toEqual({ x: 100, y: 100 });
+    expect(result.get("instance-1")?.getPosition()).toEqual({ x: 100, y: 100 });
   });
 
   it("should create links between shapes", () => {

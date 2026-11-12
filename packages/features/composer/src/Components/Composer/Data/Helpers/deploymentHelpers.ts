@@ -13,7 +13,7 @@ export const getCellsCoordinates = (
   canvasState: Map<string, ServiceEntityShape>
 ): SavedCoordinates[] =>
   Array.from(canvasState.values()).map((shape) => {
-    const position = shape.position();
+    const position = shape.getPosition();
 
     return {
       id: String(shape.id),

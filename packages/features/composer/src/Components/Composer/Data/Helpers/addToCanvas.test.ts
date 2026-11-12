@@ -56,7 +56,7 @@ describe("createNewEntityShapes", () => {
 
     expect(shapes.size).toBe(2);
     expect(entity.isNew).toBe(true);
-    expect(entity.position()).toEqual({ x: 10, y: 20 });
+    expect(entity.getPosition()).toEqual({ x: 10, y: 20 });
     expect(embedded.entityType).toBe("embedded");
     expect(entity.connections.get("child")).toEqual([embedded.id]);
   });

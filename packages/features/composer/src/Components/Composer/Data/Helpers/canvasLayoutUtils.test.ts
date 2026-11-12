@@ -29,7 +29,7 @@ describe("applyLayeredLayout", () => {
       rootEntities: {},
       interServiceRelations: {},
       embeddedEntities: {},
-    }).position(x, y);
+    }).setPosition(x, y);
   };
 
   const toCanvas = (...shapes: ServiceEntityShape[]): Map<string, ServiceEntityShape> =>
@@ -46,7 +46,9 @@ describe("applyLayeredLayout", () => {
 
     applyLayeredLayout(toCanvas(child, parent), "LR");
 
-    expect(child.position().x).toBeGreaterThanOrEqual(parent.position().x + parent.size.width);
+    expect(child.getPosition().x).toBeGreaterThanOrEqual(
+      parent.getPosition().x + parent.size.width
+    );
   });
 
   it("should put a child below its parent in a TB layout", () => {
@@ -56,7 +58,9 @@ describe("applyLayeredLayout", () => {
 
     applyLayeredLayout(toCanvas(child, parent), "TB");
 
-    expect(child.position().y).toBeGreaterThanOrEqual(parent.position().y + parent.size.height);
+    expect(child.getPosition().y).toBeGreaterThanOrEqual(
+      parent.getPosition().y + parent.size.height
+    );
   });
 
   it("should not overlap siblings in the same layer", () => {
@@ -69,9 +73,11 @@ describe("applyLayeredLayout", () => {
     applyLayeredLayout(toCanvas(parent, childA, childB), "LR");
 
     // Same layer: same column, stacked without overlapping
-    expect(childA.position().x).toBe(childB.position().x);
-    const [upper, lower] = [childA, childB].sort((s1, s2) => s1.position().y - s2.position().y);
-    expect(lower.position().y).toBeGreaterThanOrEqual(upper.position().y + upper.size.height);
+    expect(childA.getPosition().x).toBe(childB.getPosition().x);
+    const [upper, lower] = [childA, childB].sort(
+      (s1, s2) => s1.getPosition().y - s2.getPosition().y
+    );
+    expect(lower.getPosition().y).toBeGreaterThanOrEqual(upper.getPosition().y + upper.size.height);
   });
 
   it("should keep the top-left corner of the arranged shapes in place", () => {
@@ -82,7 +88,7 @@ describe("applyLayeredLayout", () => {
     const moved = applyLayeredLayout(toCanvas(parent, child));
 
     expect(moved.sort()).toEqual(["child", "parent"]);
-    const positions = [parent.position(), child.position()];
+    const positions = [parent.getPosition(), child.getPosition()];
     expect(Math.min(...positions.map(({ x }) => x))).toBe(200);
     expect(Math.min(...positions.map(({ y }) => y))).toBe(300);
   });
@@ -98,11 +104,11 @@ describe("applyLayeredLayout", () => {
     const moved = applyLayeredLayout(toCanvas(top, root, child, unrelated), "LR", "root");
 
     expect(moved.sort()).toEqual(["child", "root"]);
-    expect(root.position()).toEqual({ x: 1000, y: 500 });
-    expect(child.position().x).toBeGreaterThanOrEqual(1000 + root.size.width);
+    expect(root.getPosition()).toEqual({ x: 1000, y: 500 });
+    expect(child.getPosition().x).toBeGreaterThanOrEqual(1000 + root.size.width);
     // The parent of the root and unrelated shapes are outside the subtree
-    expect(top.position()).toEqual({ x: 0, y: 0 });
-    expect(unrelated.position()).toEqual({ x: 50, y: 50 });
+    expect(top.getPosition()).toEqual({ x: 0, y: 0 });
+    expect(unrelated.getPosition()).toEqual({ x: 50, y: 50 });
   });
 
   it("should not move hidden shapes", () => {
@@ -116,7 +122,7 @@ describe("applyLayeredLayout", () => {
     const moved = applyLayeredLayout(toCanvas(parent, child, hidden));
 
     expect(moved).not.toContain("hidden");
-    expect(hidden.position()).toEqual({ x: 7, y: 9 });
+    expect(hidden.getPosition()).toEqual({ x: 7, y: 9 });
   });
 
   it("should return no ids when every shape is hidden", () => {
@@ -124,6 +130,6 @@ describe("applyLayeredLayout", () => {
     shape.isHidden = true;
 
     expect(applyLayeredLayout(toCanvas(shape))).toEqual([]);
-    expect(shape.position()).toEqual({ x: 10, y: 20 });
+    expect(shape.getPosition()).toEqual({ x: 10, y: 20 });
   });
 });

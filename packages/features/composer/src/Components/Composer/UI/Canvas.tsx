@@ -114,7 +114,7 @@ export const Canvas: React.FC = () => {
       return Array.from(canvasState.values()).map((shape) => ({
         id: shape.id,
         type: "entity",
-        position: shape.position(),
+        position: shape.getPosition(),
         measured: measured.get(shape.id),
         hidden: shape.isHidden,
         selected: shape.id === activeCell?.id,
@@ -144,7 +144,7 @@ export const Canvas: React.FC = () => {
     (changes: NodeChange<EntityNodeType>[]) => {
       changes.forEach((change) => {
         if (change.type === "position" && change.position) {
-          canvasState.get(change.id)?.position(change.position.x, change.position.y);
+          canvasState.get(change.id)?.setPosition(change.position.x, change.position.y);
         }
         if (change.type === "dimensions" && change.dimensions) {
           const shape = canvasState.get(change.id);

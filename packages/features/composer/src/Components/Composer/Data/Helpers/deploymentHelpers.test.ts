@@ -67,8 +67,8 @@ describe("deploymentHelpers", () => {
     });
 
     it("should return the coordinates of every shape on the canvas", () => {
-      const shape1 = createMockShape("shape-1", "ServiceA").position(100, 200);
-      const shape2 = createMockShape("shape-2", "ServiceB").position(300, 400);
+      const shape1 = createMockShape("shape-1", "ServiceA").setPosition(100, 200);
+      const shape2 = createMockShape("shape-2", "ServiceB").setPosition(300, 400);
       const canvasState = new Map([
         ["shape-1", shape1],
         ["shape-2", shape2],
@@ -83,8 +83,8 @@ describe("deploymentHelpers", () => {
     });
 
     it("should only report shapes, not the links between them", () => {
-      const shape1 = createMockShape("shape-1", "ServiceA").position(100, 200);
-      const shape2 = createMockShape("shape-2", "ServiceB").position(300, 400);
+      const shape1 = createMockShape("shape-1", "ServiceA").setPosition(100, 200);
+      const shape2 = createMockShape("shape-2", "ServiceB").setPosition(300, 400);
       addConnectionsBetweenShapes(shape1, shape2);
       const canvasState = new Map([
         ["shape-1", shape1],

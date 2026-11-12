@@ -22,7 +22,7 @@ export const useAddPaletteItem = () => {
     (item: PaletteItem, requestedPosition: Point) => {
       const positionTracker = new PositionTracker();
       canvasState.forEach((shape) => {
-        const { x, y } = shape.position();
+        const { x, y } = shape.getPosition();
         const { width, height } = getShapeDimensions(shape);
 
         positionTracker.reserve(shape.id, x, y, width, height);
