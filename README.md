@@ -21,13 +21,9 @@ The frontend uses (Patternfly)[https://www.patternfly.org/] for its UI component
 The repository holds two apps:
 
 - `apps/oss` (`@inmanta/web-console-oss`): the open-source web console, with the OSS features only.
-- `apps/web-console` (`@inmanta/web-console-app`): the ISO web console, with every feature. The composer needs JointJS+, which needs a licence token to install.
+- `apps/web-console` (`@inmanta/web-console-app`): the ISO web console, with every feature.
 
-To install the OSS app only, which needs no token:
-
-    yarn workspaces focus @inmanta/web-console-oss
-
-That installs what the OSS app and its packages use, so `yarn build:oss` and `yarn start:oss` work. The checks that cover every package (`yarn lint`, `yarn tsc`, `yarn test`) and the ISO app need the full install, with the JointJS token exported in your shell (see [ENV Tokens and PAT](#env-tokens-and-pat)):
+To install both, with every package:
 
     yarn install
 

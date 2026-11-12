@@ -229,23 +229,17 @@ export default [
     },
   },
   {
-    // Only the composer draws diagrams, so the canvas libraries stay out of the other features'
-    // bundles, and only the GraphiQL feature depends on the GraphiQL packages. This rule gives the
-    // clearest message for a static import; the Yarn constraints (yarn.config.cjs) and
+    // Only the GraphiQL feature depends on the GraphiQL packages. This rule gives the clearest
+    // message for a static import; the Yarn constraints (yarn.config.cjs) and
     // import/no-extraneous-dependencies below also catch import() and a dependency in the wrong
     // package.json.
     files: ["{src,packages,apps}/**/*.ts", "{src,packages,apps}/**/*.tsx"],
-    ignores: ["packages/features/composer/**", "packages/features/graphiql/**"],
+    ignores: ["packages/features/graphiql/**"],
     rules: {
       "no-restricted-imports": [
         "error",
         {
           patterns: [
-            {
-              group: ["@xyflow/*", "@dagrejs/*"],
-              message:
-                "Only the composer feature (packages/features/composer) imports the canvas libraries.",
-            },
             {
               group: [
                 "graphiql",

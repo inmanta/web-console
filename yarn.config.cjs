@@ -5,14 +5,9 @@
 
 /**
  * Third-party packages that only one workspace may depend on, so that an app without that
- * feature doesn't install them. JointJS needs a licence token to install.
+ * feature doesn't install them.
  */
 const restrictedPackages = [
-  {
-    matches: (ident) => ident.startsWith("@joint/"),
-    workspace: "packages/features/composer",
-    reason: "JointJS needs a licence, so only the composer depends on it.",
-  },
   {
     matches: (ident) =>
       ident === "graphiql" || ident.startsWith("@graphiql/") || ident === "monaco-graphql",
