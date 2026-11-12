@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
+import { Tooltip } from "@patternfly/react-core";
 import { AngleDoubleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-double-down-icon";
 import { AngleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-down-icon";
 import { AngleUpIcon } from "@patternfly/react-icons/dist/esm/icons/angle-up-icon";
@@ -20,11 +21,36 @@ import { EntityShapeType, ServiceEntityShape } from "../Data/ServiceEntityShape"
 import { SHAPE_WIDTH } from "../config";
 import { EntityIcon } from "./EntityIcon";
 
-export const HeaderColors: Record<EntityShapeType, string> = {
-  core: "var(--pf-t--color--yellow--30)",
-  embedded: "var(--pf-t--color--blue--50)",
-  relation: "var(--pf-t--color--purple--50)",
+/**
+ * The colour of each kind of entity, as PatternFly's non-status colours (the colours of its
+ * labels), so they follow the theme: services are yellow, embedded entities blue, and related
+ * instances purple.
+ */
+const entityColors: Record<EntityShapeType, "yellow" | "blue" | "purple"> = {
+  core: "yellow",
+  embedded: "blue",
+  relation: "purple",
 };
+
+/**
+ * The accent of each kind of entity: the edge of its cards, and its cards in the minimap.
+ */
+export const HeaderColors = Object.fromEntries(
+  Object.entries(entityColors).map(([type, color]) => [
+    type,
+    `var(--pf-t--global--border--color--nonstatus--${color}--default)`,
+  ])
+) as Record<EntityShapeType, string>;
+
+/**
+ * The CSS variables a card takes its kind's colours from.
+ */
+const entityColorVariables = (type: EntityShapeType) =>
+  ({
+    "--entity-accent": HeaderColors[type],
+    "--entity-icon-background": `var(--pf-t--global--color--nonstatus--${entityColors[type]}--default)`,
+    "--entity-icon-color": `var(--pf-t--global--icon--color--nonstatus--on-${entityColors[type]}--default)`,
+  }) as React.CSSProperties;
 
 /**
  * What the canvas passes to a card: the shape, and what it derived from the canvas.
@@ -47,6 +73,9 @@ export type EntityNodeType = Node<EntityNodeData, "entity">;
  * The selected card shows a toolbar above it to collapse or expand the layers below it,
  * and to drag a link to another entity. While a link is dragged, the cards it can connect
  * to light up, and the whole card is a drop target.
+ *
+ * An invalid card counts its problems in a button: pointing at the card or focusing the button
+ * lists them in a tooltip, and the button is described by the list for screen readers.
  */
 export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, selected }) => {
   const { canvasState, relationsDictionary, canvasActions, editable } = useContext(ComposerContext);
@@ -56,6 +85,8 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
     state.connection.inProgress ? state.connection.fromNode.id : null
   );
   const [isHovered, setIsHovered] = useState(false);
+  const [isIssuesFocused, setIsIssuesFocused] = useState(false);
+  const issuesRef = useRef<HTMLButtonElement>(null);
   const { shape, validationMessages, hiddenCount, hasLayers, relationCount } = data;
   const displayName = shape.getDisplayName();
   const identity = shape.getIdentity();
@@ -91,6 +122,10 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
     canvasActions.refresh();
   };
 
+  const messagesId = `entity-${id}-problems`;
+  const showMessages =
+    validationMessages.length > 0 && !linkSourceId && (isHovered || isIssuesFocused);
+
   const classNames = [
     selected && "is-selected",
     validationMessages.length > 0 && "is-invalid",
@@ -102,10 +137,7 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
     .join(" ");
 
   return (
-    <NodeWrapper
-      className={classNames}
-      style={{ "--entity-accent": HeaderColors[shape.entityType] } as React.CSSProperties}
-    >
+    <NodeWrapper className={classNames} style={entityColorVariables(shape.entityType)}>
       {hasActions && (
         <Toolbar
           className="nodrag nopan"
@@ -173,13 +205,26 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
           </div>
           <span className="status">
             {validationMessages.length > 0 && (
-              <span
+              <button
+                ref={issuesRef}
+                type="button"
                 className="issues"
                 aria-label={words("instanceComposer.card.issues")(validationMessages.length)}
+                aria-describedby={messagesId}
+                onFocus={() => setIsIssuesFocused(true)}
+                onBlur={() => setIsIssuesFocused(false)}
+                onKeyDown={(event) => {
+                  // Escape hides the list, without unselecting the card
+                  if (event.key === "Escape" && showMessages) {
+                    event.stopPropagation();
+                    setIsIssuesFocused(false);
+                    setIsHovered(false);
+                  }
+                }}
               >
                 <ExclamationCircleIcon />
                 {validationMessages.length}
-              </span>
+              </button>
             )}
             {shape.isNew && <span className="pill">{words("instanceComposer.label.new")}</span>}
             {isReadOnly && (
@@ -232,12 +277,25 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
           isConnectableStart={false}
         />
       </Card>
-      {isHovered && validationMessages.length > 0 && !linkSourceId && (
-        <ValidationTooltip role="tooltip">
-          {validationMessages.map((message) => (
-            <div key={message}>{message}</div>
-          ))}
-        </ValidationTooltip>
+      {validationMessages.length > 0 && (
+        <>
+          <ul id={messagesId} hidden>
+            {validationMessages.map((message) => (
+              <li key={message}>{message}</li>
+            ))}
+          </ul>
+          {/* The button is described by the list above, so the tooltip adds no description */}
+          <Tooltip
+            triggerRef={issuesRef}
+            trigger="manual"
+            isVisible={showMessages}
+            position="right"
+            aria="none"
+            content={validationMessages.map((message) => (
+              <div key={message}>{message}</div>
+            ))}
+          />
+        </>
       )}
     </NodeWrapper>
   );
@@ -263,11 +321,6 @@ const NodeWrapper = styled.div`
 
   &.is-dimmed {
     opacity: 0.45;
-  }
-
-  // Above the toolbar of the selected card
-  &.is-selected > [role="tooltip"] {
-    bottom: calc(100% + 60px);
   }
 
   &:not(.is-selected) > [role="toolbar"] {
@@ -351,8 +404,8 @@ const Card = styled.div`
     height: 32px;
     margin-top: 2px;
     border-radius: var(--pf-t--global--border--radius--small);
-    background: color-mix(in srgb, var(--entity-accent) 18%, transparent);
-    color: color-mix(in srgb, var(--entity-accent) 70%, var(--pf-t--global--text--color--regular));
+    background: var(--entity-icon-background);
+    color: var(--entity-icon-color);
   }
 
   .heading {
@@ -398,7 +451,12 @@ const Card = styled.div`
     display: inline-flex;
     align-items: center;
     gap: 2px;
+    padding: 0 var(--pf-t--global--spacer--xs);
+    border: 0;
+    border-radius: var(--pf-t--global--border--radius--small);
+    background: none;
     color: var(--pf-t--global--icon--color--status--danger--default);
+    cursor: help;
     font-size: var(--pf-t--global--font--size--body--sm);
     font-weight: var(--pf-t--global--font--weight--body--bold);
   }
@@ -533,30 +591,5 @@ const Toolbar = styled.div`
     svg {
       pointer-events: none;
     }
-  }
-`;
-
-const ValidationTooltip = styled.div`
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 0;
-  width: max-content;
-  max-width: 300px;
-  padding: var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md);
-  border-radius: var(--pf-t--global--border--radius--small);
-  background: var(--pf-t--global--background--color--inverse--default);
-  color: var(--pf-t--global--text--color--inverse);
-  font-size: var(--pf-t--global--font--size--body--default);
-  box-shadow: var(--pf-t--global--box-shadow--md);
-  pointer-events: none;
-  z-index: 1;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 24px;
-    border: 6px solid transparent;
-    border-top-color: var(--pf-t--global--background--color--inverse--default);
   }
 `;
