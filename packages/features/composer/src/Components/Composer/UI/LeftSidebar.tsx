@@ -12,6 +12,7 @@ import {
   Tab,
   Tabs,
   TabTitleText,
+  Truncate,
 } from "@patternfly/react-core";
 import { AngleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-down-icon";
 import { AngleRightIcon } from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
@@ -29,9 +30,16 @@ import { EntityIcon } from "./EntityIcon";
 
 interface PaletteRow {
   key: string;
+
+  /** The full name, which the search matches */
   label: string;
+
+  /** The name the row shows */
+  name: string;
+
+  /** What kind of entity it is, in small text under the name */
+  detail?: string;
   item: PaletteItem;
-  entityType?: "core" | "embedded";
   unavailableReason?: string;
 }
 
@@ -42,12 +50,20 @@ interface PaletteGroup {
 
 type PaletteTab = "new" | "inventory";
 
-const getLabel = (serviceModel: ServiceModel | EmbeddedEntity) => {
-  const typeName = "type" in serviceModel && serviceModel.type ? serviceModel.type : undefined;
+/**
+ * The names of an embedded entity's row: its type, and the attribute it is embedded as.
+ */
+const getEmbeddedNames = (embeddedEntity: EmbeddedEntity) => {
+  const typeName = embeddedEntity.type || undefined;
+  const embeddedAs = typeName && embeddedEntity.name;
 
-  return typeName && serviceModel.name
-    ? `${typeName} - ${serviceModel.name}`
-    : typeName || serviceModel.name;
+  return {
+    label: embeddedAs ? `${typeName} - ${embeddedAs}` : typeName || embeddedEntity.name,
+    name: typeName || embeddedEntity.name,
+    detail: embeddedAs
+      ? `${words("instanceComposer.label.embedded")} · ${embeddedAs}`
+      : words("instanceComposer.label.embedded"),
+  };
 };
 
 /**
@@ -66,8 +82,7 @@ const getEmbeddedRows = (
       return [
         {
           key,
-          label: getLabel(embeddedEntity),
-          entityType: "embedded" as const,
+          ...getEmbeddedNames(embeddedEntity),
           item: {
             kind: "new" as const,
             serviceModel: embeddedEntity,
@@ -88,7 +103,8 @@ const buildNewGroups = (serviceCatalog: ServiceModel[]): PaletteGroup[] =>
       {
         key: serviceModel.name,
         label: serviceModel.name,
-        entityType: "core",
+        name: serviceModel.name,
+        detail: words("instanceComposer.label.core"),
         item: { kind: "new", serviceModel, entityType: "core" },
       },
       ...getEmbeddedRows(serviceModel, serviceModel.name),
@@ -116,9 +132,12 @@ const buildInventoryGroups = (
         rows: instances.map((instance) => {
           const reason = unavailable.get(instance.id);
 
+          const label = instance.service_identity_attribute_value || instance.id;
+
           return {
             key: instance.id,
-            label: instance.service_identity_attribute_value || instance.id,
+            label,
+            name: label,
             item: { kind: "inventory", instance, serviceModel },
             unavailableReason: reason && words(`instanceComposer.palette.${reason}`),
           };
@@ -308,8 +327,8 @@ export const LeftSidebar: React.FC = () => {
                         <span className="palette-row-icon" aria-hidden>
                           <EntityIcon serviceModel={row.item.serviceModel} />
                         </span>
-                        <span className="palette-row-label">{row.label}</span>
-                        <Label isCompact variant="outline">
+                        <PaletteRowText row={row} />
+                        <Label isCompact variant="outline" className="palette-row-reason">
                           {row.unavailableReason}
                         </Label>
                       </li>
@@ -328,23 +347,12 @@ export const LeftSidebar: React.FC = () => {
                           draggedItemRef.current = null;
                         }}
                       >
-                        <GripVerticalIcon className="palette-row-grip" />
+                        {/* The grip takes the icon's place while the row is pointed at */}
                         <span className="palette-row-icon" aria-hidden>
                           <EntityIcon serviceModel={row.item.serviceModel} />
+                          <GripVerticalIcon className="palette-row-grip" />
                         </span>
-                        <span className="palette-row-label" title={row.label}>
-                          {row.label}
-                        </span>
-                        {row.entityType === "core" && (
-                          <Label isCompact color="yellow">
-                            {words("instanceComposer.label.core")}
-                          </Label>
-                        )}
-                        {row.entityType === "embedded" && (
-                          <Label isCompact color="blue">
-                            {words("instanceComposer.label.embedded")}
-                          </Label>
-                        )}
+                        <PaletteRowText row={row} />
                         <Button
                           className="palette-row-add"
                           variant="plain"
@@ -365,6 +373,21 @@ export const LeftSidebar: React.FC = () => {
     </Sidebar>
   );
 };
+
+/**
+ * The name of a palette row, and what kind of entity it is under it. Only a name that doesn't fit
+ * is cut short, with a tooltip.
+ */
+const PaletteRowText: React.FC<{ row: PaletteRow }> = ({ row }) => (
+  <span className="palette-row-text">
+    <Truncate className="palette-row-name" content={row.name} />
+    {row.detail && (
+      <span className="palette-row-detail" title={row.detail}>
+        {row.detail}
+      </span>
+    )}
+  </span>
+);
 
 const Sidebar = styled.aside`
   display: flex;
@@ -440,7 +463,6 @@ const Sidebar = styled.aside`
     }
 
     &.is-unavailable {
-      padding-left: var(--pf-t--global--spacer--xl);
       color: var(--pf-t--global--text--color--disabled);
       cursor: not-allowed;
 
@@ -450,15 +472,30 @@ const Sidebar = styled.aside`
     }
   }
 
-  .palette-row-grip {
-    flex: none;
-    color: var(--pf-t--global--icon--color--subtle);
-  }
-
   .palette-row-icon {
     flex: none;
     display: inline-flex;
+    justify-content: center;
+    width: var(--pf-t--global--icon--size--md);
     color: var(--pf-t--global--icon--color--subtle);
+  }
+
+  .palette-row-grip {
+    display: none;
+  }
+
+  .palette-row:not(.is-unavailable):is(:hover, :focus-within) .palette-row-icon {
+    > * {
+      display: none;
+    }
+
+    > .palette-row-grip {
+      display: block;
+    }
+  }
+
+  .palette-row-reason {
+    flex: none;
   }
 
   // Every row has an add button, so it stays subtle until it is pointed at or focused.
@@ -468,11 +505,25 @@ const Sidebar = styled.aside`
     --pf-v6-c-button--m-clicked__icon--Color: var(--pf-t--global--icon--color--regular);
   }
 
-  .palette-row-label {
+  .palette-row-text {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  // As wide as the name, up to the row: Truncate compares the width of its text with the width
+  // of the row, so a name that fills the row would always count as cut short.
+  .palette-row-name {
+    align-self: flex-start;
+    max-width: 100%;
+  }
+
+  .palette-row-detail {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--pf-t--global--text--color--subtle);
+    font-size: var(--pf-t--global--font--size--body--sm);
   }
 `;
