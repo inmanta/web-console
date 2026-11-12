@@ -426,9 +426,9 @@ if (isIso) {
       cy.get(".codicon-diff-insert, .codicon-diff-remove").should("exist");
 
       // Update the state to setting_start: the transfer is flagged web_advanced_state
-      // so its "Push settings" button is demoted behind the "Advanced" disclosure.
+      // so its "Push settings" button is listed in the "Advanced" flyout menu.
       cy.get('[aria-label="Actions-Toggle"]').click();
-      cy.get('[role="menuitem"]').contains("Advanced").click();
+      cy.contains('button[aria-haspopup="menu"]', "Advanced").click();
       cy.get('[role="menuitem"]').contains("Push settings").click();
 
       // Confirm in the modal

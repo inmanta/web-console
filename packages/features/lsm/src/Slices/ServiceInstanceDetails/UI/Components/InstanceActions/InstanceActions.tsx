@@ -129,6 +129,7 @@ export const InstanceActions: React.FC = () => {
         onOpenChange={(isOpen: boolean) => !blockedInterface && setIsDropdownOpen(isOpen)}
         toggle={toggle}
         popperProps={{ position: "right" }}
+        containsFlyout
       >
         <DropdownList>
           {actions.map(({ id, getLabel, icon: Icon, getUrl, isDisabled }) => (

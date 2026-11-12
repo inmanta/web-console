@@ -4,12 +4,12 @@ import { ExclamationTriangleIcon, InfoAltIcon } from "@patternfly/react-icons";
 import { Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ParsedNumber, Attributes, AttributeAnnotations } from "@inmanta/web-console-core";
-import { Toggle } from "@inmanta/web-console-feature-lsm/Components/Toggle";
 import { ClipboardCopyButton } from "@inmanta/web-console-ui/Components/ClipboardCopyButton";
 import { RowHoverReveal } from "@inmanta/web-console-ui/Components/RowHoverReveal";
 import { CellWithCopy } from "./CellWithCopy";
 import { Indent } from "./Indent";
 import { TreeRow } from "./TreeRow";
+import { TreeRowToggle } from "./TreeRowToggle";
 
 /**
  * RowProps is an interface that defines the props of the TreeRowView component.
@@ -77,8 +77,8 @@ export const TreeRowView: React.FC<RowProps> = ({ row, annotations, setTab = () 
             <Indent level={0}>
               <Split>
                 <SplitItem isFilled>
-                  <Toggle
-                    expanded={row.isChildExpanded}
+                  <TreeRowToggle
+                    isExpanded={row.isChildExpanded}
                     onToggle={row.onToggle}
                     aria-label={`Toggle-${row.id}`}
                   />
@@ -111,8 +111,8 @@ export const TreeRowView: React.FC<RowProps> = ({ row, annotations, setTab = () 
         <Tr aria-label={`Row-${row.id}`} isExpanded={row.isExpandedByParent}>
           <Td colSpan={4} dataLabel={row.primaryCell.label}>
             <Indent level={row.level}>
-              <Toggle
-                expanded={row.isChildExpanded}
+              <TreeRowToggle
+                isExpanded={row.isChildExpanded}
                 onToggle={row.onToggle}
                 aria-label={`Toggle-${row.id}`}
               />

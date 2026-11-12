@@ -13,7 +13,6 @@ import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import { JsonFormatter } from "@inmanta/web-console-core/Common";
 import { ServiceOrderItem } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
-import { Toggle } from "@inmanta/web-console-feature-lsm/Components/Toggle";
 import { OrderStatusLabel } from "@inmanta/web-console-feature-lsm/Slices/Orders/UI/OrderStatusLabel";
 import { CodeEditor } from "@inmanta/web-console-ui/Components/CodeEditor";
 import { OrderDependencies } from "./OrderDependencies";
@@ -27,6 +26,7 @@ const jsonFormatter = new JsonFormatter();
 interface Props {
   row: ServiceOrderItem;
   orderItems: ServiceOrderItem[];
+  rowIndex: number;
   isExpanded: boolean;
   onToggle: () => void;
   numberOfColumns: number;
@@ -41,6 +41,7 @@ interface Props {
  *
  * @param row  ServiceOrderItem
  * @param orderItems all service_order_items of the order, used to resolve the identity of dependencies
+ * @param rowIndex position of the row in the table, used by the expand toggle
  * @param isExpanded boolean
  * @param onToggle callback method
  * @param numberOfColumns number
@@ -51,6 +52,7 @@ interface Props {
 export const OrderDetailsRow: React.FC<Props> = ({
   row,
   orderItems,
+  rowIndex,
   isExpanded,
   onToggle,
   numberOfColumns,
@@ -60,9 +62,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
   return (
     <>
       <Tr aria-label="ServiceOrderDetailsRow" ref={rowRef} tabIndex={-1}>
-        <Td>
-          <Toggle expanded={isExpanded} onToggle={onToggle} aria-label={"Toggle-DetailsRow"} />
-        </Td>
+        <Td expand={{ rowIndex, isExpanded, onToggle }} />
         <Td width={35} dataLabel={words("orders.column.instance")}>
           <OrderInstanceLink row={row} />
         </Td>

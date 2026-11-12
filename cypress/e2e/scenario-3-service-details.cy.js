@@ -285,7 +285,10 @@ if (isIso) {
       cy.get('[aria-label="callbackId"]').should("have.value", "");
 
       // click on expand row
-      cy.get("button").contains("http://localhost:1234").click();
+      cy.get('[aria-label="CallbacksTable"]')
+        .contains("tr", "http://localhost:1234")
+        .find('[aria-label="Details"]')
+        .click();
 
       // Expect to see all values except ALLOCATION_UPDATE to have text-decoration: line-through
       cy.get(".pf-v6-c-description-list__description ul").should(($ul) => {
@@ -312,9 +315,9 @@ if (isIso) {
         const $tableBody = $table.find("tbody").eq(1);
         const $cells = $tableBody.find("td");
 
-        expect($cells.eq(1), "Id").to.have.text("60b18097");
-        expect($cells.eq(2), "Minimal Log Level").to.have.text("INFO");
-        expect($cells.eq(3), "Event Types").to.have.text("1 Event Types");
+        expect($cells.eq(2), "Id").to.have.text("60b18097");
+        expect($cells.eq(3), "Minimal Log Level").to.have.text("INFO");
+        expect($cells.eq(4), "Event Types").to.have.text("1 Event Types");
       });
 
       // Delete Callback

@@ -150,7 +150,7 @@ describe("Order Details", () => {
 
     expect(serviceOrderItemRows).toHaveLength(2);
 
-    await userEvent.click(screen.getAllByLabelText("Toggle-DetailsRow")[0]);
+    await userEvent.click(screen.getAllByLabelText("Details")[0]);
     const rowDetails = await screen.findByLabelText("Expanded-Details");
 
     expect(rowDetails).toHaveTextContent(/Show Compile Report/);
@@ -185,7 +185,7 @@ describe("Order Details", () => {
 
     render(component);
 
-    await userEvent.click((await screen.findAllByLabelText("Toggle-DetailsRow"))[0]);
+    await userEvent.click((await screen.findAllByLabelText("Details"))[0]);
     const rowDetails = await screen.findByLabelText("Expanded-Details");
 
     expect(rowDetails).toHaveTextContent(/Failure Type/);
@@ -221,7 +221,7 @@ describe("Order Details", () => {
 
     expect(serviceOrderItemRows).toHaveLength(1);
 
-    await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
+    await userEvent.click(screen.getByLabelText("Details"));
 
     const rowDetails = await screen.findByLabelText("Expanded-Details");
 
@@ -257,7 +257,7 @@ describe("Order Details", () => {
 
     render(component);
 
-    await userEvent.click(await screen.findByLabelText("Toggle-DetailsRow"));
+    await userEvent.click(await screen.findByLabelText("Details"));
     const rowDetails = await screen.findByLabelText("Expanded-Details");
 
     // Its only detail is the compile report, which this app can't link to.
@@ -294,7 +294,7 @@ describe("Order Details", () => {
 
     expect(serviceOrderItemRows).toHaveLength(1);
 
-    await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
+    await userEvent.click(screen.getByLabelText("Details"));
 
     const rowDetails = await screen.findByLabelText("Expanded-Details");
 
@@ -353,7 +353,7 @@ describe("Order Details", () => {
 
       expect(rows).toHaveLength(2);
 
-      const toggleButtons = screen.getAllByLabelText("Toggle-DetailsRow");
+      const toggleButtons = screen.getAllByLabelText("Details");
 
       await userEvent.click(toggleButtons[0]);
 
@@ -395,7 +395,7 @@ describe("Order Details", () => {
 
       expect(rows).toHaveLength(2);
 
-      await userEvent.click(screen.getAllByLabelText("Toggle-DetailsRow")[0]);
+      await userEvent.click(screen.getAllByLabelText("Details")[0]);
 
       const dependenciesRegion = await screen.findByLabelText("Expanded-Dependencies");
       const dependencyButton = within(dependenciesRegion).getByRole("button", {
