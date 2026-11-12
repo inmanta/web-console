@@ -19,25 +19,24 @@ export const ZoomControlsContainer = styled.div`
   filter: drop-shadow(0.05rem 0.2rem 0.2rem var(--pf-t--global--box-shadow--color--100));
   z-index: 10;
 
-  // Every control is as high as a square icon button, whatever its PatternFly variant: the
-  // Arrange menu toggle has text and padding of its own.
+  // Every control is a square icon button's height, through PatternFly's own sizing: the block
+  // padding leaves exactly the control size around one line of text, whatever the variant. The
+  // Arrange menu toggle keeps its inline padding for its text; the icon buttons have none and
+  // centre their icon, so they are as wide as they are high (the button's minimum width).
   --toolbar-control--size: var(--pf-t--global--spacer--xl);
-
-  .toolbar-control {
-    flex: none;
-    justify-content: center;
-    min-width: var(--toolbar-control--size);
-    height: var(--toolbar-control--size);
-    padding-block: 0;
-  }
+  --toolbar-control--padding-block: calc((var(--toolbar-control--size) - 1lh) / 2);
 
   .pf-v6-c-button.toolbar-control {
-    width: var(--toolbar-control--size);
-    padding-inline: 0;
+    --pf-v6-c-button--AlignItems: center;
+    --pf-v6-c-button--PaddingBlockStart: var(--toolbar-control--padding-block);
+    --pf-v6-c-button--PaddingBlockEnd: var(--toolbar-control--padding-block);
+    --pf-v6-c-button--m-control--PaddingInlineStart: 0;
+    --pf-v6-c-button--m-control--PaddingInlineEnd: 0;
   }
 
   .pf-v6-c-menu-toggle.toolbar-control {
-    padding-inline: var(--pf-t--global--spacer--md);
+    --pf-v6-c-menu-toggle--PaddingBlockStart: var(--toolbar-control--padding-block);
+    --pf-v6-c-menu-toggle--PaddingBlockEnd: var(--toolbar-control--padding-block);
   }
 
   .toolbar-divider {
