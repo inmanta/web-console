@@ -81,6 +81,7 @@ export const withDefaultValues = (
  * A service, embedded entity, or inter-service relation on the composer canvas.
  * Tracks its connections, attributes and position, and provides helpers for validation
  * and order-item generation. It holds no rendering state: the canvas draws it.
+ * The composer changes it in place; CanvasActions says when that re-renders the canvas.
  */
 export class ServiceEntityShape {
   readonly id: string;
@@ -116,7 +117,7 @@ export class ServiceEntityShape {
           initializationOptions.instanceAttributes
         )
       : initializationOptions.instanceAttributes;
-    this.sanitizedAttrs = JSON.parse(JSON.stringify(this.instanceAttributes));
+    this.sanitizedAttrs = structuredClone(this.instanceAttributes);
     this.readonly = initializationOptions.readonly;
     this.isNew = initializationOptions.isNew;
     this.lockedOnCanvas = initializationOptions.lockedOnCanvas;
@@ -612,7 +613,7 @@ export class ServiceEntityShape {
   updateAttributes(attributes: InstanceAttributeModel) {
     // Create a new object to ensure we're not sharing references
     this.instanceAttributes = { ...attributes };
-    this.sanitizedAttrs = JSON.parse(JSON.stringify(attributes));
+    this.sanitizedAttrs = structuredClone(attributes);
     // Invalidate cached orderItem - will be recomputed when needed
     this.orderItem = null;
 

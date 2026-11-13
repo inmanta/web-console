@@ -22,6 +22,25 @@ export type PaletteItem =
 
 /**
  * Changes to the shapes on the canvas. Each one updates the shapes and re-renders the canvas.
+ *
+ * The canvas state is a map of ServiceEntityShape objects that are changed in place. The domain
+ * code (connections, layers, layouts, validation, order items) works on the shapes themselves,
+ * and the shapes refer to each other by id. A shape keeps its object for as long as it is on the
+ * canvas: the cards render the shape itself (`data.shape`), and React Flow keeps a card's measured
+ * size by its id. The rules:
+ *
+ * - React only sees a change when the map is replaced. A change to what the cards show or to the
+ *   order (connections, attributes, layers, a layout) is followed by a new map: through one of these
+ *   actions, `refresh()` after changing a shape in place, or `setCanvasState` (EntityForm). Each new
+ *   map derives the cards again (Canvas) and recomputes the order items (useServiceOrderItems).
+ * - Moving or measuring a card is written to its shape without a new map (Canvas' onNodesChange).
+ *   React Flow already shows the change and the order doesn't depend on it, so a pointer move
+ *   doesn't derive every card and order item again.
+ * - A shape caches its order item. The methods that change its connections or attributes clear the
+ *   cache, so change those through the methods, not the fields.
+ *
+ * Keep the shapes mutable as a whole: copying some of them on a change would leave the other
+ * shapes and the cards holding the old objects.
  */
 export interface CanvasActions {
   /** Puts new shapes on the canvas. */
