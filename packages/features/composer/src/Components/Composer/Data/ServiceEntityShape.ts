@@ -7,7 +7,11 @@ import {
   ServiceOrderItemRequest,
 } from "@inmanta/web-console-core";
 import { sanitizeAttributes } from "@inmanta/web-console-core/Common";
-import { CreateModifierHandler, FieldCreator } from "@inmanta/web-console-core/FormState";
+import {
+  createFormState,
+  CreateModifierHandler,
+  FieldCreator,
+} from "@inmanta/web-console-core/FormState";
 import { SuggestionVariables } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { SHAPE_HEADER_HEIGHT, SHAPE_ROW_HEIGHT, SHAPE_WIDTH } from "../config/shapeConfig";
 import {
@@ -54,6 +58,26 @@ export interface Size {
 }
 
 /**
+ * A new entity's attributes with the default values of its model under them, the values its form
+ * starts from (EntityForm). A new entity from a placeholder, such as a required embedded entity,
+ * has none of its own yet, so without them its card would count the defaults as missing.
+ *
+ * @param serviceModel - The model of the entity
+ * @param attributes - The attributes it has
+ * @returns The attributes, with the defaults of the ones it doesn't have
+ */
+export const withDefaultValues = (
+  serviceModel: ServiceModel | EmbeddedEntity,
+  attributes: InstanceAttributeModel
+): InstanceAttributeModel => {
+  const fields = new FieldCreator(new CreateModifierHandler()).attributesToFields(
+    serviceModel.attributes ?? []
+  );
+
+  return { ...createFormState(fields), ...attributes };
+};
+
+/**
  * A service, embedded entity, or inter-service relation on the composer canvas.
  * Tracks its connections, attributes and position, and provides helpers for validation
  * and order-item generation. It holds no rendering state: the canvas draws it.
@@ -86,8 +110,13 @@ export class ServiceEntityShape {
     this.connections = new Map<string, string[]>();
     this.serviceModel = initializationOptions.serviceModel;
     this.relationsDictionary = initializationOptions.relationsDictionary;
-    this.instanceAttributes = initializationOptions.instanceAttributes;
-    this.sanitizedAttrs = JSON.parse(JSON.stringify(initializationOptions.instanceAttributes));
+    this.instanceAttributes = initializationOptions.isNew
+      ? withDefaultValues(
+          initializationOptions.serviceModel,
+          initializationOptions.instanceAttributes
+        )
+      : initializationOptions.instanceAttributes;
+    this.sanitizedAttrs = JSON.parse(JSON.stringify(this.instanceAttributes));
     this.readonly = initializationOptions.readonly;
     this.isNew = initializationOptions.isNew;
     this.lockedOnCanvas = initializationOptions.lockedOnCanvas;
@@ -564,6 +593,9 @@ export class ServiceEntityShape {
           case "Textarea":
           case "Unit":
             return isEmptyValue(value);
+          // false is a value: only a required boolean without one is missing
+          case "Boolean":
+            return value === null || value === undefined;
           default:
             return false;
         }
