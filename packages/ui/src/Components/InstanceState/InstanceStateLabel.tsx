@@ -1,7 +1,12 @@
 import React from "react";
 import { Content, Label, Tooltip } from "@patternfly/react-core";
 import { State } from "@inmanta/web-console-core";
-import { DynamicFAIcon } from "@inmanta/web-console-ui/Components/FaIcon";
+import { DynamicFAIcon } from "../FaIcon";
+
+interface Props extends State {
+  /** Renders the badge compact, for tight places like a canvas card or a palette row. */
+  isCompact?: boolean;
+}
 
 /**
  * The InstanceStateLabel Component
@@ -12,7 +17,7 @@ import { DynamicFAIcon } from "@inmanta/web-console-ui/Components/FaIcon";
  * when there is a status color or a state annotation to present; otherwise the raw
  * name is rendered as plain text.
  */
-export const InstanceStateLabel: React.FC<State> = ({ name, label, annotations }) => {
+export const InstanceStateLabel: React.FC<Props> = ({ name, label, annotations, isCompact }) => {
   const displayName = annotations?.web_label || name;
 
   if (!label && !annotations) {
@@ -23,6 +28,7 @@ export const InstanceStateLabel: React.FC<State> = ({ name, label, annotations }
     <Label
       status={label ?? undefined}
       variant="outline"
+      isCompact={isCompact}
       icon={
         annotations?.web_icon ? <DynamicFAIcon icon={annotations.web_icon} isInline /> : undefined
       }
