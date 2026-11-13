@@ -31,7 +31,7 @@
     "@tanstack/react-query": "^5.107.1",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
-    "@testing-library/user-event": "^14.6.8",
+    "@testing-library/user-event": "^14.6.9",
     "@types/jest-axe": "^3.5.9",
     "@vitejs/plugin-react": "^6.2.1",
     "jest-axe": "^11.0.0",
