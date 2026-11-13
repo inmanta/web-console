@@ -11,12 +11,19 @@ import { Point } from "../ServiceEntityShape";
 /**
  * Hook that puts an item from the palette on the canvas at a position, or below it where it
  * doesn't cover another card, and selects it.
- * A new entity comes with the embedded entities it requires; an inventory instance with
- * its embedded entities, connected to the instances on the canvas it relates to.
+ * A new entity comes with the embedded entities it requires; an inventory instance with its
+ * cluster: its embedded entities and the instances it relates to (createInventoryEntityShapes).
  */
 export const useAddPaletteItem = () => {
-  const { canvasState, canvasActions, serviceCatalog, relationsDictionary, setActiveCell } =
-    useContext(ComposerContext);
+  const {
+    canvasState,
+    canvasActions,
+    serviceCatalog,
+    serviceInventories,
+    relationsDictionary,
+    initialShapeInfoRef,
+    setActiveCell,
+  } = useContext(ComposerContext);
 
   return useCallback(
     (item: PaletteItem, requestedPosition: Point) => {
@@ -52,11 +59,25 @@ export const useAddPaletteItem = () => {
               position,
               canvasState,
               relationsDictionary,
+              serviceCatalog,
+              serviceInventories,
+              // Instances deleted from the canvas are deleted on deploy, so they don't come back
+              excludedIds: new Set(
+                Array.from(initialShapeInfoRef.current.keys()).filter((id) => !canvasState.has(id))
+              ),
             });
 
       canvasActions.addShapes(shapes);
       setActiveCell(shapes.values().next().value ?? null);
     },
-    [canvasState, canvasActions, serviceCatalog, relationsDictionary, setActiveCell]
+    [
+      canvasState,
+      canvasActions,
+      serviceCatalog,
+      serviceInventories,
+      relationsDictionary,
+      initialShapeInfoRef,
+      setActiveCell,
+    ]
   );
 };

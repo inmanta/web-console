@@ -97,13 +97,32 @@ describe("createInventoryEntityShapes", () => {
       },
     ],
   });
-  const relationsDictionary = createRelationsDictionary([parentModel, childModel]);
+  const vlanModel = createMockEmbeddedEntity("vlan", { type: "Vlan" });
+  const clusterModel = createMockServiceModel("cluster", { embedded_entities: [vlanModel] });
+  const catalog = [parentModel, childModel, clusterModel];
+  const relationsDictionary = createRelationsDictionary(catalog);
 
-  it("adds an existing instance as a read-only relation, connected to what is on the canvas", () => {
-    const parent = new ServiceEntityShape({
-      id: "parent-1",
+  const createInstance = (
+    id: string,
+    serviceEntity: string,
+    attributes: Record<string, unknown>
+  ): ServiceInstanceModel =>
+    ({
+      id,
+      service_entity: serviceEntity,
+      candidate_attributes: null,
+      active_attributes: attributes,
+    }) as unknown as ServiceInstanceModel;
+
+  const parentInstance = createInstance("parent-1", "parent", { name: "parent" });
+  const childInstance = createInstance("child-1", "child", { parent_entity: "parent-1" });
+  const serviceInventories = { parent: [parentInstance], child: [childInstance] };
+
+  const createExistingShape = (id: string, serviceModel: ServiceModel) =>
+    new ServiceEntityShape({
+      id,
       entityType: "core",
-      serviceModel: parentModel,
+      serviceModel,
       instanceAttributes: {},
       readonly: false,
       isNew: false,
@@ -113,27 +132,83 @@ describe("createInventoryEntityShapes", () => {
       interServiceRelations: {},
       embeddedEntities: {},
     });
-    const instance = {
-      id: "child-1",
-      service_entity: "child",
-      candidate_attributes: null,
-      active_attributes: { parent_entity: "parent-1" },
-    } as unknown as ServiceInstanceModel;
 
-    const shapes = createInventoryEntityShapes({
+  const addFromInventory = (
+    instance: ServiceInstanceModel,
+    serviceModel: ServiceModel,
+    canvasState = new Map<string, ServiceEntityShape>(),
+    excludedIds?: Set<string>
+  ) =>
+    createInventoryEntityShapes({
       instance,
-      serviceModel: childModel,
-      position: { x: 0, y: 0 },
-      canvasState: new Map([[parent.id, parent]]),
+      serviceModel,
+      position: { x: 500, y: 300 },
+      canvasState,
       relationsDictionary,
+      serviceCatalog: catalog,
+      serviceInventories,
+      excludedIds,
     });
+
+  it("adds an existing instance as a read-only relation, connected to what is on the canvas", () => {
+    const parent = createExistingShape("parent-1", parentModel);
+
+    const shapes = addFromInventory(childInstance, childModel, new Map([[parent.id, parent]]));
     const child = shapes.get("child-1")!;
 
+    expect(Array.from(shapes.keys())).toEqual(["child-1"]);
     expect(child.entityType).toBe("relation");
     expect(child.readonly).toBe(true);
     expect(child.isNew).toBe(false);
     expect(child.instanceAttributes.id).toBe("child-1");
     expect(child.connections.get("parent")).toEqual(["parent-1"]);
+    expect(child.isMissingConnections()).toBe(false);
+  });
+
+  it("brings the instances it relates to from the inventory, connected and valid", () => {
+    const shapes = addFromInventory(childInstance, childModel);
+    const [child, parent] = Array.from(shapes.values());
+
+    expect(Array.from(shapes.keys())).toEqual(["child-1", "parent-1"]);
+    expect(parent.entityType).toBe("relation");
+    expect(parent.readonly).toBe(true);
+    expect(child.connections.get("parent")).toEqual(["parent-1"]);
+    expect(child.isMissingConnections()).toBe(false);
+  });
+
+  it("keeps a relation the instance has when the related instance can't be brought along", () => {
+    const shapes = addFromInventory(childInstance, childModel, new Map(), new Set(["parent-1"]));
+    const child = shapes.get("child-1")!;
+
+    expect(Array.from(shapes.keys())).toEqual(["child-1"]);
+    expect(child.connections.get("parent")).toEqual(["parent-1"]);
+    expect(child.isMissingConnections()).toBe(false);
+  });
+
+  it("brings its embedded entities, connected to it", () => {
+    const instance = createInstance("cluster-1", "cluster", { vlan: { name: "vlan-1" } });
+
+    const shapes = addFromInventory(instance, clusterModel);
+    const [cluster, vlan] = Array.from(shapes.values());
+
+    expect(shapes.size).toBe(2);
+    expect(vlan.entityType).toBe("embedded");
+    expect(cluster.connections.get("Vlan")).toEqual([vlan.id]);
+    expect(cluster.isMissingConnections()).toBe(false);
+    expect(vlan.isMissingConnections()).toBe(false);
+  });
+
+  it("puts the instance at the position and lays the cluster out clear of the canvas", () => {
+    const shapes = addFromInventory(childInstance, childModel);
+    const [child, parent] = Array.from(shapes.values());
+
+    expect(child.getPosition()).toEqual({ x: 500, y: 300 });
+    expect(parent.getPosition()).not.toEqual(child.getPosition());
+
+    const blocking = createExistingShape("other", parentModel).setPosition(500, 300);
+    const moved = addFromInventory(childInstance, childModel, new Map([["other", blocking]]));
+
+    expect(moved.get("child-1")!.getPosition().y).toBeGreaterThan(300);
   });
 });
 
