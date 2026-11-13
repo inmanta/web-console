@@ -1,0 +1,5 @@
+description: |
+  `yarn test` now stops with a clear message when started from a lowercase Windows drive letter (c:\...), instead of failing hundreds of tests with "Invalid Chai property".
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

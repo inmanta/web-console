@@ -12,6 +12,16 @@ import { join, posix, resolve } from "path";
 import { mergeConfig, ViteUserConfig } from "vitest/config";
 import { repoRoot, sharedConfig } from "./vite.shared.ts";
 
+// Vitest loads itself with the drive letter of the working directory, while Vite resolves the
+// tests' `vitest` imports with an upper-case one. Node.js caches modules by URL, so from c:\...
+// (a terminal opened from cmd or VS Code on Windows) the tests get a second copy of Vitest without
+// the matchers of the setup files, and fail with "Invalid Chai property".
+if (/^[a-z]:/.test(process.cwd())) {
+  throw new Error(
+    `Run the tests from a working directory with an upper-case drive letter, not ${process.cwd()}: run \`cd .\` in Git Bash, or cd to it as C:\\... in cmd.`
+  );
+}
+
 /**
  * Every workspace package, relative to the repository root, with its edition (`"inmanta":
  * { "edition": ... }` in its package.json).
