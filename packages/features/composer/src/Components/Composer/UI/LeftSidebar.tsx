@@ -13,7 +13,6 @@ import {
   Tabs,
   TabTitleText,
   Tooltip,
-  Truncate,
 } from "@patternfly/react-core";
 import { AngleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-down-icon";
 import { AngleRightIcon } from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
@@ -399,7 +398,7 @@ const PaletteRowIcon: React.FC<{ row: PaletteRow }> = ({ row }) => (
  */
 const PaletteRowText: React.FC<{ row: PaletteRow }> = ({ row }) => (
   <span className="palette-row-text">
-    <Truncate className="palette-row-name" content={row.name} />
+    <OverflowText className="palette-row-name" text={row.name} />
     {row.detail && <OverflowText className="palette-row-detail" text={row.detail} />}
   </span>
 );
@@ -535,11 +534,10 @@ const Sidebar = styled.aside`
     flex-direction: column;
   }
 
-  // As wide as the name, up to the row: Truncate compares the width of its text with the width
-  // of the row, so a name that fills the row would always count as cut short.
   .palette-row-name {
-    align-self: flex-start;
-    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .palette-row-detail {
