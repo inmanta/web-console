@@ -10,6 +10,7 @@ import { LockIcon } from "@patternfly/react-icons/dist/esm/icons/lock-icon";
 import { Handle, Node, NodeProps, Position, useStore } from "@xyflow/react";
 import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
+import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
 import { ComposerContext } from "../Data/Context";
 import {
   checkIfConnectionIsAllowed,
@@ -197,6 +198,11 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
                 <ExclamationCircleIcon />
                 {validationMessages.length}
               </button>
+            )}
+            {shape.instanceState && (
+              <span data-testid={`entity-state-${displayName}`}>
+                <InstanceStateLabel {...shape.instanceState} isCompact />
+              </span>
             )}
             {shape.isNew && <span className="pill">{words("instanceComposer.label.new")}</span>}
             {isReadOnly && (

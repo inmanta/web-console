@@ -20,10 +20,18 @@ import { GripVerticalIcon } from "@patternfly/react-icons/dist/esm/icons/grip-ve
 import { PlusCircleIcon } from "@patternfly/react-icons/dist/esm/icons/plus-circle-icon";
 import { useReactFlow, useStore } from "@xyflow/react";
 import styled from "styled-components";
-import { EmbeddedEntity, ServiceModel, words } from "@inmanta/web-console-core";
+import {
+  compareEntityAnnotations,
+  EmbeddedEntity,
+  resolveEntityAnnotations,
+  ServiceModel,
+  State,
+  words,
+} from "@inmanta/web-console-core";
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
 import { ComposerContext, PaletteItem } from "../Data/Context";
-import { getUnavailableInventoryItems } from "../Data/Helpers";
+import { getLifecycleState, getUnavailableInventoryItems } from "../Data/Helpers";
 import { useAddPaletteItem } from "../Data/Hooks";
 import { EntityShapeType } from "../Data/ServiceEntityShape";
 import { LEFT_SIDEBAR_WIDTH, SHAPE_WIDTH } from "../config";
@@ -42,6 +50,9 @@ interface PaletteRow {
 
   /** What kind of entity it is, in small text under the name */
   detail?: string;
+
+  /** The lifecycle state of an inventory instance, under its name */
+  state?: State;
   item: PaletteItem;
   unavailableReason?: string;
 }
@@ -97,22 +108,73 @@ const getEmbeddedRows = (
     });
 
 /**
- * One group per service in the catalog: the service itself, then its embedded entities.
+ * The rows of one service: the service itself, then its embedded entities.
  */
-const buildNewGroups = (serviceCatalog: ServiceModel[]): PaletteGroup[] =>
-  serviceCatalog.map((serviceModel) => ({
+const getServiceRows = (serviceModel: ServiceModel): PaletteRow[] => [
+  {
+    key: serviceModel.name,
+    label: serviceModel.name,
     name: serviceModel.name,
-    rows: [
-      {
-        key: serviceModel.name,
-        label: serviceModel.name,
-        name: serviceModel.name,
-        detail: words("instanceComposer.label.core"),
-        item: { kind: "new", serviceModel, entityType: "core" },
-      },
-      ...getEmbeddedRows(serviceModel, serviceModel.name),
-    ],
+    detail: words("instanceComposer.label.core"),
+    item: { kind: "new", serviceModel, entityType: "core" },
+  },
+  ...getEmbeddedRows(serviceModel, serviceModel.name),
+];
+
+/**
+ * The services grouped like the service catalog: by their `web_group` annotation, within a
+ * group ordered by `web_order` and then by name, and the services without a group last,
+ * under "Other services". Groups are ordered by the lowest `web_order` of their services,
+ * then by name. Each service brings its embedded entities with it.
+ *
+ * A catalog without any `web_group` keeps a group per service, so its services stay
+ * headers of their own.
+ */
+const buildNewGroups = (serviceCatalog: ServiceModel[]): PaletteGroup[] => {
+  const annotatedServices = serviceCatalog
+    .map((serviceModel) => ({
+      serviceModel,
+      annotations: resolveEntityAnnotations(serviceModel),
+    }))
+    .sort((a, b) => compareEntityAnnotations(a.annotations, b.annotations));
+
+  const servicesByGroup = new Map<string, typeof annotatedServices>();
+  const ungroupedServices: typeof annotatedServices = [];
+
+  annotatedServices.forEach((service) => {
+    const group = service.annotations.web_group;
+
+    if (group === undefined) {
+      ungroupedServices.push(service);
+    } else {
+      servicesByGroup.set(group, [...(servicesByGroup.get(group) || []), service]);
+    }
+  });
+
+  if (servicesByGroup.size === 0) {
+    return annotatedServices.map(({ serviceModel }) => ({
+      name: serviceModel.name,
+      rows: getServiceRows(serviceModel),
+    }));
+  }
+
+  // The services of a group are sorted, so the first one has its lowest order.
+  const groups = [...servicesByGroup.entries()].sort(([nameA, [firstA]], [nameB, [firstB]]) => {
+    const orderA = firstA.annotations.web_order ?? Number.MAX_SAFE_INTEGER;
+    const orderB = firstB.annotations.web_order ?? Number.MAX_SAFE_INTEGER;
+
+    return orderA - orderB || nameA.localeCompare(nameB);
+  });
+
+  if (ungroupedServices.length > 0) {
+    groups.push([words("instanceComposer.palette.otherServices"), ungroupedServices]);
+  }
+
+  return groups.map(([name, services]) => ({
+    name,
+    rows: services.flatMap(({ serviceModel }) => getServiceRows(serviceModel)),
   }));
+};
 
 /**
  * One group per service with instances in the inventory.
@@ -141,6 +203,7 @@ const buildInventoryGroups = (
             key: instance.id,
             label,
             name: label,
+            state: getLifecycleState(serviceModel, instance.state),
             item: { kind: "inventory", instance, serviceModel },
             unavailableReason: reason && words(`instanceComposer.palette.${reason}`),
           };
@@ -393,13 +456,18 @@ const PaletteRowIcon: React.FC<{ row: PaletteRow }> = ({ row }) => (
 );
 
 /**
- * The name of a palette row, and what kind of entity it is under it. Only text that doesn't fit is
- * cut short, with a tooltip.
+ * The name of a palette row, and under it what kind of entity it is, or for an inventory
+ * instance its lifecycle state. Only text that doesn't fit is cut short, with a tooltip.
  */
 const PaletteRowText: React.FC<{ row: PaletteRow }> = ({ row }) => (
   <span className="palette-row-text">
     <OverflowText className="palette-row-name" text={row.name} />
     {row.detail && <OverflowText className="palette-row-detail" text={row.detail} />}
+    {row.state && (
+      <span className="palette-row-state">
+        <InstanceStateLabel {...row.state} isCompact />
+      </span>
+    )}
   </span>
 );
 
@@ -546,5 +614,11 @@ const Sidebar = styled.aside`
     white-space: nowrap;
     color: var(--pf-t--global--text--color--subtle);
     font-size: var(--pf-t--global--font--size--body--sm);
+  }
+
+  // A state label stays its own size instead of stretching to the row's width.
+  .palette-row-state {
+    align-self: flex-start;
+    margin-top: 2px;
   }
 `;

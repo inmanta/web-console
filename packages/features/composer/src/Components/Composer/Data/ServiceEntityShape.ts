@@ -5,6 +5,7 @@ import {
   ServiceModel,
   ServiceOrderItemAction,
   ServiceOrderItemRequest,
+  State,
 } from "@inmanta/web-console-core";
 import { sanitizeAttributes } from "@inmanta/web-console-core/Common";
 import {
@@ -35,7 +36,28 @@ export interface ServiceEntityBase {
   interServiceRelations: Record<string, string[]>;
   embeddedEntities: Record<string, string[]>;
   id: string;
+
+  /** The lifecycle state of an existing instance; a new entity has none yet. */
+  instanceState?: State;
+
+  /**
+   * The attribute sets of an existing instance, to view each of them; an embedded entity
+   * carries its own slice of its root instance's sets. The editable one (getEditableSet)
+   * is where `instanceAttributes` starts from.
+   */
+  attributeSets?: AttributeSets;
 }
+
+/**
+ * The candidate and active attributes an existing instance has. Only the sets the instance
+ * has are present.
+ */
+export interface AttributeSets {
+  candidate?: InstanceAttributeModel;
+  active?: InstanceAttributeModel;
+}
+
+export type AttributeSetName = keyof AttributeSets;
 
 /**
  * Full configuration used to construct a `ServiceEntityShape`.
@@ -98,6 +120,12 @@ export class ServiceEntityShape {
   hasAttributeValidationErrors: boolean;
   isLayersCollapsed: boolean;
 
+  /** The lifecycle state of the existing instance this shape shows, if any. */
+  instanceState: State | null;
+
+  /** The attribute sets of the existing instance this shape shows, if any. */
+  attributeSets: AttributeSets | null;
+
   /** Hidden because an ancestor collapsed its layers. */
   isHidden: boolean;
   parentIds: Set<string>;
@@ -125,6 +153,8 @@ export class ServiceEntityShape {
     this.orderItem = null;
     this.hasAttributeValidationErrors = false;
     this.isLayersCollapsed = false;
+    this.instanceState = initializationOptions.instanceState ?? null;
+    this.attributeSets = initializationOptions.attributeSets ?? null;
     this.isHidden = false;
     this.parentIds = new Set<string>();
     // An estimate until the canvas has measured the card
@@ -533,6 +563,19 @@ export class ServiceEntityShape {
 
   getSanitizedAttributes(): InstanceAttributeModel {
     return this.sanitizedAttrs;
+  }
+
+  /**
+   * Which attribute set the composer works on, and so where `instanceAttributes` started from:
+   * the candidate set while the instance has one, otherwise the active set. The other set, when
+   * the instance has both, can only be viewed. A new entity has no sets yet, so no set name.
+   */
+  getEditableSet(): AttributeSetName | null {
+    if (!this.attributeSets) {
+      return null;
+    }
+
+    return this.attributeSets.candidate ? "candidate" : "active";
   }
 
   /**

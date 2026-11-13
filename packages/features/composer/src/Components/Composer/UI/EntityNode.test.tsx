@@ -193,6 +193,32 @@ describe("EntityNode", () => {
     });
   });
 
+  it("shows the lifecycle state of an existing instance, and none on a new card", async () => {
+    const [parent] = instanceShapes(
+      inventoryInstance(
+        parentService,
+        "parent-1",
+        { name: "edge-1", region: "eu" },
+        { state: "failed" }
+      ),
+      parentService
+    );
+    const [child] = newServiceShapes(childService);
+
+    setup([parent, child]);
+
+    const card = await screen.findByTestId("entity-parent-service");
+    const state = within(card).getByTestId("entity-state-parent-service");
+
+    expect(within(state).getByText("failed")).toBeVisible();
+    // The lifecycle gives the state its status colour
+    expect(state.querySelector(".pf-m-danger")).toBeInTheDocument();
+
+    const newCard = screen.getByTestId("entity-child-service");
+
+    expect(within(newCard).queryByTestId("entity-state-child-service")).not.toBeInTheDocument();
+  });
+
   it("has no link action in the viewer", async () => {
     const [child] = newServiceShapes(childService);
 

@@ -1,11 +1,16 @@
 import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { words } from "@inmanta/web-console-core";
+import { ServiceModel, words } from "@inmanta/web-console-core";
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { ComposerTestProvider } from "../Mock/ComposerTestProvider";
-import { childService, inventoryInstance, parentService } from "../Mock/serviceModels";
+import {
+  childService,
+  inventoryInstance,
+  parentService,
+  standaloneService,
+} from "../Mock/serviceModels";
 import { instanceShapes, toCanvasState } from "../Mock/shapes";
 import { defineReactFlowTestObjects } from "../testSetup";
 import { Canvas } from "./Canvas";
@@ -28,11 +33,17 @@ const serviceInventories: Inventories = {
 };
 
 const setup = (
-  options: { shapes?: ServiceEntityShape[]; deletedInstanceIds?: string[]; editable?: boolean } = {}
+  options: {
+    shapes?: ServiceEntityShape[];
+    deletedInstanceIds?: string[];
+    editable?: boolean;
+    serviceCatalog?: ServiceModel[];
+  } = {}
 ) =>
   render(
     <ComposerTestProvider
       shapes={toCanvasState(...(options.shapes ?? []))}
+      serviceCatalog={options.serviceCatalog}
       serviceInventories={serviceInventories}
       deletedInstanceIds={options.deletedInstanceIds}
       editable={options.editable}
@@ -61,6 +72,55 @@ describe("LeftSidebar", () => {
     );
     expect(settings).toHaveTextContent(`settings${words("instanceComposer.label.embedded")}`);
     expect(screen.getByTestId("palette-group-child-service")).toBeVisible();
+  });
+
+  it("groups the services by their web_group annotation, the ungrouped ones last", () => {
+    const annotated = (
+      model: ServiceModel,
+      web_group: string,
+      web_order: number
+    ): ServiceModel => ({
+      ...model,
+      entity_annotations: { web_group, web_order },
+    });
+
+    setup({
+      serviceCatalog: [
+        annotated(childService, "Network", 2),
+        annotated(parentService, "Network", 1),
+        standaloneService,
+      ],
+    });
+
+    const network = screen.getByTestId("palette-group-Network");
+    const rows = within(network)
+      .getAllByTestId(/^palette-item-/)
+      .map((row) => row.getAttribute("data-testid"));
+
+    // Within the group the services follow their web_order, each with its embedded entities
+    expect(rows).toEqual([
+      "palette-item-parent-service",
+      "palette-item-settings",
+      "palette-item-child-service",
+    ]);
+
+    const other = screen.getByTestId(
+      `palette-group-${words("instanceComposer.palette.otherServices")}`
+    );
+
+    expect(within(other).getByTestId("palette-item-standalone-service")).toBeInTheDocument();
+    // The ungrouped services come last
+    expect(network.compareDocumentPosition(other)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
+  it("shows the lifecycle state of an inventory instance", async () => {
+    setup();
+    await openInventory();
+
+    const row = screen.getByTestId("palette-item-edge-1");
+
+    expect(within(row).getByText("up")).toBeVisible();
+    expect(row.querySelector(".pf-m-success")).toBeInTheDocument();
   });
 
   it("filters the rows with the search, and says when nothing matches", async () => {

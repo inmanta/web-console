@@ -7,11 +7,84 @@ import {
   VERTICAL_SPACING,
   NESTED_HORIZONTAL_OFFSET,
 } from "../../config/layoutConfig";
-import { ServiceEntityShape, ServiceEntityOptions } from "../ServiceEntityShape";
+import {
+  AttributeSetName,
+  AttributeSets,
+  ServiceEntityShape,
+  ServiceEntityOptions,
+} from "../ServiceEntityShape";
 import { applyLayeredLayout } from "./canvasLayoutUtils";
 import { RelationsDictionary } from "./createRelationsDictionary";
 import { PositionTracker } from "./positionTracker";
-import { getShapeDimensions, getEmbeddedEntityKey, getInterServiceRelationKey } from "./shapeUtils";
+import {
+  getShapeDimensions,
+  getEmbeddedEntityKey,
+  getInterServiceRelationKey,
+  getLifecycleState,
+} from "./shapeUtils";
+
+/**
+ * Which attribute set the embedded entities of an existing instance are read from, and the
+ * active set's data for the same embedded entity, to view next to it. The active data is only
+ * there when the instance has both sets, so the composer works on the candidate set.
+ */
+export interface EmbeddedSetsContext {
+  editableSet: AttributeSetName;
+  activeData?: unknown;
+}
+
+/**
+ * The attribute sets of an embedded entity: its own slice of each of the root instance's sets.
+ * The editable set holds the attributes the shape works on; the matched active entry, when
+ * there is one, can only be viewed.
+ */
+const getEmbeddedAttributeSets = (
+  setsContext: EmbeddedSetsContext,
+  embeddedAttributes: Record<string, unknown>,
+  matchedActive: Record<string, unknown> | undefined
+): AttributeSets =>
+  setsContext.editableSet === "candidate"
+    ? { candidate: embeddedAttributes, ...(matchedActive ? { active: matchedActive } : {}) }
+    : { active: embeddedAttributes };
+
+/**
+ * Matches the entries of the active set's data for an embedded entity to the entries the
+ * shapes are created from: by their key attributes when they have values, by position
+ * otherwise.
+ */
+const matchActiveEntries = (
+  activeData: unknown,
+  chosenEntries: unknown[],
+  rootEntityId: string,
+  embeddedEntity: EmbeddedEntity
+): Array<Record<string, unknown> | undefined> => {
+  const activeEntries = (Array.isArray(activeData) ? activeData : [activeData]).filter(
+    (entry): entry is Record<string, unknown> => typeof entry === "object" && entry !== null
+  );
+  const activeByKey = new Map<string, Record<string, unknown>>();
+
+  activeEntries.forEach((entry) => {
+    const key = getEmbeddedEntityCacheKey(rootEntityId, embeddedEntity, entry);
+
+    if (key && !activeByKey.has(key)) {
+      activeByKey.set(key, entry);
+    }
+  });
+
+  return chosenEntries.map((entry, index) => {
+    if (typeof entry !== "object" || entry === null) {
+      return undefined;
+    }
+
+    const key = getEmbeddedEntityCacheKey(
+      rootEntityId,
+      embeddedEntity,
+      entry as Record<string, unknown>
+    );
+
+    return (key && activeByKey.get(key)) || activeEntries[index];
+  });
+};
 
 /**
  * Adds a relation id to the given collection map, avoiding duplicates.
@@ -76,10 +149,14 @@ export const createEmbeddedEntityShapes = (
   positionTracker: PositionTracker,
   offsetX: number,
   offsetY: number,
-  isNew: boolean = false
+  isNew: boolean = false,
+  setsContext?: EmbeddedSetsContext
 ): string[] => {
   const createdIds: string[] = [];
   const dataArray = Array.isArray(embeddedData) ? embeddedData : [embeddedData];
+  const matchedActiveEntries = setsContext
+    ? matchActiveEntries(setsContext.activeData, dataArray, rootEntityId, embeddedEntity)
+    : [];
 
   dataArray.forEach((data, index) => {
     if (typeof data !== "object" || data === null) {
@@ -151,6 +228,8 @@ export const createEmbeddedEntityShapes = (
       }
     });
 
+    const matchedActive = matchedActiveEntries[index];
+
     const nestedEmbeddedEntities: Record<string, string[]> = {};
     embeddedEntity.embedded_entities.forEach((nestedEntity) => {
       const nestedData = embeddedAttributes[nestedEntity.name];
@@ -166,7 +245,11 @@ export const createEmbeddedEntityShapes = (
           positionTracker,
           offsetX + NESTED_HORIZONTAL_OFFSET,
           offsetY,
-          isNew
+          isNew,
+          setsContext && {
+            editableSet: setsContext.editableSet,
+            activeData: matchedActive?.[nestedEntity.name],
+          }
         );
 
         if (nestedIds.length > 0) {
@@ -197,6 +280,10 @@ export const createEmbeddedEntityShapes = (
       rootEntities,
       interServiceRelations,
       embeddedEntities: nestedEmbeddedEntities,
+      attributeSets:
+        !isNew && setsContext
+          ? getEmbeddedAttributeSets(setsContext, embeddedAttributes, matchedActive)
+          : undefined,
     };
 
     const shape = new ServiceEntityShape(shapeOptions);
@@ -268,6 +355,13 @@ export const initializeCanvasFromInstance = (
      */
     const isNewEntity = instance.state === "creating" && !instance.active_attributes;
 
+    const attributeSets: AttributeSets | undefined = isNewEntity
+      ? undefined
+      : {
+          ...(instance.candidate_attributes ? { candidate: instance.candidate_attributes } : {}),
+          ...(instance.active_attributes ? { active: instance.active_attributes } : {}),
+        };
+
     const interServiceRelations: Record<string, string[]> = {};
     const rootEntities: Record<string, string[]> = {};
 
@@ -298,6 +392,8 @@ export const initializeCanvasFromInstance = (
       rootEntities,
       interServiceRelations,
       embeddedEntities: {},
+      instanceState: isNewEntity ? undefined : getLifecycleState(serviceModel, instance.state),
+      attributeSets,
     };
 
     const shape = new ServiceEntityShape(shapeOptions);
@@ -344,7 +440,16 @@ export const initializeCanvasFromInstance = (
           positionTracker,
           parentPosition.x + HORIZONTAL_SPACING,
           parentPosition.y,
-          isNewEntity
+          isNewEntity,
+          isNewEntity || !attributeSets
+            ? undefined
+            : {
+                editableSet: attributeSets.candidate ? "candidate" : "active",
+                // Only there to view when the composer works on the candidate set
+                activeData: attributeSets.candidate
+                  ? attributeSets.active?.[embeddedEntity.name]
+                  : undefined,
+              }
         );
 
         if (embeddedIds.length > 0) {

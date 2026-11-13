@@ -7,13 +7,18 @@ import {
 } from "@inmanta/web-console-core/FormState";
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { HORIZONTAL_SPACING } from "../../config";
-import { EntityShapeType, Point, ServiceEntityShape } from "../ServiceEntityShape";
+import { AttributeSets, EntityShapeType, Point, ServiceEntityShape } from "../ServiceEntityShape";
 import { applyLayeredLayout } from "./canvasLayoutUtils";
 import { applyRequiredConnections } from "./createPlaceholderInstance";
 import { RelationsDictionary } from "./createRelationsDictionary";
 import { createEmbeddedEntityShapes } from "./initializeCanvasFromInstance";
 import { PositionTracker } from "./positionTracker";
-import { getEmbeddedEntityKey, getInterServiceRelationKey, getShapeDimensions } from "./shapeUtils";
+import {
+  getEmbeddedEntityKey,
+  getInterServiceRelationKey,
+  getLifecycleState,
+  getShapeDimensions,
+} from "./shapeUtils";
 
 /**
  * Adds the embedded entities a shape carries in its attributes as shapes of their own,
@@ -24,7 +29,8 @@ const addEmbeddedEntities = (
   embeddedData: Record<string, unknown>,
   relationsDictionary: RelationsDictionary,
   shapes: Map<string, ServiceEntityShape>,
-  isNew: boolean
+  isNew: boolean,
+  attributeSets?: AttributeSets
 ) => {
   const positionTracker = new PositionTracker();
   const position = shape.getPosition();
@@ -50,7 +56,16 @@ const addEmbeddedEntities = (
       positionTracker,
       position.x + HORIZONTAL_SPACING,
       position.y,
-      isNew
+      isNew,
+      isNew || !attributeSets
+        ? undefined
+        : {
+            editableSet: attributeSets.candidate ? "candidate" : "active",
+            // Only there to view when the composer works on the candidate set
+            activeData: attributeSets.candidate
+              ? attributeSets.active?.[embeddedEntity.name]
+              : undefined,
+          }
     );
 
     if (embeddedIds.length > 0) {
@@ -150,6 +165,10 @@ const addInstanceShapes = (
     ...(instance.candidate_attributes || instance.active_attributes || {}),
     id: instance.id,
   };
+  const attributeSets: AttributeSets = {
+    ...(instance.candidate_attributes ? { candidate: instance.candidate_attributes } : {}),
+    ...(instance.active_attributes ? { active: instance.active_attributes } : {}),
+  };
   const interServiceRelations: Record<string, string[]> = {};
 
   serviceModel.inter_service_relations.forEach((relation) => {
@@ -177,10 +196,12 @@ const addInstanceShapes = (
     rootEntities: {},
     interServiceRelations,
     embeddedEntities: {},
+    instanceState: getLifecycleState(serviceModel, instance.state),
+    attributeSets,
   });
 
   shapes.set(shape.id, shape);
-  addEmbeddedEntities(shape, instanceAttributes, relationsDictionary, shapes, false);
+  addEmbeddedEntities(shape, instanceAttributes, relationsDictionary, shapes, false, attributeSets);
 
   return shape;
 };

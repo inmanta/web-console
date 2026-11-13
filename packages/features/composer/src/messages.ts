@@ -81,6 +81,7 @@ export const composerMessages = {
     "Check the spelling, or clear the search to see every service and embedded entity.",
   "instanceComposer.palette.noInstances": "There are no instances to add from the inventory.",
   "instanceComposer.palette.clearSearch": "Clear search",
+  "instanceComposer.palette.otherServices": "Other services",
   "instanceComposer.contextMenu.remove": "Remove from canvas",
   "instanceComposer.contextMenu.remove.description": "Nothing is sent to the orchestrator",
   "instanceComposer.contextMenu.delete": "Delete permanently",
@@ -103,6 +104,10 @@ export const composerMessages = {
   "instanceComposer.arrange.done.title": "Layout arranged",
   "instanceComposer.arrange.done.body": "The new positions are saved when you deploy.",
   "instanceComposer.arrange.undo": "Undo",
+  "instanceComposer.sets.label": "Attribute set",
+  "instanceComposer.sets.candidate": "Candidate",
+  "instanceComposer.sets.active": "Active",
+  "instanceComposer.sets.readOnly": "This attribute set can only be viewed here.",
 };
 
 type ComposerMessages = typeof composerMessages;

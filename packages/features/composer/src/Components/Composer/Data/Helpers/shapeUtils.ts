@@ -1,4 +1,9 @@
-import { EmbeddedEntity, InterServiceRelation } from "@inmanta/web-console-core";
+import {
+  EmbeddedEntity,
+  InterServiceRelation,
+  ServiceModel,
+  State,
+} from "@inmanta/web-console-core";
 import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config/shapeConfig";
 import type { ServiceEntityShape } from "../ServiceEntityShape";
 
@@ -22,6 +27,18 @@ export const getShapeDimensions = (
     height: height > 0 ? height : defaultHeight,
   };
 };
+
+/**
+ * Resolves the lifecycle state of an instance against its service model, so the state's
+ * status color and web annotations come with the name. A state the lifecycle doesn't
+ * define renders by its raw name.
+ *
+ * @param serviceModel - The model of the instance's service
+ * @param stateName - The state the instance is in
+ * @returns The state with its label and annotations, or just the name
+ */
+export const getLifecycleState = (serviceModel: ServiceModel, stateName: string): State =>
+  serviceModel.lifecycle.states.find((state) => state.name === stateName) ?? { name: stateName };
 
 /**
  * Gets the connection key for an embedded entity.

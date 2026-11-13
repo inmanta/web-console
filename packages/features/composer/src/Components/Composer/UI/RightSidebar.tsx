@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   Content,
@@ -12,28 +12,44 @@ import {
   Flex,
   Label,
   Title,
+  ToggleGroup,
+  ToggleGroupItem,
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons/dist/esm/icons/cubes-icon";
 import { useReactFlow } from "@xyflow/react";
 import styled from "styled-components";
-import { words } from "@inmanta/web-console-core";
+import { InstanceAttributeModel, words } from "@inmanta/web-console-core";
+import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
 import { ComposerContext } from "../Data/Context";
-import { ServiceEntityShape } from "../Data/ServiceEntityShape";
+import { AttributeSetName, ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { RIGHT_SIDEBAR_WIDTH } from "../config";
 import { EntityForm } from "./EntityForm";
 
 const labelColors = { core: "yellow", embedded: "blue", relation: "purple" } as const;
 
 /**
- * The details of the selected shape: its name, kind and description, and its attributes.
+ * The details of the selected shape: its name, kind, state and description, and its attributes.
  * In the editor they are a form; in the viewer a read-only list, where a relation links to
- * the related entity on the canvas.
+ * the related entity on the canvas. An existing instance with a candidate and an active set
+ * offers both: the form only works on the editable one (the candidate set), the other can
+ * only be viewed.
  */
 export const RightSidebar: React.FC = () => {
   const { mainService, activeCell, editable } = useContext(ComposerContext);
+  // The set being viewed; null means the editable one, the default.
+  const [viewedSet, setViewedSet] = useState<AttributeSetName | null>(null);
+
+  // A new selection starts back on its editable set.
+  useEffect(() => setViewedSet(null), [activeCell]);
+
   const description = activeCell
     ? activeCell.serviceModel.description || null
     : mainService?.description || null;
+
+  const editableSet = activeCell?.getEditableSet() ?? null;
+  const hasBothSets = !!(activeCell?.attributeSets?.candidate && activeCell.attributeSets.active);
+  const selectedSet = (hasBothSets && viewedSet) || editableSet;
+  const showsEditableSet = selectedSet === null || selectedSet === editableSet;
 
   return (
     <Wrapper
@@ -55,6 +71,7 @@ export const RightSidebar: React.FC = () => {
               {words("instanceComposer.label.new")}
             </Label>
           )}
+          {activeCell.instanceState && <InstanceStateLabel {...activeCell.instanceState} />}
         </Flex>
       ) : (
         <Title headingLevel="h2" size="xl">
@@ -62,13 +79,40 @@ export const RightSidebar: React.FC = () => {
         </Title>
       )}
       {description && <Content aria-label="service-description">{description}</Content>}
-      {activeCell && editable && (
+      {activeCell && hasBothSets && (
+        <ToggleGroup aria-label={words("instanceComposer.sets.label")} isCompact>
+          <ToggleGroupItem
+            text={words("instanceComposer.sets.candidate")}
+            buttonId="attribute-set-candidate"
+            isSelected={selectedSet === "candidate"}
+            onChange={() => setViewedSet("candidate")}
+          />
+          <ToggleGroupItem
+            text={words("instanceComposer.sets.active")}
+            buttonId="attribute-set-active"
+            isSelected={selectedSet === "active"}
+            onChange={() => setViewedSet("active")}
+          />
+        </ToggleGroup>
+      )}
+      {activeCell && editable && showsEditableSet && (
         <EntityForm
           activeCell={activeCell}
           isDisabled={activeCell.entityType === "relation" && !activeCell.isNew}
         />
       )}
-      {activeCell && !editable && <EntityDetails shape={activeCell} />}
+      {activeCell && editable && !showsEditableSet && selectedSet && (
+        <>
+          <Content component="small">{words("instanceComposer.sets.readOnly")}</Content>
+          <EntityDetails shape={activeCell} attributes={activeCell.attributeSets?.[selectedSet]} />
+        </>
+      )}
+      {activeCell && !editable && (
+        <EntityDetails
+          shape={activeCell}
+          attributes={selectedSet ? activeCell.attributeSets?.[selectedSet] : undefined}
+        />
+      )}
       {!activeCell && (
         <Flex flex={{ default: "flex_1" }} alignItems={{ default: "alignItemsCenter" }}>
           <EmptyState
@@ -86,10 +130,14 @@ export const RightSidebar: React.FC = () => {
 };
 
 /**
- * The attributes of a shape as a read-only list. Embedded entities are shapes of their own,
+ * The attributes of a shape as a read-only list: the ones it works on, or a given set of them,
+ * like the attribute set that can only be viewed. Embedded entities are shapes of their own,
  * so they are left out; a relation to a shape on the canvas selects it and moves the view to it.
  */
-const EntityDetails: React.FC<{ shape: ServiceEntityShape }> = ({ shape }) => {
+const EntityDetails: React.FC<{
+  shape: ServiceEntityShape;
+  attributes?: InstanceAttributeModel;
+}> = ({ shape, attributes: attributesSource }) => {
   const { canvasState, setActiveCell } = useContext(ComposerContext);
   const { setCenter } = useReactFlow();
   const relationNames = new Set(
@@ -98,7 +146,7 @@ const EntityDetails: React.FC<{ shape: ServiceEntityShape }> = ({ shape }) => {
   const embeddedNames = new Set(
     (shape.serviceModel.embedded_entities || []).map((entity) => entity.name)
   );
-  const attributes = Object.entries(shape.instanceAttributes).filter(
+  const attributes = Object.entries(attributesSource ?? shape.instanceAttributes).filter(
     ([name]) => !embeddedNames.has(name) && name !== "id"
   );
 

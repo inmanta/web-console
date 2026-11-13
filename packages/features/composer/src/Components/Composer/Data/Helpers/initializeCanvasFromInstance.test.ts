@@ -351,4 +351,195 @@ describe("initializeCanvasFromInstance", () => {
     // Should still create the main shape, but not embedded entities
     expect(result.size).toBe(1);
   });
+
+  it("should resolve the lifecycle state of an existing instance, and give a placeholder none", () => {
+    const serviceModel = createMockServiceModel("TestService", {
+      lifecycle: {
+        initial_state: "start",
+        states: [
+          {
+            name: "up",
+            label: "success",
+            deleted: false,
+            export_resources: true,
+            purge_resources: false,
+          },
+        ],
+        transfers: [],
+      },
+    });
+    const existing = createMockInstance("instance-1", "TestService", {
+      state: "up",
+      active_attributes: { name: "test" },
+    });
+    const placeholder = createMockInstance("instance-2", "TestService", {
+      state: "creating",
+      active_attributes: null,
+    });
+    const serviceCatalog: ServiceModel[] = [serviceModel];
+
+    const existingShape = initializeCanvasFromInstance(
+      createMockInstanceWithRelations(existing),
+      serviceCatalog,
+      {}
+    ).get("instance-1");
+    const placeholderShape = initializeCanvasFromInstance(
+      createMockInstanceWithRelations(placeholder),
+      serviceCatalog,
+      {}
+    ).get("instance-2");
+
+    expect(existingShape?.instanceState).toMatchObject({ name: "up", label: "success" });
+    expect(placeholderShape?.instanceState).toBeNull();
+  });
+
+  it("should resolve a state the lifecycle doesn't define by its raw name", () => {
+    const serviceModel = createMockServiceModel("TestService");
+    const instance = createMockInstance("instance-1", "TestService", {
+      state: "unknown-state",
+      active_attributes: { name: "test" },
+    });
+
+    const result = initializeCanvasFromInstance(
+      createMockInstanceWithRelations(instance),
+      [serviceModel],
+      {}
+    );
+
+    expect(result.get("instance-1")?.instanceState).toEqual({ name: "unknown-state" });
+  });
+
+  it("should keep both attribute sets on an existing instance, editable on the candidate set", () => {
+    const serviceModel = createMockServiceModel("TestService");
+    const instance = createMockInstance("instance-1", "TestService", {
+      candidate_attributes: { name: "draft" },
+      active_attributes: { name: "deployed" },
+    });
+
+    const shape = initializeCanvasFromInstance(
+      createMockInstanceWithRelations(instance),
+      [serviceModel],
+      {}
+    ).get("instance-1");
+
+    expect(shape?.attributeSets).toEqual({
+      candidate: { name: "draft" },
+      active: { name: "deployed" },
+    });
+    expect(shape?.getEditableSet()).toBe("candidate");
+    expect(shape?.instanceAttributes).toEqual({ name: "draft" });
+  });
+
+  it("should keep only the active set, and edit it, when there is no candidate set", () => {
+    const serviceModel = createMockServiceModel("TestService");
+    const instance = createMockInstance("instance-1", "TestService", {
+      candidate_attributes: null,
+      active_attributes: { name: "deployed" },
+    });
+
+    const shape = initializeCanvasFromInstance(
+      createMockInstanceWithRelations(instance),
+      [serviceModel],
+      {}
+    ).get("instance-1");
+
+    expect(shape?.attributeSets).toEqual({ active: { name: "deployed" } });
+    expect(shape?.getEditableSet()).toBe("active");
+  });
+
+  it("should give a placeholder instance no attribute sets", () => {
+    const serviceModel = createMockServiceModel("TestService");
+    const instance = createMockInstance("instance-1", "TestService", {
+      state: "creating",
+      candidate_attributes: { name: "new" },
+      active_attributes: null,
+    });
+
+    const shape = initializeCanvasFromInstance(
+      createMockInstanceWithRelations(instance),
+      [serviceModel],
+      {}
+    ).get("instance-1");
+
+    expect(shape?.attributeSets).toBeNull();
+    expect(shape?.getEditableSet()).toBeNull();
+  });
+
+  it("should match each embedded entity's slice of the active set by its key attributes", () => {
+    const portEntity = {
+      name: "ports",
+      type: "Port",
+      lower_limit: 0,
+      upper_limit: null,
+      modifier: "rw" as const,
+      attributes: [],
+      key_attributes: ["name"],
+      embedded_entities: [],
+      inter_service_relations: [],
+    };
+    const serviceModel = createMockServiceModel("TestService", {
+      embedded_entities: [portEntity],
+    });
+    const instance = createMockInstance("instance-1", "TestService", {
+      // The candidate set lists the ports in another order than the active set
+      candidate_attributes: {
+        ports: [
+          { name: "beta", vlan: 20 },
+          { name: "alpha", vlan: 11 },
+        ],
+      },
+      active_attributes: {
+        ports: [
+          { name: "alpha", vlan: 10 },
+          { name: "beta", vlan: 20 },
+        ],
+      },
+    });
+
+    const result = initializeCanvasFromInstance(
+      createMockInstanceWithRelations(instance),
+      [serviceModel],
+      {}
+    );
+
+    const alpha = [...result.values()].find(
+      (shape) => shape.entityType === "embedded" && shape.instanceAttributes.name === "alpha"
+    );
+
+    expect(alpha?.attributeSets).toEqual({
+      candidate: { name: "alpha", vlan: 11 },
+      active: { name: "alpha", vlan: 10 },
+    });
+  });
+
+  it("should give an embedded entity only its candidate slice when the active set misses it", () => {
+    const portEntity = {
+      name: "ports",
+      type: "Port",
+      lower_limit: 0,
+      upper_limit: null,
+      modifier: "rw" as const,
+      attributes: [],
+      key_attributes: ["name"],
+      embedded_entities: [],
+      inter_service_relations: [],
+    };
+    const serviceModel = createMockServiceModel("TestService", {
+      embedded_entities: [portEntity],
+    });
+    const instance = createMockInstance("instance-1", "TestService", {
+      candidate_attributes: { ports: [{ name: "new-port" }] },
+      active_attributes: { other: true },
+    });
+
+    const result = initializeCanvasFromInstance(
+      createMockInstanceWithRelations(instance),
+      [serviceModel],
+      {}
+    );
+
+    const port = [...result.values()].find((shape) => shape.entityType === "embedded");
+
+    expect(port?.attributeSets).toEqual({ candidate: { name: "new-port" } });
+  });
 });

@@ -19,10 +19,22 @@ const stringAttribute = (name: string): AttributeModel => ({
   default_value: null,
 });
 
+const lifecycleState = (name: string, label: "success" | "danger") => ({
+  name,
+  label,
+  deleted: false,
+  export_resources: true,
+  purge_resources: false,
+});
+
 const service = (name: string, overrides: Partial<ServiceModel> = {}): ServiceModel => ({
   name,
   environment: "env",
-  lifecycle: { initial_state: "start", states: [], transfers: [] },
+  lifecycle: {
+    initial_state: "start",
+    states: [lifecycleState("up", "success"), lifecycleState("failed", "danger")],
+    transfers: [],
+  },
   attributes: [],
   config: {},
   embedded_entities: [],
@@ -81,7 +93,8 @@ export const serviceCatalog = [parentService, childService, standaloneService];
 export const inventoryInstance = (
   serviceModel: ServiceModel,
   id: string,
-  attributes: Record<string, unknown>
+  attributes: Record<string, unknown>,
+  overrides: Partial<ServiceInstanceModel> = {}
 ): ServiceInstanceModel => ({
   id,
   service_identity_attribute_value: String(attributes.name),
@@ -98,4 +111,5 @@ export const inventoryInstance = (
   callback: [],
   deleted: false,
   referenced_by: [],
+  ...overrides,
 });
