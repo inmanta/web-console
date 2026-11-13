@@ -25,6 +25,7 @@ import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceIns
 import { ComposerContext, PaletteItem } from "../Data/Context";
 import { getUnavailableInventoryItems } from "../Data/Helpers";
 import { useAddPaletteItem } from "../Data/Hooks";
+import { EntityShapeType } from "../Data/ServiceEntityShape";
 import { LEFT_SIDEBAR_WIDTH, SHAPE_WIDTH } from "../config";
 import { EntityIcon } from "./EntityIcon";
 import { entityColorVariables } from "./entityColors";
@@ -148,10 +149,10 @@ const buildInventoryGroups = (
   });
 
 /**
- * The kind of entity a row adds: inventory rows add existing services.
+ * The kind of card a row adds: an inventory instance comes on the canvas as a read-only relation.
  */
-const getRowKind = (row: PaletteRow): "core" | "embedded" =>
-  row.item.kind === "new" ? row.item.entityType : "core";
+const getRowKind = (row: PaletteRow): EntityShapeType =>
+  row.item.kind === "new" ? row.item.entityType : "relation";
 
 const filterGroups = (groups: PaletteGroup[], query: string): PaletteGroup[] => {
   const needle = query.trim().toLowerCase();
