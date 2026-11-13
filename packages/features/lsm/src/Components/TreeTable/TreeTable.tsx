@@ -11,7 +11,7 @@ import { Tbody, Thead, Tr, Th, Table } from "@patternfly/react-table";
 import { words } from "@inmanta/web-console-core";
 import { ColumnHeaders } from "./ColumnHeaders";
 import { TreeTableHelper } from "./Helpers/TreeTableHelper";
-import { TreeRowView, Indent } from "./TreeRow";
+import { TreeRowView } from "./TreeRow";
 
 interface Props {
   treeTableHelper: TreeTableHelper;
@@ -24,13 +24,11 @@ export const TreeTable: React.FC<Props> = ({ treeTableHelper }) => {
   const { rows, closeAll, openAll } = treeTableHelper.createRows(expansionState, setExpansionState);
 
   return (
-    <Table variant="compact">
+    <Table isTreeTable gridBreakPoint="" variant="compact">
       <Thead>
         <Tr>
           <Th key={firstColumn} width={30}>
-            <Indent level={0} noToggle>
-              {firstColumn}
-            </Indent>
+            {firstColumn}
           </Th>
           <ColumnHeaders columns={columns} />
           <Th>
@@ -65,8 +63,8 @@ export const TreeTable: React.FC<Props> = ({ treeTableHelper }) => {
         </Tr>
       </Thead>
       <Tbody>
-        {rows.map((row) => (
-          <TreeRowView key={row.id} row={row} />
+        {rows.map((row, rowIndex) => (
+          <TreeRowView key={row.id} row={row} rowIndex={rowIndex} />
         ))}
       </Tbody>
     </Table>
