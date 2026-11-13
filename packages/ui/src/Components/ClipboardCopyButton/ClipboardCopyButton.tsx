@@ -40,7 +40,7 @@ export const ClipboardCopyButton: React.FC<Props> = ({
   const tooltipText = copied ? words("copy.feedback") : tooltipContent || words("copy");
 
   return (
-    <WidthLimitedTooltip content={<div>{tooltipText}</div>} entryDelay={200}>
+    <WidthLimitedTooltip content={<div>{tooltipText}</div>}>
       <Button
         icon={<CopyIcon />}
         {...props}

@@ -102,12 +102,7 @@ export const CopyMultiOptions: React.FC<Props> = ({
       >
         <DropdownList>
           {options.map((value, index) => (
-            <Tooltip
-              key={index}
-              content={<div>{tooltipText}</div>}
-              entryDelay={200}
-              position="right"
-            >
+            <Tooltip key={index} content={<div>{tooltipText}</div>} position="right">
               <DropdownItem value={value}>{value}</DropdownItem>
             </Tooltip>
           ))}

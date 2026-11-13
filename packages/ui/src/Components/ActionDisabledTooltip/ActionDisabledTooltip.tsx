@@ -17,7 +17,7 @@ export const ActionDisabledTooltip: React.FC<React.PropsWithChildren<Props>> = (
 }) => {
   if (isDisabled) {
     return (
-      <Tooltip entryDelay={200} content={tooltipContent}>
+      <Tooltip content={tooltipContent}>
         <CursorNotAllowedContainer data-testid={testingId}>{children}</CursorNotAllowedContainer>
       </Tooltip>
     );
