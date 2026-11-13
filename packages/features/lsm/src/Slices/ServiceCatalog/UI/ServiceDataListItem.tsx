@@ -25,7 +25,7 @@ import { Link } from "@inmanta/web-console-ui/Components/Link";
 import { OwnedServicesNotSuccessLabel } from "./OwnedServicesNotSuccessLabel";
 import { ServiceActions } from "./ServiceActions";
 import { formatDescriptionLine, getOwnedServicesStateCounts, getServiceIconName } from "./helpers";
-import { CatalogService, serviceIconFixedWidthStyle } from "./types";
+import { CatalogService } from "./types";
 
 interface Props {
   service: CatalogService;
@@ -97,7 +97,6 @@ export const ServiceDataListItem: React.FC<Props> = ({
                       <DynamicFAIcon
                         icon={getServiceIconName(service)}
                         isInline
-                        style={serviceIconFixedWidthStyle}
                         color="var(--pf-t--global--icon--color--brand--default)"
                         attr={{ "aria-hidden": true }}
                       />
@@ -217,6 +216,10 @@ export const ServiceDataListItem: React.FC<Props> = ({
  * A brand-tinted square behind the service icon, as in the design. PatternFly's Icon has no
  * background, so the size and tint are set on its own variables. `&&` lets them win over
  * PatternFly's `pf-v6-c-icon` rule.
+ *
+ * The glyph box is the size of Font Awesome's own fixed-width icons. Font Awesome glyphs are 1em
+ * tall and at most 1.25em wide, so every glyph fills the icon height instead of the wide ones
+ * shrinking to fit a 1em square.
  */
 const ServiceIconTile = styled(Icon)`
   && {
@@ -229,6 +232,11 @@ const ServiceIconTile = styled(Icon)`
 
     border-radius: var(--pf-t--global--border--radius--small);
     background-color: var(--pf-t--global--color--brand--subtle--default);
+
+    svg {
+      width: 1.25em;
+      height: 1em;
+    }
   }
 `;
 

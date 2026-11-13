@@ -1,4 +1,3 @@
-import { CSSProperties } from "react";
 import { ResolvedEntityAnnotations, ServiceModel } from "@inmanta/web-console-core";
 import {
   StateCount,
@@ -96,10 +95,3 @@ export const ownerServiceFallbackIconName = "FaFolder";
 
 /** The icon of a service that owns no other services and has no `web_icon`. */
 export const serviceFallbackIconName = "FaCube";
-
-/**
- * The glyph box of a service icon tile, like Font Awesome's own fixed-width icons. Font Awesome
- * glyphs are 1em tall and at most 1.25em wide, so every glyph fills the icon height instead of
- * the wide ones shrinking to fit a 1em square.
- */
-export const serviceIconFixedWidthStyle: CSSProperties = { width: "1.25em", height: "1em" };
