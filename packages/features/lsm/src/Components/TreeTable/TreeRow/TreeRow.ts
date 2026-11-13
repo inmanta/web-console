@@ -1,15 +1,9 @@
-import { AttributeAnnotations } from "@inmanta/web-console-core";
-
 export type TreeRow = Flat | Root | Branch | Leaf;
 
 export interface Cell {
   label: string;
   value: string;
-  annotations?: AttributeAnnotations;
   hasRelation?: boolean;
-  serviceName?: string;
-  modifier?: string;
-  warning?: string;
 }
 
 interface Flat {
@@ -17,7 +11,6 @@ interface Flat {
   id: string;
   primaryCell: Cell;
   valueCells: Cell[];
-  type?: string;
 }
 
 interface Root {
@@ -45,12 +38,4 @@ interface Leaf {
   level: number;
   primaryCell: Cell;
   valueCells: Cell[];
-  type?: string;
-}
-
-export function isRowOfMultipleValues(row: Flat | Leaf): boolean {
-  const values = row.valueCells.map(({ value }) => value);
-  const nonEmptyValues = values.filter((value) => value.length > 0);
-
-  return nonEmptyValues.length > 1;
 }

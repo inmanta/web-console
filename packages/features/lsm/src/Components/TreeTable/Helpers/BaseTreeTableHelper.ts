@@ -1,22 +1,19 @@
-import { Attributes } from "@inmanta/web-console-core";
-import { AttributeTree } from "@inmanta/web-console-feature-lsm/Components/TreeTable/types";
+import { CatalogAttributeTree } from "@inmanta/web-console-feature-lsm/Components/TreeTable/types";
 import { Cell, TreeRow } from "../TreeRow/TreeRow";
 import { TreeRowCreator } from "../TreeRow/TreeRowCreator";
-import { TreeTableHelper } from "../types/TreeTableHelper";
 import { AttributeHelper } from "./AttributeHelper";
-import { MultiAttributeNode } from "./AttributeNode";
+import { AttributeNode } from "./AttributeNode";
 import { PathHelper } from "./PathHelper";
 import { ExpansionState, TreeExpansionManager } from "./TreeExpansionManager";
+import { TreeTableHelper } from "./TreeTableHelper";
 
-export abstract class BaseTreeTableHelper<A extends AttributeTree> implements TreeTableHelper {
+export abstract class BaseTreeTableHelper implements TreeTableHelper {
   constructor(
     private readonly pathHelper: PathHelper,
     private readonly expansionManager: TreeExpansionManager,
-    private readonly attributeHelper: AttributeHelper<A>,
-    protected readonly attributes: A["source"],
-    private readonly extractValues: (
-      node: Extract<MultiAttributeNode<A["target"]>, { kind: "Leaf" }>
-    ) => Cell[]
+    private readonly attributeHelper: AttributeHelper,
+    protected readonly attributes: CatalogAttributeTree["source"],
+    private readonly extractValues: (node: Extract<AttributeNode, { kind: "Leaf" }>) => Cell[]
   ) {}
 
   abstract getColumns(): string[];
@@ -39,31 +36,20 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree> implements Tr
 
     const isChildExpanded = (path: string) => this.expansionManager.get(expansionState, path);
 
-    const treeRowCreator = new TreeRowCreator<A["target"]>(
+    const treeRowCreator = new TreeRowCreator(
       this.pathHelper,
       isExpandedByParent,
       isChildExpanded,
       createOnToggle,
-      this.extractValues,
-      this.attributes as Attributes
+      this.extractValues
     );
 
-    const nodes = this.attributeHelper.getMultiAttributeNodes(this.attributes);
+    const nodes = this.attributeHelper.getAttributeNodes(this.attributes);
 
     return {
-      rows: Object.entries(nodes).map(([key, node]) =>
-        treeRowCreator.create(key, node, this.attributeHelper.getAttributeAnnotations(key))
-      ),
+      rows: Object.entries(nodes).map(([key, node]) => treeRowCreator.create(key, node)),
       openAll: createOpenAll,
       closeAll: createCloseAll,
     };
-  }
-
-  getEmptyAttributeSets(): string[] {
-    return [];
-  }
-
-  getAttributes(): Attributes {
-    return this.attributes as Attributes;
   }
 }

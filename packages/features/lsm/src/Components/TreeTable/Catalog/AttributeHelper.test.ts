@@ -31,7 +31,7 @@ test("AttributeHelper getPaths", () => {
   expect(paths).toEqual(["a", "a.b", "a.c", "a.c.d", "e", "f", "f.g"]);
 });
 
-test("AttributeHelper getMultiAttributeNodes", () => {
+test("AttributeHelper getAttributeNodes", () => {
   const attributeHelper = new CatalogAttributeHelper(".");
   const service = {
     attributes: [{ name: "e", type: "string", description: "" }],
@@ -58,7 +58,7 @@ test("AttributeHelper getMultiAttributeNodes", () => {
       },
     ],
   };
-  const nodes = attributeHelper.getMultiAttributeNodes(service);
+  const nodes = attributeHelper.getAttributeNodes(service);
 
   expect(nodes).toEqual({
     a: { kind: "Branch" },
