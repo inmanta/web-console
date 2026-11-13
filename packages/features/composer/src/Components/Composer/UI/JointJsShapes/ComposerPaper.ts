@@ -259,9 +259,18 @@ export class ComposerPaper {
           missingConnections.map(({ entityType, name }) => ({ entityType, name }))
         );
         const connectionLines = missingConnections.map((conn) => {
+          const relatedServiceModel =
+            conn.type === "embedded"
+              ? undefined
+              : this._serviceCatalogRef.current.find(
+                  (serviceModel) => serviceModel.name === conn.entityType
+                );
+          const entityDisplayName = relatedServiceModel
+            ? ServiceEntityShape.getDisplayName(relatedServiceModel)
+            : conn.entityType;
           const displayName =
-            conn.entityType && conn.entityType !== conn.name
-              ? `${conn.name} (${conn.entityType})`
+            entityDisplayName && entityDisplayName !== conn.name
+              ? `${conn.name} (${entityDisplayName})`
               : conn.name;
           const line =
             conn.required === 1
