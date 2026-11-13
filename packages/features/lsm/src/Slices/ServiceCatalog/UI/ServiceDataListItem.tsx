@@ -25,7 +25,7 @@ import { Link } from "@inmanta/web-console-ui/Components/Link";
 import { OwnedServicesNotSuccessLabel } from "./OwnedServicesNotSuccessLabel";
 import { ServiceActions } from "./ServiceActions";
 import { formatDescriptionLine, getOwnedServicesStateCounts, getServiceIconName } from "./helpers";
-import { CatalogService } from "./types";
+import { CatalogService, serviceIconFixedWidthStyle } from "./types";
 
 interface Props {
   service: CatalogService;
@@ -97,6 +97,7 @@ export const ServiceDataListItem: React.FC<Props> = ({
                       <DynamicFAIcon
                         icon={getServiceIconName(service)}
                         isInline
+                        style={serviceIconFixedWidthStyle}
                         color="var(--pf-t--global--icon--color--brand--default)"
                         attr={{ "aria-hidden": true }}
                       />

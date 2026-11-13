@@ -23,7 +23,11 @@ import {
   vpn,
 } from "./Mock";
 import { createCatalogSections } from "./helpers";
-import { ownerServiceFallbackIconName, serviceFallbackIconName } from "./types";
+import {
+  ownerServiceFallbackIconName,
+  serviceFallbackIconName,
+  serviceIconFixedWidthStyle,
+} from "./types";
 
 const axe = configureAxe({
   rules: {
@@ -239,6 +243,15 @@ test("GIVEN CatalogSections WHEN some services have a web_icon THEN the others g
   expect(
     within(screen.getByTestId(linuxVm.name + "-item")).getByTestId(serviceFallbackIconName)
   ).toBeInTheDocument();
+});
+
+test("GIVEN CatalogSections WHEN a service has a web_icon THEN its glyph fills the full-height fixed-width box", async () => {
+  render(Component([vpn]));
+
+  const svg = screen.getByTestId(String(vpn.entity_annotations?.web_icon)).querySelector("svg");
+
+  expect(svg?.style.width).toBe(serviceIconFixedWidthStyle.width);
+  expect(svg?.style.height).toBe(serviceIconFixedWidthStyle.height);
 });
 
 test("GIVEN CatalogSections WHEN no service has a web_icon THEN no row shows an icon", async () => {

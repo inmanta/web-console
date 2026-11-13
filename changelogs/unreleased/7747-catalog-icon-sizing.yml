@@ -1,0 +1,5 @@
+description: Wide icons in the service catalog tiles are now as tall as the others.
+issue-nr: 7747
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}
