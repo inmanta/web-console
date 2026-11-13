@@ -1,144 +1,12 @@
-import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Attributes, EntityLike, ServiceModel, words } from "@inmanta/web-console-core";
+import { EntityLike, words } from "@inmanta/web-console-core";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { CatalogAttributeHelper, CatalogTreeTableHelper } from "./Catalog";
 import { PathHelper, TreeExpansionManager } from "./Helpers";
-import { InventoryAttributeHelper } from "./Inventory";
-import { InventoryTreeTableHelper } from "./Inventory/TreeTableHelper";
 import { TreeTable } from "./TreeTable";
-import type { Mock } from "vitest";
-
-function inventorySetup(attributes: Attributes, service?: ServiceModel, setTab?: Mock) {
-  const component = (
-    <QueryClientProvider client={testClient}>
-      <MockedDependencyProvider>
-        <TreeTable
-          treeTableHelper={
-            new InventoryTreeTableHelper(
-              new PathHelper("$"),
-              new TreeExpansionManager("$"),
-              new InventoryAttributeHelper("$", service),
-              attributes
-            )
-          }
-          setTab={setTab}
-          version={1}
-        />
-      </MockedDependencyProvider>
-    </QueryClientProvider>
-  );
-
-  return component;
-}
-test("TreeTable 1st level of nested property can be expanded", async () => {
-  // Arrange
-  render(
-    inventorySetup({
-      candidate: null,
-      active: { a: { b: { c: "d" } } },
-      rollback: null,
-    })
-  );
-  expect(screen.queryByRole("row", { name: "Row-a$b" })).not.toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "Toggle-a" })).toHaveAttribute(
-    "aria-expanded",
-    "false"
-  );
-
-  // Act
-  fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
-
-  // Assert
-  expect(screen.getByRole("row", { name: "Row-a$b" })).toBeVisible();
-  expect(screen.getByRole("button", { name: "Toggle-a" })).toHaveAttribute("aria-expanded", "true");
-});
-
-test("TreeTable with 1st level of attributes containing annotations should not render a value but be a link to the right tab.", async () => {
-  const serviceModel: ServiceModel = {
-    name: "service",
-    environment: "env",
-    attributes: [
-      {
-        name: "documentation",
-        type: "string",
-        description: "description",
-        modifier: "rw",
-        default_value: "",
-        default_value_set: false,
-        attribute_annotations: {
-          web_presentation: "documentation",
-          web_content_type: "text/markdown",
-          web_icon: "FaBook",
-          web_title: "Documentation",
-        },
-      },
-    ],
-    embedded_entities: [],
-    inter_service_relations: [],
-    config: {},
-    lifecycle: {
-      initial_state: "initial",
-      states: [],
-      transfers: [],
-    },
-    owner: null,
-    owned_entities: [],
-  };
-
-  // mock the setTab function
-  const setTab = vi.fn() as Mock;
-
-  render(
-    inventorySetup(
-      {
-        candidate: null,
-        active: {
-          documentation: "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```",
-        },
-        rollback: null,
-      },
-      serviceModel
-    ),
-    setTab()
-  );
-
-  // expect to find a row with a link to the documentation tab
-  const documentationButton = screen.getByRole("button", {
-    name: "documentation",
-  });
-
-  expect(documentationButton).toBeInTheDocument();
-
-  act(() => {
-    fireEvent.click(documentationButton);
-  });
-  // expect the setTab from the TreeTable component method to have been called
-  expect(setTab).toHaveBeenCalled();
-});
-
-test("TreeTable 2nd level of nested property can be expanded", async () => {
-  // Arrange
-  render(
-    inventorySetup({
-      candidate: null,
-      active: { a: { b: { c: "d" } } },
-      rollback: null,
-    })
-  );
-  fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
-
-  expect(screen.queryByRole("row", { name: "Row-a$b$c" })).not.toBeInTheDocument();
-
-  // Act
-  fireEvent.click(screen.getByRole("button", { name: "Toggle-a$b" }));
-
-  // Assert
-  expect(screen.getByRole("row", { name: "Row-a$b$c" })).toBeVisible();
-});
 
 function catalogSetup(service: EntityLike) {
   const component = (
@@ -153,7 +21,6 @@ function catalogSetup(service: EntityLike) {
               service
             )
           }
-          version={1}
         />
       </MockedDependencyProvider>
     </QueryClientProvider>
@@ -161,6 +28,7 @@ function catalogSetup(service: EntityLike) {
 
   return component;
 }
+
 test("TreeTable with catalog entries can be expanded", async () => {
   const service = {
     attributes: [],
@@ -182,8 +50,17 @@ test("TreeTable with catalog entries can be expanded", async () => {
   };
 
   render(catalogSetup(service));
+
+  expect(screen.queryByRole("row", { name: "Row-a$c" })).not.toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Toggle-a" })).toHaveAttribute(
+    "aria-expanded",
+    "false"
+  );
+
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
 
+  expect(screen.getByRole("row", { name: "Row-a$c" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Toggle-a" })).toHaveAttribute("aria-expanded", "true");
   expect(screen.queryByRole("row", { name: "Row-a$c$d" })).not.toBeInTheDocument();
 
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a$c" }));

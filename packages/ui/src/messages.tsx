@@ -88,9 +88,6 @@ export const uiMessages = {
    */
   "copy.feedback": "Copied to clipboard",
   "attributes.emptyString": "empty string",
-  "attributesTab.active": "Active",
-  "attributesTab.candidate": "Candidate",
-  "attributesTab.rollback": "Rollback",
   "attribute.value.copy": "Copy full value to clipboard",
   "empty.title": "There is nothing here",
   "empty.filtered.title": "No results found",

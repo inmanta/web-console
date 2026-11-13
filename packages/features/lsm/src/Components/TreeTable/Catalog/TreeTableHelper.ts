@@ -6,7 +6,7 @@ import { extractCatalogValues } from "@inmanta/web-console-feature-lsm/Component
 import { CatalogAttributeTree } from "@inmanta/web-console-feature-lsm/Components/TreeTable/types";
 import { BaseTreeTableHelper } from "../Helpers/BaseTreeTableHelper";
 
-export class CatalogTreeTableHelper extends BaseTreeTableHelper<CatalogAttributeTree> {
+export class CatalogTreeTableHelper extends BaseTreeTableHelper {
   private readonly columns = [
     words("name"),
     words("type"),
@@ -17,7 +17,7 @@ export class CatalogTreeTableHelper extends BaseTreeTableHelper<CatalogAttribute
   constructor(
     pathHelper: PathHelper,
     expansionManager: TreeExpansionManager,
-    attributeHelper: AttributeHelper<CatalogAttributeTree>,
+    attributeHelper: AttributeHelper,
     attributes: CatalogAttributeTree["source"]
   ) {
     super(pathHelper, expansionManager, attributeHelper, attributes, extractCatalogValues);

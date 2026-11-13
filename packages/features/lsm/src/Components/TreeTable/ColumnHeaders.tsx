@@ -7,13 +7,12 @@ import { ColumnExpansionHelper } from "./Helpers";
 
 interface Props {
   columns: string[];
-  emptyColumns: string[];
 }
 
-export const ColumnHeaders: React.FC<Props> = ({ columns, emptyColumns }) => {
+export const ColumnHeaders: React.FC<Props> = ({ columns }) => {
   const columnExpansionHelper = new ColumnExpansionHelper(60, columns.length, 10);
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
-    columnExpansionHelper.getDefaultState(columns, emptyColumns)
+    columnExpansionHelper.getDefaultState(columns)
   );
 
   return (
@@ -26,7 +25,7 @@ export const ColumnHeaders: React.FC<Props> = ({ columns, emptyColumns }) => {
           isExpanded={!columnExpansionHelper.isExpanded(columnWidths[column])}
           onClick={() =>
             columnExpansionHelper.isExpanded(columnWidths[column])
-              ? setColumnWidths(columnExpansionHelper.getDefaultState(columns, emptyColumns))
+              ? setColumnWidths(columnExpansionHelper.getDefaultState(columns))
               : setColumnWidths(columnExpansionHelper.expandColumn(columnWidths, column))
           }
         />

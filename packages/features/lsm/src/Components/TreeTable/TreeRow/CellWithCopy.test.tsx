@@ -8,7 +8,7 @@ import { MockedDependencyProvider, ServiceInstance } from "@inmanta/web-console-
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
-import { CellWithCopy } from "./CellWithCopy";
+import { CellWithCopy, MultiLinkCell } from "./CellWithCopy";
 
 function setup(props) {
   const onClickFn = vi.fn();
@@ -34,7 +34,48 @@ function setup(props) {
   return { component, onClickFn };
 }
 
+function setupMultiLinkCell(props: { value: string; serviceName: string }) {
+  const onClickFn = vi.fn();
+
+  const component = (
+    <QueryClientProvider client={testClient}>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
+          <MultiLinkCell {...props} onClick={onClickFn} />
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
+    </QueryClientProvider>
+  );
+
+  return { component, onClickFn };
+}
+
 describe("CellWithCopy", () => {
+  test("Given CellWithCopy When a cell has a simple value only Then it is shown", async () => {
+    const props = { label: "attribute", value: "someValue" };
+    const { component } = setup(props);
+
+    render(component);
+
+    expect(await screen.findByText(props.value)).toBeVisible();
+  });
+
+  test("Given CellWithCopy When a cell has on click Then it is rendered as a link", async () => {
+    const props = { label: "attribute", value: "someValue", hasRelation: true };
+    const { component, onClickFn } = setup(props);
+
+    render(component);
+    const cell = await screen.findByText(props.value);
+
+    expect(cell).toBeVisible();
+
+    await userEvent.click(cell);
+
+    expect(onClickFn).toHaveBeenCalledWith(props.value);
+  });
+});
+
+describe("MultiLinkCell", () => {
   const server = setupTestServer(
     http.get("/lsm/v1/service_inventory/test_service/someValue", () => {
       return HttpResponse.json({
@@ -65,37 +106,9 @@ describe("CellWithCopy", () => {
     server.close();
   });
 
-  test("Given CellWithCopy When a cell has a simple value only Then it is shown", async () => {
-    const props = { label: "attribute", value: "someValue" };
-    const { component } = setup(props);
-
-    render(component);
-
-    expect(await screen.findByText(props.value)).toBeVisible();
-  });
-
-  test("Given CellWithCopy When a cell has on click Then it is rendered as a link", async () => {
-    const props = { label: "attribute", value: "someValue", hasRelation: true };
-    const { component, onClickFn } = setup(props);
-
-    render(component);
-    const cell = await screen.findByText(props.value);
-
-    expect(cell).toBeVisible();
-
-    await userEvent.click(cell);
-
-    expect(onClickFn).toHaveBeenCalledWith(props.value);
-  });
-
-  test("Given CellWithCopy When a cell has entity and on click Then it is rendered as a link", async () => {
-    const props = {
-      label: "attribute",
-      value: "someValue",
-      hasRelation: true,
-      serviceName: "test_service",
-    };
-    const { component, onClickFn } = setup(props);
+  test("Given MultiLinkCell When a cell has entity and on click Then it is rendered as a link", async () => {
+    const props = { value: "someValue", serviceName: "test_service" };
+    const { component, onClickFn } = setupMultiLinkCell(props);
 
     render(component);
 
@@ -108,15 +121,10 @@ describe("CellWithCopy", () => {
     expect(onClickFn).toHaveBeenCalledWith(props.value, props.serviceName, props.value);
   });
 
-  test("Given CellWithCopy When a cell has entity, multiple values and on click Then multiple links are rendered", async () => {
+  test("Given MultiLinkCell When a cell has entity, multiple values and on click Then multiple links are rendered", async () => {
     const [someValue, someOtherValue] = ["someValue", "someOtherValue"];
-    const props = {
-      label: "attribute",
-      value: "someValue,someOtherValue",
-      hasRelation: true,
-      serviceName: "test_service",
-    };
-    const { component, onClickFn } = setup(props);
+    const props = { value: "someValue,someOtherValue", serviceName: "test_service" };
+    const { component, onClickFn } = setupMultiLinkCell(props);
 
     render(component);
 

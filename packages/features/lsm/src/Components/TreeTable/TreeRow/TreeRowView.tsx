@@ -1,11 +1,5 @@
-import React, { FC } from "react";
-import { Button, Icon, Split, SplitItem, Tooltip } from "@patternfly/react-core";
-import { ExclamationTriangleIcon, InfoAltIcon } from "@patternfly/react-icons";
+import React from "react";
 import { Tr, Td } from "@patternfly/react-table";
-import styled from "styled-components";
-import { ParsedNumber, Attributes, AttributeAnnotations } from "@inmanta/web-console-core";
-import { ClipboardCopyButton } from "@inmanta/web-console-ui/Components/ClipboardCopyButton";
-import { RowHoverReveal } from "@inmanta/web-console-ui/Components/RowHoverReveal";
 import { CellWithCopy } from "./CellWithCopy";
 import { Indent } from "./Indent";
 import { TreeRow } from "./TreeRow";
@@ -16,57 +10,35 @@ import { TreeRowToggle } from "./TreeRowToggle";
  */
 interface RowProps {
   row: TreeRow;
-  id: string;
-  serviceEntity: string;
-  version: ParsedNumber;
-  showExpertMode: boolean;
-  attributes: Attributes;
-  annotations?: AttributeAnnotations;
-  setTab?: (tab: string) => void;
 }
-
-const warningMessage =
-  "This attribute migrated to a different/new Type and can’t be displayed properly into the table. You can copy the object for further comparison through the Copy button. It will store the value of each state in your clipboard.";
 
 /**
  * TreeRowView is a component that renders a row in the tree table for the Attributes.
  *
  * @param {RowProps} props - The props of the component.
  *  @prop {TreeRow} row - The row object.
- *  @prop {AttributeAnnotations} annotations - The annotations object, optional.
- *  @prop {function} setTab - The callback for setting the active tab, optional.
  *
  * @returns The tree row view component.
  */
-export const TreeRowView: React.FC<RowProps> = ({ row, annotations, setTab = () => {} }) => {
+export const TreeRowView: React.FC<RowProps> = ({ row }) => {
   switch (row.kind) {
     case "Flat":
       return (
         <Tr aria-label={`Row-${row.id}`}>
           <Td dataLabel={row.primaryCell.label}>
             <Indent level={0} noToggle>
-              {annotations?.web_presentation !== "documentation" ? (
-                row.primaryCell.value
-              ) : (
-                <DocumentationCell
-                  setTab={setTab}
-                  value={row.primaryCell.value}
-                  tabKey={annotations?.web_title}
-                />
-              )}
+              {row.primaryCell.value}
             </Indent>
           </Td>
-          {annotations?.web_presentation !== "documentation" &&
-            row.valueCells.map(({ label, value, hasRelation, serviceName }) => (
-              <CellWithCopy
-                label={label}
-                value={label === "description" && value === "null" ? "" : value}
-                hasRelation={hasRelation}
-                serviceName={serviceName}
-                className={"pf-v6-c-truncate"}
-                key={`${label}-${value}`}
-              />
-            ))}
+          {row.valueCells.map(({ label, value, hasRelation }) => (
+            <CellWithCopy
+              label={label}
+              value={label === "description" && value === "null" ? "" : value}
+              hasRelation={hasRelation}
+              className={"pf-v6-c-truncate"}
+              key={`${label}-${value}`}
+            />
+          ))}
         </Tr>
       );
 
@@ -75,32 +47,12 @@ export const TreeRowView: React.FC<RowProps> = ({ row, annotations, setTab = () 
         <Tr aria-label={`Row-${row.id}`}>
           <Td dataLabel="name" colSpan={4}>
             <Indent level={0}>
-              <Split>
-                <SplitItem isFilled>
-                  <TreeRowToggle
-                    isExpanded={row.isChildExpanded}
-                    onToggle={row.onToggle}
-                    aria-label={`Toggle-${row.id}`}
-                  />
-                  {row.primaryCell.label === "description" && row.primaryCell.value === "null"
-                    ? ""
-                    : row.primaryCell.value}
-                  {row.primaryCell.warning ? (
-                    <Spacer>
-                      <Tooltip content={warningMessage}>
-                        <Icon status="warning">
-                          <ExclamationTriangleIcon />
-                        </Icon>
-                      </Tooltip>
-                      <RowHoverReveal>
-                        <ClipboardCopyButton value={row.primaryCell.warning} />
-                      </RowHoverReveal>
-                    </Spacer>
-                  ) : (
-                    ""
-                  )}
-                </SplitItem>
-              </Split>
+              <TreeRowToggle
+                isExpanded={row.isChildExpanded}
+                onToggle={row.onToggle}
+                aria-label={`Toggle-${row.id}`}
+              />
+              {row.primaryCell.value}
             </Indent>
           </Td>
         </Tr>
@@ -116,23 +68,7 @@ export const TreeRowView: React.FC<RowProps> = ({ row, annotations, setTab = () 
                 onToggle={row.onToggle}
                 aria-label={`Toggle-${row.id}`}
               />
-              {row.primaryCell.label === "description" && row.primaryCell.value === "null"
-                ? ""
-                : row.primaryCell.value}
-              {row.primaryCell.warning ? (
-                <Spacer>
-                  <Tooltip content={warningMessage}>
-                    <Icon status="warning">
-                      <ExclamationTriangleIcon />
-                    </Icon>
-                  </Tooltip>
-                  <RowHoverReveal>
-                    <ClipboardCopyButton value={row.primaryCell.warning} />
-                  </RowHoverReveal>
-                </Spacer>
-              ) : (
-                ""
-              )}
+              {row.primaryCell.value}
             </Indent>
           </Td>
         </Tr>
@@ -146,12 +82,11 @@ export const TreeRowView: React.FC<RowProps> = ({ row, annotations, setTab = () 
               {row.primaryCell.value}
             </Indent>
           </Td>
-          {row.valueCells.map(({ label, value, hasRelation, serviceName }) => (
+          {row.valueCells.map(({ label, value, hasRelation }) => (
             <CellWithCopy
               label={label}
               value={label === "description" && value === "null" ? "" : value}
               hasRelation={hasRelation}
-              serviceName={serviceName}
               className={"pf-v6-c-truncate"}
               key={`${label}-${value}`}
             />
@@ -160,39 +95,3 @@ export const TreeRowView: React.FC<RowProps> = ({ row, annotations, setTab = () 
       );
   }
 };
-
-/**
- * DocumentationCellProps is an interface that defines the props of the DocumentationCell component.
- */
-interface DocumentationCellProps {
-  value: string;
-  tabKey: string | undefined;
-  setTab: (tab: string) => void;
-}
-
-/**
- * DocumentationCell is a component that renders a cell with a documentation button.
- * This is meant to display attributes that are forwarding to a documentation tab.
- *
- * @param {DocumentationCellProps} props - The props of the component.
- *  @prop {string} value - The value of the cell.
- *  @prop {string} tabKey - The key of the tab.
- *  @prop {function} setTab - The callback for setting the active tab.
- *
- * @returns The documentation cell component.
- */
-const DocumentationCell: FC<DocumentationCellProps> = ({ value, tabKey = "", setTab }) => (
-  <Button
-    variant="link"
-    icon={<InfoAltIcon />}
-    isInline
-    title={value}
-    onClick={() => setTab(tabKey)}
-  >
-    {value}
-  </Button>
-);
-
-const Spacer = styled.span`
-  padding-left: 10px;
-`;
