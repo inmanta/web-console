@@ -1,5 +1,5 @@
 description: |
-  The Instance Composer has a new canvas that no longer needs the licensed JointJS+ library. Cards name each instance, show its service icon, lifecycle state and what is missing, relations are drawn by dragging from a card's link action, and an Arrange action lays out complex relation trees. The palette groups services like the service catalog, and the details panel offers an instance's candidate and active attribute sets, editing only the one the composer works on.
+  The Instance Composer has a new canvas that no longer needs the licensed JointJS+ library. Cards name each instance, show its service icon, lifecycle state and what is missing, relations are drawn by dragging from a card's link action, and an Arrange action lays out complex relation trees. The palette groups services like the service catalog, and the details panel offers an instance's candidate and active attribute sets, editing only the one the composer works on. An existing instance can be removed from the canvas without deleting it: it leaves the order, with its embedded entities, and the instance itself is kept. Deleting permanently stages the delete on the canvas instead of hiding the card: the marked card shows what the deploy will delete, and the delete can be undone.
 change-type: minor
 destination-branches: [master, iso9]
 sections:

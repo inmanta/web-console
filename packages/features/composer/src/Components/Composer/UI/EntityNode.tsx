@@ -102,12 +102,14 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
   };
 
   const messagesId = `entity-${id}-problems`;
-  const showMessages =
-    validationMessages.length > 0 && !linkSourceId && (isHovered || isIssuesFocused);
+  // A card staged to be deleted only orders its delete, so its problems don't show
+  const showsProblems = validationMessages.length > 0 && !shape.isMarkedForDeletion;
+  const showMessages = showsProblems && !linkSourceId && (isHovered || isIssuesFocused);
 
   const classNames = [
     selected && "is-selected",
-    validationMessages.length > 0 && "is-invalid",
+    validationMessages.length > 0 && !shape.isMarkedForDeletion && "is-invalid",
+    shape.isMarkedForDeletion && "is-marked-for-deletion",
     hiddenCount > 0 && "is-collapsed",
     isLinkTarget && "is-link-target",
     linkSourceId && !isLinkTarget && !isLinkSource && "is-dimmed",
@@ -160,7 +162,8 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
       <Card
         className="entity-card"
         data-testid={`entity-${displayName}`}
-        data-invalid={validationMessages.length > 0}
+        data-invalid={showsProblems}
+        data-marked-for-deletion={shape.isMarkedForDeletion}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -177,7 +180,12 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
             />
           </div>
           <span className="status">
-            {validationMessages.length > 0 && (
+            {shape.isMarkedForDeletion && (
+              <span className="pill pill-danger">
+                {words("instanceComposer.card.markedForDeletion")}
+              </span>
+            )}
+            {showsProblems && (
               <button
                 ref={issuesRef}
                 type="button"
@@ -259,7 +267,7 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
           isConnectableStart={false}
         />
       </Card>
-      {validationMessages.length > 0 && (
+      {showsProblems && (
         <>
           <ul id={messagesId} hidden>
             {validationMessages.map((message) => (
@@ -291,6 +299,16 @@ const NodeWrapper = styled.div`
 
   &.is-invalid {
     --entity-ring: var(--pf-t--global--border--color--status--danger--default);
+  }
+
+  // Staged to be deleted: a danger ring, with the attributes faded but the header readable,
+  // so the user sees what the deploy will delete and can still undo it.
+  &.is-marked-for-deletion {
+    --entity-ring: var(--pf-t--global--border--color--status--danger--default);
+
+    .entity-card > :is(dl, footer) {
+      opacity: 0.55;
+    }
   }
 
   &.is-selected {
@@ -450,6 +468,12 @@ const Card = styled.div`
     color: var(--pf-t--global--text--color--brand--default);
     font-size: var(--pf-t--global--font--size--body--sm);
     line-height: 18px;
+    white-space: nowrap;
+  }
+
+  .pill-danger {
+    border-color: var(--pf-t--global--border--color--status--danger--default);
+    color: var(--pf-t--global--text--color--status--danger--default);
   }
 
   dl {

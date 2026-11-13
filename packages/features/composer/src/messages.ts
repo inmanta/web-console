@@ -86,6 +86,9 @@ export const composerMessages = {
   "instanceComposer.contextMenu.remove.description": "Nothing is sent to the orchestrator",
   "instanceComposer.contextMenu.delete": "Delete permanently",
   "instanceComposer.contextMenu.delete.description": "Adds a delete to the order on deploy",
+  "instanceComposer.contextMenu.undoDelete": "Undo delete",
+  "instanceComposer.contextMenu.undoDelete.description": "Takes the delete out of the order",
+  "instanceComposer.card.markedForDeletion": "Marked for deletion",
   "instanceComposer.contextMenu.cannotRemove.title": "Can't remove",
   "instanceComposer.contextMenu.cannotRemove.description": "Required by relation constraints",
   "instanceComposer.link.remove": (source: string, target: string) =>

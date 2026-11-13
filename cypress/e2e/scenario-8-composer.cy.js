@@ -262,12 +262,29 @@ if (isIso) {
         .should("be.visible")
         .click();
 
-      cy.get(entity("l3out")).should("not.exist");
+      // The card stays on the canvas, marked, so the delete can be undone.
+      cy.get(entity("l3out"))
+        .should("have.attr", "data-marked-for-deletion", "true")
+        .and("contain", "Marked for deletion");
 
-      // The instance is not on the canvas, but is set to be deleted, so it can't be added again.
+      // It is still on the canvas, so it can't be added again.
       cy.get('[data-testid="palette-item-pxs-l3out"]')
         .should("have.attr", "aria-disabled", "true")
-        .and("contain", "Marked for deletion");
+        .and("contain", "On canvas");
+
+      // Undo puts the instance back in the order, then stage the delete again.
+      cy.get(entity("l3out")).first().rightclick({ force: true });
+      cy.get('[data-testid="entity-context-menu"]')
+        .contains("button", "Undo delete")
+        .should("be.visible")
+        .click();
+      cy.get(entity("l3out")).should("have.attr", "data-marked-for-deletion", "false");
+
+      cy.get(entity("l3out")).first().rightclick({ force: true });
+      cy.get('[data-testid="entity-context-menu"]')
+        .contains("button", "Delete permanently")
+        .click();
+      cy.get(entity("l3out")).should("have.attr", "data-marked-for-deletion", "true");
 
       // Step 4: Deploy and validate resulting order details.
       cy.get('[data-testid="deploy-button"]').should("be.enabled").click();

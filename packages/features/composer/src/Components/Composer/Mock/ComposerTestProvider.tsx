@@ -22,6 +22,9 @@ interface Props {
 
   /** The selected shape when the canvas opens. */
   activeCellId?: string;
+
+  /** The instance the composer edits, like the editor provides it. */
+  serviceInstanceId?: string | null;
   children: React.ReactNode;
 }
 
@@ -37,6 +40,7 @@ export const ComposerTestProvider: React.FC<Props> = ({
   editable = true,
   deletedInstanceIds = [],
   activeCellId: initialActiveCellId,
+  serviceInstanceId = null,
   children,
 }) => {
   const relationsDictionary = useMemo(
@@ -81,6 +85,7 @@ export const ComposerTestProvider: React.FC<Props> = ({
     initialShapeInfoRef,
     draggedItemRef,
     mainService: serviceCatalog[0] ?? null,
+    serviceInstanceId,
   };
 
   return (

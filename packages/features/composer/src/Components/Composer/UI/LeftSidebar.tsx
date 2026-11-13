@@ -21,9 +21,9 @@ import { PlusCircleIcon } from "@patternfly/react-icons/dist/esm/icons/plus-circ
 import { useReactFlow, useStore } from "@xyflow/react";
 import styled from "styled-components";
 import {
-  compareEntityAnnotations,
   EmbeddedEntity,
-  resolveEntityAnnotations,
+  groupByEntityAnnotations,
+  resolveLifecycleState,
   ServiceModel,
   State,
   words,
@@ -31,7 +31,7 @@ import {
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
 import { ComposerContext, PaletteItem } from "../Data/Context";
-import { getLifecycleState, getUnavailableInventoryItems } from "../Data/Helpers";
+import { getUnavailableInventoryItems } from "../Data/Helpers";
 import { useAddPaletteItem } from "../Data/Hooks";
 import { EntityShapeType } from "../Data/ServiceEntityShape";
 import { LEFT_SIDEBAR_WIDTH, SHAPE_WIDTH } from "../config";
@@ -58,6 +58,8 @@ interface PaletteRow {
 }
 
 interface PaletteGroup {
+  /** Identifies the group in keys and test ids, so a group named like the fallback can't collide */
+  key: string;
   name: string;
   rows: PaletteRow[];
 }
@@ -122,57 +124,30 @@ const getServiceRows = (serviceModel: ServiceModel): PaletteRow[] => [
 ];
 
 /**
- * The services grouped like the service catalog: by their `web_group` annotation, within a
- * group ordered by `web_order` and then by name, and the services without a group last,
- * under "Other services". Groups are ordered by the lowest `web_order` of their services,
- * then by name. Each service brings its embedded entities with it.
+ * The services grouped like the service catalog: by their `web_group` annotation
+ * (groupByEntityAnnotations), the ungrouped ones last, under "Other services". Each service
+ * brings its embedded entities with it.
  *
  * A catalog without any `web_group` keeps a group per service, so its services stay
  * headers of their own.
  */
 const buildNewGroups = (serviceCatalog: ServiceModel[]): PaletteGroup[] => {
-  const annotatedServices = serviceCatalog
-    .map((serviceModel) => ({
-      serviceModel,
-      annotations: resolveEntityAnnotations(serviceModel),
-    }))
-    .sort((a, b) => compareEntityAnnotations(a.annotations, b.annotations));
+  const groups = groupByEntityAnnotations(serviceCatalog);
 
-  const servicesByGroup = new Map<string, typeof annotatedServices>();
-  const ungroupedServices: typeof annotatedServices = [];
-
-  annotatedServices.forEach((service) => {
-    const group = service.annotations.web_group;
-
-    if (group === undefined) {
-      ungroupedServices.push(service);
-    } else {
-      servicesByGroup.set(group, [...(servicesByGroup.get(group) || []), service]);
-    }
-  });
-
-  if (servicesByGroup.size === 0) {
-    return annotatedServices.map(({ serviceModel }) => ({
-      name: serviceModel.name,
-      rows: getServiceRows(serviceModel),
-    }));
+  if (groups.every((group) => group.name === undefined)) {
+    return groups.flatMap((group) =>
+      group.services.map(({ serviceModel }) => ({
+        key: serviceModel.name,
+        name: serviceModel.name,
+        rows: getServiceRows(serviceModel),
+      }))
+    );
   }
 
-  // The services of a group are sorted, so the first one has its lowest order.
-  const groups = [...servicesByGroup.entries()].sort(([nameA, [firstA]], [nameB, [firstB]]) => {
-    const orderA = firstA.annotations.web_order ?? Number.MAX_SAFE_INTEGER;
-    const orderB = firstB.annotations.web_order ?? Number.MAX_SAFE_INTEGER;
-
-    return orderA - orderB || nameA.localeCompare(nameB);
-  });
-
-  if (ungroupedServices.length > 0) {
-    groups.push([words("instanceComposer.palette.otherServices"), ungroupedServices]);
-  }
-
-  return groups.map(([name, services]) => ({
-    name,
-    rows: services.flatMap(({ serviceModel }) => getServiceRows(serviceModel)),
+  return groups.map((group) => ({
+    key: group.name ?? "other-services",
+    name: group.name ?? words("instanceComposer.palette.otherServices"),
+    rows: group.services.flatMap(({ serviceModel }) => getServiceRows(serviceModel)),
   }));
 };
 
@@ -193,6 +168,7 @@ const buildInventoryGroups = (
 
     return [
       {
+        key: serviceName,
         name: serviceName,
         rows: instances.map((instance) => {
           const reason = unavailable.get(instance.id);
@@ -203,7 +179,7 @@ const buildInventoryGroups = (
             key: instance.id,
             label,
             name: label,
-            state: getLifecycleState(serviceModel, instance.state),
+            state: resolveLifecycleState(serviceModel.lifecycle.states, instance.state),
             item: { kind: "inventory", instance, serviceModel },
             unavailableReason: reason && words(`instanceComposer.palette.${reason}`),
           };
@@ -272,10 +248,10 @@ export const LeftSidebar: React.FC = () => {
   const resultCount = groups.reduce((count, group) => count + group.rows.length, 0);
   const setQuery = (value: string) => setQueries((prev) => ({ ...prev, [activeTab]: value }));
 
-  const toggleGroup = (name: string) =>
+  const toggleGroup = (groupKey: string) =>
     setCollapsedGroups((prev) => {
       const next = new Set(prev);
-      const key = `${activeTab}/${name}`;
+      const key = `${activeTab}/${groupKey}`;
 
       if (next.has(key)) {
         next.delete(key);
@@ -368,19 +344,19 @@ export const LeftSidebar: React.FC = () => {
           </EmptyState>
         )}
         {groups.map((group) => {
-          const isOpen = !!query || !collapsedGroups.has(`${activeTab}/${group.name}`);
+          const isOpen = !!query || !collapsedGroups.has(`${activeTab}/${group.key}`);
 
           return (
             <div
               className="palette-group"
-              key={group.name}
-              data-testid={`palette-group-${group.name}`}
+              key={group.key}
+              data-testid={`palette-group-${group.key}`}
             >
               <button
                 type="button"
                 className="palette-group-toggle"
                 aria-expanded={isOpen}
-                onClick={() => toggleGroup(group.name)}
+                onClick={() => toggleGroup(group.key)}
               >
                 {isOpen ? <AngleDownIcon /> : <AngleRightIcon />}
                 <span className="palette-group-name">{group.name}</span>
@@ -619,6 +595,6 @@ const Sidebar = styled.aside`
   // A state label stays its own size instead of stretching to the row's width.
   .palette-row-state {
     align-self: flex-start;
-    margin-top: 2px;
+    margin-top: var(--pf-t--global--spacer--xs);
   }
 `;

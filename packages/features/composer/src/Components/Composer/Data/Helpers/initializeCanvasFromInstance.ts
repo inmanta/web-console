@@ -1,5 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
-import { ServiceModel, ServiceInstanceModel, EmbeddedEntity } from "@inmanta/web-console-core";
+import {
+  ServiceModel,
+  ServiceInstanceModel,
+  EmbeddedEntity,
+  resolveLifecycleState,
+} from "@inmanta/web-console-core";
 import { InstanceWithRelations } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config";
 import {
@@ -10,18 +15,14 @@ import {
 import {
   AttributeSetName,
   AttributeSets,
+  getInstanceAttributeSets,
   ServiceEntityShape,
   ServiceEntityOptions,
 } from "../ServiceEntityShape";
 import { applyLayeredLayout } from "./canvasLayoutUtils";
 import { RelationsDictionary } from "./createRelationsDictionary";
 import { PositionTracker } from "./positionTracker";
-import {
-  getShapeDimensions,
-  getEmbeddedEntityKey,
-  getInterServiceRelationKey,
-  getLifecycleState,
-} from "./shapeUtils";
+import { getShapeDimensions, getEmbeddedEntityKey, getInterServiceRelationKey } from "./shapeUtils";
 
 /**
  * Which attribute set the embedded entities of an existing instance are read from, and the
@@ -32,6 +33,25 @@ export interface EmbeddedSetsContext {
   editableSet: AttributeSetName;
   activeData?: unknown;
 }
+
+/**
+ * The sets context of an instance's embedded entities, or undefined for a new instance,
+ * whose shapes get no attribute sets.
+ */
+export const getEmbeddedSetsContext = (
+  isNew: boolean,
+  attributeSets: AttributeSets | undefined,
+  embeddedEntity: EmbeddedEntity
+): EmbeddedSetsContext | undefined =>
+  isNew || !attributeSets
+    ? undefined
+    : {
+        editableSet: attributeSets.candidate ? "candidate" : "active",
+        // Only there to view when the composer works on the candidate set
+        activeData: attributeSets.candidate
+          ? attributeSets.active?.[embeddedEntity.name]
+          : undefined,
+      };
 
 /**
  * The attribute sets of an embedded entity: its own slice of each of the root instance's sets.
@@ -50,7 +70,8 @@ const getEmbeddedAttributeSets = (
 /**
  * Matches the entries of the active set's data for an embedded entity to the entries the
  * shapes are created from: by their key attributes when they have values, by position
- * otherwise.
+ * otherwise. A keyed entry the active set doesn't hold matches nothing: it only exists in
+ * the candidate set, so no other entry's data may show up as its active slice.
  */
 const matchActiveEntries = (
   activeData: unknown,
@@ -58,16 +79,22 @@ const matchActiveEntries = (
   rootEntityId: string,
   embeddedEntity: EmbeddedEntity
 ): Array<Record<string, unknown> | undefined> => {
-  const activeEntries = (Array.isArray(activeData) ? activeData : [activeData]).filter(
-    (entry): entry is Record<string, unknown> => typeof entry === "object" && entry !== null
-  );
+  const activeEntries = Array.isArray(activeData) ? activeData : [activeData];
   const activeByKey = new Map<string, Record<string, unknown>>();
 
   activeEntries.forEach((entry) => {
-    const key = getEmbeddedEntityCacheKey(rootEntityId, embeddedEntity, entry);
+    if (typeof entry !== "object" || entry === null) {
+      return;
+    }
+
+    const key = getEmbeddedEntityCacheKey(
+      rootEntityId,
+      embeddedEntity,
+      entry as Record<string, unknown>
+    );
 
     if (key && !activeByKey.has(key)) {
-      activeByKey.set(key, entry);
+      activeByKey.set(key, entry as Record<string, unknown>);
     }
   });
 
@@ -82,7 +109,16 @@ const matchActiveEntries = (
       entry as Record<string, unknown>
     );
 
-    return (key && activeByKey.get(key)) || activeEntries[index];
+    if (key) {
+      return activeByKey.get(key);
+    }
+
+    // Positions line up with the raw data, so a gap on one side doesn't shift the rest
+    const positional = activeEntries[index];
+
+    return typeof positional === "object" && positional !== null
+      ? (positional as Record<string, unknown>)
+      : undefined;
   });
 };
 
@@ -357,10 +393,7 @@ export const initializeCanvasFromInstance = (
 
     const attributeSets: AttributeSets | undefined = isNewEntity
       ? undefined
-      : {
-          ...(instance.candidate_attributes ? { candidate: instance.candidate_attributes } : {}),
-          ...(instance.active_attributes ? { active: instance.active_attributes } : {}),
-        };
+      : getInstanceAttributeSets(instance);
 
     const interServiceRelations: Record<string, string[]> = {};
     const rootEntities: Record<string, string[]> = {};
@@ -392,7 +425,9 @@ export const initializeCanvasFromInstance = (
       rootEntities,
       interServiceRelations,
       embeddedEntities: {},
-      instanceState: isNewEntity ? undefined : getLifecycleState(serviceModel, instance.state),
+      instanceState: isNewEntity
+        ? undefined
+        : resolveLifecycleState(serviceModel.lifecycle.states, instance.state),
       attributeSets,
     };
 
@@ -441,15 +476,7 @@ export const initializeCanvasFromInstance = (
           parentPosition.x + HORIZONTAL_SPACING,
           parentPosition.y,
           isNewEntity,
-          isNewEntity || !attributeSets
-            ? undefined
-            : {
-                editableSet: attributeSets.candidate ? "candidate" : "active",
-                // Only there to view when the composer works on the candidate set
-                activeData: attributeSets.candidate
-                  ? attributeSets.active?.[embeddedEntity.name]
-                  : undefined,
-              }
+          getEmbeddedSetsContext(isNewEntity, attributeSets, embeddedEntity)
         );
 
         if (embeddedIds.length > 0) {

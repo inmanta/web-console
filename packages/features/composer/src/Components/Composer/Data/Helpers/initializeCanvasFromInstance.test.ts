@@ -447,6 +447,24 @@ describe("initializeCanvasFromInstance", () => {
     expect(shape?.getEditableSet()).toBe("active");
   });
 
+  it("should give an existing instance without any set no attribute sets", () => {
+    const serviceModel = createMockServiceModel("TestService");
+    const instance = createMockInstance("instance-1", "TestService", {
+      state: "up",
+      candidate_attributes: null,
+      active_attributes: null,
+    });
+
+    const shape = initializeCanvasFromInstance(
+      createMockInstanceWithRelations(instance),
+      [serviceModel],
+      {}
+    ).get("instance-1");
+
+    expect(shape?.attributeSets).toBeNull();
+    expect(shape?.getEditableSet()).toBeNull();
+  });
+
   it("should give a placeholder instance no attribute sets", () => {
     const serviceModel = createMockServiceModel("TestService");
     const instance = createMockInstance("instance-1", "TestService", {
@@ -510,6 +528,38 @@ describe("initializeCanvasFromInstance", () => {
       candidate: { name: "alpha", vlan: 11 },
       active: { name: "alpha", vlan: 10 },
     });
+  });
+
+  it("should not borrow another entry's active slice for a keyed entry the active set misses", () => {
+    const portEntity = {
+      name: "ports",
+      type: "Port",
+      lower_limit: 0,
+      upper_limit: null,
+      modifier: "rw" as const,
+      attributes: [],
+      key_attributes: ["name"],
+      embedded_entities: [],
+      inter_service_relations: [],
+    };
+    const serviceModel = createMockServiceModel("TestService", {
+      embedded_entities: [portEntity],
+    });
+    const instance = createMockInstance("instance-1", "TestService", {
+      // "new-port" only exists in the candidate set; the active set holds another port
+      candidate_attributes: { ports: [{ name: "new-port" }] },
+      active_attributes: { ports: [{ name: "old-port", vlan: 5 }] },
+    });
+
+    const result = initializeCanvasFromInstance(
+      createMockInstanceWithRelations(instance),
+      [serviceModel],
+      {}
+    );
+
+    const port = [...result.values()].find((shape) => shape.entityType === "embedded");
+
+    expect(port?.attributeSets).toEqual({ candidate: { name: "new-port" } });
   });
 
   it("should give an embedded entity only its candidate slice when the active set misses it", () => {

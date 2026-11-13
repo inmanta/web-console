@@ -1,22 +1,30 @@
 import React from "react";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { words } from "@inmanta/web-console-core";
+import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { ComposerTestProvider } from "../Mock/ComposerTestProvider";
 import { childService, inventoryInstance, parentService } from "../Mock/serviceModels";
 import { instanceShapes, newServiceShapes, toCanvasState } from "../Mock/shapes";
 import { defineReactFlowTestObjects } from "../testSetup";
 import { Canvas } from "./Canvas";
+import { LeftSidebar } from "./LeftSidebar";
 
 defineReactFlowTestObjects();
 
 const setup = (
   shapes: ServiceEntityShape[],
-  options: { activeCellId?: string; editable?: boolean } = {}
+  options: {
+    activeCellId?: string;
+    editable?: boolean;
+    serviceInstanceId?: string;
+    serviceInventories?: Inventories;
+  } = {}
 ) =>
   render(
     <ComposerTestProvider shapes={toCanvasState(...shapes)} {...options}>
+      <LeftSidebar />
       <Canvas />
     </ComposerTestProvider>
   );
@@ -83,15 +91,18 @@ describe("EntityContextMenu", () => {
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
   });
 
-  it("deletes an existing instance permanently", async () => {
+  it("stages an existing instance for deletion on its card, and undoes it", async () => {
     const { shapes } = existingInstances();
 
     setup(shapes);
     await openMenu("entity-child-service");
 
+    // An existing instance offers both: taking it off the canvas, and deleting it
     expect(
-      screen.queryByText(words("instanceComposer.contextMenu.remove"))
-    ).not.toBeInTheDocument();
+      screen.getByRole("menuitem", {
+        name: new RegExp(words("instanceComposer.contextMenu.remove")),
+      })
+    ).toBeVisible();
 
     await userEvent.click(
       screen.getByRole("menuitem", {
@@ -99,7 +110,120 @@ describe("EntityContextMenu", () => {
       })
     );
 
-    expect(screen.queryByTestId("entity-child-service")).not.toBeInTheDocument();
+    // The card stays on the canvas, marked, so the delete can be undone
+    const card = screen.getByTestId("entity-child-service");
+
+    expect(card).toHaveAttribute("data-marked-for-deletion", "true");
+    expect(within(card).getByText(words("instanceComposer.card.markedForDeletion"))).toBeVisible();
+
+    // The menu of a marked card only offers to undo the delete
+    await openMenu("entity-child-service");
+
+    expect(
+      screen.queryByText(words("instanceComposer.contextMenu.delete"))
+    ).not.toBeInTheDocument();
+
+    await userEvent.click(
+      screen.getByRole("menuitem", {
+        name: new RegExp(words("instanceComposer.contextMenu.undoDelete")),
+      })
+    );
+
+    expect(screen.getByTestId("entity-child-service")).toHaveAttribute(
+      "data-marked-for-deletion",
+      "false"
+    );
+  });
+
+  it("removes an existing instance from the canvas without deleting it", async () => {
+    const parentInstance = inventoryInstance(parentService, "parent-1", {
+      name: "edge-1",
+      region: "eu",
+      settings: { vlan: "100" },
+    });
+    const shapes = instanceShapes(parentInstance, parentService);
+
+    setup(shapes, { serviceInventories: { "parent-service": [parentInstance] } });
+    await openMenu("entity-parent-service");
+    await userEvent.click(
+      screen.getByRole("menuitem", {
+        name: new RegExp(words("instanceComposer.contextMenu.remove")),
+      })
+    );
+
+    // The instance leaves the canvas together with its embedded entities
+    expect(screen.queryByTestId("entity-parent-service")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("entity-settings")).not.toBeInTheDocument();
+
+    // The instance itself is kept: the inventory offers it again, not marked for deletion
+    await userEvent.click(
+      screen.getByRole("tab", { name: words("instanceComposer.stencil.inventory") })
+    );
+
+    const row = screen.getByTestId("palette-item-edge-1");
+
+    expect(row).not.toHaveAttribute("aria-disabled");
+    expect(
+      screen.queryByText(words("instanceComposer.palette.markedForDeletion"))
+    ).not.toBeInTheDocument();
+  });
+
+  it("keeps a staged delete on the canvas, with its embedded entities, 'On canvas' in the inventory", async () => {
+    const parentInstance = inventoryInstance(parentService, "parent-1", {
+      name: "edge-1",
+      region: "eu",
+      settings: { vlan: "100" },
+    });
+    const shapes = instanceShapes(parentInstance, parentService);
+
+    setup(shapes, { serviceInventories: { "parent-service": [parentInstance] } });
+    await openMenu("entity-parent-service");
+    await userEvent.click(
+      screen.getByRole("menuitem", {
+        name: new RegExp(words("instanceComposer.contextMenu.delete")),
+      })
+    );
+
+    // The embedded entities are deleted with the instance, so they are marked with it
+    expect(screen.getByTestId("entity-settings")).toHaveAttribute(
+      "data-marked-for-deletion",
+      "true"
+    );
+
+    // The instance is still on the canvas, so the inventory says so
+    await userEvent.click(
+      screen.getByRole("tab", { name: words("instanceComposer.stencil.inventory") })
+    );
+
+    const row = screen.getByTestId("palette-item-edge-1");
+
+    expect(row).toHaveAttribute("aria-disabled", "true");
+    expect(within(row).getByText(words("instanceComposer.palette.onCanvas"))).toBeVisible();
+    expect(
+      within(screen.getByTestId("left_sidebar")).queryByText(
+        words("instanceComposer.palette.markedForDeletion")
+      )
+    ).not.toBeInTheDocument();
+  });
+
+  it("never offers to remove the instance being edited, only to delete it", async () => {
+    const parentInstance = inventoryInstance(parentService, "parent-1", {
+      name: "edge-1",
+      region: "eu",
+    });
+    const shapes = instanceShapes(parentInstance, parentService);
+
+    setup(shapes, { serviceInstanceId: "parent-1" });
+    await openMenu("entity-parent-service");
+
+    expect(
+      screen.queryByText(words("instanceComposer.contextMenu.remove"))
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("menuitem", {
+        name: new RegExp(words("instanceComposer.contextMenu.delete")),
+      })
+    ).toBeVisible();
   });
 
   it("says when the relations require the entity", async () => {
@@ -154,6 +278,28 @@ describe("EntityContextMenu", () => {
       // Nothing is selected any more, so Backspace removes nothing
       await userEvent.keyboard("{Backspace}");
       expect(screen.getByTestId("entity-parent-service")).toBeVisible();
+    });
+
+    it("open the menu of a removable existing instance, to choose between remove and delete", async () => {
+      const { child, shapes } = existingInstances();
+
+      setup(shapes, { activeCellId: child.id });
+      await focusCard("entity-child-service");
+      await userEvent.keyboard("{Delete}");
+
+      // Not removed right away: the user chooses what taking it off means
+      expect(screen.getByTestId("entity-child-service")).toBeVisible();
+      expect(await screen.findByRole("menu")).toBeVisible();
+      expect(
+        screen.getByRole("menuitem", {
+          name: new RegExp(words("instanceComposer.contextMenu.remove")),
+        })
+      ).toBeVisible();
+      expect(
+        screen.getByRole("menuitem", {
+          name: new RegExp(words("instanceComposer.contextMenu.delete")),
+        })
+      ).toBeVisible();
     });
 
     it("open the menu of an existing instance, to delete it or say why it can't be", async () => {

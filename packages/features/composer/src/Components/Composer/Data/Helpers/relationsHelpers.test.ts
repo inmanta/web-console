@@ -565,7 +565,7 @@ describe("relationsHelpers", () => {
       });
     });
 
-    it("deletes an existing service or relation permanently", () => {
+    it("removes or deletes an existing service or relation", () => {
       (["core", "relation"] as const).forEach((entityType) => {
         const shape = createMockShape(
           "shape-1",
@@ -576,9 +576,41 @@ describe("relationsHelpers", () => {
         );
 
         expect(getRemoveActions(shape, toCanvas(shape), {}, [])).toEqual({
-          canRemoveFromCanvas: false,
+          canRemoveFromCanvas: true,
           canDelete: true,
         });
+      });
+    });
+
+    it("offers neither on a shape staged to be deleted: its menu only undoes the delete", () => {
+      const shape = createMockShape(
+        "shape-1",
+        "core",
+        false,
+        new Map(),
+        createMockServiceModel("ServiceA")
+      );
+
+      shape.isMarkedForDeletion = true;
+
+      expect(getRemoveActions(shape, toCanvas(shape), {}, [])).toEqual({
+        canRemoveFromCanvas: false,
+        canDelete: false,
+      });
+    });
+
+    it("only deletes the instance the composer edits, never removes it from the canvas", () => {
+      const shape = createMockShape(
+        "main-1",
+        "core",
+        false,
+        new Map(),
+        createMockServiceModel("ServiceA")
+      );
+
+      expect(getRemoveActions(shape, toCanvas(shape), {}, [], "main-1")).toEqual({
+        canRemoveFromCanvas: false,
+        canDelete: true,
       });
     });
 

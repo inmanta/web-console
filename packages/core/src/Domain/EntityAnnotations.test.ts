@@ -4,6 +4,7 @@ import {
   compareEntityAnnotations,
   getServiceIconName,
   getServiceTitle,
+  groupByEntityAnnotations,
   ownerServiceFallbackIconName,
   resolveEntityAnnotations,
   serviceFallbackIconName,
@@ -117,4 +118,45 @@ describe("getServiceIconName", () => {
       ).toBe(expected);
     }
   );
+});
+
+describe("groupByEntityAnnotations", () => {
+  const grouped = (name: string, web_group?: string, web_order?: number): ServiceModel => ({
+    ...service,
+    name,
+    entity_annotations: { web_group, web_order },
+  });
+
+  it("groups by web_group like the catalog, the ungrouped services last, as a nameless group", () => {
+    const groups = groupByEntityAnnotations([
+      grouped("solo"),
+      grouped("admin-tool", "Admin", 9),
+      grouped("vpn-tunnel", "Network", 2),
+      grouped("vpn", "Network", 1),
+    ]);
+
+    expect(
+      groups.map((group) => ({
+        name: group.name,
+        services: group.services.map(({ serviceModel }) => serviceModel.name),
+      }))
+    ).toEqual([
+      // Groups by their services' lowest web_order, services by web_order then title
+      { name: "Network", services: ["vpn", "vpn-tunnel"] },
+      { name: "Admin", services: ["admin-tool"] },
+      { name: undefined, services: ["solo"] },
+    ]);
+  });
+
+  it("returns one nameless group when no service has a web_group", () => {
+    const groups = groupByEntityAnnotations([grouped("b"), grouped("a")]);
+
+    expect(groups).toHaveLength(1);
+    expect(groups[0].name).toBeUndefined();
+    expect(groups[0].services.map(({ serviceModel }) => serviceModel.name)).toEqual(["a", "b"]);
+  });
+
+  it("returns no groups for an empty catalog", () => {
+    expect(groupByEntityAnnotations([])).toEqual([]);
+  });
 });

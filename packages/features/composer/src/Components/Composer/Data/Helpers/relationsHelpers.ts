@@ -337,30 +337,38 @@ export const canRemoveShape = (
 
 /**
  * How a shape can be taken off the canvas, the rules of its right-click menu and of the Delete
- * key. A new shape is only removed from the canvas: nothing is sent to the orchestrator for it.
- * An existing service or relation is deleted permanently: the order deletes it on deploy. An
- * existing embedded entity can't be taken off on its own, and neither can a shape the relations
- * require (canRemoveShape).
+ * key. A new shape, or an existing instance other than the one being edited, can be removed
+ * from the canvas: nothing is sent to the orchestrator for it, the instance only leaves the
+ * order. An existing service or relation can also be deleted permanently: the order deletes it
+ * on deploy. An existing embedded entity can't be taken off on its own, and neither can a shape
+ * the relations require (canRemoveShape).
  *
  * @param {ServiceEntityShape} shape - The shape to take off the canvas
  * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas
  * @param {RelationsDictionary} relationsDictionary - The relations dictionary
  * @param {ServiceModel[]} serviceCatalog - The service catalog
- * @returns {{ canRemoveFromCanvas: boolean, canDelete: boolean }} Which of the two is allowed;
- *   at most one is
+ * @param {string | null} mainInstanceId - The instance the composer edits; removing it from
+ *   the canvas would leave nothing to edit, so it can only be deleted
+ * @returns {{ canRemoveFromCanvas: boolean, canDelete: boolean }} Which of the two is allowed
  */
 export const getRemoveActions = (
   shape: ServiceEntityShape,
   canvasState: Map<string, ServiceEntityShape>,
   relationsDictionary: RelationsDictionary,
-  serviceCatalog: ServiceModel[]
+  serviceCatalog: ServiceModel[],
+  mainInstanceId: string | null = null
 ): { canRemoveFromCanvas: boolean; canDelete: boolean } => {
+  // A shape staged to be deleted only offers to undo that (EntityContextMenu)
+  if (shape.isMarkedForDeletion) {
+    return { canRemoveFromCanvas: false, canDelete: false };
+  }
+
   const canRemove = canRemoveShape(shape, canvasState, relationsDictionary, serviceCatalog);
+  const isInstance = shape.entityType === "core" || shape.entityType === "relation";
 
   return {
-    canRemoveFromCanvas: canRemove && shape.isNew,
-    canDelete:
-      canRemove && !shape.isNew && (shape.entityType === "core" || shape.entityType === "relation"),
+    canRemoveFromCanvas: canRemove && (shape.isNew || (isInstance && shape.id !== mainInstanceId)),
+    canDelete: canRemove && !shape.isNew && isInstance,
   };
 };
 

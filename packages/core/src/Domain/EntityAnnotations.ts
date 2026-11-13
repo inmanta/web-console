@@ -53,6 +53,64 @@ export const compareEntityAnnotations = (
   return orderA - orderB || a.web_title.localeCompare(b.web_title);
 };
 
+/** A service with its annotations resolved. */
+export interface AnnotatedService {
+  serviceModel: ServiceModel;
+  annotations: ResolvedEntityAnnotations;
+}
+
+/** A `web_group` of services; the ungrouped services come as a group without a name. */
+export interface EntityAnnotationGroup {
+  name?: string;
+  services: AnnotatedService[];
+}
+
+/**
+ * Groups services by their `web_group` annotation, the way the service catalog sections them:
+ * within a group the services are ordered by `web_order` and then by title, groups by the
+ * lowest `web_order` of their services and then by name, and the services without a group
+ * come last, as a group without a name.
+ */
+export const groupByEntityAnnotations = (
+  serviceModels: ServiceModel[]
+): EntityAnnotationGroup[] => {
+  const annotatedServices = serviceModels
+    .map((serviceModel): AnnotatedService => ({
+      serviceModel,
+      annotations: resolveEntityAnnotations(serviceModel),
+    }))
+    .sort((a, b) => compareEntityAnnotations(a.annotations, b.annotations));
+
+  const servicesByGroup = new Map<string, AnnotatedService[]>();
+  const ungroupedServices: AnnotatedService[] = [];
+
+  annotatedServices.forEach((service) => {
+    const group = service.annotations.web_group;
+
+    if (group === undefined) {
+      ungroupedServices.push(service);
+    } else {
+      servicesByGroup.set(group, [...(servicesByGroup.get(group) || []), service]);
+    }
+  });
+
+  // The services of a group are sorted, so the first one has its lowest order.
+  const groups: EntityAnnotationGroup[] = [...servicesByGroup.entries()]
+    .sort(([nameA, [firstA]], [nameB, [firstB]]) => {
+      const orderA = firstA.annotations.web_order ?? Number.MAX_SAFE_INTEGER;
+      const orderB = firstB.annotations.web_order ?? Number.MAX_SAFE_INTEGER;
+
+      return orderA - orderB || nameA.localeCompare(nameB);
+    })
+    .map(([name, services]) => ({ name, services }));
+
+  if (ungroupedServices.length > 0) {
+    groups.push({ services: ungroupedServices });
+  }
+
+  return groups;
+};
+
 /** Returns the trimmed value when it is a non-empty string, otherwise undefined. */
 const getTrimmedString = (value: unknown): string | undefined => {
   if (typeof value !== "string") {

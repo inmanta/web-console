@@ -6,7 +6,12 @@ import { baseSetup } from "@inmanta/web-console-test-utils/Utils/base-setup";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { ComposerTestProvider } from "../Mock/ComposerTestProvider";
 import { inventoryInstance, parentService } from "../Mock/serviceModels";
-import { instanceShapes, newServiceShapes, toCanvasState } from "../Mock/shapes";
+import {
+  editedInstanceShapes,
+  instanceShapes,
+  newServiceShapes,
+  toCanvasState,
+} from "../Mock/shapes";
 import { defineReactFlowTestObjects } from "../testSetup";
 import { RightSidebar } from "./RightSidebar";
 
@@ -14,7 +19,10 @@ defineReactFlowTestObjects();
 
 // The form's fields read the environment and the suggestions queries, so the sidebar
 // renders with the test dependencies and query client.
-const setup = (shapes: ServiceEntityShape[], options: { editable?: boolean } = {}) =>
+const setup = (
+  shapes: ServiceEntityShape[],
+  options: { editable?: boolean; activeCellId?: string } = {}
+) =>
   render(
     baseSetup(
       <ComposerTestProvider
@@ -69,6 +77,60 @@ describe("RightSidebar", () => {
     expect(screen.getByTestId("entity-form")).toBeInTheDocument();
   });
 
+  it("keeps the form's edits across a look at the active set and back", async () => {
+    const shapes = editedInstanceShapes(
+      inventoryInstance(
+        parentService,
+        "parent-1",
+        { name: "edge-1", region: "eu" },
+        { candidate_attributes: { name: "edge-1", region: "eu-draft" } }
+      )
+    );
+
+    setup(shapes);
+
+    const region = screen.getByDisplayValue("eu-draft");
+
+    await userEvent.clear(region);
+    await userEvent.type(region, "eu-edited");
+
+    await userEvent.click(activeToggle());
+
+    expect(within(screen.getByTestId("entity-details")).getByText("eu")).toBeVisible();
+
+    await userEvent.click(candidateToggle());
+
+    expect(screen.getByDisplayValue("eu-edited")).toBeInTheDocument();
+  });
+
+  it("offers an embedded entity its slice of each set", async () => {
+    const shapes = editedInstanceShapes(
+      inventoryInstance(
+        parentService,
+        "parent-1",
+        { name: "edge-1", region: "eu", settings: { vlan: "100", mtu: "9000" } },
+        {
+          candidate_attributes: {
+            name: "edge-1",
+            region: "eu",
+            settings: { vlan: "100", mtu: "1500" },
+          },
+        }
+      )
+    );
+    const settings = shapes.find((shape) => shape.entityType === "embedded");
+
+    setup(shapes, { activeCellId: settings?.id });
+
+    // The candidate slice is the form
+    expect(screen.getByDisplayValue("100")).toBeInTheDocument();
+
+    await userEvent.click(activeToggle());
+
+    // The active slice, matched by the key attributes, can only be viewed
+    expect(within(screen.getByTestId("entity-details")).getByText("9000")).toBeVisible();
+  });
+
   it("offers no toggle when the instance has one set, or the entity is new", () => {
     const [instance] = instanceShapes(
       inventoryInstance(parentService, "parent-1", { name: "edge-1", region: "eu" }),
@@ -102,6 +164,23 @@ describe("RightSidebar", () => {
     expect(within(screen.getByTestId("entity-details")).getByText("eu")).toBeVisible();
     // The viewer edits nothing, so neither set says it is read-only
     expect(screen.queryByText(words("instanceComposer.sets.readOnly"))).not.toBeInTheDocument();
+  });
+
+  it("disables the form of an instance staged to be deleted, and says so", () => {
+    const shapes = editedInstanceShapes(
+      inventoryInstance(
+        parentService,
+        "parent-1",
+        { name: "edge-1", region: "eu" },
+        { candidate_attributes: { name: "edge-1", region: "eu-draft" } }
+      )
+    );
+
+    shapes[0].isMarkedForDeletion = true;
+    setup(shapes);
+
+    expect(screen.getByText(words("instanceComposer.card.markedForDeletion"))).toBeVisible();
+    expect(screen.getByDisplayValue("eu-draft")).toBeDisabled();
   });
 
   it("shows the lifecycle state of the selected instance", () => {

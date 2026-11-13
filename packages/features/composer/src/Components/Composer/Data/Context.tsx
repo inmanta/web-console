@@ -47,10 +47,17 @@ export interface CanvasActions {
   addShapes: (shapes: Map<string, ServiceEntityShape>) => void;
 
   /**
-   * Takes a shape off the canvas. Deleting it permanently adds a delete to the order for an
-   * existing instance; removing it only takes it off the canvas.
+   * Takes a shape off the canvas, an instance together with its embedded entities. Nothing is
+   * sent to the orchestrator for it: the shape only leaves the canvas and the order, so an
+   * existing instance is kept.
    */
-  removeShape: (shape: ServiceEntityShape, deletePermanently: boolean) => void;
+  removeShape: (shape: ServiceEntityShape) => void;
+
+  /**
+   * Stages an existing instance to be deleted on deploy, or undoes that. The card stays on
+   * the canvas, marked, with its embedded entities, so the delete can still be undone.
+   */
+  markShapeForDeletion: (shape: ServiceEntityShape, marked: boolean) => void;
 
   /** Connects two shapes, if their relation allows it. */
   connectShapes: (source: ServiceEntityShape, target: ServiceEntityShape) => void;
@@ -99,6 +106,7 @@ export const composerContext: ComposerContextInterface = {
   canvasActions: {
     addShapes: noop,
     removeShape: noop,
+    markShapeForDeletion: noop,
     connectShapes: noop,
     disconnectShapes: noop,
     refresh: noop,

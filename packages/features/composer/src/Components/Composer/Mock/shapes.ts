@@ -3,6 +3,7 @@ import {
   createInventoryEntityShapes,
   createNewEntityShapes,
   createRelationsDictionary,
+  initializeCanvasFromInstance,
 } from "../Data/Helpers";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { serviceCatalog } from "./serviceModels";
@@ -44,6 +45,19 @@ export const instanceShapes = (
       serviceCatalog,
       serviceInventories: null,
     }).values()
+  );
+
+/**
+ * The canvas of the editor: the instance being edited with its embedded entities, built
+ * like the editor builds it, the instance first.
+ */
+export const editedInstanceShapes = (instance: ServiceInstanceModel): ServiceEntityShape[] =>
+  Array.from(
+    initializeCanvasFromInstance(
+      { instance, interServiceRelations: [] },
+      serviceCatalog,
+      relationsDictionary
+    ).values()
   );
 
 /**

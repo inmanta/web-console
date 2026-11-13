@@ -2,6 +2,7 @@ import {
   EmbeddedEntity,
   Field,
   InstanceAttributeModel,
+  ServiceInstanceModel,
   ServiceModel,
   ServiceOrderItemAction,
   ServiceOrderItemRequest,
@@ -57,7 +58,22 @@ export interface AttributeSets {
   active?: InstanceAttributeModel;
 }
 
+/** The name of an attribute set: "candidate" or "active". */
 export type AttributeSetName = keyof AttributeSets;
+
+/**
+ * The attribute sets of an existing instance: only the sets it has, or undefined when it has
+ * neither, so an instance without sets offers none to view.
+ */
+export const getInstanceAttributeSets = (
+  instance: Pick<ServiceInstanceModel, "candidate_attributes" | "active_attributes">
+): AttributeSets | undefined =>
+  instance.candidate_attributes || instance.active_attributes
+    ? {
+        ...(instance.candidate_attributes ? { candidate: instance.candidate_attributes } : {}),
+        ...(instance.active_attributes ? { active: instance.active_attributes } : {}),
+      }
+    : undefined;
 
 /**
  * Full configuration used to construct a `ServiceEntityShape`.
@@ -126,6 +142,13 @@ export class ServiceEntityShape {
   /** The attribute sets of the existing instance this shape shows, if any. */
   attributeSets: AttributeSets | null;
 
+  /**
+   * Whether the instance is staged to be deleted on deploy. The card stays on the canvas,
+   * marked, so the delete can be undone; the shape's order item becomes the delete, and the
+   * other shapes' order items leave out their references to it.
+   */
+  isMarkedForDeletion: boolean;
+
   /** Hidden because an ancestor collapsed its layers. */
   isHidden: boolean;
   parentIds: Set<string>;
@@ -155,6 +178,7 @@ export class ServiceEntityShape {
     this.isLayersCollapsed = false;
     this.instanceState = initializationOptions.instanceState ?? null;
     this.attributeSets = initializationOptions.attributeSets ?? null;
+    this.isMarkedForDeletion = false;
     this.isHidden = false;
     this.parentIds = new Set<string>();
     // An estimate until the canvas has measured the card
@@ -571,11 +595,11 @@ export class ServiceEntityShape {
    * the instance has both, can only be viewed. A new entity has no sets yet, so no set name.
    */
   getEditableSet(): AttributeSetName | null {
-    if (!this.attributeSets) {
-      return null;
+    if (this.attributeSets?.candidate) {
+      return "candidate";
     }
 
-    return this.attributeSets.candidate ? "candidate" : "active";
+    return this.attributeSets?.active ? "active" : null;
   }
 
   /**
@@ -719,7 +743,7 @@ export class ServiceEntityShape {
         .map((connectedId) => canvasState.get(connectedId))
         .filter(
           (connectedShape): connectedShape is ServiceEntityShape =>
-            connectedShape?.entityType === "embedded"
+            connectedShape?.entityType === "embedded" && !connectedShape.isMarkedForDeletion
         )
         .map((connectedShape) =>
           this.transformEmbeddedEntityAttributes(connectedShape, canvasState, isCreating)
@@ -759,6 +783,8 @@ export class ServiceEntityShape {
           const connectedShape = canvasState.get(connectedId);
           if (
             connectedShape?.getEntityType() === relation.entity_type &&
+            // A reference to an instance staged to be deleted leaves the order with it
+            !connectedShape.isMarkedForDeletion &&
             !relationIds.includes(connectedId)
           ) {
             relationIds.push(connectedId);
@@ -843,6 +869,20 @@ export class ServiceEntityShape {
     // Only include Core and Relation types (embedded entities are nested in their parent's attributes)
     if (this.entityType !== "core" && this.entityType !== "relation") {
       this.orderItem = null;
+
+      return;
+    }
+
+    // An instance staged to be deleted only orders its delete; its attributes don't matter
+    if (this.isMarkedForDeletion) {
+      this.orderItem = {
+        instance_id: String(this.id),
+        service_entity: this.getEntityType(),
+        config: {},
+        action: "delete",
+        attributes: null,
+        edits: null,
+      };
 
       return;
     }

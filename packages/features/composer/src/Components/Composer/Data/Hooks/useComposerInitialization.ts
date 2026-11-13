@@ -94,11 +94,15 @@ export const useComposerInitialization = ({
     onCanvasStateInitialized(initializedEntities);
     initializationKeyRef.current = initializationKey;
 
-    // Track initial shape info for delete detection (only for existing instances, not new ones)
+    // Track initial shape info for delete detection (only for existing instances, not new ones).
+    // Embedded entities deploy within their instance's attributes, never as delete order items
+    // of their own, so they are not tracked.
     if (instanceId) {
       const initialShapeInfo = new Map<string, { service_entity: string }>();
       initializedEntities.forEach((shape, id) => {
-        initialShapeInfo.set(id, { service_entity: shape.getEntityType() });
+        if (shape.entityType !== "embedded") {
+          initialShapeInfo.set(id, { service_entity: shape.getEntityType() });
+        }
       });
       onInitialShapeInfoTracked(initialShapeInfo);
     } else {

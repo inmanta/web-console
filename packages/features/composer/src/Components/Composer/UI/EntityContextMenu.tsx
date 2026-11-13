@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef } from "react";
 import { Menu, MenuContent, MenuItem, MenuList } from "@patternfly/react-core";
 import { TimesIcon } from "@patternfly/react-icons/dist/esm/icons/times-icon";
 import { TrashIcon } from "@patternfly/react-icons/dist/esm/icons/trash-icon";
+import { UndoIcon } from "@patternfly/react-icons/dist/esm/icons/undo-icon";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import { getRemoveActions } from "../Data/Helpers";
@@ -16,13 +17,14 @@ interface Props {
 
 /**
  * The menu of a shape, opened with a right-click, or with the Delete key when the selected shape
- * can't simply be removed. A new shape can be removed from the canvas: nothing is sent to the
- * orchestrator for it. An existing service or relation can be deleted permanently: the order
- * deletes it on deploy. When the relations require the shape, the menu says it can't be removed
- * (getRemoveActions).
+ * can't simply be removed. A new shape, or an existing instance other than the one being edited,
+ * can be removed from the canvas: nothing is sent to the orchestrator for it. An existing
+ * service or relation can be deleted permanently: the card stays on the canvas, marked, and the
+ * order deletes the instance on deploy; the menu of a marked card undoes the delete. When the
+ * relations require the shape, the menu says it can't be removed (getRemoveActions).
  */
 export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => {
-  const { canvasState, canvasActions, relationsDictionary, serviceCatalog } =
+  const { canvasState, canvasActions, relationsDictionary, serviceCatalog, serviceInstanceId } =
     useContext(ComposerContext);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -30,7 +32,8 @@ export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => 
     shape,
     canvasState,
     relationsDictionary,
-    serviceCatalog
+    serviceCatalog,
+    serviceInstanceId
   );
 
   // Close on a click outside the menu, or on Escape
@@ -56,8 +59,13 @@ export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => 
     };
   }, [onClose]);
 
-  const remove = (deletePermanently: boolean) => {
-    canvasActions.removeShape(shape, deletePermanently);
+  const remove = () => {
+    canvasActions.removeShape(shape);
+    onClose();
+  };
+
+  const markForDeletion = (marked: boolean) => {
+    canvasActions.markShapeForDeletion(shape, marked);
     onClose();
   };
 
@@ -71,32 +79,44 @@ export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => 
     >
       <MenuContent>
         <MenuList>
-          {canRemoveFromCanvas && (
+          {shape.isMarkedForDeletion ? (
             <MenuItem
-              icon={<TimesIcon />}
-              description={words("instanceComposer.contextMenu.remove.description")}
-              onClick={() => remove(false)}
+              icon={<UndoIcon />}
+              description={words("instanceComposer.contextMenu.undoDelete.description")}
+              onClick={() => markForDeletion(false)}
             >
-              {words("instanceComposer.contextMenu.remove")}
+              {words("instanceComposer.contextMenu.undoDelete")}
             </MenuItem>
-          )}
-          {canDelete && (
-            <MenuItem
-              isDanger
-              icon={<TrashIcon />}
-              description={words("instanceComposer.contextMenu.delete.description")}
-              onClick={() => remove(true)}
-            >
-              {words("instanceComposer.contextMenu.delete")}
-            </MenuItem>
-          )}
-          {!canRemoveFromCanvas && !canDelete && (
-            <MenuItem
-              isDisabled
-              description={words("instanceComposer.contextMenu.cannotRemove.description")}
-            >
-              {words("instanceComposer.contextMenu.cannotRemove.title")}
-            </MenuItem>
+          ) : (
+            <>
+              {canRemoveFromCanvas && (
+                <MenuItem
+                  icon={<TimesIcon />}
+                  description={words("instanceComposer.contextMenu.remove.description")}
+                  onClick={remove}
+                >
+                  {words("instanceComposer.contextMenu.remove")}
+                </MenuItem>
+              )}
+              {canDelete && (
+                <MenuItem
+                  isDanger
+                  icon={<TrashIcon />}
+                  description={words("instanceComposer.contextMenu.delete.description")}
+                  onClick={() => markForDeletion(true)}
+                >
+                  {words("instanceComposer.contextMenu.delete")}
+                </MenuItem>
+              )}
+              {!canRemoveFromCanvas && !canDelete && (
+                <MenuItem
+                  isDisabled
+                  description={words("instanceComposer.contextMenu.cannotRemove.description")}
+                >
+                  {words("instanceComposer.contextMenu.cannotRemove.title")}
+                </MenuItem>
+              )}
+            </>
           )}
         </MenuList>
       </MenuContent>

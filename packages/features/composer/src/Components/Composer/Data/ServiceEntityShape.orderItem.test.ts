@@ -123,4 +123,80 @@ describe("ServiceEntityShape order item serialization", () => {
       },
     });
   });
+
+  it("orders only the delete of an instance staged to be deleted", () => {
+    const shape = new ServiceEntityShape({
+      id: "core-1",
+      entityType: "core",
+      serviceModel: createMockServiceModel("ParentService"),
+      instanceAttributes: { name: "keeps-its-attributes" },
+      readonly: false,
+      isNew: false,
+      lockedOnCanvas: false,
+      relationsDictionary: {},
+      rootEntities: {},
+      interServiceRelations: {},
+      embeddedEntities: {},
+    });
+
+    shape.isMarkedForDeletion = true;
+    shape.updateOrderItem(new Map([["core-1", shape]]));
+
+    expect(shape.orderItem).toEqual({
+      instance_id: "core-1",
+      service_entity: "ParentService",
+      config: {},
+      action: "delete",
+      attributes: null,
+      edits: null,
+    });
+  });
+
+  it("leaves references to an instance staged to be deleted out of the other order items", () => {
+    const relation = createMockInterServiceRelation("database", "DatabaseService");
+    const parentModel = createMockServiceModel("ParentService", {
+      inter_service_relations: [relation],
+    });
+
+    const parentShape = new ServiceEntityShape({
+      id: "core-1",
+      entityType: "core",
+      serviceModel: parentModel,
+      instanceAttributes: { database: "relation-1" },
+      readonly: false,
+      isNew: false,
+      lockedOnCanvas: false,
+      relationsDictionary: {},
+      rootEntities: {},
+      interServiceRelations: { DatabaseService: ["relation-1"] },
+      embeddedEntities: {},
+    });
+    const relationShape = new ServiceEntityShape({
+      id: "relation-1",
+      entityType: "relation",
+      serviceModel: createMockServiceModel("DatabaseService"),
+      instanceAttributes: {},
+      readonly: false,
+      isNew: false,
+      lockedOnCanvas: false,
+      relationsDictionary: {},
+      rootEntities: {},
+      interServiceRelations: {},
+      embeddedEntities: {},
+    });
+    const canvasState = new Map<string, ServiceEntityShape>([
+      ["core-1", parentShape],
+      ["relation-1", relationShape],
+    ]);
+
+    parentShape.updateOrderItem(canvasState);
+
+    expect(parentShape.orderItem?.attributes).toMatchObject({ database: "relation-1" });
+
+    relationShape.isMarkedForDeletion = true;
+    parentShape.updateOrderItem(canvasState);
+
+    // The deploy deletes the instance, so the parent's update doesn't reference it any more
+    expect(parentShape.orderItem?.attributes?.database ?? null).toBeNull();
+  });
 });

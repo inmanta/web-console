@@ -47,6 +47,11 @@ export const useServiceOrderItems = ({
 
     // Check if any shape has missing connections or attribute validation errors
     for (const shape of canvasState.values()) {
+      // A shape staged to be deleted only orders its delete, so its problems don't block
+      if (shape.isMarkedForDeletion) {
+        continue;
+      }
+
       // Ensure attribute validation state is up to date
       shape.validateAttributes();
 

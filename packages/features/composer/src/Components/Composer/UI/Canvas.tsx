@@ -84,6 +84,7 @@ export const Canvas: React.FC = () => {
     setActiveCell,
     relationsDictionary,
     serviceCatalog,
+    serviceInstanceId,
     draggedItemRef,
   } = useContext(ComposerContext);
   const { screenToFlowPosition, flowToScreenPosition, getInternalNode } = useReactFlow();
@@ -232,8 +233,9 @@ export const Canvas: React.FC = () => {
 
   /**
    * Delete or Backspace takes the selected shape off the canvas, by the rules of its menu: a new
-   * shape is removed right away. Otherwise the menu opens on the card, to delete the shape
-   * permanently, or to say why it can't be removed.
+   * shape is removed right away. Otherwise the menu opens on the card, to choose between
+   * removing the shape from the canvas and deleting it permanently, to undo a staged delete,
+   * or to say why it can't be removed.
    */
   const onKeyDown = (event: React.KeyboardEvent) => {
     if (
@@ -248,15 +250,17 @@ export const Canvas: React.FC = () => {
     }
     event.preventDefault();
 
-    const { canRemoveFromCanvas } = getRemoveActions(
+    const { canRemoveFromCanvas, canDelete } = getRemoveActions(
       activeCell,
       canvasState,
       relationsDictionary,
-      serviceCatalog
+      serviceCatalog,
+      serviceInstanceId
     );
 
-    if (canRemoveFromCanvas) {
-      canvasActions.removeShape(activeCell, false);
+    // Only a new shape is removed right away; an existing instance opens the menu to choose.
+    if (canRemoveFromCanvas && !canDelete) {
+      canvasActions.removeShape(activeCell);
       setActiveCell(null);
       // Keep the focus in the canvas, where it was on the removed card
       wrapperRef.current?.focus();

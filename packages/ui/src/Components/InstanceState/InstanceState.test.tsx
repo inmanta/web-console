@@ -70,3 +70,9 @@ test("GIVEN State label WHEN the state has annotations but no status color THEN 
 
   expect(screen.getByText("Creating").closest(".pf-v6-c-label")).toBeInTheDocument();
 });
+
+test("GIVEN State label WHEN isCompact is set THEN the badge renders compact", async () => {
+  render(<InstanceStateLabel name="up" label="success" isCompact />);
+
+  expect(screen.getByText("up").closest(".pf-v6-c-label")).toHaveClass("pf-m-compact");
+});

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Button,
   Content,
@@ -36,11 +36,15 @@ const labelColors = { core: "yellow", embedded: "blue", relation: "purple" } as 
  */
 export const RightSidebar: React.FC = () => {
   const { mainService, activeCell, editable } = useContext(ComposerContext);
-  // The set being viewed; null means the editable one, the default.
-  const [viewedSet, setViewedSet] = useState<AttributeSetName | null>(null);
-
-  // A new selection starts back on its editable set.
-  useEffect(() => setViewedSet(null), [activeCell]);
+  // The set being viewed, remembered with whose it is: a new selection starts back on its
+  // editable set (null), without a render of the previous card's choice in between.
+  const [viewedSetState, setViewedSetState] = useState<{
+    cellId: string | null;
+    set: AttributeSetName | null;
+  }>({ cellId: null, set: null });
+  const activeCellId = activeCell?.id ?? null;
+  const viewedSet = viewedSetState.cellId === activeCellId ? viewedSetState.set : null;
+  const setViewedSet = (set: AttributeSetName) => setViewedSetState({ cellId: activeCellId, set });
 
   const description = activeCell
     ? activeCell.serviceModel.description || null
@@ -72,6 +76,11 @@ export const RightSidebar: React.FC = () => {
             </Label>
           )}
           {activeCell.instanceState && <InstanceStateLabel {...activeCell.instanceState} />}
+          {activeCell.isMarkedForDeletion && (
+            <Label isCompact status="danger" variant="outline">
+              {words("instanceComposer.card.markedForDeletion")}
+            </Label>
+          )}
         </Flex>
       ) : (
         <Title headingLevel="h2" size="xl">
@@ -98,7 +107,11 @@ export const RightSidebar: React.FC = () => {
       {activeCell && editable && showsEditableSet && (
         <EntityForm
           activeCell={activeCell}
-          isDisabled={activeCell.entityType === "relation" && !activeCell.isNew}
+          isDisabled={
+            (activeCell.entityType === "relation" && !activeCell.isNew) ||
+            // Editing an instance staged to be deleted would be lost with it
+            activeCell.isMarkedForDeletion
+          }
         />
       )}
       {activeCell && editable && !showsEditableSet && selectedSet && (

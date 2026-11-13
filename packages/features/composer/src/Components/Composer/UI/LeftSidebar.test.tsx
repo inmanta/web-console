@@ -86,6 +86,7 @@ describe("LeftSidebar", () => {
 
     setup({
       serviceCatalog: [
+        annotated({ ...standaloneService, name: "extra-service" }, "Admin", 9),
         annotated(childService, "Network", 2),
         annotated(parentService, "Network", 1),
         standaloneService,
@@ -104,13 +105,14 @@ describe("LeftSidebar", () => {
       "palette-item-child-service",
     ]);
 
-    const other = screen.getByTestId(
-      `palette-group-${words("instanceComposer.palette.otherServices")}`
-    );
+    const admin = screen.getByTestId("palette-group-Admin");
+    const other = screen.getByTestId("palette-group-other-services");
 
     expect(within(other).getByTestId("palette-item-standalone-service")).toBeInTheDocument();
-    // The ungrouped services come last
-    expect(network.compareDocumentPosition(other)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(screen.getByText(words("instanceComposer.palette.otherServices"))).toBeVisible();
+    // The groups follow their services' lowest web_order, and the ungrouped services come last
+    expect(network.compareDocumentPosition(admin)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(admin.compareDocumentPosition(other)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 
   it("shows the lifecycle state of an inventory instance", async () => {

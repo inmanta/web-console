@@ -13,6 +13,7 @@ export * from "./EventModel";
 export * from "./EventType";
 export * from "./Field";
 export * from "./InventoryTable";
+export * from "./LifecycleState";
 export * from "./ProjectModel";
 export * from "./InstanceResourceModel";
 export * from "./ServiceInstanceModel";
