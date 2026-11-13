@@ -13,6 +13,7 @@ import {
   Slider,
   ToggleGroup,
   ToggleGroupItem,
+  Tooltip,
 } from "@patternfly/react-core";
 import { CompressIcon } from "@patternfly/react-icons/dist/esm/icons/compress-icon";
 import { ExpandArrowsAltIcon } from "@patternfly/react-icons/dist/esm/icons/expand-arrows-alt-icon";
@@ -163,34 +164,38 @@ export const ZoomControls: React.FC = () => {
         </DropdownGroup>
       </Dropdown>
       <span className="toolbar-divider" aria-hidden />
-      <Button
-        className="toolbar-control"
-        variant="control"
-        icon={isFullscreen ? <CompressIcon /> : <ExpandIcon />}
-        onClick={handleFullscreenToggle}
-        aria-label={fullscreenLabel}
-        title={fullscreenLabel}
-        data-testid="fullscreen"
-      />
-      <Button
-        className="toolbar-control"
-        variant="control"
-        icon={<ExpandArrowsAltIcon />}
-        onClick={handleFitToScreen}
-        aria-label={words("instanceComposer.zoomHandler.zoomToFit")}
-        title={words("instanceComposer.zoomHandler.zoomToFit")}
-        data-testid="fit-to-screen"
-      />
+      <Tooltip content={fullscreenLabel} aria="none">
+        <Button
+          className="toolbar-control"
+          variant="control"
+          icon={isFullscreen ? <CompressIcon /> : <ExpandIcon />}
+          onClick={handleFullscreenToggle}
+          aria-label={fullscreenLabel}
+          data-testid="fullscreen"
+        />
+      </Tooltip>
+      <Tooltip content={words("instanceComposer.zoomHandler.zoomToFit")} aria="none">
+        <Button
+          className="toolbar-control"
+          variant="control"
+          icon={<ExpandArrowsAltIcon />}
+          onClick={handleFitToScreen}
+          aria-label={words("instanceComposer.zoomHandler.zoomToFit")}
+          data-testid="fit-to-screen"
+        />
+      </Tooltip>
       <span className="toolbar-divider" aria-hidden />
-      <Button
-        className="toolbar-control"
-        variant="control"
-        icon={<MinusIcon />}
-        onClick={() => handleZoom(-0.1)}
-        aria-label={words("instanceComposer.zoomHandler.zoomOut")}
-        data-testid="zoom-out"
-        isDisabled={zoom <= MIN_ZOOM}
-      />
+      <Tooltip content={words("instanceComposer.zoomHandler.zoomOut")} aria="none">
+        <Button
+          className="toolbar-control"
+          variant="control"
+          icon={<MinusIcon />}
+          onClick={() => handleZoom(-0.1)}
+          aria-label={words("instanceComposer.zoomHandler.zoomOut")}
+          data-testid="zoom-out"
+          isDisabled={zoom <= MIN_ZOOM}
+        />
+      </Tooltip>
       <Slider
         className="zoom-slider"
         min={SLIDER_MIN}
@@ -205,15 +210,17 @@ export const ZoomControls: React.FC = () => {
       <output className="zoom-percentage" data-testid="slider-output">
         {zoomPercentage}%
       </output>
-      <Button
-        className="toolbar-control"
-        variant="control"
-        icon={<PlusIcon />}
-        onClick={() => handleZoom(0.1)}
-        aria-label={words("instanceComposer.zoomHandler.zoomIn")}
-        data-testid="zoom-in"
-        isDisabled={zoom >= MAX_ZOOM}
-      />
+      <Tooltip content={words("instanceComposer.zoomHandler.zoomIn")} aria="none">
+        <Button
+          className="toolbar-control"
+          variant="control"
+          icon={<PlusIcon />}
+          onClick={() => handleZoom(0.1)}
+          aria-label={words("instanceComposer.zoomHandler.zoomIn")}
+          data-testid="zoom-in"
+          isDisabled={zoom >= MAX_ZOOM}
+        />
+      </Tooltip>
       {previousPositions && (
         <AlertGroup isToast isLiveRegion>
           <Alert

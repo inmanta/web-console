@@ -12,6 +12,7 @@ import {
   Tab,
   Tabs,
   TabTitleText,
+  Tooltip,
   Truncate,
 } from "@patternfly/react-core";
 import { AngleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-down-icon";
@@ -28,6 +29,7 @@ import { useAddPaletteItem } from "../Data/Hooks";
 import { EntityShapeType } from "../Data/ServiceEntityShape";
 import { LEFT_SIDEBAR_WIDTH, SHAPE_WIDTH } from "../config";
 import { EntityIcon } from "./EntityIcon";
+import { OverflowText } from "./OverflowText";
 import { entityColorVariables } from "./entityColors";
 
 interface PaletteRow {
@@ -333,13 +335,7 @@ export const LeftSidebar: React.FC = () => {
                         aria-disabled="true"
                         data-testid={`palette-item-${row.label}`}
                       >
-                        <span
-                          className="palette-row-icon"
-                          title={words(`instanceComposer.label.${getRowKind(row)}`)}
-                          aria-hidden
-                        >
-                          <EntityIcon serviceModel={row.item.serviceModel} />
-                        </span>
+                        <PaletteRowIcon row={row} />
                         <PaletteRowText row={row} />
                         <Label isCompact variant="outline" className="palette-row-reason">
                           {row.unavailableReason}
@@ -361,15 +357,7 @@ export const LeftSidebar: React.FC = () => {
                           draggedItemRef.current = null;
                         }}
                       >
-                        {/* The grip takes the icon's place while the row is pointed at */}
-                        <span
-                          className="palette-row-icon"
-                          title={words(`instanceComposer.label.${getRowKind(row)}`)}
-                          aria-hidden
-                        >
-                          <EntityIcon serviceModel={row.item.serviceModel} />
-                          <GripVerticalIcon className="palette-row-grip" />
-                        </span>
+                        <PaletteRowIcon row={row} />
                         <PaletteRowText row={row} />
                         <Button
                           className="palette-row-add"
@@ -393,17 +381,26 @@ export const LeftSidebar: React.FC = () => {
 };
 
 /**
- * The name of a palette row, and what kind of entity it is under it. Only a name that doesn't fit
- * is cut short, with a tooltip.
+ * The icon of a palette row, in a tile of its kind's colours, with the kind in a tooltip. The grip
+ * takes the icon's place while a row that can be dragged is pointed at.
+ */
+const PaletteRowIcon: React.FC<{ row: PaletteRow }> = ({ row }) => (
+  <Tooltip content={words(`instanceComposer.label.${getRowKind(row)}`)} aria="none">
+    <span className="palette-row-icon" aria-hidden>
+      <EntityIcon serviceModel={row.item.serviceModel} />
+      {!row.unavailableReason && <GripVerticalIcon className="palette-row-grip" />}
+    </span>
+  </Tooltip>
+);
+
+/**
+ * The name of a palette row, and what kind of entity it is under it. Only text that doesn't fit is
+ * cut short, with a tooltip.
  */
 const PaletteRowText: React.FC<{ row: PaletteRow }> = ({ row }) => (
   <span className="palette-row-text">
     <Truncate className="palette-row-name" content={row.name} />
-    {row.detail && (
-      <span className="palette-row-detail" title={row.detail}>
-        {row.detail}
-      </span>
-    )}
+    {row.detail && <OverflowText className="palette-row-detail" text={row.detail} />}
   </span>
 );
 

@@ -20,6 +20,7 @@ import {
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { SHAPE_WIDTH } from "../config";
 import { EntityIcon } from "./EntityIcon";
+import { OverflowText } from "./OverflowText";
 import { entityColorVariables } from "./entityColors";
 
 /**
@@ -74,6 +75,13 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
     !isLinkSource &&
     checkIfConnectionIsAllowed(fromShape, shape, relationsDictionary);
 
+  const kindText = identity
+    ? `${words(`instanceComposer.label.${shape.entityType}`)} · ${displayName}`
+    : words(`instanceComposer.label.${shape.entityType}`);
+  const titleText = identity
+    ? identity.value || words("instanceComposer.card.unnamed")
+    : displayName;
+
   const toggleLabel = shape.isLayersCollapsed
     ? words("instanceComposer.halo.expandLayers")
     : words("instanceComposer.halo.collapseLayers");
@@ -117,35 +125,34 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
         >
           {hasLayers && (
             <>
-              <button
-                type="button"
-                onClick={toggleLayers}
-                aria-label={toggleLabel}
-                title={toggleLabel}
-              >
-                {shape.isLayersCollapsed ? <AngleDownIcon /> : <AngleUpIcon />}
-              </button>
-              <button
-                type="button"
-                onClick={expandAll}
-                aria-label={words("instanceComposer.halo.expandAllLayers")}
-                title={words("instanceComposer.halo.expandAllLayers")}
-              >
-                <AngleDoubleDownIcon />
-              </button>
+              <Tooltip content={toggleLabel} aria="none">
+                <button type="button" onClick={toggleLayers} aria-label={toggleLabel}>
+                  {shape.isLayersCollapsed ? <AngleDownIcon /> : <AngleUpIcon />}
+                </button>
+              </Tooltip>
+              <Tooltip content={words("instanceComposer.halo.expandAllLayers")} aria="none">
+                <button
+                  type="button"
+                  onClick={expandAll}
+                  aria-label={words("instanceComposer.halo.expandAllLayers")}
+                >
+                  <AngleDoubleDownIcon />
+                </button>
+              </Tooltip>
             </>
           )}
           {canLink && (
-            <Handle
-              id="link"
-              type="source"
-              position={Position.Top}
-              className="link-handle"
-              aria-label={words("instanceComposer.halo.link")}
-              title={words("instanceComposer.halo.link")}
-            >
-              <LinkIcon />
-            </Handle>
+            <Tooltip content={words("instanceComposer.halo.link")} aria="none">
+              <Handle
+                id="link"
+                type="source"
+                position={Position.Top}
+                className="link-handle"
+                aria-label={words("instanceComposer.halo.link")}
+              >
+                <LinkIcon />
+              </Handle>
+            </Tooltip>
           )}
         </Toolbar>
       )}
@@ -161,17 +168,12 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
             <EntityIcon serviceModel={shape.serviceModel} />
           </span>
           <div className="heading">
-            <span className="kind" data-testid={`header-${displayName}`} title={displayName}>
-              {words(`instanceComposer.label.${shape.entityType}`)}
-              {identity && ` · ${displayName}`}
-            </span>
+            <OverflowText className="kind" data-testid={`header-${displayName}`} text={kindText} />
             {/* Named by its identity; an entity without one goes by its type. */}
-            <span
+            <OverflowText
               className={`title ${identity && !identity.value ? "is-placeholder" : ""}`}
-              title={identity ? identity.value || undefined : displayName}
-            >
-              {identity ? identity.value || words("instanceComposer.card.unnamed") : displayName}
-            </span>
+              text={titleText}
+            />
           </div>
           <span className="status">
             {validationMessages.length > 0 && (
@@ -198,13 +200,15 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
             )}
             {shape.isNew && <span className="pill">{words("instanceComposer.label.new")}</span>}
             {isReadOnly && (
-              <span
-                className="read-only"
-                title={words("instanceComposer.card.readOnly")}
-                aria-label={words("instanceComposer.card.readOnly")}
-              >
-                <LockIcon />
-              </span>
+              <Tooltip content={words("instanceComposer.card.readOnly")} aria="none">
+                <span
+                  className="read-only"
+                  role="img"
+                  aria-label={words("instanceComposer.card.readOnly")}
+                >
+                  <LockIcon />
+                </span>
+              </Tooltip>
             )}
           </span>
         </header>
@@ -212,10 +216,12 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
           <dl>
             {attributes.map(({ name, value }) => (
               <React.Fragment key={name}>
-                <dt title={name}>{name}</dt>
-                <dd title={value} className={value ? "" : "is-placeholder"}>
-                  {value || words("instanceComposer.card.notSet")}
-                </dd>
+                <OverflowText component="dt" text={name} />
+                <OverflowText
+                  component="dd"
+                  className={value ? "" : "is-placeholder"}
+                  text={value || words("instanceComposer.card.notSet")}
+                />
               </React.Fragment>
             ))}
           </dl>
