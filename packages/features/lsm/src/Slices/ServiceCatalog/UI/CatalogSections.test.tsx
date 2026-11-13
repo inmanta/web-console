@@ -241,6 +241,20 @@ test("GIVEN CatalogSections WHEN some services have a web_icon THEN the others g
   ).toBeInTheDocument();
 });
 
+test("GIVEN CatalogSections WHEN a service has a web_icon THEN its glyph fills the full-height fixed-width box", async () => {
+  render(Component([vpn]));
+
+  const svg = screen.getByTestId(String(vpn.entity_annotations?.web_icon)).querySelector("svg");
+
+  if (!svg) {
+    throw new Error("No svg rendered for the service icon");
+  }
+
+  const glyphBox = getComputedStyle(svg);
+
+  expect(parseFloat(glyphBox.width)).toBeGreaterThan(parseFloat(glyphBox.height));
+});
+
 test("GIVEN CatalogSections WHEN no service has a web_icon THEN no row shows an icon", async () => {
   render(Component([Service.a, Service.b]));
 
