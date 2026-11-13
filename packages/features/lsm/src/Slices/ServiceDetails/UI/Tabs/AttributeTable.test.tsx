@@ -1,6 +1,6 @@
 import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { AttributeModel, ServiceModel } from "@inmanta/web-console-core";
@@ -152,9 +152,9 @@ test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows 
   expect(await screen.findByRole("row", { name: "Row-bandwidth" })).toBeVisible();
 
   //scenario to expand and hide one child
-  const toggleButton = await screen.findByRole("button", {
-    name: "Toggle-embedded",
-  });
+  const toggleButton = within(await screen.findByRole("row", { name: "Row-embedded" })).getByRole(
+    "button"
+  );
 
   //show embedded entity
   await userEvent.click(toggleButton);

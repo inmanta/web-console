@@ -36,15 +36,16 @@ export abstract class BaseTreeTableHelper implements TreeTableHelper {
 
     const isChildExpanded = (path: string) => this.expansionManager.get(expansionState, path);
 
+    const nodes = this.attributeHelper.getAttributeNodes(this.attributes);
+
     const treeRowCreator = new TreeRowCreator(
       this.pathHelper,
       isExpandedByParent,
       isChildExpanded,
       createOnToggle,
-      this.extractValues
+      this.extractValues,
+      Object.keys(nodes)
     );
-
-    const nodes = this.attributeHelper.getAttributeNodes(this.attributes);
 
     return {
       rows: Object.entries(nodes).map(([key, node]) => treeRowCreator.create(key, node)),

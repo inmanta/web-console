@@ -5,13 +5,17 @@ import { extractCatalogValues, TreeRowCreator } from "./TreeRowCreator";
 
 const onToggle = () => {};
 
+// "a" has the child rows "a.b" and "a.d", "a.b" has the child row "a.b.c", "b" is the second top-level row.
+const paths = ["a", "a.b", "a.b.c", "a.d", "b"];
+
 const setupTreeRowCreator = () => {
   return new TreeRowCreator(
     new PathHelper("."),
     () => false,
     () => false,
     () => onToggle,
-    extractCatalogValues
+    extractCatalogValues,
+    paths
   );
 };
 
@@ -35,20 +39,22 @@ const valueCells = [
 test("TreeRowCreator create returns Leaf for Leaf node", () => {
   const row: TreeRow = {
     kind: "Leaf",
-    id: "a.b",
+    id: "a.d",
+    positionInSet: 2,
     isExpandedByParent: false,
-    primaryCell: { label: "name", value: "b" },
+    primaryCell: { label: "name", value: "d" },
     valueCells,
     level: 1,
   };
 
-  expect(treeRowCreator.create("a.b", leafNode)).toEqual(row);
+  expect(treeRowCreator.create("a.d", leafNode)).toEqual(row);
 });
 
 test("TreeRowCreator create returns Flat for flat Leaf node", () => {
   const row: TreeRow = {
     kind: "Flat",
     id: "b",
+    positionInSet: 2,
     valueCells,
     primaryCell: { label: "name", value: "b" },
   };
@@ -60,6 +66,8 @@ test("TreeRowCreator create returns Root for flat Branch node", () => {
   const row: TreeRow = {
     kind: "Root",
     id: "a",
+    positionInSet: 1,
+    childCount: 2,
     onToggle,
     isChildExpanded: false,
     primaryCell: { label: "name", value: "a" },
@@ -72,6 +80,8 @@ test("TreeRowCreator create returns Branch for nested Branch node", () => {
   const row: TreeRow = {
     kind: "Branch",
     id: "a.b",
+    positionInSet: 1,
+    childCount: 1,
     onToggle,
     isChildExpanded: false,
     isExpandedByParent: false,
