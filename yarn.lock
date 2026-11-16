@@ -958,7 +958,7 @@ __metadata:
     "@types/jest-axe": "npm:^3.5.9"
     "@vitejs/plugin-react": "npm:^6.3.0"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
@@ -984,7 +984,7 @@ __metadata:
     graphql: "npm:^17.1.0"
     jsonpathly: "npm:^4.0.0"
     keycloak-js: "npm:^26.2.5"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     qs: "npm:^6.17.0"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
@@ -1039,7 +1039,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.9"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
@@ -1067,7 +1067,7 @@ __metadata:
     graphql: "npm:^17.1.0"
     monaco-editor: "npm:^0.57.0"
     monaco-graphql: "npm:^2.0.1"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     prettier: "npm:^3.10.1"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
@@ -1105,7 +1105,7 @@ __metadata:
     markdown-it-emoji: "npm:^3.1.0"
     mermaid: "npm:^12.3.0"
     monaco-editor: "npm:^0.57.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-icons: "npm:^5.7.0"
@@ -1135,7 +1135,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.9"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-diff-viewer-continued: "npm:^4.4.0"
     react-dom: "npm:^19.3.1"
@@ -1162,7 +1162,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.9"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
@@ -1186,7 +1186,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.9"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
   languageName: unknown
@@ -1237,7 +1237,7 @@ __metadata:
     jest-axe: "npm:^11.0.0"
     keycloak-js: "npm:^26.2.5"
     monaco-editor: "npm:^0.57.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     oidc-client-ts: "npm:^3.5.0"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
@@ -1270,7 +1270,7 @@ __metadata:
     jest-axe: "npm:^11.0.0"
     mermaid: "npm:^12.3.0"
     monaco-editor: "npm:^0.57.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
@@ -1298,7 +1298,7 @@ __metadata:
     copy-to-clipboard: "npm:^4.0.2"
     highlight.js: "npm:^11.12.0"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
@@ -1749,9 +1749,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.45.6":
-  version: 0.45.11
-  resolution: "@mswjs/interceptors@npm:0.45.11"
+"@mswjs/interceptors@npm:^0.45.11":
+  version: 0.45.12
+  resolution: "@mswjs/interceptors@npm:0.45.12"
   dependencies:
     "@open-draft/until": "npm:^3.0.1"
     "@types/debug": "npm:^4.1.13"
@@ -1759,7 +1759,7 @@ __metadata:
     is-node-process: "npm:^1.2.0"
     outvariant: "npm:^1.4.3"
     rettime: "npm:^0.11.12"
-  checksum: 10/10d5f9e1db1bd22fd1ffe69c3aa3370957bc3c7f86a15ba763ccbb9041e4daee8b37d09ebf4a69b6c0ec674294ad77b706309b855750197fe0c24c6c5cd9d799
+  checksum: 10/4f96940fd89595438902dd91ef89f00a61af23869d3e0cc023fd16229f94c422946fbffa09f421feb91ea9a3982cf9270f25f27dfa3dd9e32281350a09ce2b40
   languageName: node
   linkType: hard
 
@@ -9225,13 +9225,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "msw@npm:3.0.4"
+"msw@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "msw@npm:3.0.5"
   dependencies:
     "@inquirer/confirm": "npm:^6.0.11"
     "@msw/url": "npm:^0.1.2"
-    "@mswjs/interceptors": "npm:^0.45.6"
+    "@mswjs/interceptors": "npm:^0.45.11"
     cookie: "npm:^2.0.1"
     headers-polyfill: "npm:^5.0.1"
     is-node-process: "npm:^1.2.0"
@@ -9254,7 +9254,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10/d4f35e1cf80f18705552e180a9fcb3c9dd5afd728d00ae9511740bc66fe80775cb0f908ffa8432d11de56ff6b5f73bdf4d11a6ca5d7ff15568d041227401299c
+  checksum: 10/86503f352dada95986132d66a5656934a4644a73e9effecbb00cc5bbcd89689bbc2e96da98f1d08384596b2d9fd90ee2c3c1091fe72a4fdd37d34ba5468962b7
   languageName: node
   linkType: hard
 
