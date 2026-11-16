@@ -1332,7 +1332,7 @@ __metadata:
     eslint: "npm:^10.2.1"
     eslint-import-resolver-typescript: "npm:^4.4.5"
     eslint-plugin-import: "npm:^2.32.0"
-    eslint-plugin-jest-dom: "npm:^5.10.1"
+    eslint-plugin-jest-dom: "npm:^5.10.2"
     eslint-plugin-react: "npm:^7.37.5"
     eslint-plugin-react-hooks: "npm:^7.1.1"
     eslint-plugin-testing-library: "npm:^7.16.2"
@@ -6619,9 +6619,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest-dom@npm:^5.10.1":
-  version: 5.10.1
-  resolution: "eslint-plugin-jest-dom@npm:5.10.1"
+"eslint-plugin-jest-dom@npm:^5.10.2":
+  version: 5.10.2
+  resolution: "eslint-plugin-jest-dom@npm:5.10.2"
   dependencies:
     requireindex: "npm:^1.2.0"
   peerDependencies:
@@ -6630,7 +6630,7 @@ __metadata:
   peerDependenciesMeta:
     "@testing-library/dom":
       optional: true
-  checksum: 10/4dfe8a4b5c16b996c1285d5c4e6c9ba01a977db5ed4ad83bf3c8c4ff36bd51f1b0bc9692d517412683ec125b16275f0c2a942527eb0264f1a676195db6e11c90
+  checksum: 10/2d14f789b06371f7486c4b95c14405fad366b06a788b4c2c3f9ba21bf2969c31d44c27f7a2afff00ffe9ef71ef41c8ba0f2183212909381394e45de75c332122
   languageName: node
   linkType: hard
 
