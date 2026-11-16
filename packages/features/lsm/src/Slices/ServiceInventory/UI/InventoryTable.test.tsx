@@ -31,11 +31,18 @@ const LocationDisplay: React.FC = () => {
   return <div data-testid="location">{`${pathname}${search}`}</div>;
 };
 
-function setup(
-  expertMode = false,
-  setSortFn: (props) => void = dummySetter,
-  initialEntries?: string[]
-) {
+/**
+ * Options for rendering the inventory table in a test.
+ */
+interface SetupOptions {
+  expertMode?: boolean;
+  setSortFn?: (props) => void;
+
+  /** The urls the router starts with, the last one being the current url. */
+  initialEntries?: string[];
+}
+
+function setup({ expertMode = false, setSortFn = dummySetter, initialEntries }: SetupOptions = {}) {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={initialEntries}>
@@ -86,8 +93,7 @@ test("ServiceInventory shows sorting buttons for sortable columns", async () => 
 
 test("ServiceInventory sets sorting parameters correctly on click", async () => {
   let sort;
-  const expertMode = false;
-  const component = setup(expertMode, (value) => (sort = value));
+  const component = setup({ setSortFn: (value) => (sort = value) });
 
   render(component);
   const stateButton = await screen.findByRole("button", { name: /state/i });
@@ -104,21 +110,21 @@ describe("Deployment progress bar", () => {
   const instanceDetailsPath = `/lsm/catalog/${Service.withIdentity.name}/inventory/${Row.a.serviceIdentityValue}/${Row.a.id.full}/details`;
 
   it("opens the Resources tab of the instance details and keeps the env", async () => {
-    render(setup(false, dummySetter, ["/?env=aaa"]));
+    render(setup({ initialEntries: ["/?env=aaa"] }));
 
     await userEvent.click(await screen.findByLabelText("deploy-progress"));
 
-    expect(screen.getByTestId("location")).toHaveTextContent(
+    expect(screen.getByTestId("location").textContent).toBe(
       `${instanceDetailsPath}?env=aaa&state.InstanceDetails.tab=Resources`
     );
   });
 
   it("opens the Resources tab when the url has no search", async () => {
-    render(setup(false, dummySetter, ["/"]));
+    render(setup({ initialEntries: ["/"] }));
 
     await userEvent.click(await screen.findByLabelText("deploy-progress"));
 
-    expect(screen.getByTestId("location")).toHaveTextContent(
+    expect(screen.getByTestId("location").textContent).toBe(
       `${instanceDetailsPath}?state.InstanceDetails.tab=Resources`
     );
   });
