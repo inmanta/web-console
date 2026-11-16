@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
@@ -30,12 +30,20 @@ export const InstanceRow: React.FC<Props> = ({
 }) => {
   const { routeManager } = useContext(DependencyContext);
 
-  const instanceDetailsUrl = routeManager.useUrl("InstanceDetails", {
+  const instanceDetailsPath = routeManager.getUrl("InstanceDetails", {
     service: service.name,
     instance: row.serviceIdentityValue || row.id.full,
     instanceId: row.id.full,
   });
+  const { search } = useLocation();
   const navigate = useNavigate();
+
+  const navigateToResourcesTab = () => {
+    const resourcesTabSearch = new URLSearchParams(search);
+
+    resourcesTabSearch.set("state.InstanceDetails.tab", "Resources");
+    navigate({ pathname: instanceDetailsPath, search: resourcesTabSearch.toString() });
+  };
 
   return (
     <Tbody>
@@ -61,7 +69,7 @@ export const InstanceRow: React.FC<Props> = ({
           <ActionWrapper
             id={`instance-row-resources-${row.id.short}`}
             aria-label="deploy-progress"
-            onClick={() => navigate(`${instanceDetailsUrl}&state.InstanceDetails.tab=Resources`)}
+            onClick={navigateToResourcesTab}
           >
             <DeploymentProgressBar progress={row.deploymentProgress} />
           </ActionWrapper>
@@ -78,12 +86,8 @@ export const InstanceRow: React.FC<Props> = ({
               <Link
                 aria-label="instance-details-link"
                 to={{
-                  pathname: routeManager.getUrl("InstanceDetails", {
-                    service: service.name,
-                    instance: row.serviceIdentityValue || row.id.full,
-                    instanceId: row.id.full,
-                  }),
-                  search: location.search,
+                  pathname: instanceDetailsPath,
+                  search,
                 }}
               >
                 <Button variant="link">{words("instanceDetails.button")}</Button>
