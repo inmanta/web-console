@@ -87,7 +87,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-testing-library": "^7.16.2",
     "happy-dom": "^21.0.4",
-    "prettier": "^3.9.10",
+    "prettier": "^3.10.1",
     "react": "^19.3.1",
     "rimraf": "^6.1.4",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
