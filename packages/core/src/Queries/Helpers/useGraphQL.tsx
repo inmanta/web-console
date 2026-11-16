@@ -1,6 +1,6 @@
 import type { TypedDocumentString } from "@inmanta/web-console-core/GraphQL/generated/graphql";
-import { createCustomError } from "./useFetchHelpers";
-import { usePostWithoutEnv } from "./useQueries";
+import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
+import { createCustomError, parseRequiredJsonResponse, useFetchHelpers } from "./useFetchHelpers";
 
 // TODO: https://github.com/inmanta/inmanta-core/issues/11187 drop the extra `data` wrapper once core returns a standard response.
 /**
@@ -32,16 +32,28 @@ export interface GraphQLResponseBody<Result> {
  * // data.environments.edges[0].node.name is typed as a string
  */
 export const useGraphQLRequest = () => {
-  const post = usePostWithoutEnv({ expectResponseBody: true });
+  const baseUrl = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname
+  ).getBaseUrl();
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders();
+
+  headers.set("Content-Type", "application/json");
 
   return async <Result, Variables>(
     query: TypedDocumentString<Result, Variables>,
     ...[variables]: Variables extends Record<string, never> ? [] : [NoInfer<Variables>]
   ): Promise<Result> => {
-    const body = await post<unknown, GraphQLResponseBody<Result>>("/api/v2/graphql", {
-      query,
-      variables,
+    const response = await fetch(`${baseUrl}/api/v2/graphql`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ query, variables }),
     });
+
+    await handleErrors(response, { method: "POST", path: "/api/v2/graphql" });
+
+    const body = await parseRequiredJsonResponse<GraphQLResponseBody<Result>>(response);
 
     if (body.data.errors?.length) {
       throw createCustomError(body.data.errors.join(", "), 200);

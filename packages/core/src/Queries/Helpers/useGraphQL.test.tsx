@@ -42,8 +42,9 @@ describe("useGraphQLRequest", () => {
     await expect(renderExecute()(environmentsQuery)).resolves.toEqual(environmentsData);
   });
 
-  it("GIVEN a query with variables THEN it posts the query string and the variables", async () => {
+  it("GIVEN a query with variables THEN it posts the query string and the variables as JSON", async () => {
     let requestBody: unknown;
+    let contentType: string | null = null;
     const query = new TypedDocumentString<typeof environmentsData, { first: number }>(
       "query Q($first: Int) { environments(first: $first) { edges { node { id } } } }"
     );
@@ -51,6 +52,7 @@ describe("useGraphQLRequest", () => {
     server.use(
       http.post("/api/v2/graphql", async ({ request }) => {
         requestBody = await request.json();
+        contentType = request.headers.get("Content-Type");
 
         return HttpResponse.json(environmentsBody);
       })
@@ -59,6 +61,7 @@ describe("useGraphQLRequest", () => {
     await renderExecute()(query, { first: 2 });
 
     expect(requestBody).toEqual({ query: query.toString(), variables: { first: 2 } });
+    expect(contentType).toBe("application/json");
   });
 
   it("GIVEN a body with GraphQL errors THEN it rejects with those errors", async () => {
