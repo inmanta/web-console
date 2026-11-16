@@ -96,8 +96,8 @@ export interface RelationAnnotations {
 export interface StateModel {
   deleted: boolean;
   label?: "info" | "success" | "warning" | "danger" | null;
-  validate_self?: "candidate" | "active" | null;
-  validate_others?: "candidate" | "active" | null;
+  validate_self?: "candidate" | "active" | "rollback" | null;
+  validate_others?: "candidate" | "active" | "rollback" | null;
   export_resources: boolean;
   name: string;
   purge_resources: boolean;
