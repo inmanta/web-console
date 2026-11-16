@@ -1,4 +1,5 @@
-import { ResourceActionFilter, StringMatch } from "@inmanta/web-console-core";
+import { ResourceActionFilter } from "@inmanta/web-console-core";
+import type { StrFilter } from "@inmanta/web-console-core/GraphQL/generated/graphql";
 import { VersionSelectionBlocker } from "@inmanta/web-console-core/Queries/Slices/Resource";
 
 /**
@@ -13,7 +14,7 @@ export type FilterRowKey = Extract<
 /**
  * The operators a filter value can carry besides equality: those of a string match.
  */
-export type FilterOperator = Exclude<keyof StringMatch, "eq">;
+export type FilterOperator = Exclude<keyof StrFilter, "eq">;
 
 /**
  * One value in the applied filter, with the filter field it comes from when it is shown

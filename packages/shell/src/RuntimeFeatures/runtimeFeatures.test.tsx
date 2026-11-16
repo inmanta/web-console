@@ -4,7 +4,8 @@ import { http, HttpResponse } from "msw";
 import { graphql } from "msw/graphql";
 import { FeatureModule, RuntimeFeatureEntry, words } from "@inmanta/web-console-core";
 import { getSingletons } from "@inmanta/web-console-core/Dependency";
-import { EnvironmentPreviewResponse } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import type { GetEnvironmentPreviewQuery } from "@inmanta/web-console-core/GraphQL/generated/graphql";
+import { GraphQLResponseBody } from "@inmanta/web-console-core/Queries/Helpers";
 import {
   Environment,
   EnvironmentDetails,
@@ -62,7 +63,7 @@ const server = setupTestServer(
       ? HttpResponse.json({
           data: { data: { notifications: { edges: [] } }, errors: [], extensions: {} },
         })
-      : HttpResponse.json<{ data: EnvironmentPreviewResponse }>({
+      : HttpResponse.json<GraphQLResponseBody<GetEnvironmentPreviewQuery>>({
           data: {
             data: {
               environments: {

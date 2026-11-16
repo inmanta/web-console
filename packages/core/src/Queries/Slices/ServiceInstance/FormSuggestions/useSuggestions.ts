@@ -3,6 +3,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { FormSuggestion, words } from "@inmanta/web-console-core";
 import { useDebounce } from "@inmanta/web-console-core/Common/useDebounce";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { TypedDocumentString } from "@inmanta/web-console-core/GraphQL/generated/graphql";
 import { useGet, useGraphQLRequest } from "@inmanta/web-console-core/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@inmanta/web-console-core/Queries/Helpers/KeyFactory";
 import { getParametersKey } from "@inmanta/web-console-core/Queries/Slices/Parameters";
@@ -229,11 +230,17 @@ export const useSuggestedValues = (
         // Debounce so a filter fed by a typed field re-queries on settle rather
         // than on every keystroke; the resolved query is the cache key.
         const debouncedQuery = useDebounce(queryString, 500);
-        const fetchSuggestions = useGraphQLRequest<Record<string, unknown>>(debouncedQuery);
+        const execute = useGraphQLRequest();
 
         const query = useQuery({
           queryKey: getGraphQLSuggestionsKey.single(graphqlQuery.root, [debouncedQuery, env]),
-          queryFn: fetchSuggestions,
+          // The query is built from the model's annotations at runtime, so codegen can't type its result.
+          queryFn: () =>
+            execute(
+              new TypedDocumentString<Record<string, unknown>, Record<string, never>>(
+                debouncedQuery
+              )
+            ),
           select: (data) =>
             normalizeSuggestions(projectNodes(extractNodes(data, graphqlQuery.root), graphqlQuery)),
           // Gate with `enabled` (not an early return) so hook order stays stable. A

@@ -1,5 +1,6 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { Environment } from "@inmanta/web-console-core/Domain";
+import { graphql } from "@inmanta/web-console-core/GraphQL/generated";
+import type { GetEnvironmentPreviewQuery } from "@inmanta/web-console-core/GraphQL/generated/graphql";
 import {
   CustomError,
   REFETCH_INTERVAL,
@@ -7,45 +8,33 @@ import {
 } from "@inmanta/web-console-core/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@inmanta/web-console-core/Queries/Helpers/KeyFactory";
 
-/**
- * Environment Preview type that represents the Environment type but with only the id, name, halted, extended of isExpertMode property.
- */
-export interface EnvironmentPreview extends Pick<Environment, "id" | "name" | "halted"> {
-  isExpertMode: boolean;
-  isCompiling: boolean;
-}
+const GET_ENVIRONMENT_PREVIEW_QUERY = graphql(`
+  query GetEnvironmentPreview {
+    environments {
+      edges {
+        node {
+          name
+          id
+          halted
+          isExpertMode
+          isCompiling
+        }
+      }
+    }
+  }
+`);
 
 /**
- * Response type for the environments preview query through GraphQL.
- *
- * @property {Object} data - The data object containing the environment previews.
- * @property {string[] | null} errors - The errors array containing any errors that occurred.
- * @property {Record<string, unknown>} extensions - The extensions object containing any additional data.
+ * An environment with only the fields the preview query asks for.
  */
-export interface EnvironmentPreviewResponse {
-  data: {
-    environments: {
-      edges: {
-        node: EnvironmentPreview;
-      }[];
-    };
-  };
-  errors: string[] | null;
-  extensions: Record<string, unknown>;
-}
+export type EnvironmentPreview =
+  GetEnvironmentPreviewQuery["environments"]["edges"][number]["node"];
 
 /**
  * Return Signature of the useGetEnvironmentPreview React Query
  */
 interface GetEnvironmentPreview {
-  useContinuous: () => UseQueryResult<
-    {
-      environments: EnvironmentPreview[];
-      errors: string[] | null;
-      extensions: Record<string, unknown>;
-    },
-    CustomError
-  >;
+  useContinuous: () => UseQueryResult<{ environments: EnvironmentPreview[] }, CustomError>;
 }
 
 /**
@@ -54,39 +43,15 @@ interface GetEnvironmentPreview {
  * @returns GetEnvironmentPreview A query result containing environment previews data or an error.
  */
 export const useGetEnvironmentPreview = (): GetEnvironmentPreview => {
-  const query = /* GraphQL */ `
-    query {
-      environments {
-        edges {
-          node {
-            name
-            id
-            halted
-            isExpertMode
-            isCompiling
-          }
-        }
-      }
-    }
-  `;
-
-  const queryFn = useGraphQLRequest<EnvironmentPreviewResponse>(query);
+  const execute = useGraphQLRequest();
 
   return {
     useContinuous: () =>
       useQuery({
         queryKey: GetEnvironmentPreviewKey.list([]),
-        queryFn,
+        queryFn: () => execute(GET_ENVIRONMENT_PREVIEW_QUERY),
         refetchInterval: REFETCH_INTERVAL,
-        select: (data) => {
-          const environments = data.data.environments.edges.map((edge) => edge.node);
-
-          return {
-            environments,
-            errors: data.errors,
-            extensions: data.extensions,
-          };
-        },
+        select: (data) => ({ environments: data.environments.edges.map((edge) => edge.node) }),
       }),
   };
 };

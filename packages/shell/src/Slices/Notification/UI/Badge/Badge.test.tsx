@@ -2,7 +2,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { HttpResponse } from "msw";
 import { graphql } from "msw/graphql";
-import { NotificationsResponse } from "@inmanta/web-console-core/Queries/Slices/Notification";
+import type { GetPartialNotificationsQuery } from "@inmanta/web-console-core/GraphQL/generated/graphql";
+import { GraphQLResponseBody } from "@inmanta/web-console-core/Queries/Helpers";
 import * as Mock from "@inmanta/web-console-shell/Slices/Notification/Core/Mock";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
@@ -49,7 +50,7 @@ describe("Badge", () => {
     async ({ data, variant }) => {
       server.use(
         queryBase.operation(() => {
-          return HttpResponse.json<{ data: NotificationsResponse }>({
+          return HttpResponse.json<GraphQLResponseBody<GetPartialNotificationsQuery>>({
             data: {
               data: {
                 notifications: {
@@ -81,7 +82,7 @@ describe("Badge", () => {
   test("Given Badge WHEN request is loading THEN an enabled read badge is shown", () => {
     server.use(
       queryBase.operation(() =>
-        HttpResponse.json<{ data: NotificationsResponse }>({
+        HttpResponse.json<GraphQLResponseBody<GetPartialNotificationsQuery>>({
           data: { data: { notifications: { edges: [] } }, errors: [], extensions: {} },
         })
       )
@@ -110,7 +111,7 @@ describe("Badge", () => {
   test("Given Badge WHEN request succeeds but experienced query language error THEN error is shown", async () => {
     server.use(
       queryBase.operation(() => {
-        return HttpResponse.json({ data: null, errors: ["error"] }, { status: 200 });
+        return HttpResponse.json({ data: { data: null, errors: ["error"], extensions: {} } });
       })
     );
     const { component } = setup();
