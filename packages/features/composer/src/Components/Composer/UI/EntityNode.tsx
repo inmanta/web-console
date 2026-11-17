@@ -21,7 +21,7 @@ import {
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { SHAPE_WIDTH } from "../config";
 import { EntityIcon } from "./EntityIcon";
-import { OverflowText } from "./OverflowText";
+import { OverflowText, OverflowTooltipPlacement } from "./OverflowText";
 import { entityColorVariables } from "./entityColors";
 
 /**
@@ -58,7 +58,9 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
   );
   const [isHovered, setIsHovered] = useState(false);
   const [isIssuesFocused, setIsIssuesFocused] = useState(false);
+  const [isTextTooltipVisible, setIsTextTooltipVisible] = useState(false);
   const issuesRef = useRef<HTMLButtonElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const { shape, validationMessages, hiddenCount, hasLayers, relationCount } = data;
   const displayName = shape.getDisplayName();
   const identity = shape.getIdentity();
@@ -104,7 +106,20 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
   const messagesId = `entity-${id}-problems`;
   // A card staged to be deleted only orders its delete, so its problems don't show
   const showsProblems = validationMessages.length > 0 && !shape.isMarkedForDeletion;
-  const showMessages = showsProblems && !linkSourceId && (isHovered || isIssuesFocused);
+  // Tooltips sit above or below the whole card so they never cover the card's content; a
+  // selected card has its toolbar above it, so there they go below.
+  const tooltipPlacement: OverflowTooltipPlacement = {
+    anchorRef: cardRef,
+    position: selected ? "bottom" : "top",
+    flipBehavior: selected ? ["bottom", "top"] : ["top", "bottom"],
+  };
+  const textTooltipProps = {
+    tooltipPlacement,
+    onTooltipVisibleChange: setIsTextTooltipVisible,
+  };
+  // The problems take the same place as a cut-short text's tooltip, so they make way for it.
+  const showMessages =
+    showsProblems && !linkSourceId && !isTextTooltipVisible && (isHovered || isIssuesFocused);
 
   const classNames = [
     selected && "is-selected",
@@ -118,7 +133,11 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
     .join(" ");
 
   return (
-    <NodeWrapper className={classNames} style={entityColorVariables(shape.entityType)}>
+    <NodeWrapper
+      ref={cardRef}
+      className={classNames}
+      style={entityColorVariables(shape.entityType)}
+    >
       {hasActions && (
         <Toolbar
           className="nodrag nopan"
@@ -172,11 +191,17 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
             <EntityIcon serviceModel={shape.serviceModel} />
           </span>
           <div className="heading">
-            <OverflowText className="kind" data-testid={`header-${displayName}`} text={kindText} />
+            <OverflowText
+              className="kind"
+              data-testid={`header-${displayName}`}
+              text={kindText}
+              {...textTooltipProps}
+            />
             {/* Named by its identity; an entity without one goes by its type. */}
             <OverflowText
               className={`title ${identity && !identity.value ? "is-placeholder" : ""}`}
               text={titleText}
+              {...textTooltipProps}
             />
           </div>
           <span className="status">
@@ -230,11 +255,12 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
           <dl>
             {attributes.map(({ name, value }) => (
               <React.Fragment key={name}>
-                <OverflowText component="dt" text={name} />
+                <OverflowText component="dt" text={name} {...textTooltipProps} />
                 <OverflowText
                   component="dd"
                   className={value ? "" : "is-placeholder"}
                   text={value || words("instanceComposer.card.notSet")}
+                  {...textTooltipProps}
                 />
               </React.Fragment>
             ))}
@@ -276,10 +302,11 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
           </ul>
           {/* The button is described by the list above, so the tooltip adds no description */}
           <Tooltip
-            triggerRef={issuesRef}
+            triggerRef={cardRef}
             trigger="manual"
             isVisible={showMessages}
-            position="right"
+            position={tooltipPlacement.position}
+            flipBehavior={tooltipPlacement.flipBehavior}
             aria="none"
             content={validationMessages.map((message) => (
               <div key={message}>{message}</div>
@@ -321,6 +348,40 @@ const NodeWrapper = styled.div`
 
   &.is-dimmed {
     opacity: 0.45;
+  }
+
+  // Collapsed layers: the cards hidden below are tucked under this one like a stack, each a
+  // little narrower and further down. They are drawn behind the card, so the card keeps its
+  // own ring, shadow and clipped corners.
+  &.is-collapsed {
+    isolation: isolate;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      border: 1px solid
+        color-mix(
+          in srgb,
+          var(--pf-t--global--border--color--default) 60%,
+          var(--pf-t--global--text--color--subtle)
+        );
+      border-radius: var(--pf-t--global--border--radius--medium);
+      background: var(--pf-t--global--background--color--primary--default);
+    }
+
+    &::before {
+      inset-inline: 10px;
+      bottom: -8px;
+    }
+
+    &::after {
+      z-index: -2;
+      inset-inline: 20px;
+      bottom: -16px;
+    }
   }
 
   &:not(.is-selected) > [role="toolbar"] {
@@ -370,22 +431,6 @@ const Card = styled.div`
     box-shadow:
       0 0 0 2px var(--entity-ring),
       0 0 0 8px color-mix(in srgb, var(--entity-ring) 25%, transparent);
-  }
-
-  // Collapsed layers: the cards hidden below peek out like a stack.
-  .is-collapsed & {
-    overflow: visible;
-    box-shadow:
-      0 0 0 2px var(--entity-ring),
-      5px 5px 0 -1px var(--pf-t--global--background--color--primary--default),
-      5px 5px 0 0 var(--pf-t--global--border--color--default),
-      10px 10px 0 -1px var(--pf-t--global--background--color--primary--default),
-      10px 10px 0 0 var(--pf-t--global--border--color--default);
-  }
-
-  .is-collapsed &::before {
-    border-radius: var(--pf-t--global--border--radius--medium) 0 0
-      var(--pf-t--global--border--radius--medium);
   }
 
   header {

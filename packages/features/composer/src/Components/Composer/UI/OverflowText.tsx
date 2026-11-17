@@ -1,5 +1,11 @@
 import React, { useRef, useState } from "react";
-import { Tooltip } from "@patternfly/react-core";
+import { Tooltip, TooltipProps } from "@patternfly/react-core";
+
+/** Where the tooltip goes, when not right by the text itself. */
+export type OverflowTooltipPlacement = Pick<TooltipProps, "position" | "flipBehavior"> & {
+  /** The element the tooltip is placed against, instead of the text. */
+  anchorRef?: React.RefObject<HTMLElement | null>;
+};
 
 interface Props {
   /** The whole text, for the tooltip. */
@@ -10,6 +16,10 @@ interface Props {
   component?: "span" | "dt" | "dd";
   className?: string;
   "data-testid"?: string;
+  tooltipPlacement?: OverflowTooltipPlacement;
+
+  /** Called when the tooltip shows or hides. */
+  onTooltipVisibleChange?: (isVisible: boolean) => void;
 }
 
 /**
@@ -22,15 +32,23 @@ export const OverflowText: React.FC<Props> = ({
   text,
   children,
   component: Component = "span",
+  tooltipPlacement,
+  onTooltipVisibleChange,
   ...props
 }) => {
   const ref = useRef<HTMLElement>(null);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const { anchorRef, ...position } = tooltipPlacement ?? {};
+
+  const showTooltip = (isVisible: boolean) => {
+    setIsTooltipVisible(isVisible);
+    onTooltipVisibleChange?.(isVisible);
+  };
 
   const onMouseEnter = () => {
     const element = ref.current;
 
-    setIsTooltipVisible(!!element && element.scrollWidth > element.clientWidth);
+    showTooltip(!!element && element.scrollWidth > element.clientWidth);
   };
 
   return (
@@ -38,13 +56,20 @@ export const OverflowText: React.FC<Props> = ({
       <Component
         ref={ref}
         onMouseEnter={onMouseEnter}
-        onMouseLeave={() => setIsTooltipVisible(false)}
+        onMouseLeave={() => showTooltip(false)}
         {...props}
       >
         {children ?? text}
       </Component>
       {isTooltipVisible && (
-        <Tooltip triggerRef={ref} trigger="manual" isVisible content={text} aria="none" />
+        <Tooltip
+          triggerRef={anchorRef ?? ref}
+          trigger="manual"
+          isVisible
+          content={text}
+          aria="none"
+          {...position}
+        />
       )}
     </>
   );
