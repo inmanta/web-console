@@ -5,14 +5,19 @@ import { TrashIcon } from "@patternfly/react-icons/dist/esm/icons/trash-icon";
 import { UndoIcon } from "@patternfly/react-icons/dist/esm/icons/undo-icon";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
-import { getRemoveActions } from "../Data/Helpers";
+import { getRemoveActions, getShapeName } from "../Data/Helpers";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 
 interface Props {
   shape: ServiceEntityShape;
   x: number;
   y: number;
-  onClose: () => void;
+
+  /**
+   * Closes the menu. After Escape or one of its actions, the focus goes back to the canvas
+   * (restoreFocus); after a click outside it, the focus stays where the click put it.
+   */
+  onClose: (restoreFocus: boolean) => void;
 }
 
 /**
@@ -40,12 +45,12 @@ export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => 
   useEffect(() => {
     const closeOnOutsideClick = (event: MouseEvent) => {
       if (!menuRef.current?.contains(event.target as Node)) {
-        onClose();
+        onClose(false);
       }
     };
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        onClose(true);
       }
     };
 
@@ -61,18 +66,18 @@ export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => 
 
   const remove = () => {
     canvasActions.removeShape(shape);
-    onClose();
+    onClose(true);
   };
 
   const markForDeletion = (marked: boolean) => {
     canvasActions.markShapeForDeletion(shape, marked);
-    onClose();
+    onClose(true);
   };
 
   return (
     <Menu
       ref={menuRef}
-      aria-label={words("instanceComposer.halo.actions")(shape.getDisplayName())}
+      aria-label={words("instanceComposer.halo.actions")(getShapeName(shape))}
       className="entity-context-menu"
       style={{ position: "absolute", left: x, top: y, zIndex: 1000, minWidth: 220 }}
       data-testid="entity-context-menu"

@@ -270,6 +270,19 @@ export const Canvas: React.FC = () => {
 
   const closeContextMenu = useCallback(() => setContextMenu(undefined), []);
 
+  /**
+   * Gives the focus back to a card after its menu closed, or to the canvas if the card left it.
+   * On the next frame, so a removed card is gone by then.
+   */
+  const focusCard = (shapeId: string) =>
+    requestAnimationFrame(() => {
+      const card = wrapperRef.current?.querySelector<HTMLElement>(
+        `.react-flow__node[data-id="${shapeId}"]`
+      );
+
+      (card ?? wrapperRef.current)?.focus();
+    });
+
   const clearSelection = () => {
     setActiveCell(null);
     setSelectedEdgeId(null);
@@ -460,7 +473,12 @@ export const Canvas: React.FC = () => {
           shape={contextMenuShape}
           x={contextMenu.x}
           y={contextMenu.y}
-          onClose={closeContextMenu}
+          onClose={(restoreFocus) => {
+            closeContextMenu();
+            if (restoreFocus) {
+              focusCard(contextMenu.shapeId);
+            }
+          }}
         />
       )}
     </CanvasContainer>

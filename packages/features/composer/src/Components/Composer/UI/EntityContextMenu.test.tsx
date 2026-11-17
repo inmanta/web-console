@@ -1,5 +1,5 @@
 import React from "react";
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { words } from "@inmanta/web-console-core";
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
@@ -306,6 +306,32 @@ describe("EntityContextMenu", () => {
         })
       ).toBeDisabled();
       expect(screen.getByTestId("entity-parent-service")).toBeVisible();
+    });
+
+    it("give the focus back when the menu closes: to the card, or to the canvas if it left", async () => {
+      const { child, shapes } = existingInstances();
+
+      setup(shapes, { activeCellId: child.id });
+      await focusCard("entity-child-service");
+      await userEvent.keyboard("{Delete}");
+      await screen.findByRole("menu");
+      await userEvent.keyboard("{Escape}");
+
+      const card = screen.getByTestId("entity-child-service").closest(".react-flow__node");
+
+      await waitFor(() => expect(card).toHaveFocus());
+
+      await userEvent.keyboard("{Delete}");
+      await userEvent.click(
+        await screen.findByRole("menuitem", {
+          name: new RegExp(words("instanceComposer.contextMenu.remove")),
+        })
+      );
+
+      expect(screen.queryByTestId("entity-child-service")).not.toBeInTheDocument();
+      await waitFor(() =>
+        expect(screen.getByRole("region", { name: words("instanceComposer.canvas") })).toHaveFocus()
+      );
     });
 
     it("do nothing in the viewer", async () => {

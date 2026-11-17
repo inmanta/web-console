@@ -17,6 +17,7 @@ import {
   collapseLayers,
   expandAllLayers,
   expandLayers,
+  getShapeName,
 } from "../Data/Helpers";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { SHAPE_WIDTH } from "../config";
@@ -142,7 +143,7 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
         <Toolbar
           className="nodrag nopan"
           role="toolbar"
-          aria-label={words("instanceComposer.halo.actions")(displayName)}
+          aria-label={words("instanceComposer.halo.actions")(getShapeName(shape))}
           aria-hidden={!selected}
         >
           {hasLayers && (
