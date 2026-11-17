@@ -91,6 +91,25 @@ describe("EntityContextMenu", () => {
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
   });
 
+  it("removes the embedded entities with their parent, however the link was drawn", async () => {
+    const [parent, settings] = newServiceShapes(parentService);
+
+    // Linked from the embedded card to its parent: only the parent's connections hold it
+    settings.parentIds.clear();
+    expect(parent.connections.get(settings.getEntityType())).toEqual([settings.id]);
+
+    setup([parent, settings]);
+    await openMenu("entity-parent-service");
+    await userEvent.click(
+      screen.getByRole("menuitem", {
+        name: new RegExp(words("instanceComposer.contextMenu.remove")),
+      })
+    );
+
+    expect(screen.queryByTestId("entity-parent-service")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("entity-settings")).not.toBeInTheDocument();
+  });
+
   it("stages an existing instance for deletion on its card, and undoes it", async () => {
     const { shapes } = existingInstances();
 

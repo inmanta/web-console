@@ -5,6 +5,7 @@ import {
   addConnectionsBetweenShapes,
   canRemoveLink,
   checkIfConnectionIsAllowed,
+  findParentShapeForEmbedded,
   RelationsDictionary,
   removeConnectionsBetweenShapes,
   revealDirectChildren,
@@ -37,17 +38,34 @@ export const useCanvasActions = ({
     };
 
     /**
-     * A shape with the embedded entities below it: they live in the instance's attributes,
-     * so whatever happens to the instance happens to them.
+     * A shape with the embedded entities below it, at any depth: they live in the instance's
+     * attributes, so whatever happens to the instance happens to them. An embedded entity's
+     * parent is found by its parentIds or by the parent's connections, which depend on the way
+     * the link was dragged (findParentShapeForEmbedded).
      */
-    const withEmbeddedEntities = (shape: ServiceEntityShape): ServiceEntityShape[] => [
-      shape,
-      ...(shape.entityType === "embedded"
-        ? []
-        : Array.from(canvasState.values()).filter(
-            (other) => other.entityType === "embedded" && other.parentIds.has(shape.id)
-          )),
-    ];
+    const withEmbeddedEntities = (shape: ServiceEntityShape): ServiceEntityShape[] => {
+      const collected = [shape];
+      const ids = new Set([shape.id]);
+      const embedded = Array.from(canvasState.values()).filter(
+        (other) => other.entityType === "embedded" && other.id !== shape.id
+      );
+      let found = true;
+
+      while (found) {
+        found = false;
+        embedded.forEach((entity) => {
+          const parent = !ids.has(entity.id) && findParentShapeForEmbedded(entity, canvasState);
+
+          if (parent && ids.has(parent.id)) {
+            collected.push(entity);
+            ids.add(entity.id);
+            found = true;
+          }
+        });
+      }
+
+      return collected;
+    };
 
     const removeShape: CanvasActions["removeShape"] = (shape) => {
       const removedShapes = withEmbeddedEntities(shape);

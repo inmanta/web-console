@@ -5,8 +5,9 @@
  * the features it ships; vitest.config.ts adds the test settings.
  *
  * Every app lists the packages this file imports (vite, @vitejs/plugin-react, vite-plugin-mkcert)
- * in its own devDependencies, even though the root lists them too, so each app declares what its
- * Vite config uses. A package added here goes into every app's devDependencies as well.
+ * in its own devDependencies, even though the root lists them too: `yarn workspaces focus` on an
+ * app, e.g. the OSS install, doesn't install the root's devDependencies.
+ * A package added here goes into every app's devDependencies as well.
  */
 import { execSync } from "child_process";
 import { readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "fs";

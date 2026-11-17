@@ -2,7 +2,8 @@
  * The test settings both Vitest configs share, on top of the shared Vite settings
  * (vite.shared.ts): one project per package, the happy-dom environment, the mocks and the
  * coverage. vitest.config.ts runs every package; vitest.config.oss.ts only the OSS ones, and
- * also works in the OSS app's install, without the JointJS token (see `yarn test:oss`).
+ * also works in the OSS app's install (`yarn workspaces focus @inmanta/web-console-oss`, see
+ * `yarn test:oss`).
  *
  * The projects keep the root of the repository as their root, so the setup files and the
  * `import.meta.glob` in the apps' test setup resolve the same way for every package.
