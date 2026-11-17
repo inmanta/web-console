@@ -15,7 +15,15 @@ import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import { canRemoveLink } from "../Data/Helpers";
 
-export type RelationEdgeType = Edge<{ isActive: boolean }, "relation">;
+export type RelationEdgeType = Edge<
+  {
+    isActive: boolean;
+
+    /** Removes the relation, keeping the focus in the canvas. */
+    onRemove: () => void;
+  },
+  "relation"
+>;
 
 interface Anchor {
   x: number;
@@ -90,7 +98,7 @@ export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
   target,
   data,
 }) => {
-  const { canvasState, canvasActions, relationsDictionary, serviceCatalog, editable } =
+  const { canvasState, relationsDictionary, serviceCatalog, editable } =
     useContext(ComposerContext);
   const sourceNode = useInternalNode(source);
   const targetNode = useInternalNode(target);
@@ -131,7 +139,7 @@ export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
               sourceShape.getDisplayName(),
               targetShape.getDisplayName()
             )}
-            onClick={() => canvasActions.disconnectShapes(sourceShape, targetShape)}
+            onClick={data.onRemove}
           >
             <TimesIcon />
           </RemoveButton>

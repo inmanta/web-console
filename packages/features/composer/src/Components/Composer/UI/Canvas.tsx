@@ -23,6 +23,7 @@ import {
   getConnectedLayerData,
   getLinks,
   getRemoveActions,
+  getShapeName,
   getValidationMessages,
 } from "../Data/Helpers";
 import { useAddPaletteItem } from "../Data/Hooks";
@@ -96,6 +97,11 @@ export const Canvas: React.FC = () => {
   const [nodes, setNodes] = useState<EntityNodeType[]>([]);
   const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
+  // Read out by screen readers; a new selection clears it
+  const [announcement, setAnnouncement] = useState("");
+
+  useEffect(() => setAnnouncement(""), [selectedEdgeId, activeCell]);
+  const ariaLabelConfig = useMemo(getAriaLabelConfig, []);
   const [contextMenu, setContextMenu] = useState<{ shapeId: string; x: number; y: number }>();
   // The card data of the current shapes (deriveCardData)
   const cardDataRef = useRef<{
@@ -128,18 +134,47 @@ export const Canvas: React.FC = () => {
     });
   }, [canvasState, activeCell, editable]);
 
+  /**
+   * Removes a relation, by its line's button or Delete. The line, which may have had the focus,
+   * goes away, so the focus goes back to the canvas.
+   */
+  const removeRelation = useCallback(
+    (source: ServiceEntityShape, target: ServiceEntityShape) => {
+      canvasActions.disconnectShapes(source, target);
+      setSelectedEdgeId(null);
+      wrapperRef.current?.focus();
+    },
+    [canvasActions]
+  );
+
   const edges: RelationEdgeType[] = useMemo(
     () =>
-      getLinks(canvasState).map((link) => ({
-        ...link,
-        type: "relation",
-        hidden: !!(
-          canvasState.get(link.source)?.isHidden || canvasState.get(link.target)?.isHidden
-        ),
-        selected: link.id === selectedEdgeId,
-        data: { isActive: link.id === hoveredEdgeId || link.id === selectedEdgeId },
-      })),
-    [canvasState, hoveredEdgeId, selectedEdgeId]
+      getLinks(canvasState).flatMap((link) => {
+        const source = canvasState.get(link.source);
+        const target = canvasState.get(link.target);
+
+        if (!source || !target) {
+          return [];
+        }
+
+        return [
+          {
+            ...link,
+            type: "relation" as const,
+            hidden: source.isHidden || target.isHidden,
+            selected: link.id === selectedEdgeId,
+            ariaLabel: words("instanceComposer.link.label")(
+              getShapeName(source),
+              getShapeName(target)
+            ),
+            data: {
+              isActive: link.id === hoveredEdgeId || link.id === selectedEdgeId,
+              onRemove: () => removeRelation(source, target),
+            },
+          },
+        ];
+      }),
+    [canvasState, hoveredEdgeId, selectedEdgeId, removeRelation]
   );
 
   // Moving or measuring a card writes straight to its shape. Neither changes the order,
@@ -274,8 +309,11 @@ export const Canvas: React.FC = () => {
       return false;
     }
     if (canRemoveLink(source, target, canvasState, relationsDictionary, serviceCatalog)) {
-      canvasActions.disconnectShapes(source, target);
-      setSelectedEdgeId(null);
+      removeRelation(source, target);
+    } else {
+      setAnnouncement(
+        words("instanceComposer.link.cannotRemove")(getShapeName(source), getShapeName(target))
+      );
     }
 
     return true;
@@ -355,6 +393,7 @@ export const Canvas: React.FC = () => {
     >
       <ReactFlow<EntityNodeType, RelationEdgeType>
         className={isConnecting ? "is-connecting" : undefined}
+        ariaLabelConfig={ariaLabelConfig}
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
@@ -407,6 +446,10 @@ export const Canvas: React.FC = () => {
           zoomable
         />
       </ReactFlow>
+      {/* Says why Delete didn't remove the selected relation */}
+      <span className="screen-reader-only" role="status">
+        {announcement}
+      </span>
       {contextMenu && contextMenuShape && (
         <EntityContextMenu
           shape={contextMenuShape}
@@ -419,7 +462,25 @@ export const Canvas: React.FC = () => {
   );
 };
 
+/**
+ * What the cards and lines tell screen readers they do, instead of React Flow's default, which
+ * says Delete always removes them.
+ */
+const getAriaLabelConfig = () => ({
+  "node.a11yDescription.default": words("instanceComposer.canvas.cardDescription"),
+  "edge.a11yDescription.default": words("instanceComposer.canvas.lineDescription"),
+});
+
 const CanvasContainer = styled.div`
+  .screen-reader-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   position: relative;
   // Leave room for both flanking sidebars so the canvas never runs under them.
   width: calc(100% - ${LEFT_SIDEBAR_WIDTH + RIGHT_SIDEBAR_WIDTH}px);

@@ -21,6 +21,7 @@ import styled from "styled-components";
 import { InstanceAttributeModel, words } from "@inmanta/web-console-core";
 import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
 import { ComposerContext } from "../Data/Context";
+import { getShapeName } from "../Data/Helpers";
 import { AttributeSetName, ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { RIGHT_SIDEBAR_WIDTH } from "../config";
 import { EntityForm } from "./EntityForm";
@@ -183,8 +184,7 @@ const EntityDetails: React.FC<{
 
         return target ? (
           <Button key={String(id)} variant="link" isInline onClick={() => showShape(target)}>
-            {/* Named like its card: by its identity, or by its type */}
-            {target.getIdentity()?.value || target.getDisplayName()}
+            {getShapeName(target)}
           </Button>
         ) : (
           <span key={String(id)}>{String(id)}</span>

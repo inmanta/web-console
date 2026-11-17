@@ -29,60 +29,68 @@ const setup = (shapes: ServiceEntityShape[]) =>
     </ComposerTestProvider>
   );
 
-const removeLabel = words("instanceComposer.link.remove")(
-  "parent-service",
-  "optional-child-service"
-);
+const canvas = () => screen.getByRole("region", { name: words("instanceComposer.canvas") });
 
-/** The relation line between the parent and the child, focused like tabbing to it. */
-const focusEdge = async (parent: ServiceEntityShape, child: ServiceEntityShape) => {
-  const edge = (await screen.findAllByRole("group")).find(
-    (element) =>
-      element.getAttribute("data-id")?.includes(parent.id) &&
-      element.getAttribute("data-id")?.includes(child.id)
-  ) as HTMLElement;
+/** The relation line between the parent and a child, focused like tabbing to it, then selected. */
+const selectLine = async (child: string) => {
+  const line = await screen.findByRole("group", {
+    name: words("instanceComposer.link.label")("parent-service", child),
+  });
 
-  act(() => edge.focus());
+  act(() => line.focus());
+  await userEvent.keyboard("{Enter}");
 
-  return edge;
+  expect(line).toHaveClass("selected");
+
+  return line;
 };
+
+const removeButton = () =>
+  screen.queryByRole("button", {
+    name: words("instanceComposer.link.remove")("parent-service", "optional-child-service"),
+  });
 
 describe("RelationEdge", () => {
   it("removes an optional relation with the keyboard: select the line, then Delete", async () => {
-    const { parent, child, shapes } = linkedShapes(optionalChildService);
+    const { child, shapes } = linkedShapes(optionalChildService);
 
     setup(shapes);
-    await focusEdge(parent, child);
-    await userEvent.keyboard("{Enter}");
+    await selectLine("optional-child-service");
 
-    expect(await screen.findByRole("button", { name: removeLabel })).toBeVisible();
+    expect(removeButton()).toBeVisible();
 
     await userEvent.keyboard("{Delete}");
 
     expect(child.connections.get("parent-service")).toBeUndefined();
-    expect(screen.queryByRole("button", { name: removeLabel })).not.toBeInTheDocument();
+    expect(removeButton()).not.toBeInTheDocument();
+    // The line went away with the focus, so the focus goes back to the canvas
+    expect(canvas()).toHaveFocus();
   });
 
   it("removes an optional relation with its button once the line is selected", async () => {
-    const { parent, child, shapes } = linkedShapes(optionalChildService);
+    const { child, shapes } = linkedShapes(optionalChildService);
 
     setup(shapes);
-    await focusEdge(parent, child);
-    await userEvent.keyboard("{Enter}");
-    await userEvent.click(await screen.findByRole("button", { name: removeLabel }));
+    await selectLine("optional-child-service");
+    await userEvent.click(removeButton()!);
 
     expect(child.connections.get("parent-service")).toBeUndefined();
+    expect(canvas()).toHaveFocus();
   });
 
-  it("keeps a required relation: no remove button, and Delete does nothing", async () => {
+  it("keeps a required relation, and says why Delete didn't remove it", async () => {
     const { parent, child, shapes } = linkedShapes(childService);
 
     setup(shapes);
-    await focusEdge(parent, child);
-    await userEvent.keyboard("{Enter}");
+    await selectLine("child-service");
+
+    expect(screen.queryByRole("button", { name: /remove/i })).not.toBeInTheDocument();
+
     await userEvent.keyboard("{Delete}");
 
     expect(child.connections.get("parent-service")).toEqual([parent.id]);
-    expect(screen.queryByRole("button", { name: /remove/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent(
+      words("instanceComposer.link.cannotRemove")("parent-service", "child-service")
+    );
   });
 });

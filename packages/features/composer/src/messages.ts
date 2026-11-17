@@ -92,6 +92,14 @@ export const composerMessages = {
   "instanceComposer.link.remove": (source: string, target: string) =>
     `Remove the relation between ${source} and ${target}`,
   "instanceComposer.canvas": "Canvas",
+  "instanceComposer.canvas.cardDescription":
+    "Press Enter or Space to select a card, and Escape to unselect it. Delete then removes a new card, or opens the menu of an existing one.",
+  "instanceComposer.canvas.lineDescription":
+    "Press Enter or Space to select a relation, and Escape to unselect it. Delete then removes the relation, if it is not required.",
+  "instanceComposer.link.label": (source: string, target: string) =>
+    `Relation between ${source} and ${target}`,
+  "instanceComposer.link.cannotRemove": (source: string, target: string) =>
+    `The relation between ${source} and ${target} is required, so it can't be removed.`,
   "instanceComposer.overview": "Overview",
   "instanceComposer.arrange": "Arrange",
   "instanceComposer.arrange.all": "Arrange all",

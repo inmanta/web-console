@@ -3,6 +3,12 @@ import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config/shapeConfig";
 import type { ServiceEntityShape } from "../ServiceEntityShape";
 
 /**
+ * The name a card goes by: its identity, or its type when it has none or it is still empty.
+ */
+export const getShapeName = (shape: ServiceEntityShape): string =>
+  shape.getIdentity()?.value || shape.getDisplayName();
+
+/**
  * Gets the size of a shape with fallback to default dimensions.
  * The canvas stores the measured size on the shape once it has rendered the card;
  * before that, the defaults apply.
