@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -21,10 +22,31 @@ const dummySetter = () => {
 
 const tablePresenterWithIdentity = () => createInventoryTablePresenter("service_id", "Service ID");
 
-function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
+/**
+ * Shows the current path and search, to assert where a click navigated to.
+ */
+const LocationDisplay: React.FC = () => {
+  const { pathname, search } = useLocation();
+
+  return <div data-testid="location">{`${pathname}${search}`}</div>;
+};
+
+/**
+ * Options for rendering the inventory table in a test.
+ */
+interface SetupOptions {
+  expertMode?: boolean;
+  setSortFn?: (props) => void;
+
+  /** The urls the router starts with, the last one being the current url. */
+  initialEntries?: string[];
+}
+
+function setup({ expertMode = false, setSortFn = dummySetter, initialEntries }: SetupOptions = {}) {
   const component = (
     <QueryClientProvider client={testClient}>
-      <TestMemoryRouter>
+      <TestMemoryRouter initialEntries={initialEntries}>
+        <LocationDisplay />
         <MockedDependencyProvider
           features={[lsmFeature]}
           env={{
@@ -71,8 +93,7 @@ test("ServiceInventory shows sorting buttons for sortable columns", async () => 
 
 test("ServiceInventory sets sorting parameters correctly on click", async () => {
   let sort;
-  const expertMode = false;
-  const component = setup(expertMode, (value) => (sort = value));
+  const component = setup({ setSortFn: (value) => (sort = value) });
 
   render(component);
   const stateButton = await screen.findByRole("button", { name: /state/i });
@@ -83,6 +104,30 @@ test("ServiceInventory sets sorting parameters correctly on click", async () => 
 
   expect(sort.name).toEqual("state");
   expect(sort.order).toEqual("asc");
+});
+
+describe("Deployment progress bar", () => {
+  const instanceDetailsPath = `/lsm/catalog/${Service.withIdentity.name}/inventory/${Row.a.serviceIdentityValue}/${Row.a.id.full}/details`;
+
+  it("opens the Resources tab of the instance details and keeps the env", async () => {
+    render(setup({ initialEntries: ["/?env=aaa"] }));
+
+    await userEvent.click(await screen.findByLabelText("deploy-progress"));
+
+    expect(screen.getByTestId("location").textContent).toBe(
+      `${instanceDetailsPath}?env=aaa&state.InstanceDetails.tab=Resources`
+    );
+  });
+
+  it("opens the Resources tab when the url has no search", async () => {
+    render(setup({ initialEntries: ["/"] }));
+
+    await userEvent.click(await screen.findByLabelText("deploy-progress"));
+
+    expect(screen.getByTestId("location").textContent).toBe(
+      `${instanceDetailsPath}?state.InstanceDetails.tab=Resources`
+    );
+  });
 });
 
 describe("Actions", () => {
