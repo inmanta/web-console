@@ -126,7 +126,8 @@ export const applyAutoLayoutToEmbeddedEntities = (
 /**
  * Lays the shapes out in layers by relation depth: each link points from one layer to the
  * next, and the order within a layer keeps links from crossing where it can.
- * Shapes hidden by a collapsed parent keep their position.
+ * Shapes hidden by a collapsed parent are not laid out; they move along with the shape that
+ * hides them, so they come back next to it when it is expanded.
  *
  * With a root, only the root and everything below it move, and the root stays where it is.
  *
@@ -188,14 +189,30 @@ export const applyLayeredLayout = (
     : topLeft(shapes.map((shape) => shape.getPosition()));
   const anchorAfter = root ? laidOut.get(root.id)! : topLeft(Array.from(laidOut.values()));
 
+  const movedIds = new Set<string>();
+
   shapes.forEach((shape) => {
     const { x, y } = laidOut.get(shape.id)!;
+    const before = shape.getPosition();
+    const after = {
+      x: Math.round(x - anchorAfter.x + anchorBefore.x),
+      y: Math.round(y - anchorAfter.y + anchorBefore.y),
+    };
 
-    shape.setPosition(
-      Math.round(x - anchorAfter.x + anchorBefore.x),
-      Math.round(y - anchorAfter.y + anchorBefore.y)
-    );
+    shape.setPosition(after.x, after.y);
+    movedIds.add(shape.id);
+
+    if (shape.isLayersCollapsed) {
+      getConnectedLayerData(canvasState, shape)
+        .shapes.filter((hidden) => hidden.isHidden && !movedIds.has(hidden.id))
+        .forEach((hidden) => {
+          const position = hidden.getPosition();
+
+          hidden.setPosition(position.x + after.x - before.x, position.y + after.y - before.y);
+          movedIds.add(hidden.id);
+        });
+    }
   });
 
-  return shapes.map((shape) => shape.id);
+  return Array.from(movedIds);
 };

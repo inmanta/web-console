@@ -125,6 +125,22 @@ describe("applyLayeredLayout", () => {
     expect(hidden.getPosition()).toEqual({ x: 7, y: 9 });
   });
 
+  it("should move the shapes a collapsed shape hides along with it", () => {
+    const parent = createShape("parent", 100, 100);
+    const collapsed = createShape("collapsed", 100, 100);
+    const hidden = createShape("hidden", 7, 9);
+    addConnectionsBetweenShapes(parent, collapsed);
+    addConnectionsBetweenShapes(collapsed, hidden);
+    collapsed.isLayersCollapsed = true;
+    hidden.isHidden = true;
+
+    const moved = applyLayeredLayout(toCanvas(parent, collapsed, hidden));
+    const { x, y } = collapsed.getPosition();
+
+    expect(moved).toContain("hidden");
+    expect(hidden.getPosition()).toEqual({ x: 7 + x - 100, y: 9 + y - 100 });
+  });
+
   it("should return no ids when every shape is hidden", () => {
     const shape = createShape("shape", 10, 20);
     shape.isHidden = true;

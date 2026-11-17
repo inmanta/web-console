@@ -311,9 +311,14 @@ export const Canvas: React.FC = () => {
     if (canRemoveLink(source, target, canvasState, relationsDictionary, serviceCatalog)) {
       removeRelation(source, target);
     } else {
-      setAnnouncement(
-        words("instanceComposer.link.cannotRemove")(getShapeName(source), getShapeName(target))
+      // Cleared first, so pressing Delete again announces the same message again
+      const message = words("instanceComposer.link.cannotRemove")(
+        getShapeName(source),
+        getShapeName(target)
       );
+
+      setAnnouncement("");
+      requestAnimationFrame(() => setAnnouncement(message));
     }
 
     return true;
@@ -467,6 +472,9 @@ export const Canvas: React.FC = () => {
  * says Delete always removes them.
  */
 const getAriaLabelConfig = () => ({
+  // React Flow reads "keyboardDisabled" while keyboard access is on (it is, here), and "default"
+  // while it is off; the names are the other way round.
+  "node.a11yDescription.keyboardDisabled": words("instanceComposer.canvas.cardDescription"),
   "node.a11yDescription.default": words("instanceComposer.canvas.cardDescription"),
   "edge.a11yDescription.default": words("instanceComposer.canvas.lineDescription"),
 });

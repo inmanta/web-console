@@ -24,7 +24,7 @@ import { SitemapIcon } from "@patternfly/react-icons/dist/esm/icons/sitemap-icon
 import { useReactFlow, useViewport } from "@xyflow/react";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
-import { applyLayeredLayout, LayoutDirection } from "../Data/Helpers";
+import { applyLayeredLayout, getShapeName, LayoutDirection } from "../Data/Helpers";
 import { Point } from "../Data/ServiceEntityShape";
 import { MIN_ZOOM, MAX_ZOOM, SLIDER_MIN, SLIDER_MAX, ZOOM_TO_FIT_PADDING_BUTTON } from "../config";
 import { ZoomControlsContainer } from "./ZoomControls.styles";
@@ -139,9 +139,7 @@ export const ZoomControls: React.FC = () => {
             }
             onClick={() => activeCell && arrange(activeCell.id)}
           >
-            {words("instanceComposer.arrange.below")(
-              activeCell ? activeCell.getDisplayName() : "…"
-            )}
+            {words("instanceComposer.arrange.below")(activeCell ? getShapeName(activeCell) : "…")}
           </DropdownItem>
         </DropdownList>
         <DropdownGroup label={words("instanceComposer.arrange.direction")} labelHeadingLevel="h3">

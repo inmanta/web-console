@@ -6,6 +6,7 @@ import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { ComposerTestProvider } from "../Mock/ComposerTestProvider";
 import { parentService } from "../Mock/serviceModels";
 import { newServiceShapes, toCanvasState } from "../Mock/shapes";
+import { SHAPE_WIDTH } from "../config";
 import { defineReactFlowTestObjects } from "../testSetup";
 import { Canvas } from "./Canvas";
 import { ZoomControls } from "./ZoomControls";
@@ -159,8 +160,12 @@ describe("ZoomControls", () => {
     );
 
     expect(await screen.findByText(words("instanceComposer.arrange.done.title"))).toBeVisible();
-    // Top to bottom: the embedded entity moves below its parent
+    // Top to bottom: the embedded entity moves below its parent, not beside it
+    const [x, y] = (getCardPosition(settings).match(/-?[\d.]+/g) ?? []).map(Number);
+
     expect(getCardPosition(settings)).not.toBe(before);
     expect(getCardPosition(parent)).toBe("translate(0px,0px)");
+    expect(y).toBeGreaterThan(0);
+    expect(x).toBeLessThan(SHAPE_WIDTH);
   });
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { words } from "@inmanta/web-console-core";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
@@ -78,8 +78,9 @@ describe("RelationEdge", () => {
     expect(canvas()).toHaveFocus();
   });
 
-  it("keeps a required relation, and says why Delete didn't remove it", async () => {
+  it("keeps a required relation, and says why Delete didn't remove it, every time", async () => {
     const { parent, child, shapes } = linkedShapes(childService);
+    const message = words("instanceComposer.link.cannotRemove")("parent-service", "child-service");
 
     setup(shapes);
     await selectLine("child-service");
@@ -89,8 +90,33 @@ describe("RelationEdge", () => {
     await userEvent.keyboard("{Delete}");
 
     expect(child.connections.get("parent-service")).toEqual([parent.id]);
-    expect(screen.getByRole("status")).toHaveTextContent(
-      words("instanceComposer.link.cannotRemove")("parent-service", "child-service")
+    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent(message));
+
+    // Pressed again, the message is cleared and set again, so it is read out again
+    const texts: string[] = [];
+    const observer = new MutationObserver(() =>
+      texts.push(screen.getByRole("status").textContent ?? "")
     );
+
+    observer.observe(screen.getByRole("status"), { childList: true, subtree: true });
+    await userEvent.keyboard("{Delete}");
+    await waitFor(() => expect(texts).toEqual(["", message]));
+    observer.disconnect();
+  });
+
+  it("tells screen readers what the cards and the lines do", async () => {
+    const { shapes } = linkedShapes(optionalChildService);
+
+    setup(shapes);
+
+    const line = await screen.findByRole("group", {
+      name: words("instanceComposer.link.label")("parent-service", "optional-child-service"),
+    });
+    const card = screen
+      .getByTestId("entity-optional-child-service")
+      .closest(".react-flow__node") as HTMLElement;
+
+    expect(line).toHaveAccessibleDescription(words("instanceComposer.canvas.lineDescription"));
+    expect(card).toHaveAccessibleDescription(words("instanceComposer.canvas.cardDescription"));
   });
 });

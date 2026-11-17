@@ -93,7 +93,7 @@ export const composerMessages = {
     `Remove the relation between ${source} and ${target}`,
   "instanceComposer.canvas": "Canvas",
   "instanceComposer.canvas.cardDescription":
-    "Press Enter or Space to select a card, and Escape to unselect it. Delete then removes a new card, or opens the menu of an existing one.",
+    "Press Enter or Space to select a card, and Escape to unselect it. The arrow keys then move it, and Delete removes a new card or opens the menu of an existing one.",
   "instanceComposer.canvas.lineDescription":
     "Press Enter or Space to select a relation, and Escape to unselect it. Delete then removes the relation, if it is not required.",
   "instanceComposer.link.label": (source: string, target: string) =>

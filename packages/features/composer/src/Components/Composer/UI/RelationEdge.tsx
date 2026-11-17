@@ -13,7 +13,7 @@ import {
 import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
-import { canRemoveLink } from "../Data/Helpers";
+import { canRemoveLink, getShapeName } from "../Data/Helpers";
 
 export type RelationEdgeType = Edge<
   {
@@ -136,8 +136,8 @@ export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
             className="nodrag nopan"
             style={{ transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)` }}
             aria-label={words("instanceComposer.link.remove")(
-              sourceShape.getDisplayName(),
-              targetShape.getDisplayName()
+              getShapeName(sourceShape),
+              getShapeName(targetShape)
             )}
             onClick={data.onRemove}
           >
