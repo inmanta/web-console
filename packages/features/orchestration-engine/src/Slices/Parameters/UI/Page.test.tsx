@@ -5,12 +5,12 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import * as Parameters from "@inmanta/web-console-feature-orchestration-engine/Slices/Parameters/Data/Mock";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { ParametersPage } from ".";
 
 function setup() {
@@ -30,7 +30,7 @@ function setup() {
 }
 
 describe("ParametersPage", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => {
     server.listen();

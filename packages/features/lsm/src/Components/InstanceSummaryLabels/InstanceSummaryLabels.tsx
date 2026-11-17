@@ -8,7 +8,7 @@ import {
   LabelFiltering,
   StateCountsTooltipRow,
   SummaryLabel,
-  summaryLabelColors,
+  summaryLabelStatus,
   summaryLabels,
 } from "./types";
 
@@ -56,7 +56,6 @@ export const InstanceSummaryLabels: React.FC<Props> = ({ summary, states, filter
                 content={
                   <StateCountsTooltipContent title={getLabelName(label)} rows={tooltipRows} />
                 }
-                entryDelay={200}
               >
                 {renderLabel(label, Number(summary.by_label[label]), filtering)}
               </Tooltip>
@@ -99,7 +98,7 @@ const renderLabel = (
     <Label
       variant={isActive ? "filled" : "outline"}
       icon={<LabelIcon label={label} />}
-      {...summaryLabelColors[label]}
+      status={summaryLabelStatus[label]}
       {...interactionProps}
     >
       {value}

@@ -4,11 +4,11 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { EnvironmentSettings, MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Tab } from "./Tab";
 
 const axe = configureAxe({
@@ -32,7 +32,7 @@ function setup() {
   return { component };
 }
 describe("ConfigurationTab", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => {
     server.listen();

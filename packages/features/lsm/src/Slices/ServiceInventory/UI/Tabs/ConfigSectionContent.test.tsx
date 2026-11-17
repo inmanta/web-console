@@ -8,7 +8,6 @@ import {
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { ServiceModel, VersionedServiceInstanceIdentifier, words } from "@inmanta/web-console-core";
 import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
 import { InstanceDetailsContext } from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Core/Context";
@@ -19,6 +18,7 @@ import {
   EnvironmentDetails,
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { ConfigSectionContent } from "./ConfigSectionContent";
 
 // Mock the instance config hooks from @inmanta/web-console-core/Queries/Slices/ServiceInstance
@@ -114,7 +114,7 @@ function setup(halted: boolean = false) {
 }
 
 describe("ConfigSectionContent", () => {
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config", () => {
       return HttpResponse.json({
         data: mockConfigData,

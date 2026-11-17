@@ -2,12 +2,12 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { graphiqlFeature } from "@inmanta/web-console-feature-graphiql";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Page } from "./Page";
 
 // Stub out the heavy GraphiQL editor — we only test the page shell here.
@@ -33,17 +33,15 @@ function setup(search = "") {
 }
 
 describe("GraphiQL Page", () => {
-  const server = setupServer();
+  const server = setupTestServer(
+    http.get("/api/v2/graphql/schema", () => HttpResponse.json({ data: {} }, { status: 200 }))
+  );
 
   beforeAll(() => server.listen());
   beforeEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
   test("renders the page heading", async () => {
-    server.use(
-      http.get("/api/v2/graphql/schema", () => HttpResponse.json({ data: {} }, { status: 200 }))
-    );
-
     const { component } = setup();
     render(component);
 
@@ -53,10 +51,6 @@ describe("GraphiQL Page", () => {
   });
 
   test("renders the GraphiQL editor", async () => {
-    server.use(
-      http.get("/api/v2/graphql/schema", () => HttpResponse.json({ data: {} }, { status: 200 }))
-    );
-
     const { component } = setup();
     render(component);
 
@@ -71,10 +65,6 @@ describe("GraphiQL Page", () => {
   });
 
   test("renders correctly with an env query param", async () => {
-    server.use(
-      http.get("/api/v2/graphql/schema", () => HttpResponse.json({ data: {} }, { status: 200 }))
-    );
-
     const { component } = setup("?env=test-env-id");
     render(component);
 

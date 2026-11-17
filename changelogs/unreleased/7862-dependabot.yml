@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): bump dotenv from 18.0.9 to 18.0.10'
+destination-branches:
+- master
+- iso9
+sections: {}

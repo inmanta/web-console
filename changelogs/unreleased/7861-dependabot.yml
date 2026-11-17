@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): bump victory from 38.0.0 to 38.0.1'
+destination-branches:
+- master
+- iso9
+sections: {}

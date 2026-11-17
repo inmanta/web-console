@@ -2,8 +2,6 @@ interface Leaf<Value> {
   kind: "Leaf";
   value: Value;
   hasRelation?: boolean;
-  entity?: string;
-  type?: string;
 }
 
 interface Branch {

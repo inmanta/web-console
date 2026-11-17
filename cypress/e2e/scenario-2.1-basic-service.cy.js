@@ -44,6 +44,17 @@ if (isIso) {
       ).as("GetServiceInventory");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+
+      // The section, title, icon and description come from the entity annotations of the test model.
+      cy.contains('[aria-label="ServiceCatalog-Success"] h2', "Basic services").should(
+        "be.visible"
+      );
+      cy.get("#basic-service-title").should("have.text", "Basic service");
+      cy.get("#basic-service")
+        .should("contain", "basic-service")
+        .and("contain", "Plain attributes on two routers.");
+      cy.get("#custom-agent-service").find('[data-testid="FaUserCog"]').should("be.visible");
+
       cy.get("#basic-service").contains("Inventory").click();
 
       // make sure the call to get inventory has been executed
@@ -415,9 +426,9 @@ if (isIso) {
       cy.get(".codicon-diff-insert, .codicon-diff-remove").should("exist");
 
       // Update the state to setting_start: the transfer is flagged web_advanced_state
-      // so its "Push settings" button is demoted behind the "Advanced" disclosure.
+      // so its "Push settings" button is listed in the "Advanced" flyout menu.
       cy.get('[aria-label="Actions-Toggle"]').click();
-      cy.get('[role="menuitem"]').contains("Advanced").click();
+      cy.contains('button[aria-haspopup="menu"]', "Advanced").click();
       cy.get('[role="menuitem"]').contains("Push settings").click();
 
       // Confirm in the modal

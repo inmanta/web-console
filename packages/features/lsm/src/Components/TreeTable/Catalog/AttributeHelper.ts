@@ -1,8 +1,8 @@
 import { AttributeHelper } from "@inmanta/web-console-feature-lsm/Components/TreeTable/Helpers/AttributeHelper";
-import { MultiAttributeNodeDict } from "@inmanta/web-console-feature-lsm/Components/TreeTable/Helpers/AttributeNode";
+import { AttributeNodeDict } from "@inmanta/web-console-feature-lsm/Components/TreeTable/Helpers/AttributeNode";
 import { CatalogAttributeTree } from "@inmanta/web-console-feature-lsm/Components/TreeTable/types";
 
-export class CatalogAttributeHelper implements AttributeHelper<CatalogAttributeTree> {
+export class CatalogAttributeHelper implements AttributeHelper {
   constructor(private readonly separator: string) {}
 
   public getPaths(container: CatalogAttributeTree["source"]): string[] {
@@ -11,20 +11,14 @@ export class CatalogAttributeHelper implements AttributeHelper<CatalogAttributeT
     );
   }
 
-  public getMultiAttributeNodes(
-    container: CatalogAttributeTree["source"]
-  ): MultiAttributeNodeDict<CatalogAttributeTree["target"]> {
+  public getAttributeNodes(container: CatalogAttributeTree["source"]): AttributeNodeDict {
     return this.getNodesFromEntities("", container);
-  }
-
-  public getAttributeAnnotations(_key: string) {
-    return {};
   }
 
   private getNodesFromEntities(
     prefix: string,
     container: CatalogAttributeTree["source"]
-  ): MultiAttributeNodeDict<CatalogAttributeTree["target"]> {
+  ): AttributeNodeDict {
     let entries = container.attributes.reduce((acc, cur) => {
       acc[`${prefix}${cur.name}`] = {
         kind: "Leaf",
@@ -72,6 +66,6 @@ export class CatalogAttributeHelper implements AttributeHelper<CatalogAttributeT
         acc[key] = entries[key];
 
         return acc;
-      }, {}) as MultiAttributeNodeDict<CatalogAttributeTree["target"]>;
+      }, {}) as AttributeNodeDict;
   }
 }

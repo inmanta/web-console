@@ -8,47 +8,29 @@ import {
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { Tbody, Thead, Tr, Th, Table } from "@patternfly/react-table";
-import { ParsedNumber, words } from "@inmanta/web-console-core";
+import { words } from "@inmanta/web-console-core";
 import { ColumnHeaders } from "./ColumnHeaders";
 import { TreeTableHelper } from "./Helpers/TreeTableHelper";
-import { TreeRowView, Indent } from "./TreeRow";
+import { TreeRowView } from "./TreeRow";
 
 interface Props {
   treeTableHelper: TreeTableHelper;
-  id?: string;
-  serviceName?: string;
-  version?: ParsedNumber;
-  isExpertAvailable?: boolean;
-  setTab?: (tab: string) => void;
 }
 
-export const TreeTable: React.FC<Props> = ({
-  treeTableHelper,
-  id,
-  serviceName,
-  version,
-  isExpertAvailable = false,
-  setTab = () => {},
-}) => {
+export const TreeTable: React.FC<Props> = ({ treeTableHelper }) => {
   const [expansionState, setExpansionState] = useState(treeTableHelper.getExpansionState());
   const [isOpen, setIsOpen] = useState(false);
   const [firstColumn, ...columns] = treeTableHelper.getColumns();
   const { rows, closeAll, openAll } = treeTableHelper.createRows(expansionState, setExpansionState);
-  const emptyColumns = treeTableHelper.getEmptyAttributeSets();
 
   return (
-    <Table
-      variant="compact"
-      data-testid={id ? `attributes-tree-table-${id}` : "attributes-tree-table"}
-    >
+    <Table isTreeTable gridBreakPoint="" variant="compact">
       <Thead>
         <Tr>
           <Th key={firstColumn} width={30}>
-            <Indent level={0} noToggle>
-              {firstColumn}
-            </Indent>
+            {firstColumn}
           </Th>
-          <ColumnHeaders columns={columns} emptyColumns={emptyColumns} />
+          <ColumnHeaders columns={columns} />
           <Th>
             <Dropdown
               role="listbox"
@@ -81,18 +63,8 @@ export const TreeTable: React.FC<Props> = ({
         </Tr>
       </Thead>
       <Tbody>
-        {rows.map((row) => (
-          <TreeRowView
-            key={row.id}
-            row={row}
-            id={id as string}
-            version={version as number}
-            serviceEntity={serviceName as string}
-            showExpertMode={isExpertAvailable}
-            attributes={treeTableHelper.getAttributes()}
-            annotations={row.primaryCell.annotations}
-            setTab={setTab}
-          />
+        {rows.map((row, rowIndex) => (
+          <TreeRowView key={row.id} row={row} rowIndex={rowIndex} />
         ))}
       </Tbody>
     </Table>

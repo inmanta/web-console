@@ -2,11 +2,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { delay, http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { Mock } from "@inmanta/web-console-feature-resource-manager/Slices/Facts/Test";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { FactsTab } from "./FactsTab";
 import { sortFactRows } from "./FactsTable";
 
@@ -32,7 +32,7 @@ function setup() {
   return { component };
 }
 describe("FactsTab", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());

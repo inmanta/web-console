@@ -90,6 +90,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
           placeholderText={words("common.serviceInstance.relations")(serviceTitle)}
           onSearchTextChanged={onSearchTextChanged}
           hasChips
+          numLabels={3}
         />
       ) : (
         <SingleTextSelect

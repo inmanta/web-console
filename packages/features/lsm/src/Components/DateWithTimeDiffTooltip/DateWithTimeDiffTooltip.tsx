@@ -31,7 +31,7 @@ export const DateWithTimeDiffTooltip: React.FC<Props> = ({ timestamp1, timestamp
   const dateDiff = datePresenter.diff(timestamp1, timestamp2);
 
   return (
-    <Tooltip content={words("instanceDetails.events.dateTooltip")(dateDiff)} entryDelay={200}>
+    <Tooltip content={words("instanceDetails.events.dateTooltip")(dateDiff)}>
       <span>{date.dateTimeMilliseconds}</span>
     </Tooltip>
   );

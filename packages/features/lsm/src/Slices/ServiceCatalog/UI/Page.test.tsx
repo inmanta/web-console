@@ -5,7 +5,6 @@ import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { ServiceModel, words } from "@inmanta/web-console-core";
 import { lsmFeature } from "@inmanta/web-console-feature-lsm";
 import {
@@ -16,6 +15,7 @@ import {
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import {
   aviVirtualIp,
   deployment,
@@ -51,7 +51,7 @@ function setup() {
 }
 
 describe("ServiceCatalog", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => server.listen());
 
@@ -177,6 +177,96 @@ describe("ServiceCatalog", () => {
     expect(within(collapsedList).getByTestId(deployment.name + "-item")).toBeVisible();
     expect(within(collapsedList).getByTestId(dnsRecord.name + "-item")).not.toBeVisible();
     expect(within(collapsedList).getByTestId(aviVirtualIp.name + "-item")).not.toBeVisible();
+  });
+
+  test("GIVEN ServiceCatalog WHEN the filter matches an owned service THEN only the path to it is shown, expanded", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog", () => {
+        return HttpResponse.json({ data: [linuxVm, ...deploymentTree] });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByTestId(linuxVm.name + "-item");
+
+    await userEvent.type(
+      screen.getByRole("textbox", { name: words("catalog.filter.placeholder") }),
+      aviVirtualIp.name
+    );
+
+    const list = screen.getByRole("list", { name: words("catalog.title") });
+
+    expect(within(list).getByTestId(deployment.name + "-item")).toBeVisible();
+    expect(within(list).getByTestId(aviVirtualIp.name + "-item")).toBeVisible();
+    expect(within(list).queryByTestId(dnsRecord.name + "-item")).not.toBeInTheDocument();
+    expect(within(list).queryByTestId(linuxVm.name + "-item")).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: words("collapseAll") }));
+
+    const collapsedList = screen.getByRole("list", { name: words("catalog.title") });
+
+    expect(within(collapsedList).getByTestId(deployment.name + "-item")).toBeVisible();
+    expect(within(collapsedList).getByTestId(aviVirtualIp.name + "-item")).not.toBeVisible();
+  });
+
+  test("GIVEN ServiceCatalog WHEN a filter is set THEN the toolbar count goes from all services to the matches of all services", async () => {
+    const serviceModels = [linuxVm, ...deploymentTree];
+
+    server.use(
+      http.get("/lsm/v1/service_catalog", () => {
+        return HttpResponse.json({ data: serviceModels });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByTestId(linuxVm.name + "-item");
+
+    expect(screen.getByText(words("catalog.serviceCount")(serviceModels.length))).toBeVisible();
+
+    await userEvent.type(
+      screen.getByRole("textbox", { name: words("catalog.filter.placeholder") }),
+      aviVirtualIp.name
+    );
+
+    expect(
+      screen.getByText(
+        words("catalog.serviceCount.filtered")([aviVirtualIp].length, serviceModels.length)
+      )
+    ).toBeVisible();
+  });
+
+  test("GIVEN ServiceCatalog WHEN the filter matches no service THEN a no results view resets it", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog", () => {
+        return HttpResponse.json({ data: [linuxVm, vpn] });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByTestId(linuxVm.name + "-item");
+
+    await userEvent.type(
+      screen.getByRole("textbox", { name: words("catalog.filter.placeholder") }),
+      "no service has this text"
+    );
+
+    expect(screen.getByText(words("empty.filtered.title"))).toBeVisible();
+
+    await userEvent.click(
+      screen.getByRole("button", { name: words("resources.filters.active.resetFilters") })
+    );
+
+    expect(screen.getByTestId(linuxVm.name + "-item")).toBeVisible();
+    expect(screen.getByTestId(vpn.name + "-item")).toBeVisible();
   });
 
   test("GIVEN ServiceCatalog WHEN no service owns another THEN there is no Expand all", async () => {

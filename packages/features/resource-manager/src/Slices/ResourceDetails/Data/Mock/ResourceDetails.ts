@@ -10,7 +10,6 @@ export const a: Details = {
   id_attribute_value: "/tmp/file4",
   last_deploy: "2021-07-07T09:03:00.000000",
   first_generated_time: "2021-07-07T10:00:00.000000",
-  first_generated_version: 2,
   attributes: {
     key1: "modified_value",
     path: "/tmp/file4",

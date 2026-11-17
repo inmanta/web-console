@@ -4,12 +4,12 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { getFeatureRoutes, words } from "@inmanta/web-console-core";
 import { lsmFeature } from "@inmanta/web-console-feature-lsm";
 import { stubRoute } from "@inmanta/web-console-test-utils";
 import { baseSetup } from "@inmanta/web-console-test-utils/Utils/base-setup";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import {
   responseCompletedOrder,
   responseInProgressOrder,
@@ -37,7 +37,7 @@ const DetailsPage = (
 const routes = [...getFeatureRoutes([lsmFeature]), stubRoute("CompileDetails")];
 
 describe("Order Details", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => {
     server.listen();
@@ -150,7 +150,7 @@ describe("Order Details", () => {
 
     expect(serviceOrderItemRows).toHaveLength(2);
 
-    await userEvent.click(screen.getAllByLabelText("Toggle-DetailsRow")[0]);
+    await userEvent.click(screen.getAllByLabelText("Details")[0]);
     const rowDetails = await screen.findByLabelText("Expanded-Details");
 
     expect(rowDetails).toHaveTextContent(/Show Compile Report/);
@@ -185,7 +185,7 @@ describe("Order Details", () => {
 
     render(component);
 
-    await userEvent.click((await screen.findAllByLabelText("Toggle-DetailsRow"))[0]);
+    await userEvent.click((await screen.findAllByLabelText("Details"))[0]);
     const rowDetails = await screen.findByLabelText("Expanded-Details");
 
     expect(rowDetails).toHaveTextContent(/Failure Type/);
@@ -221,7 +221,7 @@ describe("Order Details", () => {
 
     expect(serviceOrderItemRows).toHaveLength(1);
 
-    await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
+    await userEvent.click(screen.getByLabelText("Details"));
 
     const rowDetails = await screen.findByLabelText("Expanded-Details");
 
@@ -257,7 +257,7 @@ describe("Order Details", () => {
 
     render(component);
 
-    await userEvent.click(await screen.findByLabelText("Toggle-DetailsRow"));
+    await userEvent.click(await screen.findByLabelText("Details"));
     const rowDetails = await screen.findByLabelText("Expanded-Details");
 
     // Its only detail is the compile report, which this app can't link to.
@@ -294,7 +294,7 @@ describe("Order Details", () => {
 
     expect(serviceOrderItemRows).toHaveLength(1);
 
-    await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
+    await userEvent.click(screen.getByLabelText("Details"));
 
     const rowDetails = await screen.findByLabelText("Expanded-Details");
 
@@ -353,7 +353,7 @@ describe("Order Details", () => {
 
       expect(rows).toHaveLength(2);
 
-      const toggleButtons = screen.getAllByLabelText("Toggle-DetailsRow");
+      const toggleButtons = screen.getAllByLabelText("Details");
 
       await userEvent.click(toggleButtons[0]);
 
@@ -395,7 +395,7 @@ describe("Order Details", () => {
 
       expect(rows).toHaveLength(2);
 
-      await userEvent.click(screen.getAllByLabelText("Toggle-DetailsRow")[0]);
+      await userEvent.click(screen.getAllByLabelText("Details")[0]);
 
       const dependenciesRegion = await screen.findByLabelText("Expanded-Dependencies");
       const dependencyButton = within(dependenciesRegion).getByRole("button", {

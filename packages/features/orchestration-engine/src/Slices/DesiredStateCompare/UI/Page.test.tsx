@@ -4,7 +4,6 @@ import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { orchestrationEngineFeature } from "@inmanta/web-console-feature-orchestration-engine";
 import {
@@ -14,6 +13,7 @@ import {
 } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { View } from "./Page";
 
 const axe = configureAxe({
@@ -44,7 +44,7 @@ function setup() {
 describe("DesiredStateCompare", () => {
   let counterForFile123 = 0;
   let counterForFile567 = 0;
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/api/v2/desiredstate/diff/123/456", () => {
       return HttpResponse.json(DesiredStateDiff.response);
     }),

@@ -53,7 +53,7 @@ export const ConfigDetails: React.FC<Props> = ({ config, defaults, serviceInstan
         actions={{
           actions: (
             <>
-              <Tooltip content={words("config.reset.description")} entryDelay={200}>
+              <Tooltip content={words("config.reset.description")}>
                 <Button
                   size="sm"
                   onClick={() =>

@@ -4,12 +4,12 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { referenceAttributes } from "@inmanta/web-console-core/Common/References/Mock";
 import * as VersionedResourceDetails from "@inmanta/web-console-feature-orchestration-engine/Slices/DesiredStateResourceDetails/Data/Mock";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { DetailsProvider } from "./DetailsProvider";
 
 const axe = configureAxe({
@@ -34,7 +34,7 @@ function setup() {
 }
 
 describe("DetailsProvider", () => {
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/api/v2/desiredstate/123/resource/abc", () => {
       return HttpResponse.json({ data: VersionedResourceDetails.a });
     })

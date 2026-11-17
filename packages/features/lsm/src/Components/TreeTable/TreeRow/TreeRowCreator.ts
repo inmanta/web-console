@@ -1,129 +1,93 @@
-import { AttributeAnnotations } from "@inmanta/web-console-core";
-import { Attributes } from "@inmanta/web-console-core/Domain/InventoryTable";
-import {
-  CatalogAttributes,
-  InventoryAttributes,
-  MultiAttributeNode,
-} from "@inmanta/web-console-feature-lsm/Components/TreeTable/Helpers/AttributeNode";
+import { AttributeNode } from "@inmanta/web-console-feature-lsm/Components/TreeTable/Helpers/AttributeNode";
 import { PathHelper } from "@inmanta/web-console-feature-lsm/Components/TreeTable/Helpers/PathHelper";
-import { AttributeTree } from "@inmanta/web-console-feature-lsm/Components/TreeTable/types";
 import { Cell, TreeRow } from "./TreeRow";
 
-export class TreeRowCreator<T extends AttributeTree["target"]> {
+export class TreeRowCreator {
+  /** The 1-based position of each path among the paths that share its parent. */
+  private readonly positionInSetByPath: Map<string, number>;
+
+  /** The number of child paths of each path. Top-level paths count as children of "". */
+  private readonly childCountByPath: Map<string, number>;
+
   constructor(
     private readonly pathHelper: PathHelper,
     private readonly isExpandedByParent: (path: string) => boolean,
     private readonly isChildExpanded: (path: string) => boolean,
     private readonly createOnToggle: (path: string) => () => void,
-    private readonly extractValues: (
-      node: Extract<MultiAttributeNode<T>, { kind: "Leaf" }>
-    ) => Cell[],
-    private readonly attributes: Attributes
-  ) {}
+    private readonly extractValues: (node: Extract<AttributeNode, { kind: "Leaf" }>) => Cell[],
+    paths: string[]
+  ) {
+    this.positionInSetByPath = new Map();
+    this.childCountByPath = new Map();
+
+    paths.forEach((path) => {
+      const parentPath = this.getParentPath(path);
+      const positionInSet = (this.childCountByPath.get(parentPath) || 0) + 1;
+
+      this.childCountByPath.set(parentPath, positionInSet);
+      this.positionInSetByPath.set(path, positionInSet);
+    });
+  }
 
   /**
-   * When a Branch is not conform, this method will return you the content of the warning object.
-   * If the Branch targeted by the path is conform, all attributes are either undefined or an object, then this method will return undefined.
-   *
-   * @param {string} path - Usually a dict that separates attribute names by a $ sign.
-   * @returns {string | undefined}
+   * Returns the parent path of the given path, or "" for a top-level path.
    */
-  getBranchWarningObject = (path: string): string | undefined => {
-    const pathArr = path.split("$");
-
-    if (!pathArr || !pathArr.length) {
-      return "";
-    }
-
-    const candidate = (this.attributes.candidate as unknown) || {};
-    const active = (this.attributes.active as unknown) || {};
-    const rollback = (this.attributes.rollback as unknown) || {};
-
-    const candidateValue = pathArr.reduce(
-      (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
-      candidate
-    );
-
-    const activeValue = pathArr.reduce(
-      (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
-      active
-    );
-
-    const rollBackValue = pathArr.reduce(
-      (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
-      rollback
-    );
-
-    /**
-     * The value can normally only be of type object or undefined if it's conform.
-     * If it's a string or a number it means that the type migrated at some point.
-     * That's when we want to display a warning to the user to inform there is a mismatch.
-     */
-    if (
-      typeof candidateValue === "string" ||
-      typeof activeValue === "string" ||
-      typeof rollBackValue === "string"
-    ) {
-      const candidateStringified =
-        typeof candidateValue !== "undefined" ? JSON.stringify(candidateValue) : candidateValue;
-      const activeStringified =
-        typeof activeValue !== "undefined" ? JSON.stringify(activeValue) : activeValue;
-      const rollbackStringified =
-        typeof rollBackValue !== "undefined" ? JSON.stringify(rollBackValue) : rollBackValue;
-
-      return `Candidate attributes : ${candidateStringified} \n  Active attributes : ${activeStringified} \n Rollback attributes : ${rollbackStringified}`;
-    }
-
-    return;
-  };
+  private getParentPath(path: string): string {
+    return this.pathHelper.isNested(path) ? this.pathHelper.getParent(path) : "";
+  }
 
   /**
-   * Depending on the targeted attribute and if it's nested or not,
-   * this method will return you a Leaf/Flat or a Branch/Root Row.
-   * There is an additional check for nested levels to define if they are conform or not.
-   * A warning property is added to the primaryCell object for these sections.
-   * If the warning has a string value, this will be handled further in the TreeRowView component.
-   *
-   * @param {string} path
-   * @param {MultiAttributeNode<T>} node
-   * @returns {TreeRow} a TreeRow object
+   * Returns the 1-based position of the path among the paths that share its parent.
    */
-  create(path: string, node: MultiAttributeNode<T>, annotations?: AttributeAnnotations): TreeRow {
+  private getPositionInSet(path: string): number {
+    return this.positionInSetByPath.get(path) || 0;
+  }
+
+  /**
+   * Returns the number of child paths of the given path.
+   */
+  private getChildCount(path: string): number {
+    return this.childCountByPath.get(path) || 0;
+  }
+
+  /**
+   * Creates the table row for the attribute node at the given path.
+   * A leaf becomes a Flat row at the top level and a Leaf row when nested; a branch becomes a Root or a Branch row the same way.
+   */
+  create(path: string, node: AttributeNode): TreeRow {
     if (node.kind === "Leaf") {
       if (this.pathHelper.isNested(path)) {
         return {
           kind: "Leaf",
           id: path,
+          positionInSet: this.getPositionInSet(path),
           isExpandedByParent: this.isExpandedByParent(path),
           level: this.pathHelper.getLevel(path),
           primaryCell: {
             label: "name",
             value: this.pathHelper.getSelf(path),
-            ...(annotations && { annotations: annotations }),
           },
           valueCells: this.extractValues(node),
-          type: node.type,
         };
       } else {
         return {
           kind: "Flat",
           id: path,
+          positionInSet: this.getPositionInSet(path),
           primaryCell: {
             label: "name",
             value: path,
-            ...(annotations && { annotations: annotations }),
           },
           valueCells: this.extractValues(node),
-          type: node.type,
         };
       }
     } else {
-      const warning = this.getBranchWarningObject(path);
-
       if (this.pathHelper.isNested(path)) {
         return {
           kind: "Branch",
           id: path,
+          positionInSet: this.getPositionInSet(path),
+          childCount: this.getChildCount(path),
           isExpandedByParent: this.isExpandedByParent(path),
           isChildExpanded: this.isChildExpanded(path),
           onToggle: this.createOnToggle(path),
@@ -131,21 +95,19 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
           primaryCell: {
             label: "name",
             value: this.pathHelper.getSelf(path),
-            ...(annotations && { annotations: annotations }),
-            warning: warning,
           },
         };
       } else {
         return {
           kind: "Root",
           id: path,
+          positionInSet: this.getPositionInSet(path),
+          childCount: this.getChildCount(path),
           isChildExpanded: this.isChildExpanded(path),
           onToggle: this.createOnToggle(path),
           primaryCell: {
             label: "name",
             value: path,
-            warning: warning,
-            ...(annotations && { annotations: annotations }),
           },
         };
       }
@@ -187,9 +149,7 @@ function format(value: unknown): string {
   return "";
 }
 
-export function extractCatalogValues(
-  node: Extract<MultiAttributeNode<CatalogAttributes>, { kind: "Leaf" }>
-): Cell[] {
+export function extractCatalogValues(node: Extract<AttributeNode, { kind: "Leaf" }>): Cell[] {
   return [
     {
       label: "type",
@@ -203,31 +163,6 @@ export function extractCatalogValues(
     {
       label: "description",
       value: format(node.value.description),
-    },
-  ];
-}
-
-export function extractInventoryValues(
-  node: Extract<MultiAttributeNode<InventoryAttributes>, { kind: "Leaf" }>
-): Cell[] {
-  return [
-    {
-      label: "candidate",
-      value: format(node.value.candidate),
-      hasRelation: node.hasRelation,
-      serviceName: node.entity,
-    },
-    {
-      label: "active",
-      value: format(node.value.active),
-      hasRelation: node.hasRelation,
-      serviceName: node.entity,
-    },
-    {
-      label: "rollback",
-      value: format(node.value.rollback),
-      hasRelation: node.hasRelation,
-      serviceName: node.entity,
     },
   ];
 }

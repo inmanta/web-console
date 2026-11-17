@@ -222,15 +222,15 @@ export const MarkdownStyles = `
   border-width: 0 2px 2px 0;
   border-color: var(--pf-t--global--icon--color--regular);
   transform-origin: center;
-  /* 45deg gives a chevron similar to fa-angle-right instead of a 90deg L-shape.
+  /* The right and bottom borders rotated by 45deg form a chevron that points down.
      A slight vertical translation keeps it visually centered with the text line. */
   transform: translateY(-2px) rotate(45deg);
   transition: transform var(--pf-t--global--motion-duration--fast) ease-in-out;
 }
 
 .markdown-body details[open] summary::before {
-  /* Rotate further to point down when expanded, preserving vertical alignment */
-  transform: translateY(1px) rotate(135deg);
+  /* Half a turn back makes the chevron point up when expanded, preserving vertical alignment */
+  transform: translateY(1px) rotate(-135deg);
 }
 
 .markdown-body details summary::-webkit-details-marker,

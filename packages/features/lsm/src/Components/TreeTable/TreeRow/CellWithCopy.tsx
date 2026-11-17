@@ -12,7 +12,6 @@ interface Props {
   label: string;
   value: string;
   hasRelation?: boolean;
-  serviceName?: string;
 }
 
 /**
@@ -23,16 +22,9 @@ interface Props {
  * @prop value - The value of the cell.
  * @prop className - The class name of the cell.
  * @prop hasRelation - Whether the value has a relation.
- * @prop serviceName - The name of the service.
  * @returns A React component that displays a cell with a value and a copy button.
  */
-export const CellWithCopy: React.FC<Props> = ({
-  label,
-  value,
-  className,
-  hasRelation,
-  serviceName,
-}) => {
+export const CellWithCopy: React.FC<Props> = ({ label, value, className, hasRelation }) => {
   const [wrapWithPopover, setWrapWithPopover] = useState(false);
   const { onClick } = useContext(TreeTableCellContext);
   const onMouseEnter = (event: MouseEvent<HTMLTableCellElement>) => {
@@ -47,7 +39,7 @@ export const CellWithCopy: React.FC<Props> = ({
   const cell = (
     <Td className={className} key={label} dataLabel={label} onMouseEnter={onMouseEnter}>
       {shouldRenderLink(value, hasRelation) ? (
-        <MultiLinkCell value={value} serviceName={serviceName} onClick={onClick} />
+        <MultiLinkCell value={value} onClick={onClick} />
       ) : (
         value
       )}

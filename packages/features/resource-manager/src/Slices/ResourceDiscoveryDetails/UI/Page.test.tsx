@@ -5,12 +5,12 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { resourceManagerFeature } from "@inmanta/web-console-feature-resource-manager";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Page as ResourceDiscoveryDetailsPage } from "./Page";
 
 // Mock data for individual resource details
@@ -86,7 +86,7 @@ function setup(resourceId = "test-resource-id") {
 }
 
 describe("ResourceDiscoveryDetailsPage", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
@@ -105,6 +105,7 @@ describe("ResourceDiscoveryDetailsPage", () => {
     render(component);
 
     expect(screen.getByLabelText("DiscoveredResourceDetails-Loading")).toBeVisible();
+    expect(await screen.findByText(mockResourceDetails.discovered_resource_id)).toBeVisible();
   });
 
   test("GIVEN ResourceDiscoveryDetails page WHEN API returns error AND user clicks retry THEN refetches data", async () => {

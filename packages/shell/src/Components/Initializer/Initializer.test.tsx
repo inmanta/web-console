@@ -5,7 +5,6 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { graphql } from "msw/graphql";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import {
   AuthContextInterface,
@@ -17,6 +16,7 @@ import {
 } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { getServerStatusKey } from "@inmanta/web-console-core/Queries/Slices/Server";
 import { MockedDependencyProvider, ServerStatus } from "@inmanta/web-console-test-utils";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { Initializer } from "./Initializer";
 
 const queryBase = graphql.link("/api/v2/graphql");
@@ -64,7 +64,7 @@ function setup(queryClient: QueryClient, authHelper: AuthContextInterface = defa
 }
 
 describe("Initializer", () => {
-  const server = setupServer();
+  const server = setupTestServer();
 
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());

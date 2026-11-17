@@ -26,8 +26,8 @@
     "@testing-library/react": "^16.3.3",
     "@types/file-saver": "^2.0.7",
     "@types/qs": "^6.15.1",
-    "msw": "^3.0.4",
-    "vite": "^8.3.6",
+    "msw": "^3.0.5",
+    "vite": "^8.3.8",
     "vitest": "^5.1.0"
   },
   "dependencies": {
@@ -36,8 +36,8 @@
     "bignumber.js": "^11.1.5",
     "dayjs": "^1.11.23",
     "file-saver": "^2.0.5",
-    "graphql": "^17.0.2",
-    "jsonpathly": "^3.2.1",
+    "graphql": "^17.1.0",
+    "jsonpathly": "^4.0.0",
     "keycloak-js": "^26.2.5",
     "qs": "^6.17.0",
     "react": "^19.3.1",

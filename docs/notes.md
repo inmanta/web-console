@@ -112,6 +112,8 @@ The ISO app loads the composer this way. The composer has its own Vite config (`
 
 The dev server and the tests resolve `composer/feature` to the composer's source instead, like a bundled feature.
 
+`yarn cypress-test:ship-modes` checks these modes end to end (`cypress/e2e/ShipModes`) on the orchestrator's container, or on the folder in `WEB_CONSOLE_DIR`. It switches modes with `scripts/composer-ship-mode.js` (`yarn composer-ship-mode <mode>`): `without` removes the `composer-*` files, `combined` copies them in again (also how it installs the composer later), and `mismatch` builds the composer a second time with another version (`COMPOSER_VERSION_OVERRIDE`, one extra composer build of a few seconds) into a temporary folder and copies those files in. The rest of the end-to-end tests run on `dist/` as built, with the composer. After an aborted run, `yarn composer-ship-mode combined --container inmanta_orchestrator` restores the orchestrator's web console.
+
 ## Features and routes in tests
 
 Tests follow the same import boundaries as the code they test (see `eslint.layers.js`), and may also import `@inmanta/web-console-test-utils`. A feature's tests only depend on that feature:
@@ -124,6 +126,17 @@ Tests follow the same import boundaries as the code they test (see `eslint.layer
 - The lint rule only sees `import` statements. Keep the paths in `vi.mock`, `vi.importActual` and `typeof import()` within the same boundaries.
 
 `apps/web-console/src/test-setup.ts` holds the setup that depends on the app's features, like registering every feature's messages. A feature's own global mocks go in a setup file of that feature.
+
+## CI
+
+These Jenkins jobs run from this repository:
+
+- `Jenkinsfile`, on every branch: `yarn install --immutable`, the checks, `yarn build:ci` (the ISO app with the composer next to it, the composer's own build and the OSS app, all stamped with the version in `package.json`, which `yarn check-dist-versions` checks), `yarn check-no-cdn` over every build, the unit tests and the ISO end-to-end tests.
+- `jenkins/Jenkinsfile.oss`, on every branch, without the token and with an empty Yarn global folder (an earlier install on the agent may have mirrored the JointJS packages there): the lockfile is complete without the token (`yarn install --mode=update-lockfile`, then `git diff --exit-code yarn.lock`), and the OSS app installs (`yarn workspaces focus @inmanta/web-console-oss`), builds, type-checks (`yarn tsc:oss`) and passes the tests of the OSS packages (`yarn test:oss`).
+- `jenkins/Jenkinsfile.nightly-ship-modes`, every night on master and the iso branches: the ISO end-to-end tests once per ship mode of the composer (combined, without, mismatch), then `yarn cypress-test:ship-modes`, each on a fresh orchestrator.
+- `jenkins/Jenkinsfile.nightly-auth`, every night on master: the end-to-end tests of each authentication method (Keycloak, OIDC, local authentication), each on a fresh OSS orchestrator set up for it (`yarn install:orchestrator:<method>`), with the build's `dist/`.
+
+Every run that starts an orchestrator (the main job's Cypress stage and each run of the nightly jobs) takes the lock `orchestrator-<agent>` (Lockable Resources), since they all use the same container names on the agent.
 
 ## Minimum browser versions
 

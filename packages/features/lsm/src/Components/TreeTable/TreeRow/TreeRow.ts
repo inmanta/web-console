@@ -1,28 +1,30 @@
-import { AttributeAnnotations } from "@inmanta/web-console-core";
-
 export type TreeRow = Flat | Root | Branch | Leaf;
 
 export interface Cell {
   label: string;
   value: string;
-  annotations?: AttributeAnnotations;
   hasRelation?: boolean;
-  serviceName?: string;
-  modifier?: string;
-  warning?: string;
 }
 
 interface Flat {
   kind: "Flat";
   id: string;
+
+  /** 1-based position among the rows that share its parent, set as aria-posinset for screen readers. */
+  positionInSet: number;
   primaryCell: Cell;
   valueCells: Cell[];
-  type?: string;
 }
 
 interface Root {
   kind: "Root";
   id: string;
+
+  /** 1-based position among the rows that share its parent, set as aria-posinset for screen readers. */
+  positionInSet: number;
+
+  /** Number of direct child rows, set as aria-setsize; PatternFly only draws the expand toggle when it is above 0. */
+  childCount: number;
   onToggle: () => void;
   isChildExpanded: boolean;
   primaryCell: Cell;
@@ -31,6 +33,12 @@ interface Root {
 interface Branch {
   kind: "Branch";
   id: string;
+
+  /** 1-based position among the rows that share its parent, set as aria-posinset for screen readers. */
+  positionInSet: number;
+
+  /** Number of direct child rows, set as aria-setsize; PatternFly only draws the expand toggle when it is above 0. */
+  childCount: number;
   isExpandedByParent: boolean;
   isChildExpanded: boolean;
   onToggle: () => void;
@@ -41,16 +49,11 @@ interface Branch {
 interface Leaf {
   kind: "Leaf";
   id: string;
+
+  /** 1-based position among the rows that share its parent, set as aria-posinset for screen readers. */
+  positionInSet: number;
   isExpandedByParent: boolean;
   level: number;
   primaryCell: Cell;
   valueCells: Cell[];
-  type?: string;
-}
-
-export function isRowOfMultipleValues(row: Flat | Leaf): boolean {
-  const values = row.valueCells.map(({ value }) => value);
-  const nonEmptyValues = values.filter((value) => value.length > 0);
-
-  return nonEmptyValues.length > 1;
 }

@@ -1,21 +1,12 @@
-import { Attributes } from "@inmanta/web-console-core";
-import {
-  InventoryAttributes,
-  MultiAttributeNode,
-} from "@inmanta/web-console-feature-lsm/Components/TreeTable/Helpers/AttributeNode";
+import { AttributeNode } from "@inmanta/web-console-feature-lsm/Components/TreeTable/Helpers/AttributeNode";
 import { PathHelper } from "@inmanta/web-console-feature-lsm/Components/TreeTable/Helpers/PathHelper";
 import { TreeRow } from "./TreeRow";
-import { extractInventoryValues, TreeRowCreator } from "./TreeRowCreator";
+import { extractCatalogValues, TreeRowCreator } from "./TreeRowCreator";
 
 const onToggle = () => {};
 
-const attributes: Attributes = {
-  candidate: {
-    b: "a",
-  },
-  active: null,
-  rollback: null,
-};
+// "a" has the child rows "a.b" and "a.d", "a.b" has the child row "a.b.c", "b" is the second top-level row.
+const paths = ["a", "a.b", "a.b.c", "a.d", "b"];
 
 const setupTreeRowCreator = () => {
   return new TreeRowCreator(
@@ -23,67 +14,60 @@ const setupTreeRowCreator = () => {
     () => false,
     () => false,
     () => onToggle,
-    extractInventoryValues,
-    attributes
+    extractCatalogValues,
+    paths
   );
 };
 
 const treeRowCreator = setupTreeRowCreator();
 
-test("TreeRowCreator create returns Leaf for Leaf node", () => {
-  const node: MultiAttributeNode<InventoryAttributes> = {
-    kind: "Leaf",
-    value: {
-      candidate: "a",
-      active: undefined,
-      rollback: undefined,
-    },
-  };
+const leafNode: AttributeNode = {
+  kind: "Leaf",
+  value: {
+    type: "string",
+    modifier: "rw",
+    description: undefined,
+  },
+};
 
+const valueCells = [
+  { label: "type", value: "string" },
+  { label: "modifier", value: "rw" },
+  { label: "description", value: "" },
+];
+
+test("TreeRowCreator create returns Leaf for Leaf node", () => {
   const row: TreeRow = {
     kind: "Leaf",
-    id: "a.b",
+    id: "a.d",
+    positionInSet: 2,
     isExpandedByParent: false,
-    primaryCell: { label: "name", value: "b" },
-    valueCells: [
-      { label: "candidate", value: "a" },
-      { label: "active", value: "" },
-      { label: "rollback", value: "" },
-    ],
+    primaryCell: { label: "name", value: "d" },
+    valueCells,
     level: 1,
   };
 
-  expect(treeRowCreator.create("a.b", node)).toEqual(row);
+  expect(treeRowCreator.create("a.d", leafNode)).toEqual(row);
 });
 
 test("TreeRowCreator create returns Flat for flat Leaf node", () => {
-  const node: MultiAttributeNode<InventoryAttributes> = {
-    kind: "Leaf",
-    value: {
-      candidate: "a",
-      active: undefined,
-      rollback: undefined,
-    },
-  };
-
   const row: TreeRow = {
     kind: "Flat",
     id: "b",
-    valueCells: [
-      { label: "candidate", value: "a" },
-      { label: "active", value: "" },
-      { label: "rollback", value: "" },
-    ],
+    positionInSet: 2,
+    valueCells,
     primaryCell: { label: "name", value: "b" },
   };
 
-  expect(treeRowCreator.create("b", node)).toEqual(row);
+  expect(treeRowCreator.create("b", leafNode)).toEqual(row);
 });
 
 test("TreeRowCreator create returns Root for flat Branch node", () => {
   const row: TreeRow = {
     kind: "Root",
     id: "a",
+    positionInSet: 1,
+    childCount: 2,
     onToggle,
     isChildExpanded: false,
     primaryCell: { label: "name", value: "a" },
@@ -96,6 +80,8 @@ test("TreeRowCreator create returns Branch for nested Branch node", () => {
   const row: TreeRow = {
     kind: "Branch",
     id: "a.b",
+    positionInSet: 1,
+    childCount: 1,
     onToggle,
     isChildExpanded: false,
     isExpandedByParent: false,

@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
-import { DropdownGroup, DropdownItem } from "@patternfly/react-core";
-import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
+import React, { useContext } from "react";
+import { DropdownGroup, DropdownItem, Menu, MenuContent, MenuList } from "@patternfly/react-core";
 import styled, { css } from "styled-components";
 import { ParsedNumber, words } from "@inmanta/web-console-core";
 import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
@@ -12,9 +11,8 @@ import { StateTransferModalContent } from "./StateTransferModalContent";
 interface Props {
   targets: StateTarget[];
 
-  /** Targets whose transfer carries `web_advanced_state`. Rendered behind a
-   * collapsed "Advanced" disclosure instead of the primary "Set state" group
-   * (issue #7095). */
+  /** Targets whose transfer carries `web_advanced_state`. Listed in a flyout menu next to an
+   * "Advanced" item instead of in the primary "Set state" group. */
   advancedTargets?: StateTarget[];
   instance_display_identity: string;
   instance_id: string;
@@ -29,7 +27,7 @@ interface Props {
  *
  * @props {Props} props - The props of the components
  *  @prop {StateTarget[]} targets - a list of available target states, paired with the transfer that produces each one
- *  @prop {StateTarget[]} [advancedTargets] - targets demoted into the "Advanced" disclosure
+ *  @prop {StateTarget[]} [advancedTargets] - targets listed in the "Advanced" flyout menu
  *  @prop {string} instance_display_identity - the display value of the instance Id
  *  @prop {string} instance_id - the hashed id of the instance
  *  @prop {string} service_entity - the service entity type of the instance
@@ -50,7 +48,6 @@ export const StateAction: React.FC<Props> = ({
   setInterfaceBlocked,
 }) => {
   const { triggerModal } = useContext(ModalContext);
-  const [isAdvancedOpen, setIsAdvancedOpen] = useState<boolean>(false);
 
   /**
    * When a state is selected, block the interface, open the modal,
@@ -85,7 +82,7 @@ export const StateAction: React.FC<Props> = ({
 
   /**
    * Renders a single target state as a dropdown item, shared between the
-   * primary "Set state" group and the "Advanced" disclosure.
+   * primary "Set state" group and the "Advanced" flyout menu.
    *
    * @param {StateTarget} stateTarget - the target state and its transfer
    * @param {number} index - its position, to disambiguate targets sharing the same target state
@@ -117,16 +114,17 @@ export const StateAction: React.FC<Props> = ({
         </DropdownGroup>
       )}
       {advancedTargets.length > 0 && (
-        <>
-          <DropdownItem
-            key="advanced-state-toggle"
-            onClick={() => setIsAdvancedOpen((open) => !open)}
-            icon={isAdvancedOpen ? <AngleDownIcon /> : <AngleRightIcon />}
-          >
-            {words("instanceDetails.setState.advanced")}
-          </DropdownItem>
-          {isAdvancedOpen && <DropdownGroup>{advancedTargets.map(renderTarget)}</DropdownGroup>}
-        </>
+        <DropdownItem
+          flyoutMenu={
+            <Menu>
+              <MenuContent>
+                <MenuList>{advancedTargets.map(renderTarget)}</MenuList>
+              </MenuContent>
+            </Menu>
+          }
+        >
+          {words("instanceDetails.setState.advanced")}
+        </DropdownItem>
       )}
     </>
   );

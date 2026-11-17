@@ -540,7 +540,7 @@ describe("Page Actions - Success", () => {
     await userEvent.click(screen.getByRole("button", { name: /no/i }));
   });
 
-  it("Normal Instance Actions Enabled - web_advanced_state demotes a transfer into the Advanced disclosure (issue #7095)", async () => {
+  it("Normal Instance Actions Enabled - web_advanced_state moves a transfer into the Advanced flyout menu", async () => {
     server.use(
       http.get("/lsm/v1/service_catalog/mobileCore", () => {
         return HttpResponse.json({
@@ -591,11 +591,14 @@ describe("Page Actions - Success", () => {
       screen.queryByRole("menuitem", { name: "Enter maintenance mode" })
     ).not.toBeInTheDocument();
 
-    const advancedToggle = screen.getByRole("menuitem", { name: "Advanced" });
+    const advancedToggle = screen.getByRole("button", { name: "Advanced" });
+
+    expect(advancedToggle).toHaveAttribute("aria-expanded", "false");
 
     await userEvent.click(advancedToggle);
 
-    // expanding the disclosure only reveals it in place, it doesn't collapse the outer dropdown
+    expect(advancedToggle).toHaveAttribute("aria-expanded", "true");
+    // opening the flyout is not a state transfer, so the outer dropdown stays open
     expect(actionDropdown).toHaveAttribute("aria-expanded", "true");
 
     const maintenanceItem = screen.getByRole("menuitem", { name: "Enter maintenance mode" });

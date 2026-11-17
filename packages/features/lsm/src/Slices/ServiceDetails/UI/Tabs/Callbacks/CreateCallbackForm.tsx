@@ -89,6 +89,7 @@ export const CreateCallbackForm: React.FC<Props> = ({ service_entity, numberOfCo
   return (
     <Tbody>
       <Tr>
+        <Td />
         <Td className="pf-v6-c-inline-edit__input">
           <TextInput
             aria-label="callbackUrl"

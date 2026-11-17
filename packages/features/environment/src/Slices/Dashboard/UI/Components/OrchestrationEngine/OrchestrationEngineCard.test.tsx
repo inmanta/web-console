@@ -3,14 +3,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { words } from "@inmanta/web-console-core";
 import { mockedMetrics } from "@inmanta/web-console-feature-environment/Slices/Dashboard/Core/Mock";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { OrchestrationEngineCard } from "./OrchestrationEngineCard";
 
-const server = setupServer();
+const server = setupTestServer();
 
 // The card fires two /api/v2/compilereport requests (total in range, failed in range) that only
 // differ by the `filter.success=false` param the failed-only query adds - branching on that lets

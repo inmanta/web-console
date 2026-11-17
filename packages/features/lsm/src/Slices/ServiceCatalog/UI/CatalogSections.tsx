@@ -16,7 +16,8 @@ import { CatalogSection } from "./types";
 
 interface Props {
   sections: CatalogSection[];
-  isExpandedByDefault: boolean;
+  isExpandedByDefault?: boolean;
+  ownerNamesOfMatchingServices: Set<string>;
 }
 
 /**
@@ -29,11 +30,18 @@ interface Props {
  *
  * @props {Props} props - The props of the component.
  *  @prop {CatalogSection[]} sections - The catalog sections, from createCatalogSections.
- *  @prop {boolean} isExpandedByDefault - Whether the owned services of every service start expanded.
+ *  @prop {boolean} [isExpandedByDefault] - Whether the owned services of every service start
+ *  expanded. When `undefined`, only the owners in ownerNamesOfMatchingServices start expanded.
+ *  @prop {Set<string>} ownerNamesOfMatchingServices - The owners of the services matching the
+ *  catalog filter.
  *
  * @returns {React.FC<Props>} The service catalog sections.
  */
-export const CatalogSections: React.FC<Props> = ({ sections, isExpandedByDefault }) => {
+export const CatalogSections: React.FC<Props> = ({
+  sections,
+  isExpandedByDefault,
+  ownerNamesOfMatchingServices,
+}) => {
   const allServices = getAllCatalogServices(sections);
   const hasGroups = sections.some((section) => section.kind === "Group");
   const hasServiceIcons = allServices.some(
@@ -58,6 +66,7 @@ export const CatalogSections: React.FC<Props> = ({ sections, isExpandedByDefault
                   isOwnedService={false}
                   titleHeadingLevel={hasGroups ? "h3" : "h2"}
                   isExpandedByDefault={isExpandedByDefault}
+                  ownerNamesOfMatchingServices={ownerNamesOfMatchingServices}
                 />
               ))}
             </CatalogDataList>

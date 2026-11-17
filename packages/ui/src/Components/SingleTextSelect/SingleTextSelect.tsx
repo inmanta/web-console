@@ -12,6 +12,7 @@ import {
   TextInputGroupUtilities,
 } from "@patternfly/react-core";
 import { TimesIcon } from "@patternfly/react-icons";
+import { useOptionDisplayNames } from "@inmanta/web-console-ui/Utils";
 
 interface Props {
   selected: string | null;
@@ -29,6 +30,7 @@ interface Props {
 /**
  * The implementation mostly follows the suggested implementation from PF5.
  * Except that the selected state is handled at a higher level in our case.
+ * Closing the menu drops typed text that was not picked, so the input shows the selected option again.
  *
  * @param selected string value of the selected value
  * @param setSelected state callback method
@@ -61,6 +63,7 @@ export const SingleTextSelect: React.FC<Props> = ({
   const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const textInputRef = useRef<HTMLInputElement | null>(null);
+  const getDisplayName = useOptionDisplayNames(options);
 
   useEffect(() => {
     if (filterValue && !isOpen) {
@@ -86,9 +89,17 @@ export const SingleTextSelect: React.FC<Props> = ({
 
     setActiveItem(null);
     setFocusedItemIndex(null);
-    onSearchTextChanged(inputValue);
+    onSearchTextChanged(filterValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterValue]);
+
+  // Search for the selected value while its name is unknown, e.g. when it is not on the first page of options.
+  useEffect(() => {
+    if (selected && getDisplayName(selected) === undefined) {
+      onSearchTextChanged(selected);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected]);
 
   useEffect(() => {
     if (options.length === 0 && !hasCreation) {
@@ -103,9 +114,12 @@ export const SingleTextSelect: React.FC<Props> = ({
       setSelectOptions([{ children: `Create "${inputValue}"`, value: "create" }]);
     } else {
       setSelectOptions(options);
+      const selectedDisplayName = selected ? getDisplayName(selected) : undefined;
 
-      if (inputValue && inputValue === selected) {
-        setInputValue(getDisplayValue(selected));
+      // Once the name of the selected value is known, show it and go back to the regular search.
+      if (inputValue && inputValue === selected && selectedDisplayName !== undefined) {
+        setInputValue(selectedDisplayName);
+        onSearchTextChanged(filterValue);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,18 +138,28 @@ export const SingleTextSelect: React.FC<Props> = ({
     previousSelected.current = selected;
   }, [selected]);
 
-  const onToggleClick = () => {
-    setIsOpen(!isOpen);
+  const closeMenu = () => {
+    setIsOpen(false);
+    setFocusedItemIndex(null);
+    setActiveItem(null);
+    setInputValue(selected ? (getDisplayName(selected) ?? selected) : "");
+    setFilterValue("");
   };
 
-  const getDisplayValue = (value: string | null) => {
-    const selectedItem = options.find((option) => option.value === value);
-
-    if (selectedItem && selectedItem.children) {
-      return String(selectedItem.children);
+  const onToggleClick = () => {
+    if (isOpen) {
+      closeMenu();
+    } else {
+      setIsOpen(true);
     }
+  };
 
-    return value || "";
+  const onInputClick = () => {
+    if (!isOpen) {
+      setIsOpen(true);
+    } else if (!inputValue) {
+      closeMenu();
+    }
   };
 
   const onSelect = (
@@ -151,7 +175,7 @@ export const SingleTextSelect: React.FC<Props> = ({
       default:
         if (value && value !== "no results") {
           setFilterValue("");
-          setInputValue(getDisplayValue(String(value)));
+          setInputValue(getDisplayName(String(value)) ?? String(value));
           setSelected(String(value));
         }
 
@@ -240,8 +264,7 @@ export const SingleTextSelect: React.FC<Props> = ({
         break;
       case "Tab":
       case "Escape":
-        setIsOpen(false);
-        setActiveItem(null);
+        closeMenu();
         break;
       case "ArrowUp":
       case "ArrowDown":
@@ -264,7 +287,7 @@ export const SingleTextSelect: React.FC<Props> = ({
       <TextInputGroup isPlain>
         <TextInputGroupMain
           value={inputValue}
-          onClick={onToggleClick}
+          onClick={onInputClick}
           onChange={onTextInputChange}
           onKeyDown={onInputKeyDown}
           autoComplete="off"
@@ -302,9 +325,7 @@ export const SingleTextSelect: React.FC<Props> = ({
       id="typeahead-select"
       isOpen={isOpen}
       onSelect={onSelect}
-      onOpenChange={() => {
-        setIsOpen(false);
-      }}
+      onOpenChange={closeMenu}
       toggle={toggle}
       selected={selected}
     >

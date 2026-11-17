@@ -178,7 +178,6 @@ interface BaseDetails {
 interface ReleasedDetails extends BaseDetails {
   last_deploy?: string;
   first_generated_time: string;
-  first_generated_version: ParsedNumber;
 }
 
 export interface Details extends ReleasedDetails {

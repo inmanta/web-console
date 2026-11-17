@@ -16,11 +16,7 @@ export const DocumentationLinks: React.FC = () => {
 
   return (
     <ToolbarItem>
-      <Tooltip
-        content={words("dashboard.documentation.tooltip")}
-        position="bottom"
-        entryDelay={500}
-      >
+      <Tooltip content={words("dashboard.documentation.tooltip")} position="bottom">
         <Link to={urlManager.getDocumentationLink()} target="_blank" rel="noopener noreferrer">
           <Button icon={<BookIcon />} aria-label="documentation link" variant="plain" />
         </Link>

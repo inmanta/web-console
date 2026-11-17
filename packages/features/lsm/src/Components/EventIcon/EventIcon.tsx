@@ -19,7 +19,7 @@ interface Props {
 }
 export const EventIcon: React.FC<Props> = ({ eventType }) => {
   return (
-    <Tooltip content={eventType} entryDelay={200}>
+    <Tooltip content={eventType}>
       <>{getIconFor(eventType)}</>
     </Tooltip>
   );

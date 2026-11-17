@@ -1,5 +1,5 @@
 import { HttpResponse, delay, http } from "msw";
-import { setupServer } from "msw/node";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import {
   logsResponse,
   instanceData,
@@ -188,7 +188,7 @@ const postStateUpdateFailed = http.post(
 /**
  * Setup a test server where the queries are delayed or infinitely delayed
  */
-export const loadingServer = setupServer(
+export const loadingServer = setupTestServer(
   getServiceModel,
   getHistoryLogsInfiniteDelay,
   getInstanceData,
@@ -198,7 +198,7 @@ export const loadingServer = setupServer(
 /**
  * Setup a test server where all the initial GET queries return with an error
  */
-export const errorServerInstance = setupServer(
+export const errorServerInstance = setupTestServer(
   getServiceModelError,
   getHistoryLogsError,
   getInstanceError,
@@ -208,7 +208,7 @@ export const errorServerInstance = setupServer(
 /**
  * Setup a test server where all the initial GET queries return with an error
  */
-export const versionErrorResourceServerInstance = setupServer(
+export const versionErrorResourceServerInstance = setupTestServer(
   getServiceModelError,
   getHistoryLogsError,
   getInstanceError,
@@ -218,7 +218,7 @@ export const versionErrorResourceServerInstance = setupServer(
 /**
  * Setup a test server where only the HistoryLogs GET query returns an error
  */
-export const errorServerHistory = setupServer(
+export const errorServerHistory = setupTestServer(
   getServiceModelWithConfig,
   getHistoryLogsError,
   getInstanceDataDelayed,
@@ -229,7 +229,7 @@ export const errorServerHistory = setupServer(
  * Setup a default test server where all queries succeed
  * This server doesn't have documentation for any attributes
  */
-export const defaultServer = setupServer(
+export const defaultServer = setupTestServer(
   getServiceModel,
   getHistoryLogs,
   getInstanceData,
@@ -245,7 +245,7 @@ export const defaultServer = setupServer(
  * Setup a test server where only the actions fail
  * This server doesn't have documentation for any attributes
  */
-export const serverFailedActions = setupServer(
+export const serverFailedActions = setupTestServer(
   getServiceModel,
   getHistoryLogs,
   getInstanceData,
@@ -260,7 +260,7 @@ export const serverFailedActions = setupServer(
 /**
  * Setup a test server with documentation for a certain attribute
  */
-export const serverWithDocumentation = setupServer(
+export const serverWithDocumentation = setupTestServer(
   getServiceModelWithDocumentation,
   getHistoryLogsWithDocumentation,
   getInstanceDataWithDocumentation,
@@ -297,11 +297,11 @@ const getHistoryLogsWithMultipleDocumentation = http.get(
  * web_order and web_default_open annotations, used to test sorting,
  * default-open, and multi-expand behaviour.
  */
-export const serverWithMultipleDocumentation = setupServer(
+export const serverWithMultipleDocumentation = setupTestServer(
   getServiceModelWithMultipleDocumentation,
   getHistoryLogsWithMultipleDocumentation,
   getInstanceDataWithMultipleDocumentation,
   getResources
 );
 
-export const emptyResourcesServer = setupServer(getResourcesEmpty);
+export const emptyResourcesServer = setupTestServer(getResourcesEmpty);

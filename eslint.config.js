@@ -29,11 +29,50 @@ const testFiles = [
 // and the Vite config of the apps and the features.
 const devDependencyFiles = [
   ...testFiles,
-  "apps/web-console/src/test-setup.ts",
+  "apps/*/src/test-setup.ts",
   "apps/*/vite.config.ts",
   "packages/features/*/vite.config.ts",
   "packages/features/*/vite.js",
 ];
+
+/**
+ * Imports that only one place may use, with the files of that place.
+ * Only the GraphiQL feature depends on the GraphiQL packages. Tests create their msw server
+ * with setupTestServer, which makes a request without a handler fail the test.
+ */
+const restrictedImports = {
+  graphiql: {
+    files: ["packages/features/graphiql/**"],
+    pattern: {
+      group: ["graphiql", "graphiql/*", "@graphiql/*", "monaco-graphql", "monaco-graphql/*"],
+      message:
+        "Only the GraphiQL feature (packages/features/graphiql) imports the GraphiQL packages.",
+    },
+  },
+  msw: {
+    files: ["packages/test-utils/**"],
+    pattern: {
+      group: ["msw/node"],
+      importNames: ["setupServer"],
+      message:
+        "Use setupTestServer from @inmanta/web-console-test-utils/Utils/setupTestServer, which fails the test on a request without a handler.",
+    },
+  },
+};
+
+/**
+ * The no-restricted-imports rule with every restriction except the given one.
+ */
+const restrictImports = (allowed) => ({
+  "no-restricted-imports": [
+    "error",
+    {
+      patterns: Object.entries(restrictedImports)
+        .filter(([name]) => name !== allowed)
+        .map(([, { pattern }]) => pattern),
+    },
+  ],
+});
 
 export default [
   {
@@ -228,34 +267,18 @@ export default [
       "import/no-restricted-paths": ["error", { basePath, zones: testImportBoundaryZones }],
     },
   },
+  // The imports only one place may use, see restrictedImports. For GraphiQL, this rule
+  // gives the clearest message for a static import; the Yarn constraints (yarn.config.cjs) and
+  // import/no-extraneous-dependencies below also catch import() and a dependency in the wrong
+  // package.json.
   {
-    // Only the GraphiQL feature depends on the GraphiQL packages. This rule gives the clearest
-    // message for a static import; the Yarn constraints (yarn.config.cjs) and
-    // import/no-extraneous-dependencies below also catch import() and a dependency in the wrong
-    // package.json.
     files: ["{src,packages,apps}/**/*.ts", "{src,packages,apps}/**/*.tsx"],
-    ignores: ["packages/features/graphiql/**"],
-    rules: {
-      "no-restricted-imports": [
-        "error",
-        {
-          patterns: [
-            {
-              group: [
-                "graphiql",
-                "graphiql/*",
-                "@graphiql/*",
-                "monaco-graphql",
-                "monaco-graphql/*",
-              ],
-              message:
-                "Only the GraphiQL feature (packages/features/graphiql) imports the GraphiQL packages.",
-            },
-          ],
-        },
-      ],
-    },
+    rules: restrictImports(),
   },
+  ...Object.entries(restrictedImports).map(([name, { files }]) => ({
+    files,
+    rules: restrictImports(name),
+  })),
   {
     // Every workspace declares the packages it imports in its own package.json, so that
     // installing one app only installs what its packages use. Tests and test helpers may use

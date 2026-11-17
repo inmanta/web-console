@@ -15,7 +15,7 @@ import {
   Title,
   Truncate,
 } from "@patternfly/react-core";
-import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
+import { RhMicronsCaretDownIcon, RhMicronsCaretUpIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { getServiceIconName, words } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
@@ -32,7 +32,8 @@ interface Props {
   hasServiceIcons: boolean;
   isOwnedService: boolean;
   titleHeadingLevel: "h2" | "h3";
-  isExpandedByDefault: boolean;
+  isExpandedByDefault?: boolean;
+  ownerNamesOfMatchingServices: Set<string>;
 }
 
 /**
@@ -50,8 +51,11 @@ interface Props {
  *  indented one level further than its owner's.
  *  @prop {"h2" | "h3"} titleHeadingLevel - The heading level of the service title, one below the
  *  section heading when there is one.
- *  @prop {boolean} isExpandedByDefault - Whether the owned services start expanded. The row keeps
- *  its own expanded state after that.
+ *  @prop {boolean} [isExpandedByDefault] - Whether the owned services start expanded. When
+ *  `undefined`, they start expanded only for an owner in ownerNamesOfMatchingServices. The row
+ *  keeps its own expanded state after that.
+ *  @prop {Set<string>} ownerNamesOfMatchingServices - The owners of the services matching the
+ *  catalog filter.
  *
  * @returns {React.FC<Props>} A data list item for the service.
  */
@@ -61,12 +65,15 @@ export const ServiceDataListItem: React.FC<Props> = ({
   isOwnedService,
   titleHeadingLevel,
   isExpandedByDefault,
+  ownerNamesOfMatchingServices,
 }) => {
   const { serviceModel, resolvedAnnotations } = service;
   const serviceName = serviceModel.name;
   const instanceSummary = serviceModel.instance_summary;
   const hasOwnedServices = service.ownedServices.length > 0;
-  const [isExpanded, setIsExpanded] = useState(isExpandedByDefault);
+  const [isExpanded, setIsExpanded] = useState(
+    isExpandedByDefault ?? ownerNamesOfMatchingServices.has(serviceName)
+  );
   const ownedServicesStateCounts = useMemo(() => getOwnedServicesStateCounts(service), [service]);
   const titleId = `${serviceName}-title`;
   const inventoryPathname = useContext(DependencyContext).routeManager.getUrl("Inventory", {
@@ -120,7 +127,7 @@ export const ServiceDataListItem: React.FC<Props> = ({
                           id={`${serviceName}-toggle`}
                           variant="link"
                           isInline
-                          icon={isExpanded ? <AngleDownIcon /> : <AngleRightIcon />}
+                          icon={isExpanded ? <RhMicronsCaretUpIcon /> : <RhMicronsCaretDownIcon />}
                           iconPosition="end"
                           aria-expanded={isExpanded}
                           aria-controls={`${serviceName}-owned-services`}
@@ -195,6 +202,7 @@ export const ServiceDataListItem: React.FC<Props> = ({
                 isOwnedService
                 titleHeadingLevel={titleHeadingLevel}
                 isExpandedByDefault={isExpandedByDefault}
+                ownerNamesOfMatchingServices={ownerNamesOfMatchingServices}
               />
             ))}
           </DataList>
@@ -208,6 +216,10 @@ export const ServiceDataListItem: React.FC<Props> = ({
  * A brand-tinted square behind the service icon, as in the design. PatternFly's Icon has no
  * background, so the size and tint are set on its own variables. `&&` lets them win over
  * PatternFly's `pf-v6-c-icon` rule.
+ *
+ * The glyph box is the size of Font Awesome's own fixed-width icons. Font Awesome glyphs are 1em
+ * tall and at most 1.25em wide, so every glyph fills the icon height instead of the wide ones
+ * shrinking to fit a 1em square.
  */
 const ServiceIconTile = styled(Icon)`
   && {
@@ -220,6 +232,11 @@ const ServiceIconTile = styled(Icon)`
 
     border-radius: var(--pf-t--global--border--radius--small);
     background-color: var(--pf-t--global--color--brand--subtle--default);
+
+    svg {
+      width: 1.25em;
+      height: 1em;
+    }
   }
 `;
 

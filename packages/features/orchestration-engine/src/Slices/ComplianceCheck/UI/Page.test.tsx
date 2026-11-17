@@ -5,7 +5,6 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
 import { DryRun, words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
 import { orchestrationEngineFeature } from "@inmanta/web-console-feature-orchestration-engine";
@@ -20,6 +19,7 @@ import {
 import * as DesiredStateMock from "@inmanta/web-console-test-utils/Data/DesiredStateVersions";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
+import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 import { countDiff, createReportScopeParts } from "./Components/ReportScope/helpers";
 import { View } from "./Page";
@@ -78,7 +78,7 @@ function setup(search = "", env = EnvironmentDetails.env, page = <View version="
 }
 
 describe("ComplianceCheck page", () => {
-  const server = setupServer(
+  const server = setupTestServer(
     http.get("/api/v2/dryrun/123", () => {
       return HttpResponse.json(Mock.listResponse);
     }),

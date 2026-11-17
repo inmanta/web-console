@@ -19,20 +19,10 @@ export class ColumnExpansionHelper {
     return this.maxColumnWidth === columnWidth;
   }
 
-  getDefaultState(columns: string[], emptyColumns: string[]): Record<string, number> {
-    if (this.numberOfColumns === emptyColumns.length) {
-      const equalColumnWidth = this.sumColumnWidth / this.numberOfColumns;
+  getDefaultState(columns: string[]): Record<string, number> {
+    const equalColumnWidth = this.sumColumnWidth / this.numberOfColumns;
 
-      return Object.fromEntries(columns.map((k) => [k, equalColumnWidth]));
-    }
-
-    const nonCollapsedWidth =
-      (this.sumColumnWidth - emptyColumns.length * this.minColumnWidth) /
-      (this.numberOfColumns - emptyColumns.length);
-
-    return Object.fromEntries(
-      columns.map((k) => [k, emptyColumns.includes(k) ? this.minColumnWidth : nonCollapsedWidth])
-    );
+    return Object.fromEntries(columns.map((column) => [column, equalColumnWidth]));
   }
 
   expandColumn(
