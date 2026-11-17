@@ -7,7 +7,8 @@ import {
 
 /**
  * The service models of the composer's component tests: a parent service with a required embedded
- * entity, a child service that requires a parent, and a service that relates to nothing.
+ * entity, a child service that requires a parent, a child service whose parent is optional, and a
+ * service that relates to nothing.
  */
 
 const stringAttribute = (name: string): AttributeModel => ({
@@ -85,7 +86,28 @@ export const standaloneService = service("standalone-service", {
   attributes: [stringAttribute("name")],
 });
 
-export const serviceCatalog = [parentService, childService, standaloneService];
+/** A service that can relate to a parent, but doesn't have to, so the relation can be removed. */
+export const optionalChildService = service("optional-child-service", {
+  service_identity: "name",
+  attributes: [stringAttribute("name")],
+  inter_service_relations: [
+    {
+      name: "parent_entity",
+      entity_type: "parent-service",
+      lower_limit: 0,
+      upper_limit: 1,
+      modifier: "rw+",
+      description: "",
+    },
+  ],
+});
+
+export const serviceCatalog = [
+  parentService,
+  childService,
+  standaloneService,
+  optionalChildService,
+];
 
 /**
  * An instance of a service in the inventory, with its attributes.

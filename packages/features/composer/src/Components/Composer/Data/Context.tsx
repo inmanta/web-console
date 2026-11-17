@@ -36,8 +36,6 @@ export type PaletteItem =
  * - Moving or measuring a card is written to its shape without a new map (Canvas' onNodesChange).
  *   React Flow already shows the change and the order doesn't depend on it, so a pointer move
  *   doesn't derive every card and order item again.
- * - A shape caches its order item. The methods that change its connections or attributes clear the
- *   cache, so change those through the methods, not the fields.
  *
  * Keep the shapes mutable as a whole: copying some of them on a change would leave the other
  * shapes and the cards holding the old objects.
@@ -80,9 +78,6 @@ interface ComposerContextInterface {
   activeCell: ServiceEntityShape | null;
   setActiveCell: (cell: ServiceEntityShape | null) => void;
 
-  /** The instances on the canvas when it opened; those missing on deploy are deleted. */
-  initialShapeInfoRef: MutableRefObject<Map<string, { service_entity: string }>>;
-
   /** The palette item being dragged onto the canvas, if any. */
   draggedItemRef: MutableRefObject<PaletteItem | null>;
   mainService: ServiceModel | null;
@@ -113,7 +108,6 @@ export const composerContext: ComposerContextInterface = {
   },
   activeCell: null,
   setActiveCell: noop,
-  initialShapeInfoRef: { current: new Map() },
   draggedItemRef: { current: null },
   mainService: null,
   serviceCatalog: [],

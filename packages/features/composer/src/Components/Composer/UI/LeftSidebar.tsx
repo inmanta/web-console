@@ -31,7 +31,7 @@ import {
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
 import { ComposerContext, PaletteItem } from "../Data/Context";
-import { getUnavailableInventoryItems } from "../Data/Helpers";
+import { getInstanceIdsOnCanvas } from "../Data/Helpers";
 import { useAddPaletteItem } from "../Data/Hooks";
 import { EntityShapeType } from "../Data/ServiceEntityShape";
 import { LEFT_SIDEBAR_WIDTH, SHAPE_WIDTH } from "../config";
@@ -157,7 +157,7 @@ const buildNewGroups = (serviceCatalog: ServiceModel[]): PaletteGroup[] => {
 const buildInventoryGroups = (
   serviceInventories: Inventories | null,
   serviceCatalog: ServiceModel[],
-  unavailable: Map<string, "onCanvas" | "markedForDeletion">
+  onCanvas: Set<string>
 ): PaletteGroup[] =>
   Object.entries(serviceInventories || {}).flatMap(([serviceName, instances]) => {
     const serviceModel = serviceCatalog.find((model) => model.name === serviceName);
@@ -171,8 +171,6 @@ const buildInventoryGroups = (
         key: serviceName,
         name: serviceName,
         rows: instances.map((instance) => {
-          const reason = unavailable.get(instance.id);
-
           const label = instance.service_identity_attribute_value || instance.id;
 
           return {
@@ -181,7 +179,9 @@ const buildInventoryGroups = (
             name: label,
             state: resolveLifecycleState(serviceModel.lifecycle.states, instance.state),
             item: { kind: "inventory", instance, serviceModel },
-            unavailableReason: reason && words(`instanceComposer.palette.${reason}`),
+            unavailableReason: onCanvas.has(instance.id)
+              ? words("instanceComposer.palette.onCanvas")
+              : undefined,
           };
         }),
       },
@@ -217,14 +217,8 @@ const filterGroups = (groups: PaletteGroup[], query: string): PaletteGroup[] => 
  * centre of the view with its + button. Hidden in view mode.
  */
 export const LeftSidebar: React.FC = () => {
-  const {
-    serviceCatalog,
-    serviceInventories,
-    editable,
-    canvasState,
-    initialShapeInfoRef,
-    draggedItemRef,
-  } = useContext(ComposerContext);
+  const { serviceCatalog, serviceInventories, editable, canvasState, draggedItemRef } =
+    useContext(ComposerContext);
   const addPaletteItem = useAddPaletteItem();
   const { screenToFlowPosition } = useReactFlow();
   const canvasElement = useStore((state) => state.domNode);
@@ -235,12 +229,8 @@ export const LeftSidebar: React.FC = () => {
   const newGroups = useMemo(() => buildNewGroups(serviceCatalog), [serviceCatalog]);
   const inventoryGroups = useMemo(
     () =>
-      buildInventoryGroups(
-        serviceInventories,
-        serviceCatalog,
-        getUnavailableInventoryItems(canvasState, new Set(initialShapeInfoRef.current.keys()))
-      ),
-    [serviceInventories, serviceCatalog, canvasState, initialShapeInfoRef]
+      buildInventoryGroups(serviceInventories, serviceCatalog, getInstanceIdsOnCanvas(canvasState)),
+    [serviceInventories, serviceCatalog, canvasState]
   );
 
   const query = queries[activeTab];
@@ -290,129 +280,145 @@ export const LeftSidebar: React.FC = () => {
       >
         <Tab
           eventKey="new"
+          id={PALETTE_ID}
+          tabContentId={PANEL_ID}
           title={<TabTitleText>{words("instanceComposer.stencil.new")}</TabTitleText>}
         />
         <Tab
           eventKey="inventory"
+          id={PALETTE_ID}
+          tabContentId={PANEL_ID}
           title={<TabTitleText>{words("instanceComposer.stencil.inventory")}</TabTitleText>}
         />
       </Tabs>
-      <div className="palette-search">
-        <SearchInput
-          value={query}
-          onChange={(_event, value) => setQuery(value)}
-          onClear={() => setQuery("")}
-          resultsCount={query ? words("instanceComposer.palette.results")(resultCount) : undefined}
-          placeholder={
-            activeTab === "new"
-              ? words("instanceComposer.palette.searchEntities")
-              : words("instanceComposer.palette.searchInstances")
-          }
-          aria-label={
-            activeTab === "new"
-              ? words("instanceComposer.palette.searchEntities")
-              : words("instanceComposer.palette.searchInstances")
-          }
-        />
-        {activeTab === "new" && (
-          <Content component="small">{words("instanceComposer.palette.hint")}</Content>
-        )}
-      </div>
-      <div className="palette-groups">
-        {groups.length === 0 && (
-          <EmptyState
-            headingLevel="h3"
-            titleText={
-              query
-                ? words("instanceComposer.palette.noResults.title")(query)
-                : words("instanceComposer.palette.noInstances")
+      {/* Both tabs show this panel; its content follows the selected tab */}
+      <div
+        className="palette-panel"
+        id={PANEL_ID}
+        role="tabpanel"
+        aria-labelledby={`pf-tab-${activeTab}-${PALETTE_ID}`}
+      >
+        <div className="palette-search">
+          <SearchInput
+            value={query}
+            onChange={(_event, value) => setQuery(value)}
+            onClear={() => setQuery("")}
+            resultsCount={
+              query ? words("instanceComposer.palette.results")(resultCount) : undefined
             }
-            variant="xs"
-          >
-            {query && (
-              <>
-                <EmptyStateBody>{words("instanceComposer.palette.noResults.body")}</EmptyStateBody>
-                <EmptyStateFooter>
-                  <EmptyStateActions>
-                    <Button variant="link" onClick={() => setQuery("")}>
-                      {words("instanceComposer.palette.clearSearch")}
-                    </Button>
-                  </EmptyStateActions>
-                </EmptyStateFooter>
-              </>
-            )}
-          </EmptyState>
-        )}
-        {groups.map((group) => {
-          const isOpen = !!query || !collapsedGroups.has(`${activeTab}/${group.key}`);
-
-          return (
-            <div
-              className="palette-group"
-              key={group.key}
-              data-testid={`palette-group-${group.key}`}
+            placeholder={
+              activeTab === "new"
+                ? words("instanceComposer.palette.searchEntities")
+                : words("instanceComposer.palette.searchInstances")
+            }
+            aria-label={
+              activeTab === "new"
+                ? words("instanceComposer.palette.searchEntities")
+                : words("instanceComposer.palette.searchInstances")
+            }
+          />
+          {activeTab === "new" && (
+            <Content component="small">{words("instanceComposer.palette.hint")}</Content>
+          )}
+        </div>
+        <div className="palette-groups">
+          {groups.length === 0 && (
+            <EmptyState
+              headingLevel="h3"
+              titleText={
+                query
+                  ? words("instanceComposer.palette.noResults.title")(query)
+                  : words("instanceComposer.palette.noInstances")
+              }
+              variant="xs"
             >
-              <button
-                type="button"
-                className="palette-group-toggle"
-                aria-expanded={isOpen}
-                onClick={() => toggleGroup(group.key)}
-              >
-                {isOpen ? <AngleDownIcon /> : <AngleRightIcon />}
-                <span className="palette-group-name">{group.name}</span>
-                <Badge isRead>{group.rows.length}</Badge>
-              </button>
-              {isOpen && (
-                <ul>
-                  {group.rows.map((row) =>
-                    row.unavailableReason ? (
-                      <li
-                        key={row.key}
-                        className="palette-row is-unavailable"
-                        style={entityColorVariables(getRowKind(row))}
-                        aria-disabled="true"
-                        data-testid={`palette-item-${row.label}`}
-                      >
-                        <PaletteRowIcon row={row} />
-                        <PaletteRowText row={row} />
-                        <Label isCompact variant="outline" className="palette-row-reason">
-                          {row.unavailableReason}
-                        </Label>
-                      </li>
-                    ) : (
-                      <li
-                        key={row.key}
-                        className="palette-row"
-                        style={entityColorVariables(getRowKind(row))}
-                        data-testid={`palette-item-${row.label}`}
-                        draggable
-                        onDragStart={(event) => {
-                          draggedItemRef.current = row.item;
-                          event.dataTransfer.setData("text/plain", row.label);
-                          event.dataTransfer.effectAllowed = "copy";
-                        }}
-                        onDragEnd={() => {
-                          draggedItemRef.current = null;
-                        }}
-                      >
-                        <PaletteRowIcon row={row} />
-                        <PaletteRowText row={row} />
-                        <Button
-                          className="palette-row-add"
-                          variant="plain"
-                          size="sm"
-                          icon={<PlusCircleIcon />}
-                          aria-label={words("instanceComposer.palette.add")(row.label)}
-                          onClick={() => addAtCentre(row.item)}
-                        />
-                      </li>
-                    )
-                  )}
-                </ul>
+              {query && (
+                <>
+                  <EmptyStateBody>
+                    {words("instanceComposer.palette.noResults.body")}
+                  </EmptyStateBody>
+                  <EmptyStateFooter>
+                    <EmptyStateActions>
+                      <Button variant="link" onClick={() => setQuery("")}>
+                        {words("instanceComposer.palette.clearSearch")}
+                      </Button>
+                    </EmptyStateActions>
+                  </EmptyStateFooter>
+                </>
               )}
-            </div>
-          );
-        })}
+            </EmptyState>
+          )}
+          {groups.map((group) => {
+            const isOpen = !!query || !collapsedGroups.has(`${activeTab}/${group.key}`);
+
+            return (
+              <div
+                className="palette-group"
+                key={group.key}
+                data-testid={`palette-group-${group.key}`}
+              >
+                <button
+                  type="button"
+                  className="palette-group-toggle"
+                  aria-expanded={isOpen}
+                  onClick={() => toggleGroup(group.key)}
+                >
+                  {isOpen ? <AngleDownIcon /> : <AngleRightIcon />}
+                  <span className="palette-group-name">{group.name}</span>
+                  <Badge isRead>{group.rows.length}</Badge>
+                </button>
+                {isOpen && (
+                  <ul>
+                    {group.rows.map((row) =>
+                      row.unavailableReason ? (
+                        <li
+                          key={row.key}
+                          className="palette-row is-unavailable"
+                          style={entityColorVariables(getRowKind(row))}
+                          aria-disabled="true"
+                          data-testid={`palette-item-${row.label}`}
+                        >
+                          <PaletteRowIcon row={row} />
+                          <PaletteRowText row={row} />
+                          <Label isCompact variant="outline" className="palette-row-reason">
+                            {row.unavailableReason}
+                          </Label>
+                        </li>
+                      ) : (
+                        <li
+                          key={row.key}
+                          className="palette-row"
+                          style={entityColorVariables(getRowKind(row))}
+                          data-testid={`palette-item-${row.label}`}
+                          draggable
+                          onDragStart={(event) => {
+                            draggedItemRef.current = row.item;
+                            event.dataTransfer.setData("text/plain", row.label);
+                            event.dataTransfer.effectAllowed = "copy";
+                          }}
+                          onDragEnd={() => {
+                            draggedItemRef.current = null;
+                          }}
+                        >
+                          <PaletteRowIcon row={row} />
+                          <PaletteRowText row={row} />
+                          <Button
+                            className="palette-row-add"
+                            variant="plain"
+                            size="sm"
+                            icon={<PlusCircleIcon />}
+                            aria-label={words("instanceComposer.palette.add")(row.label)}
+                            onClick={() => addAtCentre(row.item)}
+                          />
+                        </li>
+                      )
+                    )}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </Sidebar>
   );
@@ -447,6 +453,10 @@ const PaletteRowText: React.FC<{ row: PaletteRow }> = ({ row }) => (
   </span>
 );
 
+/** The ids PatternFly builds the tabs' ids from, and the panel they control. */
+const PALETTE_ID = "composer-palette";
+const PANEL_ID = "composer-palette-panel";
+
 const Sidebar = styled.aside`
   display: flex;
   flex-direction: column;
@@ -459,6 +469,13 @@ const Sidebar = styled.aside`
 
   &.view_mode {
     display: none;
+  }
+
+  .palette-panel {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
   }
 
   .palette-search {

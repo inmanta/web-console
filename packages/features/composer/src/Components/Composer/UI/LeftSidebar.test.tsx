@@ -35,7 +35,6 @@ const serviceInventories: Inventories = {
 const setup = (
   options: {
     shapes?: ServiceEntityShape[];
-    deletedInstanceIds?: string[];
     editable?: boolean;
     serviceCatalog?: ServiceModel[];
   } = {}
@@ -45,7 +44,6 @@ const setup = (
       shapes={toCanvasState(...(options.shapes ?? []))}
       serviceCatalog={options.serviceCatalog}
       serviceInventories={serviceInventories}
-      deletedInstanceIds={options.deletedInstanceIds}
       editable={options.editable}
     >
       <LeftSidebar />
@@ -57,6 +55,22 @@ const openInventory = () =>
   userEvent.click(screen.getByRole("tab", { name: words("instanceComposer.stencil.inventory") }));
 
 describe("LeftSidebar", () => {
+  it("shows the selected tab in a tab panel the tabs control", async () => {
+    setup();
+
+    const newTab = screen.getByRole("tab", { name: words("instanceComposer.stencil.new") });
+    const panel = screen.getByRole("tabpanel");
+
+    expect(newTab).toHaveAttribute("aria-controls", panel.id);
+    expect(panel).toHaveAccessibleName(words("instanceComposer.stencil.new"));
+
+    await openInventory();
+
+    expect(screen.getByRole("tabpanel")).toHaveAccessibleName(
+      words("instanceComposer.stencil.inventory")
+    );
+  });
+
   it("lists every service and the embedded entities it can create, grouped per service", () => {
     setup();
 
@@ -202,19 +216,18 @@ describe("LeftSidebar", () => {
     });
   });
 
-  it("says why an inventory instance can't be added again", async () => {
-    setup({
-      shapes: instanceShapes(parentInstance, parentService),
-      deletedInstanceIds: ["child-1"],
-    });
+  it("only greys out the inventory instances on the canvas", async () => {
+    setup({ shapes: instanceShapes(parentInstance, parentService) });
     await openInventory();
 
     expect(screen.getByTestId("palette-item-edge-1")).toHaveTextContent(
       words("instanceComposer.palette.onCanvas")
     );
-    expect(screen.getByTestId("palette-item-leaf-1")).toHaveTextContent(
-      words("instanceComposer.palette.markedForDeletion")
-    );
+
+    const offered = screen.getByTestId("palette-item-leaf-1");
+
+    expect(offered).not.toHaveAttribute("aria-disabled");
+    expect(offered).not.toHaveTextContent(words("instanceComposer.palette.onCanvas"));
   });
 
   it("says when the inventory has no instances", async () => {

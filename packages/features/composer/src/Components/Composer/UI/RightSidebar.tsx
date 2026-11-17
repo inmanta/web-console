@@ -24,8 +24,7 @@ import { ComposerContext } from "../Data/Context";
 import { AttributeSetName, ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { RIGHT_SIDEBAR_WIDTH } from "../config";
 import { EntityForm } from "./EntityForm";
-
-const labelColors = { core: "yellow", embedded: "blue", relation: "purple" } as const;
+import { entityColors } from "./entityColors";
 
 /**
  * The details of the selected shape: its name, kind, state and description, and its attributes.
@@ -60,6 +59,7 @@ export const RightSidebar: React.FC = () => {
       direction={{ default: "column" }}
       spaceItems={{ default: "spaceItemsSm" }}
       flexWrap={{ default: "nowrap" }}
+      role="region"
       aria-label={words("details")}
     >
       {activeCell ? (
@@ -67,7 +67,7 @@ export const RightSidebar: React.FC = () => {
           <Title headingLevel="h2" size="xl">
             {activeCell.getDisplayName()}
           </Title>
-          <Label isCompact color={labelColors[activeCell.entityType]}>
+          <Label isCompact color={entityColors[activeCell.entityType]}>
             {words(`instanceComposer.label.${activeCell.entityType}`)}
           </Label>
           {activeCell.isNew && (
@@ -183,7 +183,8 @@ const EntityDetails: React.FC<{
 
         return target ? (
           <Button key={String(id)} variant="link" isInline onClick={() => showShape(target)}>
-            {target.getDisplayAttributes()[0]?.value || String(id)}
+            {/* Named like its card: by its identity, or by its type */}
+            {target.getIdentity()?.value || target.getDisplayName()}
           </Button>
         ) : (
           <span key={String(id)}>{String(id)}</span>

@@ -29,7 +29,6 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
   const [catalogEntries, setCatalogEntries] = useState<string[]>([]);
   const [canvasState, setCanvasState] = useState<Map<string, ServiceEntityShape>>(new Map());
   const [activeCellId, setActiveCellId] = useState<string | null>(null);
-  const initialShapeInfoRef = useRef<Map<string, { service_entity: string }>>(new Map()); // Track initial shape info for delete detection
   const draggedItemRef = useRef<PaletteItem | null>(null);
 
   const serviceCatalogQuery = useGetServiceModels().useContinuousNoRefetch();
@@ -61,14 +60,6 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
     }
   }, [serviceCatalogQuery.isSuccess, serviceCatalogQuery.data]);
 
-  // Stable callback for tracking initial shape info
-  const handleInitialShapeInfoTracked = useCallback(
-    (shapeInfo: Map<string, { service_entity: string }>) => {
-      initialShapeInfoRef.current = shapeInfo;
-    },
-    []
-  );
-
   useComposerInitialization({
     serviceName,
     instanceId,
@@ -78,13 +69,11 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
     instanceData: instanceWithRelationsQuery.data || null,
     isInstanceDataReady: instanceWithRelationsQuery.isSuccess,
     onCanvasStateInitialized: setCanvasState,
-    onInitialShapeInfoTracked: handleInitialShapeInfoTracked,
   });
 
   const canvasActions = useCanvasActions({
     canvasState,
     setCanvasState,
-    initialShapeInfoRef,
     relationsDictionary,
     serviceCatalog: serviceCatalogQuery.data || [],
   });
@@ -92,8 +81,6 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
   // Use service order items hook for derivation and validation
   const { serviceOrderItems, hasValidationErrors } = useServiceOrderItems({
     canvasState,
-    initialShapeInfoRef,
-    serviceCatalog: serviceCatalogQuery.data,
   });
 
   // The active shape is looked up by id, so it drops out once it leaves the canvas.
@@ -117,7 +104,6 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
       canvasActions: canvasActions,
       activeCell: activeCell,
       setActiveCell: setActiveCell,
-      initialShapeInfoRef: initialShapeInfoRef,
       draggedItemRef: draggedItemRef,
       serviceOrderItems: serviceOrderItems,
       hasValidationErrors: hasValidationErrors,

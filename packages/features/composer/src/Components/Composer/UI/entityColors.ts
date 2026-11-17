@@ -6,7 +6,7 @@ import { EntityShapeType } from "../Data/ServiceEntityShape";
  * labels), so they follow the theme: services are yellow, embedded entities blue, and related
  * instances purple.
  */
-const entityColors: Record<EntityShapeType, "yellow" | "blue" | "purple"> = {
+export const entityColors: Record<EntityShapeType, "yellow" | "blue" | "purple"> = {
   core: "yellow",
   embedded: "blue",
   relation: "purple",

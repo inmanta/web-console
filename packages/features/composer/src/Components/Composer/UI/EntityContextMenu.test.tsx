@@ -155,17 +155,12 @@ describe("EntityContextMenu", () => {
     expect(screen.queryByTestId("entity-parent-service")).not.toBeInTheDocument();
     expect(screen.queryByTestId("entity-settings")).not.toBeInTheDocument();
 
-    // The instance itself is kept: the inventory offers it again, not marked for deletion
+    // The instance itself is kept: the inventory offers it again
     await userEvent.click(
       screen.getByRole("tab", { name: words("instanceComposer.stencil.inventory") })
     );
 
-    const row = screen.getByTestId("palette-item-edge-1");
-
-    expect(row).not.toHaveAttribute("aria-disabled");
-    expect(
-      screen.queryByText(words("instanceComposer.palette.markedForDeletion"))
-    ).not.toBeInTheDocument();
+    expect(screen.getByTestId("palette-item-edge-1")).not.toHaveAttribute("aria-disabled");
   });
 
   it("keeps a staged delete on the canvas, with its embedded entities, 'On canvas' in the inventory", async () => {
@@ -199,11 +194,6 @@ describe("EntityContextMenu", () => {
 
     expect(row).toHaveAttribute("aria-disabled", "true");
     expect(within(row).getByText(words("instanceComposer.palette.onCanvas"))).toBeVisible();
-    expect(
-      within(screen.getByTestId("left_sidebar")).queryByText(
-        words("instanceComposer.palette.markedForDeletion")
-      )
-    ).not.toBeInTheDocument();
   });
 
   it("never offers to remove the instance being edited, only to delete it", async () => {

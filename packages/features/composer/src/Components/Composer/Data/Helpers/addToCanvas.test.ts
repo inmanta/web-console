@@ -3,7 +3,7 @@ import { ServiceEntityShape } from "../ServiceEntityShape";
 import {
   createInventoryEntityShapes,
   createNewEntityShapes,
-  getUnavailableInventoryItems,
+  getInstanceIdsOnCanvas,
 } from "./addToCanvas";
 import { createRelationsDictionary } from "./createRelationsDictionary";
 
@@ -136,8 +136,7 @@ describe("createInventoryEntityShapes", () => {
   const addFromInventory = (
     instance: ServiceInstanceModel,
     serviceModel: ServiceModel,
-    canvasState = new Map<string, ServiceEntityShape>(),
-    excludedIds?: Set<string>
+    canvasState = new Map<string, ServiceEntityShape>()
   ) =>
     createInventoryEntityShapes({
       instance,
@@ -147,7 +146,6 @@ describe("createInventoryEntityShapes", () => {
       relationsDictionary,
       serviceCatalog: catalog,
       serviceInventories,
-      excludedIds,
     });
 
   it("adds an existing instance as a read-only relation, connected to what is on the canvas", () => {
@@ -176,8 +174,16 @@ describe("createInventoryEntityShapes", () => {
     expect(child.isMissingConnections()).toBe(false);
   });
 
-  it("keeps a relation the instance has when the related instance can't be brought along", () => {
-    const shapes = addFromInventory(childInstance, childModel, new Map(), new Set(["parent-1"]));
+  it("keeps a relation the instance has when the related instance isn't in the inventory", () => {
+    const shapes = createInventoryEntityShapes({
+      instance: childInstance,
+      serviceModel: childModel,
+      position: { x: 500, y: 300 },
+      canvasState: new Map(),
+      relationsDictionary,
+      serviceCatalog: catalog,
+      serviceInventories: {},
+    });
     const child = shapes.get("child-1")!;
 
     expect(Array.from(shapes.keys())).toEqual(["child-1"]);
@@ -212,16 +218,12 @@ describe("createInventoryEntityShapes", () => {
   });
 });
 
-describe("getUnavailableInventoryItems", () => {
-  it("marks instances on the canvas, and initial ones that left it for deletion", () => {
+describe("getInstanceIdsOnCanvas", () => {
+  it("lists the shapes on the canvas by their id and their instance's id", () => {
     const shape = { instanceAttributes: { id: "instance-a" } } as unknown as ServiceEntityShape;
 
-    const unavailable = getUnavailableInventoryItems(
-      new Map([["instance-a", shape]]),
-      new Set(["instance-a", "instance-b"])
+    expect(getInstanceIdsOnCanvas(new Map([["shape-a", shape]]))).toEqual(
+      new Set(["shape-a", "instance-a"])
     );
-
-    expect(unavailable.get("instance-a")).toBe("onCanvas");
-    expect(unavailable.get("instance-b")).toBe("markedForDeletion");
   });
 });

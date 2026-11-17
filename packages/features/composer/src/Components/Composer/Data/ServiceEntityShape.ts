@@ -132,7 +132,6 @@ export class ServiceEntityShape {
   isNew: boolean;
   lockedOnCanvas: boolean;
   entityType: EntityShapeType;
-  orderItem: ServiceOrderItemRequest | null;
   hasAttributeValidationErrors: boolean;
   isLayersCollapsed: boolean;
 
@@ -173,7 +172,6 @@ export class ServiceEntityShape {
     this.isNew = initializationOptions.isNew;
     this.lockedOnCanvas = initializationOptions.lockedOnCanvas;
     this.entityType = initializationOptions.entityType;
-    this.orderItem = null;
     this.hasAttributeValidationErrors = false;
     this.isLayersCollapsed = false;
     this.instanceState = initializationOptions.instanceState ?? null;
@@ -349,8 +347,6 @@ export class ServiceEntityShape {
       return;
     }
     this.connections.set(relationType, [...existing, relationId]);
-    // Invalidate cached orderItem to trigger recomputation
-    this.orderItem = null;
   }
 
   removeConnection(relationId: string, relationType: string) {
@@ -366,8 +362,6 @@ export class ServiceEntityShape {
     } else {
       this.connections.set(relationType, updated);
     }
-    // Invalidate cached orderItem - will be recomputed when needed
-    this.orderItem = null;
   }
 
   getConnections(): Map<string, string[]> {
@@ -681,8 +675,6 @@ export class ServiceEntityShape {
     // Create a new object to ensure we're not sharing references
     this.instanceAttributes = { ...attributes };
     this.sanitizedAttrs = structuredClone(attributes);
-    // Invalidate cached orderItem - will be recomputed when needed
-    this.orderItem = null;
 
     // Re-run attribute validation whenever attributes change
     this.validateAttributes();
@@ -860,22 +852,21 @@ export class ServiceEntityShape {
   }
 
   /**
-   * Updates the cached orderItem based on current state.
-   * Should be called when canvasState changes or when this shape's connections/attributes change.
+   * The order item for this shape in its current state. Embedded entities have none: they are
+   * nested in their parent's attributes.
    *
    * @param canvasState - The full canvas state map to resolve connected shapes
+   * @returns The order item, or null for an embedded entity
    */
-  updateOrderItem(canvasState: Map<string, ServiceEntityShape>): void {
+  getOrderItem(canvasState: Map<string, ServiceEntityShape>): ServiceOrderItemRequest | null {
     // Only include Core and Relation types (embedded entities are nested in their parent's attributes)
     if (this.entityType !== "core" && this.entityType !== "relation") {
-      this.orderItem = null;
-
-      return;
+      return null;
     }
 
     // An instance staged to be deleted only orders its delete; its attributes don't matter
     if (this.isMarkedForDeletion) {
-      this.orderItem = {
+      return {
         instance_id: String(this.id),
         service_entity: this.getEntityType(),
         config: {},
@@ -883,8 +874,6 @@ export class ServiceEntityShape {
         attributes: null,
         edits: null,
       };
-
-      return;
     }
 
     const isCreating = this.isNew;
@@ -934,7 +923,7 @@ export class ServiceEntityShape {
 
     const action: ServiceOrderItemAction | null = this.isNew ? "create" : "update";
 
-    this.orderItem = {
+    return {
       instance_id: String(this.id),
       service_entity: this.getEntityType(),
       config: {},
@@ -942,20 +931,5 @@ export class ServiceEntityShape {
       attributes: Object.keys(sanitizedAttributes).length > 0 ? sanitizedAttributes : null,
       edits: null,
     };
-  }
-
-  /**
-   * Gets the cached orderItem, computing it if necessary.
-   * Returns null for embedded entities (they should be nested in their parent's attributes).
-   *
-   * @param canvasState - The full canvas state map to resolve connected shapes
-   * @returns ServiceOrderItemRequest or null for embedded entities
-   */
-  toServiceOrderItem(canvasState: Map<string, ServiceEntityShape>): ServiceOrderItemRequest | null {
-    if (this.orderItem === null) {
-      this.updateOrderItem(canvasState);
-    }
-
-    return this.orderItem;
   }
 }

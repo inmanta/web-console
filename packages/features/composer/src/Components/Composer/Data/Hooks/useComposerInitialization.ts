@@ -22,7 +22,6 @@ interface UseComposerInitializationParams {
   instanceData: InstanceWithRelations | undefined | null;
   isInstanceDataReady: boolean;
   onCanvasStateInitialized: (entities: Map<string, ServiceEntityShape>) => void;
-  onInitialShapeInfoTracked: (shapeInfo: Map<string, { service_entity: string }>) => void;
 }
 
 /**
@@ -39,7 +38,6 @@ export const useComposerInitialization = ({
   instanceId,
   serviceName,
   onCanvasStateInitialized,
-  onInitialShapeInfoTracked,
 }: UseComposerInitializationParams): void => {
   const initializationKeyRef = useRef<string | null>(null);
 
@@ -93,21 +91,6 @@ export const useComposerInitialization = ({
 
     onCanvasStateInitialized(initializedEntities);
     initializationKeyRef.current = initializationKey;
-
-    // Track initial shape info for delete detection (only for existing instances, not new ones).
-    // Embedded entities deploy within their instance's attributes, never as delete order items
-    // of their own, so they are not tracked.
-    if (instanceId) {
-      const initialShapeInfo = new Map<string, { service_entity: string }>();
-      initializedEntities.forEach((shape, id) => {
-        if (shape.entityType !== "embedded") {
-          initialShapeInfo.set(id, { service_entity: shape.getEntityType() });
-        }
-      });
-      onInitialShapeInfoTracked(initialShapeInfo);
-    } else {
-      onInitialShapeInfoTracked(new Map());
-    }
   }, [
     instanceId,
     isInstanceDataReady,
@@ -117,6 +100,5 @@ export const useComposerInitialization = ({
     relationsDictionary,
     serviceName,
     onCanvasStateInitialized,
-    onInitialShapeInfoTracked,
   ]);
 };

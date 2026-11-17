@@ -27,7 +27,6 @@ export const composerMessages = {
   "instanceComposer.formModal.noElementSelected.title": "No details available",
   "instanceComposer.formModal.noElementSelected": "Select an element to display the form.",
   "instanceComposer.failed.title": "Instance Composing failed",
-  "instanceComposer.contextMenu.cannotRemove": "Cannot remove: required by relation constraints",
   "instanceComposer.tooltip.missingConnectionSingle": (name: string) => `Missing relation: ${name}`,
   "instanceComposer.tooltip.missingConnectionMultiple": (
     name: string,
@@ -75,7 +74,6 @@ export const composerMessages = {
     count === 1 ? "1 result" : `${count} results`,
   "instanceComposer.palette.add": (label: string) => `Add ${label} to canvas`,
   "instanceComposer.palette.onCanvas": "On canvas",
-  "instanceComposer.palette.markedForDeletion": "Marked for deletion",
   "instanceComposer.palette.noResults.title": (query: string) => `No entities match “${query}”`,
   "instanceComposer.palette.noResults.body":
     "Check the spelling, or clear the search to see every service and embedded entity.",

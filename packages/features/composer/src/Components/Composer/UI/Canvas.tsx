@@ -5,6 +5,7 @@ import {
   BackgroundVariant,
   Connection,
   Edge,
+  EdgeChange,
   MiniMap,
   NodeChange,
   ReactFlow,
@@ -16,6 +17,7 @@ import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import {
+  canRemoveLink,
   checkIfConnectionIsAllowed,
   countHiddenLayers,
   getConnectedLayerData,
@@ -165,6 +167,7 @@ export const Canvas: React.FC = () => {
 
       if (selected) {
         setActiveCell(canvasState.get(selected.id) || null);
+        setSelectedEdgeId(null);
       } else if (selections.some((change) => change.id === activeCell?.id)) {
         setActiveCell(null);
       }
@@ -177,6 +180,33 @@ export const Canvas: React.FC = () => {
       );
     },
     [canvasState, activeCell, setActiveCell]
+  );
+
+  // One selection at a time: a card or a relation line
+  const selectEdge = useCallback(
+    (edgeId: string) => {
+      setSelectedEdgeId(edgeId);
+      setActiveCell(null);
+    },
+    [setActiveCell]
+  );
+
+  // A relation line is selected by a click (onEdgeClick) or, when focused, with Enter or Space,
+  // which React Flow reports here. Escape unselects it.
+  const onEdgesChange = useCallback(
+    (changes: EdgeChange<RelationEdgeType>[]) => {
+      const selections = changes.filter((change) => change.type === "select");
+      const selected = selections.filter((change) => change.selected).pop();
+
+      if (selected) {
+        selectEdge(selected.id);
+      } else if (selections.length > 0) {
+        setSelectedEdgeId((current) =>
+          selections.some((change) => change.id === current) ? null : current
+        );
+      }
+    },
+    [selectEdge]
   );
 
   const isValidConnection = useCallback(
@@ -232,6 +262,26 @@ export const Canvas: React.FC = () => {
   };
 
   /**
+   * Delete or Backspace on a selected relation line removes the relation, if the relation allows
+   * it, like the line's remove button.
+   */
+  const removeSelectedRelation = (): boolean => {
+    const link = selectedEdgeId && edges.find((edge) => edge.id === selectedEdgeId);
+    const source = link && canvasState.get(link.source);
+    const target = link && canvasState.get(link.target);
+
+    if (!source || !target) {
+      return false;
+    }
+    if (canRemoveLink(source, target, canvasState, relationsDictionary, serviceCatalog)) {
+      canvasActions.disconnectShapes(source, target);
+      setSelectedEdgeId(null);
+    }
+
+    return true;
+  };
+
+  /**
    * Delete or Backspace takes the selected shape off the canvas, by the rules of its menu: a new
    * shape is removed right away. Otherwise the menu opens on the card, to choose between
    * removing the shape from the canvas and deleting it permanently, to undo a staged delete,
@@ -241,11 +291,18 @@ export const Canvas: React.FC = () => {
     if (
       (event.key !== "Delete" && event.key !== "Backspace") ||
       !editable ||
-      !activeCell ||
       contextMenu ||
       event.target instanceof HTMLInputElement ||
       event.target instanceof HTMLTextAreaElement
     ) {
+      return;
+    }
+    if (removeSelectedRelation()) {
+      event.preventDefault();
+
+      return;
+    }
+    if (!activeCell) {
       return;
     }
     event.preventDefault();
@@ -290,6 +347,7 @@ export const Canvas: React.FC = () => {
       className={editable ? "canvas" : "canvas view_mode"}
       data-testid="canvas"
       tabIndex={-1}
+      role="region"
       aria-label={words("instanceComposer.canvas")}
       onDragOver={onDragOver}
       onDrop={onDrop}
@@ -321,7 +379,11 @@ export const Canvas: React.FC = () => {
           });
         }}
         onPaneClick={clearSelection}
-        onEdgeClick={(_event, edge) => setSelectedEdgeId(edge.id)}
+        onEdgesChange={onEdgesChange}
+        onEdgeClick={(_event, edge) => {
+          selectEdge(edge.id);
+          closeContextMenu();
+        }}
         onEdgeMouseEnter={(_event, edge) => setHoveredEdgeId(edge.id)}
         onEdgeMouseLeave={() => setHoveredEdgeId(null)}
         onConnect={onConnect}

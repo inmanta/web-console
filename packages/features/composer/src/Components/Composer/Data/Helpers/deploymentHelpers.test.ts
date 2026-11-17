@@ -30,7 +30,7 @@ describe("deploymentHelpers", () => {
   });
 
   /**
-   * Creates a real shape whose updateOrderItem is stubbed to produce the given order item,
+   * Creates a real shape whose getOrderItem is stubbed to produce the given order item,
    * so the tests control what canvasStateToServiceOrderItems collects.
    */
   const createMockShape = (
@@ -52,9 +52,7 @@ describe("deploymentHelpers", () => {
       embeddedEntities: {},
     });
 
-    vi.spyOn(shape, "updateOrderItem").mockImplementation(() => {
-      shape.orderItem = orderItem;
-    });
+    vi.spyOn(shape, "getOrderItem").mockReturnValue(orderItem);
 
     return shape;
   };
@@ -99,10 +97,7 @@ describe("deploymentHelpers", () => {
 
   describe("canvasStateToServiceOrderItems", () => {
     it("should return empty map when canvasState is empty", () => {
-      const canvasState = new Map<string, ServiceEntityShape>();
-      const initialShapeInfo = new Map();
-
-      const result = canvasStateToServiceOrderItems(canvasState, initialShapeInfo);
+      const result = canvasStateToServiceOrderItems(new Map());
 
       expect(result.size).toBe(0);
     });
@@ -135,58 +130,36 @@ describe("deploymentHelpers", () => {
       expect(result.size).toBe(2);
       expect(result.get("shape-1")).toEqual(orderItem1);
       expect(result.get("shape-2")).toEqual(orderItem2);
-      expect(shape1.updateOrderItem).toHaveBeenCalled();
-      expect(shape2.updateOrderItem).toHaveBeenCalled();
+      expect(shape1.getOrderItem).toHaveBeenCalledWith(canvasState);
+      expect(shape2.getOrderItem).toHaveBeenCalledWith(canvasState);
     });
 
-    it("should add delete items for removed shapes", () => {
-      const canvasState = new Map<string, ServiceEntityShape>();
-      const initialShapeInfo = new Map<string, { service_entity: string }>();
-      initialShapeInfo.set("deleted-shape-1", { service_entity: "ServiceA" });
-      initialShapeInfo.set("deleted-shape-2", { service_entity: "ServiceB" });
+    it("should order the delete of an instance staged to be deleted", () => {
+      const shape = new ServiceEntityShape({
+        id: "existing-1",
+        entityType: "core",
+        serviceModel: createMockServiceModel("ServiceA"),
+        instanceAttributes: { name: "test" },
+        readonly: false,
+        isNew: false,
+        lockedOnCanvas: false,
+        relationsDictionary: {},
+        rootEntities: {},
+        interServiceRelations: {},
+        embeddedEntities: {},
+      });
+      shape.isMarkedForDeletion = true;
 
-      const result = canvasStateToServiceOrderItems(canvasState, initialShapeInfo);
+      const result = canvasStateToServiceOrderItems(new Map([["existing-1", shape]]));
 
-      expect(result.size).toBe(2);
-      expect(result.get("deleted-shape-1")).toEqual({
-        instance_id: "deleted-shape-1",
+      expect(result.get("existing-1")).toEqual({
+        instance_id: "existing-1",
         service_entity: "ServiceA",
         config: {},
         action: "delete",
         attributes: null,
         edits: null,
       });
-      expect(result.get("deleted-shape-2")).toEqual({
-        instance_id: "deleted-shape-2",
-        service_entity: "ServiceB",
-        config: {},
-        action: "delete",
-        attributes: null,
-        edits: null,
-      });
-    });
-
-    it("should handle both existing and deleted shapes", () => {
-      const canvasState = new Map<string, ServiceEntityShape>();
-      const orderItem: ServiceOrderItemRequest = {
-        instance_id: "shape-1",
-        service_entity: "ServiceA",
-        config: {},
-        action: "create",
-        attributes: { name: "test" },
-      };
-      const shape1 = createMockShape("shape-1", "ServiceA", orderItem);
-      canvasState.set("shape-1", shape1);
-
-      const initialShapeInfo = new Map<string, { service_entity: string }>();
-      initialShapeInfo.set("shape-1", { service_entity: "ServiceA" });
-      initialShapeInfo.set("deleted-shape-1", { service_entity: "ServiceB" });
-
-      const result = canvasStateToServiceOrderItems(canvasState, initialShapeInfo);
-
-      expect(result.size).toBe(2);
-      expect(result.get("shape-1")).toEqual(orderItem);
-      expect(result.get("deleted-shape-1")?.action).toBe("delete");
     });
 
     it("should skip shapes without orderItem", () => {

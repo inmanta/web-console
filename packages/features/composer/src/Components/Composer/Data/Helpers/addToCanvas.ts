@@ -143,9 +143,6 @@ interface InventoryEntityOptions {
 
   /** The instances in the inventory, to find the instances the added one relates to */
   serviceInventories: Inventories | null;
-
-  /** Instances that can't come back on the canvas: deleted from it, they are deleted on deploy */
-  excludedIds?: Set<string>;
 }
 
 /**
@@ -220,7 +217,6 @@ export const createInventoryEntityShapes = ({
   relationsDictionary,
   serviceCatalog,
   serviceInventories,
-  excludedIds = new Set(),
 }: InventoryEntityOptions): Map<string, ServiceEntityShape> => {
   const shapes = new Map<string, ServiceEntityShape>();
   const shape = addInstanceShapes(instance, serviceModel, relationsDictionary, shapes);
@@ -234,7 +230,7 @@ export const createInventoryEntityShapes = ({
   );
 
   relatedIds.forEach((id) => {
-    if (shapes.has(id) || canvasState.has(id) || excludedIds.has(id)) {
+    if (shapes.has(id) || canvasState.has(id)) {
       return;
     }
     const related = inventory.find((candidate) => candidate.id === id);
@@ -294,27 +290,21 @@ const moveClearOf = (
 };
 
 /**
- * The ids of the instances that can't be added from the inventory again, and why: they are on
- * the canvas, or were deleted from it and will be deleted on deploy.
+ * The ids of the inventory instances that can't be added again because they are on the canvas,
+ * including the ones staged to be deleted there.
  */
-export const getUnavailableInventoryItems = (
-  canvasState: Map<string, ServiceEntityShape>,
-  initialShapeIds: Set<string>
-): Map<string, "onCanvas" | "markedForDeletion"> => {
-  const unavailable = new Map<string, "onCanvas" | "markedForDeletion">();
+export const getInstanceIdsOnCanvas = (
+  canvasState: Map<string, ServiceEntityShape>
+): Set<string> => {
+  const onCanvas = new Set<string>();
 
   canvasState.forEach((shape, shapeId) => {
-    unavailable.set(shapeId, "onCanvas");
+    onCanvas.add(shapeId);
     const id = shape.instanceAttributes?.id;
     if (typeof id === "string") {
-      unavailable.set(id, "onCanvas");
-    }
-  });
-  initialShapeIds.forEach((id) => {
-    if (!unavailable.has(id)) {
-      unavailable.set(id, "markedForDeletion");
+      onCanvas.add(id);
     }
   });
 
-  return unavailable;
+  return onCanvas;
 };

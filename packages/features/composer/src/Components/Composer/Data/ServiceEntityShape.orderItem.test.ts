@@ -115,9 +115,7 @@ describe("ServiceEntityShape order item serialization", () => {
       ["relation-1", relationShape],
     ]);
 
-    parentShape.updateOrderItem(canvasState);
-
-    expect(parentShape.orderItem?.attributes).toEqual({
+    expect(parentShape.getOrderItem(canvasState)?.attributes).toEqual({
       child: {
         database: "relation-1",
       },
@@ -140,9 +138,7 @@ describe("ServiceEntityShape order item serialization", () => {
     });
 
     shape.isMarkedForDeletion = true;
-    shape.updateOrderItem(new Map([["core-1", shape]]));
-
-    expect(shape.orderItem).toEqual({
+    expect(shape.getOrderItem(new Map([["core-1", shape]]))).toEqual({
       instance_id: "core-1",
       service_entity: "ParentService",
       config: {},
@@ -189,14 +185,13 @@ describe("ServiceEntityShape order item serialization", () => {
       ["relation-1", relationShape],
     ]);
 
-    parentShape.updateOrderItem(canvasState);
-
-    expect(parentShape.orderItem?.attributes).toMatchObject({ database: "relation-1" });
+    expect(parentShape.getOrderItem(canvasState)?.attributes).toMatchObject({
+      database: "relation-1",
+    });
 
     relationShape.isMarkedForDeletion = true;
-    parentShape.updateOrderItem(canvasState);
 
     // The deploy deletes the instance, so the parent's update doesn't reference it any more
-    expect(parentShape.orderItem?.attributes?.database ?? null).toBeNull();
+    expect(parentShape.getOrderItem(canvasState)?.attributes?.database ?? null).toBeNull();
   });
 });

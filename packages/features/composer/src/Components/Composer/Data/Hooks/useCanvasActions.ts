@@ -1,4 +1,4 @@
-import { Dispatch, MutableRefObject, SetStateAction, useMemo } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import { ServiceModel } from "@inmanta/web-console-core";
 import { CanvasActions } from "../Context";
 import {
@@ -14,7 +14,6 @@ import { ServiceEntityShape } from "../ServiceEntityShape";
 interface UseCanvasActionsParams {
   canvasState: Map<string, ServiceEntityShape>;
   setCanvasState: Dispatch<SetStateAction<Map<string, ServiceEntityShape>>>;
-  initialShapeInfoRef: MutableRefObject<Map<string, { service_entity: string }>>;
   relationsDictionary: RelationsDictionary;
   serviceCatalog: ServiceModel[];
 }
@@ -27,7 +26,6 @@ interface UseCanvasActionsParams {
 export const useCanvasActions = ({
   canvasState,
   setCanvasState,
-  initialShapeInfoRef,
   relationsDictionary,
   serviceCatalog,
 }: UseCanvasActionsParams): CanvasActions =>
@@ -56,11 +54,6 @@ export const useCanvasActions = ({
       const removedIds = new Set(removedShapes.map((removed) => removed.id));
 
       removedShapes.forEach((removed) => {
-        // Only shapes that existed when the canvas opened end up in initialShapeInfoRef, and
-        // the ones missing on deploy become delete order items. Removing a shape from the
-        // canvas without deleting it means forgetting it was there.
-        initialShapeInfoRef.current.delete(removed.id);
-
         // If the removed shape has collapsed children, reveal the first layer
         // so those children remain visible after the parent disappears.
         revealDirectChildren(canvasState, removed);
@@ -92,8 +85,6 @@ export const useCanvasActions = ({
     const markShapeForDeletion: CanvasActions["markShapeForDeletion"] = (shape, marked) => {
       withEmbeddedEntities(shape).forEach((markedShape) => {
         markedShape.isMarkedForDeletion = marked;
-        // The next derivation recomputes it as the delete, or as the update again
-        markedShape.orderItem = null;
       });
       refresh();
     };
@@ -122,4 +113,4 @@ export const useCanvasActions = ({
       disconnectShapes,
       refresh,
     };
-  }, [canvasState, setCanvasState, initialShapeInfoRef, relationsDictionary, serviceCatalog]);
+  }, [canvasState, setCanvasState, relationsDictionary, serviceCatalog]);

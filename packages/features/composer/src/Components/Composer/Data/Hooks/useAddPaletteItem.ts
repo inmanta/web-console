@@ -21,7 +21,6 @@ export const useAddPaletteItem = () => {
     serviceCatalog,
     serviceInventories,
     relationsDictionary,
-    initialShapeInfoRef,
     setActiveCell,
   } = useContext(ComposerContext);
 
@@ -61,10 +60,6 @@ export const useAddPaletteItem = () => {
               relationsDictionary,
               serviceCatalog,
               serviceInventories,
-              // Instances deleted from the canvas are deleted on deploy, so they don't come back
-              excludedIds: new Set(
-                Array.from(initialShapeInfoRef.current.keys()).filter((id) => !canvasState.has(id))
-              ),
             });
 
       canvasActions.addShapes(shapes);
@@ -76,7 +71,6 @@ export const useAddPaletteItem = () => {
       serviceCatalog,
       serviceInventories,
       relationsDictionary,
-      initialShapeInfoRef,
       setActiveCell,
     ]
   );
