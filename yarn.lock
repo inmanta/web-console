@@ -1859,11 +1859,11 @@ __metadata:
     "@types/jest-axe": "npm:^3.5.9"
     "@vitejs/plugin-react": "npm:^6.3.0"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
-    vite: "npm:^8.3.7"
+    vite: "npm:^8.3.8"
     vite-plugin-mkcert: "npm:^2.1.0"
   languageName: unknown
   linkType: soft
@@ -1886,13 +1886,13 @@ __metadata:
     graphql: "npm:^17.1.0"
     jsonpathly: "npm:^4.0.0"
     keycloak-js: "npm:^26.2.5"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     qs: "npm:^6.17.0"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
     uuid: "npm:^14.0.3"
-    vite: "npm:^8.3.7"
+    vite: "npm:^8.3.8"
     vitest: "npm:^5.1.0"
     xml-formatter: "npm:^3.7.0"
   languageName: unknown
@@ -1918,7 +1918,7 @@ __metadata:
     styled-components: "npm:^6.6.0"
     typescript: "npm:@typescript/typescript6@^6.0.2"
     uuid: "npm:^14.0.3"
-    vite: "npm:^8.3.7"
+    vite: "npm:^8.3.8"
     vitest: "npm:^5.1.0"
   languageName: unknown
   linkType: soft
@@ -1941,13 +1941,13 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.9"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
     styled-components: "npm:^6.6.0"
     victory: "npm:^38.0.1"
-    vite: "npm:^8.3.7"
+    vite: "npm:^8.3.8"
     vitest: "npm:^5.1.0"
   languageName: unknown
   linkType: soft
@@ -1969,13 +1969,13 @@ __metadata:
     graphql: "npm:^17.1.0"
     monaco-editor: "npm:^0.57.0"
     monaco-graphql: "npm:^2.0.1"
-    msw: "npm:^3.0.4"
-    prettier: "npm:^3.9.10"
+    msw: "npm:^3.0.5"
+    prettier: "npm:^3.10.1"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
     styled-components: "npm:^6.6.0"
-    vite: "npm:^8.3.7"
+    vite: "npm:^8.3.8"
     vitest: "npm:^5.1.0"
   languageName: unknown
   linkType: soft
@@ -2007,14 +2007,14 @@ __metadata:
     markdown-it-emoji: "npm:^3.1.0"
     mermaid: "npm:^12.3.0"
     monaco-editor: "npm:^0.57.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-icons: "npm:^5.7.0"
     react-router: "npm:^8.5.1"
     styled-components: "npm:^6.6.0"
     uuid: "npm:^14.0.3"
-    vite: "npm:^8.3.7"
+    vite: "npm:^8.3.8"
     vitest: "npm:^5.1.0"
   languageName: unknown
   linkType: soft
@@ -2037,7 +2037,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.9"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-diff-viewer-continued: "npm:^4.4.0"
     react-dom: "npm:^19.3.1"
@@ -2064,7 +2064,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.9"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
@@ -2088,7 +2088,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.9"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
   languageName: unknown
@@ -2111,7 +2111,7 @@ __metadata:
     "@types/react-dom": "npm:^19.3.0"
     "@vitejs/plugin-react": "npm:^6.3.0"
     typescript-7: "npm:typescript@^7.0.2"
-    vite: "npm:^8.3.7"
+    vite: "npm:^8.3.8"
     vite-plugin-mkcert: "npm:^2.1.0"
     vitest: "npm:^5.1.0"
   languageName: unknown
@@ -2139,7 +2139,7 @@ __metadata:
     jest-axe: "npm:^11.0.0"
     keycloak-js: "npm:^26.2.5"
     monaco-editor: "npm:^0.57.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     oidc-client-ts: "npm:^3.5.0"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
@@ -2147,7 +2147,7 @@ __metadata:
     react-router: "npm:^8.5.1"
     styled-components: "npm:^6.6.0"
     uuid: "npm:^14.0.3"
-    vite: "npm:^8.3.7"
+    vite: "npm:^8.3.8"
     vitest: "npm:^5.1.0"
   languageName: unknown
   linkType: soft
@@ -2172,11 +2172,11 @@ __metadata:
     jest-axe: "npm:^11.0.0"
     mermaid: "npm:^12.3.0"
     monaco-editor: "npm:^0.57.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
-    vite: "npm:^8.3.7"
+    vite: "npm:^8.3.8"
     vitest: "npm:^5.1.0"
   languageName: unknown
   linkType: soft
@@ -2200,13 +2200,13 @@ __metadata:
     copy-to-clipboard: "npm:^4.0.2"
     highlight.js: "npm:^11.12.0"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.4"
+    msw: "npm:^3.0.5"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
     styled-components: "npm:^6.6.0"
     uuid: "npm:^14.0.3"
-    vite: "npm:^8.3.7"
+    vite: "npm:^8.3.8"
     vitest: "npm:^5.1.0"
   languageName: unknown
   linkType: soft
@@ -2231,19 +2231,19 @@ __metadata:
     "@vitejs/plugin-react": "npm:^6.3.0"
     "@vitest/coverage-v8": "npm:^5.1.0"
     "@vitest/ui": "npm:^5.1.0"
-    cypress: "npm:^16.2.1"
+    cypress: "npm:^16.3.0"
     dependency-cruiser: "npm:^18.7.2"
     dotenv: "npm:^18.0.10"
     eslint: "npm:^10.2.1"
     eslint-import-resolver-typescript: "npm:^4.4.5"
     eslint-plugin-import: "npm:^2.32.0"
-    eslint-plugin-jest-dom: "npm:^5.10.1"
+    eslint-plugin-jest-dom: "npm:^5.10.2"
     eslint-plugin-react: "npm:^7.37.5"
     eslint-plugin-react-hooks: "npm:^7.1.1"
     eslint-plugin-testing-library: "npm:^7.16.2"
     graphql: "npm:^17.1.0"
     happy-dom: "npm:^21.0.4"
-    prettier: "npm:^3.9.10"
+    prettier: "npm:^3.10.1"
     process: "npm:^0.11.10"
     react: "npm:^19.3.1"
     react-is: "npm:^19.3.1"
@@ -2251,7 +2251,7 @@ __metadata:
     typescript: "npm:@typescript/typescript6@^6.0.2"
     typescript-7: "npm:typescript@^7.0.2"
     typescript-eslint: "npm:^8.72.2"
-    vite: "npm:^8.3.7"
+    vite: "npm:^8.3.8"
     vite-plugin-mkcert: "npm:^2.1.0"
     vitest: "npm:^5.1.0"
   languageName: unknown
@@ -2906,9 +2906,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.45.6":
-  version: 0.45.11
-  resolution: "@mswjs/interceptors@npm:0.45.11"
+"@mswjs/interceptors@npm:^0.45.11":
+  version: 0.45.12
+  resolution: "@mswjs/interceptors@npm:0.45.12"
   dependencies:
     "@open-draft/until": "npm:^3.0.1"
     "@types/debug": "npm:^4.1.13"
@@ -2916,7 +2916,7 @@ __metadata:
     is-node-process: "npm:^1.2.0"
     outvariant: "npm:^1.4.3"
     rettime: "npm:^0.11.12"
-  checksum: 10/10d5f9e1db1bd22fd1ffe69c3aa3370957bc3c7f86a15ba763ccbb9041e4daee8b37d09ebf4a69b6c0ec674294ad77b706309b855750197fe0c24c6c5cd9d799
+  checksum: 10/4f96940fd89595438902dd91ef89f00a61af23869d3e0cc023fd16229f94c422946fbffa09f421feb91ea9a3982cf9270f25f27dfa3dd9e32281350a09ce2b40
   languageName: node
   linkType: hard
 
@@ -6982,9 +6982,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:^16.2.1":
-  version: 16.2.1
-  resolution: "cypress@npm:16.2.1"
+"cypress@npm:^16.3.0":
+  version: 16.3.0
+  resolution: "cypress@npm:16.3.0"
   dependencies:
     "@cypress/request": "npm:^4.0.0"
     "@cypress/xvfb": "npm:^1.2.4"
@@ -7020,14 +7020,14 @@ __metadata:
     proxy-from-env: "npm:1.0.0"
     request-progress: "npm:^3.0.0"
     supports-color: "npm:^8.1.1"
-    systeminformation: "npm:^5.31.1"
+    systeminformation: "npm:^5.33.16"
     tmp: "npm:~0.2.4"
     tree-kill: "npm:1.2.2"
     untildify: "npm:^4.0.0"
     yauzl: "npm:^3.3.1"
   bin:
     cypress: bin/cypress
-  checksum: 10/7e2108c375f97430685d7bd4073f9c5b33c5f61bde5fae44862ffd44f7ed6889fef8ed06b181c36710965801c98d2ec65d16cb4ec74791d89720810f7e639824
+  checksum: 10/be428af1981de356329acb4e35f6a9d05561a35e99cfc629d416a79f2085ca3dbfe42b8744a06c33af93ccfc1ae7455e5c3f2d2250cac92eaaea0d7a761185f0
   languageName: node
   linkType: hard
 
@@ -8138,9 +8138,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest-dom@npm:^5.10.1":
-  version: 5.10.1
-  resolution: "eslint-plugin-jest-dom@npm:5.10.1"
+"eslint-plugin-jest-dom@npm:^5.10.2":
+  version: 5.10.2
+  resolution: "eslint-plugin-jest-dom@npm:5.10.2"
   dependencies:
     requireindex: "npm:^1.2.0"
   peerDependencies:
@@ -8149,7 +8149,7 @@ __metadata:
   peerDependenciesMeta:
     "@testing-library/dom":
       optional: true
-  checksum: 10/4dfe8a4b5c16b996c1285d5c4e6c9ba01a977db5ed4ad83bf3c8c4ff36bd51f1b0bc9692d517412683ec125b16275f0c2a942527eb0264f1a676195db6e11c90
+  checksum: 10/2d14f789b06371f7486c4b95c14405fad366b06a788b4c2c3f9ba21bf2969c31d44c27f7a2afff00ffe9ef71ef41c8ba0f2183212909381394e45de75c332122
   languageName: node
   linkType: hard
 
@@ -10974,13 +10974,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "msw@npm:3.0.4"
+"msw@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "msw@npm:3.0.5"
   dependencies:
     "@inquirer/confirm": "npm:^6.0.11"
     "@msw/url": "npm:^0.1.2"
-    "@mswjs/interceptors": "npm:^0.45.6"
+    "@mswjs/interceptors": "npm:^0.45.11"
     cookie: "npm:^2.0.1"
     headers-polyfill: "npm:^5.0.1"
     is-node-process: "npm:^1.2.0"
@@ -11003,7 +11003,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10/d4f35e1cf80f18705552e180a9fcb3c9dd5afd728d00ae9511740bc66fe80775cb0f908ffa8432d11de56ff6b5f73bdf4d11a6ca5d7ff15568d041227401299c
+  checksum: 10/86503f352dada95986132d66a5656934a4644a73e9effecbb00cc5bbcd89689bbc2e96da98f1d08384596b2d9fd90ee2c3c1091fe72a4fdd37d34ba5468962b7
   languageName: node
   linkType: hard
 
@@ -11584,21 +11584,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier@npm:^3.10.1":
+  version: 3.10.1
+  resolution: "prettier@npm:3.10.1"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 10/ab4fc7bbee5823eb99200f89172e1dc360a8225facc19db336f30aa4e089bd8576f141ca8e129ce6ce850f1d7beb4d6e8b7630c2522b3b2fdc62330114f828b2
+  languageName: node
+  linkType: hard
+
 "prettier@npm:^3.5.3":
   version: 3.9.5
   resolution: "prettier@npm:3.9.5"
   bin:
     prettier: bin/prettier.cjs
   checksum: 10/b6587f1582ba653ce5207ee227aff646500e5098646931088f176d1ab090b1f47d5a333f1facd634e9aa7dcb15c45940e2cec13a5962534cf0200617517b67b6
-  languageName: node
-  linkType: hard
-
-"prettier@npm:^3.9.10":
-  version: 3.9.10
-  resolution: "prettier@npm:3.9.10"
-  bin:
-    prettier: bin/prettier.cjs
-  checksum: 10/5d0118add4b44eb9d50c114f5c525451cc92be9da300ad0552787472535a3f23884baed3223d9b577bb7d1152eb58aeccfcc2b4541c0cf2274c0b4d328e36834
   languageName: node
   linkType: hard
 
@@ -13073,12 +13073,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"systeminformation@npm:^5.31.1":
-  version: 5.33.18
-  resolution: "systeminformation@npm:5.33.18"
+"systeminformation@npm:^5.33.16":
+  version: 5.33.23
+  resolution: "systeminformation@npm:5.33.23"
   bin:
     systeminformation: lib/cli.js
-  checksum: 10/923204e0970fc94a52bc14c65aa32034a5253566e60ea68f6d74877d4b2820c5380e8724c74c3911dee3b0f0b1d08496a53b12cdfc772caaeed43ff605586c31
+  checksum: 10/3b248cc05b1da2fd59520e0d733e2193b3a75ce852a2513edf873bf5551bfdb54ea9f8edd57ef644a954be0ad46b42f72cb5fb475539f17bceb5b9237b7fb305
   conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard
@@ -14242,9 +14242,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^8.3.7":
-  version: 8.3.7
-  resolution: "vite@npm:8.3.7"
+"vite@npm:^8.3.8":
+  version: 8.3.8
+  resolution: "vite@npm:8.3.8"
   dependencies:
     fsevents: "npm:~2.3.3"
     lightningcss: "npm:^1.33.0"
@@ -14295,7 +14295,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10/18803d5c9977dd179a17cffef22bf5365f23f815f5bab78e461b3a7d9f213cbf2ccaa5995d4bc01d7bf408c48114e61932ddfd3fab539cbf47444817626b000e
+  checksum: 10/8444028a3515debb9b3c05fe5428c382b1fa7158321789d94e6f844f231a81c3d5ee0eadd92487492924ad5d24f85e48dd96982de4c7b623a3beb1939622af96
   languageName: node
   linkType: hard
 
