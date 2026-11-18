@@ -76,7 +76,10 @@ pipeline {
                                 }
                             } finally {
                                 junit allowEmptyResults: true, testResults: "cypress/reports/junit/${authMethod.name}-*.xml"
-                                removeOrchestrator()
+                                // shell-scripts/clear-server.sh needs only sh and docker, not yarn; a failure is reported, not hidden.
+                                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE', message: "Couldn't remove the orchestrator: its containers may still be on the agent ${env.NODE_NAME}.") {
+                                    sh 'sh ./shell-scripts/clear-server.sh'
+                                }
                             }
                         }
                     }
@@ -92,17 +95,5 @@ pipeline {
         cleanup {
             deleteDir()
         }
-    }
-}
-
-/**
- * Removes the orchestrator of this run, from the web-console folder, with
- * shell-scripts/clear-server.sh: it needs only sh and docker, so it also works when yarn doesn't.
- * A failure marks the build unstable instead of being hidden, since the orchestrator's containers
- * may then still be on the agent.
- */
-def removeOrchestrator() {
-    if (sh(returnStatus: true, script: 'sh ./shell-scripts/clear-server.sh') != 0) {
-        unstable("Couldn't remove the orchestrator: its containers may still be on the agent ${env.NODE_NAME}.")
     }
 }
