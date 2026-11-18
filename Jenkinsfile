@@ -100,6 +100,7 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                                         dir('web-console') {
                                             sh '''yarn build:ci;
                                             sh ./shell-scripts/clear-server.sh;
+                                            sh ./shell-scripts/report-orchestrator-conflicts.sh;
                                             yarn run install:orchestrator:ci;
                                             yarn run cypress-test:iso;'''
                                         }

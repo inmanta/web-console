@@ -68,6 +68,7 @@ pipeline {
                                 timeout(time: 20, unit: 'MINUTES') {
                                     sh """
                                     sh ./shell-scripts/clear-server.sh
+                                    sh ./shell-scripts/report-orchestrator-conflicts.sh
                                     yarn run install:orchestrator:${authMethod.name}
                                     sleep ${authMethod.startupSeconds}
                                     yarn update:dist

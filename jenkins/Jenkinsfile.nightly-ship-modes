@@ -30,6 +30,7 @@ def onFreshOrchestrator(String stageName, String run, Closure tests) {
                         timeout(time: 30, unit: 'MINUTES') {
                             sh '''
                             sh ./shell-scripts/clear-server.sh
+                            sh ./shell-scripts/report-orchestrator-conflicts.sh
                             yarn run install:orchestrator:ci
                             '''
                             // Cypress empties its screenshots folder before each run.
