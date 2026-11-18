@@ -257,14 +257,13 @@ describe("useSuggestedValues graphql flavor", () => {
 
       sentQueries.push(body.query);
 
-      // The endpoint double-wraps: useGraphQLRequest strips the outer
-      // `data`, leaving the `{ data: { <root> }, errors, extensions }` envelope
-      // that consumers (and extractNodes) read via `.data`.
-      const envelope = {
-        data: { environments: { edges: environmentNodes.map((node) => ({ node })) } },
-      };
-
-      return HttpResponse.json({ data: envelope });
+      return HttpResponse.json({
+        data: {
+          data: { environments: { edges: environmentNodes.map((node) => ({ node })) } },
+          errors: null,
+          extensions: {},
+        },
+      });
     })
   );
 

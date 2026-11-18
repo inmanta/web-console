@@ -17,6 +17,7 @@ packages/
   core/src/ - @inmanta/web-console-core, the web-console core layer (no components)
     Contracts/ - All interfaces that represent a contract, including FeatureModule
     Domain/ - Entities
+      GraphQL/ - The orchestrator's GraphQL schema and the query types codegen generates from it
     I18n/ - The words registry
     Language/ - Language extensions & isolated implementations
     Auth/ - The auth context and types

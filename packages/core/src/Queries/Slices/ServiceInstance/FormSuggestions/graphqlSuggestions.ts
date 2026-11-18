@@ -97,16 +97,15 @@ const asRecord = (value: unknown): Record<string, unknown> | null =>
   typeof value === "object" && value !== null ? (value as Record<string, unknown>) : null;
 
 /**
- * Pulls the nodes out of a Relay connection response for `root` (read via the envelope
- * `data.data.<root>.edges[].node`). Any missing or malformed shape collapses to `[]`.
+ * Pulls the nodes out of a Relay connection in a query result for `root`
+ * (`<root>.edges[].node`). Any missing or malformed shape collapses to `[]`.
  *
  * @example
- * extractNodes({ data: { environments: { edges: [{ node: { id: "e1" } }] } } }, "environments") // => [{ id: "e1" }]
+ * extractNodes({ environments: { edges: [{ node: { id: "e1" } }] } }, "environments") // => [{ id: "e1" }]
  */
 export const extractNodes = (data: unknown, root: string): unknown[] => {
-  const response = asRecord(data);
-  const container = response && asRecord(response.data);
-  const connection = container && asRecord(container[root]);
+  const result = asRecord(data);
+  const connection = result && asRecord(result[root]);
   const edges = connection?.edges;
   if (!Array.isArray(edges)) {
     return [];

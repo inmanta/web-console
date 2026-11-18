@@ -11,6 +11,7 @@ node_modules
 # Generated files
 *.min.js
 *.min.css
+**/GraphQL/generated
 
 # IDE and editor files
 .idea

@@ -18,7 +18,7 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const { notifyError } = useAppAlert();
   const envID = environmentHandler.useId();
-  const { data, isSuccess, isError, error } = useGetPartialNotifications({
+  const { data, isError, error } = useGetPartialNotifications({
     envID,
     cleared: false,
     orderBy: [{ key: "created", order: "desc" }],
@@ -35,18 +35,9 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
         message: error.message,
       });
     }
+  }, [isError, error, envID, notifyError]);
 
-    if (isSuccess && (data?.errors?.length || 0) > 0) {
-      notifyError({
-        title: words("error"),
-        message: (data?.errors ?? []).join(", "),
-      });
-    }
-  }, [isError, error, isSuccess, data, envID, notifyError]);
-
-  const hasErrors = !!envID && (isError || (isSuccess && (data?.errors?.length ?? 0) > 0));
-
-  if (hasErrors) {
+  if (envID && isError) {
     return (
       <NotificationBadge
         aria-label="Badge-Error"
