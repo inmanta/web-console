@@ -37,6 +37,9 @@ function setup(halted: boolean = false, isDisabled: boolean = false) {
 
 async function openDropdown() {
   await userEvent.click(screen.getByRole("button", { name: words("actions") }));
+  // PatternFly's Popper mounts the menu at opacity 0 and fades it in from a setTimeout,
+  // so wait for that before asserting visibility.
+  await waitFor(() => expect(screen.getByRole("menu")).toBeVisible());
 }
 
 describe("AgentsActionsButton", () => {
