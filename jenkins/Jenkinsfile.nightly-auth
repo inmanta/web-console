@@ -1,17 +1,23 @@
-// The nightly end-to-end tests of the authentication methods, each against a fresh OSS
-// orchestrator set up for it (shell-scripts/setup-auth.sh), with the web console of this build:
+// The nightly end-to-end tests of one authentication method, against a fresh OSS orchestrator set
+// up for it (shell-scripts/setup-auth.sh), with the web console of this build:
 // - keycloak: cypress/e2e/Keycloak (cypress.config.keycloak.cjs);
 // - oidc: cypress/e2e/Oidc (cypress.config.oidc.cjs);
 // - local-auth: cypress/e2e/LocalAuth (cypress.config.local-auth.cjs).
-// Its own job, on master.
+// One job per method, on master, so each method has its own status and can be rerun alone. The
+// jobs keep the names of the freestyle jobs they replace (the build monitor lists those), and the
+// job's name picks the method: a job with another name fails.
 //
 // The setup doesn't wait for the orchestrator and the identity provider to be ready, so each
 // method waits a fixed time before it installs the build.
-def authMethods = [
-    [name: 'keycloak', startupSeconds: 45],
-    [name: 'oidc', startupSeconds: 20],
-    [name: 'local-auth', startupSeconds: 45],
+def authMethodsByJob = [
+    'keycloak-e2e-test': [name: 'keycloak', startupSeconds: 45],
+    'oidc-e2e-test': [name: 'oidc', startupSeconds: 20],
+    'frontend-local-auth': [name: 'local-auth', startupSeconds: 45],
 ]
+def authMethod = authMethodsByJob[env.JOB_BASE_NAME]
+if (authMethod == null) {
+    error("No authentication method for the job '${env.JOB_BASE_NAME}': it must be one of ${authMethodsByJob.keySet().join(', ')}.")
+}
 
 pipeline {
     agent any
@@ -53,29 +59,23 @@ pipeline {
         stage('Auth: End-to-end tests') {
             steps {
                 script {
-                    for (method in authMethods) {
-                        stage("Authentication: ${method.name}") {
-                            // A failing method fails the build, and the other methods still run.
-                            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                                // One orchestrator per agent: the main job's Cypress stage takes the same lock.
-                                lock(resource: "orchestrator-${env.NODE_NAME}") {
-                                    dir('web-console') {
-                                        // The cleanup is outside the timeout, so it also runs when a method times out.
-                                        try {
-                                            timeout(time: 20, unit: 'MINUTES') {
-                                                sh """
-                                                yarn run install:orchestrator:${method.name}
-                                                sleep ${method.startupSeconds}
-                                                yarn update:dist
-                                                yarn run cypress-test:${method.name} --config screenshotsFolder=cypress/screenshots/${method.name} --reporter-options 'mochaFile=cypress/reports/junit/${method.name}-[hash].xml'
-                                                """
-                                            }
-                                        } finally {
-                                            junit allowEmptyResults: true, testResults: "cypress/reports/junit/${method.name}-*.xml"
-                                            sh 'yarn run kill-server || true; rm -rf temp'
-                                        }
-                                    }
+                    // One orchestrator per agent: the main job's Cypress stage takes the same lock.
+                    // Taken here, on the agent: a stage option can't see NODE_NAME yet.
+                    lock(resource: "orchestrator-${env.NODE_NAME}") {
+                        dir('web-console') {
+                            // The cleanup is outside the timeout, so it also runs when the tests time out.
+                            try {
+                                timeout(time: 20, unit: 'MINUTES') {
+                                    sh """
+                                    yarn run install:orchestrator:${authMethod.name}
+                                    sleep ${authMethod.startupSeconds}
+                                    yarn update:dist
+                                    yarn run cypress-test:${authMethod.name} --reporter-options 'mochaFile=cypress/reports/junit/${authMethod.name}-[hash].xml'
+                                    """
                                 }
+                            } finally {
+                                junit allowEmptyResults: true, testResults: "cypress/reports/junit/${authMethod.name}-*.xml"
+                                sh 'yarn run kill-server || true; rm -rf temp'
                             }
                         }
                     }
