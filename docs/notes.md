@@ -140,7 +140,7 @@ Every run that starts an orchestrator (the main job's Cypress stage and each run
 
 ## GraphQL queries
 
-Every GraphQL query in core is written with `graphql()` from `@inmanta/web-console-core/GraphQL/generated`, and `useGraphQLRequest` runs it. Codegen generates the types of its variables and result from the orchestrator's schema in `packages/core/src/GraphQL/schema.graphql`. `graphql.config.ts` configures it. For autocomplete and validation inside `graphql()`, install the "GraphQL: Language Feature Support" extension in VS Code or the GraphQL plugin in JetBrains editors; both read the same file.
+Every GraphQL query in `packages/core` (web-console-core) is written with `graphql()` from `@inmanta/web-console-core/GraphQL/generated`, and `useGraphQLRequest` runs it. Codegen generates the types of its variables and result from the orchestrator's schema in `packages/core/src/GraphQL/schema.graphql`. `graphql.config.ts` configures it. For autocomplete, validation and the schema's descriptions on hover inside `graphql()`, install the "GraphQL: Language Feature Support" extension in VS Code or the GraphQL plugin in JetBrains editors; both read the same file.
 
 - `yarn codegen` generates the types after you add or change a query. `yarn codegen:watch` keeps doing so while you work.
 - `yarn codegen:schema [url]` pulls the schema from a running orchestrator (default `http://localhost:8888`). Run it, then `yarn codegen`, when the orchestrator's schema changed.

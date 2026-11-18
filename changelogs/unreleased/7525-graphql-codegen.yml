@@ -1,5 +1,5 @@
 description: Generate the GraphQL query types from the orchestrator's schema and check them in CI.
 issue-nr: 7525
 change-type: patch
-destination-branches: [master]
+destination-branches: [master, iso9]
 sections: {}
