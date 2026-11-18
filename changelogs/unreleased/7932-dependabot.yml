@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): bump msw from 3.0.5 to 3.0.6'
+destination-branches:
+- master
+- iso9
+sections: {}

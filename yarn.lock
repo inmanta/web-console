@@ -1859,7 +1859,7 @@ __metadata:
     "@types/jest-axe": "npm:^3.5.9"
     "@vitejs/plugin-react": "npm:^6.3.0"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.5"
+    msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
@@ -1886,7 +1886,7 @@ __metadata:
     graphql: "npm:^17.1.0"
     jsonpathly: "npm:^4.0.0"
     keycloak-js: "npm:^26.2.5"
-    msw: "npm:^3.0.5"
+    msw: "npm:^3.0.6"
     qs: "npm:^6.17.0"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
@@ -1941,7 +1941,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.10"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.5"
+    msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
@@ -1969,7 +1969,7 @@ __metadata:
     graphql: "npm:^17.1.0"
     monaco-editor: "npm:^0.57.0"
     monaco-graphql: "npm:^2.0.1"
-    msw: "npm:^3.0.5"
+    msw: "npm:^3.0.6"
     prettier: "npm:^3.10.1"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
@@ -2007,7 +2007,7 @@ __metadata:
     markdown-it-emoji: "npm:^3.1.0"
     mermaid: "npm:^12.3.0"
     monaco-editor: "npm:^0.57.0"
-    msw: "npm:^3.0.5"
+    msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-icons: "npm:^5.7.0"
@@ -2037,7 +2037,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.10"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.5"
+    msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-diff-viewer-continued: "npm:^4.4.0"
     react-dom: "npm:^19.3.1"
@@ -2064,7 +2064,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.10"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.5"
+    msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
@@ -2088,7 +2088,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.10"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.5"
+    msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
   languageName: unknown
@@ -2139,7 +2139,7 @@ __metadata:
     jest-axe: "npm:^11.0.0"
     keycloak-js: "npm:^26.2.5"
     monaco-editor: "npm:^0.57.0"
-    msw: "npm:^3.0.5"
+    msw: "npm:^3.0.6"
     oidc-client-ts: "npm:^3.5.0"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
@@ -2172,7 +2172,7 @@ __metadata:
     jest-axe: "npm:^11.0.0"
     mermaid: "npm:^12.3.0"
     monaco-editor: "npm:^0.57.0"
-    msw: "npm:^3.0.5"
+    msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
@@ -2200,7 +2200,7 @@ __metadata:
     copy-to-clipboard: "npm:^4.0.2"
     highlight.js: "npm:^11.12.0"
     jest-axe: "npm:^11.0.0"
-    msw: "npm:^3.0.5"
+    msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-router: "npm:^8.5.1"
@@ -2900,9 +2900,9 @@ __metadata:
   linkType: hard
 
 "@msw/url@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "@msw/url@npm:0.1.2"
-  checksum: 10/3fbfccbf320803b2b2f6c7718166c0f86399c92e6be4e458427f2870cf420f8d004126565e254ecd611a8c2d660f41cba4e032a97bdb18be915984dfe2f03961
+  version: 0.1.3
+  resolution: "@msw/url@npm:0.1.3"
+  checksum: 10/71535287611d49677ab77bf1bc9e0d511d8ecd87e02c13bef621b4db85de22dc9ca9cddff0abb058a51c541676cb276df5511f2c0a17a995e9d38e462cfa8809
   languageName: node
   linkType: hard
 
@@ -10974,9 +10974,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:^3.0.5":
-  version: 3.0.5
-  resolution: "msw@npm:3.0.5"
+"msw@npm:^3.0.6":
+  version: 3.0.6
+  resolution: "msw@npm:3.0.6"
   dependencies:
     "@inquirer/confirm": "npm:^6.0.11"
     "@msw/url": "npm:^0.1.2"
@@ -11003,7 +11003,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10/86503f352dada95986132d66a5656934a4644a73e9effecbb00cc5bbcd89689bbc2e96da98f1d08384596b2d9fd90ee2c3c1091fe72a4fdd37d34ba5468962b7
+  checksum: 10/a7bbcea29c21820fab573c744cb572488ae794155f072348b6700877bd94dd58875bcbbd7c06c1d80f5dc00505e40fc2db3bad067549c9296d67c655f82ea9ed
   languageName: node
   linkType: hard
 
