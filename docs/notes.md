@@ -131,12 +131,22 @@ Tests follow the same import boundaries as the code they test (see `eslint.layer
 
 These Jenkins jobs run from this repository:
 
-- `Jenkinsfile`, on every branch: `yarn install --immutable`, the checks, `yarn build:ci` (the ISO app with the composer next to it, the composer's own build and the OSS app, all stamped with the version in `package.json`, which `yarn check-dist-versions` checks), `yarn check-no-cdn` over every build, the unit tests and the ISO end-to-end tests.
+- `Jenkinsfile`, on every branch: `yarn install --immutable`, the checks, `yarn build:ci` (the ISO app with the composer next to it, the composer's own build and the OSS app, all stamped with the version in `package.json`, which `yarn check-dist-versions` checks), `yarn check-no-cdn` over every build, the unit tests and the ISO end-to-end tests. Once its orchestrator is up, `yarn codegen:check` fails the build when that orchestrator's GraphQL schema no longer matches the generated query types (see [GraphQL queries](#graphql-queries)); the end-to-end tests still run.
 - `jenkins/Jenkinsfile.oss`, on every branch, without the token and with an empty Yarn global folder (an earlier install on the agent may have mirrored the JointJS packages there): the lockfile is complete without the token (`yarn install --mode=update-lockfile`, then `git diff --exit-code yarn.lock`), and the OSS app installs (`yarn workspaces focus @inmanta/web-console-oss`), builds, type-checks (`yarn tsc:oss`) and passes the tests of the OSS packages (`yarn test:oss`).
 - `jenkins/Jenkinsfile.nightly-ship-modes`, every night on master and the iso branches: the ISO end-to-end tests once per ship mode of the composer (combined, without, mismatch), then `yarn cypress-test:ship-modes`, each on a fresh orchestrator.
 - `jenkins/Jenkinsfile.nightly-auth`, every night on master: the end-to-end tests of each authentication method (Keycloak, OIDC, local authentication), each on a fresh OSS orchestrator set up for it (`yarn install:orchestrator:<method>`), with the build's `dist/`.
 
 Every run that starts an orchestrator (the main job's Cypress stage and each run of the nightly jobs) takes the lock `orchestrator-<agent>` (Lockable Resources), since they all use the same container names on the agent.
+
+## GraphQL queries
+
+Every GraphQL query in `packages/core` (web-console-core) is written with `graphql()` from `@inmanta/web-console-core/Domain/GraphQL/generated`, and `useGraphQLRequest` runs it. Codegen generates the types of its variables and result from the orchestrator's schema in `packages/core/src/Domain/GraphQL/schema.graphql`. `graphql.config.ts` configures it. For autocomplete, validation and the schema's descriptions on hover inside `graphql()`, install the "GraphQL: Language Feature Support" extension in VS Code or the GraphQL plugin in JetBrains editors; both read the same file.
+
+- `yarn codegen` generates the types after you add or change a query. `yarn codegen:watch` keeps doing so while you work.
+- `yarn codegen:schema [url]` pulls the schema from a running orchestrator (default `http://localhost:8888`). Run it, then `yarn codegen`, when the orchestrator's schema changed.
+- `yarn codegen:check` pulls the schema, then fails when the generated types are stale, without writing them. CI runs it against its orchestrator.
+
+The generated files and the schema are committed. Don't edit them by hand.
 
 ## Minimum browser versions
 

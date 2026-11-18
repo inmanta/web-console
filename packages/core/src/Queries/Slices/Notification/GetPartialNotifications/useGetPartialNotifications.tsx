@@ -1,5 +1,9 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { Notification } from "@inmanta/web-console-core/Domain/Notification";
+import { graphql } from "@inmanta/web-console-core/Domain/GraphQL/generated";
+import type {
+  GetPartialNotificationsQuery,
+  StrawberryOrder,
+} from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import {
   CustomError,
   REFETCH_INTERVAL,
@@ -10,63 +14,35 @@ import { KeyFactory, SliceKeys } from "@inmanta/web-console-core/Queries/Helpers
 interface Props {
   envID: string;
   cleared: boolean;
-  orderBy: Array<{ key: string; order: string }>;
+  orderBy: StrawberryOrder[];
 }
 
+const GET_PARTIAL_NOTIFICATIONS_QUERY = graphql(`
+  query GetPartialNotifications($filter: NotificationFilter!, $orderBy: [StrawberryOrder!]) {
+    notifications(filter: $filter, orderBy: $orderBy) {
+      edges {
+        node {
+          title
+          severity
+          read
+        }
+      }
+    }
+  }
+`);
+
 /**
- * Response type for the notifications query through GraphQL.
- *
- * @property {Object} data - The data object containing the notifications.
- * @property {Array} errors - The errors array containing any errors that occurred.
- * @property {Object} extensions - The extensions object containing any additional data.
+ * A notification with only the fields the partial notifications query asks for.
  */
-export interface NotificationsResponse {
-  data: {
-    notifications: {
-      edges: {
-        node: PartialNotification;
-      }[];
-    };
-  };
-  errors: string[] | null;
-  extensions: Record<string, unknown>;
-}
+export type PartialNotification =
+  GetPartialNotificationsQuery["notifications"]["edges"][number]["node"];
 
 /**
- * Return Signature of the useGetInstance React Query
+ * Return Signature of the useGetPartialNotifications React Query
  */
 interface GetNotifications {
-  useContinuous: () => UseQueryResult<
-    {
-      notifications: PartialNotification[];
-      errors: string[] | null;
-      extensions: Record<string, unknown>;
-    },
-    CustomError
-  >;
+  useContinuous: () => UseQueryResult<{ notifications: PartialNotification[] }, CustomError>;
 }
-
-/**
- * Partial Notification type that represents the Notification type but with only the title, severity, and read properties.
- */
-export type PartialNotification = Pick<Notification, "title" | "severity" | "read">;
-
-/**
- * Converts an orderBy array to GraphQL syntax.
- * This is a temporary workaround to support the orderBy array in the query.
- * TODO: Remove this once the backend supports graphql variables.
- * https://github.com/inmanta/web-console/issues/6587
- *
- * @param {Array<{ key: string; order: string }>} orderBy - Array of order by objects
- * @returns {string} GraphQL formatted orderBy string
- */
-const formatOrderBy = (orderBy: Array<{ key: string; order: string }>): string => {
-  const formatted = orderBy
-    .map((item) => `{key: "${item.key}", order: "${item.order}"}`)
-    .join(", ");
-
-  return `[${formatted}]`;
-};
 
 /**
  * React Query hook for fetching notifications using GraphQL.
@@ -79,42 +55,19 @@ export const useGetPartialNotifications = ({
   cleared,
   orderBy,
 }: Props): GetNotifications => {
-  const orderByString = formatOrderBy(orderBy);
-
-  const query = /* GraphQL */ `
-    query {
-      notifications(
-        filter: { cleared: ${cleared}, environment: "${envID}" }
-        orderBy: ${orderByString}
-      ) {
-        edges {
-          node {
-            title
-            severity
-            read
-          }
-        }
-      }
-    }
-  `;
-
-  const queryFn = useGraphQLRequest<NotificationsResponse>(query);
+  const execute = useGraphQLRequest();
 
   return {
     useContinuous: () =>
       useQuery({
         queryKey: GetPartialNotificationsKey.list([envID]),
-        queryFn,
+        queryFn: () =>
+          execute(GET_PARTIAL_NOTIFICATIONS_QUERY, {
+            filter: { cleared, environment: envID },
+            orderBy,
+          }),
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
-        select: (data) => {
-          const notifications = data.data.notifications.edges.map((edge) => edge.node);
-
-          return {
-            notifications,
-            errors: data.errors,
-            extensions: data.extensions,
-          };
-        },
+        select: (data) => ({ notifications: data.notifications.edges.map((edge) => edge.node) }),
       }),
   };
 };

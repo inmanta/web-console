@@ -3,11 +3,11 @@ import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
 import { Environment, ProjectModel, words } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import type { GetEnvironmentPreviewQuery } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import {
   useCreateEnvironment,
   getEnvironmentsKey,
   GetEnvironmentPreviewKey,
-  EnvironmentPreviewResponse,
 } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { useCreateProject } from "@inmanta/web-console-core/Queries/Slices/Project";
 import { useNavigateTo } from "@inmanta/web-console-core/Routing";
@@ -50,7 +50,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       client.setQueryData(getEnvironmentsKey.list([{ hasDetails: false }]), dataUpdater);
       client.setQueryData(
         GetEnvironmentPreviewKey.list(),
-        (previousData: EnvironmentPreviewResponse | undefined) => {
+        (previousData: GetEnvironmentPreviewQuery | undefined) => {
           const newEnv = {
             id: data.data.id,
             name: data.data.name,
@@ -60,10 +60,10 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
           };
 
           if (previousData) {
-            previousData.data.environments.edges.push({
+            previousData.environments.edges.push({
               node: newEnv,
             });
-            const envsAsArray = previousData.data.environments.edges.map((edge) => edge.node);
+            const envsAsArray = previousData.environments.edges.map((edge) => edge.node);
 
             environmentHandler.setAllEnvironments(envsAsArray);
 
@@ -73,10 +73,8 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
           environmentHandler.setAllEnvironments([newEnv]);
 
           return {
-            data: {
-              environments: {
-                edges: [{ node: newEnv }],
-              },
+            environments: {
+              edges: [{ node: newEnv }],
             },
           };
         }

@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
-import { PageSize, Pagination, Resource, ResourceActionFilter } from "@inmanta/web-console-core";
+import { PageSize, Pagination, Resource } from "@inmanta/web-console-core";
 import { MultiSort } from "@inmanta/web-console-core/Common";
 import { CurrentPage } from "@inmanta/web-console-core/Common/UrlState/useUrlStateWithCurrentPage";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { graphql } from "@inmanta/web-console-core/Domain/GraphQL/generated";
+import type { GetResourcesQuery } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import { Handlers } from "@inmanta/web-console-core/Domain/Pagination/Pagination";
 import { useGraphQLRequest, REFETCH_INTERVAL } from "@inmanta/web-console-core/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@inmanta/web-console-core/Queries/Helpers/KeyFactory";
@@ -13,27 +15,6 @@ import {
   mapToResourceActionFilterWithInstanceLabels,
   parseCurrentPage,
 } from "./helpers";
-
-export interface PageInfo {
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  endCursor: string | null;
-  startCursor: string | null;
-}
-
-/**
- * GraphQL response type for the resources query
- */
-interface ResourcesGraphQLResponse {
-  data: {
-    resources: {
-      totalCount: number;
-      pageInfo: PageInfo;
-      edges: Resource.RawResource[];
-    };
-    resourceSummary: Resource.ResourceSummary;
-  };
-}
 
 /**
  * Flattened response from the useGetResources hook,
@@ -60,7 +41,7 @@ interface GetResourcesParams {
   currentPage: CurrentPage;
 }
 
-const GET_RESOURCES_QUERY = /* GraphQL */ `
+const GET_RESOURCES_QUERY = graphql(`
   query GetResources(
     $filter: ResourceFilter!
     $environment: String!
@@ -111,7 +92,12 @@ const GET_RESOURCES_QUERY = /* GraphQL */ `
       totalCount
     }
   }
-`;
+`);
+
+/**
+ * The page cursors of the resources query.
+ */
+export type PageInfo = GetResourcesQuery["resources"]["pageInfo"];
 
 /**
  * React Query hook to fetch resources via GraphQL
@@ -127,38 +113,36 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
     currentPage || { kind: "CurrentPage", value: "" }
   );
 
-  //TODO: https://github.com/inmanta/web-console/issues/6823 => same as in ResourceFilterForm.tsx
-  const graphqlFilter: ResourceActionFilter & { environment: string } = {
-    environment: env,
-    ...mapToResourceActionFilterWithInstanceLabels(filter).resourceActionFilter,
-  };
-
   const pageSizeNum = Number(pageSize.value);
   const paginationVariables = before
     ? { last: pageSizeNum, before }
     : { first: pageSizeNum, ...(after ? { after } : {}) };
 
-  const variables: Record<string, unknown> = {
-    filter: graphqlFilter,
-    environment: env,
-    ...paginationVariables,
-    ...(sort.length > 0 ? { orderBy: mapSort(sort) } : {}),
-  };
-
   const filterArray = filter ? Object.values(filter) : [];
 
-  const queryFn = useGraphQLRequest<ResourcesGraphQLResponse>(GET_RESOURCES_QUERY, variables);
+  const execute = useGraphQLRequest();
 
   return {
     useContinuous: (): UseQueryResult<GetResourcesResponse, Error> =>
       useQuery({
         queryKey: getResourcesKey.list([pageSize, ...filterArray, ...sort, currentPage, env]),
-        queryFn,
+        queryFn: () =>
+          execute(GET_RESOURCES_QUERY, {
+            filter: {
+              environment: env,
+              ...mapToResourceActionFilterWithInstanceLabels(filter).resourceActionFilter,
+            },
+            environment: env,
+            ...paginationVariables,
+            ...(sort.length > 0 ? { orderBy: mapSort(sort) } : {}),
+          }),
         select: (data) => {
-          const { resources, resourceSummary } = data.data;
-          const totalCount = resources.totalCount;
+          const { resources, resourceSummary } = data;
+          // TODO: https://github.com/inmanta/inmanta-core/issues/11186 the schema types totalCount, state
+          // and its fields looser than the orchestrator returns them, and the summary groups as JSON.
+          const totalCount = resources.totalCount ?? 0;
           const handlers = buildHandlers(resources.pageInfo, beforeCount, pageSizeNum);
-          const edges = resources?.edges || [];
+          const edges = resources.edges as Resource.RawResource[];
           const afterCount = Math.max(0, totalCount - beforeCount - edges.length);
 
           const metadata: Pagination.Metadata = {
@@ -170,7 +154,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
 
           return {
             resources: edges.map((edge) => edge.node),
-            resourceSummary,
+            resourceSummary: resourceSummary as Resource.ResourceSummary,
             metadata,
             handlers,
           };

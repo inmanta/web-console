@@ -1,3 +1,8 @@
+import type {
+  Blocked,
+  Compliance,
+  HandlerResult,
+} from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import { Pagination } from "@inmanta/web-console-core/Domain/Pagination";
 import { Order } from "@inmanta/web-console-core/Domain/Sort";
 import { ParsedNumber } from "@inmanta/web-console-core/Language";
@@ -28,7 +33,7 @@ export const LAST_HANDLER_RUN = {
   skipped: "SKIPPED",
   successful: "SUCCESSFUL",
   new: "NEW",
-} as const;
+} as const satisfies Record<string, HandlerResult>;
 
 /**
  * Indicates whether the real-world state matches the intended configuration. Is about intent being reflected in the real world.
@@ -48,7 +53,7 @@ export const COMPLIANCE = {
   has_update: "HAS_UPDATE",
   non_compliant: "NON_COMPLIANT",
   undefined: "UNDEFINED",
-} as const;
+} as const satisfies Record<string, Compliance>;
 
 /**
  * Indicates whether execution of the resource handler is blocked. Heavily tied to UNDEFINED compliance.
@@ -63,16 +68,16 @@ export const BLOCKED = {
   blocked: "BLOCKED",
   not_blocked: "NOT_BLOCKED",
   temporarily_blocked: "TEMPORARILY_BLOCKED",
-} as const;
+} as const satisfies Record<string, Blocked>;
 
 export type LastHandlerRunKey = keyof typeof LAST_HANDLER_RUN;
-export type LastHandlerRunValue = (typeof LAST_HANDLER_RUN)[LastHandlerRunKey];
+export type LastHandlerRunValue = HandlerResult;
 
 export type ComplianceKey = keyof typeof COMPLIANCE;
-export type ComplianceValue = (typeof COMPLIANCE)[ComplianceKey];
+export type ComplianceValue = Compliance;
 
 export type BlockedKey = keyof typeof BLOCKED;
-export type BlockedValue = (typeof BLOCKED)[BlockedKey];
+export type BlockedValue = Blocked;
 
 /** Union of all compound state values across all three groups. */
 export type CompoundState = LastHandlerRunValue | ComplianceValue | BlockedValue;

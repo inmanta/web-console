@@ -114,19 +114,16 @@ describe("buildSuggestionQuery", () => {
 });
 
 describe("extractNodes", () => {
-  // useGraphQLRequest hands back the GraphQL envelope: { data: { <root>: ... } }.
-  const data = { data: { environments: { edges: [edge({ id: "a" }), edge({ id: "b" })] } } };
+  const data = { environments: { edges: [edge({ id: "a" }), edge({ id: "b" })] } };
 
-  it("pulls the node list out of the { data: { <root> } } envelope", () => {
+  it("pulls the node list out of the <root> connection", () => {
     expect(extractNodes(data, "environments")).toEqual([{ id: "a" }, { id: "b" }]);
   });
 
   it.each([
     ["null data", null],
-    ["errored query (data: null)", { data: null }],
-    ["missing root", { data: { other: { edges: [] } } }],
-    ["malformed connection", { data: { environments: {} } }],
-    ["an unwrapped response (no envelope)", { environments: { edges: [edge({ id: "a" })] } }],
+    ["missing root", { other: { edges: [] } }],
+    ["malformed connection", { environments: {} }],
   ])("returns an empty list for %s", (_label, input) => {
     expect(extractNodes(input, "environments")).toEqual([]);
   });
