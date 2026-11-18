@@ -4,9 +4,9 @@ import { PageSize, Pagination, Resource } from "@inmanta/web-console-core";
 import { MultiSort } from "@inmanta/web-console-core/Common";
 import { CurrentPage } from "@inmanta/web-console-core/Common/UrlState/useUrlStateWithCurrentPage";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { graphql } from "@inmanta/web-console-core/Domain/GraphQL/generated";
+import type { GetResourcesQuery } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import { Handlers } from "@inmanta/web-console-core/Domain/Pagination/Pagination";
-import { graphql } from "@inmanta/web-console-core/GraphQL/generated";
-import type { GetResourcesQuery } from "@inmanta/web-console-core/GraphQL/generated/graphql";
 import { useGraphQLRequest, REFETCH_INTERVAL } from "@inmanta/web-console-core/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@inmanta/web-console-core/Queries/Helpers/KeyFactory";
 import {

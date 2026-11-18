@@ -10,7 +10,7 @@ import {
   AuthContextInterface,
   defaultAuthContext,
 } from "@inmanta/web-console-core/Auth/AuthContext";
-import type { GetEnvironmentPreviewQuery } from "@inmanta/web-console-core/GraphQL/generated/graphql";
+import type { GetEnvironmentPreviewQuery } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import { GraphQLResponseBody } from "@inmanta/web-console-core/Queries/Helpers";
 import { GetEnvironmentPreviewKey } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { getServerStatusKey } from "@inmanta/web-console-core/Queries/Slices/Server";

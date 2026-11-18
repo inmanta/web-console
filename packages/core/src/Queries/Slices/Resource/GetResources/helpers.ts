@@ -1,7 +1,7 @@
 import { Resource, ResourceActionFilter } from "@inmanta/web-console-core";
 import { CurrentPage, MultiSort } from "@inmanta/web-console-core/Common";
+import type { StrawberryOrder } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import { Handlers } from "@inmanta/web-console-core/Domain/Pagination/Pagination";
-import type { StrawberryOrder } from "@inmanta/web-console-core/GraphQL/generated/graphql";
 import { PageInfo } from "./useGetResources";
 
 type GraphQLStateFilter = Pick<

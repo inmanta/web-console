@@ -1,5 +1,5 @@
 import { ResourceActionFilter } from "@inmanta/web-console-core";
-import type { StrFilter } from "@inmanta/web-console-core/GraphQL/generated/graphql";
+import type { StrFilter } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import { VersionSelectionBlocker } from "@inmanta/web-console-core/Queries/Slices/Resource";
 
 /**

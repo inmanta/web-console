@@ -3,7 +3,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { FormSuggestion, words } from "@inmanta/web-console-core";
 import { useDebounce } from "@inmanta/web-console-core/Common/useDebounce";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
-import { TypedDocumentString } from "@inmanta/web-console-core/GraphQL/generated/graphql";
+import { TypedDocumentString } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import { useGet, useGraphQLRequest } from "@inmanta/web-console-core/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@inmanta/web-console-core/Queries/Helpers/KeyFactory";
 import { getParametersKey } from "@inmanta/web-console-core/Queries/Slices/Parameters";

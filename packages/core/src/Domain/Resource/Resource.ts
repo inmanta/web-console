@@ -1,10 +1,10 @@
-import { Pagination } from "@inmanta/web-console-core/Domain/Pagination";
-import { Order } from "@inmanta/web-console-core/Domain/Sort";
 import type {
   Blocked,
   Compliance,
   HandlerResult,
-} from "@inmanta/web-console-core/GraphQL/generated/graphql";
+} from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
+import { Pagination } from "@inmanta/web-console-core/Domain/Pagination";
+import { Order } from "@inmanta/web-console-core/Domain/Sort";
 import { ParsedNumber } from "@inmanta/web-console-core/Language";
 
 /**

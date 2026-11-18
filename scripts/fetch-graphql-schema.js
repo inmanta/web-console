@@ -12,7 +12,7 @@ import { writeFileSync } from "fs";
 import { buildClientSchema, getIntrospectionQuery, printSchema } from "graphql";
 
 const orchestratorUrl = process.argv[2] ?? "http://localhost:8888";
-const schemaPath = "packages/core/src/GraphQL/schema.graphql";
+const schemaPath = "packages/core/src/Domain/GraphQL/schema.graphql";
 
 const response = await fetch(`${orchestratorUrl}/api/v2/graphql`, {
   method: "POST",

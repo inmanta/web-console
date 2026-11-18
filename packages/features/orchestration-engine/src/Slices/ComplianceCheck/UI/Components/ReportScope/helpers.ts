@@ -7,7 +7,7 @@ import {
   words,
 } from "@inmanta/web-console-core";
 import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
-import type { StrFilter } from "@inmanta/web-console-core/GraphQL/generated/graphql";
+import type { StrFilter } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import {
   getVersionSelectionBlocker,
   withDryRunVersion,

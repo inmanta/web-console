@@ -1,9 +1,9 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { graphql } from "@inmanta/web-console-core/GraphQL/generated";
+import { graphql } from "@inmanta/web-console-core/Domain/GraphQL/generated";
 import type {
   GetPartialNotificationsQuery,
   StrawberryOrder,
-} from "@inmanta/web-console-core/GraphQL/generated/graphql";
+} from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import {
   CustomError,
   REFETCH_INTERVAL,

@@ -1,4 +1,4 @@
-import type { TypedDocumentString } from "@inmanta/web-console-core/GraphQL/generated/graphql";
+import type { TypedDocumentString } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
 import { createCustomError, parseRequiredJsonResponse, useFetchHelpers } from "./useFetchHelpers";
 

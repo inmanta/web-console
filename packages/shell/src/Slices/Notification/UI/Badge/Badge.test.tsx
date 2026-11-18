@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { HttpResponse } from "msw";
 import { graphql } from "msw/graphql";
-import type { GetPartialNotificationsQuery } from "@inmanta/web-console-core/GraphQL/generated/graphql";
+import type { GetPartialNotificationsQuery } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import { GraphQLResponseBody } from "@inmanta/web-console-core/Queries/Helpers";
 import * as Mock from "@inmanta/web-console-shell/Slices/Notification/Core/Mock";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";

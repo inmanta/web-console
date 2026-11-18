@@ -9,7 +9,7 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 const codegen: CodegenConfig = {
   ignoreNoDocuments: true,
   generates: {
-    "packages/core/src/GraphQL/generated/": {
+    "packages/core/src/Domain/GraphQL/generated/": {
       preset: "client",
       // No query uses fragments, so the fragment masking helpers would be unused code.
       presetConfig: { fragmentMasking: false },
@@ -24,7 +24,7 @@ const codegen: CodegenConfig = {
 };
 
 export default {
-  schema: "packages/core/src/GraphQL/schema.graphql",
-  documents: ["packages/core/src/**/*.{ts,tsx}", "!packages/core/src/GraphQL/generated/**"],
+  schema: "packages/core/src/Domain/GraphQL/schema.graphql",
+  documents: ["packages/core/src/**/*.{ts,tsx}", "!packages/core/src/Domain/GraphQL/generated/**"],
   extensions: { codegen },
 };

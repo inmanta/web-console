@@ -3,7 +3,7 @@ import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
 import { Environment, ProjectModel, words } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
-import type { GetEnvironmentPreviewQuery } from "@inmanta/web-console-core/GraphQL/generated/graphql";
+import type { GetEnvironmentPreviewQuery } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import {
   useCreateEnvironment,
   getEnvironmentsKey,

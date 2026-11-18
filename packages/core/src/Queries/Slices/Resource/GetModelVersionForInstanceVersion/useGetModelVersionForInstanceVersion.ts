@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
-import { graphql } from "@inmanta/web-console-core/GraphQL/generated";
+import { graphql } from "@inmanta/web-console-core/Domain/GraphQL/generated";
 import { useGraphQLRequest } from "@inmanta/web-console-core/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@inmanta/web-console-core/Queries/Helpers/KeyFactory";
 

@@ -1,4 +1,4 @@
-import type { ResourceFilter } from "@inmanta/web-console-core/GraphQL/generated/graphql";
+import type { ResourceFilter } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 
 /**
  * The resource filter shared by the resources GraphQL query and the filtered scheduler endpoints

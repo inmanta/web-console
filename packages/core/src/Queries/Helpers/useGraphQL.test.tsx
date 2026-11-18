@@ -2,7 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { words } from "@inmanta/web-console-core";
-import { TypedDocumentString } from "@inmanta/web-console-core/GraphQL/generated/graphql";
+import { TypedDocumentString } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import { MockedDependencyProvider } from "@inmanta/web-console-test-utils";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
