@@ -1,8 +1,8 @@
 import React from "react";
 import { Badge, Tooltip } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { LifecycleModel, StateModel } from "@inmanta/web-console-core";
-import { InstanceStateLabel } from "@inmanta/web-console-feature-lsm/Components/InstanceState";
+import { findLifecycleState, LifecycleModel, StateModel } from "@inmanta/web-console-core";
+import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
 
 /**
  * Renders a state name as a resolved `InstanceStateLabel` (web_label/web_icon/
@@ -18,7 +18,7 @@ const renderState = (stateName: string | null, states: StateModel[]): React.Reac
     return stateName;
   }
 
-  const state = states.find((candidate) => candidate.name === stateName);
+  const state = findLifecycleState(states, stateName);
 
   if (!state) {
     return stateName;

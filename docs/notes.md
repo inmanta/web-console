@@ -125,13 +125,13 @@ Tests follow the same import boundaries as the code they test (see `eslint.layer
 - A test that needs several features together, like the composer's actions on lsm's pages, is an app-level test next to `apps/web-console/src/app.ts`.
 - The lint rule only sees `import` statements. Keep the paths in `vi.mock`, `vi.importActual` and `typeof import()` within the same boundaries.
 
-`apps/web-console/src/test-setup.ts` holds the setup that depends on the app's features, like registering every feature's messages. A feature's own global mocks go in a setup file of that feature, like the composer's `globalTestMocks.ts`.
+`apps/web-console/src/test-setup.ts` holds the setup that depends on the app's features, like registering every feature's messages. A feature's own global mocks go in a setup file of that feature.
 
 ## CI
 
 These Jenkins jobs run from this repository:
 
-- `Jenkinsfile`, on every branch, with the JointJS token: `yarn install --immutable`, the checks, `yarn build:ci` (the ISO app with the composer next to it, the composer's own build and the OSS app, all stamped with the version in `package.json`, which `yarn check-dist-versions` checks), `yarn check-no-cdn` over every build, the unit tests and the ISO end-to-end tests. Once its orchestrator is up, `yarn codegen:check` fails the build when that orchestrator's GraphQL schema no longer matches the generated query types (see [GraphQL queries](#graphql-queries)); the end-to-end tests still run.
+- `Jenkinsfile`, on every branch: `yarn install --immutable`, the checks, `yarn build:ci` (the ISO app with the composer next to it, the composer's own build and the OSS app, all stamped with the version in `package.json`, which `yarn check-dist-versions` checks), `yarn check-no-cdn` over every build, the unit tests and the ISO end-to-end tests. Once its orchestrator is up, `yarn codegen:check` fails the build when that orchestrator's GraphQL schema no longer matches the generated query types (see [GraphQL queries](#graphql-queries)); the end-to-end tests still run.
 - `jenkins/Jenkinsfile.oss`, on every branch, without the token and with an empty Yarn global folder (an earlier install on the agent may have mirrored the JointJS packages there): the lockfile is complete without the token (`yarn install --mode=update-lockfile`, then `git diff --exit-code yarn.lock`), and the OSS app installs (`yarn workspaces focus @inmanta/web-console-oss`), builds, type-checks (`yarn tsc:oss`) and passes the tests of the OSS packages (`yarn test:oss`).
 - `jenkins/Jenkinsfile.nightly-ship-modes`, every night on master and the iso branches: the ISO end-to-end tests once per ship mode of the composer (combined, without, mismatch), then `yarn cypress-test:ship-modes`, each on a fresh orchestrator.
 - `jenkins/Jenkinsfile.nightly-auth`, every night on master: the end-to-end tests of each authentication method (Keycloak, OIDC, local authentication), each on a fresh OSS orchestrator set up for it (`yarn install:orchestrator:<method>`), with the build's `dist/`.

@@ -11,13 +11,13 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
-import { ServiceModel, words } from "@inmanta/web-console-core";
+import { findLifecycleState, ServiceModel, words } from "@inmanta/web-console-core";
 import { useUrlStateWithString } from "@inmanta/web-console-core/Common";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { InstanceLog } from "@inmanta/web-console-core/Domain/HistoryLog";
-import { InstanceStateLabel } from "@inmanta/web-console-feature-lsm/Components/InstanceState";
 import { DateWithTooltip } from "@inmanta/web-console-ui/Components/DateWithTooltip";
 import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
+import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
 import { Link } from "@inmanta/web-console-ui/Components/Link";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { InstanceDetailsContext } from "../../../Core/Context";
@@ -178,9 +178,7 @@ export const StateLabel: React.FC<StateLabelProps> = ({ service, state }) => {
   }
 
   // The service entity lifecycle contains all of the states an instance of that entity can reach
-  const lifecycleState = service.lifecycle.states.find(
-    (serviceState) => serviceState.name === state
-  );
+  const lifecycleState = findLifecycleState(service.lifecycle.states, state);
 
   if (!lifecycleState) {
     return null;

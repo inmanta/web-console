@@ -17,7 +17,6 @@ pipeline {
     }
     environment {
         GITLAB_TOKEN = credentials('jenkins_on_gitlab')
-        JOINTJS_NPM_TOKEN = credentials('jointjs-npm-token')
     }
 
     stages {

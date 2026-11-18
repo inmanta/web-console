@@ -1,11 +1,10 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { ServiceModel } from "@inmanta/web-console-core";
-import { ServiceEntityShape } from "../../UI";
+import { ServiceEntityShape } from "../ServiceEntityShape";
 import { useServiceOrderItems } from "./useServiceOrderItems";
 
 // Mock the deploymentHelpers module
 vi.mock("../Helpers/deploymentHelpers", () => ({
-  canvasStateToServiceOrderItems: vi.fn((canvasState, _initialShapeInfo, _serviceCatalog) => {
+  canvasStateToServiceOrderItems: vi.fn((canvasState) => {
     const orderItems = new Map();
     canvasState.forEach((shape) => {
       orderItems.set(shape.id, {
@@ -40,34 +39,12 @@ describe("useServiceOrderItems", () => {
     return shape;
   };
 
-  const createMockServiceCatalog = (): ServiceModel[] => [
-    {
-      name: "TestService",
-      environment: "test",
-      lifecycle: {
-        initial_state: "active",
-        states: [],
-        transfers: [],
-      },
-      attributes: [],
-      config: {},
-      embedded_entities: [],
-      inter_service_relations: [],
-      owned_entities: [],
-      owner: null,
-    },
-  ];
-
   it("should return empty serviceOrderItems when canvasState is empty", () => {
     const canvasState = new Map<string, ServiceEntityShape>();
-    const initialShapeInfoRef = { current: new Map() };
-    const serviceCatalog = createMockServiceCatalog();
 
     const { result } = renderHook(() =>
       useServiceOrderItems({
         canvasState,
-        initialShapeInfoRef,
-        serviceCatalog,
       })
     );
 
@@ -82,14 +59,10 @@ describe("useServiceOrderItems", () => {
       ["shape-1", shape1],
       ["shape-2", shape2],
     ]);
-    const initialShapeInfoRef = { current: new Map() };
-    const serviceCatalog = createMockServiceCatalog();
 
     const { result } = renderHook(() =>
       useServiceOrderItems({
         canvasState,
-        initialShapeInfoRef,
-        serviceCatalog,
       })
     );
 
@@ -104,15 +77,11 @@ describe("useServiceOrderItems", () => {
   it("should update serviceOrderItems when canvasState changes", async () => {
     const shape1 = createMockShape("shape-1", "Entity1");
     const canvasState = new Map([["shape-1", shape1]]);
-    const initialShapeInfoRef = { current: new Map() };
-    const serviceCatalog = createMockServiceCatalog();
 
     const { result, rerender } = renderHook(
       ({ canvasState }) =>
         useServiceOrderItems({
           canvasState,
-          initialShapeInfoRef,
-          serviceCatalog,
         }),
       {
         initialProps: { canvasState },
@@ -143,14 +112,10 @@ describe("useServiceOrderItems", () => {
       ["shape-1", shape1],
       ["shape-2", shape2],
     ]);
-    const initialShapeInfoRef = { current: new Map() };
-    const serviceCatalog = createMockServiceCatalog();
 
     const { result } = renderHook(() =>
       useServiceOrderItems({
         canvasState,
-        initialShapeInfoRef,
-        serviceCatalog,
       })
     );
 
@@ -160,14 +125,10 @@ describe("useServiceOrderItems", () => {
   it("should return hasValidationErrors as true when a shape has missing connections", () => {
     const shape1 = createMockShape("shape-1", "Entity1", true, false);
     const canvasState = new Map([["shape-1", shape1]]);
-    const initialShapeInfoRef = { current: new Map() };
-    const serviceCatalog = createMockServiceCatalog();
 
     const { result } = renderHook(() =>
       useServiceOrderItems({
         canvasState,
-        initialShapeInfoRef,
-        serviceCatalog,
       })
     );
 
@@ -177,14 +138,10 @@ describe("useServiceOrderItems", () => {
   it("should return hasValidationErrors as true when a shape has attribute validation errors", () => {
     const shape1 = createMockShape("shape-1", "Entity1", false, true);
     const canvasState = new Map([["shape-1", shape1]]);
-    const initialShapeInfoRef = { current: new Map() };
-    const serviceCatalog = createMockServiceCatalog();
 
     const { result } = renderHook(() =>
       useServiceOrderItems({
         canvasState,
-        initialShapeInfoRef,
-        serviceCatalog,
       })
     );
 
@@ -198,65 +155,14 @@ describe("useServiceOrderItems", () => {
       ["shape-1", shape1],
       ["shape-2", shape2],
     ]);
-    const initialShapeInfoRef = { current: new Map() };
-    const serviceCatalog = createMockServiceCatalog();
 
     renderHook(() =>
       useServiceOrderItems({
         canvasState,
-        initialShapeInfoRef,
-        serviceCatalog,
       })
     );
 
     expect(shape1.validateAttributes).toHaveBeenCalled();
     expect(shape2.validateAttributes).toHaveBeenCalled();
-  });
-
-  it("should handle undefined serviceCatalog", () => {
-    const shape1 = createMockShape("shape-1", "Entity1");
-    const canvasState = new Map([["shape-1", shape1]]);
-    const initialShapeInfoRef = { current: new Map() };
-
-    const { result } = renderHook(() =>
-      useServiceOrderItems({
-        canvasState,
-        initialShapeInfoRef,
-        serviceCatalog: undefined,
-      })
-    );
-
-    expect(result.current.serviceOrderItems.size).toBeGreaterThanOrEqual(0);
-  });
-
-  it("should update when initialShapeInfoRef changes", async () => {
-    const shape1 = createMockShape("shape-1", "Entity1");
-    const canvasState = new Map([["shape-1", shape1]]);
-    const initialShapeInfoRef = { current: new Map([["shape-1", { service_entity: "Entity1" }]]) };
-    const serviceCatalog = createMockServiceCatalog();
-
-    const { result, rerender } = renderHook(
-      ({ initialShapeInfoRef }) =>
-        useServiceOrderItems({
-          canvasState,
-          initialShapeInfoRef,
-          serviceCatalog,
-        }),
-      {
-        initialProps: { initialShapeInfoRef },
-      }
-    );
-
-    await waitFor(() => {
-      expect(result.current.serviceOrderItems.size).toBeGreaterThanOrEqual(0);
-    });
-
-    const newInitialShapeInfoRef = {
-      current: new Map([["shape-2", { service_entity: "Entity2" }]]),
-    };
-    rerender({ initialShapeInfoRef: newInitialShapeInfoRef });
-
-    // The hook should still work with the new ref
-    expect(result.current.serviceOrderItems).toBeDefined();
   });
 });

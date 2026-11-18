@@ -89,9 +89,3 @@ export interface OwnedServicesExpansion {
    */
   resetCount: number;
 }
-
-/** The icon of a service that owns other services and has no `web_icon`. */
-export const ownerServiceFallbackIconName = "FaFolder";
-
-/** The icon of a service that owns no other services and has no `web_icon`. */
-export const serviceFallbackIconName = "FaCube";

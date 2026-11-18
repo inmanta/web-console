@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Page } from "@patternfly/react-core";
+import { createGlobalStyle } from "styled-components";
 import { EnvSelectorOpenContext } from "@inmanta/web-console-core/Dependency/EnvSelectorOpenContext";
 import { BlockingModal } from "@inmanta/web-console-shell/Components/BlockingModal";
 import { ExpertBanner } from "@inmanta/web-console-shell/Components/ExpertBanner";
@@ -9,13 +10,31 @@ import { PageBreadcrumbs } from "@inmanta/web-console-shell/Components/PageBread
 import { Sidebar } from "@inmanta/web-console-shell/Components/Sidebar";
 import { useDrawer } from "@inmanta/web-console-shell/Slices/Notification/UI/Drawer";
 
+/**
+ * A page that puts the document in full screen, like the Instance Composer, gets the whole screen:
+ * the banners, the masthead and the sidebar step aside until it leaves full screen.
+ */
+const FullscreenFrame = createGlobalStyle`
+  :root:fullscreen {
+    .page-banners,
+    #page-header,
+    .pf-v6-c-page__sidebar {
+      display: none;
+    }
+  }
+`;
+
 interface Props {
   environmentId?: string;
+
+  /** Whether the page fills the height of the window (the route's `fillsPage`). */
+  isContentFilled?: boolean;
 }
 
 export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   environmentId,
+  isContentFilled,
 }) => {
   const {
     onNotificationsToggle,
@@ -29,7 +48,8 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
     <EnvSelectorOpenContext.Provider
       value={{ isOpen: isEnvSelectorOpen, setIsOpen: setIsEnvSelectorOpen }}
     >
-      <div role="alert" aria-label="bannerNotifications">
+      <FullscreenFrame />
+      <div className="page-banners" role="alert" aria-label="bannerNotifications">
         {environmentId && <ExpertBanner />}
         <LicenseBanner />
       </div>
@@ -42,6 +62,7 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
             isNotificationDrawerExpanded,
           }}
           isManagedSidebar
+          isContentFilled={isContentFilled}
           mainContainerId="primary-app-container"
           breadcrumb={<PageBreadcrumbs />}
           masthead={<Header {...{ onNotificationsToggle }} noEnv={!Boolean(environmentId)} />}

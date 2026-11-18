@@ -16,8 +16,6 @@ import {
   FilteredCatalogSections,
   LabelCount,
   OwnedServiceStateCount,
-  ownerServiceFallbackIconName,
-  serviceFallbackIconName,
 } from "./types";
 
 /**
@@ -116,23 +114,6 @@ export const getAllCatalogServices = (sections: CatalogSection[]): CatalogServic
   sections.forEach((section) => section.services.forEach(addWithOwnedServices));
 
   return allServices;
-};
-
-/**
- * Gets the icon name of a service: its `web_icon`, or a fallback that shows whether the service
- * owns other services.
- */
-export const getServiceIconName = ({
-  serviceModel,
-  resolvedAnnotations,
-}: CatalogService): string => {
-  if (resolvedAnnotations.web_icon !== undefined) {
-    return resolvedAnnotations.web_icon;
-  }
-
-  return serviceModel.owned_entities.length > 0
-    ? ownerServiceFallbackIconName
-    : serviceFallbackIconName;
 };
 
 /**

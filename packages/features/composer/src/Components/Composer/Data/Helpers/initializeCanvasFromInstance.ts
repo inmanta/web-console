@@ -1,22 +1,119 @@
-import { dia } from "@joint/plus";
 import { v4 as uuidv4 } from "uuid";
-import { ServiceModel, ServiceInstanceModel, EmbeddedEntity } from "@inmanta/web-console-core";
-import { InstanceWithRelations } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
-import { LinkShape } from "../../UI/JointJsShapes/LinkShape";
 import {
-  ServiceEntityShape,
-  ServiceEntityOptions,
-} from "../../UI/JointJsShapes/ServiceEntityShape";
+  ServiceModel,
+  ServiceInstanceModel,
+  EmbeddedEntity,
+  resolveLifecycleState,
+} from "@inmanta/web-console-core";
+import { InstanceWithRelations } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config";
 import {
   HORIZONTAL_SPACING,
   VERTICAL_SPACING,
   NESTED_HORIZONTAL_OFFSET,
 } from "../../config/layoutConfig";
-import { applyGridLayout } from "./canvasLayoutUtils";
+import {
+  AttributeSetName,
+  AttributeSets,
+  getInstanceAttributeSets,
+  ServiceEntityShape,
+  ServiceEntityOptions,
+} from "../ServiceEntityShape";
+import { applyLayeredLayout } from "./canvasLayoutUtils";
 import { RelationsDictionary } from "./createRelationsDictionary";
 import { PositionTracker } from "./positionTracker";
 import { getShapeDimensions, getEmbeddedEntityKey, getInterServiceRelationKey } from "./shapeUtils";
+
+/**
+ * Which attribute set the embedded entities of an existing instance are read from, and the
+ * active set's data for the same embedded entity, to view next to it. The active data is only
+ * there when the instance has both sets, so the composer works on the candidate set.
+ */
+export interface EmbeddedSetsContext {
+  editableSet: AttributeSetName;
+  activeData?: unknown;
+}
+
+/**
+ * The sets context of an instance's embedded entities, or undefined for a new instance,
+ * whose shapes get no attribute sets.
+ */
+export const getEmbeddedSetsContext = (
+  isNew: boolean,
+  attributeSets: AttributeSets | undefined,
+  embeddedEntity: EmbeddedEntity
+): EmbeddedSetsContext | undefined =>
+  isNew || !attributeSets
+    ? undefined
+    : {
+        editableSet: attributeSets.candidate ? "candidate" : "active",
+        // Only there to view when the composer works on the candidate set
+        activeData: attributeSets.candidate
+          ? attributeSets.active?.[embeddedEntity.name]
+          : undefined,
+      };
+
+/**
+ * The attribute sets of an embedded entity: its own slice of each of the root instance's sets.
+ * The editable set holds the attributes the shape works on; the matched active entry, when
+ * there is one, can only be viewed.
+ */
+const getEmbeddedAttributeSets = (
+  setsContext: EmbeddedSetsContext,
+  embeddedAttributes: Record<string, unknown>,
+  matchedActive: Record<string, unknown> | undefined
+): AttributeSets =>
+  setsContext.editableSet === "candidate"
+    ? { candidate: embeddedAttributes, ...(matchedActive ? { active: matchedActive } : {}) }
+    : { active: embeddedAttributes };
+
+/**
+ * Whether a value is an object of attributes, such as an embedded entity's entry; an empty one,
+ * like a placeholder's, counts.
+ */
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+/**
+ * Matches the entries of the active set's data for an embedded entity to the entries the
+ * shapes are created from: by their key attributes when they have values, by position
+ * otherwise. A keyed entry the active set doesn't hold matches nothing: it only exists in
+ * the candidate set, so no other entry's data may show up as its active slice.
+ */
+const matchActiveEntries = (
+  activeData: unknown,
+  chosenEntries: unknown[],
+  rootEntityId: string,
+  embeddedEntity: EmbeddedEntity
+): Array<Record<string, unknown> | undefined> => {
+  const activeEntries = Array.isArray(activeData) ? activeData : [activeData];
+  const activeByKey = new Map<string, Record<string, unknown>>();
+
+  activeEntries.filter(isRecord).forEach((entry) => {
+    const key = getEmbeddedEntityCacheKey(rootEntityId, embeddedEntity, entry);
+
+    if (key && !activeByKey.has(key)) {
+      activeByKey.set(key, entry);
+    }
+  });
+
+  return chosenEntries.map((entry, index) => {
+    if (!isRecord(entry)) {
+      return undefined;
+    }
+
+    const key = getEmbeddedEntityCacheKey(rootEntityId, embeddedEntity, entry);
+
+    if (key) {
+      return activeByKey.get(key);
+    }
+
+    // Positions line up with the raw data, so a gap on one side doesn't shift the rest
+    const positional = activeEntries[index];
+
+    return isRecord(positional) ? positional : undefined;
+  });
+};
 
 /**
  * Adds a relation id to the given collection map, avoiding duplicates.
@@ -76,23 +173,25 @@ export const createEmbeddedEntityShapes = (
   parentShape: ServiceEntityShape,
   rootEntityId: string,
   relationsDictionary: RelationsDictionary,
-  graph: dia.Graph,
   canvasState: Map<string, ServiceEntityShape>,
   embeddedEntityCache: Map<string, string>,
   positionTracker: PositionTracker,
   offsetX: number,
   offsetY: number,
-  isNew: boolean = false
+  isNew: boolean = false,
+  setsContext?: EmbeddedSetsContext
 ): string[] => {
   const createdIds: string[] = [];
   const dataArray = Array.isArray(embeddedData) ? embeddedData : [embeddedData];
+  const matchedActiveEntries = setsContext
+    ? matchActiveEntries(setsContext.activeData, dataArray, rootEntityId, embeddedEntity)
+    : [];
 
-  dataArray.forEach((data, index) => {
-    if (typeof data !== "object" || data === null) {
+  dataArray.forEach((embeddedAttributes, index) => {
+    if (!isRecord(embeddedAttributes)) {
       return;
     }
 
-    const embeddedAttributes = data as Record<string, unknown>;
     // Skip read-only embedded entities
     if (embeddedEntity.modifier === "r") {
       return;
@@ -122,14 +221,14 @@ export const createEmbeddedEntityShapes = (
           // Otherwise, find a new position for it
           const existingPosition = positionTracker.getPosition(cachedId);
           if (!existingPosition) {
-            const parentPos = parentShape.position();
+            const parentPos = parentShape.getPosition();
             const newY = positionTracker.findNextYPosition(
               offsetX,
               SHAPE_WIDTH,
               SHAPE_MIN_HEIGHT,
               parentPos.y + index * VERTICAL_SPACING
             );
-            cachedShape.position(offsetX, newY);
+            cachedShape.setPosition(offsetX, newY);
             const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(cachedShape);
             positionTracker.reserve(cachedId, offsetX, newY, bboxWidth, bboxHeight);
           }
@@ -157,6 +256,8 @@ export const createEmbeddedEntityShapes = (
       }
     });
 
+    const matchedActive = matchedActiveEntries[index];
+
     const nestedEmbeddedEntities: Record<string, string[]> = {};
     embeddedEntity.embedded_entities.forEach((nestedEntity) => {
       const nestedData = embeddedAttributes[nestedEntity.name];
@@ -167,13 +268,16 @@ export const createEmbeddedEntityShapes = (
           parentShape,
           rootEntityId,
           relationsDictionary,
-          graph,
           canvasState,
           embeddedEntityCache,
           positionTracker,
           offsetX + NESTED_HORIZONTAL_OFFSET,
           offsetY,
-          isNew
+          isNew,
+          setsContext && {
+            editableSet: setsContext.editableSet,
+            activeData: matchedActive?.[nestedEntity.name],
+          }
         );
 
         if (nestedIds.length > 0) {
@@ -194,9 +298,7 @@ export const createEmbeddedEntityShapes = (
 
     const shapeOptions: ServiceEntityOptions = {
       entityType: "embedded",
-      readonly: false,
       isNew,
-      lockedOnCanvas: false,
       id: embeddedId,
       relationsDictionary,
       serviceModel: embeddedEntity,
@@ -204,12 +306,16 @@ export const createEmbeddedEntityShapes = (
       rootEntities,
       interServiceRelations,
       embeddedEntities: nestedEmbeddedEntities,
+      attributeSets:
+        !isNew && setsContext
+          ? getEmbeddedAttributeSets(setsContext, embeddedAttributes, matchedActive)
+          : undefined,
     };
 
     const shape = new ServiceEntityShape(shapeOptions);
 
     // Find a non-overlapping position for this shape
-    const parentPos = parentShape.position();
+    const parentPos = parentShape.getPosition();
     const startY = parentPos.y + index * VERTICAL_SPACING;
     const finalY = positionTracker.findNextYPosition(
       offsetX,
@@ -218,11 +324,7 @@ export const createEmbeddedEntityShapes = (
       startY
     );
 
-    shape.position(offsetX, finalY);
-    shape.addTo(graph);
-
-    // Update columns display after shape is added to graph
-    shape.updateColumnsDisplay();
+    shape.setPosition(offsetX, finalY);
 
     // Get the actual bounding box to reserve the correct space
     const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(shape);
@@ -239,90 +341,14 @@ export const createEmbeddedEntityShapes = (
 };
 
 /**
- * Creates links between shapes based on their connections maps.
- * This is the same simple logic used in initializeCanvasFromInstance.
- */
-export const createLinksFromCanvasState = (
-  canvasState: Map<string, ServiceEntityShape>,
-  graph: dia.Graph
-): void => {
-  if (!graph) {
-    return;
-  }
-
-  canvasState.forEach((sourceShape) => {
-    // Verify shape is in graph before processing
-    if (!graph.getCell(sourceShape.id)) {
-      return;
-    }
-
-    let neighbors: dia.Cell[]; // Neighbors are all the cells that are connected to the source shape
-    try {
-      neighbors = graph.getNeighbors(sourceShape);
-    } catch (error) {
-      console.error(`Failed to get neighbors for ${sourceShape.id}:`, error);
-
-      return;
-    }
-
-    const existingNeighbors = new Set(neighbors.map((neighbor) => String(neighbor.id)));
-
-    sourceShape.connections.forEach((targetIds, relationName) => {
-      const uniqueTargetIds = [...new Set(targetIds)];
-
-      uniqueTargetIds.forEach((targetId) => {
-        const targetShape = canvasState.get(targetId);
-
-        if (!targetShape || existingNeighbors.has(String(targetId))) {
-          return;
-        }
-
-        // Verify target is in graph
-        if (!graph.getCell(targetId)) {
-          return;
-        }
-
-        // Check if link already exists by checking all links in the graph
-        // This prevents duplicates when links are manually created
-        const existingLinks = graph.getLinks();
-        const linkAlreadyExists = existingLinks.some((link) => {
-          const linkSource = link.source();
-          const linkTarget = link.target();
-
-          return (
-            (linkSource.id === sourceShape.id && linkTarget.id === targetId) ||
-            (linkSource.id === targetId && linkTarget.id === sourceShape.id)
-          );
-        });
-
-        if (linkAlreadyExists) {
-          return;
-        }
-
-        try {
-          const link = new LinkShape();
-          link.source({ id: sourceShape.id, port: relationName });
-          link.target({ id: targetId });
-          link.addTo(graph);
-
-          existingNeighbors.add(String(targetId));
-        } catch (error) {
-          console.warn(`Failed to create link from ${sourceShape.id} to ${targetId}:`, error);
-        }
-      });
-    });
-  });
-};
-
-/**
  * Initializes the canvas state from an instance-with-relations payload.
- * Creates shapes, embedded entities, and links, applies layout, and returns the canvas state map.
+ * Creates shapes and embedded entities, lays them out, and returns the canvas state map.
+ * The links follow from the shapes' connections.
  */
 export const initializeCanvasFromInstance = (
   instanceData: InstanceWithRelations,
   serviceCatalog: ServiceModel[],
-  relationsDictionary: RelationsDictionary,
-  graph: dia.Graph
+  relationsDictionary: RelationsDictionary
 ): Map<string, ServiceEntityShape> => {
   const canvasState = new Map<string, ServiceEntityShape>();
   const embeddedEntityCache = new Map<string, string>();
@@ -355,6 +381,10 @@ export const initializeCanvasFromInstance = (
      */
     const isNewEntity = instance.state === "creating" && !instance.active_attributes;
 
+    const attributeSets: AttributeSets | undefined = isNewEntity
+      ? undefined
+      : getInstanceAttributeSets(instance);
+
     const interServiceRelations: Record<string, string[]> = {};
     const rootEntities: Record<string, string[]> = {};
 
@@ -375,9 +405,7 @@ export const initializeCanvasFromInstance = (
 
     const shapeOptions: ServiceEntityOptions = {
       entityType,
-      readonly: false,
       isNew: isNewEntity,
-      lockedOnCanvas: false,
       id: instance.id,
       relationsDictionary,
       serviceModel,
@@ -385,6 +413,10 @@ export const initializeCanvasFromInstance = (
       rootEntities,
       interServiceRelations,
       embeddedEntities: {},
+      instanceState: isNewEntity
+        ? undefined
+        : resolveLifecycleState(serviceModel.lifecycle.states, instance.state),
+      attributeSets,
     };
 
     const shape = new ServiceEntityShape(shapeOptions);
@@ -404,11 +436,7 @@ export const initializeCanvasFromInstance = (
 
     // Ensure the main instance doesn't overlap with existing shapes
     const finalY = positionTracker.findNextYPosition(shapeX, SHAPE_WIDTH, SHAPE_MIN_HEIGHT, shapeY);
-    shape.position(shapeX, finalY);
-    shape.addTo(graph);
-
-    // Update columns display after shape is added to graph
-    shape.updateColumnsDisplay();
+    shape.setPosition(shapeX, finalY);
 
     // Reserve the position for the main instance
     const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(shape);
@@ -416,7 +444,7 @@ export const initializeCanvasFromInstance = (
 
     canvasState.set(instance.id, shape);
 
-    const parentPosition = shape.position();
+    const parentPosition = shape.getPosition();
 
     serviceModel.embedded_entities.forEach((embeddedEntity) => {
       if (embeddedEntity.modifier === "r") {
@@ -430,13 +458,13 @@ export const initializeCanvasFromInstance = (
           shape,
           instance.id,
           relationsDictionary,
-          graph,
           canvasState,
           embeddedEntityCache,
           positionTracker,
           parentPosition.x + HORIZONTAL_SPACING,
           parentPosition.y,
-          isNewEntity
+          isNewEntity,
+          getEmbeddedSetsContext(isNewEntity, attributeSets, embeddedEntity)
         );
 
         if (embeddedIds.length > 0) {
@@ -448,9 +476,7 @@ export const initializeCanvasFromInstance = (
     });
   });
 
-  createLinksFromCanvasState(canvasState, graph);
-
-  applyGridLayout(graph);
+  applyLayeredLayout(canvasState);
 
   return canvasState;
 };

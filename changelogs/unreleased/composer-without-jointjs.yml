@@ -1,0 +1,6 @@
+description: |
+  The Instance Composer has a new canvas that no longer needs the licensed JointJS+ library, with clearer cards, an Arrange action, and existing instances that can be removed from the canvas or staged for deletion.
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

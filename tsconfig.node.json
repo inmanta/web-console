@@ -11,6 +11,7 @@
     "vitest.config.oss.ts",
     "apps/*/vite.config.ts",
     "packages/features/*/vite.js",
+    "packages/features/*/vite.test.ts",
     "packages/features/*/vite.config.ts",
     "__mocks__/**/*.ts",
     "src",

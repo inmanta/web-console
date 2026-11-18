@@ -6,7 +6,7 @@
  *
  * Every app lists the packages this file imports (vite, @vitejs/plugin-react, vite-plugin-mkcert)
  * in its own devDependencies, even though the root lists them too: `yarn workspaces focus` on an
- * app, the OSS install without the JointJS token, doesn't install the root's devDependencies.
+ * app, e.g. the OSS install, doesn't install the root's devDependencies.
  * A package added here goes into every app's devDependencies as well.
  */
 import { execSync } from "child_process";

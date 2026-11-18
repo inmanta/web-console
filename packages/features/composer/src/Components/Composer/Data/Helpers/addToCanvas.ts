@@ -1,0 +1,306 @@
+import { v4 as uuidv4 } from "uuid";
+import {
+  EmbeddedEntity,
+  resolveLifecycleState,
+  ServiceInstanceModel,
+  ServiceModel,
+} from "@inmanta/web-console-core";
+import {
+  createFormState,
+  CreateModifierHandler,
+  FieldCreator,
+} from "@inmanta/web-console-core/FormState";
+import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { HORIZONTAL_SPACING } from "../../config";
+import {
+  AttributeSets,
+  EntityShapeType,
+  getInstanceAttributeSets,
+  Point,
+  ServiceEntityShape,
+} from "../ServiceEntityShape";
+import { applyLayeredLayout } from "./canvasLayoutUtils";
+import { applyRequiredConnections } from "./createPlaceholderInstance";
+import { RelationsDictionary } from "./createRelationsDictionary";
+import { createEmbeddedEntityShapes, getEmbeddedSetsContext } from "./initializeCanvasFromInstance";
+import { PositionTracker } from "./positionTracker";
+import { getEmbeddedEntityKey, getInterServiceRelationKey, getShapeDimensions } from "./shapeUtils";
+
+/**
+ * Adds the embedded entities a shape carries in its attributes as shapes of their own,
+ * to the right of it, and records them in its connections.
+ */
+const addEmbeddedEntities = (
+  shape: ServiceEntityShape,
+  embeddedData: Record<string, unknown>,
+  relationsDictionary: RelationsDictionary,
+  shapes: Map<string, ServiceEntityShape>,
+  isNew: boolean,
+  attributeSets?: AttributeSets
+) => {
+  const positionTracker = new PositionTracker();
+  const position = shape.getPosition();
+  const { width, height } = getShapeDimensions(shape);
+
+  positionTracker.reserve(shape.id, position.x, position.y, width, height);
+
+  shape.serviceModel.embedded_entities?.forEach((embeddedEntity) => {
+    const data = embeddedData[embeddedEntity.name];
+
+    if (embeddedEntity.modifier === "r" || !data) {
+      return;
+    }
+
+    const embeddedIds = createEmbeddedEntityShapes(
+      embeddedEntity,
+      data,
+      shape,
+      shape.id,
+      relationsDictionary,
+      shapes,
+      new Map<string, string>(),
+      positionTracker,
+      position.x + HORIZONTAL_SPACING,
+      position.y,
+      isNew,
+      getEmbeddedSetsContext(isNew, attributeSets, embeddedEntity)
+    );
+
+    if (embeddedIds.length > 0) {
+      // Embedded entities of the same type share a key, so add to what is there.
+      const entityKey = getEmbeddedEntityKey(embeddedEntity);
+      shape.connections.set(entityKey, [
+        ...(shape.connections.get(entityKey) || []),
+        ...embeddedIds,
+      ]);
+    }
+  });
+};
+
+interface NewEntityOptions {
+  serviceModel: ServiceModel | EmbeddedEntity;
+  entityType: EntityShapeType;
+  position: Point;
+  serviceCatalog: ServiceModel[];
+  relationsDictionary: RelationsDictionary;
+}
+
+/**
+ * Creates a new service or embedded entity for the canvas, with its default attribute values
+ * and the embedded entities it requires.
+ *
+ * @returns The new shapes, keyed by id, the new entity first.
+ */
+export const createNewEntityShapes = ({
+  serviceModel,
+  entityType,
+  position,
+  serviceCatalog,
+  relationsDictionary,
+}: NewEntityOptions): Map<string, ServiceEntityShape> => {
+  const fieldCreator = new FieldCreator(new CreateModifierHandler());
+  const fields = fieldCreator.attributesToFields(serviceModel.attributes);
+
+  const shape = new ServiceEntityShape({
+    entityType,
+    isNew: true,
+    id: uuidv4(),
+    relationsDictionary,
+    serviceModel,
+    instanceAttributes: createFormState(fields),
+    rootEntities: {},
+    interServiceRelations: {},
+    embeddedEntities: {},
+  });
+
+  shape.setPosition(position.x, position.y);
+
+  // Build placeholder attribute data for required embedded entities
+  const placeholderAttrs: Record<string, unknown> = {};
+  applyRequiredConnections(
+    serviceModel.inter_service_relations ?? [],
+    serviceModel.embedded_entities ?? [],
+    placeholderAttrs,
+    [],
+    serviceCatalog
+  );
+
+  const shapes = new Map<string, ServiceEntityShape>([[shape.id, shape]]);
+  addEmbeddedEntities(shape, placeholderAttrs, relationsDictionary, shapes, true);
+
+  return shapes;
+};
+
+interface InventoryEntityOptions {
+  instance: ServiceInstanceModel;
+  serviceModel: ServiceModel;
+  position: Point;
+  canvasState: Map<string, ServiceEntityShape>;
+  relationsDictionary: RelationsDictionary;
+  serviceCatalog: ServiceModel[];
+
+  /** The instances in the inventory, to find the instances the added one relates to */
+  serviceInventories: Inventories | null;
+}
+
+/**
+ * Creates the shape of an existing instance, read-only, with its embedded entities, and adds them
+ * to `shapes`. Its relations are recorded as the instance has them, so they count as there even
+ * when the related instance isn't on the canvas, like when the composer opens an instance.
+ */
+const addInstanceShapes = (
+  instance: ServiceInstanceModel,
+  serviceModel: ServiceModel,
+  relationsDictionary: RelationsDictionary,
+  shapes: Map<string, ServiceEntityShape>
+): ServiceEntityShape => {
+  const instanceAttributes = {
+    ...(instance.candidate_attributes || instance.active_attributes || {}),
+    id: instance.id,
+  };
+  const attributeSets = getInstanceAttributeSets(instance);
+  const interServiceRelations: Record<string, string[]> = {};
+
+  serviceModel.inter_service_relations.forEach((relation) => {
+    const relationValue = instanceAttributes[relation.name];
+    const ids = (Array.isArray(relationValue) ? relationValue : [relationValue]).filter(
+      (value): value is string => typeof value === "string" && value !== ""
+    );
+
+    if (ids.length > 0) {
+      const key = getInterServiceRelationKey(relation);
+
+      interServiceRelations[key] = [...new Set([...(interServiceRelations[key] || []), ...ids])];
+    }
+  });
+
+  const shape = new ServiceEntityShape({
+    entityType: "relation",
+    isNew: false,
+    id: instance.id,
+    relationsDictionary,
+    serviceModel,
+    instanceAttributes,
+    rootEntities: {},
+    interServiceRelations,
+    embeddedEntities: {},
+    instanceState: resolveLifecycleState(serviceModel.lifecycle.states, instance.state),
+    attributeSets,
+  });
+
+  shapes.set(shape.id, shape);
+  addEmbeddedEntities(shape, instanceAttributes, relationsDictionary, shapes, false, attributeSets);
+
+  return shape;
+};
+
+/**
+ * Creates the shapes for an existing instance from the inventory, with its cluster: the instance
+ * as a read-only relation, its embedded entities, and the instances it relates to that are in the
+ * inventory but not on the canvas yet, with their embedded entities. Relations to instances on the
+ * canvas connect to their cards, so no card is added twice.
+ *
+ * The cluster is laid out by relation depth (applyLayeredLayout) with the instance at the
+ * position, and moved down until it clears the cards on the canvas.
+ *
+ * @returns The new shapes, keyed by id, the instance first.
+ */
+export const createInventoryEntityShapes = ({
+  instance,
+  serviceModel,
+  position,
+  canvasState,
+  relationsDictionary,
+  serviceCatalog,
+  serviceInventories,
+}: InventoryEntityOptions): Map<string, ServiceEntityShape> => {
+  const shapes = new Map<string, ServiceEntityShape>();
+  const shape = addInstanceShapes(instance, serviceModel, relationsDictionary, shapes);
+  const inventory = Object.values(serviceInventories || {}).flat();
+
+  // The instances the cluster relates to, one level deep, like an instance the composer opens
+  const relatedIds = new Set(
+    Array.from(shapes.values()).flatMap((clusterShape) =>
+      Array.from(clusterShape.connections.values()).flat()
+    )
+  );
+
+  relatedIds.forEach((id) => {
+    if (shapes.has(id) || canvasState.has(id)) {
+      return;
+    }
+    const related = inventory.find((candidate) => candidate.id === id);
+    const relatedModel =
+      related && serviceCatalog.find((model) => model.name === related.service_entity);
+
+    if (related && relatedModel) {
+      addInstanceShapes(related, relatedModel, relationsDictionary, shapes);
+    }
+  });
+
+  // Arrange the cluster around the instance, at the position
+  applyLayeredLayout(shapes);
+  const anchor = shape.getPosition();
+
+  moveShapes(shapes, position.x - anchor.x, position.y - anchor.y);
+  moveClearOf(shapes, canvasState);
+
+  return shapes;
+};
+
+/**
+ * Moves shapes by an offset.
+ */
+const moveShapes = (shapes: Map<string, ServiceEntityShape>, dx: number, dy: number) =>
+  shapes.forEach((shape) => {
+    const { x, y } = shape.getPosition();
+
+    shape.setPosition(x + dx, y + dy);
+  });
+
+/**
+ * Moves shapes down, together, until the box around them covers none of the cards on the canvas.
+ */
+const moveClearOf = (
+  shapes: Map<string, ServiceEntityShape>,
+  canvasState: Map<string, ServiceEntityShape>
+) => {
+  const boxes = Array.from(shapes.values()).map((shape) => ({
+    ...shape.getPosition(),
+    ...getShapeDimensions(shape),
+  }));
+  const left = Math.min(...boxes.map(({ x }) => x));
+  const top = Math.min(...boxes.map(({ y }) => y));
+  const width = Math.max(...boxes.map(({ x, width }) => x + width)) - left;
+  const height = Math.max(...boxes.map(({ y, height }) => y + height)) - top;
+  const positionTracker = new PositionTracker();
+
+  canvasState.forEach((canvasShape) => {
+    const { x, y } = canvasShape.getPosition();
+    const dimensions = getShapeDimensions(canvasShape);
+
+    positionTracker.reserve(canvasShape.id, x, y, dimensions.width, dimensions.height);
+  });
+
+  moveShapes(shapes, 0, positionTracker.findNextYPosition(left, width, height, top) - top);
+};
+
+/**
+ * The ids of the inventory instances that can't be added again because they are on the canvas,
+ * including the ones staged to be deleted there.
+ */
+export const getInstanceIdsOnCanvas = (
+  canvasState: Map<string, ServiceEntityShape>
+): Set<string> => {
+  const onCanvas = new Set<string>();
+
+  canvasState.forEach((shape, shapeId) => {
+    onCanvas.add(shapeId);
+    const id = shape.instanceAttributes?.id;
+    if (typeof id === "string") {
+      onCanvas.add(id);
+    }
+  });
+
+  return onCanvas;
+};

@@ -1,0 +1,45 @@
+import React from "react";
+import { Content, Label, Tooltip } from "@patternfly/react-core";
+import { State } from "@inmanta/web-console-core";
+import { DynamicFAIcon } from "../FaIcon";
+
+interface Props extends State {
+  /** Renders the badge compact, for tight places like a canvas card or a palette row. */
+  isCompact?: boolean;
+}
+
+/**
+ * The InstanceStateLabel Component
+ *
+ * Renders a lifecycle state: `web_label` as the display text (falling back to the
+ * raw state name), `web_icon` as the badge icon (in the status color, if any),
+ * `web_description` as a hover tooltip (issue #7094). A badge is only shown
+ * when there is a status color or a state annotation to present; otherwise the raw
+ * name is rendered as plain text.
+ */
+export const InstanceStateLabel: React.FC<Props> = ({ name, label, annotations, isCompact }) => {
+  const displayName = annotations?.web_label || name;
+
+  if (!label && !annotations) {
+    return <Content>{displayName}</Content>;
+  }
+
+  const badge = (
+    <Label
+      status={label ?? undefined}
+      variant="outline"
+      isCompact={isCompact}
+      icon={
+        annotations?.web_icon ? <DynamicFAIcon icon={annotations.web_icon} isInline /> : undefined
+      }
+    >
+      {displayName}
+    </Label>
+  );
+
+  if (annotations?.web_description) {
+    return <Tooltip content={annotations.web_description}>{badge}</Tooltip>;
+  }
+
+  return badge;
+};
