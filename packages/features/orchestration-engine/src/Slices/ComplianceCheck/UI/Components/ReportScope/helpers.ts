@@ -3,11 +3,11 @@ import {
   DryRun,
   Resource,
   ResourceActionFilter,
-  StringMatch,
   isObject,
   words,
 } from "@inmanta/web-console-core";
 import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
+import type { StrFilter } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import {
   getVersionSelectionBlocker,
   withDryRunVersion,
@@ -74,23 +74,24 @@ const trimWildcards = (value: string): string =>
  * @example createFilterValues({ contains: ["%File%"] }) // [{ value: "File", operator: "contains" }]
  */
 const createFilterValues = (
-  match: StringMatch | undefined,
+  match: StrFilter | null | undefined,
   formatValue: (value: string) => string = (value) => value
 ): FilterValue[] => {
-  if (match === undefined) {
+  if (!match) {
     return [];
   }
 
-  const { eq = [], neq = [], contains = [], notContains = [] } = match;
-
   return [
-    ...eq.map((value): FilterValue => ({ value: formatValue(value) })),
-    ...neq.map((value): FilterValue => ({ value: formatValue(value), operator: "neq" })),
-    ...contains.map((value): FilterValue => ({
+    ...(match.eq ?? []).map((value): FilterValue => ({ value: formatValue(value) })),
+    ...(match.neq ?? []).map((value): FilterValue => ({
+      value: formatValue(value),
+      operator: "neq",
+    })),
+    ...(match.contains ?? []).map((value): FilterValue => ({
       value: trimWildcards(value),
       operator: "contains",
     })),
-    ...notContains.map((value): FilterValue => ({
+    ...(match.notContains ?? []).map((value): FilterValue => ({
       value: trimWildcards(value),
       operator: "notContains",
     })),
@@ -156,9 +157,9 @@ export const createFilterRows = (
     {
       key: "purged",
       values:
-        filter.purged === undefined
-          ? []
-          : [{ value: words(`desiredState.complianceCheck.scope.value.purged.${filter.purged}`) }],
+        typeof filter.purged === "boolean"
+          ? [{ value: words(`desiredState.complianceCheck.scope.value.purged.${filter.purged}`) }]
+          : [],
     },
   ];
 
@@ -180,10 +181,10 @@ export const createVersionValues = (
 ): FilterValue[] => {
   const modelVersionValue = { value: words("modelVersion")(modelVersion) };
 
-  if (filter.instanceVersion !== undefined) {
+  if (typeof filter.instanceVersion === "number") {
     return [{ value: words("instanceVersion")(filter.instanceVersion) }, modelVersionValue];
   }
-  if (filter.modelVersion !== undefined) {
+  if (typeof filter.modelVersion === "number") {
     return [modelVersionValue];
   }
   if (filter.isOrphan === false) {
@@ -211,15 +212,15 @@ export const createStatusValues = (filter: ResourceActionFilter): FilterValue[] 
   ...createFilterValues(filter.compliance, formatStatusValue),
   ...createFilterValues(filter.lastHandlerRun, formatStatusValue),
   ...createFilterValues(filter.blocked, formatStatusValue),
-  ...(filter.isDeploying === undefined
-    ? []
-    : [
+  ...(typeof filter.isDeploying === "boolean"
+    ? [
         {
           value: words(
             `desiredState.complianceCheck.scope.value.isDeploying.${filter.isDeploying}`
           ),
         },
-      ]),
+      ]
+    : []),
   ...(filter.isOrphan
     ? [{ value: words("desiredState.complianceCheck.scope.value.orphansOnly") }]
     : []),

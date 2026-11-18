@@ -21,6 +21,7 @@
     }
   },
   "devDependencies": {
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@inmanta/web-console-test-utils": "workspace:^",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",

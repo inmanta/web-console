@@ -100,8 +100,13 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                                         dir('web-console') {
                                             sh '''yarn build:ci;
                                             sudo systemctl restart docker && sudo docker network prune -f;
-                                            yarn run install:orchestrator:ci;
-                                            yarn run cypress-test:iso;'''
+                                            yarn run install:orchestrator:ci;'''
+                                            // Fails the build when the orchestrator's schema no longer matches the
+                                            // generated query types, but still runs the e2e tests.
+                                            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                                                sh 'yarn codegen:check'
+                                            }
+                                            sh 'yarn run cypress-test:iso'
                                         }
                                     }
                                 } finally {

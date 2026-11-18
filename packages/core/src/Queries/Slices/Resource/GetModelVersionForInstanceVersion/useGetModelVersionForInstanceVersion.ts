@@ -1,18 +1,15 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import { graphql } from "@inmanta/web-console-core/Domain/GraphQL/generated";
 import { useGraphQLRequest } from "@inmanta/web-console-core/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@inmanta/web-console-core/Queries/Helpers/KeyFactory";
 
 /**
- * The first resource of one instance version, with the model version it belongs to. The query asks
- * for only one, since all of them share that model version. Empty when there is none.
+ * Asks for the first resource of one instance version, with the model version it belongs to. One is
+ * enough, since all of them share that model version. Empty when there is none.
  */
-interface Response {
-  data: { resources: { edges: { node: { modelVersion: number } }[] } };
-}
-
-const GET_MODEL_VERSION_FOR_INSTANCE_VERSION_QUERY = /* GraphQL */ `
+const GET_MODEL_VERSION_FOR_INSTANCE_VERSION_QUERY = graphql(`
   query GetModelVersionForInstanceVersion($filter: ResourceFilter!) {
     resources(filter: $filter, first: 1) {
       edges {
@@ -22,7 +19,7 @@ const GET_MODEL_VERSION_FOR_INSTANCE_VERSION_QUERY = /* GraphQL */ `
       }
     }
   }
-`;
+`);
 
 /**
  * React Query hook returning the model version that one instance version of a service instance
@@ -41,18 +38,19 @@ export const useGetModelVersionForInstanceVersion = (
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
 
-  const queryFn = useGraphQLRequest<Response>(GET_MODEL_VERSION_FOR_INSTANCE_VERSION_QUERY, {
-    filter: { environment: env, serviceInstance: [instanceId], instanceVersion },
-  });
+  const execute = useGraphQLRequest();
 
   return useQuery({
     queryKey: getModelVersionForInstanceVersionKey.single(instanceId ?? "", [
       String(instanceVersion),
       env,
     ]),
-    queryFn,
+    queryFn: () =>
+      execute(GET_MODEL_VERSION_FOR_INSTANCE_VERSION_QUERY, {
+        filter: { environment: env, serviceInstance: [instanceId ?? ""], instanceVersion },
+      }),
     enabled: instanceId !== undefined && instanceVersion !== undefined,
-    select: (response) => response.data.resources.edges[0]?.node.modelVersion ?? null,
+    select: (data) => data.resources.edges[0]?.node.modelVersion ?? null,
   });
 };
 

@@ -10,10 +10,9 @@ import {
   AuthContextInterface,
   defaultAuthContext,
 } from "@inmanta/web-console-core/Auth/AuthContext";
-import {
-  EnvironmentPreviewResponse,
-  GetEnvironmentPreviewKey,
-} from "@inmanta/web-console-core/Queries/Slices/Environment";
+import type { GetEnvironmentPreviewQuery } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
+import { GraphQLResponseBody } from "@inmanta/web-console-core/Queries/Helpers";
+import { GetEnvironmentPreviewKey } from "@inmanta/web-console-core/Queries/Slices/Environment";
 import { getServerStatusKey } from "@inmanta/web-console-core/Queries/Slices/Server";
 import { MockedDependencyProvider, ServerStatus } from "@inmanta/web-console-test-utils";
 import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
@@ -29,7 +28,7 @@ function createQueryClient(): QueryClient {
 }
 
 const environmentPreviewSuccess = () =>
-  HttpResponse.json<{ data: EnvironmentPreviewResponse }>({
+  HttpResponse.json<GraphQLResponseBody<GetEnvironmentPreviewQuery>>({
     data: {
       data: {
         environments: {
