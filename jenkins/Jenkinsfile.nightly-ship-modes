@@ -29,7 +29,7 @@ def onFreshOrchestrator(String stageName, String run, Closure tests) {
                     try {
                         timeout(time: 30, unit: 'MINUTES') {
                             sh '''
-                            sudo systemctl restart docker && sudo docker network prune -f
+                            yarn run kill-server
                             yarn run install:orchestrator:ci
                             '''
                             // Cypress empties its screenshots folder before each run.
@@ -101,7 +101,8 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: 'web-console/cypress/screenshots/**', allowEmptyArchive: true
+            // The Cypress outputs the main job keeps, whichever these runs made.
+            archiveArtifacts artifacts: 'web-console/cypress/reports/**, web-console/cypress/screenshots/**, web-console/cypress/videos/**', allowEmptyArchive: true, onlyIfSuccessful: false
         }
         cleanup {
             deleteDir()

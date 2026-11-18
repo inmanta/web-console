@@ -1,4 +1,4 @@
-description: Run the nightly authentication tests as one Jenkins job per method, under the names of the jobs they replace.
+description: Run the nightly authentication tests as one Jenkins job per method under their old names, keep the Cypress reports of the nightly jobs, and clean up only the orchestrator our CI runs created instead of restarting Docker on the agent.
 issue-nr: 7473
 change-type: patch
 destination-branches: [master, iso9]

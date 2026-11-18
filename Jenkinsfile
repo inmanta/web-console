@@ -99,7 +99,7 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                                     timeout(time: 20, unit: 'MINUTES') {
                                         dir('web-console') {
                                             sh '''yarn build:ci;
-                                            sudo systemctl restart docker && sudo docker network prune -f;
+                                            yarn run kill-server;
                                             yarn run install:orchestrator:ci;
                                             yarn run cypress-test:iso;'''
                                         }
