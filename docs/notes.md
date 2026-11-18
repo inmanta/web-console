@@ -137,7 +137,7 @@ These Jenkins jobs run from this repository:
 - `jenkins/Jenkinsfile.nightly-auth`, every night on master, as one job per authentication method: `keycloak-e2e-test` (Keycloak), `oidc-e2e-test` (OIDC) and `frontend-local-auth` (local authentication). The job's name picks the method, and a job with another name fails. Each runs the method's end-to-end tests on a fresh OSS orchestrator set up for it (`yarn install:orchestrator:<method>`), with the build's `dist/`.
 
 Every run that starts an orchestrator (the main job's Cypress stage and each run of the nightly jobs) takes the lock `orchestrator-<agent>` (Lockable Resources), since they all use the same container names on the agent.
-Each run calls `yarn kill-server` before its setup and again when it ends, also when it fails: it removes the Compose project `local-setup` (containers, network and volumes) and `temp/`, so it only removes what our setups created, never other containers on the agent.
+Each run calls `shell-scripts/clear-server.sh` (`yarn kill-server`, but without yarn, so it also works when yarn doesn't) before its setup and again when it ends, also when it fails or times out; a failing cleanup marks the build unstable. It removes the Compose project `local-setup` (containers, network and volumes) and `temp/`, so it only removes what our setups created, never other containers on the agent.
 
 ## Minimum browser versions
 

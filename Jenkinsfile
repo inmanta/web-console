@@ -99,14 +99,14 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                                     timeout(time: 20, unit: 'MINUTES') {
                                         dir('web-console') {
                                             sh '''yarn build:ci;
-                                            yarn run kill-server;
+                                            sh ./shell-scripts/clear-server.sh;
                                             yarn run install:orchestrator:ci;
                                             yarn run cypress-test:iso;'''
                                         }
                                     }
                                 } finally {
                                     dir('web-console') {
-                                        sh 'yarn run kill-server'
+                                        removeOrchestrator()
                                     }
                                 }
                             }
@@ -151,4 +151,16 @@ def isChangelogOnly(String previousSuccessfulCommit) {
     }
     def changes = sh(returnStdout: true, script: "git diff --name-status --no-renames ${previousSuccessfulCommit} HEAD").trim()
     return changes && changes.readLines().every { it ==~ /[AM]\tchangelogs\/unreleased\/[^\/]+\.yml/ }
+}
+
+/**
+ * Removes the orchestrator of this run, from the web-console folder, with
+ * shell-scripts/clear-server.sh: it needs only sh and docker, so it also works when yarn doesn't.
+ * A failure marks the build unstable instead of being hidden, since the orchestrator's containers
+ * may then still be on the agent.
+ */
+def removeOrchestrator() {
+    if (sh(returnStatus: true, script: 'sh ./shell-scripts/clear-server.sh') != 0) {
+        unstable("Couldn't remove the orchestrator: its containers may still be on the agent ${env.NODE_NAME}.")
+    }
 }
