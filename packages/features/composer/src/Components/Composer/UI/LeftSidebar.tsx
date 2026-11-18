@@ -593,6 +593,14 @@ const Sidebar = styled.aside`
     flex: none;
   }
 
+  // Every row has an add button, so it stays subtle until it is pointed at or focused, like the
+  // copy icons. These are PatternFly's own button variables: check them on a PatternFly major.
+  .palette-row-add {
+    --pf-v6-c-button--m-plain__icon--Color: var(--pf-t--global--icon--color--subtle);
+    --pf-v6-c-button--hover__icon--Color: var(--pf-t--global--icon--color--regular);
+    --pf-v6-c-button--m-clicked__icon--Color: var(--pf-t--global--icon--color--regular);
+  }
+
   .palette-row-text {
     flex: 1;
     min-width: 0;
