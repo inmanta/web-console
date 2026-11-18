@@ -85,7 +85,8 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: 'web-console/cypress/screenshots/**', allowEmptyArchive: true
+            // The Cypress outputs the main job keeps, whichever this run made.
+            archiveArtifacts artifacts: 'web-console/cypress/reports/**, web-console/cypress/screenshots/**, web-console/cypress/videos/**', allowEmptyArchive: true, onlyIfSuccessful: false
         }
         cleanup {
             deleteDir()
