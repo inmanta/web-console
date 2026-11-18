@@ -15,12 +15,11 @@ export const entityColors: Record<EntityShapeType, "yellow" | "blue" | "purple">
 /**
  * The accent of each kind of entity: the edge of its cards, and its cards in the minimap.
  */
-export const HeaderColors = Object.fromEntries(
-  Object.entries(entityColors).map(([type, color]) => [
-    type,
-    `var(--pf-t--global--border--color--nonstatus--${color}--default)`,
-  ])
-) as Record<EntityShapeType, string>;
+export const entityAccentColors: Record<EntityShapeType, string> = {
+  core: "var(--pf-t--global--border--color--nonstatus--yellow--default)",
+  embedded: "var(--pf-t--global--border--color--nonstatus--blue--default)",
+  relation: "var(--pf-t--global--border--color--nonstatus--purple--default)",
+};
 
 /**
  * The CSS variables a card or a palette row takes its kind's colours from: the accent, and the
@@ -28,7 +27,7 @@ export const HeaderColors = Object.fromEntries(
  */
 export const entityColorVariables = (type: EntityShapeType) =>
   ({
-    "--entity-accent": HeaderColors[type],
+    "--entity-accent": entityAccentColors[type],
     "--entity-icon-background": `var(--pf-t--global--color--nonstatus--${entityColors[type]}--default)`,
     "--entity-icon-color": `var(--pf-t--global--icon--color--nonstatus--on-${entityColors[type]}--default)`,
   }) as React.CSSProperties;

@@ -1,6 +1,7 @@
 import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@inmanta/web-console-core";
 import { ServiceEntityShape } from "../ServiceEntityShape";
 import { RelationsDictionary, Rules } from "./createRelationsDictionary";
+import { getEmbeddedEntityKey } from "./shapeUtils";
 
 /**
  * Finds the inter-service relations entity types for the given service model or embedded entity.
@@ -47,6 +48,8 @@ export const findFullInterServiceRelations = (
 /**
  * Finds the parent shape of an embedded entity: the shape it hangs off.
  * Uses the shape's known parents first, then any shape on the canvas that holds it as a child.
+ * Only a shape whose model declares the entity as embedded counts: a known parent is the source
+ * of any link dragged to it, which can be an instance it relates to.
  *
  * @param {ServiceEntityShape} embeddedShape - The embedded entity shape
  * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas
@@ -56,15 +59,20 @@ export const findParentShapeForEmbedded = (
   embeddedShape: ServiceEntityShape,
   canvasState: Map<string, ServiceEntityShape>
 ): ServiceEntityShape | null => {
+  const embedsEntity = (candidate: ServiceEntityShape): boolean =>
+    (candidate.serviceModel.embedded_entities ?? []).some(
+      (entity) => getEmbeddedEntityKey(entity) === embeddedShape.getEntityType()
+    );
+
   for (const parentId of embeddedShape.parentIds) {
     const parent = canvasState.get(parentId);
-    if (parent) {
+    if (parent && embedsEntity(parent)) {
       return parent;
     }
   }
 
   for (const shape of canvasState.values()) {
-    if (shape.id === embeddedShape.id) {
+    if (shape.id === embeddedShape.id || !embedsEntity(shape)) {
       continue;
     }
     // A parent stores its embedded children under the child's entity type.
@@ -322,8 +330,10 @@ export const canRemoveShape = (
       }
 
       // Check if removing would violate lower_limit for the connected shape
-      const connections = connectedShape.connections.get(shapeEntityType) || [];
-      const currentCount = connections.length;
+      const currentCount = connectedShape.getCountedConnections(
+        shapeEntityType,
+        canvasState
+      ).length;
       const lowerLimit = relationInfo.rules.lower_limit;
 
       if (wouldViolateLowerLimit(currentCount, lowerLimit)) {
@@ -373,6 +383,47 @@ export const getRemoveActions = (
 };
 
 /**
+ * Whether the delete staged on a shape can be undone: every shape that holds it still has room
+ * for it. While it was staged it didn't count for their limits (getCountedConnections), so
+ * another instance may have taken its place.
+ *
+ * @param {ServiceEntityShape} shape - The shape staged to be deleted
+ * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas
+ * @param {RelationsDictionary} relationsDictionary - The relations dictionary
+ * @param {ServiceModel[]} serviceCatalog - The service catalog
+ * @returns {boolean} True if the delete can be undone
+ */
+export const canUndoDelete = (
+  shape: ServiceEntityShape,
+  canvasState: Map<string, ServiceEntityShape>,
+  relationsDictionary: RelationsDictionary,
+  serviceCatalog: ServiceModel[]
+): boolean =>
+  Array.from(canvasState.values()).every((holder) => {
+    const holdsShape = Array.from(holder.connections.values()).some((ids) =>
+      ids.includes(shape.id)
+    );
+
+    if (holder.id === shape.id || holder.isMarkedForDeletion || !holdsShape) {
+      return true;
+    }
+
+    const upperLimit = getRelationInfo(
+      holder,
+      shape,
+      relationsDictionary,
+      canvasState,
+      serviceCatalog
+    )?.rules.upper_limit;
+
+    return (
+      upperLimit === null ||
+      upperLimit === undefined ||
+      holder.getCountedConnections(shape.getEntityType(), canvasState).length < upperLimit
+    );
+  });
+
+/**
  * Checks if a link can be removed between two shapes without violating relation requirements.
  * Prevents removal if:
  * 1. Removing would cause the shape to fall below the required lower_limit
@@ -408,8 +459,7 @@ export const canRemoveLink = (
       return false;
     }
 
-    const sourceConnections = sourceShape.connections.get(targetEntityType) || [];
-    const currentCount = sourceConnections.length;
+    const currentCount = sourceShape.getCountedConnections(targetEntityType, canvasState).length;
     if (wouldViolateLowerLimit(currentCount, sourceRelationInfo.rules.lower_limit)) {
       return false;
     }
@@ -428,8 +478,7 @@ export const canRemoveLink = (
       return false;
     }
 
-    const targetConnections = targetShape.connections.get(sourceEntityType) || [];
-    const currentCount = targetConnections.length;
+    const currentCount = targetShape.getCountedConnections(sourceEntityType, canvasState).length;
     if (wouldViolateLowerLimit(currentCount, targetRelationInfo.rules.lower_limit)) {
       return false;
     }

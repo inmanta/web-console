@@ -103,9 +103,7 @@ export const createNewEntityShapes = ({
 
   const shape = new ServiceEntityShape({
     entityType,
-    readonly: false,
     isNew: true,
-    lockedOnCanvas: false,
     id: uuidv4(),
     relationsDictionary,
     serviceModel,
@@ -178,9 +176,7 @@ const addInstanceShapes = (
 
   const shape = new ServiceEntityShape({
     entityType: "relation",
-    readonly: true,
     isNew: false,
-    lockedOnCanvas: false,
     id: instance.id,
     relationsDictionary,
     serviceModel,

@@ -9,6 +9,13 @@ export const getShapeName = (shape: ServiceEntityShape): string =>
   shape.getIdentity()?.value || shape.getDisplayName();
 
 /**
+ * Whether a shape is an existing instance the composer doesn't edit: one related to the edited
+ * instance, or added from the inventory. Its card and details are read-only.
+ */
+export const isReadOnlyShape = (shape: Pick<ServiceEntityShape, "entityType" | "isNew">): boolean =>
+  shape.entityType === "relation" && !shape.isNew;
+
+/**
  * Gets the size of a shape with fallback to default dimensions.
  * The canvas stores the measured size on the shape once it has rendered the card;
  * before that, the defaults apply.

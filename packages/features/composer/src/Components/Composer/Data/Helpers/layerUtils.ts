@@ -47,9 +47,7 @@ export const getConnectedLayerData = (
   const layerShapes: ServiceEntityShape[] = [];
   const toVisit: ServiceEntityShape[] = [shape];
 
-  while (toVisit.length > 0) {
-    const current = toVisit.pop()!;
-
+  for (let current = toVisit.pop(); current; current = toVisit.pop()) {
     current.connections.forEach((targetIds) => {
       targetIds.forEach((targetId) => {
         const otherShape = canvasState.get(targetId);

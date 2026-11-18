@@ -6,6 +6,7 @@ import {
   getInstanceIdsOnCanvas,
 } from "./addToCanvas";
 import { createRelationsDictionary } from "./createRelationsDictionary";
+import { isReadOnlyShape } from "./shapeUtils";
 
 const createMockEmbeddedEntity = (
   name: string,
@@ -124,9 +125,7 @@ describe("createInventoryEntityShapes", () => {
       entityType: "core",
       serviceModel,
       instanceAttributes: {},
-      readonly: false,
       isNew: false,
-      lockedOnCanvas: false,
       relationsDictionary,
       rootEntities: {},
       interServiceRelations: {},
@@ -156,11 +155,11 @@ describe("createInventoryEntityShapes", () => {
 
     expect(Array.from(shapes.keys())).toEqual(["child-1"]);
     expect(child.entityType).toBe("relation");
-    expect(child.readonly).toBe(true);
+    expect(isReadOnlyShape(child)).toBe(true);
     expect(child.isNew).toBe(false);
     expect(child.instanceAttributes.id).toBe("child-1");
     expect(child.connections.get("parent")).toEqual(["parent-1"]);
-    expect(child.isMissingConnections()).toBe(false);
+    expect(child.isMissingConnections(new Map())).toBe(false);
   });
 
   it("brings the instances it relates to from the inventory, connected and valid", () => {
@@ -169,9 +168,9 @@ describe("createInventoryEntityShapes", () => {
 
     expect(Array.from(shapes.keys())).toEqual(["child-1", "parent-1"]);
     expect(parent.entityType).toBe("relation");
-    expect(parent.readonly).toBe(true);
+    expect(isReadOnlyShape(parent)).toBe(true);
     expect(child.connections.get("parent")).toEqual(["parent-1"]);
-    expect(child.isMissingConnections()).toBe(false);
+    expect(child.isMissingConnections(new Map())).toBe(false);
   });
 
   it("keeps a relation the instance has when the related instance isn't in the inventory", () => {
@@ -188,7 +187,7 @@ describe("createInventoryEntityShapes", () => {
 
     expect(Array.from(shapes.keys())).toEqual(["child-1"]);
     expect(child.connections.get("parent")).toEqual(["parent-1"]);
-    expect(child.isMissingConnections()).toBe(false);
+    expect(child.isMissingConnections(new Map())).toBe(false);
   });
 
   it("brings its embedded entities, connected to it", () => {
@@ -200,8 +199,8 @@ describe("createInventoryEntityShapes", () => {
     expect(shapes.size).toBe(2);
     expect(vlan.entityType).toBe("embedded");
     expect(cluster.connections.get("Vlan")).toEqual([vlan.id]);
-    expect(cluster.isMissingConnections()).toBe(false);
-    expect(vlan.isMissingConnections()).toBe(false);
+    expect(cluster.isMissingConnections(new Map())).toBe(false);
+    expect(vlan.isMissingConnections(new Map())).toBe(false);
   });
 
   it("puts the instance at the position and lays the cluster out clear of the canvas", () => {

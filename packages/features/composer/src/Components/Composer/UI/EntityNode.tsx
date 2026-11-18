@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { Tooltip } from "@patternfly/react-core";
+import { Button, Icon, Label, Tooltip } from "@patternfly/react-core";
 import { AngleDoubleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-double-down-icon";
 import { AngleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-down-icon";
 import { AngleUpIcon } from "@patternfly/react-icons/dist/esm/icons/angle-up-icon";
@@ -18,6 +18,7 @@ import {
   expandAllLayers,
   expandLayers,
   getShapeName,
+  isReadOnlyShape,
 } from "../Data/Helpers";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { SHAPE_WIDTH } from "../config";
@@ -67,7 +68,7 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
   const identity = shape.getIdentity();
   // The identity is the card's title, so it isn't listed again below it.
   const attributes = shape.getDisplayAttributes().filter(({ name }) => name !== identity?.name);
-  const isReadOnly = shape.entityType === "relation" && !shape.isNew;
+  const isReadOnly = isReadOnlyShape(shape);
   // Only offered when the model lets the entity be linked at all; read-only cards keep it.
   const canLink = editable && (isReadOnly || shape.canHaveConnections());
   const hasActions = hasLayers || canLink;
@@ -77,11 +78,12 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
   const isLinkTarget =
     !!fromShape &&
     !isLinkSource &&
-    checkIfConnectionIsAllowed(fromShape, shape, relationsDictionary);
+    checkIfConnectionIsAllowed(fromShape, shape, relationsDictionary, canvasState);
 
+  const kindLabel = words(`instanceComposer.label.${shape.entityType}`);
   const kindText = identity
-    ? `${words(`instanceComposer.label.${shape.entityType}`)} · ${displayName}`
-    : words(`instanceComposer.label.${shape.entityType}`);
+    ? words("instanceComposer.label.withName")(kindLabel, displayName)
+    : kindLabel;
   const titleText = identity
     ? identity.value || words("instanceComposer.card.unnamed")
     : displayName;
@@ -149,18 +151,20 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
           {hasLayers && (
             <>
               <Tooltip content={toggleLabel} aria="none">
-                <button type="button" onClick={toggleLayers} aria-label={toggleLabel}>
-                  {shape.isLayersCollapsed ? <AngleDownIcon /> : <AngleUpIcon />}
-                </button>
+                <Button
+                  variant="plain"
+                  icon={shape.isLayersCollapsed ? <AngleDownIcon /> : <AngleUpIcon />}
+                  onClick={toggleLayers}
+                  aria-label={toggleLabel}
+                />
               </Tooltip>
               <Tooltip content={words("instanceComposer.halo.expandAllLayers")} aria="none">
-                <button
-                  type="button"
+                <Button
+                  variant="plain"
+                  icon={<AngleDoubleDownIcon />}
                   onClick={expandAll}
                   aria-label={words("instanceComposer.halo.expandAllLayers")}
-                >
-                  <AngleDoubleDownIcon />
-                </button>
+                />
               </Tooltip>
             </>
           )}
@@ -207,15 +211,21 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
           </div>
           <span className="status">
             {shape.isMarkedForDeletion && (
-              <span className="pill pill-danger">
+              <Label isCompact status="danger" variant="outline">
                 {words("instanceComposer.card.markedForDeletion")}
-              </span>
+              </Label>
             )}
             {showsProblems && (
-              <button
+              <Button
                 ref={issuesRef}
-                type="button"
+                variant="plain"
+                size="sm"
                 className="issues"
+                icon={
+                  <Icon status="danger">
+                    <ExclamationCircleIcon />
+                  </Icon>
+                }
                 aria-label={words("instanceComposer.card.issues")(validationMessages.length)}
                 aria-describedby={messagesId}
                 onFocus={() => setIsIssuesFocused(true)}
@@ -229,16 +239,19 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
                   }
                 }}
               >
-                <ExclamationCircleIcon />
                 {validationMessages.length}
-              </button>
+              </Button>
             )}
             {shape.instanceState && (
               <span data-testid={`entity-state-${displayName}`}>
                 <InstanceStateLabel {...shape.instanceState} isCompact />
               </span>
             )}
-            {shape.isNew && <span className="pill">{words("instanceComposer.label.new")}</span>}
+            {shape.isNew && (
+              <Label isCompact variant="outline">
+                {words("instanceComposer.label.new")}
+              </Label>
+            )}
             {isReadOnly && (
               <Tooltip content={words("instanceComposer.card.readOnly")} aria="none">
                 <span
@@ -493,35 +506,6 @@ const Card = styled.div`
     color: var(--pf-t--global--icon--color--subtle);
   }
 
-  .issues {
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    padding: 0 var(--pf-t--global--spacer--xs);
-    border: 0;
-    border-radius: var(--pf-t--global--border--radius--small);
-    background: none;
-    color: var(--pf-t--global--icon--color--status--danger--default);
-    cursor: help;
-    font-size: var(--pf-t--global--font--size--body--sm);
-    font-weight: var(--pf-t--global--font--weight--body--bold);
-  }
-
-  .pill {
-    padding: 0 var(--pf-t--global--spacer--sm);
-    border: 1px solid var(--pf-t--global--border--color--brand--default);
-    border-radius: var(--pf-t--global--border--radius--pill);
-    color: var(--pf-t--global--text--color--brand--default);
-    font-size: var(--pf-t--global--font--size--body--sm);
-    line-height: 18px;
-    white-space: nowrap;
-  }
-
-  .pill-danger {
-    border-color: var(--pf-t--global--border--color--status--danger--default);
-    color: var(--pf-t--global--text--color--status--danger--default);
-  }
-
   dl {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
@@ -609,16 +593,11 @@ const Toolbar = styled.div`
   box-shadow: var(--pf-t--global--box-shadow--md);
   cursor: default;
 
-  // The link action is the handle a link is dragged from.
+  // The link action is the handle a link is dragged from, so it can't be a PF button: it is
+  // sized like the plain buttons next to it.
   .link-handle {
     position: static;
     transform: none;
-    border: 0;
-    border-radius: var(--pf-t--global--border--radius--small);
-  }
-
-  .link-handle,
-  button {
     display: grid;
     place-items: center;
     width: 36px;
@@ -630,15 +609,11 @@ const Toolbar = styled.div`
     border-radius: var(--pf-t--global--border--radius--small);
     background: transparent;
     color: var(--pf-t--global--icon--color--regular);
-    cursor: pointer;
+    cursor: grab;
 
     &:hover {
       background: var(--pf-t--global--background--color--primary--hover);
     }
-  }
-
-  .link-handle {
-    cursor: grab;
 
     svg {
       pointer-events: none;

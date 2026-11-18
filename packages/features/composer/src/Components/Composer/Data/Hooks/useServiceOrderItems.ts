@@ -41,7 +41,7 @@ export const useServiceOrderItems = ({
       // Ensure attribute validation state is up to date
       shape.validateAttributes();
 
-      if (shape.isMissingConnections() || shape.hasAttributeValidationErrors) {
+      if (shape.isMissingConnections(canvasState) || shape.hasAttributeValidationErrors) {
         return true;
       }
     }

@@ -36,9 +36,7 @@ const createShape = (
     entityType,
     serviceModel,
     instanceAttributes: {},
-    readonly: false,
     isNew: true,
-    lockedOnCanvas: false,
     relationsDictionary: createRelationsDictionary(catalog),
     rootEntities: {},
     interServiceRelations: {},
@@ -53,10 +51,10 @@ describe("ServiceEntityShape missing connections", () => {
       const service = createService("parent", [embedded]);
       const child = createShape([service], embedded, "embedded");
 
-      expect(child.getMissingConnections()).toEqual([
+      expect(child.getMissingConnections(new Map())).toEqual([
         expect.objectContaining({ type: "parent", name: "parent", missing: 1, required: 1 }),
       ]);
-      expect(child.isMissingConnections()).toBe(true);
+      expect(child.isMissingConnections(new Map())).toBe(true);
     }
   );
 
@@ -68,8 +66,8 @@ describe("ServiceEntityShape missing connections", () => {
 
     addConnectionsBetweenShapes(parent, child);
 
-    expect(child.getMissingConnections()).toEqual([]);
-    expect(child.isMissingConnections()).toBe(false);
+    expect(child.getMissingConnections(new Map())).toEqual([]);
+    expect(child.isMissingConnections(new Map())).toBe(false);
   });
 
   it("agrees with the list of missing connections for a parent missing a required child", () => {
@@ -77,9 +75,9 @@ describe("ServiceEntityShape missing connections", () => {
     const service = createService("parent", [embedded]);
     const parent = createShape([service], service, "core");
 
-    expect(parent.getMissingConnections()).toEqual([
+    expect(parent.getMissingConnections(new Map())).toEqual([
       expect.objectContaining({ type: "embedded", name: "child", missing: 1, required: 1 }),
     ]);
-    expect(parent.isMissingConnections()).toBe(true);
+    expect(parent.isMissingConnections(new Map())).toBe(true);
   });
 });

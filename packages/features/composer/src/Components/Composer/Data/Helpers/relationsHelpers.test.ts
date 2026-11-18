@@ -10,6 +10,7 @@ import {
   canRemoveShape,
   canRemoveLink,
   getRemoveActions,
+  canUndoDelete,
 } from "./relationsHelpers";
 
 describe("relationsHelpers", () => {
@@ -80,9 +81,7 @@ describe("relationsHelpers", () => {
       entityType,
       serviceModel,
       instanceAttributes: {},
-      readonly: false,
       isNew,
-      lockedOnCanvas: false,
       relationsDictionary: {},
       rootEntities: {},
       interServiceRelations: {},
@@ -164,13 +163,17 @@ describe("relationsHelpers", () => {
   });
 
   describe("findParentShapeForEmbedded", () => {
+    const embedsEmbeddedType = {
+      embedded_entities: [createMockEmbeddedEntity("Embedded1", "EmbeddedType")],
+    };
+
     it("should find the parent shape from the embedded shape's parentIds", () => {
       const parentShape = createMockShape(
         "parent-1",
         "core",
         false,
         new Map(),
-        createMockServiceModel("ServiceA")
+        createMockServiceModel("ServiceA", embedsEmbeddedType)
       );
       const embeddedShape = createMockShape(
         "embedded-1",
@@ -202,7 +205,7 @@ describe("relationsHelpers", () => {
         "core",
         false,
         new Map([["EmbeddedType", ["embedded-1"]]]),
-        createMockServiceModel("ServiceA")
+        createMockServiceModel("ServiceA", embedsEmbeddedType)
       );
       const embeddedShape = createMockShape(
         "embedded-1",
@@ -226,7 +229,7 @@ describe("relationsHelpers", () => {
         "core",
         false,
         new Map([["EmbeddedType", ["embedded-1"]]]),
-        createMockServiceModel("ServiceA")
+        createMockServiceModel("ServiceA", embedsEmbeddedType)
       );
       const embeddedShape = createMockShape(
         "embedded-1",
@@ -240,6 +243,40 @@ describe("relationsHelpers", () => {
       const result = findParentShapeForEmbedded(
         embeddedShape,
         toCanvas(parentShape, embeddedShape)
+      );
+
+      expect(result).toBe(parentShape);
+    });
+
+    it("should skip a known parent whose model doesn't embed the entity", () => {
+      // A link dragged from an instance the entity relates to also records it as a known parent
+      const relatedShape = createMockShape(
+        "related-1",
+        "core",
+        false,
+        new Map([["EmbeddedType", ["embedded-1"]]]),
+        createMockServiceModel("ServiceB")
+      );
+      const parentShape = createMockShape(
+        "parent-1",
+        "core",
+        false,
+        new Map([["EmbeddedType", ["embedded-1"]]]),
+        createMockServiceModel("ServiceA", embedsEmbeddedType)
+      );
+      const embeddedShape = createMockShape(
+        "embedded-1",
+        "embedded",
+        true,
+        new Map(),
+        createMockEmbeddedEntity("Embedded1", "EmbeddedType")
+      );
+      embeddedShape.parentIds.add("related-1");
+      embeddedShape.parentIds.add("parent-1");
+
+      const result = findParentShapeForEmbedded(
+        embeddedShape,
+        toCanvas(relatedShape, parentShape, embeddedShape)
       );
 
       expect(result).toBe(parentShape);
@@ -745,6 +782,68 @@ describe("relationsHelpers", () => {
       );
 
       expect(result).toBe(false);
+    });
+  });
+
+  describe("shapes staged to be deleted", () => {
+    const relatedModel = createMockServiceModel("ServiceB");
+
+    /**
+     * A new ServiceA that holds two ServiceB instances, b-1 and b-2, with the given limits.
+     */
+    const setup = (lowerLimit: number, upperLimit: number | null) => {
+      const holderModel = createMockServiceModel("ServiceA", {
+        inter_service_relations: [createMockInterServiceRelation("b", "ServiceB", "rw+")],
+      });
+      const holder = createMockShape(
+        "a-1",
+        "core",
+        true,
+        new Map([["ServiceB", ["b-1", "b-2"]]]),
+        holderModel
+      );
+      const first = createMockShape("b-1", "relation", false, new Map(), relatedModel);
+      const second = createMockShape("b-2", "relation", false, new Map(), relatedModel);
+      const relationsDictionary: RelationsDictionary = {
+        ServiceA: { ServiceB: { lower_limit: lowerLimit, upper_limit: upperLimit } },
+        ServiceB: { ServiceA: { lower_limit: 0, upper_limit: null } },
+      };
+
+      return {
+        holder,
+        first,
+        second,
+        canvasState: toCanvas(holder, first, second),
+        relationsDictionary,
+        serviceCatalog: [holderModel, relatedModel],
+      };
+    };
+
+    it("don't count for the lower limit of the shapes that hold them", () => {
+      const { first, second, canvasState, relationsDictionary, serviceCatalog } = setup(1, null);
+
+      expect(canRemoveShape(second, canvasState, relationsDictionary, serviceCatalog)).toBe(true);
+
+      first.isMarkedForDeletion = true;
+
+      expect(canRemoveShape(second, canvasState, relationsDictionary, serviceCatalog)).toBe(false);
+      expect(
+        getRemoveActions(second, canvasState, relationsDictionary, serviceCatalog).canDelete
+      ).toBe(false);
+    });
+
+    it("can only be restored while the shapes that hold them have room", () => {
+      const { holder, first, second, canvasState, relationsDictionary, serviceCatalog } = setup(
+        0,
+        1
+      );
+
+      // The holder is full with b-2 while b-1 is staged to be deleted
+      first.isMarkedForDeletion = true;
+      expect(canUndoDelete(first, canvasState, relationsDictionary, serviceCatalog)).toBe(false);
+
+      holder.removeConnection(second.id, "ServiceB");
+      expect(canUndoDelete(first, canvasState, relationsDictionary, serviceCatalog)).toBe(true);
     });
   });
 });

@@ -139,7 +139,9 @@ export const ZoomControls: React.FC = () => {
             }
             onClick={() => activeCell && arrange(activeCell.id)}
           >
-            {words("instanceComposer.arrange.below")(activeCell ? getShapeName(activeCell) : "…")}
+            {activeCell
+              ? words("instanceComposer.arrange.below")(getShapeName(activeCell))
+              : words("instanceComposer.arrange.below.noSelection")}
           </DropdownItem>
         </DropdownList>
         <DropdownGroup label={words("instanceComposer.arrange.direction")} labelHeadingLevel="h3">

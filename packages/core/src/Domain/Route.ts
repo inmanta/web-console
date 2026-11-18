@@ -29,6 +29,13 @@ export interface Route<K extends RouteKind = RouteKind> {
   path: string;
   generateLabel(params: RouteParams<K>): string;
   environmentRole: EnvironmentRole;
+
+  /**
+   * Whether the page fills the height of the window, like the Instance Composer's canvas,
+   * instead of ending where its content ends. The page frame then fills its content area
+   * (PatternFly's `isContentFilled`).
+   */
+  fillsPage?: boolean;
 }
 
 /**

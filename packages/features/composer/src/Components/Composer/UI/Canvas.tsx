@@ -38,21 +38,20 @@ import {
 import { EntityContextMenu } from "./EntityContextMenu";
 import { EntityNode, EntityNodeData, EntityNodeType } from "./EntityNode";
 import { RelationEdge, RelationEdgeType } from "./RelationEdge";
-import { HeaderColors } from "./entityColors";
+import { entityAccentColors } from "./entityColors";
 
 const nodeTypes = { entity: EntityNode };
 const edgeTypes = { relation: RelationEdge };
 const fitViewOptions = { padding: 0.2, maxZoom: 1 };
 const proOptions = { hideAttribution: true };
 
-type CardData = Omit<EntityNodeData, "shape">;
-
 /**
- * What each card shows that depends on the other shapes: its problems, what is hidden below it,
- * and its relations. Validating a shape refreshes its attribute validation, so this changes the
- * shapes; it runs once per change of the shapes, not on every render or selection.
+ * What each card shows: its shape, and what depends on the other shapes: its problems, what is
+ * hidden below it, and its relations. Validating a shape refreshes its attribute validation, so
+ * this changes the shapes; it runs once per change of the shapes, not on every render or
+ * selection.
  */
-const deriveCardData = (canvasState: Map<string, ServiceEntityShape>): Map<string, CardData> => {
+const deriveCardData = (canvasState: Map<string, ServiceEntityShape>): EntityNodeData[] => {
   const relationCounts = new Map<string, number>();
 
   getLinks(canvasState).forEach(({ source, target }) => {
@@ -60,17 +59,13 @@ const deriveCardData = (canvasState: Map<string, ServiceEntityShape>): Map<strin
     relationCounts.set(target, (relationCounts.get(target) ?? 0) + 1);
   });
 
-  return new Map(
-    Array.from(canvasState.values()).map((shape) => [
-      shape.id,
-      {
-        validationMessages: getValidationMessages(shape, canvasState),
-        hiddenCount: countHiddenLayers(canvasState, shape),
-        relationCount: relationCounts.get(shape.id) ?? 0,
-        hasLayers: getConnectedLayerData(canvasState, shape).shapes.length > 0,
-      },
-    ])
-  );
+  return Array.from(canvasState.values()).map((shape) => ({
+    shape,
+    validationMessages: getValidationMessages(shape, canvasState),
+    hiddenCount: countHiddenLayers(canvasState, shape),
+    relationCount: relationCounts.get(shape.id) ?? 0,
+    hasLayers: getConnectedLayerData(canvasState, shape).shapes.length > 0,
+  }));
 };
 
 /**
@@ -106,7 +101,7 @@ export const Canvas: React.FC = () => {
   // The card data of the current shapes (deriveCardData)
   const cardDataRef = useRef<{
     canvasState: Map<string, ServiceEntityShape>;
-    data: Map<string, CardData>;
+    data: EntityNodeData[];
   }>(null);
 
   // Rebuild the cards whenever the shapes or the selection change. Only a change of the shapes
@@ -121,15 +116,15 @@ export const Canvas: React.FC = () => {
     setNodes((previousNodes) => {
       const measured = new Map(previousNodes.map((node) => [node.id, node.measured]));
 
-      return Array.from(canvasState.values()).map((shape) => ({
-        id: shape.id,
+      return cardData.map((data) => ({
+        id: data.shape.id,
         type: "entity",
-        position: shape.getPosition(),
-        measured: measured.get(shape.id),
-        hidden: shape.isHidden,
-        selected: shape.id === activeCell?.id,
+        position: data.shape.getPosition(),
+        measured: measured.get(data.shape.id),
+        hidden: data.shape.isHidden,
+        selected: data.shape.id === activeCell?.id,
         connectable: editable,
-        data: { shape, ...(cardData.get(shape.id) as CardData) },
+        data,
       }));
     });
   }, [canvasState, activeCell, editable]);
@@ -250,7 +245,12 @@ export const Canvas: React.FC = () => {
 
       return (
         !!source &&
-        checkIfConnectionIsAllowed(source, canvasState.get(link.target), relationsDictionary)
+        checkIfConnectionIsAllowed(
+          source,
+          canvasState.get(link.target),
+          relationsDictionary,
+          canvasState
+        )
       );
     },
     [canvasState, relationsDictionary]
@@ -455,11 +455,11 @@ export const Canvas: React.FC = () => {
         proOptions={proOptions}
       >
         <Background variant={BackgroundVariant.Dots} gap={20} size={1.5} />
-        <MiniMap
+        <MiniMap<EntityNodeType>
           position="top-right"
           style={{ width: 160, height: 100 }}
           ariaLabel={words("instanceComposer.overview")}
-          nodeColor={(node) => HeaderColors[(node as EntityNodeType).data.shape.entityType]}
+          nodeColor={(node) => entityAccentColors[node.data.shape.entityType]}
           pannable
           zoomable
         />

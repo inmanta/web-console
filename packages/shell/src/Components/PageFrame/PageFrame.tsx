@@ -26,11 +26,15 @@ const FullscreenFrame = createGlobalStyle`
 
 interface Props {
   environmentId?: string;
+
+  /** Whether the page fills the height of the window (the route's `fillsPage`). */
+  isContentFilled?: boolean;
 }
 
 export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   environmentId,
+  isContentFilled,
 }) => {
   const {
     onNotificationsToggle,
@@ -58,6 +62,7 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
             isNotificationDrawerExpanded,
           }}
           isManagedSidebar
+          isContentFilled={isContentFilled}
           mainContainerId="primary-app-container"
           breadcrumb={<PageBreadcrumbs />}
           masthead={<Header {...{ onNotificationsToggle }} noEnv={!Boolean(environmentId)} />}

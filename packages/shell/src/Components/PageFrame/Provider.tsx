@@ -20,10 +20,8 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 }) => {
   const { environmentHandler, routeManager } = useContext(DependencyContext);
   const { pathname } = useLocation();
-  const role =
-    environmentRole ??
-    routeManager.getRouteMatchFromUrl(pathname)?.route.environmentRole ??
-    "Required";
+  const matchedRoute = routeManager.getRouteMatchFromUrl(pathname)?.route;
+  const role = environmentRole ?? matchedRoute?.environmentRole ?? "Required";
   const environment = environmentHandler.useSelected();
   const allEnvironments = environmentHandler.useAll();
   const { notifyInfo } = useAppAlert();
@@ -57,7 +55,11 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
     return <Navigate to={routeManager.getUrl("CreateEnvironment", undefined)} replace />;
   }
 
-  return <PageFrame environmentId={environmentId}>{children}</PageFrame>;
+  return (
+    <PageFrame environmentId={environmentId} isContentFilled={matchedRoute?.fillsPage}>
+      {children}
+    </PageFrame>
+  );
 };
 
 const getEnvironmentId = (

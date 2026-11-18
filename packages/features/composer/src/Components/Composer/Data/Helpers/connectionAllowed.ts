@@ -2,23 +2,30 @@ import { ServiceEntityShape } from "../ServiceEntityShape";
 import { RelationsDictionary } from "./createRelationsDictionary";
 
 /**
- * Checks whether a new link between two shapes is allowed on the canvas.
+ * Checks whether a new link between two shapes is allowed on the canvas. A shape staged to be
+ * deleted takes no new links, and the ones staged to be deleted don't count for the limits.
  *
  * @param sourceShape - The shape the link starts from.
  * @param targetShape - The shape that is the potential link target; if undefined, connection is not allowed.
  * @param relationsDictionary - Dictionary describing allowed relations between service entities.
+ * @param canvasState - The shapes on the canvas.
  * @returns `true` if the connection is valid and not already present, otherwise `false`.
  */
 export const checkIfConnectionIsAllowed = (
   sourceShape: ServiceEntityShape,
   targetShape: ServiceEntityShape | undefined,
-  relationsDictionary: RelationsDictionary
+  relationsDictionary: RelationsDictionary,
+  canvasState: Map<string, ServiceEntityShape>
 ): boolean => {
   if (!targetShape) {
     return false;
   }
 
-  if (sourceShape.id === targetShape.id) {
+  if (
+    sourceShape.id === targetShape.id ||
+    sourceShape.isMarkedForDeletion ||
+    targetShape.isMarkedForDeletion
+  ) {
     return false;
   }
 
@@ -52,8 +59,8 @@ export const checkIfConnectionIsAllowed = (
     return false;
   }
 
-  const sourceAllowed = sourceShape.validateConnection(targetShape);
-  const targetAllowed = targetShape.validateConnection(sourceShape);
+  const sourceAllowed = sourceShape.validateConnection(targetShape, canvasState);
+  const targetAllowed = targetShape.validateConnection(sourceShape, canvasState);
 
   return sourceAllowed && targetAllowed;
 };

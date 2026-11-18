@@ -4,6 +4,7 @@ import { CanvasActions } from "../Context";
 import {
   addConnectionsBetweenShapes,
   canRemoveLink,
+  canUndoDelete,
   checkIfConnectionIsAllowed,
   findParentShapeForEmbedded,
   RelationsDictionary,
@@ -78,14 +79,19 @@ export const useCanvasActions = ({
       });
 
       // Take the shapes out of the connections of the shapes that hold them. A relation loaded
-      // from an instance is only recorded on one side, so look at every shape.
+      // from an instance is only recorded on one side, so look at every shape. An existing
+      // instance keeps the relations it was loaded with: the instance taken off the canvas
+      // still exists, and its update would unlink it otherwise.
       canvasState.forEach((otherShape) => {
         if (removedIds.has(otherShape.id)) {
           return;
         }
         otherShape.connections.forEach((connectedIds, relationType) => {
           connectedIds
-            .filter((connectedId) => removedIds.has(connectedId))
+            .filter(
+              (connectedId) =>
+                removedIds.has(connectedId) && !otherShape.recordedRelationIds.has(connectedId)
+            )
             .forEach((connectedId) => otherShape.removeConnection(connectedId, relationType));
         });
         removedIds.forEach((removedId) => otherShape.parentIds.delete(removedId));
@@ -101,6 +107,9 @@ export const useCanvasActions = ({
     };
 
     const markShapeForDeletion: CanvasActions["markShapeForDeletion"] = (shape, marked) => {
+      if (!marked && !canUndoDelete(shape, canvasState, relationsDictionary, serviceCatalog)) {
+        return;
+      }
       withEmbeddedEntities(shape).forEach((markedShape) => {
         markedShape.isMarkedForDeletion = marked;
       });
@@ -108,7 +117,7 @@ export const useCanvasActions = ({
     };
 
     const connectShapes: CanvasActions["connectShapes"] = (source, target) => {
-      if (!checkIfConnectionIsAllowed(source, target, relationsDictionary)) {
+      if (!checkIfConnectionIsAllowed(source, target, relationsDictionary, canvasState)) {
         return;
       }
       addConnectionsBetweenShapes(source, target);

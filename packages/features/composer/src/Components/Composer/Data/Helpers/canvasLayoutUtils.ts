@@ -187,12 +187,17 @@ export const applyLayeredLayout = (
   const anchorBefore = root
     ? root.getPosition()
     : topLeft(shapes.map((shape) => shape.getPosition()));
-  const anchorAfter = root ? laidOut.get(root.id)! : topLeft(Array.from(laidOut.values()));
+  const anchorAfter = (root && laidOut.get(root.id)) || topLeft(Array.from(laidOut.values()));
 
   const movedIds = new Set<string>();
 
   shapes.forEach((shape) => {
-    const { x, y } = laidOut.get(shape.id)!;
+    const position = laidOut.get(shape.id);
+
+    if (!position) {
+      return;
+    }
+    const { x, y } = position;
     const before = shape.getPosition();
     const after = {
       x: Math.round(x - anchorAfter.x + anchorBefore.x),

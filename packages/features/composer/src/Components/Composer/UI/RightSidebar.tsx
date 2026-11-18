@@ -19,9 +19,11 @@ import { CubesIcon } from "@patternfly/react-icons/dist/esm/icons/cubes-icon";
 import { useReactFlow } from "@xyflow/react";
 import styled from "styled-components";
 import { InstanceAttributeModel, words } from "@inmanta/web-console-core";
+import { AttributeClassifier } from "@inmanta/web-console-core/Common";
+import { AttributeValue } from "@inmanta/web-console-ui/Components/AttributeList";
 import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
 import { ComposerContext } from "../Data/Context";
-import { getShapeName } from "../Data/Helpers";
+import { getShapeName, isReadOnlyShape } from "../Data/Helpers";
 import { AttributeSetName, ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { RIGHT_SIDEBAR_WIDTH } from "../config";
 import { EntityForm } from "./EntityForm";
@@ -109,7 +111,7 @@ export const RightSidebar: React.FC = () => {
         <EntityForm
           activeCell={activeCell}
           isDisabled={
-            (activeCell.entityType === "relation" && !activeCell.isNew) ||
+            isReadOnlyShape(activeCell) ||
             // Editing an instance staged to be deleted would be lost with it
             activeCell.isMarkedForDeletion
           }
@@ -143,10 +145,15 @@ export const RightSidebar: React.FC = () => {
   );
 };
 
+// Every attribute of the model is shown, so none is left out as framework metadata
+const classifier = new AttributeClassifier({ includeAllKeys: true });
+
 /**
  * The attributes of a shape as a read-only list: the ones it works on, or a given set of them,
  * like the attribute set that can only be viewed. Embedded entities are shapes of their own,
  * so they are left out; a relation to a shape on the canvas selects it and moves the view to it.
+ * The other values show like an instance's attributes elsewhere (AttributeValue): passwords
+ * masked, JSON and multi-line text in a code block.
  */
 const EntityDetails: React.FC<{
   shape: ServiceEntityShape;
@@ -191,11 +198,14 @@ const EntityDetails: React.FC<{
         );
       });
     }
-    if (value === null || value === undefined || value === "") {
-      return "—";
-    }
+    const [attribute] =
+      value === null || value === undefined ? [] : classifier.classify({ [name]: value });
 
-    return typeof value === "object" ? JSON.stringify(value) : String(value);
+    return attribute ? (
+      <AttributeValue attribute={attribute} />
+    ) : (
+      words("instanceComposer.details.noValue")
+    );
   };
 
   return (

@@ -48,9 +48,7 @@ const createShape = (
     entityType,
     serviceModel,
     instanceAttributes: {},
-    readonly: false,
     isNew,
-    lockedOnCanvas: false,
     relationsDictionary: createRelationsDictionary(catalog),
     rootEntities: {},
     interServiceRelations: {},
@@ -127,7 +125,7 @@ describe("ServiceEntityShape.canHaveConnections", () => {
     childShape.addConnection(parentShape.id, "parent");
     parentShape.addConnection(childShape.id, "child");
 
-    expect(childShape.validateConnection(createShape(catalog, parent))).toBe(false);
+    expect(childShape.validateConnection(createShape(catalog, parent), new Map())).toBe(false);
     expect(childShape.canHaveConnections()).toBe(true);
   });
 });

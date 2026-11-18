@@ -7,6 +7,7 @@ import {
   ServiceOrderItemAction,
   ServiceOrderItemRequest,
   State,
+  words,
 } from "@inmanta/web-console-core";
 import { sanitizeAttributes } from "@inmanta/web-console-core/Common";
 import {
@@ -22,7 +23,7 @@ import {
 } from "./Helpers/connectionValidationUtils";
 import { RelationsDictionary } from "./Helpers/createRelationsDictionary";
 import { findTopRootInstance } from "./Helpers/findTopRootInstance";
-import { getEmbeddedEntityKey } from "./Helpers/shapeUtils";
+import { getEmbeddedEntityKey, getInterServiceRelationKey } from "./Helpers/shapeUtils";
 
 /**
  * Base configuration for a service entity rendered on the composer canvas.
@@ -31,7 +32,6 @@ export interface ServiceEntityBase {
   entityType: EntityShapeType;
   serviceModel: ServiceModel | EmbeddedEntity;
   instanceAttributes: InstanceAttributeModel;
-  readonly: boolean;
   isNew: boolean;
   rootEntities: Record<string, string[]>;
   interServiceRelations: Record<string, string[]>;
@@ -79,7 +79,6 @@ export const getInstanceAttributeSets = (
  * Full configuration used to construct a `ServiceEntityShape`.
  */
 export interface ServiceEntityOptions extends ServiceEntityBase {
-  lockedOnCanvas: boolean;
   relationsDictionary: RelationsDictionary;
 }
 
@@ -128,9 +127,7 @@ export class ServiceEntityShape {
   relationsDictionary: RelationsDictionary;
   instanceAttributes: InstanceAttributeModel;
   sanitizedAttrs: InstanceAttributeModel;
-  readonly: boolean;
   isNew: boolean;
-  lockedOnCanvas: boolean;
   entityType: EntityShapeType;
   hasAttributeValidationErrors: boolean;
   isLayersCollapsed: boolean;
@@ -152,6 +149,12 @@ export class ServiceEntityShape {
   isHidden: boolean;
   parentIds: Set<string>;
 
+  /**
+   * The instances an existing instance relates to as it was loaded. Taking one of them off the
+   * canvas keeps the relation (removeShape), so the update doesn't unlink it.
+   */
+  readonly recordedRelationIds: ReadonlySet<string>;
+
   /** The size the canvas measured for the card, used by the layouts. */
   size: Size;
   private _position: Point;
@@ -168,9 +171,7 @@ export class ServiceEntityShape {
         )
       : initializationOptions.instanceAttributes;
     this.sanitizedAttrs = structuredClone(this.instanceAttributes);
-    this.readonly = initializationOptions.readonly;
     this.isNew = initializationOptions.isNew;
-    this.lockedOnCanvas = initializationOptions.lockedOnCanvas;
     this.entityType = initializationOptions.entityType;
     this.hasAttributeValidationErrors = false;
     this.isLayersCollapsed = false;
@@ -187,6 +188,10 @@ export class ServiceEntityShape {
     this._position = { x: 0, y: 0 };
 
     const { interServiceRelations, embeddedEntities, rootEntities } = initializationOptions;
+
+    this.recordedRelationIds = new Set(
+      initializationOptions.isNew ? [] : Object.values(interServiceRelations).flat()
+    );
 
     // add all existing inter-service relations and embedded entities to the connections map
     Object.entries(interServiceRelations).forEach(([relationType, relationId]) => {
@@ -236,7 +241,9 @@ export class ServiceEntityShape {
       "type" in this.serviceModel && this.serviceModel.type ? this.serviceModel.type : undefined;
     const serviceName = this.serviceModel.name;
 
-    return typeName && serviceName ? `${typeName} - ${serviceName}` : typeName || serviceName;
+    return typeName && serviceName
+      ? words("instanceComposer.label.embeddedAs")(typeName, serviceName)
+      : typeName || serviceName;
   }
 
   /**
@@ -368,6 +375,24 @@ export class ServiceEntityShape {
     return this.connections;
   }
 
+  /**
+   * The ids connected under a relation type that count for its limits: all but the shapes on
+   * the canvas staged to be deleted, which leave the order (getOrderItem). An id that isn't on
+   * the canvas counts: it is a relation the instance has (addInstanceShapes).
+   *
+   * @param relationType - The key of the relation in the connections
+   * @param canvasState - The shapes on the canvas
+   * @returns The connected ids that count
+   */
+  getCountedConnections(
+    relationType: string,
+    canvasState: Map<string, ServiceEntityShape>
+  ): string[] {
+    return (this.connections.get(relationType) || []).filter(
+      (connectedId) => !canvasState.get(connectedId)?.isMarkedForDeletion
+    );
+  }
+
   private getAllowedRelations():
     Record<string, { lower_limit: number; upper_limit: number | null }> | undefined {
     const entityType = this.getEntityType();
@@ -438,7 +463,15 @@ export class ServiceEntityShape {
     );
   }
 
-  validateConnection(targetEntity: ServiceEntityShape): boolean {
+  /**
+   * Whether this shape has room for a link to the target: the models allow the relation, it
+   * isn't locked, and it is below its upper limit, counting only the connections that count
+   * (getCountedConnections).
+   */
+  validateConnection(
+    targetEntity: ServiceEntityShape,
+    canvasState: Map<string, ServiceEntityShape>
+  ): boolean {
     const relationType = targetEntity.getEntityType();
     const allowedRelations = this.getAllowedRelations();
 
@@ -462,7 +495,10 @@ export class ServiceEntityShape {
       return false;
     }
 
-    const existingConnections = this.connections.get(relationKey || relationType) || [];
+    const existingConnections = this.getCountedConnections(
+      relationKey || relationType,
+      canvasState
+    );
 
     // Check if adding this connection would exceed the upper limit
     if (rules.upper_limit !== undefined && rules.upper_limit !== null) {
@@ -478,17 +514,20 @@ export class ServiceEntityShape {
    * Whether this shape is missing required connections: whether getMissingConnections lists any,
    * so the order and the card agree on what is valid.
    */
-  isMissingConnections(): boolean {
-    return this.getMissingConnections().length > 0;
+  isMissingConnections(canvasState: Map<string, ServiceEntityShape>): boolean {
+    return this.getMissingConnections(canvasState).length > 0;
   }
 
   /**
    * Gets a list of missing connections for this shape: the relations and embedded entities
    * below their lower limit, and, for an embedded entity on its own, a parent. An embedded entity
    * can never stand alone: when none of its parents requires it, it still needs one of them.
+   * Shapes staged to be deleted don't count (getCountedConnections).
+   *
+   * @param canvasState - The shapes on the canvas
    * @returns Array of { name: string, missing: number, required: number } objects
    */
-  getMissingConnections(): Array<{
+  getMissingConnections(canvasState: Map<string, ServiceEntityShape>): Array<{
     type: "embedded" | "relation" | "parent";
     entityType: string;
     name: string;
@@ -507,8 +546,8 @@ export class ServiceEntityShape {
     // When an embedded entity is standalone, we want to show which parent entities (core, embedded,
     // or inter-service relations) it is allowed to belong to.
     if (this.entityType === "embedded") {
-      const totalConnections = Array.from(this.connections.values()).reduce(
-        (sum, array) => sum + array.length,
+      const totalConnections = Array.from(this.connections.keys()).reduce(
+        (sum, relationType) => sum + this.getCountedConnections(relationType, canvasState).length,
         0
       );
       if (totalConnections === 0) {
@@ -559,7 +598,11 @@ export class ServiceEntityShape {
     // Check embedded entities
     if ("embedded_entities" in this.serviceModel) {
       for (const embeddedEntity of this.serviceModel.embedded_entities) {
-        const missingConnection = getEmbeddedEntityMissingConnections(this, embeddedEntity);
+        const missingConnection = getEmbeddedEntityMissingConnections(
+          this,
+          embeddedEntity,
+          canvasState
+        );
         if (missingConnection) {
           missing.push({ ...missingConnection, type: "embedded" });
         }
@@ -569,7 +612,11 @@ export class ServiceEntityShape {
     // Check inter-service relations
     if ("inter_service_relations" in this.serviceModel) {
       for (const relation of this.serviceModel.inter_service_relations) {
-        const missingConnection = getInterServiceRelationMissingConnections(this, relation);
+        const missingConnection = getInterServiceRelationMissingConnections(
+          this,
+          relation,
+          canvasState
+        );
         if (missingConnection) {
           missing.push({ ...missingConnection, type: "relation" });
         }
@@ -753,6 +800,11 @@ export class ServiceEntityShape {
   /**
    * Processes inter-service relations for a given shape and returns a new attributes object with relations added.
    * Handles filtering based on isCreating flag.
+   *
+   * A connected shape staged to be deleted leaves the relation. A connected id that isn't on the
+   * canvas stays: it is a relation the instance has, to an instance the composer didn't load or
+   * that was taken off the canvas, and the update replaces the attributes, so leaving it out
+   * would unlink it.
    */
   private processInterServiceRelations(
     shape: ServiceEntityShape,
@@ -769,16 +821,17 @@ export class ServiceEntityShape {
     const processedAttributes = { ...attributes };
 
     interServiceRelations.forEach((relation) => {
+      const relationKey = getInterServiceRelationKey(relation);
       const relationIds: string[] = [];
-      shape.connections.forEach((connectedIds) => {
+      shape.connections.forEach((connectedIds, connectionKey) => {
         connectedIds.forEach((connectedId) => {
           const connectedShape = canvasState.get(connectedId);
-          if (
-            connectedShape?.getEntityType() === relation.entity_type &&
-            // A reference to an instance staged to be deleted leaves the order with it
-            !connectedShape.isMarkedForDeletion &&
-            !relationIds.includes(connectedId)
-          ) {
+          const isPartOfRelation = connectedShape
+            ? connectedShape.getEntityType() === relation.entity_type &&
+              !connectedShape.isMarkedForDeletion
+            : connectionKey === relationKey;
+
+          if (isPartOfRelation && !relationIds.includes(connectedId)) {
             relationIds.push(connectedId);
           }
         });

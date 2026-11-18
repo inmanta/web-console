@@ -44,9 +44,7 @@ describe("checkIfConnectionIsAllowed", () => {
       entityType: "core",
       serviceModel: createMockServiceModel(entityName),
       instanceAttributes: {},
-      readonly: false,
       isNew: true,
-      lockedOnCanvas: false,
       relationsDictionary,
       rootEntities: {},
       interServiceRelations: {},
@@ -56,7 +54,12 @@ describe("checkIfConnectionIsAllowed", () => {
   it("should return false when targetShape is undefined", () => {
     const sourceShape = createShape("source-1", "ServiceA");
 
-    const result = checkIfConnectionIsAllowed(sourceShape, undefined, bothWaysDictionary);
+    const result = checkIfConnectionIsAllowed(
+      sourceShape,
+      undefined,
+      bothWaysDictionary,
+      new Map()
+    );
 
     expect(result).toBe(false);
   });
@@ -64,7 +67,7 @@ describe("checkIfConnectionIsAllowed", () => {
   it("should return false when source and target are the same", () => {
     const shape = createShape("same-1", "ServiceA");
 
-    const result = checkIfConnectionIsAllowed(shape, shape, bothWaysDictionary);
+    const result = checkIfConnectionIsAllowed(shape, shape, bothWaysDictionary, new Map());
 
     expect(result).toBe(false);
   });
@@ -73,7 +76,7 @@ describe("checkIfConnectionIsAllowed", () => {
     const sourceShape = createShape("source-1", "ServiceA", {});
     const targetShape = createShape("target-1", "ServiceB", {});
 
-    const result = checkIfConnectionIsAllowed(sourceShape, targetShape, {});
+    const result = checkIfConnectionIsAllowed(sourceShape, targetShape, {}, new Map());
 
     expect(result).toBe(false);
   });
@@ -84,7 +87,12 @@ describe("checkIfConnectionIsAllowed", () => {
     sourceShape.addConnection("target-1", "ServiceB");
     const validateSpy = vi.spyOn(sourceShape, "validateConnection");
 
-    const result = checkIfConnectionIsAllowed(sourceShape, targetShape, bothWaysDictionary);
+    const result = checkIfConnectionIsAllowed(
+      sourceShape,
+      targetShape,
+      bothWaysDictionary,
+      new Map()
+    );
 
     expect(result).toBe(false);
     // The "already connected" check short-circuits before validation
@@ -97,11 +105,16 @@ describe("checkIfConnectionIsAllowed", () => {
     const sourceSpy = vi.spyOn(sourceShape, "validateConnection");
     const targetSpy = vi.spyOn(targetShape, "validateConnection");
 
-    const result = checkIfConnectionIsAllowed(sourceShape, targetShape, bothWaysDictionary);
+    const result = checkIfConnectionIsAllowed(
+      sourceShape,
+      targetShape,
+      bothWaysDictionary,
+      new Map()
+    );
 
     expect(result).toBe(true);
-    expect(sourceSpy).toHaveBeenCalledWith(targetShape);
-    expect(targetSpy).toHaveBeenCalledWith(sourceShape);
+    expect(sourceSpy).toHaveBeenCalledWith(targetShape, expect.any(Map));
+    expect(targetSpy).toHaveBeenCalledWith(sourceShape, expect.any(Map));
   });
 
   it("should match dictionary keys case-insensitively", () => {
@@ -112,7 +125,7 @@ describe("checkIfConnectionIsAllowed", () => {
     const sourceShape = createShape("source-1", "ServiceA", dictionary);
     const targetShape = createShape("target-1", "ServiceB", dictionary);
 
-    const result = checkIfConnectionIsAllowed(sourceShape, targetShape, dictionary);
+    const result = checkIfConnectionIsAllowed(sourceShape, targetShape, dictionary, new Map());
 
     expect(result).toBe(true);
   });
@@ -122,7 +135,12 @@ describe("checkIfConnectionIsAllowed", () => {
     const targetShape = createShape("target-1", "ServiceB");
     vi.spyOn(sourceShape, "validateConnection").mockReturnValue(false);
 
-    const result = checkIfConnectionIsAllowed(sourceShape, targetShape, bothWaysDictionary);
+    const result = checkIfConnectionIsAllowed(
+      sourceShape,
+      targetShape,
+      bothWaysDictionary,
+      new Map()
+    );
 
     expect(result).toBe(false);
   });
@@ -132,7 +150,12 @@ describe("checkIfConnectionIsAllowed", () => {
     const targetShape = createShape("target-1", "ServiceB");
     vi.spyOn(targetShape, "validateConnection").mockReturnValue(false);
 
-    const result = checkIfConnectionIsAllowed(sourceShape, targetShape, bothWaysDictionary);
+    const result = checkIfConnectionIsAllowed(
+      sourceShape,
+      targetShape,
+      bothWaysDictionary,
+      new Map()
+    );
 
     expect(result).toBe(false);
   });
@@ -142,8 +165,51 @@ describe("checkIfConnectionIsAllowed", () => {
     const targetShape = createShape("target-2", "ServiceB");
     sourceShape.addConnection("target-1", "ServiceB");
 
-    const result = checkIfConnectionIsAllowed(sourceShape, targetShape, bothWaysDictionary);
+    const result = checkIfConnectionIsAllowed(
+      sourceShape,
+      targetShape,
+      bothWaysDictionary,
+      new Map()
+    );
 
     expect(result).toBe(false);
+  });
+
+  it("should refuse a link to or from a shape staged to be deleted", () => {
+    const sourceShape = createShape("source-1", "ServiceA");
+    const targetShape = createShape("target-1", "ServiceB");
+    const canvasState = new Map([
+      [sourceShape.id, sourceShape],
+      [targetShape.id, targetShape],
+    ]);
+
+    targetShape.isMarkedForDeletion = true;
+    expect(
+      checkIfConnectionIsAllowed(sourceShape, targetShape, bothWaysDictionary, canvasState)
+    ).toBe(false);
+    expect(
+      checkIfConnectionIsAllowed(targetShape, sourceShape, bothWaysDictionary, canvasState)
+    ).toBe(false);
+  });
+
+  it("should not count a shape staged to be deleted for the upper limit", () => {
+    const sourceShape = createShape("source-1", "ServiceA");
+    const deletedShape = createShape("deleted-1", "ServiceB");
+    const targetShape = createShape("target-1", "ServiceB");
+    const canvasState = new Map([
+      [sourceShape.id, sourceShape],
+      [deletedShape.id, deletedShape],
+      [targetShape.id, targetShape],
+    ]);
+
+    sourceShape.addConnection(deletedShape.id, "ServiceB");
+    expect(
+      checkIfConnectionIsAllowed(sourceShape, targetShape, bothWaysDictionary, canvasState)
+    ).toBe(false);
+
+    deletedShape.isMarkedForDeletion = true;
+    expect(
+      checkIfConnectionIsAllowed(sourceShape, targetShape, bothWaysDictionary, canvasState)
+    ).toBe(true);
   });
 });

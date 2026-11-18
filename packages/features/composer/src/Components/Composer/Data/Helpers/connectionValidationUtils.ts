@@ -38,7 +38,8 @@ const buildConnectionCheckConfig = (
  */
 const getMissingConnectionDetails = (
   shape: ServiceEntityShape,
-  configuration: ConnectionCheckConfig
+  configuration: ConnectionCheckConfig,
+  canvasState: Map<string, ServiceEntityShape>
 ): { entityType: string; name: string; missing: number; required: number } | null => {
   // Skip read-only for existing entities
   if (configuration.skipReadOnly) {
@@ -50,8 +51,10 @@ const getMissingConnectionDetails = (
     return null;
   }
 
-  const connectionsForType = shape.connections.get(configuration.connectionKey) || [];
-  const connectedCount = connectionsForType.length;
+  const connectedCount = shape.getCountedConnections(
+    configuration.connectionKey,
+    canvasState
+  ).length;
 
   if (connectedCount < configuration.lowerLimit) {
     return {
@@ -70,7 +73,8 @@ const getMissingConnectionDetails = (
  */
 export const getEmbeddedEntityMissingConnections = (
   shape: ServiceEntityShape,
-  embeddedEntity: EmbeddedEntity
+  embeddedEntity: EmbeddedEntity,
+  canvasState: Map<string, ServiceEntityShape>
 ): { entityType: string; name: string; missing: number; required: number } | null => {
   const configuration = buildConnectionCheckConfig(
     shape,
@@ -79,7 +83,7 @@ export const getEmbeddedEntityMissingConnections = (
     getEmbeddedEntityKey(embeddedEntity)
   );
 
-  return getMissingConnectionDetails(shape, configuration);
+  return getMissingConnectionDetails(shape, configuration, canvasState);
 };
 
 /**
@@ -87,7 +91,8 @@ export const getEmbeddedEntityMissingConnections = (
  */
 export const getInterServiceRelationMissingConnections = (
   shape: ServiceEntityShape,
-  relation: InterServiceRelation
+  relation: InterServiceRelation,
+  canvasState: Map<string, ServiceEntityShape>
 ): { entityType: string; name: string; missing: number; required: number } | null => {
   const configuration = buildConnectionCheckConfig(
     shape,
@@ -96,5 +101,5 @@ export const getInterServiceRelationMissingConnections = (
     relation.name
   );
 
-  return getMissingConnectionDetails(shape, configuration);
+  return getMissingConnectionDetails(shape, configuration, canvasState);
 };

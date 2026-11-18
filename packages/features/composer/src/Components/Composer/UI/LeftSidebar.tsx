@@ -66,6 +66,9 @@ interface PaletteGroup {
 
 type PaletteTab = "new" | "inventory";
 
+const isPaletteTab = (key: string | number): key is PaletteTab =>
+  key === "new" || key === "inventory";
+
 /**
  * The names of an embedded entity's row: its type, and the attribute it is embedded as.
  */
@@ -74,10 +77,15 @@ const getEmbeddedNames = (embeddedEntity: EmbeddedEntity) => {
   const embeddedAs = typeName && embeddedEntity.name;
 
   return {
-    label: embeddedAs ? `${typeName} - ${embeddedAs}` : typeName || embeddedEntity.name,
+    label: embeddedAs
+      ? words("instanceComposer.label.embeddedAs")(typeName, embeddedAs)
+      : typeName || embeddedEntity.name,
     name: typeName || embeddedEntity.name,
     detail: embeddedAs
-      ? `${words("instanceComposer.label.embedded")} · ${embeddedAs}`
+      ? words("instanceComposer.label.withName")(
+          words("instanceComposer.label.embedded"),
+          embeddedAs
+        )
       : words("instanceComposer.label.embedded"),
   };
 };
@@ -274,7 +282,11 @@ export const LeftSidebar: React.FC = () => {
     >
       <Tabs
         activeKey={activeTab}
-        onSelect={(_event, key) => setActiveTab(key as PaletteTab)}
+        onSelect={(_event, key) => {
+          if (isPaletteTab(key)) {
+            setActiveTab(key);
+          }
+        }}
         aria-label={words("instanceComposer.palette")}
         isFilled
       >
@@ -579,13 +591,6 @@ const Sidebar = styled.aside`
 
   .palette-row-reason {
     flex: none;
-  }
-
-  // Every row has an add button, so it stays subtle until it is pointed at or focused.
-  .palette-row-add {
-    --pf-v6-c-button--m-plain__icon--Color: var(--pf-t--global--icon--color--subtle);
-    --pf-v6-c-button--hover__icon--Color: var(--pf-t--global--icon--color--regular);
-    --pf-v6-c-button--m-clicked__icon--Color: var(--pf-t--global--icon--color--regular);
   }
 
   .palette-row-text {

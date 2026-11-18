@@ -68,6 +68,13 @@ const getEmbeddedAttributeSets = (
     : { active: embeddedAttributes };
 
 /**
+ * Whether a value is an object of attributes, such as an embedded entity's entry; an empty one,
+ * like a placeholder's, counts.
+ */
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+/**
  * Matches the entries of the active set's data for an embedded entity to the entries the
  * shapes are created from: by their key attributes when they have values, by position
  * otherwise. A keyed entry the active set doesn't hold matches nothing: it only exists in
@@ -82,32 +89,20 @@ const matchActiveEntries = (
   const activeEntries = Array.isArray(activeData) ? activeData : [activeData];
   const activeByKey = new Map<string, Record<string, unknown>>();
 
-  activeEntries.forEach((entry) => {
-    if (typeof entry !== "object" || entry === null) {
-      return;
-    }
-
-    const key = getEmbeddedEntityCacheKey(
-      rootEntityId,
-      embeddedEntity,
-      entry as Record<string, unknown>
-    );
+  activeEntries.filter(isRecord).forEach((entry) => {
+    const key = getEmbeddedEntityCacheKey(rootEntityId, embeddedEntity, entry);
 
     if (key && !activeByKey.has(key)) {
-      activeByKey.set(key, entry as Record<string, unknown>);
+      activeByKey.set(key, entry);
     }
   });
 
   return chosenEntries.map((entry, index) => {
-    if (typeof entry !== "object" || entry === null) {
+    if (!isRecord(entry)) {
       return undefined;
     }
 
-    const key = getEmbeddedEntityCacheKey(
-      rootEntityId,
-      embeddedEntity,
-      entry as Record<string, unknown>
-    );
+    const key = getEmbeddedEntityCacheKey(rootEntityId, embeddedEntity, entry);
 
     if (key) {
       return activeByKey.get(key);
@@ -116,9 +111,7 @@ const matchActiveEntries = (
     // Positions line up with the raw data, so a gap on one side doesn't shift the rest
     const positional = activeEntries[index];
 
-    return typeof positional === "object" && positional !== null
-      ? (positional as Record<string, unknown>)
-      : undefined;
+    return isRecord(positional) ? positional : undefined;
   });
 };
 
@@ -194,12 +187,11 @@ export const createEmbeddedEntityShapes = (
     ? matchActiveEntries(setsContext.activeData, dataArray, rootEntityId, embeddedEntity)
     : [];
 
-  dataArray.forEach((data, index) => {
-    if (typeof data !== "object" || data === null) {
+  dataArray.forEach((embeddedAttributes, index) => {
+    if (!isRecord(embeddedAttributes)) {
       return;
     }
 
-    const embeddedAttributes = data as Record<string, unknown>;
     // Skip read-only embedded entities
     if (embeddedEntity.modifier === "r") {
       return;
@@ -306,9 +298,7 @@ export const createEmbeddedEntityShapes = (
 
     const shapeOptions: ServiceEntityOptions = {
       entityType: "embedded",
-      readonly: false,
       isNew,
-      lockedOnCanvas: false,
       id: embeddedId,
       relationsDictionary,
       serviceModel: embeddedEntity,
@@ -415,9 +405,7 @@ export const initializeCanvasFromInstance = (
 
     const shapeOptions: ServiceEntityOptions = {
       entityType,
-      readonly: false,
       isNew: isNewEntity,
-      lockedOnCanvas: false,
       id: instance.id,
       relationsDictionary,
       serviceModel,

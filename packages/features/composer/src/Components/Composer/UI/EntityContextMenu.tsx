@@ -5,7 +5,7 @@ import { TrashIcon } from "@patternfly/react-icons/dist/esm/icons/trash-icon";
 import { UndoIcon } from "@patternfly/react-icons/dist/esm/icons/undo-icon";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
-import { getRemoveActions, getShapeName } from "../Data/Helpers";
+import { canUndoDelete, getRemoveActions, getShapeName } from "../Data/Helpers";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 
 interface Props {
@@ -25,7 +25,8 @@ interface Props {
  * can't simply be removed. A new shape, or an existing instance other than the one being edited,
  * can be removed from the canvas: nothing is sent to the orchestrator for it. An existing
  * service or relation can be deleted permanently: the card stays on the canvas, marked, and the
- * order deletes the instance on deploy; the menu of a marked card undoes the delete. When the
+ * order deletes the instance on deploy; the menu of a marked card undoes the delete, unless a
+ * related instance has no room for it anymore (canUndoDelete). When the
  * relations require the shape, the menu says it can't be removed (getRemoveActions).
  */
 export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => {
@@ -40,6 +41,9 @@ export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => 
     serviceCatalog,
     serviceInstanceId
   );
+  const canUndo =
+    shape.isMarkedForDeletion &&
+    canUndoDelete(shape, canvasState, relationsDictionary, serviceCatalog);
 
   // Close on a click outside the menu, or on Escape
   useEffect(() => {
@@ -87,7 +91,12 @@ export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => 
           {shape.isMarkedForDeletion ? (
             <MenuItem
               icon={<UndoIcon />}
-              description={words("instanceComposer.contextMenu.undoDelete.description")}
+              isDisabled={!canUndo}
+              description={words(
+                canUndo
+                  ? "instanceComposer.contextMenu.undoDelete.description"
+                  : "instanceComposer.contextMenu.cannotUndoDelete.description"
+              )}
               onClick={() => markForDeletion(false)}
             >
               {words("instanceComposer.contextMenu.undoDelete")}

@@ -17,7 +17,7 @@ export const getValidationMessages = (
   shape: ServiceEntityShape,
   canvasState: Map<string, ServiceEntityShape>
 ): string[] => {
-  const messages = shape.getMissingConnections().map((connection) => {
+  const messages = shape.getMissingConnections(canvasState).map((connection) => {
     const displayName =
       connection.entityType && connection.entityType !== connection.name
         ? `${connection.name} (${connection.entityType})`
@@ -41,7 +41,7 @@ export const getValidationMessages = (
     const hasInvalidCollapsed = getConnectedLayerData(canvasState, shape).shapes.some((child) => {
       child.validateAttributes();
 
-      return child.isMissingConnections() || child.hasAttributeValidationErrors;
+      return child.isMissingConnections(canvasState) || child.hasAttributeValidationErrors;
     });
 
     if (hasInvalidCollapsed) {

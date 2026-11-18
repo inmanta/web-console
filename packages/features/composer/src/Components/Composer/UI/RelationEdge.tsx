@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Button, Icon } from "@patternfly/react-core";
 import { TimesIcon } from "@patternfly/react-icons/dist/esm/icons/times-icon";
 import {
   BaseEdge,
@@ -131,36 +132,36 @@ export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
       <circle cx={to.x} cy={to.y} r={3} className="relation-edge-end" />
       {canRemove && (
         <EdgeLabelRenderer>
-          <RemoveButton
-            type="button"
+          <RemoveButtonPosition
             className="nodrag nopan"
             style={{ transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)` }}
-            aria-label={words("instanceComposer.link.remove")(
-              getShapeName(sourceShape),
-              getShapeName(targetShape)
-            )}
-            onClick={data.onRemove}
           >
-            <TimesIcon />
-          </RemoveButton>
+            <Button
+              variant="plain"
+              size="sm"
+              icon={
+                <Icon status="danger">
+                  <TimesIcon />
+                </Icon>
+              }
+              aria-label={words("instanceComposer.link.remove")(
+                getShapeName(sourceShape),
+                getShapeName(targetShape)
+              )}
+              onClick={data.onRemove}
+            />
+          </RemoveButtonPosition>
         </EdgeLabelRenderer>
       )}
     </>
   );
 };
 
-const RemoveButton = styled.button`
+// Puts the remove button on the middle of the line, on a background so the line doesn't run
+// through it.
+const RemoveButtonPosition = styled.div`
   position: absolute;
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 2px solid var(--pf-t--global--icon--color--status--danger--default);
   border-radius: 50%;
   background: var(--pf-t--global--background--color--primary--default);
-  color: var(--pf-t--global--icon--color--status--danger--default);
-  font-size: 10px;
-  cursor: pointer;
   pointer-events: all;
 `;

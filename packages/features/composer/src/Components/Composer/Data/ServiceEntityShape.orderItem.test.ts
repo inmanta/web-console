@@ -72,9 +72,7 @@ describe("ServiceEntityShape order item serialization", () => {
       entityType: "core",
       serviceModel: parentModel,
       instanceAttributes: {},
-      readonly: false,
       isNew: true,
-      lockedOnCanvas: false,
       relationsDictionary: {},
       rootEntities: {},
       interServiceRelations: {},
@@ -86,9 +84,7 @@ describe("ServiceEntityShape order item serialization", () => {
       entityType: "embedded",
       serviceModel: embeddedEntity,
       instanceAttributes: {},
-      readonly: false,
       isNew: true,
-      lockedOnCanvas: false,
       relationsDictionary: {},
       rootEntities: {},
       interServiceRelations: { DatabaseService: ["relation-1"] },
@@ -100,9 +96,7 @@ describe("ServiceEntityShape order item serialization", () => {
       entityType: "relation",
       serviceModel: relationModel,
       instanceAttributes: {},
-      readonly: false,
       isNew: true,
-      lockedOnCanvas: false,
       relationsDictionary: {},
       rootEntities: {},
       interServiceRelations: {},
@@ -128,9 +122,7 @@ describe("ServiceEntityShape order item serialization", () => {
       entityType: "core",
       serviceModel: createMockServiceModel("ParentService"),
       instanceAttributes: { name: "keeps-its-attributes" },
-      readonly: false,
       isNew: false,
-      lockedOnCanvas: false,
       relationsDictionary: {},
       rootEntities: {},
       interServiceRelations: {},
@@ -159,9 +151,7 @@ describe("ServiceEntityShape order item serialization", () => {
       entityType: "core",
       serviceModel: parentModel,
       instanceAttributes: { database: "relation-1" },
-      readonly: false,
       isNew: false,
-      lockedOnCanvas: false,
       relationsDictionary: {},
       rootEntities: {},
       interServiceRelations: { DatabaseService: ["relation-1"] },
@@ -172,9 +162,7 @@ describe("ServiceEntityShape order item serialization", () => {
       entityType: "relation",
       serviceModel: createMockServiceModel("DatabaseService"),
       instanceAttributes: {},
-      readonly: false,
       isNew: false,
-      lockedOnCanvas: false,
       relationsDictionary: {},
       rootEntities: {},
       interServiceRelations: {},
@@ -193,5 +181,26 @@ describe("ServiceEntityShape order item serialization", () => {
 
     // The deploy deletes the instance, so the parent's update doesn't reference it any more
     expect(parentShape.getOrderItem(canvasState)?.attributes?.database ?? null).toBeNull();
+  });
+
+  it("keeps a relation to an instance that isn't on the canvas", () => {
+    // Such as an instance one level further than the composer loads, or one taken off the canvas
+    const relation = createMockInterServiceRelation("database", "DatabaseService");
+    const parentShape = new ServiceEntityShape({
+      id: "core-1",
+      entityType: "relation",
+      serviceModel: createMockServiceModel("ParentService", {
+        inter_service_relations: [relation],
+      }),
+      instanceAttributes: { database: "relation-1" },
+      isNew: false,
+      relationsDictionary: {},
+      rootEntities: {},
+      interServiceRelations: { DatabaseService: ["relation-1"] },
+      embeddedEntities: {},
+    });
+    const canvasState = new Map<string, ServiceEntityShape>([["core-1", parentShape]]);
+
+    expect(parentShape.getOrderItem(canvasState)?.attributes?.database).toBe("relation-1");
   });
 });
