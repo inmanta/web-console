@@ -6,7 +6,7 @@ import {
   Edge,
   EdgeLabelRenderer,
   EdgeProps,
-  getSmoothStepPath,
+  getBezierPath,
   InternalNode,
   Position,
   useInternalNode,
@@ -14,11 +14,21 @@ import {
 import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
-import { canRemoveLink, getShapeName } from "../Data/Helpers";
+import {
+  canRemoveLink,
+  CardBox,
+  CardSide,
+  getLinkAnchors,
+  getShapeName,
+  LayoutAxis,
+} from "../Data/Helpers";
 
 export type RelationEdgeType = Edge<
   {
     isActive: boolean;
+
+    /** The direction the canvas is laid out in, which decides the sides the line joins. */
+    layoutAxis: LayoutAxis;
 
     /** Removes the relation, keeping the focus in the canvas. */
     onRemove: () => void;
@@ -26,67 +36,22 @@ export type RelationEdgeType = Edge<
   "relation"
 >;
 
-interface Anchor {
-  x: number;
-  y: number;
-  position: Position;
-}
+const positions: Record<CardSide, Position> = {
+  left: Position.Left,
+  right: Position.Right,
+  top: Position.Top,
+  bottom: Position.Bottom,
+};
 
 /**
- * Picks the sides of the two cards that face each other: left and right when the cards
- * are further apart horizontally than vertically, otherwise top and bottom.
+ * Where a card is on the canvas and how big it is, as React Flow last measured it.
  */
-const getAnchors = (source: InternalNode, target: InternalNode): [Anchor, Anchor] => {
-  const box = (node: InternalNode) => {
-    const width = node.measured.width ?? 0;
-    const height = node.measured.height ?? 0;
-
-    return {
-      width,
-      height,
-      x: node.internals.positionAbsolute.x + width / 2,
-      y: node.internals.positionAbsolute.y + height / 2,
-    };
-  };
-  const from = box(source);
-  const to = box(target);
-  const dx = to.x - from.x;
-  const dy = to.y - from.y;
-  const horizontalGap = Math.abs(dx) - (from.width + to.width) / 2;
-  const verticalGap = Math.abs(dy) - (from.height + to.height) / 2;
-
-  if (horizontalGap >= verticalGap) {
-    const towards = dx >= 0 ? 1 : -1;
-
-    return [
-      {
-        x: from.x + (towards * from.width) / 2,
-        y: from.y,
-        position: towards > 0 ? Position.Right : Position.Left,
-      },
-      {
-        x: to.x - (towards * to.width) / 2,
-        y: to.y,
-        position: towards > 0 ? Position.Left : Position.Right,
-      },
-    ];
-  }
-
-  const towards = dy >= 0 ? 1 : -1;
-
-  return [
-    {
-      x: from.x,
-      y: from.y + (towards * from.height) / 2,
-      position: towards > 0 ? Position.Bottom : Position.Top,
-    },
-    {
-      x: to.x,
-      y: to.y - (towards * to.height) / 2,
-      position: towards > 0 ? Position.Top : Position.Bottom,
-    },
-  ];
-};
+const getCardBox = (node: InternalNode): CardBox => ({
+  x: node.internals.positionAbsolute.x,
+  y: node.internals.positionAbsolute.y,
+  width: node.measured.width ?? 0,
+  height: node.measured.height ?? 0,
+});
 
 /**
  * The line between two connected shapes, from parent to child. When it is hovered or
@@ -110,15 +75,20 @@ export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
     return null;
   }
 
-  const [from, to] = getAnchors(sourceNode, targetNode);
-  const [path, labelX, labelY] = getSmoothStepPath({
+  // A curve rather than right angles: lines that leave the same card spread out right away
+  // instead of sharing a segment, so each one can be followed to its end.
+  const [from, to] = getLinkAnchors(
+    getCardBox(sourceNode),
+    getCardBox(targetNode),
+    data?.layoutAxis ?? "horizontal"
+  );
+  const [path, labelX, labelY] = getBezierPath({
     sourceX: from.x,
     sourceY: from.y,
-    sourcePosition: from.position,
+    sourcePosition: positions[from.side],
     targetX: to.x,
     targetY: to.y,
-    targetPosition: to.position,
-    borderRadius: 8,
+    targetPosition: positions[to.side],
   });
 
   const canRemove =
