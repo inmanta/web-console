@@ -17,10 +17,8 @@ def methodOfJob = 'of the job'
 // In a multibranch job, JOB_BASE_NAME is the branch; the job's own name is the one above it.
 def jobName = env.BRANCH_NAME ? env.JOB_NAME.tokenize('/')[-2] : env.JOB_BASE_NAME
 // AUTH_METHOD is unset on a job's first build, before Jenkins has read the parameter from this file.
+// Checked in the first stage, once Jenkins has registered the parameter.
 def methodName = params.AUTH_METHOD && params.AUTH_METHOD != methodOfJob ? params.AUTH_METHOD : methodByJob[jobName]
-if (!startupSecondsByMethod.containsKey(methodName)) {
-    error("No authentication method for the job '${jobName}': set AUTH_METHOD, or name the job one of ${methodByJob.keySet().join(', ')}.")
-}
 def authMethod = [name: methodName, startupSeconds: startupSecondsByMethod[methodName]]
 
 pipeline {
@@ -48,6 +46,9 @@ pipeline {
         stage('Auth: Checkout') {
             steps {
                 script {
+                    if (!startupSecondsByMethod.containsKey(methodName)) {
+                        error("No authentication method for the job '${jobName}': set AUTH_METHOD, or name the job one of ${methodByJob.keySet().join(', ')}.")
+                    }
                     // Shows in the build history which runs tested another method than the job's.
                     if (methodName != methodByJob[jobName]) {
                         currentBuild.displayName = "#${env.BUILD_NUMBER} ${methodName}"
