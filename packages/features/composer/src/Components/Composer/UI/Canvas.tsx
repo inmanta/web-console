@@ -18,9 +18,11 @@ import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import {
   canRemoveLink,
+  CardBox,
   checkIfConnectionIsAllowed,
   countHiddenLayers,
   getConnectedLayerData,
+  getLayoutAxis,
   getLinks,
   getRemoveActions,
   getShapeName,
@@ -37,7 +39,7 @@ import {
 } from "../config";
 import { EntityContextMenu } from "./EntityContextMenu";
 import { EntityNode, EntityNodeData, EntityNodeType } from "./EntityNode";
-import { RelationEdge, RelationEdgeType } from "./RelationEdge";
+import { getCardBox, RelationEdge, RelationEdgeType } from "./RelationEdge";
 import { entityAccentColors } from "./entityColors";
 
 const nodeTypes = { entity: EntityNode };
@@ -87,6 +89,17 @@ export const Canvas: React.FC = () => {
   } = useContext(ComposerContext);
   const { screenToFlowPosition, flowToScreenPosition, getInternalNode } = useReactFlow();
   const isConnecting = useStore((state) => state.connection.inProgress);
+  // Read from where the cards are now, so the lines follow a drag or an Arrange
+  const layoutAxis = useStore((state) =>
+    getLayoutAxis(
+      state.edges.flatMap((edge): Array<[CardBox, CardBox]> => {
+        const source = state.nodeLookup.get(edge.source);
+        const target = state.nodeLookup.get(edge.target);
+
+        return source && target && !edge.hidden ? [[getCardBox(source), getCardBox(target)]] : [];
+      })
+    )
+  );
   const addPaletteItem = useAddPaletteItem();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [nodes, setNodes] = useState<EntityNodeType[]>([]);
@@ -164,12 +177,13 @@ export const Canvas: React.FC = () => {
             ),
             data: {
               isActive: link.id === hoveredEdgeId || link.id === selectedEdgeId,
+              layoutAxis,
               onRemove: () => removeRelation(source, target),
             },
           },
         ];
       }),
-    [canvasState, hoveredEdgeId, selectedEdgeId, removeRelation]
+    [canvasState, hoveredEdgeId, selectedEdgeId, layoutAxis, removeRelation]
   );
 
   // Moving or measuring a card writes straight to its shape. Neither changes the order,
