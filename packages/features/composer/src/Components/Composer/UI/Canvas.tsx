@@ -39,7 +39,7 @@ import {
 } from "../config";
 import { EntityContextMenu } from "./EntityContextMenu";
 import { EntityNode, EntityNodeData, EntityNodeType } from "./EntityNode";
-import { getCardBox, RelationEdge, RelationEdgeType } from "./RelationEdge";
+import { RelationEdge, RelationEdgeType } from "./RelationEdge";
 import { entityAccentColors } from "./entityColors";
 
 const nodeTypes = { entity: EntityNode };
@@ -89,20 +89,35 @@ export const Canvas: React.FC = () => {
   } = useContext(ComposerContext);
   const { screenToFlowPosition, flowToScreenPosition, getInternalNode } = useReactFlow();
   const isConnecting = useStore((state) => state.connection.inProgress);
-  // Read from where the cards are now, so the lines follow a drag or an Arrange
-  const layoutAxis = useStore((state) =>
-    getLayoutAxis(
-      state.edges.flatMap((edge): Array<[CardBox, CardBox]> => {
-        const source = state.nodeLookup.get(edge.source);
-        const target = state.nodeLookup.get(edge.target);
-
-        return source && target && !edge.hidden ? [[getCardBox(source), getCardBox(target)]] : [];
-      })
-    )
-  );
   const addPaletteItem = useAddPaletteItem();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [nodes, setNodes] = useState<EntityNodeType[]>([]);
+
+  // Read from where the visible cards are now, so the lines follow a drag or an Arrange. The
+  // cards change on a move or a measurement, not on a pan or a zoom.
+  const layoutAxis = useMemo(() => {
+    const boxes = new Map(
+      nodes
+        .filter((node) => !node.hidden)
+        .map((node): [string, CardBox] => [
+          node.id,
+          {
+            ...node.position,
+            width: node.measured?.width ?? 0,
+            height: node.measured?.height ?? 0,
+          },
+        ])
+    );
+
+    return getLayoutAxis(
+      getLinks(canvasState).flatMap((link): Array<[CardBox, CardBox]> => {
+        const source = boxes.get(link.source);
+        const target = boxes.get(link.target);
+
+        return source && target ? [[source, target]] : [];
+      })
+    );
+  }, [nodes, canvasState]);
   const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   // Read out by screen readers; a new selection clears it

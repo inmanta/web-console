@@ -46,7 +46,7 @@ const positions: Record<CardSide, Position> = {
 /**
  * Where a card is on the canvas and how big it is, as React Flow last measured it.
  */
-export const getCardBox = (node: InternalNode): CardBox => ({
+const getCardBox = (node: InternalNode): CardBox => ({
   x: node.internals.positionAbsolute.x,
   y: node.internals.positionAbsolute.y,
   width: node.measured.width ?? 0,

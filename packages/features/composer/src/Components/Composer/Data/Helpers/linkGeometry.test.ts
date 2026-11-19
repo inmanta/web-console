@@ -44,6 +44,19 @@ describe("getLinkAnchors", () => {
       "top",
     ]);
   });
+
+  it("joins overlapping cards on the axis they overlap least on, whatever the layout axis", () => {
+    // Overlapping more horizontally than vertically
+    expect(getLinkAnchors(parent, card(100, 20), "horizontal")).toEqual([
+      { x: 140, y: 50, side: "bottom" },
+      { x: 240, y: 20, side: "top" },
+    ]);
+    // Overlapping more vertically than horizontally
+    expect(getLinkAnchors(parent, card(250, 5), "vertical")).toEqual([
+      { x: 280, y: 25, side: "right" },
+      { x: 250, y: 30, side: "left" },
+    ]);
+  });
 });
 
 describe("getLayoutAxis", () => {
@@ -57,6 +70,34 @@ describe("getLayoutAxis", () => {
     const row = [-480, -160, 160, 480].map((x) => card(x, 170));
 
     expect(getLayoutAxis(row.map((child) => [parent, child]))).toBe("vertical");
+  });
+
+  it("follows the majority of the links, and reads left to right on a tie", () => {
+    const beside = card(400, 0);
+    const besideAgain = card(-400, 10);
+    const below = card(0, 200);
+    const belowAgain = card(50, -200);
+
+    expect(
+      getLayoutAxis([
+        [parent, beside],
+        [parent, besideAgain],
+        [parent, below],
+      ])
+    ).toBe("horizontal");
+    expect(
+      getLayoutAxis([
+        [parent, beside],
+        [parent, below],
+        [parent, belowAgain],
+      ])
+    ).toBe("vertical");
+    expect(
+      getLayoutAxis([
+        [parent, beside],
+        [parent, below],
+      ])
+    ).toBe("horizontal");
   });
 
   it("reads left to right when the links say nothing", () => {
