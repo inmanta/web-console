@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@inmanta/web-console-test-utils": "workspace:^",
-    "@module-federation/vite": "1.24.0",
+    "@module-federation/vite": "1.24.1",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.10",
