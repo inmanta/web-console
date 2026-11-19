@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): bump @module-federation/vite from 1.24.0 to 1.24.1'
+destination-branches:
+- master
+- iso9
+sections: {}
