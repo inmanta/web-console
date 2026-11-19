@@ -77,7 +77,13 @@ const restrictImports = (allowed) => ({
 export default [
   {
     // Ignore files/folders
-    ignores: ["**/dist", "**/.yarn", ".tsbuild", "packages/core/src/Domain/GraphQL/generated"],
+    ignores: [
+      "**/dist",
+      "dist-oss",
+      "**/.yarn",
+      ".tsbuild",
+      "packages/core/src/Domain/GraphQL/generated",
+    ],
   },
 
   // Apply recommended configurations

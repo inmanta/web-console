@@ -1,6 +1,7 @@
 # Build output
 .tsbuild
 dist
+dist-oss
 build
 coverage
 

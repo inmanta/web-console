@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Verifies that every build `yarn build:ci` makes carries the version in package.json: the ISO
- * app (dist), the OSS app (apps/oss/dist) and the composer's separate build
+ * app (dist), the OSS app (dist-oss) and the composer's separate build
  * (packages/features/composer/dist). Each feature is stamped with that version (`version:
  * APP_VERSION` in its FeatureModule), and an app leaves out a feature loaded at runtime whose
  * version differs from its own, so the composer only installs on an app of the same version.
@@ -11,7 +11,7 @@
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 
-const distDirs = ["dist", "apps/oss/dist", "packages/features/composer/dist"];
+const distDirs = ["dist", "dist-oss", "packages/features/composer/dist"];
 const { version } = JSON.parse(readFileSync("package.json", "utf8"));
 // A feature module as the minifier writes it, e.g. {id:`composer`,version:`4.3.0`,...
 const featurePattern = /id:\s*(["'`])([\w-]+)\1,\s*version:\s*(["'`])([^"'`]+)\3/g;
