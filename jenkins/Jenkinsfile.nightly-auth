@@ -70,7 +70,7 @@ pipeline {
                                     sh ./shell-scripts/report-orchestrator-conflicts.sh
                                     yarn run install:orchestrator:${authMethod.name}
                                     sleep ${authMethod.startupSeconds}
-                                    yarn update:dist
+                                    yarn update:dist:oss
                                     yarn run cypress-test:${authMethod.name} --reporter-options 'mochaFile=cypress/reports/junit/${authMethod.name}-[hash].xml'
                                     """
                                 }
