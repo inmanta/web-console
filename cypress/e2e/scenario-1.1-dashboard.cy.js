@@ -37,21 +37,19 @@ describe("1.1 Dashboard", () => {
     cy.get("h1").contains("Environment Health").click();
     cy.contains('[role="menuitem"]', getDefaultEnvName()).should("not.exist");
 
-    // Health columns: title + status indicator for each of the four columns. A column links to
-    // its page; the OSS app has no service catalog, so its Services column isn't a link.
-    ["Services", "Resources", "Compiles", "Agents"].forEach((title) => {
+    // Health columns: title + status indicator for each of the four columns
+    const columns = ["Services", "Resources", "Compiles", "Agents"];
+
+    columns.forEach((title) => {
       cy.contains('[aria-label^="Status-"]', title).should("be.visible");
     });
-    const linkedColumns = isIso
-      ? ["Services", "Resources", "Compiles", "Agents"]
-      : ["Resources", "Compiles", "Agents"];
+    // Once they're rendered, each column links to its page, except Services in the OSS app,
+    // which has no service catalog.
+    columns.forEach((title) => {
+      const isLink = isIso || title !== "Services";
 
-    linkedColumns.forEach((title) => {
-      cy.get(`[aria-label="View ${title} details"]`).should("exist");
+      cy.get(`[aria-label="View ${title} details"]`).should(isLink ? "exist" : "not.exist");
     });
-    if (!isIso) {
-      cy.get('[aria-label="View Services details"]').should("not.exist");
-    }
 
     // Clicking a column navigates to the relevant page
     cy.get('[aria-label="View Resources details"]').click();

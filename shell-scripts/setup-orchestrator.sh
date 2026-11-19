@@ -45,6 +45,13 @@ else
     WEB_CONSOLE_BUILD="dist"
 fi
 
+# Checked before the setup, which takes minutes and leaves temp/ and the containers behind.
+if [[ ! -d "$WEB_CONSOLE_BUILD" ]]
+then
+    echo "No $WEB_CONSOLE_BUILD folder: build it first (yarn build:oss for dist-oss, yarn build for dist, or yarn build:ci for both)."
+    exit 1
+fi
+
 echo "Creating temp folder..."
 mkdir temp
 
@@ -73,11 +80,6 @@ yarn install:orchestrator version=$INSTALL_VERSION flag=${DOCKER_FLAG} branch=${
 cd ../..
 
 echo "Replace the web console on the orchestrator with the current build ($WEB_CONSOLE_BUILD)..."
-if [[ ! -d "$WEB_CONSOLE_BUILD" ]]
-then
-    echo "No $WEB_CONSOLE_BUILD folder: run yarn build:ci first."
-    exit 1
-fi
 # remove old build output and copy the build to the orchestrator
 docker exec -u root inmanta_orchestrator rm -rf /usr/share/inmanta/web-console
 
