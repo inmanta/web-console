@@ -18,18 +18,15 @@ import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import {
   canRemoveLink,
-  CardBox,
   checkIfConnectionIsAllowed,
   countHiddenLayers,
   getConnectedLayerData,
-  getLayoutAxis,
   getLinks,
   getRemoveActions,
-  getShapeDimensions,
   getShapeName,
   getValidationMessages,
 } from "../Data/Helpers";
-import { useAddPaletteItem } from "../Data/Hooks";
+import { useAddPaletteItem, useLayoutAxis } from "../Data/Hooks";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import {
   LEFT_SIDEBAR_WIDTH,
@@ -94,28 +91,7 @@ export const Canvas: React.FC = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [nodes, setNodes] = useState<EntityNodeType[]>([]);
 
-  // Read from where the visible cards are when the layout changes (a load, an Arrange, a new
-  // relation), not on a drag: a drag doesn't replace canvasState. Dragging a card then only
-  // moves its own lines, instead of turning the other lines of the canvas to the other axis.
-  const layoutAxis = useMemo(() => {
-    const boxes = new Map(
-      Array.from(canvasState.values())
-        .filter((shape) => !shape.isHidden)
-        .map((shape): [string, CardBox] => [
-          shape.id,
-          { ...shape.getPosition(), ...getShapeDimensions(shape) },
-        ])
-    );
-
-    return getLayoutAxis(
-      getLinks(canvasState).flatMap((link): Array<[CardBox, CardBox]> => {
-        const source = boxes.get(link.source);
-        const target = boxes.get(link.target);
-
-        return source && target ? [[source, target]] : [];
-      })
-    );
-  }, [canvasState]);
+  const { layoutAxis, onCardDragged } = useLayoutAxis(canvasState);
   const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   // Read out by screen readers; a new selection clears it
@@ -206,6 +182,7 @@ export const Canvas: React.FC = () => {
       changes.forEach((change) => {
         if (change.type === "position" && change.position) {
           canvasState.get(change.id)?.setPosition(change.position.x, change.position.y);
+          onCardDragged(change.id, change.position);
         }
         if (change.type === "dimensions" && change.dimensions) {
           const shape = canvasState.get(change.id);
@@ -236,7 +213,7 @@ export const Canvas: React.FC = () => {
         )
       );
     },
-    [canvasState, activeCell, setActiveCell]
+    [canvasState, activeCell, setActiveCell, onCardDragged]
   );
 
   // One selection at a time: a card or a relation line
