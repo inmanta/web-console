@@ -7,7 +7,7 @@ import { ExclamationCircleIcon } from "@patternfly/react-icons/dist/esm/icons/ex
 import { LayerGroupIcon } from "@patternfly/react-icons/dist/esm/icons/layer-group-icon";
 import { LinkIcon } from "@patternfly/react-icons/dist/esm/icons/link-icon";
 import { LockIcon } from "@patternfly/react-icons/dist/esm/icons/lock-icon";
-import { Handle, Node, NodeProps, Position, useStore } from "@xyflow/react";
+import { Handle, Node, NodeProps, Position, useConnectionStore } from "@xyflow/react";
 import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
@@ -55,7 +55,7 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
   const { canvasState, relationsDictionary, canvasActions, editable } = useContext(ComposerContext);
   // Only the id of the card a link is dragged from: a wider selection would re-render
   // every card on each pointer move.
-  const linkSourceId = useStore((state) =>
+  const linkSourceId = useConnectionStore((state) =>
     state.connection.inProgress ? state.connection.fromNode.id : null
   );
   const [isHovered, setIsHovered] = useState(false);

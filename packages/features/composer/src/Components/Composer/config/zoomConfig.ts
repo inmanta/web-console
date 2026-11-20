@@ -11,3 +11,9 @@ export const SLIDER_MAX = MAX_ZOOM * 100;
  * Padding values for zoomToFit operations
  */
 export const ZOOM_TO_FIT_PADDING_BUTTON = 100;
+
+/**
+ * Margin around the cards when the view is fitted on load and after Arrange, as a share of the
+ * canvas size.
+ */
+export const ZOOM_TO_FIT_PADDING: `${number}%` = "8%";
