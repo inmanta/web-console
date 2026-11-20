@@ -1,12 +1,15 @@
 import React, { PropsWithChildren } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { Diff } from "@inmanta/web-console-core";
+import {
+  DiffSideLabels,
+  Refs,
+} from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/types";
 import { EmptyJumpToAction, JumpToAction } from "./JumpToAction";
-import { Versus, VersusLabels } from "./Versus";
+import { Versus } from "./Versus";
 import { fromResourceToItem } from "./fromResourceToItem";
-import { Refs } from "./types";
 
-interface Props extends VersusLabels {
+interface Props extends DiffSideLabels {
   data: Diff.Resource[];
   refs: Refs;
 }

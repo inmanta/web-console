@@ -72,6 +72,8 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
             <DiffWizard.ItemList
               items={filteredResources.map(DiffWizard.fromResourceToItem)}
               refs={refs}
+              fromLabel={words("modelVersion")(from)}
+              toLabel={words("modelVersion")(to)}
             />
           )}
         </PageSection>

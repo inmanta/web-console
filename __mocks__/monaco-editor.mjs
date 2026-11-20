@@ -49,9 +49,27 @@ const editor = {
     dispose: vi.fn(),
     layout: vi.fn(),
     focus: vi.fn(),
-    onDidUpdateDiff: vi.fn(),
+    onDidUpdateDiff: vi.fn((listener) => {
+      listener();
+
+      return { dispose: vi.fn() };
+    }),
     getDiffLineInformationForOriginal: vi.fn(),
     getDiffLineInformationForModified: vi.fn(),
+    getOriginalEditor: vi.fn(() => ({
+      getContentHeight: vi.fn(() => 100),
+      getLayoutInfo: vi.fn(() => ({ width: 500, contentLeft: 50 })),
+      onDidContentSizeChange: vi.fn(() => ({ dispose: vi.fn() })),
+      onDidLayoutChange: vi.fn(() => ({ dispose: vi.fn() })),
+    })),
+    getModifiedEditor: vi.fn(() => ({
+      getContentHeight: vi.fn(() => 100),
+      getLayoutInfo: vi.fn(() => ({ width: 500, contentLeft: 50 })),
+      onDidContentSizeChange: vi.fn(() => ({ dispose: vi.fn() })),
+      onDidLayoutChange: vi.fn(() => ({ dispose: vi.fn() })),
+    })),
+    getContainerDomNode: vi.fn(() => document.createElement("div")),
+    getLineChanges: vi.fn(() => null),
     restoreViewState: vi.fn(),
     saveViewState: vi.fn(),
   })),
@@ -100,12 +118,5 @@ const KeyCode = {
   KEY_IN: 0,
 };
 
-export {
-  editor,
-  json,
-  languages,
-  Uri,
-  KeyMod,
-  KeyCode,
-};
+export { editor, json, languages, Uri, KeyMod, KeyCode };
 export default { editor, json, languages, Uri, KeyMod, KeyCode };

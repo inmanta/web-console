@@ -11,6 +11,8 @@ export const orchestrationEngineMessages = {
    * Generic labels reused across views (column headers, tabs, field labels)
    */
   currentStateShort: "current",
+  currentState: "Current state",
+  attribute: "Attribute",
 
   /**
    * Inventory related text
@@ -56,6 +58,8 @@ export const orchestrationEngineMessages = {
   "desiredState.compare.action.compareWithCurrentState": "Compare with current state",
   "desiredState.compare.selectionLabel": "Selected for compare: ",
   "desiredState.compare.empty": "No changes found",
+  "desiredState.compare.attributes": (resourceId: string) => `Attributes of ${resourceId}`,
+  "desiredState.compare.notPresent": "not present",
   "desiredState.complianceCheck.title": "Compliance Check",
   "desiredState.complianceCheck.failed": "Getting list of dryruns failed",
   "desiredState.complianceCheck.action.dryRun": "Perform dry run",

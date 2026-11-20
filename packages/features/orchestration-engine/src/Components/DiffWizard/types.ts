@@ -12,6 +12,12 @@ export interface EntryInfo {
   toValue: string;
 }
 
-export type Refs = React.MutableRefObject<Record<string, HTMLElement>>;
+/**
+ * The display text of the two sides of a diff, e.g. "Current state" and "v412".
+ */
+export interface DiffSideLabels {
+  fromLabel: string;
+  toLabel: string;
+}
 
-export type Classification = "Default" | "File";
+export type Refs = React.MutableRefObject<Record<string, HTMLElement>>;

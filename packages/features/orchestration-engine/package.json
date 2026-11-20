@@ -23,14 +23,15 @@
   "dependencies": {
     "@inmanta/web-console-core": "workspace:^",
     "@inmanta/web-console-ui": "workspace:^",
+    "@monaco-editor/react": "^4.7.0",
     "@patternfly/react-code-editor": "^6.7.0",
     "@patternfly/react-core": "^6.7.0",
     "@patternfly/react-icons": "^6.7.0",
     "@patternfly/react-log-viewer": "^6.5.0",
     "@patternfly/react-table": "^6.7.0",
     "@tanstack/react-query": "^5.107.2",
+    "monaco-editor": "^0.57.0",
     "react": "^19.3.1",
-    "react-diff-viewer-continued": "^4.4.0",
     "react-dom": "^19.3.1",
     "react-router": "^8.5.1",
     "styled-components": "^6.6.0"
