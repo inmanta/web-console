@@ -18,7 +18,7 @@ import { AngleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-down
 import { AngleRightIcon } from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
 import { GripVerticalIcon } from "@patternfly/react-icons/dist/esm/icons/grip-vertical-icon";
 import { PlusCircleIcon } from "@patternfly/react-icons/dist/esm/icons/plus-circle-icon";
-import { useReactFlow, useStore } from "@xyflow/react";
+import { useOptionsStore, useReactFlow } from "@xyflow/react";
 import styled from "styled-components";
 import {
   EmbeddedEntity,
@@ -229,7 +229,7 @@ export const LeftSidebar: React.FC = () => {
     useContext(ComposerContext);
   const addPaletteItem = useAddPaletteItem();
   const { screenToFlowPosition } = useReactFlow();
-  const canvasElement = useStore((state) => state.domNode);
+  const canvasElement = useOptionsStore((state) => state.domNode);
   const [activeTab, setActiveTab] = useState<PaletteTab>("new");
   const [queries, setQueries] = useState<Record<PaletteTab, string>>({ new: "", inventory: "" });
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
