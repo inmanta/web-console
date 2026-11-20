@@ -18,12 +18,12 @@ const composerDir = dirname(fileURLToPath(import.meta.url));
 const canvasLibraries = ["@xyflow/react", "@dagrejs/dagre"];
 
 /**
- * The CommonJS modules the canvas libraries import that `require` React: React Flow's store
- * (zustand 4) imports this one. The composer's build can't bundle them: React comes from the app's
- * import map as an ES module, which a `require` can't load (the build fails on such a `require`,
- * see vite.config.ts). The app bundles them with its React and provides them instead.
+ * The CommonJS modules the canvas libraries import that `require` React: React Flow is built with
+ * the React Compiler and imports its runtime. The composer's build can't bundle them: React comes
+ * from the app's import map as an ES module, which a `require` can't load (the build fails on such
+ * a `require`, see vite.config.ts). The app bundles them with its React and provides them instead.
  */
-const canvasCommonJsModules = ["use-sync-external-store/shim/with-selector.js"];
+const canvasCommonJsModules = ["react-compiler-runtime"];
 
 /**
  * The package an import specifier, or a path inside node_modules, names: "@xyflow/react" for
