@@ -1,6 +1,7 @@
 // The nightly end-to-end tests of the OSS edition: the OSS suite (cypress.config.oss.cjs) against a
 // fresh OSS orchestrator with the OSS app's build (dist-oss/), the one the OSS orchestrator ships.
 // The setup (yarn install:orchestrator:oss:ci) waits for the orchestrator and installs that build.
+// Don't run yarn update:dist after it: that puts the ISO app back.
 //
 // Its own multibranch job, web-console-nightly-oss-e2e, for master and the iso branches. It
 // replaces the freestyle job frontend-oss-e2e-test.
@@ -18,7 +19,6 @@ pipeline {
     }
     environment {
         GITLAB_TOKEN = credentials('jenkins_on_gitlab')
-        CLOUDSMITH_TOKEN = credentials('cloudsmith-token')
     }
 
     stages {
@@ -35,7 +35,7 @@ pipeline {
                 dir('web-console') {
                     sh '''
                     yarn install --immutable
-                    yarn build:oss
+                    yarn workspace @inmanta/web-console-oss build:ci
                     '''
                 }
             }
@@ -49,7 +49,7 @@ pipeline {
                         dir('web-console') {
                             // The cleanup is outside the timeout, so it also runs when the tests time out.
                             try {
-                                timeout(time: 30, unit: 'MINUTES') {
+                                timeout(time: 20, unit: 'MINUTES') {
                                     sh '''
                                     sh ./shell-scripts/clear-server.sh
                                     sh ./shell-scripts/report-orchestrator-conflicts.sh
