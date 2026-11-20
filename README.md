@@ -120,9 +120,9 @@ or run `npx cypress open` if you need to run the tests in the cypress UI.
   },
 ```
 
-Then :
+Then build the OSS app and set up the orchestrator with it (`dist-oss/`):
 
-`yarn install:orchestrator:oss`
+`yarn build:oss && yarn install:orchestrator:oss`
 
 If you need to run the test-suit headless you can chain it with:
 

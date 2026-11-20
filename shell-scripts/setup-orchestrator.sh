@@ -38,8 +38,18 @@ PROJECT_REPO=${project:-default}
 if [[ "$VERSION" == "oss" ]]
 then
     INSTALL_VERSION="oss"
+    # The OSS orchestrator ships the OSS app, see the files of package.json.
+    WEB_CONSOLE_BUILD="dist-oss"
 else
     INSTALL_VERSION="lsm"
+    WEB_CONSOLE_BUILD="dist"
+fi
+
+# Checked before the setup, which takes minutes and leaves temp/ and the containers behind.
+if [[ ! -d "$WEB_CONSOLE_BUILD" ]]
+then
+    echo "No $WEB_CONSOLE_BUILD folder: build it first (yarn build:oss for dist-oss, yarn build for dist, or yarn build:ci for both)."
+    exit 1
 fi
 
 echo "Creating temp folder..."
@@ -69,10 +79,10 @@ yarn install:orchestrator version=$INSTALL_VERSION flag=${DOCKER_FLAG} branch=${
 # exit temp/local-setup to be back on root level
 cd ../..
 
-echo "Replace dist folder on the orchestrator with current build..."
-# remove old build output and copy dist to the the orchestrator
+echo "Replace the web console on the orchestrator with the current build ($WEB_CONSOLE_BUILD)..."
+# remove old build output and copy the build to the orchestrator
 docker exec -u root inmanta_orchestrator rm -rf /usr/share/inmanta/web-console
 
-docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console
+docker cp "$WEB_CONSOLE_BUILD" inmanta_orchestrator:/usr/share/inmanta/web-console
 
 echo "The orchestrator has been setup."
