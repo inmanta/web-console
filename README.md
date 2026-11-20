@@ -35,7 +35,7 @@ Every package declares whether it is OSS or ISO in its `package.json` (`"inmanta
 | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `prebuild`                      | runs `yarn clean`                                                                                                                                                                                                     |
 | `build`                         | builds the ISO app (`apps/web-console`, through its `build` script) with Vite in production mode, into `dist/`, with the composer's separate build next to it                                                         |
-| `build:oss`                     | builds the OSS app (`apps/oss`) with Vite in production mode, into `apps/oss/dist/`                                                                                                                                   |
+| `build:oss`                     | builds the OSS app (`apps/oss`) with Vite in production mode, into `dist-oss/`                                                                                                                                        |
 | `build:ci`                      | the CI build: the ISO app and the composer (`build`), the OSS app and the SBOM, all with the version in `package.json`                                                                                                |
 | `start`                         | starts the ISO app's development server with Vite over HTTP                                                                                                                                                           |
 | `start:https`                   | starts the ISO app's development server with Vite over HTTPS (`HTTPS=true`)                                                                                                                                           |
@@ -52,7 +52,7 @@ Every package declares whether it is OSS or ISO in its `package.json` (`"inmanta
 | `tsc:oss`                       | type-checks the OSS app and its packages only (`tsc -b` in `apps/oss`); also works after `yarn workspaces focus @inmanta/web-console-oss`                                                                             |
 | `build:bundle-profile`          | builds the app with Vite in analyze mode (`vite build --mode analyze`)                                                                                                                                                |
 | `bundle-profile:analyze`        | runs `yarn build:bundle-profile` to generate a bundle profile                                                                                                                                                         |
-| `clean`                         | removes the builds (`dist`, `apps/oss/dist`) and the TypeScript build info (`.tsbuild`)                                                                                                                               |
+| `clean`                         | removes the builds (`dist`, `dist-oss`) and the TypeScript build info (`.tsbuild`)                                                                                                                                    |
 | `delete:reports`                | deletes the Cypress reports in `cypress/reports`                                                                                                                                                                      |
 | `precypress-test`               | runs `yarn run delete:reports` before Cypress tests                                                                                                                                                                   |
 | `cypress-test:oss`              | runs the Cypress tests headless for OSS (requires `install:orchestrator:oss`)                                                                                                                                         |
@@ -63,7 +63,7 @@ Every package declares whether it is OSS or ISO in its `package.json` (`"inmanta
 | `cypress-test:local-auth`       | runs the Cypress tests headless for OSS with local authentication (requires `install:orchestrator:local-auth`)                                                                                                        |
 | `package-cleanup`               | runs `node clean_up_packages`                                                                                                                                                                                         |
 | `check-circular-deps`           | runs `depcruise src packages apps`, which fails on any circular dependency in `src/`, `packages/` and `apps/`, and on an import of a workspace package that doesn't resolve                                           |
-| `check-no-cdn`                  | fails when a build has a CDN URL in it; checks every build of `build:ci`, or the folders given, e.g. `yarn check-no-cdn apps/oss/dist`                                                                                |
+| `check-no-cdn`                  | fails when a build has a CDN URL in it; checks every build of `build:ci`, or the folders given, e.g. `yarn check-no-cdn dist-oss`                                                                                     |
 | `check-dist-versions`           | fails when a build of `build:ci` (ISO app, OSS app, composer) has another version than `package.json`                                                                                                                 |
 | `install:orchestrator:keycloak` | creates a Docker container with an OSS orchestrator configured with Keycloak                                                                                                                                          |
 | `install:orchestrator`          | base command to install more specific versions of the orchestrator. The different arguments are: `version` `release` `branch`. For more details, see (local-setup repo)[https://code.inmanta.com/inmanta/local-setup] |
@@ -73,6 +73,7 @@ Every package declares whether it is OSS or ISO in its `package.json` (`"inmanta
 | `install:orchestrator:ci`       | CI command to setup the orchestrator on Jenkins. Requires different arguments depending on the needed test suite. See `install:orchestrator`                                                                          |
 | `kill-server`                   | removes the orchestrator's containers, network and volumes (Compose project `local-setup`) and the temp-folder                                                                                                        |
 | `update:dist`                   | manual update of the `dist` folder in the container. Requires a container to run.                                                                                                                                     |
+| `update:dist:oss`               | same as `update:dist` with the OSS app (`dist-oss`), for an OSS orchestrator. Requires a container to run.                                                                                                            |
 
 ### ENV Tokens and PAT
 
@@ -119,9 +120,9 @@ or run `npx cypress open` if you need to run the tests in the cypress UI.
   },
 ```
 
-Then :
+Then build the OSS app and set up the orchestrator with it (`dist-oss/`):
 
-`yarn install:orchestrator:oss`
+`yarn build:oss && yarn install:orchestrator:oss`
 
 If you need to run the test-suit headless you can chain it with:
 

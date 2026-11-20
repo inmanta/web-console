@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): bump dependency-cruiser from 18.7.2 to 18.8.0'
+destination-branches:
+- master
+- iso9
+sections: {}

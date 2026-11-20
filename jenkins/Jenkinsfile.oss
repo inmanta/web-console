@@ -107,7 +107,7 @@ pipeline {
                             sh '''
                             unset JOINTJS_NPM_TOKEN
                             yarn workspace @inmanta/web-console-oss build:ci
-                            yarn check-no-cdn apps/oss/dist
+                            yarn check-no-cdn dist-oss
                             yarn tsc:oss
                             yarn test:oss
                             '''

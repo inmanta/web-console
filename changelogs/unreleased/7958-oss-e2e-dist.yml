@@ -1,0 +1,5 @@
+description: Run the end-to-end tests on an OSS orchestrator with the OSS app (dist-oss), the build the OSS orchestrator ships.
+issue-nr: 7958
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

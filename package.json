@@ -31,7 +31,7 @@
     "tsc:oss": "yarn workspace @inmanta/web-console-oss tsc",
     "build:bundle-profile": "yarn workspace @inmanta/web-console-app build:bundle-profile",
     "bundle-profile:analyze": "yarn build:bundle-profile",
-    "clean": "rimraf dist apps/oss/dist packages/features/composer/dist .tsbuild",
+    "clean": "rimraf dist dist-oss packages/features/composer/dist .tsbuild",
     "delete:reports": "rm -r cypress/reports/* || true",
     "precypress-test": "yarn run delete:reports",
     "cypress-test:oss": "yarn cypress run --config-file cypress.config.oss.cjs",
@@ -58,13 +58,15 @@
     "install:orchestrator:oss": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' version='oss' release='dev' branch='oss_case_1'",
     "install:orchestrator:ci": "sh ./shell-scripts/setup-orchestrator.sh",
     "kill-server": "sh ./shell-scripts/clear-server.sh",
-    "update:dist": "docker exec -u root inmanta_orchestrator rm -rf /usr/share/inmanta/web-console && docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console"
+    "update:dist": "docker exec -u root inmanta_orchestrator rm -rf /usr/share/inmanta/web-console && docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console",
+    "update:dist:oss": "docker exec -u root inmanta_orchestrator rm -rf /usr/share/inmanta/web-console && docker cp dist-oss inmanta_orchestrator:/usr/share/inmanta/web-console"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
   "files": [
-    "dist/"
+    "dist/",
+    "dist-oss/"
   ],
   "type": "module",
   "devDependencies": {
@@ -84,7 +86,7 @@
     "@vitest/coverage-v8": "^5.1.0",
     "@vitest/ui": "^5.1.0",
     "cypress": "^16.3.0",
-    "dependency-cruiser": "^18.7.2",
+    "dependency-cruiser": "^18.8.0",
     "dotenv": "^18.0.10",
     "eslint": "^10.2.1",
     "eslint-import-resolver-typescript": "^4.4.5",
@@ -100,7 +102,7 @@
     "rimraf": "^6.1.4",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-7": "npm:typescript@^7.0.2",
-    "typescript-eslint": "^8.72.2",
+    "typescript-eslint": "^8.73.0",
     "vite": "^8.3.8",
     "vite-plugin-mkcert": "^2.1.0",
     "vitest": "^5.1.0"
