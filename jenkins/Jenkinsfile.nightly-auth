@@ -3,21 +3,23 @@
 // - keycloak: cypress/e2e/Keycloak (cypress.config.keycloak.cjs);
 // - oidc: cypress/e2e/Oidc (cypress.config.oidc.cjs);
 // - local-auth: cypress/e2e/LocalAuth (cypress.config.local-auth.cjs).
-// One job per method, on master, so each method has its own status and can be rerun alone. The
-// jobs keep the names of the freestyle jobs they replace (the build monitor lists those), and the
-// job's name picks the method: a job with another name fails.
+// One multibranch job per method, for master and the iso branches, so each method has its own
+// status and can be rerun alone. The jobs keep the names of the freestyle jobs they replace.
+// A job's name picks the method of its nightly runs, and the AUTH_METHOD parameter picks another
+// one for a run started by hand. The name does the picking because Jenkins can't give the jobs of
+// one Jenkinsfile different parameter defaults. A job with another name needs AUTH_METHOD.
 //
 // The setup doesn't wait for the orchestrator and the identity provider to be ready, so each
 // method waits a fixed time before it installs the build.
-def authMethodsByJob = [
-    'keycloak-e2e-test': [name: 'keycloak', startupSeconds: 45],
-    'oidc-e2e-test': [name: 'oidc', startupSeconds: 20],
-    'frontend-local-auth': [name: 'local-auth', startupSeconds: 45],
-]
-def authMethod = authMethodsByJob[env.JOB_BASE_NAME]
-if (authMethod == null) {
-    error("No authentication method for the job '${env.JOB_BASE_NAME}': it must be one of ${authMethodsByJob.keySet().join(', ')}.")
-}
+def startupSecondsByMethod = [keycloak: 45, oidc: 20, 'local-auth': 45]
+def methodByJob = ['keycloak-e2e-test': 'keycloak', 'oidc-e2e-test': 'oidc', 'frontend-local-auth': 'local-auth']
+def methodOfJob = 'of the job'
+// In a multibranch job, JOB_BASE_NAME is the branch; the job's own name is the one above it.
+def jobName = env.BRANCH_NAME ? env.JOB_NAME.tokenize('/')[-2] : env.JOB_BASE_NAME
+// AUTH_METHOD is unset on a job's first build, before Jenkins has read the parameter from this file.
+// Checked in the first stage, once Jenkins has registered the parameter.
+def methodName = params.AUTH_METHOD && params.AUTH_METHOD != methodOfJob ? params.AUTH_METHOD : methodByJob[jobName]
+def authMethod = [name: methodName, startupSeconds: startupSecondsByMethod[methodName]]
 
 pipeline {
     agent any
@@ -28,8 +30,12 @@ pipeline {
         skipDefaultCheckout()
         ansiColor('xterm')
     }
+    parameters {
+        // The first choice is methodOfJob, the default.
+        choice(name: 'AUTH_METHOD', choices: ['of the job', 'keycloak', 'oidc', 'local-auth'], description: "The authentication method to test. 'of the job' is the one the job's name picks, which the nightly runs use.")
+    }
     triggers {
-        cron('H H(2-5) * * *')
+        cron((env.BRANCH_NAME ?: 'master') ==~ /master|iso[0-9]+/ ? 'H H(2-5) * * *' : '')
     }
     environment {
         GITLAB_TOKEN = credentials('jenkins_on_gitlab')
@@ -39,6 +45,15 @@ pipeline {
     stages {
         stage('Auth: Checkout') {
             steps {
+                script {
+                    if (!startupSecondsByMethod.containsKey(methodName)) {
+                        error("No authentication method for the job '${jobName}': set AUTH_METHOD, or name the job one of ${methodByJob.keySet().join(', ')}.")
+                    }
+                    // Shows in the build history which runs tested another method than the job's.
+                    if (methodName != methodByJob[jobName]) {
+                        currentBuild.displayName = "#${env.BUILD_NUMBER} ${methodName}"
+                    }
+                }
                 deleteDir()
                 dir('web-console') {
                     checkout scm

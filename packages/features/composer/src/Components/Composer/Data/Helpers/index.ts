@@ -6,6 +6,7 @@ export * from "./canvasLayoutUtils";
 export * from "./deploymentHelpers";
 export * from "./shapeUtils";
 export * from "./linkUtils";
+export * from "./linkGeometry";
 export * from "./layerUtils";
 export * from "./addToCanvas";
 export * from "./connectionValidationUtils";

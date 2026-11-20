@@ -18,9 +18,11 @@ import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import {
   canRemoveLink,
+  CardBox,
   checkIfConnectionIsAllowed,
   countHiddenLayers,
   getConnectedLayerData,
+  getLayoutAxis,
   getLinks,
   getRemoveActions,
   getShapeName,
@@ -90,6 +92,32 @@ export const Canvas: React.FC = () => {
   const addPaletteItem = useAddPaletteItem();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [nodes, setNodes] = useState<EntityNodeType[]>([]);
+
+  // Read from where the visible cards are now, so the lines follow a drag or an Arrange. The
+  // cards change on a move or a measurement, not on a pan or a zoom.
+  const layoutAxis = useMemo(() => {
+    const boxes = new Map(
+      nodes
+        .filter((node) => !node.hidden)
+        .map((node): [string, CardBox] => [
+          node.id,
+          {
+            ...node.position,
+            width: node.measured?.width ?? 0,
+            height: node.measured?.height ?? 0,
+          },
+        ])
+    );
+
+    return getLayoutAxis(
+      getLinks(canvasState).flatMap((link): Array<[CardBox, CardBox]> => {
+        const source = boxes.get(link.source);
+        const target = boxes.get(link.target);
+
+        return source && target ? [[source, target]] : [];
+      })
+    );
+  }, [nodes, canvasState]);
   const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   // Read out by screen readers; a new selection clears it
@@ -164,12 +192,13 @@ export const Canvas: React.FC = () => {
             ),
             data: {
               isActive: link.id === hoveredEdgeId || link.id === selectedEdgeId,
+              layoutAxis,
               onRemove: () => removeRelation(source, target),
             },
           },
         ];
       }),
-    [canvasState, hoveredEdgeId, selectedEdgeId, removeRelation]
+    [canvasState, hoveredEdgeId, selectedEdgeId, layoutAxis, removeRelation]
   );
 
   // Moving or measuring a card writes straight to its shape. Neither changes the order,
