@@ -1,0 +1,82 @@
+// The nightly end-to-end tests of the OSS edition: the OSS suite (cypress.config.oss.cjs) against a
+// fresh OSS orchestrator with the OSS app's build (dist-oss/), the one the OSS orchestrator ships.
+// The setup (yarn install:orchestrator:oss:ci) waits for the orchestrator and installs that build.
+// Don't run yarn update:dist after it: that puts the ISO app back.
+//
+// Its own multibranch job, web-console-nightly-oss-e2e, for master and the iso branches. It
+// replaces the freestyle job frontend-oss-e2e-test.
+pipeline {
+    agent any
+
+    options {
+        disableConcurrentBuilds()
+        checkoutToSubdirectory('web-console')
+        skipDefaultCheckout()
+        ansiColor('xterm')
+    }
+    triggers {
+        cron((env.BRANCH_NAME ?: 'master') ==~ /master|iso[0-9]+/ ? 'H H(2-5) * * *' : '')
+    }
+    environment {
+        GITLAB_TOKEN = credentials('jenkins_on_gitlab')
+    }
+
+    stages {
+        stage('OSS e2e: Checkout') {
+            steps {
+                deleteDir()
+                dir('web-console') {
+                    checkout scm
+                }
+            }
+        }
+        stage('OSS e2e: Build') {
+            steps {
+                dir('web-console') {
+                    sh '''
+                    yarn install --immutable
+                    yarn workspace @inmanta/web-console-oss build:ci
+                    '''
+                }
+            }
+        }
+        stage('OSS e2e: End-to-end tests') {
+            steps {
+                script {
+                    // One orchestrator per agent: the main job's Cypress stage takes the same lock.
+                    // Taken here, on the agent: a stage option can't see NODE_NAME yet.
+                    lock(resource: "orchestrator-${env.NODE_NAME}") {
+                        dir('web-console') {
+                            // The cleanup is outside the timeout, so it also runs when the tests time out.
+                            try {
+                                timeout(time: 20, unit: 'MINUTES') {
+                                    sh '''
+                                    sh ./shell-scripts/clear-server.sh
+                                    sh ./shell-scripts/report-orchestrator-conflicts.sh
+                                    yarn run install:orchestrator:oss:ci
+                                    yarn run cypress-test:oss --reporter-options 'mochaFile=cypress/reports/junit/oss-[hash].xml'
+                                    '''
+                                }
+                            } finally {
+                                junit allowEmptyResults: true, testResults: 'cypress/reports/junit/oss-*.xml'
+                                // shell-scripts/clear-server.sh needs only sh and docker, not yarn; a failure is reported, not hidden.
+                                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE', message: "Couldn't remove the orchestrator: its containers may still be on the agent ${env.NODE_NAME}.") {
+                                    sh 'sh ./shell-scripts/clear-server.sh'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            // The Cypress outputs the main job keeps, whichever this run made.
+            archiveArtifacts artifacts: 'web-console/cypress/reports/**, web-console/cypress/screenshots/**, web-console/cypress/videos/**', allowEmptyArchive: true, onlyIfSuccessful: false
+        }
+        cleanup {
+            deleteDir()
+        }
+    }
+}
