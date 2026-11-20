@@ -1,7 +1,5 @@
 import React, { useId, useState } from "react";
 import {
-  Bullseye,
-  Button,
   Content,
   DataListCell,
   DataListContent,
@@ -9,39 +7,36 @@ import {
   DataListItemCells,
   DataListItemRow,
   DataListToggle,
-  DescriptionList,
   Flex,
 } from "@patternfly/react-core";
-import { Resource, words } from "@inmanta/web-console-core";
+import { words } from "@inmanta/web-console-core";
+import { ResourceDiff } from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/ResourceDiff";
 import { StatusDescriptor } from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/StatusDescriptor";
 import {
-  Classification,
+  DiffSideLabels,
   Item,
   Refs,
 } from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/types";
 import { ResourceLink } from "@inmanta/web-console-ui/Components/ResourceLink";
-import { Entry } from "./Entry/Entry";
 
-type Classify = (title: string, entryTitle: string, from: string, to: string) => Classification;
-
-interface Props {
+interface Props extends DiffSideLabels {
   item: Item;
   refs: Refs;
-  classify?: Classify;
 }
 
 /**
  * One resource in a diff, as a row of a compact data list: its status and a link to the resource,
- * expanding into its changes.
+ * expanding into its diff.
  *
  * @props {Props} props - The props of the component
  *  @prop {Item} item - The resource and its changes
  *  @prop {Refs} refs - Where the row registers itself, so the jump-to list can scroll to it
- *  @prop {Classify} [classify] - Picks how an attribute's change is shown
+ *  @prop {string} fromLabel - The display text of the side the diff starts from
+ *  @prop {string} toLabel - The display text of the side the diff goes to
  *
  * @returns {React.FC<Props>} The diff row
  */
-const BlockRow: React.FC<Props> = ({ item, refs, classify }) => {
+const BlockRow: React.FC<Props> = ({ item, refs, fromLabel, toLabel }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const titleId = useId();
   const contentId = useId();
@@ -93,14 +88,15 @@ const BlockRow: React.FC<Props> = ({ item, refs, classify }) => {
         isHidden={!isExpanded}
         hasNoPadding
       >
-        {/* Less padding than the data list's default, which even the compact list keeps large. */}
+        {/* Less padding than the data list's default, which even the compact list keeps large.
+            None at the bottom, where the data list adds its own margin under the content. */}
         <div
           style={{
-            padding: "var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md)",
+            padding: "var(--pf-t--global--spacer--md) var(--pf-t--global--spacer--md) 0",
           }}
         >
           {/* Only rendered while open, since computing every diff up front is slow. */}
-          {isExpanded && <Body item={item} classify={classify} />}
+          {isExpanded && <ResourceDiff item={item} fromLabel={fromLabel} toLabel={toLabel} />}
         </div>
       </DataListContent>
     </DataListItem>
@@ -112,74 +108,3 @@ const BlockRow: React.FC<Props> = ({ item, refs, classify }) => {
  * Check page polls its list of reports.
  */
 export const Block = React.memo(BlockRow);
-
-const Body: React.FC<{ item: Item; classify?: Classify }> = ({ item, classify }) => {
-  switch (item.status) {
-    case "deleted":
-      return (
-        <BodyWithToggle
-          item={item}
-          message={words("desiredState.compare.deleted")}
-          actionLabel={words("desiredState.compare.deleted.action")}
-          classify={classify}
-        />
-      );
-    case "added":
-    case "modified":
-      return <BodyWithChanges item={item} classify={classify} />;
-
-    case "unmodified":
-      return <BodyWithMessage message={words("desiredState.compare.unmodified")} />;
-    case "agent_down": {
-      const agent = Resource.IdParser.getAgentName(item.id) ?? "???";
-
-      return <BodyWithMessage message={words("desiredState.compare.agent_down")(agent)} />;
-    }
-
-    case "undefined":
-      return <BodyWithMessage message={words("desiredState.compare.undefined")} />;
-    case "skipped_for_undefined":
-      return <BodyWithMessage message={words("desiredState.compare.skipped_for_undefined")} />;
-    default:
-      return null;
-  }
-};
-
-const BodyWithToggle: React.FC<{
-  item: Item;
-  message: string;
-  actionLabel: string;
-  classify?: Classify;
-}> = ({ item, message, actionLabel, classify }) => {
-  const [isShown, setIsShown] = useState(false);
-
-  return isShown ? (
-    <BodyWithChanges {...{ item, classify }} />
-  ) : (
-    <Bullseye>
-      {message}
-      <Button onClick={() => setIsShown(true)} variant="link" isInline>
-        {actionLabel}
-      </Button>
-    </Bullseye>
-  );
-};
-
-const BodyWithChanges: React.FC<{
-  item: Pick<Item, "entries" | "id">;
-  classify?: Classify;
-}> = ({ item, classify }) => (
-  <DescriptionList isCompact>
-    {item.entries.map((entry) => (
-      <Entry
-        key={entry.title}
-        {...entry}
-        classify={classify ? (title, to, from) => classify(item.id, title, to, from) : undefined}
-      />
-    ))}
-  </DescriptionList>
-);
-
-const BodyWithMessage: React.FC<{ message: string }> = ({ message }) => (
-  <Bullseye>{message}</Bullseye>
-);

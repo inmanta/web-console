@@ -1,10 +1,10 @@
 import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
-import { words, getFeatureRoutes } from "@inmanta/web-console-core";
+import { Resource, words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { orchestrationEngineFeature } from "@inmanta/web-console-feature-orchestration-engine";
 import {
   MockedDependencyProvider,
@@ -24,6 +24,8 @@ const axe = configureAxe({
 });
 
 const environment = "aaa";
+const fromModelVersion = "123";
+const toModelVersion = "456";
 
 function setup() {
   const component = (
@@ -33,7 +35,7 @@ function setup() {
           features={[orchestrationEngineFeature]}
           routes={[...getFeatureRoutes([orchestrationEngineFeature]), stubRoute("ResourceDetails")]}
         >
-          <View from="123" to="456" />
+          <View from={fromModelVersion} to={toModelVersion} />
         </MockedDependencyProvider>
       </QueryClientProvider>
     </TestMemoryRouter>
@@ -42,25 +44,24 @@ function setup() {
   return { component };
 }
 describe("DesiredStateCompare", () => {
-  let counterForFile123 = 0;
-  let counterForFile567 = 0;
+  // The file ending in 1234 fails on its second request only, the one ending in 5678 never fails.
+  let requestCountFile1234 = 0;
+  let requestCountFile5678 = 0;
   const server = setupTestServer(
-    http.get("/api/v2/desiredstate/diff/123/456", () => {
+    http.get(`/api/v2/desiredstate/diff/${fromModelVersion}/${toModelVersion}`, () => {
       return HttpResponse.json(DesiredStateDiff.response);
     }),
     http.get("/api/v1/file/a47be15ee60a88c7bcc4bce900d921a8d34d1234", () => {
-      if (counterForFile123 === 1) {
+      requestCountFile1234++;
+
+      if (requestCountFile1234 === 2) {
         return HttpResponse.json({ message: "error" }, { status: 500 });
       }
-      counterForFile123++;
 
       return HttpResponse.json({ content: window.btoa("abcdefgh") });
     }),
     http.get("/api/v1/file/a47be15ee60a88c7bcc4bce900d921a8d34d5678", () => {
-      if (counterForFile567 === 1) {
-        return HttpResponse.json({ message: "error" }, { status: 500 });
-      }
-      counterForFile567++;
+      requestCountFile5678++;
 
       return HttpResponse.json({ content: window.btoa("efghijkl") });
     })
@@ -172,7 +173,7 @@ describe("DesiredStateCompare", () => {
     });
   });
 
-  test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can fetch file content", async () => {
+  test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can fetch file content, and Retry fetches only the file that failed", async () => {
     const { component } = setup();
 
     render(component);
@@ -181,37 +182,163 @@ describe("DesiredStateCompare", () => {
 
     await userEvent.click(within(blocks[1]).getByLabelText("Details"));
 
-    await userEvent.click(
-      within(blocks[1]).getByRole("button", {
-        name: words("desiredState.compare.file.show"),
-      })
-    );
+    const fileDiffLabel = words("desiredState.compare.attributeChanges")("hash");
 
     await userEvent.click(
-      within(blocks[1]).getByRole("button", {
-        name: words("desiredState.compare.file.hide"),
-      })
+      within(blocks[1]).getByRole("button", { name: words("desiredState.compare.file.show") })
     );
 
     expect(
-      within(blocks[1]).getByRole("button", {
-        name: words("desiredState.compare.file.show"),
-      })
+      await within(blocks[1]).findByText(words("desiredState.compare.file.title"))
     ).toBeVisible();
+    expect(within(blocks[1]).getByLabelText(fileDiffLabel)).toBeVisible();
 
     await userEvent.click(
       within(blocks[1]).getByRole("button", {
-        name: words("desiredState.compare.file.show"),
+        name: words("desiredState.compare.file.hideAriaLabel")(
+          DesiredStateDiff.resources[1].resource_id
+        ),
       })
     );
 
-    expect(await within(blocks[1]).findByRole("generic", { name: "ErrorDiffView" })).toBeVisible();
+    expect(within(blocks[1]).queryByLabelText(fileDiffLabel)).not.toBeInTheDocument();
+
+    await userEvent.click(
+      within(blocks[1]).getByRole("button", { name: words("desiredState.compare.file.show") })
+    );
+
+    expect(await within(blocks[1]).findByRole("button", { name: words("retry") })).toBeVisible();
+    expect(
+      within(blocks[1]).queryByRole("button", { name: words("desiredState.compare.file.show") })
+    ).not.toBeInTheDocument();
+
+    await userEvent.click(within(blocks[1]).getByRole("button", { name: words("retry") }));
+
+    expect(
+      await within(blocks[1]).findByText(words("desiredState.compare.file.title"))
+    ).toBeVisible();
+    expect(within(blocks[1]).getByLabelText(fileDiffLabel)).toBeVisible();
+    expect(requestCountFile1234).toBe(3);
+    expect(requestCountFile5678).toBe(2);
 
     await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("GIVEN DesiredStateCompare WHEN a modified resource is opened THEN its attributes show in a table with both versions and the changed part marked", async () => {
+    const { component } = setup();
+
+    render(component);
+
+    const resource = DesiredStateDiff.resources[7];
+    const { ip } = resource.attributes;
+    const blocks = await screen.findAllByTestId("DiffBlock");
+
+    await userEvent.click(within(blocks[7]).getByLabelText("Details"));
+
+    const table = within(blocks[7]).getByRole("grid", {
+      name: words("desiredState.compare.attributes")(resource.resource_id),
+    });
+    const headers = within(table)
+      .getAllByRole("columnheader")
+      .map((header) => header.textContent);
+
+    expect(headers).toEqual([
+      words("attribute"),
+      words("modelVersion")(fromModelVersion),
+      words("modelVersion")(toModelVersion),
+    ]);
+
+    const ipRow = within(table).getByRole("row", { name: /^ip / });
+    const [fromCell, toCell] = within(ipRow).getAllByRole("cell");
+
+    expect(fromCell).toHaveTextContent(ip.from_value_compare);
+    expect(toCell).toHaveTextContent(ip.to_value_compare);
+    // The two addresses only differ in their last character.
+    expect(within(fromCell).getByText(ip.from_value_compare.slice(-1)).tagName).toBe("MARK");
+    expect(within(toCell).getByText(ip.to_value_compare.slice(-1)).tagName).toBe("MARK");
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("GIVEN DesiredStateCompare WHEN a deleted resource is opened THEN it shows the deleted note and the new version as not present", async () => {
+    const { component } = setup();
+
+    render(component);
+
+    const resource = DesiredStateDiff.resources[4];
+    const blocks = await screen.findAllByTestId("DiffBlock");
+
+    await userEvent.click(within(blocks[4]).getByLabelText("Details"));
+
+    expect(within(blocks[4]).getByText(words("desiredState.compare.deleted"))).toBeVisible();
+
+    const table = within(blocks[4]).getByRole("grid", {
+      name: words("desiredState.compare.attributes")(resource.resource_id),
+    });
+    const headers = within(table)
+      .getAllByRole("columnheader")
+      .map((header) => header.textContent);
+
+    expect(headers).toEqual([
+      words("attribute"),
+      words("modelVersion")(fromModelVersion),
+      words("modelVersion")(toModelVersion),
+    ]);
+
+    const [fromCell, toCell] = within(table).getAllByRole("cell");
+
+    expect(fromCell).toHaveTextContent(resource.attributes.next_version.from_value_compare);
+    expect(toCell).toHaveTextContent(words("desiredState.compare.notPresent"));
+  });
+
+  test("GIVEN DesiredStateCompare WHEN a resource with only a long value is opened THEN the value shows as a line diff without column headers", async () => {
+    const { component } = setup();
+
+    render(component);
+
+    const resource = DesiredStateDiff.resources[2];
+    const blocks = await screen.findAllByTestId("DiffBlock");
+
+    await userEvent.click(within(blocks[2]).getByLabelText("Details"));
+
+    await waitFor(() =>
+      expect(
+        within(blocks[2]).getByLabelText(
+          words("desiredState.compare.attributeChanges")("next_version")
+        )
+      ).toBeVisible()
+    );
+
+    const table = within(blocks[2]).getByRole("grid", {
+      name: words("desiredState.compare.attributes")(resource.resource_id),
+    });
+
+    expect(within(table).queryByRole("columnheader")).not.toBeInTheDocument();
+  });
+
+  test("GIVEN DesiredStateCompare WHEN a resource whose agent is down is opened THEN it shows the agent down note without a table", async () => {
+    const { component } = setup();
+
+    render(component);
+
+    const resource = DesiredStateDiff.resources[8];
+    const agentName = Resource.IdParser.getAgentName(resource.resource_id) ?? "";
+    const blocks = await screen.findAllByTestId("DiffBlock");
+
+    await userEvent.click(within(blocks[8]).getByLabelText("Details"));
+
+    expect(
+      within(blocks[8]).getByText(words("desiredState.compare.agent_down")(agentName))
+    ).toBeVisible();
+    expect(within(blocks[8]).queryByRole("grid")).not.toBeInTheDocument();
   });
 
   test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {

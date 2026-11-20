@@ -298,7 +298,6 @@ export const uiMessages = {
   /** Desired State Details */
   "desiredState.compare.changes": (resourceId: string) => `Changes of ${resourceId}`,
   "desiredState.compare.deleted": "This resource has been deleted.",
-  "desiredState.compare.deleted.action": "Show attributes",
   "desiredState.compare.unmodified": "This resource has not been modified.",
   "desiredState.compare.agent_down": (agentName: string) =>
     `Could not determine difference because agent ${agentName} is down`,
@@ -306,9 +305,9 @@ export const uiMessages = {
     "Could not determine difference because this resource has undefined values",
   "desiredState.compare.skipped_for_undefined":
     "Could not determine difference because this resource requires a resource that has undefined values",
-  "desiredState.compare.file.attributeLabel": "content",
-  "desiredState.compare.file.hide": "Hide file contents",
-  "desiredState.compare.file.show": "Show file contents",
+  "desiredState.compare.file.show": "Compare file content",
+  "desiredState.compare.file.title": "File content",
+  "desiredState.compare.file.hide": "Hide",
   "desiredState.complianceCheck.report.view": "View report",
   "desiredState.complianceCheck.report.started": "Dry run started",
 
