@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Alert, AlertActionLink, Button, Content, Flex, FlexItem } from "@patternfly/react-core";
 import { Td, Tr } from "@patternfly/react-table";
 import { words } from "@inmanta/web-console-core";
@@ -21,9 +21,8 @@ interface Props extends DiffSideLabels {
  * The rows of the hash of a file resource, as a PatternFly expandable row pair: the hash row with
  * a "Compare file content" button under its value, and an expandable row with the line diff of
  * the file content, loaded from the server. When a file fails to load, the expandable row shows
- * the error with a Retry link in place of the button. The expandable row has no padding until
- * the diff is ready, so it shows in one step, with a "File content" title and a hide button. For
- * an added or deleted file, only the version that exists is loaded.
+ * the error with a Retry link in place of the button. The diff shows with a "File content" title
+ * and a hide button above it. For an added or deleted file, only the version that exists is loaded.
  *
  * @props {Props} props - The component props
  *  @prop {string} resourceId - The id of the file resource, which names its hide button
@@ -47,7 +46,6 @@ export const FileContentDiff: React.FC<Props> = ({
   sidesWithValues,
   isStriped,
 }) => {
-  const [isDiffReady, setIsDiffReady] = useState(false);
   const fromFileRequest = useGetFile(fromHash);
   const toFileRequest = useGetFile(toHash);
   const fileRequests: (typeof fromFileRequest)[] = [];
@@ -63,15 +61,11 @@ export const FileContentDiff: React.FC<Props> = ({
   const loadFiles = () => fileRequests.forEach((request) => request.mutate());
   const retryFailedFiles = () =>
     fileRequests.filter((request) => request.isError).forEach((request) => request.mutate());
-  const hideFiles = () => {
-    setIsDiffReady(false);
-    fileRequests.forEach((request) => request.reset());
-  };
+  const hideFiles = () => fileRequests.forEach((request) => request.reset());
 
   const error = fileRequests.find((request) => request.isError)?.error;
   const isLoaded = fileRequests.length > 0 && fileRequests.every((request) => request.isSuccess);
-  const isShown = isLoaded && isDiffReady;
-  const isLoading = fileRequests.some((request) => request.isPending) || (isLoaded && !isDiffReady);
+  const isLoading = fileRequests.some((request) => request.isPending);
   const hasContent = isLoaded || Boolean(error);
 
   return (
@@ -83,7 +77,7 @@ export const FileContentDiff: React.FC<Props> = ({
           toValue={toHash}
           sidesWithValues={sidesWithValues}
         >
-          {!isShown && !error && (
+          {!hasContent && (
             <Button
               variant="link"
               isInline
@@ -97,7 +91,7 @@ export const FileContentDiff: React.FC<Props> = ({
         </AttributeCells>
       </Tr>
       <Tr isExpanded={hasContent} isStriped={isStriped}>
-        <Td colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT} noPadding={!isShown && !error}>
+        <Td colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT}>
           {error && (
             <Alert
               isInline
@@ -112,11 +106,13 @@ export const FileContentDiff: React.FC<Props> = ({
             </Alert>
           )}
           {isLoaded && (
-            <Flex
-              direction={{ default: "column" }}
-              gap={{ default: isShown ? "gapSm" : "gapNone" }}
-            >
-              {isShown && (
+            <LongValueDiff
+              attributeName={attributeName}
+              fromValue={fromHash ? (fromFileRequest.data ?? "") : ""}
+              toValue={toHash ? (toFileRequest.data ?? "") : ""}
+              fromLabel={fromLabel}
+              toLabel={toLabel}
+              header={
                 <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
                   <FlexItem>
                     <Content component="small">{words("desiredState.compare.file.title")}</Content>
@@ -131,16 +127,8 @@ export const FileContentDiff: React.FC<Props> = ({
                     {words("desiredState.compare.file.hide")}
                   </Button>
                 </Flex>
-              )}
-              <LongValueDiff
-                attributeName={attributeName}
-                fromValue={fromHash ? (fromFileRequest.data ?? "") : ""}
-                toValue={toHash ? (toFileRequest.data ?? "") : ""}
-                fromLabel={fromLabel}
-                toLabel={toLabel}
-                onDiffReady={() => setIsDiffReady(true)}
-              />
-            </Flex>
+              }
+            />
           )}
         </Td>
       </Tr>

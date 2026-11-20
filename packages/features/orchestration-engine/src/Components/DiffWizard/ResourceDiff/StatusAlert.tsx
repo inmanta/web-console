@@ -1,7 +1,8 @@
 import React from "react";
 import { Alert } from "@patternfly/react-core";
 import { CheckCircleIcon } from "@patternfly/react-icons";
-import { Diff, Resource, words } from "@inmanta/web-console-core";
+import { Diff } from "@inmanta/web-console-core";
+import { getStatusAlertContent } from "./helpers";
 
 interface Props {
   resourceId: string;
@@ -20,58 +21,19 @@ interface Props {
  * @returns {React.FC<Props>} The alert, or nothing
  */
 export const StatusAlert: React.FC<Props> = ({ resourceId, status }) => {
-  switch (status) {
-    case "deleted":
-      return (
-        <Alert
-          isInline
-          component="p"
-          variant="danger"
-          title={words("desiredState.compare.deleted")}
-        />
-      );
-    case "unmodified":
-      return (
-        <Alert
-          isInline
-          component="p"
-          variant="custom"
-          customIcon={<CheckCircleIcon />}
-          title={words("desiredState.compare.unmodified")}
-        />
-      );
-    case "agent_down": {
-      const agentName = Resource.IdParser.getAgentName(resourceId) ?? "???";
+  const statusAlertContent = getStatusAlertContent(resourceId, status);
 
-      return (
-        <Alert
-          isInline
-          component="p"
-          variant="info"
-          title={words("desiredState.compare.agent_down")(agentName)}
-        />
-      );
-    }
-    case "undefined":
-      return (
-        <Alert
-          isInline
-          component="p"
-          variant="info"
-          title={words("desiredState.compare.undefined")}
-        />
-      );
-    case "skipped_for_undefined":
-      return (
-        <Alert
-          isInline
-          component="p"
-          variant="info"
-          title={words("desiredState.compare.skipped_for_undefined")}
-        />
-      );
-    case "added":
-    case "modified":
-      return null;
+  if (!statusAlertContent) {
+    return null;
   }
+
+  return (
+    <Alert
+      isInline
+      component="p"
+      variant={statusAlertContent.variant}
+      title={statusAlertContent.title}
+      customIcon={statusAlertContent.variant === "custom" ? <CheckCircleIcon /> : undefined}
+    />
+  );
 };

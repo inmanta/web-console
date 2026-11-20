@@ -182,7 +182,7 @@ describe("DesiredStateCompare", () => {
 
     await userEvent.click(within(blocks[1]).getByLabelText("Details"));
 
-    const fileDiffLabel = words("desiredState.compare.attributeChanges")("hash");
+    const fileDiffLabel = words("desiredState.compare.changes")("hash");
 
     await userEvent.click(
       within(blocks[1]).getByRole("button", { name: words("desiredState.compare.file.show") })
@@ -311,9 +311,7 @@ describe("DesiredStateCompare", () => {
 
     await waitFor(() =>
       expect(
-        within(blocks[2]).getByLabelText(
-          words("desiredState.compare.attributeChanges")("next_version")
-        )
+        within(blocks[2]).getByLabelText(words("desiredState.compare.changes")("next_version"))
       ).toBeVisible()
     );
 
@@ -329,16 +327,17 @@ describe("DesiredStateCompare", () => {
 
     render(component);
 
-    const resource = DesiredStateDiff.resources[8];
+    const [resource] = DesiredStateDiff.resources.filter(({ status }) => status === "agent_down");
     const agentName = Resource.IdParser.getAgentName(resource.resource_id) ?? "";
     const blocks = await screen.findAllByTestId("DiffBlock");
+    const [block] = blocks.filter((block) => within(block).queryByText(resource.resource_id));
 
-    await userEvent.click(within(blocks[8]).getByLabelText("Details"));
+    await userEvent.click(within(block).getByLabelText("Details"));
 
     expect(
-      within(blocks[8]).getByText(words("desiredState.compare.agent_down")(agentName))
+      within(block).getByText(words("desiredState.compare.agent_down")(agentName))
     ).toBeVisible();
-    expect(within(blocks[8]).queryByRole("grid")).not.toBeInTheDocument();
+    expect(within(block).queryByRole("grid")).not.toBeInTheDocument();
   });
 
   test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {

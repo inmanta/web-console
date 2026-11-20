@@ -296,7 +296,7 @@ export const uiMessages = {
   "agent.tests.up": "up",
 
   /** Desired State Details */
-  "desiredState.compare.changes": (resourceId: string) => `Changes of ${resourceId}`,
+  "desiredState.compare.changes": (name: string) => `Changes of ${name}`,
   "desiredState.compare.deleted": "This resource has been deleted.",
   "desiredState.compare.unmodified": "This resource has not been modified.",
   "desiredState.compare.agent_down": (agentName: string) =>
@@ -308,6 +308,8 @@ export const uiMessages = {
   "desiredState.compare.file.show": "Compare file content",
   "desiredState.compare.file.title": "File content",
   "desiredState.compare.file.hide": "Hide",
+  "desiredState.compare.file.hideAriaLabel": (resourceId: string) =>
+    `Hide file content of ${resourceId}`,
   "desiredState.complianceCheck.report.view": "View report",
   "desiredState.complianceCheck.report.started": "Dry run started",
 

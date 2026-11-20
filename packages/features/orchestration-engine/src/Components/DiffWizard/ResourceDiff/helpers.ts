@@ -1,5 +1,5 @@
-import { Diff } from "@inmanta/web-console-core";
-import { DIFF_SIDES, DiffSide, ValueParts } from "./types";
+import { Diff, Resource, words } from "@inmanta/web-console-core";
+import { DIFF_SIDES, DiffSide, StatusAlertContent, ValueParts } from "./types";
 
 /**
  * Splits both values of a changed attribute around the part that differs: what lies between the
@@ -79,5 +79,33 @@ export const getSidesWithValues = (status: Diff.Status): DiffSide[] => {
       return ["from"];
     default:
       return DIFF_SIDES;
+  }
+};
+
+/**
+ * Gets the variant and title of the inline alert that explains the diff status of a resource.
+ * Added and modified resources get none, since their attribute table and status label say it.
+ */
+export const getStatusAlertContent = (
+  resourceId: string,
+  status: Diff.Status
+): StatusAlertContent | null => {
+  switch (status) {
+    case "deleted":
+      return { variant: "danger", title: words("desiredState.compare.deleted") };
+    case "unmodified":
+      return { variant: "custom", title: words("desiredState.compare.unmodified") };
+    case "agent_down": {
+      const agentName = Resource.IdParser.getAgentName(resourceId) ?? "???";
+
+      return { variant: "info", title: words("desiredState.compare.agent_down")(agentName) };
+    }
+    case "undefined":
+      return { variant: "info", title: words("desiredState.compare.undefined") };
+    case "skipped_for_undefined":
+      return { variant: "info", title: words("desiredState.compare.skipped_for_undefined") };
+    case "added":
+    case "modified":
+      return null;
   }
 };

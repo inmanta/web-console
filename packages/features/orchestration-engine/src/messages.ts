@@ -58,10 +58,7 @@ export const orchestrationEngineMessages = {
   "desiredState.compare.action.compareWithCurrentState": "Compare with current state",
   "desiredState.compare.selectionLabel": "Selected for compare: ",
   "desiredState.compare.empty": "No changes found",
-  "desiredState.compare.attributeChanges": (attributeName: string) => `Changes of ${attributeName}`,
   "desiredState.compare.attributes": (resourceId: string) => `Attributes of ${resourceId}`,
-  "desiredState.compare.file.hideAriaLabel": (resourceId: string) =>
-    `Hide file content of ${resourceId}`,
   "desiredState.compare.notPresent": "not present",
   "desiredState.complianceCheck.title": "Compliance Check",
   "desiredState.complianceCheck.failed": "Getting list of dryruns failed",

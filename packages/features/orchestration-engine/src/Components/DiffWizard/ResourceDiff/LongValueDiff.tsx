@@ -1,11 +1,13 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { DiffEditor, DiffOnMount } from "@monaco-editor/react";
+import { Flex } from "@patternfly/react-core";
 import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import { DiffSideLabels } from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/types";
 import { useTheme } from "@inmanta/web-console-ui/Components/DarkmodeOption";
 import {
   DIFF_EDITOR_OPTIONS,
+  DiffEditorLayout,
   INITIAL_DIFF_EDITOR_HEIGHT,
   MonacoDiffEditor,
   SIDE_BY_SIDE_MIN_WIDTH,
@@ -16,15 +18,15 @@ interface Props extends DiffSideLabels {
   attributeName: string;
   fromValue: string;
   toValue: string;
-  onDiffReady?: () => void;
+  header?: ReactNode;
 }
 
 /**
  * The line diff of a long value, like a config, JSON or file content, in Monaco's diff editor.
  * The editor is as high as its content and is read only. From SIDE_BY_SIDE_MIN_WIDTH the sides
  * sit next to each other, with a strip above that names each side, lined up with its code; below
- * it they are stacked. The diff stays hidden until Monaco has computed it and folded the unchanged
- * lines, so it shows at its final size at once.
+ * it they are stacked. The diff and its header stay hidden until Monaco has computed the diff and
+ * folded the unchanged lines, so they show at their final size at once.
  *
  * @props {Props} props - The component props
  *  @prop {string} attributeName - The name of the attribute, which labels the diff
@@ -32,7 +34,7 @@ interface Props extends DiffSideLabels {
  *  @prop {string} toValue - The value the diff goes to
  *  @prop {string} fromLabel - The header of the side the diff starts from
  *  @prop {string} toLabel - The header of the side the diff goes to
- *  @prop {() => void} [onDiffReady] - Called when the diff shows, to show its surroundings with it
+ *  @prop {ReactNode} [header] - Content above the diff, shown together with it
  *
  * @returns {React.FC<Props>} The line diff
  *
@@ -49,19 +51,19 @@ export const LongValueDiff: React.FC<Props> = ({
   toValue,
   fromLabel,
   toLabel,
-  onDiffReady,
+  header,
 }) => {
-  const [isSideBySide, setIsSideBySide] = useState<boolean | undefined>(undefined);
+  const [diffEditorLayout, setDiffEditorLayout] = useState<DiffEditorLayout>();
   const [isDiffReady, setIsDiffReady] = useState(false);
   const [contentHeight, setContentHeight] = useState(INITIAL_DIFF_EDITOR_HEIGHT);
-  const [sideLabelsLayout, setSideLabelsLayout] = useState<SideLabelsLayout | null>(null);
+  const [sideLabelsLayout, setSideLabelsLayout] = useState<SideLabelsLayout>();
   const frameRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<MonacoDiffEditor>(undefined);
   const { theme } = useTheme();
 
   const options = useMemo(
-    () => ({ ...DIFF_EDITOR_OPTIONS, renderSideBySide: isSideBySide }),
-    [isSideBySide]
+    () => ({ ...DIFF_EDITOR_OPTIONS, renderSideBySide: diffEditorLayout === "sideBySide" }),
+    [diffEditorLayout]
   );
 
   useLayoutEffect(() => {
@@ -71,10 +73,11 @@ export const LongValueDiff: React.FC<Props> = ({
       return;
     }
 
-    const updateIsSideBySide = () => setIsSideBySide(frame.clientWidth >= SIDE_BY_SIDE_MIN_WIDTH);
-    const resizeObserver = new ResizeObserver(updateIsSideBySide);
+    const updateDiffEditorLayout = () =>
+      setDiffEditorLayout(frame.clientWidth >= SIDE_BY_SIDE_MIN_WIDTH ? "sideBySide" : "stacked");
+    const resizeObserver = new ResizeObserver(updateDiffEditorLayout);
 
-    updateIsSideBySide();
+    updateDiffEditorLayout();
     resizeObserver.observe(frame);
 
     return () => resizeObserver.disconnect();
@@ -92,13 +95,6 @@ export const LongValueDiff: React.FC<Props> = ({
       const fromLayout = originalEditor.getLayoutInfo();
       const toLayout = modifiedEditor.getLayoutInfo();
 
-      // Stacked, the editor of the from side shrinks to its line numbers.
-      if (fromLayout.width <= fromLayout.contentLeft) {
-        setSideLabelsLayout(null);
-
-        return;
-      }
-
       setSideLabelsLayout({
         fromWidth: editor.getContainerDomNode().clientWidth - toLayout.width,
         fromCodeStart: fromLayout.contentLeft,
@@ -109,7 +105,6 @@ export const LongValueDiff: React.FC<Props> = ({
     const showDiff = () => {
       updateContentHeight();
       setIsDiffReady(true);
-      onDiffReady?.();
     };
 
     updateContentHeight();
@@ -144,30 +139,33 @@ export const LongValueDiff: React.FC<Props> = ({
   );
 
   return (
-    <DiffFrame ref={frameRef} $isDiffReady={isDiffReady}>
-      {sideLabelsLayout && (
-        <SideLabels $fromWidth={sideLabelsLayout.fromWidth}>
-          <SideLabel $codeStart={sideLabelsLayout.fromCodeStart}>{fromLabel}</SideLabel>
-          <SideLabel $codeStart={sideLabelsLayout.toCodeStart}>{toLabel}</SideLabel>
-        </SideLabels>
-      )}
-      {isSideBySide !== undefined && (
-        <DiffEditor
-          height={`${isDiffReady ? contentHeight : INITIAL_DIFF_EDITOR_HEIGHT}px`}
-          original={fromValue}
-          modified={toValue}
-          options={options}
-          theme={`vs-${theme}`}
-          loading={null}
-          keepCurrentOriginalModel
-          keepCurrentModifiedModel
-          wrapperProps={{
-            "aria-label": words("desiredState.compare.attributeChanges")(attributeName),
-          }}
-          onMount={handleMount}
-        />
-      )}
-    </DiffFrame>
+    <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }}>
+      {isDiffReady && header}
+      <DiffFrame ref={frameRef} $isDiffReady={isDiffReady}>
+        {diffEditorLayout === "sideBySide" && sideLabelsLayout && (
+          <SideLabels $fromWidth={sideLabelsLayout.fromWidth}>
+            <SideLabel $codeStart={sideLabelsLayout.fromCodeStart}>{fromLabel}</SideLabel>
+            <SideLabel $codeStart={sideLabelsLayout.toCodeStart}>{toLabel}</SideLabel>
+          </SideLabels>
+        )}
+        {diffEditorLayout && (
+          <DiffEditor
+            height={`${isDiffReady ? contentHeight : INITIAL_DIFF_EDITOR_HEIGHT}px`}
+            original={fromValue}
+            modified={toValue}
+            options={options}
+            theme={`vs-${theme}`}
+            loading={null}
+            keepCurrentOriginalModel
+            keepCurrentModifiedModel
+            wrapperProps={{
+              "aria-label": words("desiredState.compare.changes")(attributeName),
+            }}
+            onMount={handleMount}
+          />
+        )}
+      </DiffFrame>
+    </Flex>
   );
 };
 

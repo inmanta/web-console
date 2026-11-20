@@ -1,10 +1,14 @@
 import { DiffEditorProps, DiffOnMount } from "@monaco-editor/react";
+import { AlertProps } from "@patternfly/react-core";
 
 /** Monaco's diff editor, as the DiffEditor hands it to its onMount callback. */
 export type MonacoDiffEditor = Parameters<DiffOnMount>[0];
 
 /** The diff width in px from which the two sides sit next to each other instead of stacked. */
 export const SIDE_BY_SIDE_MIN_WIDTH = 900;
+
+/** How the diff editor places the two sides: next to each other, or stacked in one column. */
+export type DiffEditorLayout = "sideBySide" | "stacked";
 
 /**
  * The options of the line diff of a long value. Unchanged lines fold to 3 lines of context, a
@@ -51,6 +55,13 @@ export interface ValueParts {
 
   /** The end the value shares with the other side. */
   commonEnd: string;
+}
+
+/** The variant and title of the inline alert that explains the diff status of a resource. */
+export interface StatusAlertContent {
+  /** The PatternFly variant, `custom` for unmodified, which gets a check icon. */
+  variant: AlertProps["variant"];
+  title: string;
 }
 
 /**
