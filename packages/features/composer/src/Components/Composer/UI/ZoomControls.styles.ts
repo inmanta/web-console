@@ -19,111 +19,49 @@ export const ZoomControlsContainer = styled.div`
   filter: drop-shadow(0.05rem 0.2rem 0.2rem var(--pf-t--global--box-shadow--color--100));
   z-index: 10;
 
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.25rem;
-    min-width: auto;
-    width: 2rem;
-    height: 2rem;
+  // Every control is a square icon button's height, through PatternFly's own sizing: the block
+  // padding leaves exactly the control size around one line of text, whatever the variant. The
+  // Arrange menu toggle keeps its inline padding for its text; the icon buttons have none and
+  // centre their icon, so they are as wide as they are high (the button's minimum width).
+  --toolbar-control--size: var(--pf-t--global--spacer--xl);
+  --toolbar-control--padding-block: calc((var(--toolbar-control--size) - 1lh) / 2);
 
-    &:hover {
-      background: transparent;
-    }
-
-    img {
-      display: block;
-      margin: 0;
-    }
+  .pf-v6-c-button.toolbar-control {
+    --pf-v6-c-button--AlignItems: center;
+    --pf-v6-c-button--PaddingBlockStart: var(--toolbar-control--padding-block);
+    --pf-v6-c-button--PaddingBlockEnd: var(--toolbar-control--padding-block);
+    --pf-v6-c-button--m-control--PaddingInlineStart: 0;
+    --pf-v6-c-button--m-control--PaddingInlineEnd: 0;
   }
 
-  .zoom-slider-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  .pf-v6-c-menu-toggle.toolbar-control {
+    --pf-v6-c-menu-toggle--PaddingBlockStart: var(--toolbar-control--padding-block);
+    --pf-v6-c-menu-toggle--PaddingBlockEnd: var(--toolbar-control--padding-block);
+  }
 
-    output {
-      color: var(--pf-t--global--text--color--subtle);
-      min-width: 2.5rem;
-      text-align: right;
-      font-size: 0.875rem;
-    }
+  .toolbar-divider {
+    width: 1px;
+    height: var(--pf-t--global--spacer--lg);
+    margin: 0 var(--pf-t--global--spacer--xs);
+    background: var(--pf-t--global--border--color--default);
+  }
 
-    input[type="range"] {
-      -webkit-appearance: none;
-      appearance: none;
-      cursor: pointer;
-      width: 6rem;
-      height: 0.15rem;
-      margin-right: 0.5rem;
-      border-radius: 0.5rem;
-      --slider-background: linear-gradient(
-        to right,
-        var(--pf-t--global--border--color--brand--default) 0%,
-        var(--pf-t--global--border--color--brand--default) 20%,
-        var(--pf-t--global--border--color--nonstatus--gray--default) 20%,
-        var(--pf-t--global--border--color--nonstatus--gray--default) 100%
-      );
-    }
+  // PatternFly's slider leaves room above and below its rail for ticks and labels; the toolbar
+  // shows neither, so the slider fits in the height of a control.
+  .zoom-slider {
+    --pf-v6-c-slider__rail--PaddingBlockStart: var(--pf-t--global--spacer--sm);
+    --pf-v6-c-slider__rail--PaddingBlockEnd: var(--pf-t--global--spacer--sm);
+    --pf-v6-c-slider__thumb--InsetBlockStart: calc(
+      var(--pf-v6-c-slider__rail-track--Height) / 2 + var(--pf-t--global--spacer--sm)
+    );
+    width: 6rem;
+    margin-inline: var(--pf-t--global--spacer--sm);
+  }
 
-    input[type="range"]:focus {
-      outline: none;
-    }
-
-    /* Chrome, Safari, Opera and Edge Chromium styles */
-    input[type="range"]::-webkit-slider-runnable-track {
-      background: var(
-        --slider-background,
-        linear-gradient(
-          to right,
-          var(--pf-t--global--border--color--brand--default) 0%,
-          var(--pf-t--global--border--color--brand--default) 20%,
-          var(--pf-t--global--border--color--nonstatus--gray--default) 20%,
-          var(--pf-t--global--border--color--nonstatus--gray--default) 100%
-        )
-      );
-      border-radius: 0.5rem;
-      height: 0.15rem;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      margin-top: -3.6px;
-      background-color: var(--pf-t--global--border--color--brand--default);
-      border-radius: 0.5rem;
-      height: 0.7rem;
-      width: 0.7rem;
-    }
-
-    /* Firefox styles */
-    input[type="range"]::-moz-range-track {
-      background: var(
-        --slider-background,
-        linear-gradient(
-          to right,
-          var(--pf-t--global--border--color--brand--default) 0%,
-          var(--pf-t--global--border--color--brand--default) 20%,
-          var(--pf-t--global--border--color--nonstatus--gray--default) 20%,
-          var(--pf-t--global--border--color--nonstatus--gray--default) 100%
-        )
-      );
-      border-radius: 0.5rem;
-      height: 0.15rem;
-    }
-
-    input[type="range"]::-moz-range-thumb {
-      background-color: var(--pf-t--global--border--color--brand--default);
-      border: none;
-      border-radius: 0.5rem;
-      height: 0.7rem;
-      width: 0.7rem;
-    }
-
-    input[type="range"]:focus::-moz-range-thumb {
-      outline: 3px solid var(--pf-t--global--border--color--brand--default);
-      outline-offset: 0.125rem;
-    }
+  .zoom-percentage {
+    min-width: 2.5rem;
+    color: var(--pf-t--global--text--color--subtle);
+    font-size: var(--pf-t--global--font--size--body--sm);
+    text-align: right;
   }
 `;

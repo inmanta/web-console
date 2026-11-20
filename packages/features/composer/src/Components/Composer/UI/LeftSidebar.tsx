@@ -1,276 +1,630 @@
-import React, { useContext, useEffect, useRef, Dispatch, SetStateAction } from "react";
-import { dia, ui } from "@joint/plus";
+import React, { useContext, useMemo, useState } from "react";
+import {
+  Badge,
+  Button,
+  Content,
+  EmptyState,
+  EmptyStateActions,
+  EmptyStateBody,
+  EmptyStateFooter,
+  Label,
+  SearchInput,
+  Tab,
+  Tabs,
+  TabTitleText,
+  Tooltip,
+} from "@patternfly/react-core";
+import { AngleDownIcon } from "@patternfly/react-icons/dist/esm/icons/angle-down-icon";
+import { AngleRightIcon } from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
+import { GripVerticalIcon } from "@patternfly/react-icons/dist/esm/icons/grip-vertical-icon";
+import { PlusCircleIcon } from "@patternfly/react-icons/dist/esm/icons/plus-circle-icon";
+import { useReactFlow, useStore } from "@xyflow/react";
 import styled from "styled-components";
-import { ServiceModel, words } from "@inmanta/web-console-core";
+import {
+  EmbeddedEntity,
+  groupByEntityAnnotations,
+  resolveLifecycleState,
+  ServiceModel,
+  State,
+  words,
+} from "@inmanta/web-console-core";
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
-import { RelationsDictionary } from "../Data";
-import { ComposerContext } from "../Data/Context";
-import { LEFT_SIDEBAR_WIDTH } from "../config";
-import { InstanceTabElement, InventoryTabElement, ServiceEntityShape } from "./JointJsShapes";
+import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
+import { ComposerContext, PaletteItem } from "../Data/Context";
+import { getInstanceIdsOnCanvas } from "../Data/Helpers";
+import { useAddPaletteItem } from "../Data/Hooks";
+import { EntityShapeType } from "../Data/ServiceEntityShape";
+import { LEFT_SIDEBAR_WIDTH, SHAPE_WIDTH } from "../config";
+import { EntityIcon } from "./EntityIcon";
+import { OverflowText } from "./OverflowText";
+import { entityColorVariables } from "./entityColors";
 
-export const LeftSidebar: React.FC = () => {
-  const {
-    scroller,
-    serviceInventories,
-    mainService,
-    editable,
-    serviceCatalog,
-    canvasState,
-    setCanvasState,
-    graph,
-    relationsDictionary,
-  } = useContext(ComposerContext);
-  const LeftSidebarRef = useRef<HTMLDivElement>(null);
-  // Track canvasState in a ref so the sidebar can read the latest value at construction time
-  // without triggering a full teardown/recreation on every canvas interaction.
-  const canvasStateRef = useRef(canvasState);
-  useEffect(() => {
-    canvasStateRef.current = canvasState;
-  }, [canvasState]);
+interface PaletteRow {
+  key: string;
 
-  useEffect(() => {
-    if (!LeftSidebarRef.current || !scroller || !mainService || !graph) {
-      return;
-    }
+  /** The full name, which the search matches */
+  label: string;
 
-    // Wait for serviceInventories to have actual data (not just an empty object)
-    const hasInventoryData = serviceInventories && Object.keys(serviceInventories).length > 0;
-    if (!hasInventoryData && serviceInventories !== null) {
-      // serviceInventories exists but is empty - wait for data to load
-      return;
-    }
+  /** The name the row shows */
+  name: string;
 
-    const sidebar = new LeftSidebarElement(
-      LeftSidebarRef.current,
-      scroller,
-      serviceInventories || {},
-      serviceCatalog,
-      mainService,
-      setCanvasState,
-      graph,
-      relationsDictionary,
-      canvasStateRef.current
+  /** What kind of entity it is, in small text under the name */
+  detail?: string;
+
+  /** The lifecycle state of an inventory instance, under its name */
+  state?: State;
+  item: PaletteItem;
+  unavailableReason?: string;
+}
+
+interface PaletteGroup {
+  /** Identifies the group in keys and test ids, so a group named like the fallback can't collide */
+  key: string;
+  name: string;
+  rows: PaletteRow[];
+}
+
+type PaletteTab = "new" | "inventory";
+
+const isPaletteTab = (key: string | number): key is PaletteTab =>
+  key === "new" || key === "inventory";
+
+/**
+ * The names of an embedded entity's row: its type, and the attribute it is embedded as.
+ */
+const getEmbeddedNames = (embeddedEntity: EmbeddedEntity) => {
+  const typeName = embeddedEntity.type || undefined;
+  const embeddedAs = typeName && embeddedEntity.name;
+
+  return {
+    label: embeddedAs
+      ? words("instanceComposer.label.embeddedAs")(typeName, embeddedAs)
+      : typeName || embeddedEntity.name,
+    name: typeName || embeddedEntity.name,
+    detail: embeddedAs
+      ? words("instanceComposer.label.withName")(
+          words("instanceComposer.label.embedded"),
+          embeddedAs
+        )
+      : words("instanceComposer.label.embedded"),
+  };
+};
+
+/**
+ * The embedded entities a user can create below a service or embedded entity, nested ones
+ * included. Read-only embedded entities can't be created, so they are left out.
+ */
+const getEmbeddedRows = (
+  serviceModel: ServiceModel | EmbeddedEntity,
+  keyPrefix: string
+): PaletteRow[] =>
+  serviceModel.embedded_entities
+    .filter((embeddedEntity) => embeddedEntity.modifier !== "r")
+    .flatMap((embeddedEntity) => {
+      const key = `${keyPrefix}/${embeddedEntity.name}`;
+
+      return [
+        {
+          key,
+          ...getEmbeddedNames(embeddedEntity),
+          item: {
+            kind: "new" as const,
+            serviceModel: embeddedEntity,
+            entityType: "embedded" as const,
+          },
+        },
+        ...getEmbeddedRows(embeddedEntity, key),
+      ];
+    });
+
+/**
+ * The rows of one service: the service itself, then its embedded entities.
+ */
+const getServiceRows = (serviceModel: ServiceModel): PaletteRow[] => [
+  {
+    key: serviceModel.name,
+    label: serviceModel.name,
+    name: serviceModel.name,
+    detail: words("instanceComposer.label.core"),
+    item: { kind: "new", serviceModel, entityType: "core" },
+  },
+  ...getEmbeddedRows(serviceModel, serviceModel.name),
+];
+
+/**
+ * The services grouped like the service catalog: by their `web_group` annotation
+ * (groupByEntityAnnotations), the ungrouped ones last, under "Other services". Each service
+ * brings its embedded entities with it.
+ *
+ * A catalog without any `web_group` keeps a group per service, so its services stay
+ * headers of their own.
+ */
+const buildNewGroups = (serviceCatalog: ServiceModel[]): PaletteGroup[] => {
+  const groups = groupByEntityAnnotations(serviceCatalog);
+
+  if (groups.every((group) => group.name === undefined)) {
+    return groups.flatMap((group) =>
+      group.services.map(({ serviceModel }) => ({
+        key: serviceModel.name,
+        name: serviceModel.name,
+        rows: getServiceRows(serviceModel),
+      }))
     );
+  }
 
-    return () => {
-      sidebar.remove();
-    };
-  }, [
-    scroller,
-    serviceInventories,
-    mainService,
-    serviceCatalog,
-    relationsDictionary,
-    setCanvasState,
-    graph,
-  ]);
+  return groups.map((group) => ({
+    key: group.name ?? "other-services",
+    name: group.name ?? words("instanceComposer.palette.otherServices"),
+    rows: group.services.flatMap(({ serviceModel }) => getServiceRows(serviceModel)),
+  }));
+};
+
+/**
+ * One group per service with instances in the inventory.
+ */
+const buildInventoryGroups = (
+  serviceInventories: Inventories | null,
+  serviceCatalog: ServiceModel[],
+  onCanvas: Set<string>
+): PaletteGroup[] =>
+  Object.entries(serviceInventories || {}).flatMap(([serviceName, instances]) => {
+    const serviceModel = serviceCatalog.find((model) => model.name === serviceName);
+
+    if (!serviceModel || instances.length === 0) {
+      return [];
+    }
+
+    return [
+      {
+        key: serviceName,
+        name: serviceName,
+        rows: instances.map((instance) => {
+          const label = instance.service_identity_attribute_value || instance.id;
+
+          return {
+            key: instance.id,
+            label,
+            name: label,
+            state: resolveLifecycleState(serviceModel.lifecycle.states, instance.state),
+            item: { kind: "inventory", instance, serviceModel },
+            unavailableReason: onCanvas.has(instance.id)
+              ? words("instanceComposer.palette.onCanvas")
+              : undefined,
+          };
+        }),
+      },
+    ];
+  });
+
+/**
+ * The kind of card a row adds: an inventory instance comes on the canvas as a read-only relation.
+ */
+const getRowKind = (row: PaletteRow): EntityShapeType =>
+  row.item.kind === "new" ? row.item.entityType : "relation";
+
+const filterGroups = (groups: PaletteGroup[], query: string): PaletteGroup[] => {
+  const needle = query.trim().toLowerCase();
+
+  if (!needle) {
+    return groups;
+  }
+
+  return groups
+    .map((group) => ({
+      ...group,
+      rows: group.name.toLowerCase().includes(needle)
+        ? group.rows
+        : group.rows.filter((row) => row.label.toLowerCase().includes(needle)),
+    }))
+    .filter((group) => group.rows.length > 0);
+};
+
+/**
+ * The entity palette: new services and embedded entities, and the instances in the
+ * inventory, grouped per service. An item is dragged onto the canvas, or added at the
+ * centre of the view with its + button. Hidden in view mode.
+ */
+export const LeftSidebar: React.FC = () => {
+  const { serviceCatalog, serviceInventories, editable, canvasState, draggedItemRef } =
+    useContext(ComposerContext);
+  const addPaletteItem = useAddPaletteItem();
+  const { screenToFlowPosition } = useReactFlow();
+  const canvasElement = useStore((state) => state.domNode);
+  const [activeTab, setActiveTab] = useState<PaletteTab>("new");
+  const [queries, setQueries] = useState<Record<PaletteTab, string>>({ new: "", inventory: "" });
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+
+  const newGroups = useMemo(() => buildNewGroups(serviceCatalog), [serviceCatalog]);
+  const inventoryGroups = useMemo(
+    () =>
+      buildInventoryGroups(serviceInventories, serviceCatalog, getInstanceIdsOnCanvas(canvasState)),
+    [serviceInventories, serviceCatalog, canvasState]
+  );
+
+  const query = queries[activeTab];
+  const groups = filterGroups(activeTab === "new" ? newGroups : inventoryGroups, query);
+  const resultCount = groups.reduce((count, group) => count + group.rows.length, 0);
+  const setQuery = (value: string) => setQueries((prev) => ({ ...prev, [activeTab]: value }));
+
+  const toggleGroup = (groupKey: string) =>
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      const key = `${activeTab}/${groupKey}`;
+
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+
+      return next;
+    });
+
+  const addAtCentre = (item: PaletteItem) => {
+    const bounds = canvasElement?.getBoundingClientRect();
+
+    if (!bounds) {
+      return;
+    }
+    const centre = screenToFlowPosition({
+      x: bounds.left + bounds.width / 2,
+      y: bounds.top + bounds.height / 2,
+    });
+
+    addPaletteItem(item, { x: centre.x - SHAPE_WIDTH / 2, y: centre.y - 40 });
+  };
 
   return (
-    <LeftSidebarStyling
-      className={`left_sidebar ${!editable && "view_mode"}`}
+    <Sidebar
+      className={editable ? "left_sidebar" : "left_sidebar view_mode"}
       data-testid="left_sidebar"
-      ref={LeftSidebarRef}
-    />
+      aria-label={words("instanceComposer.palette")}
+    >
+      <Tabs
+        activeKey={activeTab}
+        onSelect={(_event, key) => {
+          if (isPaletteTab(key)) {
+            setActiveTab(key);
+          }
+        }}
+        aria-label={words("instanceComposer.palette")}
+        isFilled
+      >
+        <Tab
+          eventKey="new"
+          id={PALETTE_ID}
+          tabContentId={PANEL_ID}
+          title={<TabTitleText>{words("instanceComposer.stencil.new")}</TabTitleText>}
+        />
+        <Tab
+          eventKey="inventory"
+          id={PALETTE_ID}
+          tabContentId={PANEL_ID}
+          title={<TabTitleText>{words("instanceComposer.stencil.inventory")}</TabTitleText>}
+        />
+      </Tabs>
+      {/* Both tabs show this panel; its content follows the selected tab */}
+      <div
+        className="palette-panel"
+        id={PANEL_ID}
+        role="tabpanel"
+        aria-labelledby={`pf-tab-${activeTab}-${PALETTE_ID}`}
+      >
+        <div className="palette-search">
+          <SearchInput
+            value={query}
+            onChange={(_event, value) => setQuery(value)}
+            onClear={() => setQuery("")}
+            resultsCount={
+              query ? words("instanceComposer.palette.results")(resultCount) : undefined
+            }
+            placeholder={
+              activeTab === "new"
+                ? words("instanceComposer.palette.searchEntities")
+                : words("instanceComposer.palette.searchInstances")
+            }
+            aria-label={
+              activeTab === "new"
+                ? words("instanceComposer.palette.searchEntities")
+                : words("instanceComposer.palette.searchInstances")
+            }
+          />
+          {activeTab === "new" && (
+            <Content component="small">{words("instanceComposer.palette.hint")}</Content>
+          )}
+        </div>
+        <div className="palette-groups">
+          {groups.length === 0 && (
+            <EmptyState
+              headingLevel="h3"
+              titleText={
+                query
+                  ? words("instanceComposer.palette.noResults.title")(query)
+                  : words("instanceComposer.palette.noInstances")
+              }
+              variant="xs"
+            >
+              {query && (
+                <>
+                  <EmptyStateBody>
+                    {words("instanceComposer.palette.noResults.body")}
+                  </EmptyStateBody>
+                  <EmptyStateFooter>
+                    <EmptyStateActions>
+                      <Button variant="link" onClick={() => setQuery("")}>
+                        {words("instanceComposer.palette.clearSearch")}
+                      </Button>
+                    </EmptyStateActions>
+                  </EmptyStateFooter>
+                </>
+              )}
+            </EmptyState>
+          )}
+          {groups.map((group) => {
+            const isOpen = !!query || !collapsedGroups.has(`${activeTab}/${group.key}`);
+
+            return (
+              <div
+                className="palette-group"
+                key={group.key}
+                data-testid={`palette-group-${group.key}`}
+              >
+                <button
+                  type="button"
+                  className="palette-group-toggle"
+                  aria-expanded={isOpen}
+                  onClick={() => toggleGroup(group.key)}
+                >
+                  {isOpen ? <AngleDownIcon /> : <AngleRightIcon />}
+                  <span className="palette-group-name">{group.name}</span>
+                  <Badge isRead>{group.rows.length}</Badge>
+                </button>
+                {isOpen && (
+                  <ul>
+                    {group.rows.map((row) =>
+                      row.unavailableReason ? (
+                        <li
+                          key={row.key}
+                          className="palette-row is-unavailable"
+                          style={entityColorVariables(getRowKind(row))}
+                          aria-disabled="true"
+                          data-testid={`palette-item-${row.label}`}
+                        >
+                          <PaletteRowIcon row={row} />
+                          <PaletteRowText row={row} />
+                          <Label isCompact variant="outline" className="palette-row-reason">
+                            {row.unavailableReason}
+                          </Label>
+                        </li>
+                      ) : (
+                        <li
+                          key={row.key}
+                          className="palette-row"
+                          style={entityColorVariables(getRowKind(row))}
+                          data-testid={`palette-item-${row.label}`}
+                          draggable
+                          onDragStart={(event) => {
+                            draggedItemRef.current = row.item;
+                            event.dataTransfer.setData("text/plain", row.label);
+                            event.dataTransfer.effectAllowed = "copy";
+                          }}
+                          onDragEnd={() => {
+                            draggedItemRef.current = null;
+                          }}
+                        >
+                          <PaletteRowIcon row={row} />
+                          <PaletteRowText row={row} />
+                          <Button
+                            className="palette-row-add"
+                            variant="plain"
+                            size="sm"
+                            icon={<PlusCircleIcon />}
+                            aria-label={words("instanceComposer.palette.add")(row.label)}
+                            onClick={() => addAtCentre(row.item)}
+                          />
+                        </li>
+                      )
+                    )}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </Sidebar>
   );
 };
 
-class LeftSidebarElement {
-  instanceTab: InstanceTabElement;
-  inventoryTab: InventoryTabElement;
-  tabsToolbar: ui.Toolbar;
+/**
+ * The icon of a palette row, in a tile of its kind's colours, with the kind in a tooltip. The grip
+ * takes the icon's place while a row that can be dragged is pointed at.
+ */
+const PaletteRowIcon: React.FC<{ row: PaletteRow }> = ({ row }) => (
+  <Tooltip content={words(`instanceComposer.label.${getRowKind(row)}`)} aria="none">
+    <span className="palette-row-icon" aria-hidden>
+      <EntityIcon serviceModel={row.item.serviceModel} />
+      {!row.unavailableReason && <GripVerticalIcon className="palette-row-grip" />}
+    </span>
+  </Tooltip>
+);
 
-  constructor(
-    htmlRef: HTMLElement,
-    scroller: ui.PaperScroller,
-    serviceInventories: Inventories,
-    serviceModels: ServiceModel[],
-    service: ServiceModel,
-    setCanvasState: Dispatch<SetStateAction<Map<string, ServiceEntityShape>>>,
-    graph: dia.Graph,
-    relationsDictionary: RelationsDictionary,
-    initialCanvasState: Map<string, ServiceEntityShape>
-  ) {
-    // Create the tabs toolbar first and prepend it
-    this.tabsToolbar = new ui.Toolbar({
-      id: "tabs-toolbar",
-      tools: [],
-    });
+/**
+ * The name of a palette row, and under it what kind of entity it is, or for an inventory
+ * instance its lifecycle state. Only text that doesn't fit is cut short, with a tooltip.
+ */
+const PaletteRowText: React.FC<{ row: PaletteRow }> = ({ row }) => (
+  <span className="palette-row-text">
+    <OverflowText className="palette-row-name" text={row.name} />
+    {row.detail && <OverflowText className="palette-row-detail" text={row.detail} />}
+    {row.state && (
+      <span className="palette-row-state">
+        <InstanceStateLabel {...row.state} isCompact />
+      </span>
+    )}
+  </span>
+);
 
-    const tabButtons: HTMLElement = document.createElement("div");
+/** The ids PatternFly builds the tabs' ids from, and the panel they control. */
+const PALETTE_ID = "composer-palette";
+const PANEL_ID = "composer-palette-panel";
 
-    tabButtons.classList.add("pf-v6-c-tabs", "pf-m-inset-lg");
-    tabButtons.role = "region";
-    tabButtons.innerHTML = `
-            <ul class="pf-v6-c-tabs__list" role="tablist" aria-label="stencil-sidebar-tabs">
-              <li class="pf-v6-c-tabs__item  pf-m-current" role="presentation" id="new-tab">
-                <button
-                  type="button"
-                  class="pf-v6-c-tabs__link"
-                  role="tab"
-                  name="new_tab"
-                >
-                  <span class="pf-v6-c-tabs__item-text"></span>
-                </button>
-              </li>
-              <li class="pf-v6-c-tabs__item" role="presentation" id="inventory-tab">
-                <button
-                  type="button"
-                  class="pf-v6-c-tabs__link"
-                  role="tab"
-                  name="inventory_tab"
-                >
-                  <span class="pf-v6-c-tabs__item-text"></span>
-                </button>
-              </li>
-            </ul>
-         `;
-
-    // Set the labels as text so no string ever reaches the HTML parser.
-    const setTabLabel = (tabId: string, label: string) => {
-      const span = tabButtons.querySelector(`#${tabId} .pf-v6-c-tabs__item-text`);
-
-      if (span) {
-        span.textContent = label;
-      }
-    };
-
-    setTabLabel("new-tab", words("instanceComposer.stencil.new"));
-    setTabLabel("inventory-tab", words("instanceComposer.stencil.inventory"));
-
-    tabButtons.addEventListener("click", (event: Event) => {
-      !!event.target && this.toggleTab(event.target);
-    });
-
-    this.tabsToolbar.el.appendChild(tabButtons);
-    htmlRef.appendChild(this.tabsToolbar.el);
-    this.tabsToolbar.render();
-
-    // Now create the stencil tabs after the toolbar
-    this.instanceTab = new InstanceTabElement(
-      htmlRef,
-      scroller,
-      service,
-      serviceModels,
-      setCanvasState,
-      graph,
-      relationsDictionary
-    );
-    this.inventoryTab = new InventoryTabElement(
-      htmlRef,
-      scroller,
-      serviceInventories,
-      serviceModels,
-      setCanvasState,
-      graph,
-      relationsDictionary,
-      initialCanvasState
-    );
-  }
-
-  /**
-   * Toggles the visibility of the tabs by freezing and unfreezing the old and new tabs
-   * and adding and removing the joint-hidden class.
-   *
-   * @private
-   * @param newActiveTab - The new active tab.
-   * @param oldActiveTab - The old active tab.
-   * @param newTabId - The id of the new tab.
-   */
-  private toggleTabVisibility = (newActiveTab: Tab, oldActiveTab: Tab, newTabId: string) => {
-    oldActiveTab.stencil.el.classList.add("joint-hidden");
-    oldActiveTab.stencil.freeze();
-
-    newActiveTab.stencil.el.classList.remove("joint-hidden");
-    newActiveTab.stencil.unfreeze();
-
-    const tabs: NodeListOf<HTMLElement> = document.querySelectorAll(
-      '[aria-label="stencil-sidebar-tabs"] li'
-    );
-
-    tabs.forEach((tab) => tab.classList.toggle("pf-m-current", tab.id === newTabId));
-  };
-
-  /**
-   * Toggles the visibility of the tabs by freezing and unfreezing the old and new tabs
-   * and adding and removing the joint-hidden class.
-   *
-   * @public
-   * @param clickedElement - The clicked element.
-   */
-  public toggleTab = (clickedElement: EventTarget) => {
-    if (clickedElement instanceof HTMLElement) {
-      // The clickedElement can also be the entire tabContainer, which we don't want to react on.
-      clickedElement.innerText === words("instanceComposer.stencil.inventory") &&
-        this.toggleTabVisibility(this.inventoryTab, this.instanceTab, "inventory-tab");
-
-      clickedElement.innerText === words("instanceComposer.stencil.new") &&
-        this.toggleTabVisibility(this.instanceTab, this.inventoryTab, "new-tab");
-    }
-  };
-
-  remove(): void {
-    this.instanceTab.stencil.remove();
-    this.inventoryTab.stencil.remove();
-    this.tabsToolbar.remove();
-  }
-}
-
-const LeftSidebarStyling = styled.div`
-  position: relative;
+const Sidebar = styled.aside`
+  display: flex;
+  flex-direction: column;
+  flex: none;
   width: ${LEFT_SIDEBAR_WIDTH}px;
   height: 100%;
-  background: var(--pf-t--global--background--color--secondary--default);
-  filter: drop-shadow(0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100));
+  background: var(--pf-t--global--background--color--primary--default);
+  border-right: 1px solid var(--pf-t--global--border--color--default);
   z-index: 1;
-  overflow: visible;
 
   &.view_mode {
     display: none;
   }
 
-  #tabs-toolbar.joint-toolbar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 52px;
-    z-index: 2;
-    border: 0;
-    background-color: var(--pf-t--global--background--color--secondary--default);
+  .palette-panel {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
   }
 
-  .joint-stencil {
-    position: absolute;
-    top: 52px;
-    left: 0;
-    right: 0;
-    bottom: 0;
+  .palette-search {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pf-t--global--spacer--sm);
+    padding: var(--pf-t--global--spacer--md) var(--pf-t--global--spacer--md)
+      var(--pf-t--global--spacer--sm);
+  }
+
+  .palette-groups {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md);
+  }
+
+  .palette-group {
+    border-bottom: 1px solid var(--pf-t--global--border--color--default);
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin: 0;
+      padding: 0 0 var(--pf-t--global--spacer--sm);
+      list-style: none;
+    }
+  }
+
+  .palette-group-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--pf-t--global--spacer--sm);
+    width: 100%;
+    padding: var(--pf-t--global--spacer--sm);
     border: 0;
-    background-color: var(--pf-t--global--background--color--primary--default);
+    background: none;
+    color: var(--pf-t--global--text--color--regular);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
 
-    &.joint-hidden {
-      visibility: hidden;
+  .palette-group-name {
+    flex: 1;
+    font-weight: var(--pf-t--global--font--weight--body--bold);
+  }
+
+  .palette-row {
+    display: flex;
+    align-items: center;
+    gap: var(--pf-t--global--spacer--sm);
+    padding: var(--pf-t--global--spacer--xs) var(--pf-t--global--spacer--xs)
+      var(--pf-t--global--spacer--xs) var(--pf-t--global--spacer--sm);
+    border-radius: var(--pf-t--global--border--radius--small);
+    cursor: grab;
+
+    &:hover {
+      background: var(--pf-t--global--background--color--primary--hover);
     }
 
-    .stencil_body-disabled {
-      pointer-events: none;
-      fill: var(--pf-t--global--background--color--disabled--default);
+    &.is-unavailable {
+      color: var(--pf-t--global--text--color--disabled);
+      cursor: not-allowed;
+
+      &:hover {
+        background: none;
+      }
+    }
+  }
+
+  // The icon tile in the colours of the entity's kind, like on the cards (entityColors)
+  .palette-row-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: var(--pf-t--global--spacer--lg);
+    height: var(--pf-t--global--spacer--lg);
+    border-radius: var(--pf-t--global--border--radius--small);
+    background: var(--entity-icon-background);
+    color: var(--entity-icon-color);
+  }
+
+  .is-unavailable .palette-row-icon {
+    opacity: 0.5;
+  }
+
+  .palette-row-grip {
+    display: none;
+  }
+
+  .palette-row:not(.is-unavailable):is(:hover, :focus-within) .palette-row-icon {
+    > * {
+      display: none;
     }
 
-    .stencil_text-disabled {
-      pointer-events: none;
-      fill: var(--pf-t--global--text--color--disabled);
+    > .palette-row-grip {
+      display: block;
     }
+  }
 
-    .stencil_accent-disabled {
-      pointer-events: none;
-      fill: var(--pf-t--global--text--color--disabled);
-    }
+  .palette-row-reason {
+    flex: none;
+  }
 
-    .content {
-      padding: 12px 0;
-    }
+  // Every row has an add button, so it stays subtle until it is pointed at or focused, like the
+  // copy icons. These are PatternFly's own button variables: check them on a PatternFly major.
+  .palette-row-add {
+    --pf-v6-c-button--m-plain__icon--Color: var(--pf-t--global--icon--color--subtle);
+    --pf-v6-c-button--hover__icon--Color: var(--pf-t--global--icon--color--regular);
+    --pf-v6-c-button--m-clicked__icon--Color: var(--pf-t--global--icon--color--regular);
+  }
+
+  .palette-row-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .palette-row-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .palette-row-detail {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--pf-t--global--text--color--subtle);
+    font-size: var(--pf-t--global--font--size--body--sm);
+  }
+
+  // A state label stays its own size instead of stretching to the row's width.
+  .palette-row-state {
+    align-self: flex-start;
+    margin-top: var(--pf-t--global--spacer--xs);
   }
 `;
-
-type Tab = InstanceTabElement | InventoryTabElement;

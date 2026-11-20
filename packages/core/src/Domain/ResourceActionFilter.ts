@@ -1,22 +1,4 @@
-import { Resource } from "./Resource";
-
-/**
- * An enum-valued field of a {@link ResourceActionFilter} (GraphQL *EnumFilter). Enum filters only
- * match on equality, against the enum's own value type rather than a free string.
- */
-export interface EnumMatch<T> {
-  eq?: T[];
-  neq?: T[];
-}
-
-/**
- * A string-valued field of a {@link ResourceActionFilter} (GraphQL StrFilter). Adds substring
- * operators on top of the equality operators a string can also be matched by.
- */
-export interface StringMatch extends EnumMatch<string> {
-  contains?: string[];
-  notContains?: string[];
-}
+import type { ResourceFilter } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 
 /**
  * The resource filter shared by the resources GraphQL query and the filtered scheduler endpoints
@@ -27,27 +9,4 @@ export interface StringMatch extends EnumMatch<string> {
  *
  * @example { resourceType: { eq: ["std::File"] }, agent: { eq: ["internal"] }, resourceIdValue: { eq: ["/tmp/f"] }, isOrphan: false }
  */
-export interface ResourceActionFilter {
-  isOrphan?: boolean;
-  resourceType?: StringMatch;
-  resourceIdValue?: StringMatch;
-  agent?: StringMatch;
-  purged?: boolean;
-  blocked?: EnumMatch<Resource.BlockedValue>;
-  compliance?: EnumMatch<Resource.ComplianceValue>;
-  lastHandlerRun?: EnumMatch<Resource.LastHandlerRunValue>;
-  isDeploying?: boolean;
-  modelVersion?: number;
-
-  /** List of service entity names. Keeps the singular name of core's GraphQL ResourceFilter field. */
-  serviceEntity?: string[];
-
-  /** List of service instance ids. Keeps the singular name of core's GraphQL ResourceFilter field. */
-  serviceInstance?: string[];
-
-  /** List of lifecycle states. Keeps the singular name of core's GraphQL ResourceFilter field. */
-  lifecycleState?: string[];
-
-  includeOwned?: boolean;
-  instanceVersion?: number;
-}
+export type ResourceActionFilter = Omit<ResourceFilter, "environment">;

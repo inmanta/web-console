@@ -20,4 +20,5 @@ export const route = (base: string): Route<"InstanceComposer"> => ({
   path: `${base}${path}`,
   generateLabel: () => "Instance Composer",
   environmentRole: "Required",
+  fillsPage: true,
 });

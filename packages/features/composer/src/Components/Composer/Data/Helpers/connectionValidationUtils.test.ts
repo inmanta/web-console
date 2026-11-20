@@ -1,8 +1,6 @@
 import { EmbeddedEntity, InterServiceRelation } from "@inmanta/web-console-core";
-import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
+import { ServiceEntityShape } from "../ServiceEntityShape";
 import {
-  checkEmbeddedEntityConnections,
-  checkInterServiceRelationConnections,
   getEmbeddedEntityMissingConnections,
   getInterServiceRelationMissingConnections,
 } from "./connectionValidationUtils";
@@ -15,6 +13,7 @@ describe("connectionValidationUtils", () => {
     return {
       isNew,
       connections,
+      getCountedConnections: (relationType: string) => connections.get(relationType) || [],
     } as unknown as ServiceEntityShape;
   };
 
@@ -46,115 +45,12 @@ describe("connectionValidationUtils", () => {
     modifier,
   });
 
-  describe("checkEmbeddedEntityConnections", () => {
-    it("should return false when connection requirement is satisfied", () => {
-      const shape = createMockShape(false, new Map([["EntityType", ["id1"]]]));
-      const entity = createEmbeddedEntity("EntityType", 1);
-
-      const result = checkEmbeddedEntityConnections(shape, entity);
-
-      expect(result).toBe(false);
-    });
-
-    it("should return true when connection requirement is not satisfied", () => {
-      const shape = createMockShape(false, new Map());
-      const entity = createEmbeddedEntity("EntityType", 1);
-
-      const result = checkEmbeddedEntityConnections(shape, entity);
-
-      expect(result).toBe(true);
-    });
-
-    it("should return false when lower_limit is 0", () => {
-      const shape = createMockShape(false, new Map());
-      const entity = createEmbeddedEntity("EntityType", 0);
-
-      const result = checkEmbeddedEntityConnections(shape, entity);
-
-      expect(result).toBe(false);
-    });
-
-    it("should return false for read-only entities when shape is not new", () => {
-      const shape = createMockShape(false, new Map());
-      const entity = createEmbeddedEntity("EntityType", 1, "r");
-
-      const result = checkEmbeddedEntityConnections(shape, entity);
-
-      expect(result).toBe(false);
-    });
-
-    it("should check connections when shape is new and entity is read-only", () => {
-      const shape = createMockShape(true, new Map());
-      const entity = createEmbeddedEntity("EntityType", 1, "r");
-
-      const result = checkEmbeddedEntityConnections(shape, entity);
-
-      expect(result).toBe(true);
-    });
-
-    it("should handle multiple connections correctly", () => {
-      const shape = createMockShape(false, new Map([["EntityType", ["id1", "id2"]]]));
-      const entity = createEmbeddedEntity("EntityType", 3);
-
-      const result = checkEmbeddedEntityConnections(shape, entity);
-
-      expect(result).toBe(true); // Only 2 connections, need 3
-    });
-  });
-
-  describe("checkInterServiceRelationConnections", () => {
-    it("should return false when connection requirement is satisfied", () => {
-      const shape = createMockShape(false, new Map([["ServiceB", ["id1"]]]));
-      const relation = createInterServiceRelation("rel", "ServiceB", 1);
-
-      const result = checkInterServiceRelationConnections(shape, relation);
-
-      expect(result).toBe(false);
-    });
-
-    it("should return true when connection requirement is not satisfied", () => {
-      const shape = createMockShape(false, new Map());
-      const relation = createInterServiceRelation("rel", "ServiceB", 1);
-
-      const result = checkInterServiceRelationConnections(shape, relation);
-
-      expect(result).toBe(true);
-    });
-
-    it("should use entity_type as connection key", () => {
-      const shape = createMockShape(false, new Map([["ServiceB", ["id1"]]]));
-      const relation = createInterServiceRelation("differentName", "ServiceB", 1);
-
-      const result = checkInterServiceRelationConnections(shape, relation);
-
-      expect(result).toBe(false);
-    });
-
-    it("should return false when lower_limit is 0", () => {
-      const shape = createMockShape(false, new Map());
-      const relation = createInterServiceRelation("rel", "ServiceB", 0);
-
-      const result = checkInterServiceRelationConnections(shape, relation);
-
-      expect(result).toBe(false);
-    });
-
-    it("should return false for read-only relations when shape is not new", () => {
-      const shape = createMockShape(false, new Map());
-      const relation = createInterServiceRelation("rel", "ServiceB", 1, "r");
-
-      const result = checkInterServiceRelationConnections(shape, relation);
-
-      expect(result).toBe(false);
-    });
-  });
-
   describe("getEmbeddedEntityMissingConnections", () => {
     it("should return null when connection requirement is satisfied", () => {
       const shape = createMockShape(false, new Map([["EntityType", ["id1"]]]));
       const entity = createEmbeddedEntity("EntityType", 1);
 
-      const result = getEmbeddedEntityMissingConnections(shape, entity);
+      const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
 
       expect(result).toBeNull();
     });
@@ -163,7 +59,7 @@ describe("connectionValidationUtils", () => {
       const shape = createMockShape(false, new Map());
       const entity = createEmbeddedEntity("EntityType", 2);
 
-      const result = getEmbeddedEntityMissingConnections(shape, entity);
+      const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
 
       expect(result).toEqual({
         entityType: "EntityType",
@@ -177,7 +73,7 @@ describe("connectionValidationUtils", () => {
       const shape = createMockShape(false, new Map());
       const entity = createEmbeddedEntity("EntityType", 0);
 
-      const result = getEmbeddedEntityMissingConnections(shape, entity);
+      const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
 
       expect(result).toBeNull();
     });
@@ -186,7 +82,7 @@ describe("connectionValidationUtils", () => {
       const shape = createMockShape(false, new Map());
       const entity = createEmbeddedEntity("EntityType", 1, "r");
 
-      const result = getEmbeddedEntityMissingConnections(shape, entity);
+      const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
 
       expect(result).toBeNull();
     });
@@ -195,7 +91,7 @@ describe("connectionValidationUtils", () => {
       const shape = createMockShape(false, new Map([["EntityType", ["id1"]]]));
       const entity = createEmbeddedEntity("EntityType", 3);
 
-      const result = getEmbeddedEntityMissingConnections(shape, entity);
+      const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
 
       expect(result).toEqual({
         entityType: "EntityType",
@@ -211,7 +107,7 @@ describe("connectionValidationUtils", () => {
       const shape = createMockShape(false, new Map([["ServiceB", ["id1"]]]));
       const relation = createInterServiceRelation("rel", "ServiceB", 1);
 
-      const result = getInterServiceRelationMissingConnections(shape, relation);
+      const result = getInterServiceRelationMissingConnections(shape, relation, new Map());
 
       expect(result).toBeNull();
     });
@@ -220,7 +116,7 @@ describe("connectionValidationUtils", () => {
       const shape = createMockShape(false, new Map());
       const relation = createInterServiceRelation("rel", "ServiceB", 2);
 
-      const result = getInterServiceRelationMissingConnections(shape, relation);
+      const result = getInterServiceRelationMissingConnections(shape, relation, new Map());
 
       expect(result).toEqual({
         entityType: "ServiceB",
@@ -234,7 +130,7 @@ describe("connectionValidationUtils", () => {
       const shape = createMockShape(false, new Map());
       const relation = createInterServiceRelation("MyRelation", "ServiceB", 1);
 
-      const result = getInterServiceRelationMissingConnections(shape, relation);
+      const result = getInterServiceRelationMissingConnections(shape, relation, new Map());
 
       expect(result).toEqual({
         entityType: "ServiceB",
@@ -248,7 +144,7 @@ describe("connectionValidationUtils", () => {
       const shape = createMockShape(false, new Map());
       const relation = createInterServiceRelation("rel", "ServiceB", 0);
 
-      const result = getInterServiceRelationMissingConnections(shape, relation);
+      const result = getInterServiceRelationMissingConnections(shape, relation, new Map());
 
       expect(result).toBeNull();
     });
@@ -257,7 +153,7 @@ describe("connectionValidationUtils", () => {
       const shape = createMockShape(false, new Map());
       const relation = createInterServiceRelation("rel", "ServiceB", 1, "r");
 
-      const result = getInterServiceRelationMissingConnections(shape, relation);
+      const result = getInterServiceRelationMissingConnections(shape, relation, new Map());
 
       expect(result).toBeNull();
     });

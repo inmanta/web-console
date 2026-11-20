@@ -21,13 +21,9 @@ The frontend uses (Patternfly)[https://www.patternfly.org/] for its UI component
 The repository holds two apps:
 
 - `apps/oss` (`@inmanta/web-console-oss`): the open-source web console, with the OSS features only.
-- `apps/web-console` (`@inmanta/web-console-app`): the ISO web console, with every feature. The composer needs JointJS+, which needs a licence token to install.
+- `apps/web-console` (`@inmanta/web-console-app`): the ISO web console, with every feature.
 
-To install the OSS app only, which needs no token:
-
-    yarn workspaces focus @inmanta/web-console-oss
-
-That installs what the OSS app and its packages use, so `yarn build:oss`, `yarn start:oss`, `yarn tsc:oss` and `yarn test:oss` work. The checks that cover every package (`yarn lint`, `yarn tsc`, `yarn test`) and the ISO app need the full install, with the JointJS token exported in your shell (see [ENV Tokens and PAT](#env-tokens-and-pat)):
+To install both, with every package:
 
     yarn install
 
@@ -47,13 +43,13 @@ Every package declares whether it is OSS or ISO in its `package.json` (`"inmanta
 | `test`                          | runs the test suite with Vitest, one project per package (`yarn test --project feature-lsm` runs one)                                                                                                                 |
 | `test:ci`                       | runs the test suite with Vitest in CI mode (`CI=true`, `--silent`)                                                                                                                                                    |
 | `test:ui`                       | runs Vitest in UI mode                                                                                                                                                                                                |
-| `test:oss`                      | runs the tests of the OSS packages only (`vitest.config.oss.ts`); works in the OSS app's install, without the JointJS token                                                                                           |
+| `test:oss`                      | runs the tests of the OSS packages only (`vitest.config.oss.ts`); also works after `yarn workspaces focus @inmanta/web-console-oss`                                                                                   |
 | `format`                        | runs Prettier and formats the code                                                                                                                                                                                    |
 | `format:check`                  | runs Prettier in check mode without writing changes                                                                                                                                                                   |
 | `lint`                          | runs the Yarn constraints (`yarn.config.cjs`) and ESLint, failing on any warnings (`--max-warnings=0`)                                                                                                                |
 | `lint:fix`                      | runs ESLint and attempts to automatically fix possible warnings/errors                                                                                                                                                |
 | `tsc`                           | type-checks every package as its own TypeScript project (`tsc -b`) and checks the project references and the linked routes                                                                                            |
-| `tsc:oss`                       | type-checks the OSS app and its packages only (`tsc -b` in `apps/oss`); works in the OSS app's install, without the JointJS token                                                                                     |
+| `tsc:oss`                       | type-checks the OSS app and its packages only (`tsc -b` in `apps/oss`); also works after `yarn workspaces focus @inmanta/web-console-oss`                                                                             |
 | `build:bundle-profile`          | builds the app with Vite in analyze mode (`vite build --mode analyze`)                                                                                                                                                |
 | `bundle-profile:analyze`        | runs `yarn build:bundle-profile` to generate a bundle profile                                                                                                                                                         |
 | `clean`                         | removes the builds (`dist`, `apps/oss/dist`) and the TypeScript build info (`.tsbuild`)                                                                                                                               |
@@ -75,7 +71,7 @@ Every package declares whether it is OSS or ISO in its `package.json` (`"inmanta
 | `install:orchestrator:pxsdc`    | creates a Docker container with an orchestrator for the `pxsdc` project                                                                                                                                               |
 | `install:orchestrator:oss`      | creates a Docker container with the latest dev OSS orchestrator                                                                                                                                                       |
 | `install:orchestrator:ci`       | CI command to setup the orchestrator on Jenkins. Requires different arguments depending on the needed test suite. See `install:orchestrator`                                                                          |
-| `kill-server`                   | removes the temp-folder and kills the containers                                                                                                                                                                      |
+| `kill-server`                   | removes the orchestrator's containers, network and volumes (Compose project `local-setup`) and the temp-folder                                                                                                        |
 | `update:dist`                   | manual update of the `dist` folder in the container. Requires a container to run.                                                                                                                                     |
 
 ### ENV Tokens and PAT
@@ -83,9 +79,6 @@ Every package declares whether it is OSS or ISO in its `package.json` (`"inmanta
 You will need to create a file `env.sh` in `shell-scripts` folder containing the variable GITLAB_TOKEN. It should look like so:
 `export GITLAB_TOKEN=xxxxxxxxxxxxxxxxx`
 (xxxx equals your PAT token, of course.)
-
-If you want to install the ISO version of the application, you will need to add a npm access token to the JointJS Plus library in your env file, and export it in the shell you install from. The OSS app installs without it.
-`JOINTJS_NPM_TOKEN=jjs-xxxxxxxxxxxxxx`
 
 ## Authentication
 

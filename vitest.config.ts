@@ -13,11 +13,7 @@ export default defineConfig(
   mergeConfig(
     testConfig(
       workspaces.map(({ dir }) => dir),
-      [
-        "./packages/test-utils/src/setup.ts",
-        "./apps/web-console/src/test-setup.ts",
-        "./packages/features/composer/src/Components/Composer/globalTestMocks.ts",
-      ]
+      ["./packages/test-utils/src/setup.ts", "./apps/web-console/src/test-setup.ts"]
     ),
     {
       plugins: [composerVitePlugin(), graphiqlVitePlugin()],

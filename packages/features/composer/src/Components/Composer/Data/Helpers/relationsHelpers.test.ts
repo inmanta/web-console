@@ -1,7 +1,6 @@
-import { dia } from "@joint/plus";
 import { ServiceModel, EmbeddedEntity, InterServiceRelation } from "@inmanta/web-console-core";
-import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
-import { defineObjectsForJointJS } from "../../testSetup";
+import { defineCanvasTestObjects } from "../../testSetup";
+import { ServiceEntityShape } from "../ServiceEntityShape";
 import { RelationsDictionary } from "./createRelationsDictionary";
 import {
   findInterServiceRelations,
@@ -10,11 +9,13 @@ import {
   getRelationInfo,
   canRemoveShape,
   canRemoveLink,
+  getRemoveActions,
+  canUndoDelete,
 } from "./relationsHelpers";
 
 describe("relationsHelpers", () => {
   beforeAll(() => {
-    defineObjectsForJointJS();
+    defineCanvasTestObjects();
   });
 
   const createMockServiceModel = (
@@ -65,27 +66,35 @@ describe("relationsHelpers", () => {
     modifier,
   });
 
+  /**
+   * Creates a shape whose entity type is the service model's type (or name).
+   */
   const createMockShape = (
     id: string,
-    entityName: string,
     entityType: "core" | "embedded" | "relation" = "core",
     isNew: boolean = false,
     connections: Map<string, string[]> = new Map(),
     serviceModel: ServiceModel | EmbeddedEntity
   ): ServiceEntityShape => {
-    const shape = {
+    const shape = new ServiceEntityShape({
       id,
       entityType,
-      isNew,
-      connections,
       serviceModel,
-      getEntityName: vi.fn().mockReturnValue(entityName),
-    } as unknown as ServiceEntityShape;
-    // Make it pass instanceof checks
-    Object.setPrototypeOf(shape, ServiceEntityShape.prototype);
+      instanceAttributes: {},
+      isNew,
+      relationsDictionary: {},
+      rootEntities: {},
+      interServiceRelations: {},
+      embeddedEntities: {},
+    });
+
+    shape.connections = connections;
 
     return shape;
   };
+
+  const toCanvas = (...shapes: ServiceEntityShape[]): Map<string, ServiceEntityShape> =>
+    new Map(shapes.map((shape) => [shape.id, shape]));
 
   describe("findInterServiceRelations", () => {
     it("should return entity types from inter_service_relations", () => {
@@ -154,34 +163,121 @@ describe("relationsHelpers", () => {
   });
 
   describe("findParentShapeForEmbedded", () => {
-    it("should find parent shape from incoming links", () => {
+    const embedsEmbeddedType = {
+      embedded_entities: [createMockEmbeddedEntity("Embedded1", "EmbeddedType")],
+    };
+
+    it("should find the parent shape from the embedded shape's parentIds", () => {
       const parentShape = createMockShape(
         "parent-1",
-        "ServiceA",
         "core",
         false,
         new Map(),
-        createMockServiceModel("ServiceA")
+        createMockServiceModel("ServiceA", embedsEmbeddedType)
       );
       const embeddedShape = createMockShape(
         "embedded-1",
-        "EmbeddedType",
+        "embedded",
+        false,
+        new Map([["ServiceA", ["parent-1"]]]),
+        createMockEmbeddedEntity("Embedded1", "EmbeddedType")
+      );
+      embeddedShape.parentIds.add("parent-1");
+
+      const result = findParentShapeForEmbedded(
+        embeddedShape,
+        toCanvas(parentShape, embeddedShape)
+      );
+
+      expect(result).toBe(parentShape);
+    });
+
+    it("should find the parent shape that holds the embedded shape as a child", () => {
+      const otherShape = createMockShape(
+        "other-1",
+        "core",
+        false,
+        new Map([["OtherType", ["embedded-1"]]]),
+        createMockServiceModel("ServiceB")
+      );
+      const parentShape = createMockShape(
+        "parent-1",
+        "core",
+        false,
+        new Map([["EmbeddedType", ["embedded-1"]]]),
+        createMockServiceModel("ServiceA", embedsEmbeddedType)
+      );
+      const embeddedShape = createMockShape(
+        "embedded-1",
         "embedded",
         false,
         new Map(),
         createMockEmbeddedEntity("Embedded1", "EmbeddedType")
       );
 
-      const link = {
-        getSourceElement: vi.fn().mockReturnValue(parentShape),
-        getTargetElement: vi.fn().mockReturnValue(embeddedShape),
-      } as unknown as dia.Link;
+      const result = findParentShapeForEmbedded(
+        embeddedShape,
+        toCanvas(otherShape, parentShape, embeddedShape)
+      );
 
-      const graph = {
-        getLinks: vi.fn().mockReturnValue([link]),
-      } as unknown as dia.Graph;
+      expect(result).toBe(parentShape);
+    });
 
-      const result = findParentShapeForEmbedded(embeddedShape, graph);
+    it("should skip parentIds that are not on the canvas", () => {
+      const parentShape = createMockShape(
+        "parent-1",
+        "core",
+        false,
+        new Map([["EmbeddedType", ["embedded-1"]]]),
+        createMockServiceModel("ServiceA", embedsEmbeddedType)
+      );
+      const embeddedShape = createMockShape(
+        "embedded-1",
+        "embedded",
+        false,
+        new Map(),
+        createMockEmbeddedEntity("Embedded1", "EmbeddedType")
+      );
+      embeddedShape.parentIds.add("removed-parent");
+
+      const result = findParentShapeForEmbedded(
+        embeddedShape,
+        toCanvas(parentShape, embeddedShape)
+      );
+
+      expect(result).toBe(parentShape);
+    });
+
+    it("should skip a known parent whose model doesn't embed the entity", () => {
+      // A link dragged from an instance the entity relates to also records it as a known parent
+      const relatedShape = createMockShape(
+        "related-1",
+        "core",
+        false,
+        new Map([["EmbeddedType", ["embedded-1"]]]),
+        createMockServiceModel("ServiceB")
+      );
+      const parentShape = createMockShape(
+        "parent-1",
+        "core",
+        false,
+        new Map([["EmbeddedType", ["embedded-1"]]]),
+        createMockServiceModel("ServiceA", embedsEmbeddedType)
+      );
+      const embeddedShape = createMockShape(
+        "embedded-1",
+        "embedded",
+        true,
+        new Map(),
+        createMockEmbeddedEntity("Embedded1", "EmbeddedType")
+      );
+      embeddedShape.parentIds.add("related-1");
+      embeddedShape.parentIds.add("parent-1");
+
+      const result = findParentShapeForEmbedded(
+        embeddedShape,
+        toCanvas(relatedShape, parentShape, embeddedShape)
+      );
 
       expect(result).toBe(parentShape);
     });
@@ -189,18 +285,13 @@ describe("relationsHelpers", () => {
     it("should return null when no parent is found", () => {
       const embeddedShape = createMockShape(
         "embedded-1",
-        "EmbeddedType",
         "embedded",
         false,
         new Map(),
         createMockEmbeddedEntity("Embedded1", "EmbeddedType")
       );
 
-      const graph = {
-        getLinks: vi.fn().mockReturnValue([]),
-      } as unknown as dia.Graph;
-
-      const result = findParentShapeForEmbedded(embeddedShape, graph);
+      const result = findParentShapeForEmbedded(embeddedShape, toCanvas(embeddedShape));
 
       expect(result).toBeNull();
     });
@@ -211,17 +302,9 @@ describe("relationsHelpers", () => {
       const serviceModelA = createMockServiceModel("ServiceA", {
         inter_service_relations: [createMockInterServiceRelation("rel1", "ServiceB", "rw")],
       });
-      const sourceShape = createMockShape(
-        "source-1",
-        "ServiceA",
-        "core",
-        false,
-        new Map(),
-        serviceModelA
-      );
+      const sourceShape = createMockShape("source-1", "core", false, new Map(), serviceModelA);
       const targetShape = createMockShape(
         "target-1",
-        "ServiceB",
         "core",
         false,
         new Map(),
@@ -236,15 +319,11 @@ describe("relationsHelpers", () => {
 
       const serviceCatalog: ServiceModel[] = [serviceModelA, createMockServiceModel("ServiceB")];
 
-      const graph = {
-        getLinks: vi.fn().mockReturnValue([]),
-      } as unknown as dia.Graph;
-
       const result = getRelationInfo(
         sourceShape,
         targetShape,
         relationsDictionary,
-        graph,
+        toCanvas(sourceShape, targetShape),
         serviceCatalog
       );
 
@@ -254,10 +333,59 @@ describe("relationsHelpers", () => {
       });
     });
 
+    it("should use the embedded entity definition from the parent for an embedded source", () => {
+      const embeddedEntity = createMockEmbeddedEntity("Embedded1", "EmbeddedType", {
+        inter_service_relations: [createMockInterServiceRelation("rel1", "ServiceB", "rw+")],
+      });
+      const serviceModelA = createMockServiceModel("ServiceA", {
+        embedded_entities: [embeddedEntity],
+      });
+      const parentShape = createMockShape(
+        "parent-1",
+        "core",
+        false,
+        new Map([["EmbeddedType", ["embedded-1"]]]),
+        serviceModelA
+      );
+      const embeddedShape = createMockShape(
+        "embedded-1",
+        "embedded",
+        false,
+        new Map([["ServiceA", ["parent-1"]]]),
+        embeddedEntity
+      );
+      embeddedShape.parentIds.add("parent-1");
+      const targetShape = createMockShape(
+        "target-1",
+        "core",
+        false,
+        new Map(),
+        createMockServiceModel("ServiceB")
+      );
+
+      const relationsDictionary: RelationsDictionary = {
+        EmbeddedType: {
+          ServiceB: { lower_limit: 0, upper_limit: 1 },
+        },
+      };
+
+      const result = getRelationInfo(
+        embeddedShape,
+        targetShape,
+        relationsDictionary,
+        toCanvas(parentShape, embeddedShape, targetShape),
+        [serviceModelA]
+      );
+
+      expect(result).toEqual({
+        rules: { lower_limit: 0, upper_limit: 1 },
+        modifier: "rw+",
+      });
+    });
+
     it("should return null when relation not found", () => {
       const sourceShape = createMockShape(
         "source-1",
-        "ServiceA",
         "core",
         false,
         new Map(),
@@ -265,7 +393,6 @@ describe("relationsHelpers", () => {
       );
       const targetShape = createMockShape(
         "target-1",
-        "ServiceB",
         "core",
         false,
         new Map(),
@@ -274,11 +401,13 @@ describe("relationsHelpers", () => {
 
       const relationsDictionary: RelationsDictionary = {};
 
-      const graph = {
-        getLinks: vi.fn().mockReturnValue([]),
-      } as unknown as dia.Graph;
-
-      const result = getRelationInfo(sourceShape, targetShape, relationsDictionary, graph, []);
+      const result = getRelationInfo(
+        sourceShape,
+        targetShape,
+        relationsDictionary,
+        toCanvas(sourceShape, targetShape),
+        []
+      );
 
       expect(result).toBeNull();
     });
@@ -288,17 +417,13 @@ describe("relationsHelpers", () => {
     it("should return true for new shapes", () => {
       const shape = createMockShape(
         "shape-1",
-        "ServiceA",
         "core",
         true,
         new Map(),
         createMockServiceModel("ServiceA")
       );
-      const graph = {
-        getLinks: vi.fn().mockReturnValue([]),
-      } as unknown as dia.Graph;
 
-      const result = canRemoveShape(shape, graph, {}, []);
+      const result = canRemoveShape(shape, toCanvas(shape), {}, []);
 
       expect(result).toBe(true);
     });
@@ -309,7 +434,6 @@ describe("relationsHelpers", () => {
       });
       const sourceShape = createMockShape(
         "source-1",
-        "ServiceA",
         "core",
         false,
         new Map([["ServiceB", ["target-1"]]]),
@@ -317,21 +441,11 @@ describe("relationsHelpers", () => {
       );
       const targetShape = createMockShape(
         "target-1",
-        "ServiceB",
         "core",
         false,
         new Map([["ServiceA", ["source-1"]]]),
         serviceModelB
       );
-
-      const link = {
-        getSourceElement: vi.fn().mockReturnValue(sourceShape),
-        getTargetElement: vi.fn().mockReturnValue(targetShape),
-      } as unknown as dia.Link;
-
-      const graph = {
-        getLinks: vi.fn().mockReturnValue([link]),
-      } as unknown as dia.Graph;
 
       const relationsDictionary: RelationsDictionary = {
         ServiceB: {
@@ -341,9 +455,58 @@ describe("relationsHelpers", () => {
 
       const serviceCatalog: ServiceModel[] = [createMockServiceModel("ServiceA"), serviceModelB];
 
-      const result = canRemoveShape(sourceShape, graph, relationsDictionary, serviceCatalog);
+      const result = canRemoveShape(
+        sourceShape,
+        toCanvas(sourceShape, targetShape),
+        relationsDictionary,
+        serviceCatalog
+      );
 
       expect(result).toBe(false);
+    });
+
+    it("should return true when a connected shape keeps enough connections", () => {
+      const serviceModelB = createMockServiceModel("ServiceB", {
+        inter_service_relations: [createMockInterServiceRelation("rel1", "ServiceA", "rw+")],
+      });
+      const sourceShape = createMockShape(
+        "source-1",
+        "core",
+        false,
+        new Map([["ServiceB", ["target-1"]]]),
+        createMockServiceModel("ServiceA")
+      );
+      const otherSource = createMockShape(
+        "source-2",
+        "core",
+        false,
+        new Map([["ServiceB", ["target-1"]]]),
+        createMockServiceModel("ServiceA")
+      );
+      const targetShape = createMockShape(
+        "target-1",
+        "core",
+        false,
+        new Map([["ServiceA", ["source-1", "source-2"]]]),
+        serviceModelB
+      );
+
+      const relationsDictionary: RelationsDictionary = {
+        ServiceB: {
+          ServiceA: { lower_limit: 1, upper_limit: null },
+        },
+      };
+
+      const serviceCatalog: ServiceModel[] = [createMockServiceModel("ServiceA"), serviceModelB];
+
+      const result = canRemoveShape(
+        sourceShape,
+        toCanvas(sourceShape, otherSource, targetShape),
+        relationsDictionary,
+        serviceCatalog
+      );
+
+      expect(result).toBe(true);
     });
 
     it("should allow removal even when shape has rw modifier (only other instances' requirements block it)", () => {
@@ -352,16 +515,11 @@ describe("relationsHelpers", () => {
       });
       const shape = createMockShape(
         "shape-1",
-        "ServiceA",
         "core",
         false,
         new Map([["ServiceB", ["target-1"]]]),
         serviceModelA
       );
-
-      const graph = {
-        getLinks: vi.fn().mockReturnValue([]),
-      } as unknown as dia.Graph;
 
       const relationsDictionary: RelationsDictionary = {
         ServiceA: {
@@ -371,7 +529,7 @@ describe("relationsHelpers", () => {
 
       const serviceCatalog: ServiceModel[] = [serviceModelA];
 
-      const result = canRemoveShape(shape, graph, relationsDictionary, serviceCatalog);
+      const result = canRemoveShape(shape, toCanvas(shape), relationsDictionary, serviceCatalog);
 
       expect(result).toBe(true);
     });
@@ -389,7 +547,6 @@ describe("relationsHelpers", () => {
 
       const parentShape = createMockShape(
         "parent-1",
-        "ServiceA",
         "core",
         false,
         new Map([["EmbeddedType", ["embedded-1"]]]),
@@ -398,21 +555,12 @@ describe("relationsHelpers", () => {
 
       const embeddedShape = createMockShape(
         "embedded-1",
-        "EmbeddedType",
         "embedded",
         false,
-        new Map(),
+        new Map([["ServiceA", ["parent-1"]]]),
         embeddedEntity
       );
-
-      const link = {
-        getSourceElement: vi.fn().mockReturnValue(parentShape),
-        getTargetElement: vi.fn().mockReturnValue(embeddedShape),
-      } as unknown as dia.Link;
-
-      const graph = {
-        getLinks: vi.fn().mockReturnValue([link]),
-      } as unknown as dia.Graph;
+      embeddedShape.parentIds.add("parent-1");
 
       const relationsDictionary: RelationsDictionary = {
         ServiceA: {
@@ -425,9 +573,127 @@ describe("relationsHelpers", () => {
 
       const serviceCatalog: ServiceModel[] = [serviceModelA];
 
-      const result = canRemoveShape(embeddedShape, graph, relationsDictionary, serviceCatalog);
+      const result = canRemoveShape(
+        embeddedShape,
+        toCanvas(parentShape, embeddedShape),
+        relationsDictionary,
+        serviceCatalog
+      );
 
       expect(result).toBe(false);
+    });
+  });
+
+  describe("getRemoveActions", () => {
+    it("removes a new shape from the canvas, whatever its kind", () => {
+      (["core", "embedded", "relation"] as const).forEach((entityType) => {
+        const shape = createMockShape(
+          "shape-1",
+          entityType,
+          true,
+          new Map(),
+          createMockServiceModel("ServiceA")
+        );
+
+        expect(getRemoveActions(shape, toCanvas(shape), {}, [])).toEqual({
+          canRemoveFromCanvas: true,
+          canDelete: false,
+        });
+      });
+    });
+
+    it("removes or deletes an existing service or relation", () => {
+      (["core", "relation"] as const).forEach((entityType) => {
+        const shape = createMockShape(
+          "shape-1",
+          entityType,
+          false,
+          new Map(),
+          createMockServiceModel("ServiceA")
+        );
+
+        expect(getRemoveActions(shape, toCanvas(shape), {}, [])).toEqual({
+          canRemoveFromCanvas: true,
+          canDelete: true,
+        });
+      });
+    });
+
+    it("offers neither on a shape staged to be deleted: its menu only undoes the delete", () => {
+      const shape = createMockShape(
+        "shape-1",
+        "core",
+        false,
+        new Map(),
+        createMockServiceModel("ServiceA")
+      );
+
+      shape.isMarkedForDeletion = true;
+
+      expect(getRemoveActions(shape, toCanvas(shape), {}, [])).toEqual({
+        canRemoveFromCanvas: false,
+        canDelete: false,
+      });
+    });
+
+    it("only deletes the instance the composer edits, never removes it from the canvas", () => {
+      const shape = createMockShape(
+        "main-1",
+        "core",
+        false,
+        new Map(),
+        createMockServiceModel("ServiceA")
+      );
+
+      expect(getRemoveActions(shape, toCanvas(shape), {}, [], "main-1")).toEqual({
+        canRemoveFromCanvas: false,
+        canDelete: true,
+      });
+    });
+
+    it("can't take an existing embedded entity off on its own", () => {
+      const shape = createMockShape(
+        "shape-1",
+        "embedded",
+        false,
+        new Map(),
+        createMockServiceModel("ServiceA")
+      );
+
+      expect(getRemoveActions(shape, toCanvas(shape), {}, [])).toEqual({
+        canRemoveFromCanvas: false,
+        canDelete: false,
+      });
+    });
+
+    it("can't take off an existing shape the relations require", () => {
+      const serviceModelB = createMockServiceModel("ServiceB", {
+        inter_service_relations: [createMockInterServiceRelation("rel1", "ServiceA", "rw+")],
+      });
+      const sourceShape = createMockShape(
+        "source-1",
+        "core",
+        false,
+        new Map([["ServiceB", ["target-1"]]]),
+        createMockServiceModel("ServiceA")
+      );
+      const targetShape = createMockShape(
+        "target-1",
+        "core",
+        false,
+        new Map([["ServiceA", ["source-1"]]]),
+        serviceModelB
+      );
+      const relationsDictionary: RelationsDictionary = {
+        ServiceB: { ServiceA: { lower_limit: 1, upper_limit: 1 } },
+      };
+
+      expect(
+        getRemoveActions(sourceShape, toCanvas(sourceShape, targetShape), relationsDictionary, [
+          createMockServiceModel("ServiceA"),
+          serviceModelB,
+        ])
+      ).toEqual({ canRemoveFromCanvas: false, canDelete: false });
     });
   });
 
@@ -439,7 +705,6 @@ describe("relationsHelpers", () => {
       });
       const sourceShape = createMockShape(
         "source-1",
-        "ServiceA",
         "core",
         true,
         new Map([["ServiceB", ["target-1", "target-2"]]]),
@@ -447,16 +712,11 @@ describe("relationsHelpers", () => {
       );
       const targetShape = createMockShape(
         "target-1",
-        "ServiceB",
         "core",
         false,
         new Map([["ServiceA", ["source-1"]]]),
         createMockServiceModel("ServiceB")
       );
-
-      const graph = {
-        getLinks: vi.fn().mockReturnValue([]),
-      } as unknown as dia.Graph;
 
       const relationsDictionary: RelationsDictionary = {
         ServiceA: {
@@ -472,7 +732,7 @@ describe("relationsHelpers", () => {
       const result = canRemoveLink(
         sourceShape,
         targetShape,
-        graph,
+        toCanvas(sourceShape, targetShape),
         relationsDictionary,
         serviceCatalog
       );
@@ -489,7 +749,6 @@ describe("relationsHelpers", () => {
       });
       const sourceShape = createMockShape(
         "source-1",
-        "ServiceA",
         "core",
         false,
         new Map([["ServiceB", ["target-1"]]]),
@@ -497,16 +756,11 @@ describe("relationsHelpers", () => {
       );
       const targetShape = createMockShape(
         "target-1",
-        "ServiceB",
         "core",
         false,
         new Map([["ServiceA", ["source-1"]]]),
         serviceModelB
       );
-
-      const graph = {
-        getLinks: vi.fn().mockReturnValue([]),
-      } as unknown as dia.Graph;
 
       const relationsDictionary: RelationsDictionary = {
         ServiceA: {
@@ -522,12 +776,74 @@ describe("relationsHelpers", () => {
       const result = canRemoveLink(
         sourceShape,
         targetShape,
-        graph,
+        toCanvas(sourceShape, targetShape),
         relationsDictionary,
         serviceCatalog
       );
 
       expect(result).toBe(false);
+    });
+  });
+
+  describe("shapes staged to be deleted", () => {
+    const relatedModel = createMockServiceModel("ServiceB");
+
+    /**
+     * A new ServiceA that holds two ServiceB instances, b-1 and b-2, with the given limits.
+     */
+    const setup = (lowerLimit: number, upperLimit: number | null) => {
+      const holderModel = createMockServiceModel("ServiceA", {
+        inter_service_relations: [createMockInterServiceRelation("b", "ServiceB", "rw+")],
+      });
+      const holder = createMockShape(
+        "a-1",
+        "core",
+        true,
+        new Map([["ServiceB", ["b-1", "b-2"]]]),
+        holderModel
+      );
+      const first = createMockShape("b-1", "relation", false, new Map(), relatedModel);
+      const second = createMockShape("b-2", "relation", false, new Map(), relatedModel);
+      const relationsDictionary: RelationsDictionary = {
+        ServiceA: { ServiceB: { lower_limit: lowerLimit, upper_limit: upperLimit } },
+        ServiceB: { ServiceA: { lower_limit: 0, upper_limit: null } },
+      };
+
+      return {
+        holder,
+        first,
+        second,
+        canvasState: toCanvas(holder, first, second),
+        relationsDictionary,
+        serviceCatalog: [holderModel, relatedModel],
+      };
+    };
+
+    it("don't count for the lower limit of the shapes that hold them", () => {
+      const { first, second, canvasState, relationsDictionary, serviceCatalog } = setup(1, null);
+
+      expect(canRemoveShape(second, canvasState, relationsDictionary, serviceCatalog)).toBe(true);
+
+      first.isMarkedForDeletion = true;
+
+      expect(canRemoveShape(second, canvasState, relationsDictionary, serviceCatalog)).toBe(false);
+      expect(
+        getRemoveActions(second, canvasState, relationsDictionary, serviceCatalog).canDelete
+      ).toBe(false);
+    });
+
+    it("can only be restored while the shapes that hold them have room", () => {
+      const { holder, first, second, canvasState, relationsDictionary, serviceCatalog } = setup(
+        0,
+        1
+      );
+
+      // The holder is full with b-2 while b-1 is staged to be deleted
+      first.isMarkedForDeletion = true;
+      expect(canUndoDelete(first, canvasState, relationsDictionary, serviceCatalog)).toBe(false);
+
+      holder.removeConnection(second.id, "ServiceB");
+      expect(canUndoDelete(first, canvasState, relationsDictionary, serviceCatalog)).toBe(true);
     });
   });
 });

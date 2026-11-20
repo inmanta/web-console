@@ -1,5 +1,6 @@
 import { Resource, ResourceActionFilter } from "@inmanta/web-console-core";
 import { CurrentPage, MultiSort } from "@inmanta/web-console-core/Common";
+import type { StrawberryOrder } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
 import { Handlers } from "@inmanta/web-console-core/Domain/Pagination/Pagination";
 import { PageInfo } from "./useGetResources";
 
@@ -152,7 +153,7 @@ export function mapToResourceActionFilterWithInstanceLabels(filter?: Resource.Fi
  * Maps sort parameters to the GraphQL orderBy format.
  * Preserves array order as sort priority.
  */
-export function mapSort(sort: MultiSort<Resource.SortKey>): Array<{ key: string; order: string }> {
+export function mapSort(sort: MultiSort<Resource.SortKey>): StrawberryOrder[] {
   return sort.map((s) => ({ key: s.name, order: s.order }));
 }
 

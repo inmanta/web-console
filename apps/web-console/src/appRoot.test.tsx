@@ -6,7 +6,8 @@ import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { graphql } from "msw/graphql";
 import { defaultAuthContext } from "@inmanta/web-console-core/Auth/AuthContext";
-import { EnvironmentPreviewResponse } from "@inmanta/web-console-core/Queries/Slices/Environment";
+import type { GetEnvironmentPreviewQuery } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
+import { GraphQLResponseBody } from "@inmanta/web-console-core/Queries/Helpers";
 import { Root } from "@inmanta/web-console-shell/Root";
 import { createRootRoutes } from "@inmanta/web-console-shell/RootRoutes";
 import {
@@ -64,7 +65,7 @@ describe("Root", () => {
       return HttpResponse.json({ data: Project.list });
     }),
     queryBase.operation(() => {
-      return HttpResponse.json<{ data: EnvironmentPreviewResponse }>({
+      return HttpResponse.json<GraphQLResponseBody<GetEnvironmentPreviewQuery>>({
         data: {
           data: {
             environments: {

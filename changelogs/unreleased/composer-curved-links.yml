@@ -1,0 +1,5 @@
+description: Relation lines in the Instance Composer are curves that are easier to follow on crowded canvases.
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

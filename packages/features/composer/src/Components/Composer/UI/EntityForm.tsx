@@ -13,8 +13,7 @@ import { SuggestionVariables } from "@inmanta/web-console-core/Queries/Slices/Se
 import { AppAlert } from "@inmanta/web-console-ui/Components/AppAlert";
 import { FieldInput } from "@inmanta/web-console-ui/Components/FieldInputs";
 import { ComposerContext } from "../Data/Context";
-import { ServiceEntityShape } from "./JointJsShapes/ServiceEntityShape";
-import { updateAllMissingConnectionsHighlights } from "./JointJsShapes/createHalo";
+import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 
 interface Props {
   activeCell: ServiceEntityShape;
@@ -35,7 +34,7 @@ interface Props {
  * @returns {React.FC<Props>} The EntityForm component.
  */
 export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
-  const { paper, canvasState, setCanvasState } = useContext(ComposerContext);
+  const { canvasState, setCanvasState } = useContext(ComposerContext);
   const [formState, setFormState] = useState<InstanceAttributeModel>({});
   const [fields, setFields] = useState<Field[] | null>(null);
   const [originalState, setOriginalState] = useState<InstanceAttributeModel>({});
@@ -125,8 +124,8 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
 
   /**
    * Handles the save action for the form.
-   * Updates the shape's attributes and sanitizedAttrs.
-   * Also triggers validation and highlight updates.
+   * Updates the shape's attributes and sanitizedAttrs, which re-renders the canvas
+   * and its validation.
    *
    * @param {InstanceAttributeModel} updatedFormState - The updated form state to save.
    * @returns {void}
@@ -142,29 +141,16 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
         // Update sanitizedAttrs on the shape
         activeCell.sanitizedAttrs = sanitizedAttrs;
 
-        // Force view update - JointJS might not detect items changes automatically
-        if (paper) {
-          const cellView = paper.findViewByModel(activeCell);
-          if (cellView) {
-            cellView.update();
-          }
-        }
-
-        // Update canvas state to trigger validation checks in Composer.tsx
+        // Update canvas state to re-render the card and run the validation checks
         setCanvasState((prev) => {
           const updated = new Map(prev);
           updated.set(String(activeCell.id), activeCell);
 
           return updated;
         });
-
-        // Trigger highlight updates to reflect validation state changes
-        if (paper) {
-          updateAllMissingConnectionsHighlights(paper);
-        }
       }
     },
-    [activeCell, fields, setCanvasState, paper]
+    [activeCell, fields, setCanvasState]
   );
 
   // Re-initialize when activeCell changes (detected by ID change)

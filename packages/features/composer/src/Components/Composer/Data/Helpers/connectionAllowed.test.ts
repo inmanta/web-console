@@ -1,184 +1,215 @@
-import { dia } from "@joint/plus";
-import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
-import { defineObjectsForJointJS } from "../../testSetup";
+import { ServiceModel } from "@inmanta/web-console-core";
+import { defineCanvasTestObjects } from "../../testSetup";
+import { ServiceEntityShape } from "../ServiceEntityShape";
 import { checkIfConnectionIsAllowed } from "./connectionAllowed";
 import { RelationsDictionary } from "./createRelationsDictionary";
 
 describe("checkIfConnectionIsAllowed", () => {
   beforeAll(() => {
-    defineObjectsForJointJS();
+    defineCanvasTestObjects();
   });
 
-  const createMockShape = (
+  const bothWaysDictionary: RelationsDictionary = {
+    ServiceA: { ServiceB: { lower_limit: 1, upper_limit: 1 } },
+    ServiceB: { ServiceA: { lower_limit: 1, upper_limit: 1 } },
+  };
+
+  const createMockServiceModel = (
+    name: string,
+    overrides: Partial<ServiceModel> = {}
+  ): ServiceModel => ({
+    name,
+    environment: "test",
+    lifecycle: {
+      initial_state: "active",
+      states: [],
+      transfers: [],
+    },
+    attributes: [],
+    config: {},
+    embedded_entities: [],
+    inter_service_relations: [],
+    owned_entities: [],
+    owner: null,
+    ...overrides,
+  });
+
+  const createShape = (
     id: string,
     entityName: string,
-    validateConnectionResult: boolean = true
-  ): ServiceEntityShape => {
-    const shape = {
+    relationsDictionary: RelationsDictionary = bothWaysDictionary
+  ): ServiceEntityShape =>
+    new ServiceEntityShape({
       id,
-      getEntityName: vi.fn().mockReturnValue(entityName),
-      validateConnection: vi.fn().mockReturnValue(validateConnectionResult),
-    } as unknown as ServiceEntityShape;
-    // Make it pass instanceof checks
-    Object.setPrototypeOf(shape, ServiceEntityShape.prototype);
+      entityType: "core",
+      serviceModel: createMockServiceModel(entityName),
+      instanceAttributes: {},
+      isNew: true,
+      relationsDictionary,
+      rootEntities: {},
+      interServiceRelations: {},
+      embeddedEntities: {},
+    });
 
-    return shape;
-  };
+  it("should return false when targetShape is undefined", () => {
+    const sourceShape = createShape("source-1", "ServiceA");
 
-  const createMockView = (model: ServiceEntityShape): dia.CellView => {
-    return {
-      model,
-    } as unknown as dia.CellView;
-  };
-
-  const createMockGraph = (neighbors: dia.Element[] = []): dia.Graph => {
-    return {
-      getNeighbors: vi.fn().mockReturnValue(neighbors),
-    } as unknown as dia.Graph;
-  };
-
-  it("should return false when targetView is undefined", () => {
-    const graph = createMockGraph();
-    const sourceView = createMockView(createMockShape("source-1", "ServiceA"));
-    const relationsDictionary: RelationsDictionary = {};
-
-    const result = checkIfConnectionIsAllowed(graph, undefined, sourceView, relationsDictionary);
-
-    expect(result).toBe(false);
-  });
-
-  it("should return false when source is not a ServiceEntityShape", () => {
-    const graph = createMockGraph();
-    const sourceView = {
-      model: { id: "source-1" },
-    } as unknown as dia.CellView;
-    const targetView = createMockView(createMockShape("target-1", "ServiceB"));
-    const relationsDictionary: RelationsDictionary = {};
-
-    const result = checkIfConnectionIsAllowed(graph, targetView, sourceView, relationsDictionary);
-
-    expect(result).toBe(false);
-  });
-
-  it("should return false when target is not a ServiceEntityShape", () => {
-    const graph = createMockGraph();
-    const sourceView = createMockView(createMockShape("source-1", "ServiceA"));
-    const targetView = {
-      model: { id: "target-1" },
-    } as unknown as dia.CellView;
-    const relationsDictionary: RelationsDictionary = {};
-
-    const result = checkIfConnectionIsAllowed(graph, targetView, sourceView, relationsDictionary);
+    const result = checkIfConnectionIsAllowed(
+      sourceShape,
+      undefined,
+      bothWaysDictionary,
+      new Map()
+    );
 
     expect(result).toBe(false);
   });
 
   it("should return false when source and target are the same", () => {
-    const graph = createMockGraph();
-    const shape = createMockShape("same-1", "ServiceA");
-    const sourceView = createMockView(shape);
-    const targetView = createMockView(shape);
-    const relationsDictionary: RelationsDictionary = {
-      ServiceA: { ServiceB: { lower_limit: 1, upper_limit: 1 } },
-    };
+    const shape = createShape("same-1", "ServiceA");
 
-    const result = checkIfConnectionIsAllowed(graph, targetView, sourceView, relationsDictionary);
+    const result = checkIfConnectionIsAllowed(shape, shape, bothWaysDictionary, new Map());
 
     expect(result).toBe(false);
   });
 
   it("should return false when no relations exist in dictionary", () => {
-    const graph = createMockGraph();
-    const sourceView = createMockView(createMockShape("source-1", "ServiceA"));
-    const targetView = createMockView(createMockShape("target-1", "ServiceB"));
-    const relationsDictionary: RelationsDictionary = {};
+    const sourceShape = createShape("source-1", "ServiceA", {});
+    const targetShape = createShape("target-1", "ServiceB", {});
 
-    const result = checkIfConnectionIsAllowed(graph, targetView, sourceView, relationsDictionary);
+    const result = checkIfConnectionIsAllowed(sourceShape, targetShape, {}, new Map());
 
     expect(result).toBe(false);
   });
 
   it("should return false when shapes are already connected", () => {
-    const targetShape = createMockShape("target-1", "ServiceB");
-    const sourceShape = createMockShape("source-1", "ServiceA");
-    const graph = createMockGraph([targetShape as unknown as dia.Element]);
-    const sourceView = createMockView(sourceShape);
-    const targetView = createMockView(targetShape);
-    const relationsDictionary: RelationsDictionary = {
-      ServiceA: { ServiceB: { lower_limit: 1, upper_limit: 1 } },
-      ServiceB: { ServiceA: { lower_limit: 1, upper_limit: 1 } },
-    };
+    const sourceShape = createShape("source-1", "ServiceA");
+    const targetShape = createShape("target-1", "ServiceB");
+    sourceShape.addConnection("target-1", "ServiceB");
+    const validateSpy = vi.spyOn(sourceShape, "validateConnection");
 
-    const result = checkIfConnectionIsAllowed(graph, targetView, sourceView, relationsDictionary);
+    const result = checkIfConnectionIsAllowed(
+      sourceShape,
+      targetShape,
+      bothWaysDictionary,
+      new Map()
+    );
 
     expect(result).toBe(false);
-    // getNeighbors is called with sourceElement (sourceModel cast to dia.Element)
-    expect(graph.getNeighbors).toHaveBeenCalled();
+    // The "already connected" check short-circuits before validation
+    expect(validateSpy).not.toHaveBeenCalled();
   });
 
   it("should return true when connection is allowed from both sides", () => {
-    const sourceShape = createMockShape("source-1", "ServiceA", true);
-    const targetShape = createMockShape("target-1", "ServiceB", true);
-    const graph = createMockGraph([]);
-    const sourceView = createMockView(sourceShape);
-    const targetView = createMockView(targetShape);
-    const relationsDictionary: RelationsDictionary = {
-      ServiceA: { ServiceB: { lower_limit: 1, upper_limit: 1 } },
-      ServiceB: { ServiceA: { lower_limit: 1, upper_limit: 1 } },
-    };
+    const sourceShape = createShape("source-1", "ServiceA");
+    const targetShape = createShape("target-1", "ServiceB");
+    const sourceSpy = vi.spyOn(sourceShape, "validateConnection");
+    const targetSpy = vi.spyOn(targetShape, "validateConnection");
 
-    const result = checkIfConnectionIsAllowed(graph, targetView, sourceView, relationsDictionary);
+    const result = checkIfConnectionIsAllowed(
+      sourceShape,
+      targetShape,
+      bothWaysDictionary,
+      new Map()
+    );
 
     expect(result).toBe(true);
-    expect(sourceShape.validateConnection).toHaveBeenCalledWith(targetShape);
-    expect(targetShape.validateConnection).toHaveBeenCalledWith(sourceShape);
+    expect(sourceSpy).toHaveBeenCalledWith(targetShape, expect.any(Map));
+    expect(targetSpy).toHaveBeenCalledWith(sourceShape, expect.any(Map));
+  });
+
+  it("should match dictionary keys case-insensitively", () => {
+    const dictionary: RelationsDictionary = {
+      servicea: { serviceb: { lower_limit: 0, upper_limit: null } },
+      serviceb: { servicea: { lower_limit: 0, upper_limit: null } },
+    };
+    const sourceShape = createShape("source-1", "ServiceA", dictionary);
+    const targetShape = createShape("target-1", "ServiceB", dictionary);
+
+    const result = checkIfConnectionIsAllowed(sourceShape, targetShape, dictionary, new Map());
+
+    expect(result).toBe(true);
   });
 
   it("should return false when source validation fails", () => {
-    const sourceShape = createMockShape("source-1", "ServiceA", false);
-    const targetShape = createMockShape("target-1", "ServiceB", true);
-    const graph = createMockGraph([]);
-    const sourceView = createMockView(sourceShape);
-    const targetView = createMockView(targetShape);
-    const relationsDictionary: RelationsDictionary = {
-      ServiceA: { ServiceB: { lower_limit: 1, upper_limit: 1 } },
-      ServiceB: { ServiceA: { lower_limit: 1, upper_limit: 1 } },
-    };
+    const sourceShape = createShape("source-1", "ServiceA");
+    const targetShape = createShape("target-1", "ServiceB");
+    vi.spyOn(sourceShape, "validateConnection").mockReturnValue(false);
 
-    const result = checkIfConnectionIsAllowed(graph, targetView, sourceView, relationsDictionary);
+    const result = checkIfConnectionIsAllowed(
+      sourceShape,
+      targetShape,
+      bothWaysDictionary,
+      new Map()
+    );
 
     expect(result).toBe(false);
   });
 
   it("should return false when target validation fails", () => {
-    const sourceShape = createMockShape("source-1", "ServiceA", true);
-    const targetShape = createMockShape("target-1", "ServiceB", false);
-    const graph = createMockGraph([]);
-    const sourceView = createMockView(sourceShape);
-    const targetView = createMockView(targetShape);
-    const relationsDictionary: RelationsDictionary = {
-      ServiceA: { ServiceB: { lower_limit: 1, upper_limit: 1 } },
-      ServiceB: { ServiceA: { lower_limit: 1, upper_limit: 1 } },
-    };
+    const sourceShape = createShape("source-1", "ServiceA");
+    const targetShape = createShape("target-1", "ServiceB");
+    vi.spyOn(targetShape, "validateConnection").mockReturnValue(false);
 
-    const result = checkIfConnectionIsAllowed(graph, targetView, sourceView, relationsDictionary);
+    const result = checkIfConnectionIsAllowed(
+      sourceShape,
+      targetShape,
+      bothWaysDictionary,
+      new Map()
+    );
 
     expect(result).toBe(false);
   });
 
-  it("should work with ElementView as well", () => {
-    const sourceShape = createMockShape("source-1", "ServiceA", true);
-    const targetShape = createMockShape("target-1", "ServiceB", true);
-    const graph = createMockGraph([]);
-    const sourceView = createMockView(sourceShape) as unknown as dia.ElementView;
-    const targetView = createMockView(targetShape) as unknown as dia.ElementView;
-    const relationsDictionary: RelationsDictionary = {
-      ServiceA: { ServiceB: { lower_limit: 1, upper_limit: 1 } },
-      ServiceB: { ServiceA: { lower_limit: 1, upper_limit: 1 } },
-    };
+  it("should return false when the source has reached its upper limit", () => {
+    const sourceShape = createShape("source-1", "ServiceA");
+    const targetShape = createShape("target-2", "ServiceB");
+    sourceShape.addConnection("target-1", "ServiceB");
 
-    const result = checkIfConnectionIsAllowed(graph, targetView, sourceView, relationsDictionary);
+    const result = checkIfConnectionIsAllowed(
+      sourceShape,
+      targetShape,
+      bothWaysDictionary,
+      new Map()
+    );
 
-    expect(result).toBe(true);
+    expect(result).toBe(false);
+  });
+
+  it("should refuse a link to or from a shape staged to be deleted", () => {
+    const sourceShape = createShape("source-1", "ServiceA");
+    const targetShape = createShape("target-1", "ServiceB");
+    const canvasState = new Map([
+      [sourceShape.id, sourceShape],
+      [targetShape.id, targetShape],
+    ]);
+
+    targetShape.isMarkedForDeletion = true;
+    expect(
+      checkIfConnectionIsAllowed(sourceShape, targetShape, bothWaysDictionary, canvasState)
+    ).toBe(false);
+    expect(
+      checkIfConnectionIsAllowed(targetShape, sourceShape, bothWaysDictionary, canvasState)
+    ).toBe(false);
+  });
+
+  it("should not count a shape staged to be deleted for the upper limit", () => {
+    const sourceShape = createShape("source-1", "ServiceA");
+    const deletedShape = createShape("deleted-1", "ServiceB");
+    const targetShape = createShape("target-1", "ServiceB");
+    const canvasState = new Map([
+      [sourceShape.id, sourceShape],
+      [deletedShape.id, deletedShape],
+      [targetShape.id, targetShape],
+    ]);
+
+    sourceShape.addConnection(deletedShape.id, "ServiceB");
+    expect(
+      checkIfConnectionIsAllowed(sourceShape, targetShape, bothWaysDictionary, canvasState)
+    ).toBe(false);
+
+    deletedShape.isMarkedForDeletion = true;
+    expect(
+      checkIfConnectionIsAllowed(sourceShape, targetShape, bothWaysDictionary, canvasState)
+    ).toBe(true);
   });
 });

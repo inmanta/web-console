@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@inmanta/web-console-test-utils": "workspace:^",
-    "@module-federation/vite": "1.24.0",
+    "@module-federation/vite": "1.24.1",
     "@patternfly/react-core": "^6.7.0",
     "@tanstack/react-query": "^5.107.1",
     "@testing-library/dom": "^10.4.2",
@@ -35,7 +35,7 @@
     "@types/jest-axe": "^3.5.9",
     "@vitejs/plugin-react": "^6.3.0",
     "jest-axe": "^11.0.0",
-    "msw": "^3.0.5",
+    "msw": "^3.0.6",
     "react-router": "^8.5.1",
     "vite": "^8.3.8",
     "vite-plugin-mkcert": "^2.1.0"

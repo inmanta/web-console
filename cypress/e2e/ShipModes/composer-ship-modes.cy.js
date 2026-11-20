@@ -90,7 +90,7 @@ const assertComposer = () => {
   openRowActions();
   cy.get('[role="menu"]').contains("Edit in Composer").should("be.visible");
   cy.get('[role="menu"]').contains("Show in Composer").click();
-  cy.get(`g[data-type="app.ServiceEntityShape"] [data-testid="header-${SERVICE}"]`, {
+  cy.get(`[data-testid="header-${SERVICE}"]`, {
     timeout: 30000,
   }).should("be.visible");
   cy.contains(NOT_FOUND).should("not.exist");

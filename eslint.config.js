@@ -30,7 +30,6 @@ const testFiles = [
 const devDependencyFiles = [
   ...testFiles,
   "apps/*/src/test-setup.ts",
-  "packages/features/composer/src/**/globalTestMocks.ts",
   "apps/*/vite.config.ts",
   "packages/features/*/vite.config.ts",
   "packages/features/*/vite.js",
@@ -38,18 +37,10 @@ const devDependencyFiles = [
 
 /**
  * Imports that only one place may use, with the files of that place.
- * Only the composer depends on JointJS, so that an app without it builds without the licence,
- * and only the GraphiQL feature depends on the GraphiQL packages. Tests create their msw server
+ * Only the GraphiQL feature depends on the GraphiQL packages. Tests create their msw server
  * with setupTestServer, which makes a request without a handler fail the test.
  */
 const restrictedImports = {
-  jointjs: {
-    files: ["packages/features/composer/**"],
-    pattern: {
-      group: ["@joint/*"],
-      message: "Only the composer feature (packages/features/composer) imports JointJS.",
-    },
-  },
   graphiql: {
     files: ["packages/features/graphiql/**"],
     pattern: {
@@ -86,7 +77,7 @@ const restrictImports = (allowed) => ({
 export default [
   {
     // Ignore files/folders
-    ignores: ["**/dist", "**/.yarn", ".tsbuild"],
+    ignores: ["**/dist", "**/.yarn", ".tsbuild", "packages/core/src/Domain/GraphQL/generated"],
   },
 
   // Apply recommended configurations
@@ -276,7 +267,7 @@ export default [
       "import/no-restricted-paths": ["error", { basePath, zones: testImportBoundaryZones }],
     },
   },
-  // The imports only one place may use, see restrictedImports. For JointJS and GraphiQL, this rule
+  // The imports only one place may use, see restrictedImports. For GraphiQL, this rule
   // gives the clearest message for a static import; the Yarn constraints (yarn.config.cjs) and
   // import/no-extraneous-dependencies below also catch import() and a dependency in the wrong
   // package.json.

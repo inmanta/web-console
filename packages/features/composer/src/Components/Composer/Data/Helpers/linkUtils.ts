@@ -1,48 +1,55 @@
-import { dia } from "@joint/plus";
-import { LinkShape } from "../../UI/JointJsShapes/LinkShape";
-import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
+import { ServiceEntityShape } from "../ServiceEntityShape";
 
 /**
- * Creates a LinkShape with default router/connector/anchor from paper options.
- * This consolidates the link creation logic used in multiple places.
- * The relation key (port) is derived from the target entity's name.
- *
- * @param sourceShape - The source shape for the link
- * @param targetShape - The target shape for the link
- * @param paper - The paper instance (optional, for getting default options)
- * @returns A configured LinkShape instance
+ * A line on the canvas between two connected shapes, drawn from parent to child.
  */
-export const createLinkShape = (
-  sourceShape: ServiceEntityShape,
-  targetShape: ServiceEntityShape,
-  paper?: dia.Paper
-): dia.Link => {
-  const link = new LinkShape();
+export interface ComposerLink {
+  id: string;
+  source: string;
+  target: string;
+}
 
-  // Get options from paper if provided (where they're actually set)
-  if (paper) {
-    const paperOptions = paper.options;
-    const defaultRouter = paperOptions?.defaultRouter;
-    const defaultConnector = paperOptions?.defaultConnector;
-    const defaultAnchor = paperOptions?.defaultAnchor;
+/**
+ * Derives the links from the shapes' connections maps: one link per connected pair of
+ * shapes that are both on the canvas. The connections are the source of truth; the
+ * links only exist to be drawn.
+ *
+ * A link points from the parent to the child when one is a known parent of the other,
+ * and otherwise from the shape that was put on the canvas first.
+ *
+ * @param canvasState - The shapes on the canvas, keyed by id
+ * @returns The links between them
+ */
+export const getLinks = (canvasState: Map<string, ServiceEntityShape>): ComposerLink[] => {
+  const links: ComposerLink[] = [];
+  const linkedPairs = new Set<string>();
 
-    if (defaultRouter) {
-      link.router(defaultRouter);
-    }
-    if (defaultConnector) {
-      link.connector(defaultConnector);
-    }
-    if (defaultAnchor) {
-      link.set("defaultAnchor", defaultAnchor);
-    }
-  }
+  canvasState.forEach((shape, shapeId) => {
+    shape.connections.forEach((targetIds) => {
+      targetIds.forEach((targetId) => {
+        const targetShape = canvasState.get(targetId);
 
-  // The relation key (port) is the target entity's name
-  const sourceRelationKey = targetShape.getEntityType();
-  link.source({ id: sourceShape.id, port: sourceRelationKey });
-  link.target({ id: targetShape.id });
+        if (!targetShape || targetId === shapeId) {
+          return;
+        }
 
-  return link;
+        const pair = [shapeId, targetId].sort().join("|");
+
+        if (linkedPairs.has(pair)) {
+          return;
+        }
+        linkedPairs.add(pair);
+
+        const isChildOfTarget =
+          shape.parentIds.has(targetId) && !targetShape.parentIds.has(shapeId);
+        const [source, target] = isChildOfTarget ? [targetId, shapeId] : [shapeId, targetId];
+
+        links.push({ id: `${source}->${target}`, source, target });
+      });
+    });
+  });
+
+  return links;
 };
 
 /**

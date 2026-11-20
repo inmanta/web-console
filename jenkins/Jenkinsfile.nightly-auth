@@ -1,17 +1,25 @@
-// The nightly end-to-end tests of the authentication methods, each against a fresh OSS
-// orchestrator set up for it (shell-scripts/setup-auth.sh), with the web console of this build:
+// The nightly end-to-end tests of one authentication method, against a fresh OSS orchestrator set
+// up for it (shell-scripts/setup-auth.sh), with the web console of this build:
 // - keycloak: cypress/e2e/Keycloak (cypress.config.keycloak.cjs);
 // - oidc: cypress/e2e/Oidc (cypress.config.oidc.cjs);
 // - local-auth: cypress/e2e/LocalAuth (cypress.config.local-auth.cjs).
-// Its own job, on master.
+// One multibranch job per method, for master and the iso branches, so each method has its own
+// status and can be rerun alone. The jobs keep the names of the freestyle jobs they replace.
+// A job's name picks the method of its nightly runs, and the AUTH_METHOD parameter picks another
+// one for a run started by hand. The name does the picking because Jenkins can't give the jobs of
+// one Jenkinsfile different parameter defaults. A job with another name needs AUTH_METHOD.
 //
 // The setup doesn't wait for the orchestrator and the identity provider to be ready, so each
 // method waits a fixed time before it installs the build.
-def authMethods = [
-    [name: 'keycloak', startupSeconds: 45],
-    [name: 'oidc', startupSeconds: 20],
-    [name: 'local-auth', startupSeconds: 45],
-]
+def startupSecondsByMethod = [keycloak: 45, oidc: 20, 'local-auth': 45]
+def methodByJob = ['keycloak-e2e-test': 'keycloak', 'oidc-e2e-test': 'oidc', 'frontend-local-auth': 'local-auth']
+def methodOfJob = 'of the job'
+// In a multibranch job, JOB_BASE_NAME is the branch; the job's own name is the one above it.
+def jobName = env.BRANCH_NAME ? env.JOB_NAME.tokenize('/')[-2] : env.JOB_BASE_NAME
+// AUTH_METHOD is unset on a job's first build, before Jenkins has read the parameter from this file.
+// Checked in the first stage, once Jenkins has registered the parameter.
+def methodName = params.AUTH_METHOD && params.AUTH_METHOD != methodOfJob ? params.AUTH_METHOD : methodByJob[jobName]
+def authMethod = [name: methodName, startupSeconds: startupSecondsByMethod[methodName]]
 
 pipeline {
     agent any
@@ -22,18 +30,30 @@ pipeline {
         skipDefaultCheckout()
         ansiColor('xterm')
     }
+    parameters {
+        // The first choice is methodOfJob, the default.
+        choice(name: 'AUTH_METHOD', choices: ['of the job', 'keycloak', 'oidc', 'local-auth'], description: "The authentication method to test. 'of the job' is the one the job's name picks, which the nightly runs use.")
+    }
     triggers {
-        cron('H H(2-5) * * *')
+        cron((env.BRANCH_NAME ?: 'master') ==~ /master|iso[0-9]+/ ? 'H H(2-5) * * *' : '')
     }
     environment {
         GITLAB_TOKEN = credentials('jenkins_on_gitlab')
         CLOUDSMITH_TOKEN = credentials('cloudsmith-token')
-        JOINTJS_NPM_TOKEN = credentials('jointjs-npm-token')
     }
 
     stages {
         stage('Auth: Checkout') {
             steps {
+                script {
+                    if (!startupSecondsByMethod.containsKey(methodName)) {
+                        error("No authentication method for the job '${jobName}': set AUTH_METHOD, or name the job one of ${methodByJob.keySet().join(', ')}.")
+                    }
+                    // Shows in the build history which runs tested another method than the job's.
+                    if (methodName != methodByJob[jobName]) {
+                        currentBuild.displayName = "#${env.BUILD_NUMBER} ${methodName}"
+                    }
+                }
                 deleteDir()
                 dir('web-console') {
                     checkout scm
@@ -53,28 +73,27 @@ pipeline {
         stage('Auth: End-to-end tests') {
             steps {
                 script {
-                    for (method in authMethods) {
-                        stage("Authentication: ${method.name}") {
-                            // A failing method fails the build, and the other methods still run.
-                            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                                // One orchestrator per agent: the main job's Cypress stage takes the same lock.
-                                lock(resource: "orchestrator-${env.NODE_NAME}") {
-                                    dir('web-console') {
-                                        // The cleanup is outside the timeout, so it also runs when a method times out.
-                                        try {
-                                            timeout(time: 20, unit: 'MINUTES') {
-                                                sh """
-                                                yarn run install:orchestrator:${method.name}
-                                                sleep ${method.startupSeconds}
-                                                yarn update:dist
-                                                yarn run cypress-test:${method.name} --config screenshotsFolder=cypress/screenshots/${method.name} --reporter-options 'mochaFile=cypress/reports/junit/${method.name}-[hash].xml'
-                                                """
-                                            }
-                                        } finally {
-                                            junit allowEmptyResults: true, testResults: "cypress/reports/junit/${method.name}-*.xml"
-                                            sh 'yarn run kill-server || true; rm -rf temp'
-                                        }
-                                    }
+                    // One orchestrator per agent: the main job's Cypress stage takes the same lock.
+                    // Taken here, on the agent: a stage option can't see NODE_NAME yet.
+                    lock(resource: "orchestrator-${env.NODE_NAME}") {
+                        dir('web-console') {
+                            // The cleanup is outside the timeout, so it also runs when the tests time out.
+                            try {
+                                timeout(time: 20, unit: 'MINUTES') {
+                                    sh """
+                                    sh ./shell-scripts/clear-server.sh
+                                    sh ./shell-scripts/report-orchestrator-conflicts.sh
+                                    yarn run install:orchestrator:${authMethod.name}
+                                    sleep ${authMethod.startupSeconds}
+                                    yarn update:dist
+                                    yarn run cypress-test:${authMethod.name} --reporter-options 'mochaFile=cypress/reports/junit/${authMethod.name}-[hash].xml'
+                                    """
+                                }
+                            } finally {
+                                junit allowEmptyResults: true, testResults: "cypress/reports/junit/${authMethod.name}-*.xml"
+                                // shell-scripts/clear-server.sh needs only sh and docker, not yarn; a failure is reported, not hidden.
+                                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE', message: "Couldn't remove the orchestrator: its containers may still be on the agent ${env.NODE_NAME}.") {
+                                    sh 'sh ./shell-scripts/clear-server.sh'
                                 }
                             }
                         }
@@ -85,7 +104,8 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: 'web-console/cypress/screenshots/**', allowEmptyArchive: true
+            // The Cypress outputs the main job keeps, whichever this run made.
+            archiveArtifacts artifacts: 'web-console/cypress/reports/**, web-console/cypress/screenshots/**, web-console/cypress/videos/**', allowEmptyArchive: true, onlyIfSuccessful: false
         }
         cleanup {
             deleteDir()

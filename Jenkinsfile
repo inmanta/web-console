@@ -17,7 +17,6 @@ pipeline {
     }
     environment {
         GITLAB_TOKEN = credentials('jenkins_on_gitlab')
-        JOINTJS_NPM_TOKEN = credentials('jointjs-npm-token')
     }
 
     stages {
@@ -99,14 +98,23 @@ for name in os.listdir(CHANGE_ENTRIES_PATH):
                                     timeout(time: 20, unit: 'MINUTES') {
                                         dir('web-console') {
                                             sh '''yarn build:ci;
-                                            sudo systemctl restart docker && sudo docker network prune -f;
-                                            yarn run install:orchestrator:ci;
-                                            yarn run cypress-test:iso;'''
+                                            sh ./shell-scripts/clear-server.sh;
+                                            sh ./shell-scripts/report-orchestrator-conflicts.sh;
+                                            yarn run install:orchestrator:ci;'''
+                                            // Fails the build when the orchestrator's schema no longer matches the
+                                            // generated query types, but still runs the e2e tests.
+                                            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                                                sh 'yarn codegen:check'
+                                            }
+                                            sh 'yarn run cypress-test:iso'
                                         }
                                     }
                                 } finally {
                                     dir('web-console') {
-                                        sh 'yarn run kill-server'
+                                        // shell-scripts/clear-server.sh needs only sh and docker, not yarn; a failure is reported, not hidden.
+                                        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE', message: "Couldn't remove the orchestrator: its containers may still be on the agent ${env.NODE_NAME}.") {
+                                            sh 'sh ./shell-scripts/clear-server.sh'
+                                        }
                                     }
                                 }
                             }
