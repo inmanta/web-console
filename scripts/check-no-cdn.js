@@ -11,14 +11,14 @@
  *
  * Run this after every production build (yarn build:ci) to catch regressions
  * early, before they reach a customer environment. It checks every build that
- * `yarn build:ci` makes: the ISO app (dist), the OSS app (apps/oss/dist) and the
+ * `yarn build:ci` makes: the ISO app (dist), the OSS app (dist-oss) and the
  * composer's separate build (packages/features/composer/dist), or the folders given
- * as arguments, e.g. `yarn check-no-cdn apps/oss/dist`.
+ * as arguments, e.g. `yarn check-no-cdn dist-oss`.
  */
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 
-const defaultDistDirs = ["dist", "apps/oss/dist", "packages/features/composer/dist"];
+const defaultDistDirs = ["dist", "dist-oss", "packages/features/composer/dist"];
 const distDirs = process.argv.length > 2 ? process.argv.slice(2) : defaultDistDirs;
 const cdnPatterns = ["esm.sh", "cdn.jsdelivr.net"];
 
