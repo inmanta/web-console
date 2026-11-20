@@ -25,6 +25,7 @@ import {
   getLayoutAxis,
   getLinks,
   getRemoveActions,
+  getShapeDimensions,
   getShapeName,
   getValidationMessages,
 } from "../Data/Helpers";
@@ -93,19 +94,16 @@ export const Canvas: React.FC = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [nodes, setNodes] = useState<EntityNodeType[]>([]);
 
-  // Read from where the visible cards are now, so the lines follow a drag or an Arrange. The
-  // cards change on a move or a measurement, not on a pan or a zoom.
+  // Read from where the visible cards are when the layout changes (a load, an Arrange, a new
+  // relation), not on a drag: a drag doesn't replace canvasState. Dragging a card then only
+  // moves its own lines, instead of turning the other lines of the canvas to the other axis.
   const layoutAxis = useMemo(() => {
     const boxes = new Map(
-      nodes
-        .filter((node) => !node.hidden)
-        .map((node): [string, CardBox] => [
-          node.id,
-          {
-            ...node.position,
-            width: node.measured?.width ?? 0,
-            height: node.measured?.height ?? 0,
-          },
+      Array.from(canvasState.values())
+        .filter((shape) => !shape.isHidden)
+        .map((shape): [string, CardBox] => [
+          shape.id,
+          { ...shape.getPosition(), ...getShapeDimensions(shape) },
         ])
     );
 
@@ -117,7 +115,7 @@ export const Canvas: React.FC = () => {
         return source && target ? [[source, target]] : [];
       })
     );
-  }, [nodes, canvasState]);
+  }, [canvasState]);
   const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   // Read out by screen readers; a new selection clears it
