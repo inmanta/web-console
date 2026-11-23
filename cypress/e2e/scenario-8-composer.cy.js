@@ -42,6 +42,84 @@ const linkSelectedEntityTo = (targetSelector) => {
   });
 };
 
+// TEMPORARY DEBUG for the React Flow 13 update: same drag as linkSelectedEntityTo, but records
+// what the page sees at each step and fails with that record when no line was added.
+const describeElement = (element) =>
+  element
+    ? `${element.tagName}.${String(element.getAttribute("class") || "").slice(0, 160)} testid=${element.getAttribute("data-testid")} id=${element.getAttribute("data-id")}`
+    : null;
+
+const roundRect = (rect) => ({
+  left: Math.round(rect.left),
+  top: Math.round(rect.top),
+  width: Math.round(rect.width),
+  height: Math.round(rect.height),
+});
+
+const debugLinkSelectedEntityTo = (targetSelector) => {
+  const record = {};
+
+  cy.get(".react-flow__edge").then(($edges) => {
+    record.edgesBefore = $edges.length;
+  });
+
+  cy.get(".react-flow__node.selected .link-handle").then(($handle) => {
+    const from = $handle[0].getBoundingClientRect();
+    const fromX = from.left + from.width / 2;
+    const fromY = from.top + from.height / 2;
+
+    cy.get(targetSelector).then(($target) => {
+      const to = $target[0].getBoundingClientRect();
+      const toX = to.left + to.width / 2;
+      const toY = to.top + to.height / 2;
+      const doc = $target[0].ownerDocument;
+      const targetNode = $target[0].closest(".react-flow__node");
+
+      record.handle = { rect: roundRect(from), element: describeElement($handle[0]) };
+      record.target = {
+        rect: roundRect(to),
+        element: describeElement($target[0]),
+        node: describeElement(targetNode),
+      };
+      record.canvas = roundRect(doc.querySelector(".react-flow").getBoundingClientRect());
+      record.viewport = doc.querySelector(".react-flow__viewport")?.style.transform;
+      record.sourceNode = describeElement($handle[0].closest(".react-flow__node"));
+
+      cy.wrap($handle).trigger("mousedown", { button: 0, clientX: fromX, clientY: fromY });
+      cy.document().trigger("mousemove", { button: 0, clientX: fromX + 20, clientY: fromY + 20 });
+      cy.document().then((document) => {
+        record.afterFirstMove = {
+          flowClass: document.querySelector(".react-flow").getAttribute("class"),
+          connectionLine: describeElement(document.querySelector(".react-flow__connection")),
+        };
+      });
+      cy.document().trigger("mousemove", { button: 0, clientX: toX, clientY: toY });
+      cy.document().then((document) => {
+        const targetHandle = targetNode?.querySelector(".entity-target-handle");
+
+        record.atTarget = {
+          flowClass: document.querySelector(".react-flow").getAttribute("class"),
+          connectionLine: describeElement(document.querySelector(".react-flow__connection")),
+          elementsAtPoint: document.elementsFromPoint(toX, toY).slice(0, 6).map(describeElement),
+          targetHandle: describeElement(targetHandle),
+          targetHandlePointerEvents: targetHandle && getComputedStyle(targetHandle).pointerEvents,
+          targetHandleRect: targetHandle && roundRect(targetHandle.getBoundingClientRect()),
+        };
+      });
+      cy.document().trigger("mouseup", { button: 0, clientX: toX, clientY: toY });
+      cy.wait(500);
+      cy.document().then((document) => {
+        record.edgesAfter = document.querySelectorAll(".react-flow__edge").length;
+        record.sourceNodeAfter = describeElement($handle[0].closest(".react-flow__node"));
+
+        if (record.edgesAfter <= record.edgesBefore) {
+          throw new Error(`LINK DEBUG ${JSON.stringify(record)}`);
+        }
+      });
+    });
+  });
+};
+
 /**
  * Drags an item of the palette onto the canvas, at the position getPosition yields.
  */
@@ -380,7 +458,7 @@ if (isIso && shipsComposer) {
       cy.get("#prefix_size").clear().type("5");
 
       // Step 4: Connect network -> project.
-      linkSelectedEntityTo(entity("project"));
+      debugLinkSelectedEntityTo(entity("project"));
 
       // Step 5: Deploy and validate resulting order details.
       cy.get('[data-testid="deploy-button"]').should("be.enabled").click();
