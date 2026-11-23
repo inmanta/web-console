@@ -1871,14 +1871,14 @@ __metadata:
     "@tanstack/react-query": "npm:^5.107.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
-    "@testing-library/user-event": "npm:^14.6.10"
+    "@testing-library/user-event": "npm:^14.6.13"
     "@types/jest-axe": "npm:^3.5.9"
     "@vitejs/plugin-react": "npm:^6.3.0"
     jest-axe: "npm:^11.0.0"
     msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
-    react-router: "npm:^8.5.1"
+    react-router: "npm:^8.5.2"
     vite: "npm:^8.3.8"
     vite-plugin-mkcert: "npm:^2.1.0"
   languageName: unknown
@@ -1906,7 +1906,7 @@ __metadata:
     qs: "npm:^6.17.0"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
-    react-router: "npm:^8.5.1"
+    react-router: "npm:^8.5.2"
     uuid: "npm:^14.0.3"
     vite: "npm:^8.3.8"
     vitest: "npm:^5.1.0"
@@ -1927,11 +1927,11 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
-    "@testing-library/user-event": "npm:^14.6.10"
+    "@testing-library/user-event": "npm:^14.6.13"
     "@xyflow/react": "npm:^13.0.1"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
-    react-router: "npm:^8.5.1"
+    react-router: "npm:^8.5.2"
     styled-components: "npm:^6.6.0"
     typescript: "npm:@typescript/typescript6@^6.0.2"
     uuid: "npm:^14.0.3"
@@ -1955,13 +1955,13 @@ __metadata:
     "@tanstack/react-query": "npm:^5.107.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
-    "@testing-library/user-event": "npm:^14.6.10"
+    "@testing-library/user-event": "npm:^14.6.13"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
     msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
-    react-router: "npm:^8.5.1"
+    react-router: "npm:^8.5.2"
     styled-components: "npm:^6.6.0"
     victory: "npm:^38.1.0"
     vite: "npm:^8.3.8"
@@ -1990,7 +1990,7 @@ __metadata:
     prettier: "npm:^3.10.1"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
-    react-router: "npm:^8.5.1"
+    react-router: "npm:^8.5.2"
     styled-components: "npm:^6.6.0"
     vite: "npm:^8.3.8"
     vitest: "npm:^5.1.0"
@@ -2012,9 +2012,9 @@ __metadata:
     "@patternfly/react-tokens": "npm:^6.7.0"
     "@tanstack/react-query": "npm:^5.107.2"
     "@testing-library/dom": "npm:^10.4.2"
-    "@testing-library/jest-dom": "npm:^7.0.1"
+    "@testing-library/jest-dom": "npm:^8.0.0"
     "@testing-library/react": "npm:^16.3.3"
-    "@testing-library/user-event": "npm:^14.6.10"
+    "@testing-library/user-event": "npm:^14.6.13"
     "@types/jest-axe": "npm:^3.5.9"
     "@types/markdown-it-emoji": "npm:^3.0.1"
     copy-to-clipboard: "npm:^4.0.2"
@@ -2028,7 +2028,7 @@ __metadata:
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-icons: "npm:^5.7.0"
-    react-router: "npm:^8.5.1"
+    react-router: "npm:^8.5.2"
     styled-components: "npm:^6.6.0"
     uuid: "npm:^14.0.3"
     vite: "npm:^8.3.8"
@@ -2051,14 +2051,14 @@ __metadata:
     "@tanstack/react-query": "npm:^5.107.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
-    "@testing-library/user-event": "npm:^14.6.10"
+    "@testing-library/user-event": "npm:^14.6.13"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
     msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-diff-viewer-continued: "npm:^4.4.0"
     react-dom: "npm:^19.3.1"
-    react-router: "npm:^8.5.1"
+    react-router: "npm:^8.5.2"
     styled-components: "npm:^6.6.0"
   languageName: unknown
   linkType: soft
@@ -2078,13 +2078,13 @@ __metadata:
     "@tanstack/react-query": "npm:^5.107.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
-    "@testing-library/user-event": "npm:^14.6.10"
+    "@testing-library/user-event": "npm:^14.6.13"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
     msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
-    react-router: "npm:^8.5.1"
+    react-router: "npm:^8.5.2"
     styled-components: "npm:^6.6.0"
   languageName: unknown
   linkType: soft
@@ -2102,7 +2102,7 @@ __metadata:
     "@tanstack/react-query": "npm:^5.107.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
-    "@testing-library/user-event": "npm:^14.6.10"
+    "@testing-library/user-event": "npm:^14.6.13"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
     msw: "npm:^3.0.6"
@@ -2148,10 +2148,10 @@ __metadata:
     "@react-keycloak/web": "npm:^3.4.0"
     "@remix-run/router": "npm:^1.23.4"
     "@tanstack/react-query": "npm:^5.107.2"
-    "@tanstack/react-query-devtools": "npm:^5.107.1"
+    "@tanstack/react-query-devtools": "npm:^5.108.0"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
-    "@testing-library/user-event": "npm:^14.6.10"
+    "@testing-library/user-event": "npm:^14.6.13"
     "@types/jest-axe": "npm:^3.5.9"
     jest-axe: "npm:^11.0.0"
     keycloak-js: "npm:^26.2.5"
@@ -2161,7 +2161,7 @@ __metadata:
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-oidc-context: "npm:^3.3.1"
-    react-router: "npm:^8.5.1"
+    react-router: "npm:^8.5.2"
     styled-components: "npm:^6.6.0"
     uuid: "npm:^14.0.3"
     vite: "npm:^8.3.8"
@@ -2181,9 +2181,9 @@ __metadata:
     "@patternfly/react-log-viewer": "npm:^6.5.0"
     "@tanstack/react-query": "npm:^5.107.2"
     "@testing-library/dom": "npm:^10.4.2"
-    "@testing-library/jest-dom": "npm:^7.0.1"
+    "@testing-library/jest-dom": "npm:^8.0.0"
     "@testing-library/react": "npm:^16.3.3"
-    "@testing-library/user-event": "npm:^14.6.10"
+    "@testing-library/user-event": "npm:^14.6.13"
     "@types/jest-axe": "npm:^3.5.9"
     happy-dom: "npm:^21.0.4"
     jest-axe: "npm:^11.0.0"
@@ -2192,7 +2192,7 @@ __metadata:
     msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
-    react-router: "npm:^8.5.1"
+    react-router: "npm:^8.5.2"
     vite: "npm:^8.3.8"
     vitest: "npm:^5.1.0"
   languageName: unknown
@@ -2212,7 +2212,7 @@ __metadata:
     "@tanstack/react-query": "npm:^5.107.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
-    "@testing-library/user-event": "npm:^14.6.10"
+    "@testing-library/user-event": "npm:^14.6.13"
     "@types/jest-axe": "npm:^3.5.9"
     copy-to-clipboard: "npm:^4.0.2"
     highlight.js: "npm:^11.12.0"
@@ -2221,7 +2221,7 @@ __metadata:
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
     react-icons: "npm:^5.7.0"
-    react-router: "npm:^8.5.1"
+    react-router: "npm:^8.5.2"
     styled-components: "npm:^6.6.0"
     uuid: "npm:^14.0.3"
     vite: "npm:^8.3.8"
@@ -2242,7 +2242,7 @@ __metadata:
     "@patternfly/react-styles": "npm:^6.7.0"
     "@stylistic/eslint-plugin-ts": "npm:^4.4.1"
     "@testing-library/dom": "npm:^10.4.2"
-    "@testing-library/jest-dom": "npm:^7.0.1"
+    "@testing-library/jest-dom": "npm:^8.0.0"
     "@types/node": "npm:^26.6.6"
     "@types/react": "npm:^19.3.0"
     "@types/react-dom": "npm:^19.3.0"
@@ -4351,13 +4351,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.107.1":
-  version: 5.107.1
-  resolution: "@tanstack/query-core@npm:5.107.1"
-  checksum: 10/a0346fb46f2d2326409d15c7b82e818c2c85770e3624989e9f4a8ca2bd631d31fa051d176c31ef1f98487487313a5d352bf10cab1d123d5ead5461f52748cc4a
-  languageName: node
-  linkType: hard
-
 "@tanstack/query-core@npm:5.107.2":
   version: 5.107.2
   resolution: "@tanstack/query-core@npm:5.107.2"
@@ -4365,39 +4358,46 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-devtools@npm:5.107.1":
-  version: 5.107.1
-  resolution: "@tanstack/query-devtools@npm:5.107.1"
+"@tanstack/query-core@npm:5.108.0":
+  version: 5.108.0
+  resolution: "@tanstack/query-core@npm:5.108.0"
+  checksum: 10/8858618869d8aea59f4e862b980455069b8e83856af1851af4aaf296b9a334123ab57114de00ed4a79ab3a16c01fd532d8c8d96eccd72ac1859d2381d680ac72
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-devtools@npm:5.108.0":
+  version: 5.108.0
+  resolution: "@tanstack/query-devtools@npm:5.108.0"
   dependencies:
     "@kobalte/core": "npm:^0.13.14"
     "@solid-primitives/keyed": "npm:^1.5.3"
     "@solid-primitives/resize-observer": "npm:^2.2.0"
     "@solid-primitives/storage": "npm:^1.3.11"
     "@tanstack/match-sorter-utils": "npm:^9.1.2"
-    "@tanstack/query-core": "npm:5.107.1"
+    "@tanstack/query-core": "npm:5.108.0"
     "@tanstack/solid-virtual": "npm:^3.13.52"
     clsx: "npm:^2.1.1"
     goober: "npm:^2.1.19"
     solid-js: "npm:^1.9.15"
     solid-transition-group: "npm:^0.2.3"
     superjson: "npm:^2.2.6"
-  checksum: 10/1b3f587a69574e5a72185adbe06f78d15ba95d6307f80763f825e36a7dd6b48fad28333fa5fa6669c7fe77435194b97569deb4ec345bfe133f08f67276d0f093
+  checksum: 10/dda1f7a6c2ce44e07266818810e77d449407b41a8546855be3b66f5fdfce6f6c0245043e82a31912e26d34b25ad712fcaa4412b222d4146f7f7bd141b311daae
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:^5.107.1":
-  version: 5.107.1
-  resolution: "@tanstack/react-query-devtools@npm:5.107.1"
+"@tanstack/react-query-devtools@npm:^5.108.0":
+  version: 5.108.0
+  resolution: "@tanstack/react-query-devtools@npm:5.108.0"
   dependencies:
-    "@tanstack/query-devtools": "npm:5.107.1"
+    "@tanstack/query-devtools": "npm:5.108.0"
   peerDependencies:
-    "@tanstack/react-query": ^5.107.1
+    "@tanstack/react-query": ^5.108.0
     "@types/react": ^18 || ^19
     react: ^18 || ^19
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/5a3385bd9cf7414d2fd8916281ef6a82a64deb46cb0c0236518e7915737785200864a641e6fb33ae99ee4c7efb46e903e61484780f920917ef856aa87f5a97ca
+  checksum: 10/b6c67c8c0440f382f796c5bc9b96adff1859e9ec7efc7c6f91dbd93f29b6dbd1866f1d56d8b3087e6415723c3c619d6ba22587914d7741558588b603010de26d
   languageName: node
   linkType: hard
 
@@ -4469,9 +4469,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:^7.0.1":
-  version: 7.0.1
-  resolution: "@testing-library/jest-dom@npm:7.0.1"
+"@testing-library/jest-dom@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "@testing-library/jest-dom@npm:8.0.0"
   dependencies:
     "@adobe/css-tools": "npm:^4.4.0"
     aria-query: "npm:^5.0.0"
@@ -4481,11 +4481,11 @@ __metadata:
     redent: "npm:^3.0.0"
   peerDependencies:
     "@testing-library/dom": ">=10 <11"
-    vitest: ">= 0.32"
+    vitest: ">=5 <6"
   peerDependenciesMeta:
     vitest:
       optional: true
-  checksum: 10/0770454b47da9370e59cda691f797c0442e53caefcd412c504b33c7a9bee099c8a9e7d1f07f7eae8d380ea52c34a5d70139e875480a57f729588068edc78f57b
+  checksum: 10/fe3f6395e83ce64d81a12e77927bc411de4d9dee04779544ec7183d0863db86e2d8691ffac043679b42594c556d89e0c90e83c32db656439c0442a0e0c9336fd
   languageName: node
   linkType: hard
 
@@ -4509,12 +4509,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^14.6.10":
-  version: 14.6.12
-  resolution: "@testing-library/user-event@npm:14.6.12"
+"@testing-library/user-event@npm:^14.6.13":
+  version: 14.6.13
+  resolution: "@testing-library/user-event@npm:14.6.13"
   peerDependencies:
     "@testing-library/dom": ">=7.21.4"
-  checksum: 10/154f83dc80b7c2d4a808b8ee0a6ef1d2995660638f2b777edaeaf5c19f7a7b7e6f4faa2f4158cef678b57117ca3b1c65257436cd1fbd1b4036edc20cfbe50074
+  checksum: 10/d3904066cf622586356b0d85cd6b6840e1f89f68697db27d9c3d800e8868dd2446b59c3a28e2d109ea7d6c0ba4e2713ae2e3d9f980073924886caac878d25b8a
   languageName: node
   linkType: hard
 
@@ -12022,9 +12022,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router@npm:^8.5.1":
-  version: 8.5.1
-  resolution: "react-router@npm:8.5.1"
+"react-router@npm:^8.5.2":
+  version: 8.5.2
+  resolution: "react-router@npm:8.5.2"
   dependencies:
     "@remix-run/route-pattern": "npm:^0.22.1"
     cookie-es: "npm:^3.1.1"
@@ -12040,7 +12040,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/a816ea9d47d7b74f60e97ff623f41f42cc0d9591af03f2491cdaaff4ff43a0df9c7a6a37257e05fcaf868e3921a74a03c8674f07d1757f2b439f291961b8c49d
+  checksum: 10/b3fb514b2690ed03458cec39735f3afae1f3a5d8ef3ce0b05d61d79a5da653e352b265cbad596b201810105b865a1cdfa8841e5bb9fd9a34f8560c635269210e
   languageName: node
   linkType: hard
 
@@ -12541,7 +12541,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"seroval@npm:~1.6.8":
+"seroval@npm:~1.6.11":
   version: 1.6.12
   resolution: "seroval@npm:1.6.12"
   checksum: 10/839b5cb6850d3de89436077fae6eb90fcce743ceb1cd9a1cc5e571df12404997ac2ae8f2b96618303b03ceb1f77f6c39dafd9154d1e9cc3155473859ed35291e
@@ -12791,13 +12791,13 @@ __metadata:
   linkType: hard
 
 "solid-js@npm:^1.9.15":
-  version: 1.9.17
-  resolution: "solid-js@npm:1.9.17"
+  version: 1.9.20
+  resolution: "solid-js@npm:1.9.20"
   dependencies:
     csstype: "npm:^3.1.0"
-    seroval: "npm:~1.6.8"
+    seroval: "npm:~1.6.11"
     seroval-plugins: "npm:~1.6.8"
-  checksum: 10/e977eb4e4c2073dee6973e846a79344c04a12b767fe1ceea1ae61b81ecc1f8b97ed0eb4992571babc8feb1a361dbb1306b3d6e3939a7a68b09301dd1eed9e167
+  checksum: 10/f2b17ce01c94326734edd13b02699fd7cd2ea3da418a1cc421d91f9ebc874720603d306906543f7fc7dfe8819e49d99181514ed3df9226d344de021a751c49c1
   languageName: node
   linkType: hard
 
