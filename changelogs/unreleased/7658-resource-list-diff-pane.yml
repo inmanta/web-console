@@ -1,0 +1,6 @@
+description: The Compliance Check and Desired State Compare pages list the resources by status, with the diff of the selected one as an attribute table next to the list.
+issue-nr: 7658
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

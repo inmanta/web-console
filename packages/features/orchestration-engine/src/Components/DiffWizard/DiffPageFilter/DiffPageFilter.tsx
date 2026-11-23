@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, MenuFooter, TextInput, ToolbarGroup, ToolbarItem } from "@patternfly/react-core";
 import { Diff, words } from "@inmanta/web-console-core";
-import { StatusDescriptor } from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/StatusDescriptor";
+import { DiffStatusLetterLabel } from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/DiffStatusLetterLabel";
 import { MultiTextSelect } from "@inmanta/web-console-ui/Components/MultiTextSelect";
 
 interface Props {
@@ -50,8 +50,8 @@ export const DiffPageFilter: React.FC<Props> = ({
           options={Diff.defaultStatuses.map((option: Diff.Status) => {
             return {
               value: option,
-              children: option,
-              icon: <StatusDescriptor status={option} />,
+              children: words(`desiredState.compare.status.${option}`),
+              icon: <DiffStatusLetterLabel status={option} />,
               isSelected: statuses.includes(option),
             };
           })}

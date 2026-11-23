@@ -314,4 +314,12 @@ export class IdParser {
   public static getAgentName(idStr: string): Id["agentName"] | undefined {
     return IdParser.parse(idStr)?.agentName;
   }
+
+  /**
+   * Gets the attribute value of a resource id, like the path of a file, to name the resource in
+   * short. Returns the whole id when it can't be parsed.
+   */
+  public static getAttributeValueOrId(idStr: string): string {
+    return IdParser.parse(idStr)?.attributeValue ?? idStr;
+  }
 }

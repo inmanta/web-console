@@ -14,4 +14,5 @@ export const route = (base: string): Route<"DesiredStateCompare"> => ({
   path: `${base}${path}`,
   generateLabel: () => "Compare",
   environmentRole: "Required",
+  fillsPage: true,
 });

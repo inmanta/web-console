@@ -17,15 +17,15 @@ interface Props extends DiffSideLabels {
   resourceId: string;
   entries: EntryInfo[];
   sidesWithValues: DiffSide[];
+  isTableHeaderStuck: boolean;
 }
 
 /**
- * The attributes of one resource in a compact, borderless table with a column per side of the
- * diff. It stays a table on small screens. Every other attribute is striped, together with the
- * rows under it, so an attribute reads as one block. Short values sit in the columns with the
- * changed part marked, and a side without values says so. Long values and file content get a
- * line diff in a row under their name, which names its own sides, so without short values the
- * table has no column headers.
+ * The attributes of one resource in a compact table with a column per side of the diff, its header
+ * sticking to the top of the scrolling diff. It stays a table on small screens. Short values sit
+ * in the columns with the changed part marked, and a side without values says so. Long values and
+ * file content get a line diff in a row under their name, which names its own sides, so without
+ * short values the table has no column headers.
  *
  * @props {Props} props - The component props
  *  @prop {string} resourceId - The id of the resource, which tells whether its hash is file content
@@ -33,6 +33,7 @@ interface Props extends DiffSideLabels {
  *  @prop {DiffSide[]} sidesWithValues - The sides that hold values, both unless the resource is added or deleted
  *  @prop {string} fromLabel - The header of the column of the side the diff starts from
  *  @prop {string} toLabel - The header of the column of the side the diff goes to
+ *  @prop {boolean} isTableHeaderStuck - Whether the diff is scrolled, so the header shows as stuck
  *
  * @returns {React.FC<Props>} The attribute table
  */
@@ -42,15 +43,68 @@ export const AttributeTable: React.FC<Props> = ({
   sidesWithValues,
   fromLabel,
   toLabel,
+  isTableHeaderStuck,
 }) => {
   const labels: Record<DiffSide, string> = { from: fromLabel, to: toLabel };
   const hasShortValues = entries.some(({ fromValue, toValue }) => !isLongValue(fromValue, toValue));
 
+  const renderAttributeRows = (attributeName: string, fromValue: string, toValue: string) => {
+    if (isLongValue(fromValue, toValue)) {
+      return (
+        <>
+          <Tr>
+            <AttributeName scope="row" colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT}>
+              {attributeName}
+            </AttributeName>
+          </Tr>
+          <Tr>
+            <Td colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT}>
+              <LongValueDiff
+                attributeName={attributeName}
+                fromValue={fromValue}
+                toValue={toValue}
+                fromLabel={fromLabel}
+                toLabel={toLabel}
+              />
+            </Td>
+          </Tr>
+        </>
+      );
+    }
+
+    if (isFileHash(resourceId, attributeName)) {
+      return (
+        <FileContentDiff
+          resourceId={resourceId}
+          attributeName={attributeName}
+          fromHash={fromValue}
+          toHash={toValue}
+          fromLabel={fromLabel}
+          toLabel={toLabel}
+          sidesWithValues={sidesWithValues}
+        />
+      );
+    }
+
+    return (
+      <Tr>
+        <AttributeCells
+          attributeName={attributeName}
+          fromValue={fromValue}
+          toValue={toValue}
+          sidesWithValues={sidesWithValues}
+        />
+      </Tr>
+    );
+  };
+
   return (
-    <Table
+    <TableWithoutInset
       variant="compact"
       borders={false}
       gridBreakPoint=""
+      isStickyHeaderBase
+      isStickyHeaderStuck={isTableHeaderStuck}
       aria-label={words("desiredState.compare.attributes")(resourceId)}
     >
       {hasShortValues && (
@@ -68,63 +122,34 @@ export const AttributeTable: React.FC<Props> = ({
         </Thead>
       )}
       <AttributeRows>
-        {entries.map(({ title: attributeName, fromValue, toValue }, index) => {
-          const isStriped = index % 2 === 0;
-
-          if (isLongValue(fromValue, toValue)) {
-            return (
-              <React.Fragment key={attributeName}>
-                <Tr isStriped={isStriped}>
-                  <AttributeName scope="row" colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT}>
-                    {attributeName}
-                  </AttributeName>
-                </Tr>
-                <Tr isStriped={isStriped}>
-                  <Td colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT}>
-                    <LongValueDiff
-                      attributeName={attributeName}
-                      fromValue={fromValue}
-                      toValue={toValue}
-                      fromLabel={fromLabel}
-                      toLabel={toLabel}
-                    />
-                  </Td>
-                </Tr>
-              </React.Fragment>
-            );
-          }
-
-          if (isFileHash(resourceId, attributeName)) {
-            return (
-              <FileContentDiff
-                key={attributeName}
-                resourceId={resourceId}
-                attributeName={attributeName}
-                fromHash={fromValue}
-                toHash={toValue}
-                fromLabel={fromLabel}
-                toLabel={toLabel}
-                sidesWithValues={sidesWithValues}
-                isStriped={isStriped}
-              />
-            );
-          }
-
-          return (
-            <Tr key={attributeName} isStriped={isStriped}>
-              <AttributeCells
-                attributeName={attributeName}
-                fromValue={fromValue}
-                toValue={toValue}
-                sidesWithValues={sidesWithValues}
-              />
-            </Tr>
-          );
-        })}
+        {entries.map(({ title: attributeName, fromValue, toValue }, index) => (
+          <React.Fragment key={attributeName}>
+            {/* One line between attributes, so a name and the line diff under it read as one. */}
+            {index > 0 && (
+              <Tr isBorderRow aria-hidden>
+                <Td colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT} noPadding />
+              </Tr>
+            )}
+            {renderAttributeRows(attributeName, fromValue, toValue)}
+          </React.Fragment>
+        ))}
       </AttributeRows>
-    </Table>
+    </TableWithoutInset>
   );
 };
+
+/**
+ * The table without the inset of its first and last column, so the attribute names line up with
+ * the header of the diff pane above it.
+ *
+ * @note This sets PatternFly's internal `--pf-v6-c-table--cell--first-last-child--PaddingInline`,
+ * so check it on a PatternFly major upgrade.
+ */
+const TableWithoutInset = styled(Table)`
+  && {
+    --pf-v6-c-table--cell--first-last-child--PaddingInline: 0;
+  }
+`;
 
 /**
  * The attribute rows, with their cells on the first line of text instead of the app's centered

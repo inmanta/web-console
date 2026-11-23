@@ -28,6 +28,15 @@ test("Parse resource id with partial resource id", () => {
   expect(id).toBeUndefined();
 });
 
+test.each`
+  idStr                                             | expected
+  ${"std::File[internal,path=/tmp/dir1/file2]"}     | ${"/tmp/dir1/file2"}
+  ${"std::File[internal,path=/tmp/dir1/file2],v=2"} | ${"/tmp/dir1/file2"}
+  ${"std::File[internal,path]"}                     | ${"std::File[internal,path]"}
+`("getAttributeValueOrId($idStr) returns $expected", ({ idStr, expected }) => {
+  expect(IdParser.getAttributeValueOrId(idStr)).toBe(expected);
+});
+
 test("Parse resource id with empty string", () => {
   const id = IdParser.parse("");
 
