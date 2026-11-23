@@ -1,4 +1,12 @@
+import { Resource } from "@inmanta/web-console-core";
 import { Item, RESOURCE_LIST_STATUS_ORDER, ResourceListGroup } from "./types";
+
+/**
+ * Gets the attribute value of a resource id, like the path of a file, to name the resource in
+ * short. Returns the whole id when it can't be parsed.
+ */
+export const getAttributeValueOrId = (resourceId: string): string =>
+  Resource.IdParser.parse(resourceId)?.attributeValue ?? resourceId;
 
 /**
  * Groups the resources of a diff by status, in the order of the resource list, each group sorted

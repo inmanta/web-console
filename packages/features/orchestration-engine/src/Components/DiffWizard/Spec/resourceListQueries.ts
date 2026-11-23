@@ -4,7 +4,8 @@
  */
 import { screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Resource, words } from "@inmanta/web-console-core";
+import { words } from "@inmanta/web-console-core";
+import { getAttributeValueOrId } from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/helpers";
 
 /**
  * Gets the resource rows of the resource list, the rows that mark whether they are current.
@@ -27,7 +28,7 @@ export const findResourceListRows = async (): Promise<HTMLElement[]> => {
  * Gets the row of a resource in the resource list, by the value of its id.
  */
 export const getResourceListRow = (resourceId: string): HTMLElement => {
-  const idValue = Resource.IdParser.getAttributeValueOrId(resourceId);
+  const idValue = getAttributeValueOrId(resourceId);
   const row = getResourceListRows().find((candidate) => within(candidate).queryByText(idValue));
 
   if (!row) {

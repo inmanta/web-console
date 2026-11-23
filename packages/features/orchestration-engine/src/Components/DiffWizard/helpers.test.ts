@@ -1,10 +1,21 @@
-import { getResourceListGroups, getResourceListItems } from "./helpers";
+import { getAttributeValueOrId, getResourceListGroups, getResourceListItems } from "./helpers";
 import { Item } from "./types";
 
 const addedB: Item = { id: "std::File[a,path=/b]", status: "added", entries: [] };
 const modifiedC: Item = { id: "std::File[a,path=/c]", status: "modified", entries: [] };
 const addedA: Item = { id: "std::File[a,path=/a]", status: "added", entries: [] };
 const unmodifiedD: Item = { id: "std::File[a,path=/d]", status: "unmodified", entries: [] };
+
+describe("getAttributeValueOrId", () => {
+  test.each`
+    resourceId                                        | expected
+    ${"std::File[internal,path=/tmp/dir1/file2]"}     | ${"/tmp/dir1/file2"}
+    ${"std::File[internal,path=/tmp/dir1/file2],v=2"} | ${"/tmp/dir1/file2"}
+    ${"std::File[internal,path]"}                     | ${"std::File[internal,path]"}
+  `("returns $expected for $resourceId", ({ resourceId, expected }) => {
+    expect(getAttributeValueOrId(resourceId)).toBe(expected);
+  });
+});
 
 describe("getResourceListGroups", () => {
   it("groups the resources by status, changes first and unmodified last, each sorted by id", () => {

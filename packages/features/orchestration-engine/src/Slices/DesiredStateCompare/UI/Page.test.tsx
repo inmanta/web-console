@@ -13,6 +13,7 @@ import {
   getResourceListRows,
   selectResource,
 } from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/Spec/resourceListQueries";
+import { getAttributeValueOrId } from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/helpers";
 import {
   MockedDependencyProvider,
   DesiredStateDiff,
@@ -165,7 +166,7 @@ describe("DesiredStateCompare", () => {
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: Resource.IdParser.getAttributeValueOrId(firstResource.resource_id),
+        name: getAttributeValueOrId(firstResource.resource_id),
       })
     ).toBeVisible();
 
@@ -233,7 +234,7 @@ describe("DesiredStateCompare", () => {
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: Resource.IdParser.getAttributeValueOrId(resource.resource_id),
+        name: getAttributeValueOrId(resource.resource_id),
       })
     ).toBeVisible();
   });
@@ -257,7 +258,7 @@ describe("DesiredStateCompare", () => {
     expect(
       screen.queryByRole("heading", {
         level: 2,
-        name: Resource.IdParser.getAttributeValueOrId(hiddenResource.resource_id),
+        name: getAttributeValueOrId(hiddenResource.resource_id),
       })
     ).not.toBeInTheDocument();
   });

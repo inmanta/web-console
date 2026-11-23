@@ -13,11 +13,12 @@ import {
 } from "@patternfly/react-core";
 import { AngleLeftIcon, AngleRightIcon } from "@patternfly/react-icons";
 import { InnerScrollContainer } from "@patternfly/react-table";
-import { Resource, words } from "@inmanta/web-console-core";
+import { words } from "@inmanta/web-console-core";
 import { ClipboardCopyButton } from "@inmanta/web-console-ui/Components/ClipboardCopyButton";
 import { ResourceLink } from "@inmanta/web-console-ui/Components/ResourceLink";
 import { DiffStatusLabel } from "./DiffStatusLabel";
 import { ResourceDiff } from "./ResourceDiff";
+import { getAttributeValueOrId } from "./helpers";
 import { DiffSideLabels, Item } from "./types";
 
 interface Props extends DiffSideLabels {
@@ -51,7 +52,7 @@ const DiffPaneView: React.FC<Props> = ({
   fromLabel,
   toLabel,
 }) => {
-  const idValue = Resource.IdParser.getAttributeValueOrId(item.id);
+  const idValue = getAttributeValueOrId(item.id);
 
   return (
     <>
