@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): bump @testing-library/jest-dom from 7.0.1 to 8.0.0'
+destination-branches:
+- master
+- iso9
+sections: {}
