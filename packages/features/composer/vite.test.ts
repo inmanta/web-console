@@ -23,8 +23,9 @@ describe("canvasPackages", () => {
     expect(packages).not.toContain("react");
     expect(packages).not.toContain("react-compiler-runtime");
     expect(shared).toEqual(
-      expect.arrayContaining(["react", "react-dom", "react-compiler-runtime"])
+      expect.arrayContaining(["react", "react-dom", "react/compiler-runtime"])
     );
+    expect(shared).not.toContain("react-compiler-runtime");
   });
 });
 
