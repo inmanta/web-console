@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): bump react-router from 8.5.1 to 8.5.2'
+destination-branches:
+- master
+- iso9
+sections: {}
