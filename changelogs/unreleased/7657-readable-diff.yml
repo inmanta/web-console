@@ -1,6 +1,5 @@
-description: The diff of a resource on the Compliance Check and Desired State Compare pages shows its attributes in a table.
+description: Show the diff of a resource as an attribute table, as the first part of the diff redesign.
 issue-nr: 7657
-change-type: minor
+change-type: patch
 destination-branches: [master, iso9]
-sections:
-  minor-improvement: "{{description}}"
+sections: {}
