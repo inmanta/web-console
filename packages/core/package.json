@@ -29,7 +29,7 @@
     "@types/qs": "^6.15.1",
     "msw": "^3.0.6",
     "vite": "^8.3.8",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.1"
   },
   "dependencies": {
     "@patternfly/react-core": "^6.7.0",
