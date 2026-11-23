@@ -279,62 +279,19 @@ describe("ComplianceCheck page", () => {
     expect(screen.getByTestId("search")).not.toHaveTextContent("report");
   });
 
-  test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
+  test("GIVEN ComplianceCheck page WHEN a type filter is added in the filter drawer THEN only the report's resources of that type show", async () => {
     const { component } = setup();
 
     render(component);
 
     expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
-    expect(screen.queryByRole("listbox", { name: "StatusFilterOptions" })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: new RegExp(words("filters")) }));
+    await userEvent.type(screen.getByRole("textbox", { name: words("type") }), "lsm{Enter}");
 
-    await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
-
-    expect(await screen.findByRole("listbox", { name: "StatusFilterOptions" })).toBeVisible();
-
-    const statusOptions = screen.getAllByRole("option");
-
-    expect(statusOptions).toHaveLength(6);
-
-    await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
-
-    await userEvent.click(statusOptions[0]);
-
-    await waitFor(() =>
-      expect(getResourceListRows()).toHaveLength(
-        resourcesShownByDefault.filter((resource) => resource.status === "added").length
-      )
+    expect(getResourceListRows()).toHaveLength(
+      resourcesShownByDefault.filter((resource) => resource.resource_id.startsWith("lsm::")).length
     );
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-  });
-
-  test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
-    const { component } = setup();
-
-    render(component);
-
-    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
-
-    await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "lsm");
-
-    await waitFor(() =>
-      expect(getResourceListRows()).toHaveLength(
-        resourcesShownByDefault.filter((resource) => resource.resource_id.includes("lsm")).length
-      )
-    );
-
-    await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "44554");
-
-    expect(await screen.findByText(words("noResults"))).toBeVisible();
-
-    await userEvent.clear(screen.getByRole("searchbox", { name: "SearchFilter" }));
-
-    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     await act(async () => {
       const results = await axe(document.body);

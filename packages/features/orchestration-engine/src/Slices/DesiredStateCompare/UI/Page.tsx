@@ -1,14 +1,5 @@
-import React, { useMemo, useState } from "react";
-import {
-  Content,
-  Flex,
-  FlexItem,
-  Icon,
-  Label,
-  PageSection,
-  Toolbar,
-  ToolbarContent,
-} from "@patternfly/react-core";
+import React from "react";
+import { Content, Flex, FlexItem, Icon, Label, PageSection } from "@patternfly/react-core";
 import { ArrowRightIcon } from "@patternfly/react-icons";
 import { Diff, words } from "@inmanta/web-console-core";
 import { useGetDesiredStateDiff } from "@inmanta/web-console-core/Queries/Slices/DesiredState";
@@ -35,23 +26,9 @@ export const Page: React.FC = () => {
  * @returns {React.FC<Diff.Identifiers>} The compare view
  */
 export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
-  const [statuses, setStatuses] = useState(Diff.defaultStatuses);
-  const [searchFilter, setSearchFilter] = useState("");
-
   const { data, isError, error, isSuccess, refetch } = useGetDesiredStateDiff().useOneTime(
     from,
     to
-  );
-
-  const items = useMemo(
-    () =>
-      (data ?? [])
-        .filter((resource) => statuses.includes(resource.status))
-        .filter((resource) =>
-          resource.resource_id.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase())
-        )
-        .map(DiffWizard.fromResourceToItem),
-    [data, statuses, searchFilter]
   );
 
   if (isError) {
@@ -79,24 +56,17 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           </Flex>
         </Flex>
       </PageSection>
-      <PageSection hasBodyWrapper={false}>
-        <Toolbar>
-          <ToolbarContent style={{ padding: 0 }}>
-            <DiffWizard.DiffPageFilter
-              statuses={statuses}
-              setStatuses={setStatuses}
-              searchFilter={searchFilter}
-              setSearchFilter={setSearchFilter}
-            />
-          </ToolbarContent>
-        </Toolbar>
-      </PageSection>
-      <PageSection hasBodyWrapper={false} isFilled style={{ minHeight: 0, paddingTop: 0 }}>
+      {/* Shrinks to the page, so the list, diff and filter drawer scroll on their own. */}
+      <PageSection
+        hasBodyWrapper={false}
+        isFilled
+        style={{ flex: "1 1 auto", minHeight: 0, paddingTop: 0 }}
+      >
         {data.length <= 0 ? (
           <EmptyView message={words("desiredState.compare.empty")} aria-label="CompareView-Empty" />
         ) : (
-          <DiffWizard.ResourceListWithDiffPane
-            items={items}
+          <DiffWizard.FilteredResourceListWithDiffPane
+            resources={data}
             route="DesiredStateCompare"
             fromLabel={words("modelVersion")(from)}
             toLabel={words("modelVersion")(to)}

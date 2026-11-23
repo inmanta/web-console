@@ -5,6 +5,7 @@ interface Props {
   isExpanded: boolean;
   panelContent: React.ReactNode;
   children: React.ReactNode;
+  isInline?: boolean;
 }
 
 const drawerStyle: React.CSSProperties = {
@@ -21,18 +22,26 @@ const contentBodyStyle: React.CSSProperties = {
 };
 
 /**
- * Renders the shared inline filter drawer: a side panel holding the filter widget next to the page content.
- * Replaces the Drawer + DrawerContent + DrawerContentBody boilerplate duplicated across the filtered pages.
+ * Renders the shared filter drawer: a side panel holding the filter widget next to the page
+ * content, or over it when it isn't inline. Replaces the Drawer + DrawerContent +
+ * DrawerContentBody boilerplate duplicated across the filtered pages.
  *
  * @Props {Props} - Component props.
  *  @prop {boolean} isExpanded - Whether the filter side panel is currently shown.
  *  @prop {React.ReactNode} panelContent - The filter widget rendered in the side panel.
  *  @prop {React.ReactNode} children - The main page content (table, empty view, ...) shown beside the panel.
+ *  @prop {boolean} [isInline] - Whether the panel sits beside the content, which it narrows, or
+ *   over it, PatternFly's overlay drawer. Defaults to true.
  *
  * @returns {React.ReactElement} The rendered filter drawer.
  */
-export const FilterDrawer: React.FC<Props> = ({ isExpanded, panelContent, children }) => (
-  <Drawer isExpanded={isExpanded} isInline style={drawerStyle}>
+export const FilterDrawer: React.FC<Props> = ({
+  isExpanded,
+  panelContent,
+  children,
+  isInline = true,
+}) => (
+  <Drawer isExpanded={isExpanded} isInline={isInline} style={drawerStyle}>
     <DrawerContent panelContent={panelContent}>
       <DrawerContentBody style={contentBodyStyle}>{children}</DrawerContentBody>
     </DrawerContent>

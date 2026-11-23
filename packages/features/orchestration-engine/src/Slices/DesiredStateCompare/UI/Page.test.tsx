@@ -261,38 +261,92 @@ describe("DesiredStateCompare", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
+  test("GIVEN DesiredStateCompare WHEN the statuses are changed in the filter drawer THEN only the resources with a ticked status show", async () => {
     const { component } = setup();
+    const unmodifiedCount = DesiredStateDiff.resources.length - resourcesShownByDefault.length;
+    const addedCount = DesiredStateDiff.resources.filter(({ status }) => status === "added").length;
 
     render(component);
 
     expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
-    expect(screen.queryByRole("listbox", { name: "StatusFilterOptions" })).not.toBeInTheDocument();
-
-    await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
-
-    expect(screen.getByRole("listbox", { name: "StatusFilterOptions" })).toBeVisible();
-
-    const statusOptions = screen.getAllByRole("option");
-
-    expect(statusOptions).toHaveLength(6);
-
-    await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
-
-    await userEvent.click(statusOptions[0]);
-
-    await waitFor(() =>
-      expect(getResourceListRows()).toHaveLength(
-        DesiredStateDiff.resources.filter((resource) => resource.status === "added").length
+    expect(
+      screen.getByText(
+        words("desiredState.compare.filters.resourceCount")(
+          resourcesShownByDefault.length,
+          unmodifiedCount
+        )
       )
+    ).toBeVisible();
+
+    // The badge counts every ticked status.
+    const filtersToggle = screen.getByRole("button", {
+      name: new RegExp(`^${Diff.defaultStatuses.length}\\s*${words("filters")}$`),
+    });
+
+    await userEvent.click(filtersToggle);
+
+    expect(filtersToggle).toHaveAttribute("aria-pressed", "true");
+
+    const unmodifiedCheckbox = await screen.findByRole("checkbox", {
+      name: new RegExp(words("desiredState.compare.status.unmodified")),
+    });
+
+    expect(unmodifiedCheckbox).not.toBeChecked();
+
+    await userEvent.click(unmodifiedCheckbox);
+
+    expect(getResourceListRows()).toHaveLength(DesiredStateDiff.resources.length);
+    expect(
+      screen.getByText(
+        words("desiredState.compare.filters.resourceCount")(DesiredStateDiff.resources.length, 0)
+      )
+    ).toBeVisible();
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: new RegExp(words("resources.filters.active.group.close")(words("status"))),
+      })
     );
+
+    // With every status unticked, the empty view offers to reset the filters.
+    const emptyView = screen.getByLabelText("ResourceListWithDiffPane-Empty");
+
+    expect(within(emptyView).getByText(words("empty.filtered.title"))).toBeVisible();
+    expect(
+      within(emptyView).getByRole("button", {
+        name: words("resources.filters.active.resetFilters"),
+      })
+    ).toBeVisible();
+    // Unticking every status is a filter too, so the drawer doesn't say none are applied.
+    expect(
+      screen.queryByText(words("resources.filters.active.empty.title"))
+    ).not.toBeInTheDocument();
+
+    await userEvent.click(
+      screen.getByRole("checkbox", {
+        name: new RegExp(words("desiredState.compare.status.added")),
+      })
+    );
+
+    expect(getResourceListRows()).toHaveLength(addedCount);
 
     await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
+
+    await userEvent.click(
+      screen.getByRole("button", { name: words("resources.filters.active.resetFilters") })
+    );
+
+    expect(getResourceListRows()).toHaveLength(resourcesShownByDefault.length);
+
+    // The same toggle closes the drawer again.
+    await userEvent.click(filtersToggle);
+
+    expect(filtersToggle).toHaveAttribute("aria-pressed", "false");
   });
 
   test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can fetch file content, and Retry fetches only the file that failed", async () => {
@@ -454,33 +508,32 @@ describe("DesiredStateCompare", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("GIVEN DesiredStateCompare page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
+  test("GIVEN DesiredStateCompare WHEN resource id filters are added THEN only the matching resources show, and Reset Filters shows them all again", async () => {
     const { component } = setup();
 
     render(component);
 
     expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
-    await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "std");
+    await userEvent.click(screen.getByRole("button", { name: new RegExp(words("filters")) }));
+    await userEvent.type(screen.getByRole("textbox", { name: words("type") }), "std{Enter}");
 
-    await waitFor(() =>
-      expect(getResourceListRows()).toHaveLength(
-        resourcesShownByDefault.filter((resource) => resource.resource_id.includes("std")).length
-      )
+    expect(getResourceListRows()).toHaveLength(
+      resourcesShownByDefault.filter((resource) => resource.resource_id.startsWith("std::")).length
     );
 
-    await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "44554");
+    await userEvent.type(screen.getByRole("textbox", { name: words("value") }), "44554{Enter}");
 
-    expect(await screen.findByText(words("noResults"))).toBeVisible();
+    const emptyView = screen.getByLabelText("ResourceListWithDiffPane-Empty");
 
-    await userEvent.clear(screen.getByRole("searchbox", { name: "SearchFilter" }));
+    expect(within(emptyView).getByText(words("empty.filtered.title"))).toBeVisible();
 
-    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
+    await userEvent.click(
+      within(emptyView).getByRole("button", {
+        name: words("resources.filters.active.resetFilters"),
+      })
+    );
 
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
+    expect(getResourceListRows()).toHaveLength(resourcesShownByDefault.length);
   });
 });

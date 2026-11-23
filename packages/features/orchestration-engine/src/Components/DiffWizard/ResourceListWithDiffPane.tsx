@@ -18,6 +18,7 @@ import { DiffSideLabels, Item, SELECTED_RESOURCE_URL_STATE_KEY } from "./types";
 interface Props extends DiffSideLabels {
   items: Item[];
   route: RouteKind;
+  onResetFilters?: () => void;
 }
 
 /**
@@ -31,10 +32,18 @@ interface Props extends DiffSideLabels {
  *  @prop {RouteKind} route - The page whose URL keeps the selected resource
  *  @prop {string} fromLabel - The display text of the side the diff starts from, e.g. "Current state"
  *  @prop {string} toLabel - The display text of the side the diff goes to, e.g. "v412"
+ *  @prop {() => void} [onResetFilters] - Clears the filters; when set, the empty view says the
+ *   filters hide every resource and offers to reset them
  *
  * @returns {React.FC<Props>} The resource list with the diff pane
  */
-export const ResourceListWithDiffPane: React.FC<Props> = ({ items, route, fromLabel, toLabel }) => {
+export const ResourceListWithDiffPane: React.FC<Props> = ({
+  items,
+  route,
+  fromLabel,
+  toLabel,
+  onResetFilters,
+}) => {
   const [selectedResourceId, setSelectedResourceId] = useUrlStateWithString<string>({
     default: "",
     key: SELECTED_RESOURCE_URL_STATE_KEY,
@@ -59,7 +68,13 @@ export const ResourceListWithDiffPane: React.FC<Props> = ({ items, route, fromLa
   const listedItems = useMemo(() => getResourceListItems(groups), [groups]);
 
   if (listedItems.length === 0) {
-    return <EmptyView message={words("noResults")} aria-label="ResourceListWithDiffPane-Empty" />;
+    return (
+      <EmptyView
+        message={words("noResults")}
+        aria-label="ResourceListWithDiffPane-Empty"
+        onResetFilters={onResetFilters}
+      />
+    );
   }
 
   const selectedIndex = Math.max(

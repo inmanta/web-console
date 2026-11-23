@@ -76,6 +76,13 @@ export const orchestrationEngineMessages = {
   "desiredState.compare.statusLetter.unmodified": "=",
   "desiredState.compare.resource.typeAndAgent": (type: string, agent: string) =>
     `${type} · ${agent}`,
+  "desiredState.compare.filters.resourceCount": (shown: number, hiddenByStatus: number) => {
+    const shownText = shown === 1 ? `${shown} resource shown` : `${shown} resources shown`;
+
+    return hiddenByStatus > 0
+      ? `${shownText} · ${hiddenByStatus} hidden by status filters`
+      : shownText;
+  },
   "desiredState.complianceCheck.title": "Compliance Check",
   "desiredState.complianceCheck.failed": "Getting list of dryruns failed",
   "desiredState.complianceCheck.action.dryRun": "Perform dry run",

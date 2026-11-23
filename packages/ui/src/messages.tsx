@@ -22,8 +22,6 @@ export const uiMessages = {
   empty: "Empty",
   previous: "Previous",
   next: "Next",
-  hideAll: "Hide All",
-  showAll: "Show All",
   edit: "Edit",
   details: "Details",
   remove: "Remove",
@@ -199,6 +197,12 @@ export const uiMessages = {
   "resources.filters.resource.value.placeholder": "Value...",
   "resources.filters.resource.agent.label": "Agent(s)",
   "resources.filters.resource.agent.placeholder": "Select Agent(s)",
+  "resources.filters.resource.type.hint":
+    "Matches any resource whose type contains this text, ignoring case.",
+  "resources.filters.resource.value.hint":
+    "Matches any resource whose value contains this text, ignoring case.",
+  "resources.filters.resource.agent.hint":
+    "Matches any resource whose agent contains this text, ignoring case.",
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.resetFilters": "Reset Filters",
   "resources.filters.active.empty.title": "No filters applied",
