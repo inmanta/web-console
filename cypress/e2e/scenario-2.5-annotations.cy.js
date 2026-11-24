@@ -189,8 +189,7 @@ if (isIso) {
     it("2.5.4 - the graphql flavor pulls options from live data", () => {
       // Alias environment_ref's own suggestion query so we can wait for it. The env selector also
       // queries `environments`, but with extra fields (isCompiling); the suggestion query selects
-      // only name/id, so match on the absence of isCompiling. Waiting guarantees the options are
-      // loaded before we focus - the popover opens only on focus, and only once loaded (issue #7127).
+      // only name/id, so match on the absence of isCompiling.
       cy.intercept("POST", "/api/v2/graphql", (req) => {
         const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
         const query = typeof body?.query === "string" ? body.query : "";
@@ -205,9 +204,7 @@ if (isIso) {
       // The DOM is identical to the parameter flavor; only the data source differs.
       openTab("Advanced");
       cy.wait("@EnvRefSuggestions");
-      cy.get("#environment_ref").click();
-
-      cy.contains("h3", "Suggested values").should("be.visible");
+      openSuggestions("#environment_ref");
       cy.get('[role="menuitem"]').should("have.length.greaterThan", 0);
 
       cy.get("button").contains("Cancel").click();
