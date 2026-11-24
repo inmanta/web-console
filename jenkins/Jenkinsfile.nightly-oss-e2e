@@ -1,10 +1,9 @@
 // The nightly end-to-end tests of the OSS edition: the OSS suite (cypress.config.oss.cjs) against a
 // fresh OSS orchestrator with the OSS app's build (dist-oss/), the one the OSS orchestrator ships.
-// The setup (yarn install:orchestrator:oss:ci) waits for the orchestrator and installs that build.
-// Don't run yarn update:dist after it: that puts the ISO app back.
+// The setup (yarn install:orchestrator:ci with the OSS arguments) waits for the orchestrator and
+// installs that build. Don't run yarn update:dist after it: that puts the ISO app back.
 //
-// Its own multibranch job, web-console-nightly-oss-e2e, for master and the iso branches. It
-// replaces the freestyle job frontend-oss-e2e-test.
+// Its own multibranch job, web-console-nightly-oss-e2e, for master and the iso branches.
 pipeline {
     agent any
 
@@ -53,7 +52,7 @@ pipeline {
                                     sh '''
                                     sh ./shell-scripts/clear-server.sh
                                     sh ./shell-scripts/report-orchestrator-conflicts.sh
-                                    yarn run install:orchestrator:oss:ci
+                                    yarn run install:orchestrator:ci version='oss' release='dev' branch='oss_case_1'
                                     yarn run cypress-test:oss --reporter-options 'mochaFile=cypress/reports/junit/oss-[hash].xml'
                                     '''
                                 }
