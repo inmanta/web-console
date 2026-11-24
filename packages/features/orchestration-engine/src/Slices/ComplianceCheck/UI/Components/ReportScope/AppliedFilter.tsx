@@ -1,21 +1,16 @@
 import React, { PropsWithChildren, useMemo, useState } from "react";
 import { Language } from "@patternfly/react-code-editor";
-import {
-  Content,
-  Flex,
-  Label,
-  LabelGroup,
-  LabelProps,
-  Title,
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@patternfly/react-core";
+import { Content, Flex, Label, LabelGroup, LabelProps, Title } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Tr } from "@patternfly/react-table";
 import { ResourceActionFilter, words } from "@inmanta/web-console-core";
 import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
 import { CodeEditor, getDefaultHeightEditor } from "@inmanta/web-console-ui/Components/CodeEditor";
+import {
+  StructuredJsonToggle,
+  StructuredJsonView,
+} from "@inmanta/web-console-ui/Components/StructuredJsonToggle";
 import { createVersionValues, formatFilterValue, isFlag } from "./helpers";
-import { AppliedFilterView, FilterRow, FilterValue } from "./types";
+import { FilterRow, FilterValue } from "./types";
 
 interface Props {
   rows: FilterRow[];
@@ -50,7 +45,7 @@ export const AppliedFilter: React.FC<Props> = ({
   modelVersion,
   modelVersionStatus,
 }) => {
-  const [view, setView] = useState<AppliedFilterView>("structured");
+  const [view, setView] = useState<StructuredJsonView>("structured");
   const json = useMemo(() => JSON.stringify(resourceFilter, null, 2), [resourceFilter]);
   const title = words("desiredState.complianceCheck.scope.filter.title");
   const versionTerm = words("desiredState.complianceCheck.scope.row.version");
@@ -66,23 +61,12 @@ export const AppliedFilter: React.FC<Props> = ({
         <Title headingLevel="h3" size="md">
           {title}
         </Title>
-        <ToggleGroup
+        <StructuredJsonToggle
           isCompact
+          view={view}
+          onChange={setView}
           aria-label={words("desiredState.complianceCheck.scope.filter.view.label")}
-        >
-          <ToggleGroupItem
-            text={words("desiredState.complianceCheck.scope.filter.view.structured")}
-            buttonId="applied-filter-structured"
-            isSelected={view === "structured"}
-            onChange={() => setView("structured")}
-          />
-          <ToggleGroupItem
-            text={words("desiredState.complianceCheck.scope.filter.view.json")}
-            buttonId="applied-filter-json"
-            isSelected={view === "json"}
-            onChange={() => setView("json")}
-          />
-        </ToggleGroup>
+        />
       </Flex>
       {view === "json" ? (
         <CodeEditor code={json} language={Language.json} height={getDefaultHeightEditor(json)} />

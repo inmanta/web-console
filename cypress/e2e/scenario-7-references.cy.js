@@ -182,7 +182,7 @@ if (isIso) {
     it("7.6 The JSON view shows the raw payload", () => {
       openShowcaseResource();
 
-      cy.get("#json").click();
+      cy.get("button").contains("JSON").click();
       cy.get(".monaco-editor", { timeout: 15000 }).should("be.visible");
       // Monaco renders spaces as non-breaking spaces, so normalize them before matching
       cy.get(".view-lines")
@@ -194,7 +194,7 @@ if (isIso) {
           expect(normalized).to.contain('"mutators": [');
         });
 
-      cy.get("#structured").click();
+      cy.get("button").contains("Structured").click();
       cy.get('[data-testid="attribute-token"]').should(
         "contain",
         "std::Environment(name=NETBOX_API_TOKEN)"

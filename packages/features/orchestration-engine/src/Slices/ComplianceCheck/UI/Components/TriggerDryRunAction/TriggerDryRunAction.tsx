@@ -1,11 +1,8 @@
 import React, { useContext, useMemo, useState } from "react";
 import {
-  Content,
   Dropdown,
-  DropdownItem,
   DropdownList,
   Flex,
-  FlexItem,
   Icon,
   MenuToggle,
   MenuToggleAction,
@@ -20,11 +17,10 @@ import { useGetDesiredStateVersion } from "@inmanta/web-console-core/Queries/Sli
 import { useTriggerDryRun } from "@inmanta/web-console-core/Queries/Slices/DryRun";
 import { useDryRunFiltered } from "@inmanta/web-console-core/Queries/Slices/Resource";
 import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
+import { ActionMenuItem } from "@inmanta/web-console-ui/Components/ActionMenuItem";
 import { useNotifyDryRunStarted } from "@inmanta/web-console-ui/Components/DryRunNotification";
 import { createReportScopeParts } from "../ReportScope/helpers";
 import { createReportScopeDryRunPlan } from "./helpers";
-
-const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 
 interface Props {
   version: string;
@@ -161,48 +157,32 @@ export const TriggerDryRunAction: React.FC<Props> = ({ version, report, onDryRun
       popperProps={{ position: "right" }}
     >
       <DropdownList>
-        <DropdownItem
-          icon={
-            <Icon size="sm">
-              <CubeIcon style={iconStyle} />
-            </Icon>
+        <ActionMenuItem
+          IconComponent={CubeIcon}
+          label={words("desiredState.complianceCheck.scope.fullModel")}
+          hint={
+            desiredStateVersion
+              ? words("desiredState.complianceCheck.action.dryRun.fullModel.hint")(
+                  Number(desiredStateVersion.total)
+                )
+              : undefined
           }
           onClick={startFullModelDryRun}
-        >
-          <ItemText
-            label={words("desiredState.complianceCheck.scope.fullModel")}
-            hint={
-              desiredStateVersion
-                ? words("desiredState.complianceCheck.action.dryRun.fullModel.hint")(
-                    Number(desiredStateVersion.total)
-                  )
-                : undefined
-            }
-          />
-        </DropdownItem>
-        <DropdownItem
-          icon={
-            <Icon size="sm">
-              <CrosshairsIcon style={iconStyle} />
-            </Icon>
+        />
+        <ActionMenuItem
+          IconComponent={CrosshairsIcon}
+          label={words("desiredState.complianceCheck.action.dryRun.reportScope")}
+          hint={
+            report
+              ? words("desiredState.complianceCheck.action.dryRun.reportScope.hint")(
+                  Number(report.total)
+                )
+              : undefined
           }
+          tooltip={reportScopeDisabledReason}
+          isDisabled={Boolean(reportScopeDisabledReason)}
           onClick={startReportScopeDryRun}
-          isAriaDisabled={Boolean(reportScopeDisabledReason)}
-          tooltipProps={
-            reportScopeDisabledReason ? { content: reportScopeDisabledReason } : undefined
-          }
-        >
-          <ItemText
-            label={words("desiredState.complianceCheck.action.dryRun.reportScope")}
-            hint={
-              report
-                ? words("desiredState.complianceCheck.action.dryRun.reportScope.hint")(
-                    Number(report.total)
-                  )
-                : undefined
-            }
-          />
-        </DropdownItem>
+        />
       </DropdownList>
     </Dropdown>
   );
@@ -219,27 +199,3 @@ export const TriggerDryRunAction: React.FC<Props> = ({ version, report, onDryRun
     dropdown
   );
 };
-
-/**
- * The text of a dry run scope in the menu: its label, with a hint on the right.
- *
- * @props {{ label: string; hint?: string }} props - The component props
- * @prop {string} label - The name of the scope
- * @prop {string} [hint] - The hint on the right, left out until it is known
- *
- * @returns {React.FC<{ label: string; hint?: string }>} The text of a menu item
- */
-const ItemText: React.FC<{ label: string; hint?: string }> = ({ label, hint }) => (
-  <Flex
-    justifyContent={{ default: "justifyContentSpaceBetween" }}
-    alignItems={{ default: "alignItemsCenter" }}
-    columnGap={{ default: "columnGapMd" }}
-  >
-    <FlexItem>{label}</FlexItem>
-    {hint && (
-      <FlexItem>
-        <Content component="small">{hint}</Content>
-      </FlexItem>
-    )}
-  </Flex>
-);

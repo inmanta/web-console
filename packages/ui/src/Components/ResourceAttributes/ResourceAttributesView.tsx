@@ -1,12 +1,14 @@
 import React, { useMemo, useState } from "react";
 import { Language } from "@patternfly/react-code-editor";
-import { Flex, ToggleGroup, ToggleGroupItem } from "@patternfly/react-core";
+import { Flex } from "@patternfly/react-core";
 import { words } from "@inmanta/web-console-core";
 import { AttributeClassifier } from "@inmanta/web-console-core/Common/AttributeClassifier";
 import { CodeEditor } from "@inmanta/web-console-ui/Components/CodeEditor";
+import {
+  StructuredJsonToggle,
+  StructuredJsonView,
+} from "@inmanta/web-console-ui/Components/StructuredJsonToggle";
 import { ResourceAttributes } from "./ResourceAttributes";
-
-type ViewMode = "structured" | "json";
 
 interface Props {
   attributes: Record<string, unknown>;
@@ -31,7 +33,7 @@ export const ResourceAttributesView: React.FC<Props> = ({
   isExpanded,
   onToggle,
 }) => {
-  const [mode, setMode] = useState<ViewMode>("structured");
+  const [view, setView] = useState<StructuredJsonView>("structured");
   const json = useMemo(() => JSON.stringify(attributes, null, 2), [attributes]);
 
   // In JSON mode the view grows to fill the scroll section. The bottom spacer keeps
@@ -43,26 +45,17 @@ export const ResourceAttributesView: React.FC<Props> = ({
       gap={{ default: "gapMd" }}
       style={{
         paddingBottom: "var(--pf-t--global--spacer--md)",
-        ...(mode === "json" && { flex: "1 1 100vh" }),
+        ...(view === "json" && { flex: "1 1 100vh" }),
       }}
     >
       <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
-        <ToggleGroup aria-label={words("resources.attributes.view.label")}>
-          <ToggleGroupItem
-            text={words("resources.attributes.view.structured")}
-            buttonId="structured"
-            isSelected={mode === "structured"}
-            onChange={() => setMode("structured")}
-          />
-          <ToggleGroupItem
-            text={words("resources.attributes.view.json")}
-            buttonId="json"
-            isSelected={mode === "json"}
-            onChange={() => setMode("json")}
-          />
-        </ToggleGroup>
+        <StructuredJsonToggle
+          view={view}
+          onChange={setView}
+          aria-label={words("resources.attributes.view.label")}
+        />
       </Flex>
-      {mode === "json" ? (
+      {view === "json" ? (
         <CodeEditor code={json} language={Language.json} height="100%" />
       ) : (
         <ResourceAttributes

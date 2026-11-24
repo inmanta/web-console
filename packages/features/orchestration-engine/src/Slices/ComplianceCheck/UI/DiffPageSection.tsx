@@ -8,6 +8,9 @@ import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { ReportScope } from "./Components";
 
+/** Keeps the diff usable below a tall expanded scope; the section scrolls down to it. */
+const DIFF_MIN_HEIGHT_BELOW_SCOPE = "50vh";
+
 interface Props {
   report: DryRun | null;
   version: string;
@@ -84,9 +87,7 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({ report
         <StackItem>
           <ReportScope report={report} diff={data?.diff} />
         </StackItem>
-        {/* Takes the rest of the section, so the list and diff scroll on their own. The minimum
-            height keeps the diff usable below a tall expanded scope; the section scrolls to it. */}
-        <StackItem isFilled style={{ minHeight: "50vh" }}>
+        <StackItem isFilled style={{ minHeight: DIFF_MIN_HEIGHT_BELOW_SCOPE }}>
           {renderDiff()}
         </StackItem>
       </Stack>

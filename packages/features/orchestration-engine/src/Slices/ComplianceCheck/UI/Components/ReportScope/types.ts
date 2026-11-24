@@ -50,11 +50,6 @@ export interface ReportScopeParts {
 }
 
 /**
- * How the applied filter shows: as a table of its conditions, or as the exact filter in JSON.
- */
-export type AppliedFilterView = "structured" | "json";
-
-/**
  * The agents and the changed resources in a dry run's diff.
  */
 export interface DiffCounts {

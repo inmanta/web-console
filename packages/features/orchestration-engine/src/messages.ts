@@ -118,8 +118,6 @@ export const orchestrationEngineMessages = {
   // A template PatternFly's LabelGroup fills in, not a JS template string.
   "desiredState.complianceCheck.scope.filter.more": "+${remaining} more",
   "desiredState.complianceCheck.scope.filter.view.label": "Applied filter view",
-  "desiredState.complianceCheck.scope.filter.view.structured": "Structured",
-  "desiredState.complianceCheck.scope.filter.view.json": "JSON",
   "desiredState.complianceCheck.scope.label.anchor": (names: string[]) => names.join(" › "),
   "desiredState.complianceCheck.scope.label.owned": "+owned",
   "desiredState.complianceCheck.scope.label.more": (count: number) => `+${count}`,

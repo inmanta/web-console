@@ -79,6 +79,14 @@ const openDryRunMenu = async () => {
 };
 
 /**
+ * Waits for the lookup of the model version's status, which "This report's scope" is disabled
+ * until.
+ */
+const waitForModelVersionStatus = async () => {
+  await waitFor(() => expect(testClient.isFetching()).toBe(0));
+};
+
+/**
  * Gets the "This report's scope" item of the open Dry run menu.
  */
 const getReportScopeItem = () =>
@@ -550,7 +558,7 @@ describe("ComplianceCheck page", () => {
       await expandScope(scope);
       await userEvent.click(
         within(scope).getByRole("button", {
-          name: words("desiredState.complianceCheck.scope.filter.view.json"),
+          name: words("view.json"),
         })
       );
 
@@ -569,7 +577,7 @@ describe("ComplianceCheck page", () => {
       const report: DryRun = {
         ...Mock.b,
         resource_filter: { ...Mock.b.resource_filter, serviceInstance: [instance.id] },
-        // A key another client stored, which the re-run keeps.
+        // A key another client stored, which "This report's scope" keeps.
         context: {
           web_instance_labels: { [instance.id]: Mock.filteredInstanceLabel },
           other_client_key: "kept",
@@ -701,8 +709,7 @@ describe("ComplianceCheck page", () => {
 
       const scope = await findScope();
 
-      // The scope is also disabled while the status loads, so wait for the lookup to finish.
-      await waitFor(() => expect(testClient.isFetching()).toBe(0));
+      await waitForModelVersionStatus();
       expect(
         within(scope).queryByText(words("desiredState.complianceCheck.scope.notActive"))
       ).not.toBeInTheDocument();
