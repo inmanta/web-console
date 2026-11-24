@@ -197,6 +197,7 @@ export const uiMessages = {
   "resources.filters.resource.value.placeholder": "Value...",
   "resources.filters.resource.agent.label": "Agent(s)",
   "resources.filters.resource.agent.placeholder": "Select Agent(s)",
+  "resources.filters.resource.agent.textPlaceholder": "Agent...",
   "resources.filters.resource.type.hint":
     "Matches any resource whose type contains this text, ignoring case.",
   "resources.filters.resource.value.hint":

@@ -47,7 +47,7 @@ const getIdFields = (): {
   {
     key: "agent",
     label: words("resources.filters.resource.agent.label"),
-    placeholder: words("resources.filters.resource.agent.placeholder"),
+    placeholder: words("resources.filters.resource.agent.textPlaceholder"),
     hint: words("resources.filters.resource.agent.hint"),
   },
   {
