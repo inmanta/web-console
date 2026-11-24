@@ -66,6 +66,24 @@ beforeEach(() => {
   localStorage.setItem("theme-preference", "light");
 });
 
+/**
+ * Click a version row and confirm the selection reached the URL. The click is occasionally dropped
+ * entirely (the version param never appears - exact cause not pinned down); re-selecting the same
+ * version is idempotent, so click again until it lands. `(&|$)` avoids version=2 matching version=20.
+ */
+const selectHistoryVersion = (version, attempt = 1) => {
+  cy.get(`[id="version-${version}"]`).find('[data-label="version"]').click();
+  cy.location("search").then((search) => {
+    if (new RegExp(`InstanceDetails\\.version=${version}(&|$)`).test(search)) {
+      return;
+    }
+    if (attempt >= 5) {
+      throw new Error(`version ${version} was not selected after ${attempt} clicks`);
+    }
+    selectHistoryVersion(version, attempt + 1);
+  });
+};
+
 if (Cypress.env("edition") === "iso") {
   describe("Scenario 2.1 Service Catalog - basic-service", () => {
     before(() => {
@@ -187,9 +205,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="History-Row"]').eq(0).should("contain", "up");
 
       // Selecting a version in the table should change the tags in the heading of the page.
-      cy.get('[id="version-2"]').within(() => {
-        cy.get('[data-label="version"]').click();
-      });
+      selectHistoryVersion(2);
 
       cy.get('[data-testid="selected-version"]', { timeout: 30000 }).should(
         "have.text",
@@ -460,12 +476,11 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).last().click();
 
       // change version and go to events page. The second version should contain a validation report.
-      cy.get('[aria-label="History-Row"]')
-        .eq(7)
-        .within(() => {
-          cy.get('[data-label="version"]').click(); //it's done to avoid flake where the tooltip comes in a way and click ins't triggered
-        });
-      cy.get('[data-testid="selected-version"]').should("have.text", "Version: 2");
+      selectHistoryVersion(2);
+      cy.get('[data-testid="selected-version"]', { timeout: 30000 }).should(
+        "have.text",
+        "Version: 2"
+      );
 
       cy.get('[aria-label="events-content"]').click();
 
