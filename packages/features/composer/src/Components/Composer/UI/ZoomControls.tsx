@@ -26,7 +26,14 @@ import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import { applyLayeredLayout, getShapeName, LayoutDirection } from "../Data/Helpers";
 import { Point } from "../Data/ServiceEntityShape";
-import { MIN_ZOOM, MAX_ZOOM, SLIDER_MIN, SLIDER_MAX, ZOOM_TO_FIT_PADDING_BUTTON } from "../config";
+import {
+  MIN_ZOOM,
+  MAX_ZOOM,
+  SLIDER_MIN,
+  SLIDER_MAX,
+  ZOOM_TO_FIT_PADDING,
+  ZOOM_TO_FIT_PADDING_BUTTON,
+} from "../config";
 import { ZoomControlsContainer } from "./ZoomControls.styles";
 
 /**
@@ -87,7 +94,9 @@ export const ZoomControls: React.FC = () => {
 
       if (!rootId) {
         // Let the cards move before fitting the view around them
-        requestAnimationFrame(() => fitView({ padding: 0.2, maxZoom: 1, duration: 300 }));
+        requestAnimationFrame(() =>
+          fitView({ padding: ZOOM_TO_FIT_PADDING, maxZoom: 1, duration: 300 })
+        );
       }
     },
     [canvasState, canvasActions, direction, fitView]

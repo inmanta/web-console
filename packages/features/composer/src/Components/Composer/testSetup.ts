@@ -30,8 +30,9 @@ const ELEMENT_SIZE = { width: 280, height: 80 };
 /**
  * Lays out the canvas in the component tests, as far as React Flow needs. happy-dom has no layout:
  * every element is 0 by 0, so React Flow would never measure a card and keep them all hidden.
- * Every element gets a size instead, and the ResizeObserver reports each element it observes once,
- * the way React Flow measures its cards. SVG text gets a box too, for the lines' labels.
+ * Every element gets a size instead, and the ResizeObserver reports each element it observes once
+ * with that size, the way React Flow measures its cards and the zoom area. SVG text gets a box
+ * too, for the lines' labels.
  */
 export function defineReactFlowTestObjects() {
   class ImmediateResizeObserver {
@@ -42,7 +43,9 @@ export function defineReactFlowTestObjects() {
     }
 
     observe(target: Element) {
-      this.callback([{ target } as ResizeObserverEntry], this);
+      const contentRect = { x: 0, y: 0, ...ELEMENT_SIZE };
+
+      this.callback([{ target, contentRect } as ResizeObserverEntry], this);
     }
 
     // Each element is reported once, when it is observed: there is nothing to stop

@@ -21,14 +21,11 @@ describe("canvasPackages", () => {
 
     expect(packages).toEqual(expect.arrayContaining(["@xyflow/react", "@dagrejs/dagre"]));
     expect(packages).not.toContain("react");
-    expect(packages).not.toContain("use-sync-external-store");
+    expect(packages).not.toContain("react-compiler-runtime");
     expect(shared).toEqual(
-      expect.arrayContaining([
-        "react",
-        "react-dom",
-        "use-sync-external-store/shim/with-selector.js",
-      ])
+      expect.arrayContaining(["react", "react-dom", "react/compiler-runtime"])
     );
+    expect(shared).not.toContain("react-compiler-runtime");
   });
 });
 
