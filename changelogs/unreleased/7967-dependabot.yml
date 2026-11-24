@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): bump typescript-eslint from 8.72.2 to 8.73.0'
+destination-branches:
+- master
+- iso9
+sections: {}
