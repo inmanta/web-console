@@ -10,10 +10,11 @@ const testName = (id) => "TestName " + id;
  * selected environment. A reload before that save would redirect the root path to the previously
  * selected environment.
  *
- * @param {string} displayName - the environment as the selector shows it: `<name> (<project>)`
+ * @param {string} displayName - the environment as `<name> (<project>)`, used to look up its id
+ * @param {string} [menuItemText] - text to click in the selector, which truncates long names
  */
-const selectEnvironmentAndWaitUntilSaved = (displayName) => {
-  selectEnvironment(displayName);
+const selectEnvironmentAndWaitUntilSaved = (displayName, menuItemText = displayName) => {
+  selectEnvironment(menuItemText);
 
   return getEnvironmentId(displayName).then((environmentId) => {
     cy.location("search").should("include", `env=${environmentId}`);
@@ -480,7 +481,7 @@ describe("Environment", () => {
     });
 
     // Select environment 7, then load the base path and confirm the redirect to it
-    selectEnvironmentAndWaitUntilSaved(`${envName} (${projectName})`).then((env7Id) => {
+    selectEnvironmentAndWaitUntilSaved(`${envName} (${projectName})`, envName).then((env7Id) => {
       cy.visit("/console/");
       cy.url().should("include", `env=${env7Id}`);
     });
