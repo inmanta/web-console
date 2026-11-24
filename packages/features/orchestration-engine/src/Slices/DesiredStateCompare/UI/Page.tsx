@@ -56,12 +56,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           </Flex>
         </Flex>
       </PageSection>
-      {/* Shrinks to the page, so the list, diff and filter drawer scroll on their own. */}
-      <PageSection
-        hasBodyWrapper={false}
-        isFilled
-        style={{ flex: "1 1 auto", minHeight: 0, paddingTop: 0 }}
-      >
+      <DiffWizard.ScrollingPageSection>
         {data.length <= 0 ? (
           <EmptyView message={words("desiredState.compare.empty")} aria-label="CompareView-Empty" />
         ) : (
@@ -72,7 +67,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
             toLabel={words("modelVersion")(to)}
           />
         )}
-      </PageSection>
+      </DiffWizard.ScrollingPageSection>
     </>
   );
 };

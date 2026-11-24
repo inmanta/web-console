@@ -39,4 +39,8 @@ describe("countActiveFilters", () => {
       })
     ).toEqual(2);
   });
+
+  it("does not count the disregardDefault flag", () => {
+    expect(countActiveFilters({ status: ["orphaned"], disregardDefault: true })).toEqual(1);
+  });
 });

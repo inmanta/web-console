@@ -91,7 +91,9 @@ export interface DiffFilter {
 export const DIFF_FILTER_URL_KEYS: Record<string, "Boolean"> = { disregardDefault: "Boolean" };
 
 /** The resource id filters of the filter drawer, matched against the parsed resource id. */
-export type DiffFilterIdKey = "type" | "agent" | "value";
+export const DIFF_FILTER_ID_KEYS = ["type", "agent", "value"] as const;
+
+export type DiffFilterIdKey = (typeof DIFF_FILTER_ID_KEYS)[number];
 
 /**
  * The parts of a resource id that the resource id filters match, one per DiffFilterIdKey.
@@ -106,6 +108,3 @@ export interface ResourceIdParts {
   /** The attribute value, like the path of a file, or the whole id when it doesn't parse. */
   value: string;
 }
-
-/** Every resource id filter, matched against the parsed resource id. */
-export const DIFF_FILTER_ID_KEYS: DiffFilterIdKey[] = ["type", "agent", "value"];

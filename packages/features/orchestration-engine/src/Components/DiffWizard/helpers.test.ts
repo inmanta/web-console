@@ -3,6 +3,7 @@ import {
   getAttributeValueOrId,
   getDiffFilterWithDefaults,
   getDiffStatusCounts,
+  getHiddenByStatusCount,
   getFilteredDiffResources,
   getResourceListGroups,
   getResourceListItems,
@@ -106,5 +107,23 @@ describe("getDiffStatusCounts", () => {
         ["added", 1],
       ])
     );
+  });
+});
+
+describe("getHiddenByStatusCount", () => {
+  const statusCounts = new Map<Diff.Status, number>([
+    ["modified", 2],
+    ["added", 1],
+    ["unmodified", 4],
+  ]);
+
+  test.each`
+    selectedStatuses                       | expected
+    ${["modified", "added", "unmodified"]} | ${0}
+    ${["modified", "added"]}               | ${4}
+    ${["added"]}                           | ${6}
+    ${[]}                                  | ${7}
+  `("returns $expected for $selectedStatuses", ({ selectedStatuses, expected }) => {
+    expect(getHiddenByStatusCount(statusCounts, selectedStatuses)).toBe(expected);
   });
 });

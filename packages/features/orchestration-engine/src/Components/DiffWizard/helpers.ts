@@ -110,3 +110,21 @@ export const getDiffStatusCounts = (resources: Diff.Resource[]): Map<Diff.Status
 
   return counts;
 };
+
+/**
+ * Counts the resources whose status isn't selected, from the number of resources per status.
+ */
+export const getHiddenByStatusCount = (
+  statusCounts: Map<Diff.Status, number>,
+  selectedStatuses: Diff.Status[]
+): number => {
+  let hiddenCount = 0;
+
+  statusCounts.forEach((count, status) => {
+    if (!selectedStatuses.includes(status)) {
+      hiddenCount += count;
+    }
+  });
+
+  return hiddenCount;
+};

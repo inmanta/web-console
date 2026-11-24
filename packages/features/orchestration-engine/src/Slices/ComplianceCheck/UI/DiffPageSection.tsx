@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { PageSection, Stack, StackItem } from "@patternfly/react-core";
+import { Stack, StackItem } from "@patternfly/react-core";
 import { DryRun, words } from "@inmanta/web-console-core";
 import { useGetDryRunReport } from "@inmanta/web-console-core/Queries/Slices/DryRun";
 import * as DiffWizard from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard";
@@ -85,14 +85,7 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
   };
 
   return (
-    // Scrolls on its own, so the page title and report picker above it stay in view.
-    // No top padding: the section above already ends in padding, which keeps the report close to
-    // the report picker.
-    <PageSection
-      hasBodyWrapper={false}
-      isFilled
-      style={{ flex: "1 1 auto", minHeight: 0, overflow: "auto", paddingTop: 0 }}
-    >
+    <DiffWizard.ScrollingPageSection>
       <Stack hasGutter>
         {/* The scope comes from the report itself, so it stays in place while the diff loads. */}
         <StackItem>
@@ -103,6 +96,6 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
           {renderDiff()}
         </StackItem>
       </Stack>
-    </PageSection>
+    </DiffWizard.ScrollingPageSection>
   );
 };

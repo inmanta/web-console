@@ -21,6 +21,7 @@ import {
   getDiffFilterWithDefaults,
   getDiffStatusCounts,
   getFilteredDiffResources,
+  getHiddenByStatusCount,
 } from "./helpers";
 import { DIFF_FILTER_URL_KEYS, DiffFilter, DiffSideLabels } from "./types";
 
@@ -60,16 +61,7 @@ export const FilteredResourceListWithDiffPane: React.FC<Props> = ({
     [resources, filterWithDefaults]
   );
   const statusCounts = useMemo(() => getDiffStatusCounts(resources), [resources]);
-  const selectedStatuses = filterWithDefaults.status ?? [];
-  let hiddenByStatusCount = 0;
-
-  statusCounts.forEach((count, status) => {
-    if (!selectedStatuses.includes(status)) {
-      hiddenByStatusCount += count;
-    }
-  });
-
-  const { disregardDefault: _disregardDefault, ...filterValues } = filterWithDefaults;
+  const hiddenByStatusCount = getHiddenByStatusCount(statusCounts, filterWithDefaults.status ?? []);
   const onCloseDrawer = useCallback(() => setIsDrawerExpanded(false), []);
   const onResetFilters = hasAnySetValue(filter) ? () => setFilter({}) : undefined;
 
@@ -90,7 +82,7 @@ export const FilteredResourceListWithDiffPane: React.FC<Props> = ({
               <FilterToggleButton
                 onClick={() => setIsDrawerExpanded((isExpanded) => !isExpanded)}
                 isExpanded={isDrawerExpanded}
-                activeFilterCount={countActiveFilters(filterValues)}
+                activeFilterCount={countActiveFilters(filterWithDefaults)}
                 label={words("filters")}
               />
             </ToolbarItem>
