@@ -46,8 +46,10 @@ pipeline {
             steps {
                 // A failure fails the build, but the end-to-end tests still run.
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    dir('web-console') {
-                        sh 'yarn test:oss'
+                    timeout(time: 15, unit: 'MINUTES') {
+                        dir('web-console') {
+                            sh 'yarn test:oss'
+                        }
                     }
                 }
             }
