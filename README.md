@@ -27,7 +27,7 @@ To install both, with every package:
 
     yarn install
 
-No token is needed. After adding a package or changing a `package.json`, run `yarn install` again and commit `yarn.lock` with it: CI installs with `--immutable`.
+No token is needed to install. After adding a package or changing a `package.json`, run `yarn install` again and commit `yarn.lock` with it: CI installs with `--immutable`.
 
 Every package declares whether it is OSS or ISO in its `package.json` (`"inmanta": { "edition": "oss" }`), and `yarn constraints` fails when an OSS package depends on an ISO one. The [development guide](./docs/development-guide.md) describes the packages, the import rules and how to add a feature, an app or a language.
 
@@ -46,16 +46,16 @@ Every package declares whether it is OSS or ISO in its `package.json` (`"inmanta
 | `test`                            | runs the test suite with Vitest, one project per package (`yarn test --project feature-lsm` runs one)                                                                                                                 |
 | `test:ci`                         | runs the test suite with Vitest in CI mode (`CI=true`, `--silent`)                                                                                                                                                    |
 | `test:ui`                         | runs Vitest in UI mode                                                                                                                                                                                                |
-| `test:oss`                        | runs the tests of the OSS packages only (`vitest.config.oss.ts`); also works after `yarn workspaces focus @inmanta/web-console-oss`                                                                                   |
+| `test:oss`                        | runs the tests of the OSS packages only, with the OSS app's setup (`vitest.config.oss.ts`)                                                                                                                            |
 | `format`                          | runs Prettier and formats the code                                                                                                                                                                                    |
 | `format:check`                    | runs Prettier in check mode without writing changes                                                                                                                                                                   |
 | `lint`                            | runs the Yarn constraints (`yarn.config.cjs`) and ESLint, failing on any warnings (`--max-warnings=0`)                                                                                                                |
 | `lint:fix`                        | runs ESLint and attempts to automatically fix possible warnings/errors                                                                                                                                                |
 | `tsc`                             | type-checks every package as its own TypeScript project (`tsc -b`) and checks the project references and the linked routes                                                                                            |
-| `tsc:oss`                         | type-checks the OSS app and its packages only (`tsc -b` in `apps/oss`); also works after `yarn workspaces focus @inmanta/web-console-oss`                                                                             |
+| `tsc:oss`                         | type-checks the OSS app and its packages only (`tsc -b` in `apps/oss`)                                                                                                                                                |
 | `build:bundle-profile`            | builds the app with Vite in analyze mode (`vite build --mode analyze`)                                                                                                                                                |
 | `bundle-profile:analyze`          | runs `yarn build:bundle-profile` to generate a bundle profile                                                                                                                                                         |
-| `clean`                           | removes the builds (`dist`, `dist-oss`) and the TypeScript build info (`.tsbuild`)                                                                                                                                    |
+| `clean`                           | removes the builds (`dist`, `dist-oss`, `packages/features/composer/dist`) and the TypeScript build info (`.tsbuild`)                                                                                                 |
 | `delete:reports`                  | deletes the Cypress reports in `cypress/reports`                                                                                                                                                                      |
 | `precypress-test`                 | runs `yarn run delete:reports` before Cypress tests                                                                                                                                                                   |
 | `cypress-test:oss`                | runs the Cypress tests headless for OSS (requires `install:orchestrator:oss`)                                                                                                                                         |
@@ -105,17 +105,17 @@ The base url of the backend services can also be specified here, e.g.:
 
 ### Testing the Web-console with Cypress
 
-Cypress is configured per suite in the `cypress.config.*.cjs` files (or command line arguments). It is always best to run the install commands from the web-console repository.
+Cypress is configured per suite in the `cypress.config*.cjs` files (or command line arguments). It is always best to run the install commands from the web-console repository.
 
 #### ISO
 
-To setup the containers for the latest version of ISO, you can run these steps:
+Build the ISO app and set up the containers for the latest version of ISO with it (`dist/`):
 
-`yarn install:orchestrator:iso`
+`yarn build && yarn install:orchestrator:iso`
 
 If you need to run the test-suit headless you can chain it with:
 
-`cypress-test:iso`
+`yarn cypress-test:iso`
 
 or run `npx cypress open` if you need to run the tests in the cypress UI.
 
@@ -127,6 +127,6 @@ Build the OSS app and set up the orchestrator with it (`dist-oss/`):
 
 If you need to run the test-suit headless you can chain it with:
 
-`cypress-test:oss`
+`yarn cypress-test:oss`
 
 or run `npx cypress open --config-file cypress.config.oss.cjs` if you need to run the tests in the cypress UI.
