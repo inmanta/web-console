@@ -21,16 +21,22 @@ export interface DiffSideLabels {
   toLabel: string;
 }
 
+/**
+ * Every status, in the order of the status groups in the resource list, changes first. A record,
+ * so a new status doesn't compile until it has a place here.
+ */
+const RESOURCE_LIST_STATUSES: Record<Diff.Status, true> = {
+  modified: true,
+  added: true,
+  deleted: true,
+  agent_down: true,
+  undefined: true,
+  skipped_for_undefined: true,
+  unmodified: true,
+};
+
 /** The order of the status groups in the resource list, changes first. */
-export const RESOURCE_LIST_STATUS_ORDER: Diff.Status[] = [
-  "modified",
-  "added",
-  "deleted",
-  "agent_down",
-  "undefined",
-  "skipped_for_undefined",
-  "unmodified",
-];
+export const RESOURCE_LIST_STATUS_ORDER = Object.keys(RESOURCE_LIST_STATUSES) as Diff.Status[];
 
 /**
  * The color of the label for each diff status: changes in their status color, the statuses the
@@ -47,10 +53,13 @@ export const DIFF_STATUS_LABEL_COLORS: Record<Diff.Status, LabelProps["color"]> 
 };
 
 /**
- * The resources of one status in the resource list, sorted by id.
+ * The resources of one status in the resource list.
  */
 export interface ResourceListGroup {
   status: Diff.Status;
+
+  /** The index of the group's first resource among all resources of the list. */
+  startIndex: number;
   items: Item[];
 }
 

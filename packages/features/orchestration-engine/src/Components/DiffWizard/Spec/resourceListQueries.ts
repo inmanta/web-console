@@ -16,6 +16,14 @@ export const getResourceListRows = (): HTMLElement[] =>
     .filter((row) => row.hasAttribute("aria-current"));
 
 /**
+ * Gets the rows of the resource list that head a status group, the rows without a resource.
+ */
+export const getResourceListGroupRows = (): HTMLElement[] =>
+  within(screen.getByRole("grid", { name: words("resources") }))
+    .getAllByRole("row")
+    .filter((row) => !row.hasAttribute("aria-current"));
+
+/**
  * Waits for the resource list, then gets its resource rows.
  */
 export const findResourceListRows = async (): Promise<HTMLElement[]> => {

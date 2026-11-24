@@ -9,6 +9,7 @@ import { SearchHelper } from "@inmanta/web-console-core/Routing";
 import { orchestrationEngineFeature } from "@inmanta/web-console-feature-orchestration-engine";
 import {
   findResourceListRows,
+  getResourceListGroupRows,
   getResourceListRow,
   getResourceListRows,
   selectResource,
@@ -36,9 +37,8 @@ const fromModelVersion = "123";
 const toModelVersion = "456";
 const searchHelper = new SearchHelper();
 
-/** The resources the page shows by default: every one but the unmodified. */
-const shownResources = DesiredStateDiff.resources.filter(
-  (resource) => resource.status !== "unmodified"
+const resourcesShownByDefault = DesiredStateDiff.resources.filter((resource) =>
+  Diff.defaultStatuses.includes(resource.status)
 );
 
 function setup(search = `?env=${environment}`) {
@@ -118,7 +118,7 @@ describe("DesiredStateCompare", () => {
 
     render(component);
 
-    expect(await findResourceListRows()).toHaveLength(shownResources.length);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     const statusOrder: Diff.Status[] = [
       "modified",
@@ -128,17 +128,13 @@ describe("DesiredStateCompare", () => {
       "undefined",
       "skipped_for_undefined",
     ];
-    // The rows that head a group are the rows without a resource.
-    const groupTitles = within(screen.getByRole("grid", { name: words("resources") }))
-      .getAllByRole("row")
-      .filter((row) => !row.hasAttribute("aria-current"))
-      .map((row) => row.textContent);
+    const groupTitles = getResourceListGroupRows().map((row) => row.textContent);
 
     expect(groupTitles).toEqual(
       statusOrder.map(
         (status) =>
           `${words(`desiredState.compare.status.${status}`)}${
-            shownResources.filter((resource) => resource.status === status).length
+            resourcesShownByDefault.filter((resource) => resource.status === status).length
           }`
       )
     );
@@ -157,7 +153,7 @@ describe("DesiredStateCompare", () => {
 
     const [firstRow] = await findResourceListRows();
     // The first group is modified, sorted by id.
-    const firstResource = shownResources
+    const firstResource = resourcesShownByDefault
       .filter((resource) => resource.status === "modified")
       .sort((a, b) => a.resource_id.localeCompare(b.resource_id))[0];
 
@@ -240,9 +236,8 @@ describe("DesiredStateCompare", () => {
   });
 
   test("GIVEN DesiredStateCompare WHEN the URL names a resource the filters hide THEN the first resource in the list is selected", async () => {
-    // Unmodified resources are hidden by default.
     const [hiddenResource] = DesiredStateDiff.resources.filter(
-      ({ status }) => status === "unmodified"
+      ({ status }) => !Diff.defaultStatuses.includes(status)
     );
     const search = searchHelper.stringify({
       env: environment,
@@ -268,7 +263,7 @@ describe("DesiredStateCompare", () => {
 
     render(component);
 
-    expect(await findResourceListRows()).toHaveLength(shownResources.length);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     expect(screen.queryByRole("listbox", { name: "StatusFilterOptions" })).not.toBeInTheDocument();
 
@@ -460,13 +455,13 @@ describe("DesiredStateCompare", () => {
 
     render(component);
 
-    expect(await findResourceListRows()).toHaveLength(shownResources.length);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "std");
 
     await waitFor(() =>
       expect(getResourceListRows()).toHaveLength(
-        shownResources.filter((resource) => resource.resource_id.includes("std")).length
+        resourcesShownByDefault.filter((resource) => resource.resource_id.includes("std")).length
       )
     );
 
@@ -476,7 +471,7 @@ describe("DesiredStateCompare", () => {
 
     await userEvent.clear(screen.getByRole("searchbox", { name: "SearchFilter" }));
 
-    expect(await findResourceListRows()).toHaveLength(shownResources.length);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     await act(async () => {
       const results = await axe(document.body);

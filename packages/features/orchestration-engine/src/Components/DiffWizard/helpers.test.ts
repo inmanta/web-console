@@ -20,9 +20,9 @@ describe("getAttributeValueOrId", () => {
 describe("getResourceListGroups", () => {
   it("groups the resources by status, changes first and unmodified last, each sorted by id", () => {
     expect(getResourceListGroups([unmodifiedD, addedB, modifiedC, addedA])).toEqual([
-      { status: "modified", items: [modifiedC] },
-      { status: "added", items: [addedA, addedB] },
-      { status: "unmodified", items: [unmodifiedD] },
+      { status: "modified", startIndex: 0, items: [modifiedC] },
+      { status: "added", startIndex: 1, items: [addedA, addedB] },
+      { status: "unmodified", startIndex: 3, items: [unmodifiedD] },
     ]);
   });
 
@@ -35,8 +35,8 @@ describe("getResourceListItems", () => {
   it("returns the resources group after group", () => {
     expect(
       getResourceListItems([
-        { status: "modified", items: [modifiedC] },
-        { status: "added", items: [addedA, addedB] },
+        { status: "modified", startIndex: 0, items: [modifiedC] },
+        { status: "added", startIndex: 1, items: [addedA, addedB] },
       ])
     ).toEqual([modifiedC, addedA, addedB]);
   });

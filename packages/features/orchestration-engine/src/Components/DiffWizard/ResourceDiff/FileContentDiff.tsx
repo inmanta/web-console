@@ -19,7 +19,7 @@ interface Props extends DiffSideLabels {
 /**
  * The rows of the hash of a file resource: the hash row with a "Compare file content" button under
  * its value, and once the files are loaded from the server, a row under it with the line diff of
- * the file content, on the table's own background. When a file fails to load, that row shows the
+ * the file content. When a file fails to load, that row shows the
  * error with a Retry link in place of the button. The diff shows with a "File content" title and a
  * hide button above it. For an added or deleted file, only the version that exists is loaded.
  *

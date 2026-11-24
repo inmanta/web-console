@@ -34,6 +34,14 @@ const ResourceListView: React.FC<Props> = ({ groups, listedItems, selectedIndex,
     document.getElementById(selectedElementId)?.scrollIntoView({ block: "nearest" });
   }, [selectedElementId]);
 
+  const getIndexToStepFrom = (): number => {
+    const focusedIndex = listedItems.findIndex(
+      (_item, index) => getRowElementId(index) === document.activeElement?.id
+    );
+
+    return focusedIndex < 0 ? selectedIndex : focusedIndex;
+  };
+
   const onKeyDown = (event: React.KeyboardEvent) => {
     const step = { ArrowDown: 1, ArrowUp: -1 }[event.key];
 
@@ -42,11 +50,7 @@ const ResourceListView: React.FC<Props> = ({ groups, listedItems, selectedIndex,
     }
 
     event.preventDefault();
-    // Steps from the focused resource, which a click focuses before the new selection renders.
-    const focusedIndex = listedItems.findIndex(
-      (_item, index) => getRowElementId(index) === document.activeElement?.id
-    );
-    const nextIndex = (focusedIndex < 0 ? selectedIndex : focusedIndex) + step;
+    const nextIndex = getIndexToStepFrom() + step;
 
     if (nextIndex < 0 || nextIndex >= listedItems.length) {
       return;
@@ -56,52 +60,43 @@ const ResourceListView: React.FC<Props> = ({ groups, listedItems, selectedIndex,
     document.getElementById(getRowElementId(nextIndex))?.focus();
   };
 
-  // The index in listedItems of the first resource of the group being drawn.
-  let groupStartIndex = 0;
-
   return (
     <Table variant="compact" aria-label={words("resources")} onKeyDown={onKeyDown}>
-      {groups.map((group) => {
-        const firstIndex = groupStartIndex;
+      {groups.map((group) => (
+        <Tbody key={group.status}>
+          <Tr isStriped>
+            <Th colSpan={2} scope="rowgroup" isSubheader>
+              <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
+                <FlexItem>{words(`desiredState.compare.status.${group.status}`)}</FlexItem>
+                <Badge isRead>{group.items.length}</Badge>
+              </Flex>
+            </Th>
+          </Tr>
+          {group.items.map((item, indexInGroup) => {
+            const index = group.startIndex + indexInGroup;
+            const isSelected = index === selectedIndex;
 
-        groupStartIndex += group.items.length;
-
-        return (
-          <Tbody key={group.status}>
-            <Tr isStriped>
-              <Th colSpan={2} scope="rowgroup" isSubheader>
-                <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
-                  <FlexItem>{words(`desiredState.compare.status.${group.status}`)}</FlexItem>
-                  <Badge isRead>{group.items.length}</Badge>
-                </Flex>
-              </Th>
-            </Tr>
-            {group.items.map((item, indexInGroup) => {
-              const index = firstIndex + indexInGroup;
-              const isSelected = index === selectedIndex;
-
-              return (
-                <Tr
-                  key={item.id}
-                  id={getRowElementId(index)}
-                  isClickable
-                  isRowSelected={isSelected}
-                  onRowClick={() => onSelect(item.id)}
-                  aria-current={isSelected}
-                  tabIndex={isSelected ? 0 : -1}
-                >
-                  <Td modifier="fitContent">
-                    <DiffStatusLetterLabel status={item.status} />
-                  </Td>
-                  <Td>
-                    <ResourceListRowName item={item} />
-                  </Td>
-                </Tr>
-              );
-            })}
-          </Tbody>
-        );
-      })}
+            return (
+              <Tr
+                key={item.id}
+                id={getRowElementId(index)}
+                isClickable
+                isRowSelected={isSelected}
+                onRowClick={() => onSelect(item.id)}
+                aria-current={isSelected}
+                tabIndex={isSelected ? 0 : -1}
+              >
+                <Td modifier="fitContent">
+                  <DiffStatusLetterLabel status={item.status} />
+                </Td>
+                <Td>
+                  <ResourceListRowName item={item} />
+                </Td>
+              </Tr>
+            );
+          })}
+        </Tbody>
+      ))}
     </Table>
   );
 };

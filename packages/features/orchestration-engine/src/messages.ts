@@ -52,6 +52,7 @@ export const orchestrationEngineMessages = {
   /** Desired State Details */
   "desiredState.resourceDetails.title": "Resource Details",
   "desiredState.compare.title": "Compare",
+  "desiredState.compare.versionSeparator": "to",
   "desiredState.compare.action.compare": "Select for compare",
   "desiredState.compare.action.compareWithSelected": "Compare with selected",
   "desiredState.compare.action.compareWithCurrentState": "Compare with current state",

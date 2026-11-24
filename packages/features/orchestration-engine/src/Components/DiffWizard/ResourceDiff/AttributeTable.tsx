@@ -124,12 +124,7 @@ export const AttributeTable: React.FC<Props> = ({
       <AttributeRows>
         {entries.map(({ title: attributeName, fromValue, toValue }, index) => (
           <React.Fragment key={attributeName}>
-            {/* One line between attributes, so a name and the line diff under it read as one. */}
-            {index > 0 && (
-              <Tr isBorderRow aria-hidden>
-                <Td colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT} noPadding />
-              </Tr>
-            )}
+            {index > 0 && <AttributeDivider />}
             {renderAttributeRows(attributeName, fromValue, toValue)}
           </React.Fragment>
         ))}
@@ -137,6 +132,17 @@ export const AttributeTable: React.FC<Props> = ({
     </TableWithoutInset>
   );
 };
+
+/**
+ * The line between two attributes, so an attribute name and the line diff under it read as one.
+ *
+ * @returns {React.FC} The divider row
+ */
+const AttributeDivider: React.FC = () => (
+  <Tr isBorderRow aria-hidden>
+    <Td colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT} noPadding />
+  </Tr>
+);
 
 /**
  * The table without the inset of its first and last column, so the attribute names line up with

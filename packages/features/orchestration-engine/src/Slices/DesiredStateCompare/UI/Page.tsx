@@ -75,6 +75,9 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
             <Icon>
               <ArrowRightIcon />
             </Icon>
+            <span className="pf-v6-screen-reader">
+              {words("desiredState.compare.versionSeparator")}
+            </span>
             <Label variant="outline">{words("modelVersion")(to)}</Label>
           </Flex>
         </Flex>

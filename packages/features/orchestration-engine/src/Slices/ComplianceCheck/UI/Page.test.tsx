@@ -5,7 +5,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { DryRun, words, getFeatureRoutes } from "@inmanta/web-console-core";
+import { Diff, DryRun, words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
 import { orchestrationEngineFeature } from "@inmanta/web-console-feature-orchestration-engine";
 import {
@@ -38,9 +38,8 @@ const axe = configureAxe({
 
 const environment = "aaa";
 
-/** The resources of the mock report the page shows by default: every one but the unmodified. */
-const shownResources = Mock.reportResponse.data.diff.filter(
-  (resource) => resource.status !== "unmodified"
+const resourcesShownByDefault = Mock.reportResponse.data.diff.filter((resource) =>
+  Diff.defaultStatuses.includes(resource.status)
 );
 
 /**
@@ -138,7 +137,7 @@ describe("ComplianceCheck page", () => {
     expect(options).toHaveLength(3);
     expect(options[0]).toHaveAttribute("aria-selected", "true");
 
-    expect(await findResourceListRows()).toHaveLength(shownResources.length);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -152,19 +151,18 @@ describe("ComplianceCheck page", () => {
 
     render(component);
 
-    // Not the first resource in the list, which is selected without a click.
-    const [{ resource_id: resourceId }] = Mock.reportResponse.data.diff.filter(
+    const [{ resource_id: notInitiallySelectedResourceId }] = Mock.reportResponse.data.diff.filter(
       ({ status }) => status === "deleted"
     );
 
-    await selectResource(resourceId);
+    await selectResource(notInitiallySelectedResourceId);
 
     const link = screen.getByRole("link", { name: words("desiredState.resourceDetails.title") });
     const href = link.getAttribute("href") ?? "";
 
     // The link points at the resource details page for this resource, keeping the environment.
     expect(href).toMatch(/^\/resources\//);
-    expect(decodeURIComponent(href)).toContain(resourceId);
+    expect(decodeURIComponent(href)).toContain(notInitiallySelectedResourceId);
     expect(href).toContain(`env=${environment}`);
   });
 
@@ -286,7 +284,7 @@ describe("ComplianceCheck page", () => {
 
     render(component);
 
-    expect(await findResourceListRows()).toHaveLength(shownResources.length);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     expect(screen.queryByRole("listbox", { name: "StatusFilterOptions" })).not.toBeInTheDocument();
 
@@ -304,7 +302,7 @@ describe("ComplianceCheck page", () => {
 
     await waitFor(() =>
       expect(getResourceListRows()).toHaveLength(
-        shownResources.filter((resource) => resource.status === "added").length
+        resourcesShownByDefault.filter((resource) => resource.status === "added").length
       )
     );
 
@@ -320,13 +318,13 @@ describe("ComplianceCheck page", () => {
 
     render(component);
 
-    expect(await findResourceListRows()).toHaveLength(shownResources.length);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "lsm");
 
     await waitFor(() =>
       expect(getResourceListRows()).toHaveLength(
-        shownResources.filter((resource) => resource.resource_id.includes("lsm")).length
+        resourcesShownByDefault.filter((resource) => resource.resource_id.includes("lsm")).length
       )
     );
 
@@ -336,7 +334,7 @@ describe("ComplianceCheck page", () => {
 
     await userEvent.clear(screen.getByRole("searchbox", { name: "SearchFilter" }));
 
-    expect(await findResourceListRows()).toHaveLength(shownResources.length);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     await act(async () => {
       const results = await axe(document.body);

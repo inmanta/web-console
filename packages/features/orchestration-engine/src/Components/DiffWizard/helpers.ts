@@ -12,11 +12,23 @@ export const getAttributeValueOrId = (resourceId: string): string =>
  * Groups the resources of a diff by status, in the order of the resource list, each group sorted
  * by resource id. Statuses without resources get no group.
  */
-export const getResourceListGroups = (items: Item[]): ResourceListGroup[] =>
-  RESOURCE_LIST_STATUS_ORDER.map((status) => ({
-    status,
-    items: items.filter((item) => item.status === status).sort((a, b) => a.id.localeCompare(b.id)),
-  })).filter((group) => group.items.length > 0);
+export const getResourceListGroups = (items: Item[]): ResourceListGroup[] => {
+  const groups: ResourceListGroup[] = [];
+  let startIndex = 0;
+
+  RESOURCE_LIST_STATUS_ORDER.forEach((status) => {
+    const groupItems = items
+      .filter((item) => item.status === status)
+      .sort((a, b) => a.id.localeCompare(b.id));
+
+    if (groupItems.length > 0) {
+      groups.push({ status, startIndex, items: groupItems });
+      startIndex += groupItems.length;
+    }
+  });
+
+  return groups;
+};
 
 /**
  * Gets the resources of the resource list in the order they show, group after group.
