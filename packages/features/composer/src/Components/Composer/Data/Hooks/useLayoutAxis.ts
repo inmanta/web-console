@@ -2,11 +2,15 @@ import { useCallback, useMemo, useRef } from "react";
 import { CardBox, getLayoutAxis, getLinks, getShapeDimensions, LayoutAxis } from "../Helpers";
 import { Point, ServiceEntityShape } from "../ServiceEntityShape";
 
-interface ReadLayout {
+/**
+ * The layout the axis was last read from, to tell whether the canvas still has that layout.
+ */
+interface LastReadLayout {
+  /** The axis read from this layout */
   axis: LayoutAxis;
 
   /** The ids of the links, in order */
-  links: string;
+  linkIds: string;
 
   /** Where each visible card was, moved along by drags */
   positions: Map<string, Point>;
@@ -23,16 +27,16 @@ interface ReadLayout {
  * @returns The layout axis, and the callback that tells it a card was dragged
  */
 export const useLayoutAxis = (canvasState: Map<string, ServiceEntityShape>) => {
-  const readLayout = useRef<ReadLayout | null>(null);
+  const lastReadLayout = useRef<LastReadLayout | null>(null);
 
   const layoutAxis = useMemo(() => {
     const shapes = Array.from(canvasState.values()).filter((shape) => !shape.isHidden);
     const links = getLinks(canvasState);
     const linkIds = links.map((link) => link.id).join();
-    const previous = readLayout.current;
+    const previous = lastReadLayout.current;
     const isUnchanged =
       previous !== null &&
-      previous.links === linkIds &&
+      previous.linkIds === linkIds &&
       previous.positions.size === shapes.length &&
       shapes.every((shape) => {
         const known = previous.positions.get(shape.id);
@@ -60,9 +64,9 @@ export const useLayoutAxis = (canvasState: Map<string, ServiceEntityShape>) => {
       })
     );
 
-    readLayout.current = {
+    lastReadLayout.current = {
       axis,
-      links: linkIds,
+      linkIds,
       positions: new Map(shapes.map((shape) => [shape.id, shape.getPosition()])),
     };
 
@@ -73,7 +77,7 @@ export const useLayoutAxis = (canvasState: Map<string, ServiceEntityShape>) => {
    * Records where a dragged card is now, so the move isn't taken for a new layout.
    */
   const onCardDragged = useCallback((id: string, position: Point) => {
-    const positions = readLayout.current?.positions;
+    const positions = lastReadLayout.current?.positions;
 
     if (positions?.has(id)) {
       positions.set(id, { ...position });
