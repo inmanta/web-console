@@ -1,165 +1,143 @@
-import React, { PropsWithChildren, useContext, useId, useState } from "react";
+import React, { PropsWithChildren, useMemo, useState } from "react";
 import { Language } from "@patternfly/react-code-editor";
 import {
-  Button,
-  Card,
-  CardBody,
-  CardExpandableContent,
-  CardHeader,
-  CardTitle,
   Content,
-  Divider,
   Flex,
   Label,
   LabelGroup,
   LabelProps,
-  ModalVariant,
+  Title,
+  ToggleGroup,
+  ToggleGroupItem,
 } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Tr } from "@patternfly/react-table";
-import { DryRunContext, ResourceActionFilter, words } from "@inmanta/web-console-core";
-import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
+import { ResourceActionFilter, words } from "@inmanta/web-console-core";
 import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
-import { CodeEditor } from "@inmanta/web-console-ui/Components/CodeEditor";
-import { RerunButton } from "./RerunButton";
+import { CodeEditor, getDefaultHeightEditor } from "@inmanta/web-console-ui/Components/CodeEditor";
 import { createVersionValues, formatFilterValue, isFlag } from "./helpers";
-import { FilterRow, FilterValue } from "./types";
+import { AppliedFilterView, FilterRow, FilterValue } from "./types";
 
 interface Props {
   rows: FilterRow[];
   statusValues: FilterValue[];
   resourceFilter: ResourceActionFilter;
-  context?: DryRunContext | null;
   modelVersion: number;
   modelVersionStatus: DesiredStateVersionStatus | undefined;
-  onRerunStart: () => void;
 }
 
 /**
- * The resource filter a dry run was started with, as an expandable card with a compact table: one
- * row per kind of condition, with its values as labels and the rest of a long row behind
- * "+N more". The version row follows the filter rows, and the status row, whose conditions
- * describe a moment rather than the scope, comes last and shaded. The header re-runs the dry run
- * and opens the exact filter as JSON.
+ * The resource filter a dry run was started with, with a Structured / JSON toggle. Structured is a
+ * compact table: one row per kind of condition, with its values as labels and the rest of a long
+ * row behind "+N more". The version row follows the filter rows, and the status row, whose
+ * conditions describe a moment rather than the scope, comes last and shaded. JSON shows the exact
+ * filter in a code block in its place, sized to its lines up to 300px and scrolling past that, with
+ * no expand toggle, whose full-window height would run past the bottom of the page here.
  *
  * @props {Props} props - The props of the component
  *  @prop {FilterRow[]} rows - The filter rows, in display order
  *  @prop {FilterValue[]} statusValues - The values of the status row
  *  @prop {ResourceActionFilter} resourceFilter - The filter the dry run was started with
- *  @prop {DryRunContext | null} [context] - The context the dry run was started with, to store
- *    with a re-run
  *  @prop {number} modelVersion - The model version of the dry run
  *  @prop {DesiredStateVersionStatus | undefined} modelVersionStatus - The status of that model
  *    version, undefined until it is known
- *  @prop {() => void} onRerunStart - Called when a re-run is started
  *
- * @returns {React.FC<Props>} The applied filter card
+ * @returns {React.FC<Props>} The applied filter
  */
 export const AppliedFilter: React.FC<Props> = ({
   rows,
   statusValues,
   resourceFilter,
-  context,
   modelVersion,
   modelVersionStatus,
-  onRerunStart,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
-  const titleId = useId();
-  const { triggerModal } = useContext(ModalContext);
+  const [view, setView] = useState<AppliedFilterView>("structured");
+  const json = useMemo(() => JSON.stringify(resourceFilter, null, 2), [resourceFilter]);
   const title = words("desiredState.complianceCheck.scope.filter.title");
   const versionTerm = words("desiredState.complianceCheck.scope.row.version");
   const versionValues = createVersionValues(resourceFilter, modelVersion, modelVersionStatus);
   const statusTerm = words("desiredState.complianceCheck.scope.row.status");
 
-  const openJSON = () =>
-    triggerModal({
-      title: words("desiredState.complianceCheck.scope.json.title"),
-      variant: ModalVariant.medium,
-      content: (
-        <CodeEditor code={JSON.stringify(resourceFilter, null, 2)} language={Language.json} />
-      ),
-    });
-
   return (
-    <Card isCompact isExpanded={isExpanded}>
-      <CardHeader
-        onExpand={() => setIsExpanded(!isExpanded)}
-        toggleButtonProps={{ "aria-labelledby": titleId, "aria-expanded": isExpanded }}
-        actions={{
-          hasNoOffset: true,
-          actions: (
-            <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
-              <RerunButton
-                resourceFilter={resourceFilter}
-                context={context}
-                modelVersion={modelVersion}
-                modelVersionStatus={modelVersionStatus}
-                onRerunStart={onRerunStart}
-              />
-              <Divider orientation={{ default: "vertical" }} />
-              <Button variant="link" isInline onClick={openJSON}>
-                {words("desiredState.complianceCheck.scope.json")}
-              </Button>
-            </Flex>
-          ),
-        }}
+    <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }}>
+      <Flex
+        justifyContent={{ default: "justifyContentSpaceBetween" }}
+        alignItems={{ default: "alignItemsCenter" }}
       >
-        <CardTitle id={titleId}>{title}</CardTitle>
-      </CardHeader>
-      <CardExpandableContent>
-        <CardBody>
-          <Table variant="compact" aria-label={title}>
-            <Tbody>
-              {rows.map(({ key, values }) => {
-                const term = words(`desiredState.complianceCheck.scope.row.${key}`);
+        <Title headingLevel="h3" size="md">
+          {title}
+        </Title>
+        <ToggleGroup
+          isCompact
+          aria-label={words("desiredState.complianceCheck.scope.filter.view.label")}
+        >
+          <ToggleGroupItem
+            text={words("desiredState.complianceCheck.scope.filter.view.structured")}
+            buttonId="applied-filter-structured"
+            isSelected={view === "structured"}
+            onChange={() => setView("structured")}
+          />
+          <ToggleGroupItem
+            text={words("desiredState.complianceCheck.scope.filter.view.json")}
+            buttonId="applied-filter-json"
+            isSelected={view === "json"}
+            onChange={() => setView("json")}
+          />
+        </ToggleGroup>
+      </Flex>
+      {view === "json" ? (
+        <CodeEditor code={json} language={Language.json} height={getDefaultHeightEditor(json)} />
+      ) : (
+        <Table variant="compact" aria-label={title}>
+          <Tbody>
+            {rows.map(({ key, values }) => {
+              const term = words(`desiredState.complianceCheck.scope.row.${key}`);
 
-                return (
-                  <Tr key={key}>
-                    <Th scope="row" modifier="fitContent">
-                      {term}
-                    </Th>
-                    <Td>
-                      <ValueLabels term={term} values={values} />
-                    </Td>
-                  </Tr>
-                );
-              })}
-              {versionValues.length > 0 && (
-                <Tr>
+              return (
+                <Tr key={key}>
                   <Th scope="row" modifier="fitContent">
-                    {versionTerm}
+                    {term}
                   </Th>
                   <Td>
-                    <ValueLabels term={versionTerm} values={versionValues}>
-                      {resourceFilter.isOrphan === false && (
-                        <Content component="small">
-                          {words("desiredState.complianceCheck.scope.value.excludesOrphans")}
-                        </Content>
-                      )}
-                    </ValueLabels>
+                    <ValueLabels term={term} values={values} />
                   </Td>
                 </Tr>
-              )}
-              {statusValues.length > 0 && (
-                <Tr isStriped>
-                  <Th scope="row" modifier="fitContent">
-                    <Flex direction={{ default: "column" }} gap={{ default: "gapNone" }}>
-                      {statusTerm}
+              );
+            })}
+            {versionValues.length > 0 && (
+              <Tr>
+                <Th scope="row" modifier="fitContent">
+                  {versionTerm}
+                </Th>
+                <Td>
+                  <ValueLabels term={versionTerm} values={versionValues}>
+                    {resourceFilter.isOrphan === false && (
                       <Content component="small">
-                        {words("desiredState.complianceCheck.scope.row.status.note")}
+                        {words("desiredState.complianceCheck.scope.value.excludesOrphans")}
                       </Content>
-                    </Flex>
-                  </Th>
-                  <Td>
-                    <ValueLabels term={statusTerm} values={statusValues} />
-                  </Td>
-                </Tr>
-              )}
-            </Tbody>
-          </Table>
-        </CardBody>
-      </CardExpandableContent>
-    </Card>
+                    )}
+                  </ValueLabels>
+                </Td>
+              </Tr>
+            )}
+            {statusValues.length > 0 && (
+              <Tr isStriped>
+                <Th scope="row" modifier="fitContent">
+                  <Flex direction={{ default: "column" }} gap={{ default: "gapNone" }}>
+                    {statusTerm}
+                    <Content component="small">
+                      {words("desiredState.complianceCheck.scope.row.status.note")}
+                    </Content>
+                  </Flex>
+                </Th>
+                <Td>
+                  <ValueLabels term={statusTerm} values={statusValues} />
+                </Td>
+              </Tr>
+            )}
+          </Tbody>
+        </Table>
+      )}
+    </Flex>
   );
 };
 

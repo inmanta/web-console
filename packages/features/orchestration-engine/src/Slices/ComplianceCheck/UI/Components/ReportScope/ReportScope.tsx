@@ -1,5 +1,13 @@
-import React, { useMemo } from "react";
-import { Alert, Card, CardBody, CardHeader, CardTitle, Flex } from "@patternfly/react-core";
+import React, { useId, useMemo, useState } from "react";
+import {
+  Alert,
+  Card,
+  CardBody,
+  CardExpandableContent,
+  CardHeader,
+  CardTitle,
+  Flex,
+} from "@patternfly/react-core";
 import { Diff, DryRun, words } from "@inmanta/web-console-core";
 import { useGetDesiredStateVersion } from "@inmanta/web-console-core/Queries/Slices/DesiredState";
 import { DesiredStateStatusLabel } from "@inmanta/web-console-ui/Components/DesiredStateStatusLabel";
@@ -9,7 +17,6 @@ import { countDiff, createReportScopeParts, isKnownInactive } from "./helpers";
 interface Props {
   report: DryRun;
   diff: Diff.Resource[] | undefined;
-  onRerunStart: () => void;
 }
 
 /**
@@ -25,18 +32,19 @@ interface ScopeCount {
  * Shows what a dry run report covered, between the report picker and its diff. The scope line
  * shows the model version with its lifecycle status, and counts the resources (out of all
  * resources in the model version, for a dry run on a filter), agents and changes, so an empty diff
- * never reads as the whole model being compliant. A version that isn't active gets a warning. A dry
- * run started on a resource filter also shows that filter.
+ * never reads as the whole model being compliant. A version that isn't active gets a warning. For a
+ * dry run started on a resource filter, the card expands to show that filter. It starts closed.
  *
  * @props {Props} props - The props of the component
  *  @prop {DryRun} report - The selected dry run report
  *  @prop {Diff.Resource[] | undefined} diff - The resources of the report, undefined while they
  *    load; the agent and change counts show once they are there
- *  @prop {() => void} onRerunStart - Called when a re-run is started
  *
- * @returns {React.FC<Props>} The scope band
+ * @returns {React.FC<Props>} The scope card
  */
-export const ReportScope: React.FC<Props> = ({ report, diff, onRerunStart }) => {
+export const ReportScope: React.FC<Props> = ({ report, diff }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const titleId = useId();
   const modelVersion = Number(report.model);
   const { data: desiredStateVersion } = useGetDesiredStateVersion(modelVersion);
   const modelVersionStatus = desiredStateVersion?.status;
@@ -75,20 +83,23 @@ export const ReportScope: React.FC<Props> = ({ report, diff, onRerunStart }) => 
     );
   }
 
-  const hasBody = isInactive || Boolean(resourceFilter);
-
   return (
     <Card
       component="section"
       isCompact
       variant="secondary"
+      isExpanded={isExpanded}
       aria-label={words("desiredState.complianceCheck.scope.title")}
     >
-      <CardHeader>
+      <CardHeader
+        onExpand={resourceFilter ? () => setIsExpanded(!isExpanded) : undefined}
+        toggleButtonProps={{ "aria-labelledby": titleId, "aria-expanded": isExpanded }}
+      >
         <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
-          <CardTitle>{words("desiredState.complianceCheck.scope.title")}</CardTitle>
+          <CardTitle id={titleId}>{words("desiredState.complianceCheck.scope.title")}</CardTitle>
+          {/* Compact, so the row is one text line high and the expand toggle centers on it. */}
           {desiredStateVersion && (
-            <DesiredStateStatusLabel status={desiredStateVersion.status}>
+            <DesiredStateStatusLabel status={desiredStateVersion.status} isCompact>
               {modelVersionText}
             </DesiredStateStatusLabel>
           )}
@@ -102,34 +113,30 @@ export const ReportScope: React.FC<Props> = ({ report, diff, onRerunStart }) => 
           ))}
         </Flex>
       </CardHeader>
-      {hasBody && (
+      {isInactive && (
         <CardBody>
-          <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
-            {isInactive && (
-              <Alert
-                isInline
-                isPlain
-                variant="warning"
-                title={words("desiredState.complianceCheck.scope.notActive")}
-              >
-                {words("desiredState.complianceCheck.scope.notActive.description")(
-                  modelVersionText
-                )}
-              </Alert>
-            )}
-            {resourceFilter && (
-              <AppliedFilter
-                rows={rows}
-                statusValues={statusValues}
-                resourceFilter={resourceFilter}
-                context={report.context}
-                modelVersion={modelVersion}
-                modelVersionStatus={modelVersionStatus}
-                onRerunStart={onRerunStart}
-              />
-            )}
-          </Flex>
+          <Alert
+            isInline
+            isPlain
+            variant="warning"
+            title={words("desiredState.complianceCheck.scope.notActive")}
+          >
+            {words("desiredState.complianceCheck.scope.notActive.description")(modelVersionText)}
+          </Alert>
         </CardBody>
+      )}
+      {resourceFilter && (
+        <CardExpandableContent>
+          <CardBody>
+            <AppliedFilter
+              rows={rows}
+              statusValues={statusValues}
+              resourceFilter={resourceFilter}
+              modelVersion={modelVersion}
+              modelVersionStatus={modelVersionStatus}
+            />
+          </CardBody>
+        </CardExpandableContent>
       )}
     </Card>
   );

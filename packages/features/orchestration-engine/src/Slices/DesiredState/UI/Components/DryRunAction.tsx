@@ -24,7 +24,7 @@ export const DryRunAction: React.FC<Props> = ({ version }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const isHalted = environmentHandler.useIsHalted();
   const { notifyError } = useAppAlert();
-  const notifyDryRunStarted = useNotifyDryRunStarted();
+  const notifyDryRunStarted = useNotifyDryRunStarted({ hasReportLink: true });
   const { mutate } = useTriggerDryRun({
     onSuccess: (id) => notifyDryRunStarted({ id, modelVersion: Number(version) }),
     onError: (error) =>

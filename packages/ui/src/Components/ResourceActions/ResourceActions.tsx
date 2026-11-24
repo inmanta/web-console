@@ -92,7 +92,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const isHalted = environmentHandler.useIsHalted();
   const { notifySuccess, notifyError } = useAppAlert();
-  const notifyDryRunStarted = useNotifyDryRunStarted();
+  const notifyDryRunStarted = useNotifyDryRunStarted({ hasReportLink: true });
 
   const deploy = useDeployFiltered();
   const dryRun = useDryRunFiltered();
