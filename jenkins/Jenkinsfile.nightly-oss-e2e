@@ -24,7 +24,7 @@ pipeline {
     }
 
     stages {
-        stage('OSS e2e: Checkout') {
+        stage('OSS nightly: Checkout') {
             steps {
                 deleteDir()
                 dir('web-console') {
@@ -32,7 +32,7 @@ pipeline {
                 }
             }
         }
-        stage('OSS e2e: Build') {
+        stage('OSS nightly: Build') {
             steps {
                 dir('web-console') {
                     sh '''
@@ -42,7 +42,7 @@ pipeline {
                 }
             }
         }
-        stage('OSS e2e: Unit tests') {
+        stage('OSS nightly: Unit tests') {
             steps {
                 // A failure fails the build, but the end-to-end tests still run.
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
@@ -54,7 +54,7 @@ pipeline {
                 }
             }
         }
-        stage('OSS e2e: End-to-end tests') {
+        stage('OSS nightly: End-to-end tests') {
             steps {
                 script {
                     // One orchestrator per agent: the main job's Cypress stage takes the same lock.
