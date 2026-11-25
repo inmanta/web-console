@@ -28,6 +28,7 @@ import {
   createDuplicateFormState,
   createEditFormState,
   createFormState,
+  getAttributesOutsideForm,
   getAttributeValidationErrors,
   getChangedAttributeNames,
   isAtOrBelow,
@@ -146,10 +147,25 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     [entityAnnotations, fields]
   );
 
+  // The edit form only has fields for the attributes it can change. The inputs also get the stored
+  // values of the others (e.g. `rw` attributes), so `${form.*}` references in suggestions can read them.
+  const attributesOutsideForm = useMemo(
+    () =>
+      isEdit && originalAttributes ? getAttributesOutsideForm(fields, originalAttributes) : {},
+    [isEdit, originalAttributes, fields]
+  );
+  const inputFormState = useMemo(
+    () => (isEdit ? { ...attributesOutsideForm, ...formState } : formState),
+    [isEdit, attributesOutsideForm, formState]
+  );
+
   // Cascading fields: a reference to a non-existent field or a dependency cycle
   // is a model error surfaced to the developer, not an infinite loop or a silently
   // stuck control. Derived purely from the schema, so it is stable across value edits.
-  const dependencyErrors = useMemo(() => resolveFieldDependencies(fields).errors, [fields]);
+  const dependencyErrors = useMemo(
+    () => resolveFieldDependencies(fields, attributesOutsideForm).errors,
+    [fields, attributesOutsideForm]
+  );
   const [activeTab, setActiveTab] = useState(formTabs.kind === "tabs" ? formTabs.defaultKey : "");
 
   // The validation errors of the last submit. Editing an attribute (or a list or group holding it)
@@ -306,7 +322,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     <FieldInput
       key={field.name}
       field={field}
-      formState={formState}
+      formState={inputFormState}
       originalState={originalState}
       getUpdate={getUpdate}
       path={null}

@@ -1,0 +1,6 @@
+description: The edit form's suggested values can now use attributes that can't be edited, and its subtitle no longer reads like the create form.
+issue-nr: 8006
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

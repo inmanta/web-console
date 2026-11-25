@@ -1,4 +1,4 @@
-import { Field, JsonPath, words } from "@inmanta/web-console-core";
+import { Field, InstanceAttributeModel, JsonPath, words } from "@inmanta/web-console-core";
 import {
   FieldReference,
   getFieldReferences,
@@ -66,6 +66,23 @@ const resolveTargetPath = (
 };
 
 /**
+ * Whether a `form` reference names an attribute the form has no field for. Its value is stored
+ * on the instance and can't change in the form, so the reference is valid and needs no edge.
+ */
+const referencesAttributeOutsideForm = (
+  reference: FieldReference,
+  attributesOutsideForm: InstanceAttributeModel
+): boolean => {
+  if (reference.scope !== "form") {
+    return false;
+  }
+
+  const name = JsonPath.rootMember(reference.path);
+
+  return name !== null && Object.keys(attributesOutsideForm).includes(name);
+};
+
+/**
  * Finds a cycle in the edge graph via DFS, returned as the node path from the repeated node
  * back to itself, or null when acyclic.
  *
@@ -115,14 +132,16 @@ const detectCycle = (edges: Map<string, string[]>): string[] | null => {
 
 /**
  * Turns each node's field references into dependency edges (node path -> the paths it depends
- * on), collecting a missing-dependency error for any reference that names a field not in scope.
+ * on), collecting a missing-dependency error for any reference that names neither a field in
+ * scope nor an attribute outside the form.
  *
  * @example
- * buildDependencyEdges(nodes, rootFields) // => { edges: Map { "uplink" => ["site"] }, errors: [] }
+ * buildDependencyEdges(nodes, rootFields, {}) // => { edges: Map { "uplink" => ["site"] }, errors: [] }
  */
 const buildDependencyEdges = (
   nodes: FieldNode[],
-  rootFields: Field[]
+  rootFields: Field[],
+  attributesOutsideForm: InstanceAttributeModel
 ): { edges: Map<string, string[]>; errors: string[] } => {
   const edges = new Map<string, string[]>();
   const errors: string[] = [];
@@ -133,12 +152,12 @@ const buildDependencyEdges = (
     for (const reference of getFieldReferences(node.field.suggestion)) {
       const targetPath = resolveTargetPath(node, reference, rootFields);
 
-      if (targetPath === null) {
+      if (targetPath !== null) {
+        targets.push(targetPath);
+      } else if (!referencesAttributeOutsideForm(reference, attributesOutsideForm)) {
         errors.push(
           words("inventory.form.suggestions.missingDependency")(node.field.name, reference.raw)
         );
-      } else {
-        targets.push(targetPath);
       }
     }
 
@@ -152,16 +171,20 @@ const buildDependencyEdges = (
 
 /**
  * Validates the cascading dependency graph of a form's fields (embedded entities walked
- * into), returning the model errors to surface (empty when well-formed).
+ * into), returning the model errors to surface (empty when well-formed). A `form` reference to
+ * one of `attributesOutsideForm` (the stored attributes the edit form has no field for) is valid.
  *
  * @example
- * resolveFieldDependencies(wellFormedFields) // => { errors: [] }
+ * resolveFieldDependencies(wellFormedFields, {}) // => { errors: [] }
  */
-export const resolveFieldDependencies = (fields: Field[]): { errors: string[] } => {
+export const resolveFieldDependencies = (
+  fields: Field[],
+  attributesOutsideForm: InstanceAttributeModel
+): { errors: string[] } => {
   // Flatten the schema into nodes, wire up dependency edges (recording missing targets), then
   // look for a cycle.
   const nodes = walkFields(fields);
-  const { edges, errors } = buildDependencyEdges(nodes, fields);
+  const { edges, errors } = buildDependencyEdges(nodes, fields, attributesOutsideForm);
   const cycle = detectCycle(edges);
 
   if (cycle) {

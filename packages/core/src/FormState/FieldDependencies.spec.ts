@@ -27,20 +27,22 @@ const dependsOn = (reference: string): FormSuggestion => ({
 
 describe("resolveFieldDependencies", () => {
   it("reports no errors for a form without field references", () => {
-    expect(resolveFieldDependencies([textField("site"), textField("uplink")]).errors).toEqual([]);
+    expect(resolveFieldDependencies([textField("site"), textField("uplink")], {}).errors).toEqual(
+      []
+    );
   });
 
   it("reports no errors when a ${form.*} reference names an existing root field", () => {
     expect(
-      resolveFieldDependencies([textField("site"), textField("uplink", dependsOn("form.site"))])
+      resolveFieldDependencies([textField("site"), textField("uplink", dependsOn("form.site"))], {})
         .errors
     ).toEqual([]);
   });
 
   it("reports a missing dependency when the referenced field does not exist", () => {
-    expect(resolveFieldDependencies([textField("uplink", dependsOn("form.nope"))]).errors).toEqual([
-      words("inventory.form.suggestions.missingDependency")("uplink", "form.nope"),
-    ]);
+    expect(
+      resolveFieldDependencies([textField("uplink", dependsOn("form.nope"))], {}).errors
+    ).toEqual([words("inventory.form.suggestions.missingDependency")("uplink", "form.nope")]);
   });
 
   it("resolves a ${self.*} reference among the field's own siblings", () => {
@@ -49,7 +51,7 @@ describe("resolveFieldDependencies", () => {
       textField("zone"),
     ]);
 
-    expect(resolveFieldDependencies([embedded]).errors).toEqual([]);
+    expect(resolveFieldDependencies([embedded], {}).errors).toEqual([]);
   });
 
   it("does not let ${self.*} search outward to a same-named field in another scope", () => {
@@ -57,7 +59,7 @@ describe("resolveFieldDependencies", () => {
     // `self` reference to it is a model error (no outward search).
     const embedded = dictList("endpoints", [textField("region", dependsOn("self.site"))]);
 
-    expect(resolveFieldDependencies([textField("site"), embedded]).errors).toEqual([
+    expect(resolveFieldDependencies([textField("site"), embedded], {}).errors).toEqual([
       words("inventory.form.suggestions.missingDependency")("region", "self.site"),
     ]);
   });
@@ -65,14 +67,28 @@ describe("resolveFieldDependencies", () => {
   it("lets ${form.*} from an embedded field resolve against the root scope", () => {
     const embedded = dictList("endpoints", [textField("region", dependsOn("form.site"))]);
 
-    expect(resolveFieldDependencies([textField("site"), embedded]).errors).toEqual([]);
+    expect(resolveFieldDependencies([textField("site"), embedded], {}).errors).toEqual([]);
+  });
+
+  it("lets ${form.*} resolve against an attribute outside the form", () => {
+    const embedded = dictList("endpoints", [textField("site", dependsOn("form.blueprint"))]);
+
+    expect(resolveFieldDependencies([embedded], { blueprint: "small" }).errors).toEqual([]);
+  });
+
+  it("does not let ${self.*} resolve against an attribute outside the form", () => {
+    const embedded = dictList("endpoints", [textField("site", dependsOn("self.blueprint"))]);
+
+    expect(resolveFieldDependencies([embedded], { blueprint: "small" }).errors).toEqual([
+      words("inventory.form.suggestions.missingDependency")("site", "self.blueprint"),
+    ]);
   });
 
   it("surfaces a dependency cycle instead of looping", () => {
     const a = textField("a", dependsOn("form.b"));
     const b = textField("b", dependsOn("form.a"));
 
-    expect(resolveFieldDependencies([a, b]).errors).toEqual([
+    expect(resolveFieldDependencies([a, b], {}).errors).toEqual([
       words("inventory.form.suggestions.dependencyCycle")("a -> b -> a"),
     ]);
   });
