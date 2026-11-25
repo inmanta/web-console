@@ -70,13 +70,13 @@ describe("resolveFieldDependencies", () => {
     expect(resolveFieldDependencies([textField("site"), embedded], {}).errors).toEqual([]);
   });
 
-  it("lets ${form.*} resolve against an attribute outside the form", () => {
+  it("lets ${form.*} resolve against a stored attribute of the instance", () => {
     const embedded = dictList("endpoints", [textField("site", dependsOn("form.blueprint"))]);
 
     expect(resolveFieldDependencies([embedded], { blueprint: "small" }).errors).toEqual([]);
   });
 
-  it("does not let ${self.*} resolve against an attribute outside the form", () => {
+  it("does not let ${self.*} resolve against a stored attribute of the instance", () => {
     const embedded = dictList("endpoints", [textField("site", dependsOn("self.blueprint"))]);
 
     expect(resolveFieldDependencies([embedded], { blueprint: "small" }).errors).toEqual([

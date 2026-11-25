@@ -66,12 +66,12 @@ const resolveTargetPath = (
 };
 
 /**
- * Whether a `form` reference names an attribute the form has no field for. Its value is stored
- * on the instance and can't change in the form, so the reference is valid and needs no edge.
+ * Whether a `form` reference names a stored attribute of the instance. Used for references that
+ * match no field: that attribute can't change in the form, so the reference is valid and needs no edge.
  */
-const referencesAttributeOutsideForm = (
+const referencesInstanceAttribute = (
   reference: FieldReference,
-  attributesOutsideForm: InstanceAttributeModel
+  instanceAttributes: InstanceAttributeModel
 ): boolean => {
   if (reference.scope !== "form") {
     return false;
@@ -79,7 +79,7 @@ const referencesAttributeOutsideForm = (
 
   const name = JsonPath.rootMember(reference.path);
 
-  return name !== null && Object.keys(attributesOutsideForm).includes(name);
+  return name !== null && Object.keys(instanceAttributes).includes(name);
 };
 
 /**
@@ -133,7 +133,7 @@ const detectCycle = (edges: Map<string, string[]>): string[] | null => {
 /**
  * Turns each node's field references into dependency edges (node path -> the paths it depends
  * on), collecting a missing-dependency error for any reference that names neither a field in
- * scope nor an attribute outside the form.
+ * scope nor a stored attribute of the instance.
  *
  * @example
  * buildDependencyEdges(nodes, rootFields, {}) // => { edges: Map { "uplink" => ["site"] }, errors: [] }
@@ -141,7 +141,7 @@ const detectCycle = (edges: Map<string, string[]>): string[] | null => {
 const buildDependencyEdges = (
   nodes: FieldNode[],
   rootFields: Field[],
-  attributesOutsideForm: InstanceAttributeModel
+  instanceAttributes: InstanceAttributeModel
 ): { edges: Map<string, string[]>; errors: string[] } => {
   const edges = new Map<string, string[]>();
   const errors: string[] = [];
@@ -154,7 +154,7 @@ const buildDependencyEdges = (
 
       if (targetPath !== null) {
         targets.push(targetPath);
-      } else if (!referencesAttributeOutsideForm(reference, attributesOutsideForm)) {
+      } else if (!referencesInstanceAttribute(reference, instanceAttributes)) {
         errors.push(
           words("inventory.form.suggestions.missingDependency")(node.field.name, reference.raw)
         );
@@ -171,20 +171,21 @@ const buildDependencyEdges = (
 
 /**
  * Validates the cascading dependency graph of a form's fields (embedded entities walked
- * into), returning the model errors to surface (empty when well-formed). A `form` reference to
- * one of `attributesOutsideForm` (the stored attributes the edit form has no field for) is valid.
+ * into), returning the model errors to surface (empty when well-formed). A `form` reference that
+ * matches no field is still valid when it names one of `instanceAttributes` (the stored attributes
+ * of the instance being edited, empty for a new instance).
  *
  * @example
  * resolveFieldDependencies(wellFormedFields, {}) // => { errors: [] }
  */
 export const resolveFieldDependencies = (
   fields: Field[],
-  attributesOutsideForm: InstanceAttributeModel
+  instanceAttributes: InstanceAttributeModel
 ): { errors: string[] } => {
   // Flatten the schema into nodes, wire up dependency edges (recording missing targets), then
   // look for a cycle.
   const nodes = walkFields(fields);
-  const { edges, errors } = buildDependencyEdges(nodes, fields, attributesOutsideForm);
+  const { edges, errors } = buildDependencyEdges(nodes, fields, instanceAttributes);
   const cycle = detectCycle(edges);
 
   if (cycle) {
