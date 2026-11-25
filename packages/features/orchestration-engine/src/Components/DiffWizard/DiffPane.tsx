@@ -92,31 +92,35 @@ const DiffPaneView: React.FC<Props> = ({
           </Flex>
         </Flex>
         <DrawerActions>
-          <Button
-            variant="plain"
-            icon={<AngleLeftIcon />}
-            isDisabled={previousResourceId === null}
-            onClick={() => {
-              if (previousResourceId !== null) {
-                onSelect(previousResourceId);
-              }
-            }}
-          >
-            {words("previous")}
-          </Button>
-          <Button
-            variant="plain"
-            icon={<AngleRightIcon />}
-            iconPosition="end"
-            isDisabled={nextResourceId === null}
-            onClick={() => {
-              if (nextResourceId !== null) {
-                onSelect(nextResourceId);
-              }
-            }}
-          >
-            {words("next")}
-          </Button>
+          <Flex gap={{ default: "gapMd" }} flexWrap={{ default: "nowrap" }}>
+            <Button
+              variant="link"
+              isInline
+              icon={<AngleLeftIcon />}
+              isAriaDisabled={previousResourceId === null}
+              onClick={() => {
+                if (previousResourceId !== null) {
+                  onSelect(previousResourceId);
+                }
+              }}
+            >
+              {words("previous")}
+            </Button>
+            <Button
+              variant="link"
+              isInline
+              icon={<AngleRightIcon />}
+              iconPosition="end"
+              isAriaDisabled={nextResourceId === null}
+              onClick={() => {
+                if (nextResourceId !== null) {
+                  onSelect(nextResourceId);
+                }
+              }}
+            >
+              {words("next")}
+            </Button>
+          </Flex>
         </DrawerActions>
       </DrawerHead>
       <Divider />

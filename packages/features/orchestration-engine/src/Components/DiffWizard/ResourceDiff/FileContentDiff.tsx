@@ -9,7 +9,6 @@ import { LongValueDiff } from "./LongValueDiff";
 import { ATTRIBUTE_TABLE_COLUMN_COUNT, DiffSide } from "./types";
 
 interface Props extends DiffSideLabels {
-  resourceId: string;
   attributeName: string;
   fromHash: string;
   toHash: string;
@@ -24,7 +23,6 @@ interface Props extends DiffSideLabels {
  * hide button above it. For an added or deleted file, only the version that exists is loaded.
  *
  * @props {Props} props - The component props
- *  @prop {string} resourceId - The id of the file resource, which names its hide button
  *  @prop {string} attributeName - The name of the hash attribute, which labels the diff
  *  @prop {string} fromHash - The hash of the file content the diff starts from, empty when there is none
  *  @prop {string} toHash - The hash of the file content the diff goes to, empty when there is none
@@ -35,7 +33,6 @@ interface Props extends DiffSideLabels {
  * @returns {React.FC<Props>} The table rows of the hash and its file content
  */
 export const FileContentDiff: React.FC<Props> = ({
-  resourceId,
   attributeName,
   fromHash,
   toHash,
@@ -117,13 +114,7 @@ export const FileContentDiff: React.FC<Props> = ({
                         {words("desiredState.compare.file.title")}
                       </Content>
                     </FlexItem>
-                    <Button
-                      variant="link"
-                      isInline
-                      size="sm"
-                      aria-label={words("desiredState.compare.file.hideAriaLabel")(resourceId)}
-                      onClick={hideFiles}
-                    >
+                    <Button variant="link" isInline size="sm" onClick={hideFiles}>
                       {words("desiredState.compare.file.hide")}
                     </Button>
                   </Flex>

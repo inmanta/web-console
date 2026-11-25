@@ -53,7 +53,7 @@ export const AttributeTable: React.FC<Props> = ({
       return (
         <>
           <Tr>
-            <AttributeName scope="row" colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT}>
+            <AttributeName scope="rowgroup" colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT}>
               {attributeName}
             </AttributeName>
           </Tr>
@@ -75,7 +75,6 @@ export const AttributeTable: React.FC<Props> = ({
     if (isFileHash(resourceId, attributeName)) {
       return (
         <FileContentDiff
-          resourceId={resourceId}
           attributeName={attributeName}
           fromHash={fromValue}
           toHash={toValue}
@@ -99,10 +98,11 @@ export const AttributeTable: React.FC<Props> = ({
   };
 
   return (
-    <TableWithoutInset
+    <TableWithoutSidePadding
       variant="compact"
       borders={false}
       gridBreakPoint=""
+      role="table"
       isStickyHeaderBase
       isStickyHeaderStuck={isTableHeaderStuck}
       aria-label={words("desiredState.compare.attributes")(resourceId)}
@@ -121,47 +121,41 @@ export const AttributeTable: React.FC<Props> = ({
           </Tr>
         </Thead>
       )}
-      <AttributeRows>
-        {entries.map(({ title: attributeName, fromValue, toValue }, index) => (
-          <React.Fragment key={attributeName}>
-            {index > 0 && <AttributeDivider />}
-            {renderAttributeRows(attributeName, fromValue, toValue)}
-          </React.Fragment>
-        ))}
-      </AttributeRows>
-    </TableWithoutInset>
+      {entries.map(({ title: attributeName, fromValue, toValue }) => (
+        <AttributeRows key={attributeName}>
+          {renderAttributeRows(attributeName, fromValue, toValue)}
+        </AttributeRows>
+      ))}
+    </TableWithoutSidePadding>
   );
 };
 
 /**
- * The line between two attributes, so an attribute name and the line diff under it read as one.
- *
- * @returns {React.FC} The divider row
- */
-const AttributeDivider: React.FC = () => (
-  <Tr isBorderRow aria-hidden>
-    <Td colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT} noPadding />
-  </Tr>
-);
-
-/**
- * The table without the inset of its first and last column, so the attribute names line up with
- * the header of the diff pane above it.
+ * The table without the extra side padding of its first and last column, since the drawer body
+ * around it already pads, so the table gets the full width and starts at the same edge as the
+ * diff pane's header.
  *
  * @note This sets PatternFly's internal `--pf-v6-c-table--cell--first-last-child--PaddingInline`,
  * so check it on a PatternFly major upgrade.
  */
-const TableWithoutInset = styled(Table)`
+const TableWithoutSidePadding = styled(Table)`
   && {
     --pf-v6-c-table--cell--first-last-child--PaddingInline: 0;
   }
 `;
 
 /**
- * The attribute rows, with their cells on the first line of text instead of the app's centered
- * table rows, so a value that wraps or has a button under it doesn't move the other cells down.
+ * The rows of one attribute, with a line above every attribute but the first, so an attribute
+ * name and the line diff under it read as one. Their cells sit on the first line of text instead
+ * of the app's centered table rows, so a value that wraps or has a button under it doesn't move
+ * the other cells down.
  */
 const AttributeRows = styled(Tbody)`
+  & + & {
+    border-block-start: var(--pf-t--global--border--width--divider--default) solid
+      var(--pf-t--global--border--color--default);
+  }
+
   & > tr {
     vertical-align: baseline;
   }

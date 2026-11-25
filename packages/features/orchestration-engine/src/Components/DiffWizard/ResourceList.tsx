@@ -14,7 +14,7 @@ interface Props {
 
 /**
  * The resources of a diff as a compact table with a row group per status, each headed by its
- * status and count, and the selected resource marked as current. The arrow keys select the
+ * status and count, and the selected resource highlighted. The arrow keys select the
  * previous or next resource, and the selected resource scrolls into view.
  *
  * @props {Props} props - The component props
@@ -83,7 +83,7 @@ const ResourceListView: React.FC<Props> = ({ groups, listedItems, selectedIndex,
                 isClickable
                 isRowSelected={isSelected}
                 onRowClick={() => onSelect(item.id)}
-                aria-current={isSelected}
+                aria-selected={isSelected}
                 tabIndex={isSelected ? 0 : -1}
               >
                 <Td modifier="fitContent">
@@ -103,8 +103,9 @@ const ResourceListView: React.FC<Props> = ({ groups, listedItems, selectedIndex,
 
 /**
  * The name of a resource in the list: the value of its id, then its type and agent. An id that
- * doesn't parse shows in full. Skipped when the list re-renders for a new selection, so stepping
- * through a large list only updates the rows' selected state.
+ * doesn't parse shows in full. A truncated line shows its full text on hover but is no tab stop,
+ * so Tab leaves the list in one step. Skipped when the list re-renders for a new selection, so
+ * stepping through a large list only updates the rows' selected state.
  *
  * @props {{ item: Item }} props - The component props
  *  @prop {Item} item - The resource
@@ -116,7 +117,7 @@ const ResourceListRowName = React.memo<{ item: Item }>(({ item }) => {
 
   return (
     <Flex direction={{ default: "column" }} gap={{ default: "gapNone" }}>
-      <Truncate content={id?.attributeValue ?? item.id} />
+      <Truncate content={id?.attributeValue ?? item.id} tabIndex={-1} />
       {id && (
         <Content component="small">
           <Truncate
@@ -124,6 +125,7 @@ const ResourceListRowName = React.memo<{ item: Item }>(({ item }) => {
               id.entityType,
               id.agentName
             )}
+            tabIndex={-1}
           />
         </Content>
       )}

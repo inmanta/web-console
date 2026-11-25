@@ -8,12 +8,12 @@ import { words } from "@inmanta/web-console-core";
 import { getAttributeValueOrId } from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/helpers";
 
 /**
- * Gets the resource rows of the resource list, the rows that mark whether they are current.
+ * Gets the resource rows of the resource list, the rows that mark whether they are selected.
  */
 export const getResourceListRows = (): HTMLElement[] =>
   within(screen.getByRole("grid", { name: words("resources") }))
     .getAllByRole("row")
-    .filter((row) => row.hasAttribute("aria-current"));
+    .filter((row) => row.hasAttribute("aria-selected"));
 
 /**
  * Gets the rows of the resource list that head a status group, the rows without a resource.
@@ -21,13 +21,13 @@ export const getResourceListRows = (): HTMLElement[] =>
 export const getResourceListGroupRows = (): HTMLElement[] =>
   within(screen.getByRole("grid", { name: words("resources") }))
     .getAllByRole("row")
-    .filter((row) => !row.hasAttribute("aria-current"));
+    .filter((row) => !row.hasAttribute("aria-selected"));
 
 /**
  * Waits for the resource list, then gets its resource rows.
  */
 export const findResourceListRows = async (): Promise<HTMLElement[]> => {
-  await screen.findAllByRole("row", { current: true });
+  await screen.findAllByRole("row", { selected: true });
 
   return getResourceListRows();
 };
@@ -50,6 +50,6 @@ export const getResourceListRow = (resourceId: string): HTMLElement => {
  * Selects a resource in the resource list, so the diff pane shows its diff.
  */
 export const selectResource = async (resourceId: string): Promise<void> => {
-  await screen.findAllByRole("row", { current: true });
+  await screen.findAllByRole("row", { selected: true });
   await userEvent.click(getResourceListRow(resourceId));
 };

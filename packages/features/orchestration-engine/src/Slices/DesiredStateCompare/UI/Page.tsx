@@ -73,11 +73,8 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
             <Label variant="outline">{words("modelVersion")(from)}</Label>
             <Icon>
-              <ArrowRightIcon />
+              <ArrowRightIcon title={words("desiredState.compare.versionSeparator")} />
             </Icon>
-            <span className="pf-v6-screen-reader">
-              {words("desiredState.compare.versionSeparator")}
-            </span>
             <Label variant="outline">{words("modelVersion")(to)}</Label>
           </Flex>
         </Flex>

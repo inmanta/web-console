@@ -157,7 +157,7 @@ describe("DesiredStateCompare", () => {
       .filter((resource) => resource.status === "modified")
       .sort((a, b) => a.resource_id.localeCompare(b.resource_id))[0];
 
-    expect(firstRow).toHaveAttribute("aria-current", "true");
+    expect(firstRow).toHaveAttribute("aria-selected", "true");
     expect(firstRow).toBe(getResourceListRow(firstResource.resource_id));
     expect(
       screen.getByRole("heading", {
@@ -186,32 +186,35 @@ describe("DesiredStateCompare", () => {
     const previous = screen.getByRole("button", { name: words("previous") });
     const next = screen.getByRole("button", { name: words("next") });
 
-    expect(previous).toBeDisabled();
+    expect(previous).toHaveAttribute("aria-disabled", "true");
 
     await userEvent.click(next);
 
-    expect(getResourceListRows()[1]).toHaveAttribute("aria-current", "true");
-    expect(previous).toBeEnabled();
+    expect(getResourceListRows()[1]).toHaveAttribute("aria-selected", "true");
+    expect(previous).not.toHaveAttribute("aria-disabled");
 
     await userEvent.click(previous);
 
-    expect(getResourceListRows()[0]).toHaveAttribute("aria-current", "true");
+    expect(getResourceListRows()[0]).toHaveAttribute("aria-selected", "true");
 
     rows[0].focus();
     await userEvent.keyboard("{ArrowDown}{ArrowDown}");
 
-    expect(getResourceListRows()[2]).toHaveAttribute("aria-current", "true");
+    expect(getResourceListRows()[2]).toHaveAttribute("aria-selected", "true");
     expect(getResourceListRows()[2]).toHaveFocus();
 
     await userEvent.keyboard("{ArrowUp}");
 
-    expect(getResourceListRows()[1]).toHaveAttribute("aria-current", "true");
+    expect(getResourceListRows()[1]).toHaveAttribute("aria-selected", "true");
 
     const listRows = getResourceListRows();
 
-    await userEvent.click(listRows[listRows.length - 1]);
+    await userEvent.click(listRows[listRows.length - 2]);
+    await userEvent.click(next);
 
-    expect(screen.getByRole("button", { name: words("next") })).toBeDisabled();
+    expect(getResourceListRows()[listRows.length - 1]).toHaveAttribute("aria-selected", "true");
+    expect(next).toHaveAttribute("aria-disabled", "true");
+    expect(next).toHaveFocus();
   });
 
   test("GIVEN DesiredStateCompare WHEN the URL names a resource THEN that resource is selected", async () => {
@@ -226,7 +229,7 @@ describe("DesiredStateCompare", () => {
 
     await findResourceListRows();
 
-    expect(getResourceListRow(resource.resource_id)).toHaveAttribute("aria-current", "true");
+    expect(getResourceListRow(resource.resource_id)).toHaveAttribute("aria-selected", "true");
     expect(
       screen.getByRole("heading", {
         level: 2,
@@ -249,7 +252,7 @@ describe("DesiredStateCompare", () => {
 
     const [firstRow] = await findResourceListRows();
 
-    expect(firstRow).toHaveAttribute("aria-current", "true");
+    expect(firstRow).toHaveAttribute("aria-selected", "true");
     expect(
       screen.queryByRole("heading", {
         level: 2,
@@ -309,11 +312,7 @@ describe("DesiredStateCompare", () => {
     expect(screen.getByLabelText(fileDiffLabel)).toBeVisible();
 
     await userEvent.click(
-      screen.getByRole("button", {
-        name: words("desiredState.compare.file.hideAriaLabel")(
-          DesiredStateDiff.resources[1].resource_id
-        ),
-      })
+      screen.getByRole("button", { name: words("desiredState.compare.file.hide") })
     );
 
     expect(screen.queryByLabelText(fileDiffLabel)).not.toBeInTheDocument();
@@ -351,7 +350,7 @@ describe("DesiredStateCompare", () => {
 
     await selectResource(resource.resource_id);
 
-    const table = screen.getByRole("grid", {
+    const table = screen.getByRole("table", {
       name: words("desiredState.compare.attributes")(resource.resource_id),
     });
     const headers = within(table)
@@ -391,7 +390,7 @@ describe("DesiredStateCompare", () => {
 
     expect(screen.getByText(words("desiredState.compare.deleted"))).toBeVisible();
 
-    const table = screen.getByRole("grid", {
+    const table = screen.getByRole("table", {
       name: words("desiredState.compare.attributes")(resource.resource_id),
     });
     const headers = within(table)
@@ -425,7 +424,7 @@ describe("DesiredStateCompare", () => {
       ).toBeVisible()
     );
 
-    const table = screen.getByRole("grid", {
+    const table = screen.getByRole("table", {
       name: words("desiredState.compare.attributes")(resource.resource_id),
     });
 

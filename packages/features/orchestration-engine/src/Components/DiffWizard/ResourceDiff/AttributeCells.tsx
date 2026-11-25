@@ -41,7 +41,7 @@ export const AttributeCells: React.FC<PropsWithChildren<Props>> = ({
 
   return (
     <>
-      <AttributeName scope="row" modifier="breakWord">
+      <AttributeName scope="rowgroup" modifier="breakWord">
         {attributeName}
       </AttributeName>
       {DIFF_SIDES.map((side) => (
