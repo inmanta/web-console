@@ -1868,7 +1868,7 @@ __metadata:
     "@inmanta/web-console-test-utils": "workspace:^"
     "@module-federation/vite": "npm:1.24.1"
     "@patternfly/react-core": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.107.2"
+    "@tanstack/react-query": "npm:^5.108.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -1891,7 +1891,7 @@ __metadata:
     "@graphql-typed-document-node/core": "npm:^3.2.0"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@patternfly/react-core": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.107.2"
+    "@tanstack/react-query": "npm:^5.108.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@types/file-saver": "npm:^2.0.7"
@@ -1910,7 +1910,7 @@ __metadata:
     uuid: "npm:^14.0.3"
     vite: "npm:^8.3.8"
     vitest: "npm:^5.1.0"
-    xml-formatter: "npm:^3.7.0"
+    xml-formatter: "npm:^3.7.1"
   languageName: unknown
   linkType: soft
 
@@ -1952,7 +1952,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.107.2"
+    "@tanstack/react-query": "npm:^5.108.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -1979,7 +1979,7 @@ __metadata:
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
     "@patternfly/react-icons": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.107.2"
+    "@tanstack/react-query": "npm:^5.108.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     graphiql: "npm:^6.0.1"
@@ -2010,7 +2010,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.107.2"
+    "@tanstack/react-query": "npm:^5.108.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/jest-dom": "npm:^8.0.0"
     "@testing-library/react": "npm:^16.3.3"
@@ -2048,7 +2048,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-log-viewer": "npm:^6.5.0"
     "@patternfly/react-table": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.107.2"
+    "@tanstack/react-query": "npm:^5.108.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -2075,7 +2075,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.107.2"
+    "@tanstack/react-query": "npm:^5.108.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -2099,7 +2099,7 @@ __metadata:
     "@patternfly/react-core": "npm:^6.7.0"
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.107.2"
+    "@tanstack/react-query": "npm:^5.108.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -2147,7 +2147,7 @@ __metadata:
     "@patternfly/react-tokens": "npm:^6.7.0"
     "@react-keycloak/web": "npm:^3.4.0"
     "@remix-run/router": "npm:^1.23.4"
-    "@tanstack/react-query": "npm:^5.107.2"
+    "@tanstack/react-query": "npm:^5.108.2"
     "@tanstack/react-query-devtools": "npm:^5.108.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
@@ -2179,7 +2179,7 @@ __metadata:
     "@patternfly/react-code-editor": "npm:^6.7.0"
     "@patternfly/react-core": "npm:^6.7.0"
     "@patternfly/react-log-viewer": "npm:^6.5.0"
-    "@tanstack/react-query": "npm:^5.107.2"
+    "@tanstack/react-query": "npm:^5.108.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/jest-dom": "npm:^8.0.0"
     "@testing-library/react": "npm:^16.3.3"
@@ -2209,7 +2209,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.107.2"
+    "@tanstack/react-query": "npm:^5.108.2"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -4351,13 +4351,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.107.2":
-  version: 5.107.2
-  resolution: "@tanstack/query-core@npm:5.107.2"
-  checksum: 10/cbfc15e34c8047a7173646a4431088760030349daf38123f60c6e8ea013c3740a0761b62e9dcbd43a9cd76f851ff14c6e175db3de59d59e0b051d50a529e6b6d
-  languageName: node
-  linkType: hard
-
 "@tanstack/query-core@npm:5.108.2":
   version: 5.108.2
   resolution: "@tanstack/query-core@npm:5.108.2"
@@ -4399,18 +4392,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.107.2":
-  version: 5.107.2
-  resolution: "@tanstack/react-query@npm:5.107.2"
+"@tanstack/react-query@npm:^5.108.2":
+  version: 5.108.2
+  resolution: "@tanstack/react-query@npm:5.108.2"
   dependencies:
-    "@tanstack/query-core": "npm:5.107.2"
+    "@tanstack/query-core": "npm:5.108.2"
   peerDependencies:
     "@types/react": ^18 || ^19
     react: ^18 || ^19
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/60352a64eec6df24c00b09c4f3f4bcd861bd103890d48ccbe4da532e92bc4c7e0171cc3a338463edefa3f02211ad4d70413fa803f2727b8b28242455712c48ea
+  checksum: 10/63bb443f6044de365e8f97b9e704570f9e6cb7ff81240f4f5fb39cfdff3f29aa8d59ecc973db0253887ad0965ad1555bf4bf9f2249ef983c73aa982538f26b11
   languageName: node
   linkType: hard
 
@@ -14690,12 +14683,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"xml-formatter@npm:^3.7.0":
-  version: 3.7.0
-  resolution: "xml-formatter@npm:3.7.0"
+"xml-formatter@npm:^3.7.1":
+  version: 3.7.1
+  resolution: "xml-formatter@npm:3.7.1"
   dependencies:
     xml-parser-xo: "npm:^4.1.5"
-  checksum: 10/8ddbd08e483d2a93a59c4a6f8b4845230bdea184f0e2d356d1dd11833738d2107cf43fae213f7ab8bb650da388916224887a1e846778bf3afbee9d3bbf05383a
+  checksum: 10/3c1680d4ba561dd0fa76c7f0ef89fce912786eddff0c2b64bc616ffde8590a209cc90540f8b4c307cf5f07fb428219acfd0e6f0214e97c318a3aa73e61f7c832
   languageName: node
   linkType: hard
 
