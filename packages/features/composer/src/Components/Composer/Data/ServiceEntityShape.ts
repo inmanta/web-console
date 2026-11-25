@@ -407,9 +407,10 @@ export class ServiceEntityShape {
   /**
    * The embedded entities this shape holds, by the attribute they fill. Two attributes can embed
    * the same type, say `port_a` and `port_b`, while the connections only know the type. An entity
-   * fills the attribute its model is, while that has room; the others fill the first attribute of
-   * their type with room. Read-only attributes get none: their entities aren't put on the canvas.
-   * Only the connections that count are assigned (getCountedConnections).
+   * fills the attribute its model is, while that has room and, for a new entity, isn't locked
+   * (isLockedAttribute); the others fill the first attribute of their type with room. Read-only
+   * attributes get none: their entities aren't put on the canvas. Only the connections that count
+   * are assigned (getCountedConnections).
    *
    * @param canvasState - The shapes on the canvas
    * @returns The ids of the embedded entities, keyed by the name of the attribute they fill
@@ -435,8 +436,12 @@ export class ServiceEntityShape {
       const unassigned = this.getCountedConnections(entityKey, canvasState).filter(
         (connectedId) => {
           const attribute = ownAttribute(connectedId);
+          const isLockedFor =
+            !!attribute &&
+            !!canvasState.get(connectedId)?.isNew &&
+            this.isLockedAttribute(attribute);
 
-          if (attribute && hasRoom(attribute)) {
+          if (attribute && hasRoom(attribute) && !isLockedFor) {
             assign(attribute, connectedId);
 
             return false;
@@ -473,28 +478,32 @@ export class ServiceEntityShape {
   }
 
   /**
+   * The embedded attributes of this shape of a type that aren't read-only.
+   *
+   * @param entityKey - The type of the embedded entity
+   * @returns The attributes of that type
+   */
+  private getEmbeddedAttributesOfType(entityKey: string): EmbeddedEntity[] {
+    return (this.serviceModel.embedded_entities ?? []).filter(
+      (attribute) => attribute.modifier !== "r" && getEmbeddedEntityKey(attribute) === entityKey
+    );
+  }
+
+  /**
    * Whether a new embedded entity of a type has an attribute of this shape to go in: one of that
    * type that isn't read-only or locked, and has room for it next to the entities it holds.
    *
    * @param entityKey - The type of the embedded entity
    * @param canvasState - The shapes on the canvas
-   * @returns true when there is an attribute for it, or undefined when no attribute has the type
+   * @returns true when there is an attribute for it
    */
   private hasRoomForEmbedded(
     entityKey: string,
     canvasState: Map<string, ServiceEntityShape>
-  ): boolean | undefined {
-    const attributesOfType = (this.serviceModel.embedded_entities ?? []).filter(
-      (attribute) => attribute.modifier !== "r" && getEmbeddedEntityKey(attribute) === entityKey
-    );
-
-    if (attributesOfType.length === 0) {
-      return undefined;
-    }
-
+  ): boolean {
     const assigned = this.getEmbeddedIdsByAttribute(canvasState);
 
-    return attributesOfType.some(
+    return this.getEmbeddedAttributesOfType(entityKey).some(
       (attribute) => !this.isLockedAttribute(attribute) && hasRoomIn(attribute, assigned)
     );
   }
@@ -506,7 +515,7 @@ export class ServiceEntityShape {
    *
    * @param canvasState - The shapes on the canvas
    */
-  syncEmbeddedAttributes(canvasState: Map<string, ServiceEntityShape>): void {
+  syncEmbeddedEntityModels(canvasState: Map<string, ServiceEntityShape>): void {
     this.getEmbeddedIdsByAttribute(canvasState).forEach((connectedIds, attributeName) => {
       const attribute = this.serviceModel.embedded_entities?.find(
         (embeddedEntity) => embeddedEntity.name === attributeName
@@ -625,13 +634,11 @@ export class ServiceEntityShape {
     }
 
     // An embedded entity goes in one attribute of its type, which needs room of its own
-    const hasRoomForEmbedded =
-      targetEntity.entityType === "embedded"
-        ? this.hasRoomForEmbedded(relationType, canvasState)
-        : undefined;
-
-    if (hasRoomForEmbedded !== undefined) {
-      return hasRoomForEmbedded;
+    if (
+      targetEntity.entityType === "embedded" &&
+      this.getEmbeddedAttributesOfType(relationType).length > 0
+    ) {
+      return this.hasRoomForEmbedded(relationType, canvasState);
     }
 
     if (this.isLockedRelation(relationType)) {
@@ -740,11 +747,13 @@ export class ServiceEntityShape {
 
     // Check embedded entities
     if ("embedded_entities" in this.serviceModel) {
+      const embeddedIdsByAttribute = this.getEmbeddedIdsByAttribute(canvasState);
+
       for (const embeddedEntity of this.serviceModel.embedded_entities) {
         const missingConnection = getEmbeddedEntityMissingConnections(
           this,
           embeddedEntity,
-          canvasState
+          embeddedIdsByAttribute
         );
         if (missingConnection) {
           missing.push({ ...missingConnection, type: "embedded" });

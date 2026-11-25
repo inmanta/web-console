@@ -64,13 +64,15 @@ const getMissingConnectionDetails = (
 
 /**
  * Helper to get missing connection details for an embedded entity. It counts the entities that
- * fill this attribute (getEmbeddedIdsByAttribute), and names the attribute when another
- * attribute of the shape embeds the same type, so `port_a` and `port_b` each tell what they miss.
+ * fill this attribute, and names the attribute when another attribute of the shape embeds the
+ * same type, so `port_a` and `port_b` each tell what they miss.
+ *
+ * @param embeddedIdsByAttribute - The shape's getEmbeddedIdsByAttribute, computed once per shape
  */
 export const getEmbeddedEntityMissingConnections = (
   shape: ServiceEntityShape,
   embeddedEntity: EmbeddedEntity,
-  canvasState: Map<string, ServiceEntityShape>
+  embeddedIdsByAttribute: Map<string, string[]>
 ): { entityType: string; name: string; missing: number; required: number } | null => {
   const entityKey = getEmbeddedEntityKey(embeddedEntity);
   const sharesType = (shape.serviceModel.embedded_entities ?? []).some(
@@ -85,7 +87,7 @@ export const getEmbeddedEntityMissingConnections = (
 
   return getMissingConnectionDetails(
     configuration,
-    shape.getEmbeddedIdsByAttribute(canvasState).get(embeddedEntity.name)?.length ?? 0
+    embeddedIdsByAttribute.get(embeddedEntity.name)?.length ?? 0
   );
 };
 

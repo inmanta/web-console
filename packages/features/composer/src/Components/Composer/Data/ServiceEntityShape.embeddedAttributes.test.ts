@@ -1,6 +1,9 @@
 import { EmbeddedEntity, ServiceModel } from "@inmanta/web-console-core";
 import { defineCanvasTestObjects } from "../testSetup";
-import { createRelationsDictionary } from "./Helpers/createRelationsDictionary";
+import {
+  createRelationsDictionary,
+  RelationsDictionary,
+} from "./Helpers/createRelationsDictionary";
 import { addConnectionsBetweenShapes } from "./Helpers/linkUtils";
 import { ServiceEntityShape } from "./ServiceEntityShape";
 
@@ -39,8 +42,30 @@ const createService = (embedded: EmbeddedEntity[]): ServiceModel => ({
 });
 
 /**
+ * An embedded entity card for the attribute `serviceModel`, with its id as its number.
+ */
+const createCard = (
+  id: string,
+  serviceModel: EmbeddedEntity,
+  relationsDictionary: RelationsDictionary,
+  isNew = true
+) =>
+  new ServiceEntityShape({
+    id,
+    entityType: "embedded",
+    serviceModel,
+    instanceAttributes: { number: id },
+    isNew,
+    relationsDictionary,
+    rootEntities: {},
+    interServiceRelations: {},
+    embeddedEntities: {},
+  });
+
+/**
  * A service with the given ports, its shape, and a card for each of `cards`: the id of the card
- * and the attribute it was created for. The cards are linked in the order given.
+ * and the attribute it was created for. The cards are linked in the order given, and returned
+ * in that order.
  */
 const setup = (
   ports: EmbeddedEntity[],
@@ -61,25 +86,21 @@ const setup = (
     embeddedEntities: {},
   });
   const canvasState = new Map<string, ServiceEntityShape>([[parent.id, parent]]);
-
-  cards.forEach(([id, attribute]) => {
-    const card = new ServiceEntityShape({
+  const cardShapes = cards.map(([id, attribute]) => {
+    const card = createCard(
       id,
-      entityType: "embedded",
-      serviceModel: ports.find((port) => port.name === attribute) ?? ports[0],
-      instanceAttributes: { number: id },
-      isNew,
+      ports.find((port) => port.name === attribute) ?? ports[0],
       relationsDictionary,
-      rootEntities: {},
-      interServiceRelations: {},
-      embeddedEntities: {},
-    });
+      isNew
+    );
 
     addConnectionsBetweenShapes(parent, card);
     canvasState.set(id, card);
+
+    return card;
   });
 
-  return { parent, canvasState };
+  return { parent, canvasState, cards: cardShapes };
 };
 
 describe("ServiceEntityShape with two embedded attributes of one type", () => {
@@ -116,7 +137,7 @@ describe("ServiceEntityShape with two embedded attributes of one type", () => {
       port_b: { number: "second" },
     });
 
-    parent.syncEmbeddedAttributes(canvasState);
+    parent.syncEmbeddedEntityModels(canvasState);
 
     expect(canvasState.get("second")?.serviceModel.name).toBe("port_b");
   });
@@ -158,50 +179,37 @@ describe("ServiceEntityShape with two embedded attributes of one type", () => {
   it("puts a card from a parent that names its attribute differently in an attribute of this one", () => {
     const ports = createPort("ports", { upper_limit: null });
     const { parent, canvasState } = setup([createPort("port_a"), createPort("port_b")], []);
-    const card = new ServiceEntityShape({
-      id: "moved",
-      entityType: "embedded",
-      serviceModel: ports,
-      instanceAttributes: { number: "moved" },
-      isNew: true,
-      relationsDictionary: parent.relationsDictionary,
-      rootEntities: {},
-      interServiceRelations: {},
-      embeddedEntities: {},
-    });
+    const card = createCard("moved", ports, parent.relationsDictionary);
 
     addConnectionsBetweenShapes(parent, card);
     canvasState.set(card.id, card);
-    parent.syncEmbeddedAttributes(canvasState);
+    parent.syncEmbeddedEntityModels(canvasState);
 
     expect(card.serviceModel.name).toBe("port_a");
     expect(parent.getOrderItem(canvasState)?.attributes).toEqual({ port_a: { number: "moved" } });
   });
 
   it("keeps the attributes of a nested embedded entity apart", () => {
+    const portA = createPort("port_a");
+    const portB = createPort("port_b");
     const side = createPort("side", {
       type: "Side",
       attributes: [],
-      embedded_entities: [createPort("port_a"), createPort("port_b")],
+      embedded_entities: [portA, portB],
     });
-    const { parent, canvasState } = setup([side], [["side-1", "side"]]);
-    const sideCard = canvasState.get("side-1")!;
+    const {
+      parent,
+      canvasState,
+      cards: [sideCard],
+    } = setup([side], [["side-1", "side"]]);
 
-    [
-      ["second", "port_b"],
-      ["first", "port_a"],
-    ].forEach(([id, attribute]) => {
-      const card = new ServiceEntityShape({
-        id,
-        entityType: "embedded",
-        serviceModel: side.embedded_entities.find((port) => port.name === attribute)!,
-        instanceAttributes: { number: id },
-        isNew: true,
-        relationsDictionary: parent.relationsDictionary,
-        rootEntities: {},
-        interServiceRelations: {},
-        embeddedEntities: {},
-      });
+    (
+      [
+        ["second", portB],
+        ["first", portA],
+      ] as const
+    ).forEach(([id, port]) => {
+      const card = createCard(id, port, parent.relationsDictionary);
 
       addConnectionsBetweenShapes(sideCard, card);
       canvasState.set(id, card);
@@ -213,33 +221,34 @@ describe("ServiceEntityShape with two embedded attributes of one type", () => {
   });
 
   it("doesn't put a new card in an attribute an existing instance can't change", () => {
-    const ports = [
+    const [portA, portB, portC] = [
       createPort("port_a", { modifier: "rw+" }),
       createPort("port_b"),
       createPort("port_c", { modifier: "rw+" }),
     ];
-    const { parent, canvasState } = setup(ports, [["first", "port_a"]], false);
-    const card = (id: string) =>
-      new ServiceEntityShape({
-        id,
-        entityType: "embedded",
-        serviceModel: ports[0],
-        instanceAttributes: { number: id },
-        isNew: true,
-        relationsDictionary: parent.relationsDictionary,
-        rootEntities: {},
-        interServiceRelations: {},
-        embeddedEntities: {},
-      });
-    const second = card("second");
+    const { parent, canvasState } = setup([portA, portB, portC], [["first", "port_a"]], false);
+    const link = (card: ServiceEntityShape) => {
+      addConnectionsBetweenShapes(parent, card);
+      canvasState.set(card.id, card);
+    };
+
+    // Created for port_b, which is locked: it goes in port_c, the attribute with room.
+    const second = createCard("second", portB, parent.relationsDictionary);
 
     expect(parent.validateConnection(second, canvasState)).toBe(true);
 
-    addConnectionsBetweenShapes(parent, second);
-    canvasState.set(second.id, second);
+    link(second);
 
-    expect(parent.getEmbeddedIdsByAttribute(canvasState).get("port_c")).toEqual(["second"]);
-    expect(parent.validateConnection(card("third"), canvasState)).toBe(false);
+    expect(Object.fromEntries(parent.getEmbeddedIdsByAttribute(canvasState))).toEqual({
+      port_a: ["first"],
+      port_b: [],
+      port_c: ["second"],
+    });
+
+    // Only port_b, locked, has room left.
+    expect(
+      parent.validateConnection(createCard("third", portA, parent.relationsDictionary), canvasState)
+    ).toBe(false);
   });
 
   it("names the attribute that misses a card", () => {

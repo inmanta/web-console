@@ -76,7 +76,11 @@ describe("connectionValidationUtils", () => {
       const entity = createEmbeddedEntity("EntityType", 1);
       const shape = createParentShape(entity, { EntityType: ["id1"] });
 
-      const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
+      const result = getEmbeddedEntityMissingConnections(
+        shape,
+        entity,
+        shape.getEmbeddedIdsByAttribute(new Map())
+      );
 
       expect(result).toBeNull();
     });
@@ -85,7 +89,11 @@ describe("connectionValidationUtils", () => {
       const entity = createEmbeddedEntity("EntityType", 2);
       const shape = createParentShape(entity);
 
-      const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
+      const result = getEmbeddedEntityMissingConnections(
+        shape,
+        entity,
+        shape.getEmbeddedIdsByAttribute(new Map())
+      );
 
       expect(result).toEqual({
         entityType: "EntityType",
@@ -99,7 +107,11 @@ describe("connectionValidationUtils", () => {
       const entity = createEmbeddedEntity("EntityType", 0);
       const shape = createParentShape(entity);
 
-      const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
+      const result = getEmbeddedEntityMissingConnections(
+        shape,
+        entity,
+        shape.getEmbeddedIdsByAttribute(new Map())
+      );
 
       expect(result).toBeNull();
     });
@@ -108,7 +120,11 @@ describe("connectionValidationUtils", () => {
       const entity = createEmbeddedEntity("EntityType", 1, "r");
       const shape = createParentShape(entity);
 
-      const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
+      const result = getEmbeddedEntityMissingConnections(
+        shape,
+        entity,
+        shape.getEmbeddedIdsByAttribute(new Map())
+      );
 
       expect(result).toBeNull();
     });
@@ -117,7 +133,11 @@ describe("connectionValidationUtils", () => {
       const entity = createEmbeddedEntity("EntityType", 3);
       const shape = createParentShape(entity, { EntityType: ["id1"] });
 
-      const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
+      const result = getEmbeddedEntityMissingConnections(
+        shape,
+        entity,
+        shape.getEmbeddedIdsByAttribute(new Map())
+      );
 
       expect(result).toEqual({
         entityType: "EntityType",
