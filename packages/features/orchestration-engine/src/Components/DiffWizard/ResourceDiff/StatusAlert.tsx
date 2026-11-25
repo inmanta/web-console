@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert } from "@patternfly/react-core";
+import { Alert, DrawerContentBody } from "@patternfly/react-core";
 import { CheckCircleIcon } from "@patternfly/react-icons";
 import { Diff } from "@inmanta/web-console-core";
 import { getStatusAlertContent } from "./helpers";
@@ -11,8 +11,8 @@ interface Props {
 
 /**
  * The inline alert above a resource's diff that explains its status, with its title as a
- * paragraph since it isn't a section of the page. Added and modified resources get none: their
- * attribute table and status label say it.
+ * paragraph since it isn't a section of the page, padded like the drawer body it sits in. Added
+ * and modified resources get none: their attribute table and status label say it.
  *
  * @props {Props} props - The component props
  *  @prop {string} resourceId - The id of the resource, which names the agent of an agent_down resource
@@ -28,12 +28,14 @@ export const StatusAlert: React.FC<Props> = ({ resourceId, status }) => {
   }
 
   return (
-    <Alert
-      isInline
-      component="p"
-      variant={statusAlertContent.variant}
-      title={statusAlertContent.title}
-      customIcon={statusAlertContent.variant === "custom" ? <CheckCircleIcon /> : undefined}
-    />
+    <DrawerContentBody hasPadding>
+      <Alert
+        isInline
+        component="p"
+        variant={statusAlertContent.variant}
+        title={statusAlertContent.title}
+        customIcon={statusAlertContent.variant === "custom" ? <CheckCircleIcon /> : undefined}
+      />
+    </DrawerContentBody>
   );
 };

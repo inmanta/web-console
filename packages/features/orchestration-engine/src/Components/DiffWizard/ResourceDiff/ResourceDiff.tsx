@@ -1,5 +1,4 @@
 import React from "react";
-import { Stack } from "@patternfly/react-core";
 import {
   DiffSideLabels,
   Item,
@@ -15,7 +14,8 @@ interface Props extends DiffSideLabels {
 
 /**
  * The diff of one resource: a note on its status, then its attributes in a table with a column
- * per side of the diff, whose header sticks to the top of the scrolling diff.
+ * per side of the diff, whose header sticks to the top of the scrolling diff. The table sits flush
+ * in the pane and brings its own side inset, like PatternFly tables do.
  *
  * @props {Props} props - The component props
  *  @prop {Item} item - The resource and its changed attributes
@@ -26,7 +26,7 @@ interface Props extends DiffSideLabels {
  * @returns {React.FC<Props>} The resource diff
  */
 export const ResourceDiff: React.FC<Props> = ({ item, fromLabel, toLabel, isTableHeaderStuck }) => (
-  <Stack hasGutter>
+  <>
     <StatusAlert resourceId={item.id} status={item.status} />
     {item.entries.length > 0 && (
       <AttributeTable
@@ -38,5 +38,5 @@ export const ResourceDiff: React.FC<Props> = ({ item, fromLabel, toLabel, isTabl
         isTableHeaderStuck={isTableHeaderStuck}
       />
     )}
-  </Stack>
+  </>
 );

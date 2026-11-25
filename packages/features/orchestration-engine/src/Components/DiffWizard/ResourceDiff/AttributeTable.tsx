@@ -98,7 +98,7 @@ export const AttributeTable: React.FC<Props> = ({
   };
 
   return (
-    <TableWithoutSidePadding
+    <Table
       variant="compact"
       borders={false}
       gridBreakPoint=""
@@ -126,23 +126,9 @@ export const AttributeTable: React.FC<Props> = ({
           {renderAttributeRows(attributeName, fromValue, toValue)}
         </AttributeRows>
       ))}
-    </TableWithoutSidePadding>
+    </Table>
   );
 };
-
-/**
- * The table without the extra side padding of its first and last column, since the drawer body
- * around it already pads, so the table gets the full width and starts at the same edge as the
- * diff pane's header.
- *
- * @note This sets PatternFly's internal `--pf-v6-c-table--cell--first-last-child--PaddingInline`,
- * so check it on a PatternFly major upgrade.
- */
-const TableWithoutSidePadding = styled(Table)`
-  && {
-    --pf-v6-c-table--cell--first-last-child--PaddingInline: 0;
-  }
-`;
 
 /**
  * The rows of one attribute, with a line above every attribute but the first, so an attribute

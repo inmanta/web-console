@@ -4,7 +4,6 @@ import {
   Content,
   Divider,
   DrawerActions,
-  DrawerContentBody,
   DrawerHead,
   Flex,
   FlexItem,
@@ -149,16 +148,12 @@ const ScrollingResourceDiff: React.FC<DiffSideLabels & { item: Item }> = ({
 
   return (
     <InnerScrollContainer onScroll={(event) => setIsScrolled(event.currentTarget.scrollTop > 0)}>
-      {/* The panel body pads only as a direct child of the panel, so inside the scroller the
-          drawer body brings its padding with PatternFly's padding modifier. */}
-      <DrawerContentBody hasPadding>
-        <ResourceDiff
-          item={item}
-          fromLabel={fromLabel}
-          toLabel={toLabel}
-          isTableHeaderStuck={isScrolled}
-        />
-      </DrawerContentBody>
+      <ResourceDiff
+        item={item}
+        fromLabel={fromLabel}
+        toLabel={toLabel}
+        isTableHeaderStuck={isScrolled}
+      />
     </InnerScrollContainer>
   );
 };
