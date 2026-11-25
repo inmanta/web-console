@@ -70,7 +70,7 @@ const getStatusChipText = (value: string): string => {
 /**
  * The filter drawer panel of a diff: a checkbox per status with its number of resources, the
  * resource id filters, and the active filters. A changed status sets disregardDefault, so the
- * default statuses don't come back once they were unticked; Reset Filters brings them back.
+ * default statuses don't come back once they were unticked; Reset to default brings them back.
  *
  * @props {Props} props - The component props
  *  @prop {DiffFilter} filter - The filter, with the default statuses filled in
@@ -125,7 +125,11 @@ export const DiffFilterWidget: React.FC<Props> = ({ filter, setFilter, statusCou
 
         <Divider />
 
-        <ActiveFilters hasActiveFilters={hasAnySetValue(filter)} onClear={() => setFilter({})}>
+        <ActiveFilters
+          hasActiveFilters={hasAnySetValue(filter)}
+          onClear={() => setFilter({})}
+          clearLabel={words("resources.filters.active.resetToDefault")}
+        >
           {selectedStatuses.length > 0 && (
             <StackItem>
               <ActiveFilterGroup

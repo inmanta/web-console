@@ -92,6 +92,8 @@ export const uiMessages = {
   "empty.filtered.title": "No results found",
   "empty.filtered.message":
     "No results match the filter criteria. Reset the filters and try again.",
+  "empty.filtered.resetToDefault.message":
+    "No results match the filter criteria. Reset the filters to default and try again.",
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
   "inventory.service.failed": "Something went wrong with fetching the service",
@@ -206,6 +208,7 @@ export const uiMessages = {
     "Matches any resource whose agent contains this text, ignoring case.",
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.resetFilters": "Reset Filters",
+  "resources.filters.active.resetToDefault": "Reset to default",
   "resources.filters.active.empty.title": "No filters applied",
   "resources.filters.active.empty.body.noTabs":
     "Use the fields above to add filters and refine your results.",

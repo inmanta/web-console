@@ -309,13 +309,16 @@ describe("DesiredStateCompare", () => {
       })
     );
 
-    // With every status unticked, the empty view offers to reset the filters.
+    // With every status unticked, the empty view offers to reset the filters to default.
     const emptyView = screen.getByLabelText("ResourceListWithDiffPane-Empty");
 
     expect(within(emptyView).getByText(words("empty.filtered.title"))).toBeVisible();
     expect(
+      within(emptyView).getByText(words("empty.filtered.resetToDefault.message"))
+    ).toBeVisible();
+    expect(
       within(emptyView).getByRole("button", {
-        name: words("resources.filters.active.resetFilters"),
+        name: words("resources.filters.active.resetToDefault"),
       })
     ).toBeVisible();
     // Unticking every status is a filter too, so the drawer doesn't say none are applied.
@@ -338,7 +341,7 @@ describe("DesiredStateCompare", () => {
     });
 
     await userEvent.click(
-      screen.getByRole("button", { name: words("resources.filters.active.resetFilters") })
+      screen.getByRole("button", { name: words("resources.filters.active.resetToDefault") })
     );
 
     expect(getResourceListRows()).toHaveLength(resourcesShownByDefault.length);
@@ -508,7 +511,7 @@ describe("DesiredStateCompare", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("GIVEN DesiredStateCompare WHEN resource id filters are added THEN only the matching resources show, and Reset Filters shows them all again", async () => {
+  test("GIVEN DesiredStateCompare WHEN resource id filters are added THEN only the matching resources show, and Reset to default shows the default resources again", async () => {
     const { component } = setup();
 
     render(component);
@@ -530,7 +533,7 @@ describe("DesiredStateCompare", () => {
 
     await userEvent.click(
       within(emptyView).getByRole("button", {
-        name: words("resources.filters.active.resetFilters"),
+        name: words("resources.filters.active.resetToDefault"),
       })
     );
 

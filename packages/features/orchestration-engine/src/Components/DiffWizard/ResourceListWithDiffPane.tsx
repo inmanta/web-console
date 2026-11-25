@@ -32,8 +32,8 @@ interface Props extends DiffSideLabels {
  *  @prop {RouteKind} route - The page whose URL keeps the selected resource
  *  @prop {string} fromLabel - The display text of the side the diff starts from, e.g. "Current state"
  *  @prop {string} toLabel - The display text of the side the diff goes to, e.g. "v412"
- *  @prop {() => void} [onResetFilters] - Clears the filters; when set, the empty view says the
- *   filters hide every resource and offers to reset them
+ *  @prop {() => void} [onResetFilters] - Resets the filters to default; when set, the empty view
+ *   says the filters hide every resource and offers to reset them to default
  *
  * @returns {React.FC<Props>} The resource list with the diff pane
  */
@@ -73,6 +73,7 @@ export const ResourceListWithDiffPane: React.FC<Props> = ({
         message={words("noResults")}
         aria-label="ResourceListWithDiffPane-Empty"
         onResetFilters={onResetFilters}
+        hasDefaultFilters
       />
     );
   }

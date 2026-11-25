@@ -24,6 +24,18 @@ describe("EmptyView", () => {
     expect(screen.queryByText("No agents found")).not.toBeInTheDocument();
   });
 
+  it("says the reset goes back to default with hasDefaultFilters", () => {
+    render(<EmptyView message="No agents found" onResetFilters={vi.fn()} hasDefaultFilters />);
+
+    expect(screen.getByText(words("empty.filtered.resetToDefault.message"))).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: words("resources.filters.active.resetToDefault") })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: words("resources.filters.active.resetFilters") })
+    ).not.toBeInTheDocument();
+  });
+
   it("calls onResetFilters when the Reset Filters button is pressed", async () => {
     const handleResetFilters = vi.fn();
 
