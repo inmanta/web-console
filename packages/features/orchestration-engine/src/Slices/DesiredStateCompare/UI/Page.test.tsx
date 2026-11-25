@@ -443,7 +443,7 @@ describe("DesiredStateCompare", () => {
 
     expect(screen.getByText(words("desiredState.compare.agent_down")(agentName))).toBeVisible();
     expect(
-      screen.queryByRole("grid", {
+      screen.queryByRole("table", {
         name: words("desiredState.compare.attributes")(resource.resource_id),
       })
     ).not.toBeInTheDocument();
