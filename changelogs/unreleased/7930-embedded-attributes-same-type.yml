@@ -1,0 +1,6 @@
+description: The Instance Composer no longer mixes up two embedded attributes of the same type in the order.
+issue-nr: 7930
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

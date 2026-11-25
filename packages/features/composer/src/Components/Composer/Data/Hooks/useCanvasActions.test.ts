@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { act, renderHook } from "@testing-library/react";
-import { InterServiceRelation, ServiceModel } from "@inmanta/web-console-core";
+import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@inmanta/web-console-core";
 import { defineCanvasTestObjects } from "../../testSetup";
-import { RelationsDictionary } from "../Helpers";
+import { createRelationsDictionary, RelationsDictionary } from "../Helpers";
 import { ServiceEntityShape } from "../ServiceEntityShape";
 import { useCanvasActions } from "./useCanvasActions";
 
@@ -52,7 +52,10 @@ const createShape = (
     embeddedEntities: {},
   });
 
-const renderCanvasActions = (shapes: ServiceEntityShape[]) =>
+const renderCanvasActions = (
+  shapes: ServiceEntityShape[],
+  dictionary: RelationsDictionary = relationsDictionary
+) =>
   renderHook(() => {
     const [canvasState, setCanvasState] = useState(
       new Map(shapes.map((shape) => [shape.id, shape]))
@@ -63,7 +66,7 @@ const renderCanvasActions = (shapes: ServiceEntityShape[]) =>
       actions: useCanvasActions({
         canvasState,
         setCanvasState,
-        relationsDictionary,
+        relationsDictionary: dictionary,
         serviceCatalog: [appModel, databaseModel],
       }),
     };
@@ -99,6 +102,46 @@ describe("useCanvasActions", () => {
 
       expect(app.connections.has("DatabaseService")).toBe(false);
       expect(app.getOrderItem(result.current.canvasState)?.attributes?.database).toBeUndefined();
+    });
+  });
+
+  describe("connectShapes", () => {
+    it("puts a linked embedded entity in the first attribute of its type with room", () => {
+      const createPort = (name: string): EmbeddedEntity => ({
+        name,
+        type: "Port",
+        attributes: [],
+        embedded_entities: [],
+        inter_service_relations: [],
+        lower_limit: 0,
+        upper_limit: 1,
+        modifier: "rw",
+      });
+      const [portA, portB] = [createPort("port_a"), createPort("port_b")];
+      const linkModel = createModel("Link", { embedded_entities: [portA, portB] });
+      const ports = createRelationsDictionary([linkModel]);
+      const createCard = (id: string, serviceModel: ServiceModel | EmbeddedEntity) =>
+        new ServiceEntityShape({
+          id,
+          entityType: serviceModel === linkModel ? "core" : "embedded",
+          serviceModel,
+          instanceAttributes: {},
+          isNew: true,
+          relationsDictionary: ports,
+          rootEntities: {},
+          interServiceRelations: {},
+          embeddedEntities: {},
+        });
+      const link = createCard("link-1", linkModel);
+      const first = createCard("port-1", portA);
+      const second = createCard("port-2", portA);
+      const { result } = renderCanvasActions([link, first, second], ports);
+
+      act(() => result.current.actions.connectShapes(link, first));
+      act(() => result.current.actions.connectShapes(second, link));
+
+      expect(first.serviceModel.name).toBe("port_a");
+      expect(second.serviceModel.name).toBe("port_b");
     });
   });
 

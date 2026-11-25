@@ -32,6 +32,32 @@ describe("connectionValidationUtils", () => {
     inter_service_relations: [],
   });
 
+  const createParentShape = (
+    embeddedEntity: EmbeddedEntity,
+    embeddedEntities: Record<string, string[]> = {}
+  ): ServiceEntityShape =>
+    new ServiceEntityShape({
+      id: "parent",
+      entityType: "core",
+      serviceModel: {
+        name: "Parent",
+        environment: "test",
+        lifecycle: { initial_state: "start", states: [], transfers: [] },
+        attributes: [],
+        config: {},
+        embedded_entities: [embeddedEntity],
+        inter_service_relations: [],
+        owned_entities: [],
+        owner: null,
+      },
+      instanceAttributes: {},
+      isNew: false,
+      relationsDictionary: {},
+      rootEntities: {},
+      interServiceRelations: {},
+      embeddedEntities,
+    });
+
   const createInterServiceRelation = (
     name: string,
     entityType: string,
@@ -47,8 +73,8 @@ describe("connectionValidationUtils", () => {
 
   describe("getEmbeddedEntityMissingConnections", () => {
     it("should return null when connection requirement is satisfied", () => {
-      const shape = createMockShape(false, new Map([["EntityType", ["id1"]]]));
       const entity = createEmbeddedEntity("EntityType", 1);
+      const shape = createParentShape(entity, { EntityType: ["id1"] });
 
       const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
 
@@ -56,8 +82,8 @@ describe("connectionValidationUtils", () => {
     });
 
     it("should return missing connection details when requirement is not satisfied", () => {
-      const shape = createMockShape(false, new Map());
       const entity = createEmbeddedEntity("EntityType", 2);
+      const shape = createParentShape(entity);
 
       const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
 
@@ -70,8 +96,8 @@ describe("connectionValidationUtils", () => {
     });
 
     it("should return null when lower_limit is 0", () => {
-      const shape = createMockShape(false, new Map());
       const entity = createEmbeddedEntity("EntityType", 0);
+      const shape = createParentShape(entity);
 
       const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
 
@@ -79,8 +105,8 @@ describe("connectionValidationUtils", () => {
     });
 
     it("should return null for read-only entities when shape is not new", () => {
-      const shape = createMockShape(false, new Map());
       const entity = createEmbeddedEntity("EntityType", 1, "r");
+      const shape = createParentShape(entity);
 
       const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
 
@@ -88,8 +114,8 @@ describe("connectionValidationUtils", () => {
     });
 
     it("should calculate missing connections correctly", () => {
-      const shape = createMockShape(false, new Map([["EntityType", ["id1"]]]));
       const entity = createEmbeddedEntity("EntityType", 3);
+      const shape = createParentShape(entity, { EntityType: ["id1"] });
 
       const result = getEmbeddedEntityMissingConnections(shape, entity, new Map());
 

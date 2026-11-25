@@ -121,6 +121,9 @@ export const useCanvasActions = ({
         return;
       }
       addConnectionsBetweenShapes(source, target);
+      // A linked embedded entity can end up in another attribute of its type: the card shows it
+      source.syncEmbeddedAttributes(canvasState);
+      target.syncEmbeddedAttributes(canvasState);
       refresh();
     };
 
