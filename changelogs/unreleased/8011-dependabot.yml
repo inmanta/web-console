@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): bump @tanstack/react-query from 5.107.2 to 5.108.2'
+destination-branches:
+- master
+- iso9
+sections: {}
