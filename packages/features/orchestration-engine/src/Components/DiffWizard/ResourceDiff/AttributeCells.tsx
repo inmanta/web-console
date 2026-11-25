@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React from "react";
 import { Content } from "@patternfly/react-core";
 import { Td } from "@patternfly/react-table";
 import { words } from "@inmanta/web-console-core";
@@ -16,24 +16,21 @@ interface Props {
 
 /**
  * The cells of an attribute with a short value: its name, then a cell per side of the diff with
- * the changed part marked. A side without values says so, and the children go under the value of
- * the first side that has one.
+ * the changed part marked. A side without values says so.
  *
- * @props {PropsWithChildren<Props>} props - The component props
+ * @props {Props} props - The component props
  *  @prop {string} attributeName - The name of the attribute
  *  @prop {string} fromValue - The value the diff starts from
  *  @prop {string} toValue - The value the diff goes to
  *  @prop {DiffSide[]} sidesWithValues - The sides that hold values, both unless the resource is added or deleted
- *  @prop {React.ReactNode} [children] - Shown under the value of the first side that has one
  *
- * @returns {React.FC<PropsWithChildren<Props>>} The cells of the attribute
+ * @returns {React.FC<Props>} The cells of the attribute
  */
-export const AttributeCells: React.FC<PropsWithChildren<Props>> = ({
+export const AttributeCells: React.FC<Props> = ({
   attributeName,
   fromValue,
   toValue,
   sidesWithValues,
-  children,
 }) => {
   const hasBothSides = sidesWithValues.length === DIFF_SIDES.length;
   const parts = getChangedParts(fromValue, toValue);
@@ -55,7 +52,6 @@ export const AttributeCells: React.FC<PropsWithChildren<Props>> = ({
           ) : (
             <Content component="small">{words("desiredState.compare.notPresent")}</Content>
           )}
-          {side === sidesWithValues[0] && children}
         </Td>
       ))}
     </>

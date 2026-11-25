@@ -1,12 +1,12 @@
 import React from "react";
 import { Alert, AlertActionLink, Button, Content, Flex, FlexItem } from "@patternfly/react-core";
-import { Td, Tr } from "@patternfly/react-table";
+import { ActionsColumn, Td, Tr } from "@patternfly/react-table";
 import { words } from "@inmanta/web-console-core";
 import { useGetFile } from "@inmanta/web-console-core/Queries/Slices/Server";
 import { DiffSideLabels } from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/types";
 import { AttributeCells } from "./AttributeCells";
 import { LongValueDiff } from "./LongValueDiff";
-import { ATTRIBUTE_TABLE_COLUMN_COUNT, DiffSide } from "./types";
+import { DiffSide, FILE_ATTRIBUTE_TABLE_COLUMN_COUNT } from "./types";
 
 interface Props extends DiffSideLabels {
   attributeName: string;
@@ -16,11 +16,11 @@ interface Props extends DiffSideLabels {
 }
 
 /**
- * The rows of the hash of a file resource: the hash row with a "Compare file content" button under
- * its value, and once the files are loaded from the server, a row under it with the line diff of
- * the file content. When a file fails to load, that row shows the
- * error with a Retry link in place of the button. The diff shows with a "File content" title and a
- * hide button above it. For an added or deleted file, only the version that exists is loaded.
+ * The rows of the hash of a file resource: the hash row with a "Compare file content" action in
+ * its kebab, and once the files are loaded from the server, a row under it with the line diff of
+ * the file content. When a file fails to load, that row shows the error with a Retry link. The
+ * diff shows with a "File content" title and a hide button above it. For an added or deleted file,
+ * only the version that exists is loaded.
  *
  * @props {Props} props - The component props
  *  @prop {string} attributeName - The name of the hash attribute, which labels the diff
@@ -70,23 +70,23 @@ export const FileContentDiff: React.FC<Props> = ({
           fromValue={fromHash}
           toValue={toHash}
           sidesWithValues={sidesWithValues}
-        >
-          {!hasContent && (
-            <Button
-              variant="link"
-              isInline
-              isLoading={isLoading}
-              isDisabled={isLoading}
-              onClick={loadFiles}
-            >
-              {words("desiredState.compare.file.show")}
-            </Button>
-          )}
-        </AttributeCells>
+        />
+        <Td isActionCell>
+          <ActionsColumn
+            popperProps={{ appendTo: () => document.body, position: "right" }}
+            items={[
+              {
+                title: words("desiredState.compare.file.show"),
+                onClick: loadFiles,
+                isDisabled: hasContent || isLoading,
+              },
+            ]}
+          />
+        </Td>
       </Tr>
       {hasContent && (
         <Tr>
-          <Td colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT}>
+          <Td colSpan={FILE_ATTRIBUTE_TABLE_COLUMN_COUNT}>
             {error && (
               <Alert
                 isInline

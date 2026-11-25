@@ -10,7 +10,12 @@ import { AttributeName } from "./AttributeName";
 import { FileContentDiff } from "./FileContentDiff";
 import { LongValueDiff } from "./LongValueDiff";
 import { isFileHash, isLongValue } from "./helpers";
-import { ATTRIBUTE_TABLE_COLUMN_COUNT, DIFF_SIDES, DiffSide } from "./types";
+import {
+  ATTRIBUTE_TABLE_COLUMN_COUNT,
+  DIFF_SIDES,
+  DiffSide,
+  FILE_ATTRIBUTE_TABLE_COLUMN_COUNT,
+} from "./types";
 
 interface Props extends DiffSideLabels {
   resourceId: string;
@@ -24,7 +29,8 @@ interface Props extends DiffSideLabels {
  * sticking to the top of the scrolling diff. It stays a table on small screens. Short values sit
  * in the columns with the changed part marked, and a side without values says so. Long values and
  * file content get a line diff in a row under their name, which names its own sides, so without
- * short values the table has no column headers.
+ * short values the table has no column headers. A file resource gets an actions column, with the
+ * kebab that loads its file content in the hash row.
  *
  * @props {Props} props - The component props
  *  @prop {string} resourceId - The id of the resource, which tells whether its hash is file content
@@ -46,18 +52,22 @@ export const AttributeTable: React.FC<Props> = ({
 }) => {
   const labels: Record<DiffSide, string> = { from: fromLabel, to: toLabel };
   const hasShortValues = entries.some(({ fromValue, toValue }) => !isLongValue(fromValue, toValue));
+  const hasFileContent = entries.some(({ title }) => isFileHash(resourceId, title));
+  const columnCount = hasFileContent
+    ? FILE_ATTRIBUTE_TABLE_COLUMN_COUNT
+    : ATTRIBUTE_TABLE_COLUMN_COUNT;
 
   const renderAttributeRows = (attributeName: string, fromValue: string, toValue: string) => {
     if (isLongValue(fromValue, toValue)) {
       return (
         <>
           <Tr>
-            <AttributeName scope="rowgroup" colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT}>
+            <AttributeName scope="rowgroup" colSpan={columnCount}>
               {attributeName}
             </AttributeName>
           </Tr>
           <Tr>
-            <Td colSpan={ATTRIBUTE_TABLE_COLUMN_COUNT}>
+            <Td colSpan={columnCount}>
               <LongValueDiff
                 attributeName={attributeName}
                 fromValue={fromValue}
@@ -92,6 +102,7 @@ export const AttributeTable: React.FC<Props> = ({
           toValue={toValue}
           sidesWithValues={sidesWithValues}
         />
+        {hasFileContent && <Td />}
       </Tr>
     );
   };
@@ -116,6 +127,7 @@ export const AttributeTable: React.FC<Props> = ({
                 {labels[side]}
               </Th>
             ))}
+            {hasFileContent && <Th screenReaderText={words("actions")} />}
           </Tr>
         </Thead>
       )}

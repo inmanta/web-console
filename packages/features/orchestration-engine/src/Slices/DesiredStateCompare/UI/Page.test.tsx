@@ -303,10 +303,13 @@ describe("DesiredStateCompare", () => {
     await selectResource(DesiredStateDiff.resources[1].resource_id);
 
     const fileDiffLabel = words("desiredState.compare.changes")("hash");
+    const openHashRowKebab = () =>
+      userEvent.click(screen.getByRole("button", { name: "Kebab toggle" }));
+    const getCompareFileContentItem = () =>
+      screen.getByRole("menuitem", { name: words("desiredState.compare.file.show") });
 
-    await userEvent.click(
-      screen.getByRole("button", { name: words("desiredState.compare.file.show") })
-    );
+    await openHashRowKebab();
+    await userEvent.click(getCompareFileContentItem());
 
     expect(await screen.findByText(words("desiredState.compare.file.title"))).toBeVisible();
     expect(screen.getByLabelText(fileDiffLabel)).toBeVisible();
@@ -317,14 +320,16 @@ describe("DesiredStateCompare", () => {
 
     expect(screen.queryByLabelText(fileDiffLabel)).not.toBeInTheDocument();
 
-    await userEvent.click(
-      screen.getByRole("button", { name: words("desiredState.compare.file.show") })
-    );
+    await openHashRowKebab();
+    await userEvent.click(getCompareFileContentItem());
 
     expect(await screen.findByRole("button", { name: words("retry") })).toBeVisible();
-    expect(
-      screen.queryByRole("button", { name: words("desiredState.compare.file.show") })
-    ).not.toBeInTheDocument();
+
+    await openHashRowKebab();
+
+    expect(getCompareFileContentItem()).toBeDisabled();
+
+    await userEvent.keyboard("{Escape}");
 
     await userEvent.click(screen.getByRole("button", { name: words("retry") }));
 
