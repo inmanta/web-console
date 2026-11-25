@@ -2,6 +2,9 @@ import React from "react";
 import { Tooltip } from "@patternfly/react-core";
 import styled from "styled-components";
 
+/** Segment height for bars that do not set their own. */
+export const DEFAULT_ITEM_HEIGHT = "28px";
+
 /**
  * @param id must be unique
  */
@@ -49,7 +52,7 @@ export const Item: React.FC<Props> = ({
   color,
   onClick,
   id,
-  height = "36px",
+  height = DEFAULT_ITEM_HEIGHT,
   isEmpty = false,
   isActive,
   isDimmed = false,
