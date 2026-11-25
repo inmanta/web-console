@@ -1,4 +1,7 @@
-// The nightly end-to-end tests of the OSS edition: the OSS suite (cypress.config.oss.cjs) against a
+// The nightly tests of the OSS edition. First the unit tests of the OSS packages with only the OSS
+// app's setup (yarn test:oss): the main job runs them with the ISO app's, which registers every
+// feature, so it misses an OSS package that needs an ISO one. They take a few minutes, too long for
+// every build of a branch. Then the OSS end-to-end suite (cypress.config.oss.cjs) against a
 // fresh OSS orchestrator with the OSS app's build (dist-oss/), the one the OSS orchestrator ships.
 // The setup (yarn install:orchestrator:ci with the OSS arguments) waits for the orchestrator and
 // installs that build. Don't run yarn update:dist after it: that puts the ISO app back.
@@ -21,7 +24,7 @@ pipeline {
     }
 
     stages {
-        stage('OSS e2e: Checkout') {
+        stage('OSS nightly: Checkout') {
             steps {
                 deleteDir()
                 dir('web-console') {
@@ -29,7 +32,7 @@ pipeline {
                 }
             }
         }
-        stage('OSS e2e: Build') {
+        stage('OSS nightly: Build') {
             steps {
                 dir('web-console') {
                     sh '''
@@ -39,7 +42,19 @@ pipeline {
                 }
             }
         }
-        stage('OSS e2e: End-to-end tests') {
+        stage('OSS nightly: Unit tests') {
+            steps {
+                // A failure fails the build, but the end-to-end tests still run.
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    timeout(time: 15, unit: 'MINUTES') {
+                        dir('web-console') {
+                            sh 'yarn test:oss'
+                        }
+                    }
+                }
+            }
+        }
+        stage('OSS nightly: End-to-end tests') {
             steps {
                 script {
                     // One orchestrator per agent: the main job's Cypress stage takes the same lock.
