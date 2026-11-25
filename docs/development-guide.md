@@ -168,7 +168,7 @@ The app registers it and picks its language in `src/index.tsx`, before `app.rend
 
 ## Before opening a PR
 
-Run what the main CI job checks: `yarn format`, `yarn lint`, `yarn tsc`, `yarn check-circular-deps` and `yarn test`. Add one change entry per PR in `changelogs/unreleased/<issue>-<topic>.yml`:
+Run the quick checks: `yarn format`, `yarn lint`, `yarn tsc`, `yarn check-circular-deps` and `yarn test`. The main CI job also builds (`yarn build:ci`) and checks the build (`yarn check-no-cdn`, `yarn check-dist-versions`). Add one change entry per PR in `changelogs/unreleased/<issue>-<topic>.yml`:
 
 ```yaml
 description: What changed, in one or two sentences.
