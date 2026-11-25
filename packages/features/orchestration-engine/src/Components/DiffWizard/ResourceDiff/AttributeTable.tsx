@@ -1,6 +1,5 @@
 import React from "react";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import {
   DiffSideLabels,
@@ -100,7 +99,6 @@ export const AttributeTable: React.FC<Props> = ({
   return (
     <Table
       variant="compact"
-      borders={false}
       gridBreakPoint=""
       role="table"
       isStickyHeaderBase
@@ -122,27 +120,8 @@ export const AttributeTable: React.FC<Props> = ({
         </Thead>
       )}
       {entries.map(({ title: attributeName, fromValue, toValue }) => (
-        <AttributeRows key={attributeName}>
-          {renderAttributeRows(attributeName, fromValue, toValue)}
-        </AttributeRows>
+        <Tbody key={attributeName}>{renderAttributeRows(attributeName, fromValue, toValue)}</Tbody>
       ))}
     </Table>
   );
 };
-
-/**
- * The rows of one attribute, with a line above every attribute but the first, so an attribute
- * name and the line diff under it read as one. Their cells sit on the first line of text instead
- * of the app's centered table rows, so a value that wraps or has a button under it doesn't move
- * the other cells down.
- */
-const AttributeRows = styled(Tbody)`
-  & + & {
-    border-block-start: var(--pf-t--global--border--width--divider--default) solid
-      var(--pf-t--global--border--color--default);
-  }
-
-  & > tr {
-    vertical-align: baseline;
-  }
-`;
