@@ -135,13 +135,23 @@ describe("useCanvasActions", () => {
       const link = createCard("link-1", linkModel);
       const first = createCard("port-1", portA);
       const second = createCard("port-2", portA);
-      const { result } = renderCanvasActions([link, first, second], ports);
+      const third = createCard("port-3", portA);
+      const { result } = renderCanvasActions([link, first, second, third], ports);
 
       act(() => result.current.actions.connectShapes(link, first));
       act(() => result.current.actions.connectShapes(second, link));
 
       expect(first.serviceModel.name).toBe("port_a");
       expect(second.serviceModel.name).toBe("port_b");
+
+      // An undone delete takes its attribute back, and the card that took its place moves
+      act(() => result.current.actions.markShapeForDeletion(first, true));
+      act(() => result.current.actions.disconnectShapes(link, second));
+      act(() => result.current.actions.connectShapes(link, third));
+      act(() => result.current.actions.markShapeForDeletion(first, false));
+
+      expect(first.serviceModel.name).toBe("port_a");
+      expect(third.serviceModel.name).toBe("port_b");
     });
   });
 

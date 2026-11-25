@@ -115,6 +115,17 @@ export const withDefaultValues = (
 };
 
 /**
+ * Whether an embedded attribute has room for one more entity next to the ones assigned to it.
+ *
+ * @param attribute - The embedded attribute
+ * @param assigned - The ids assigned to each attribute, by attribute name
+ */
+const hasRoomIn = (attribute: EmbeddedEntity, assigned: Map<string, string[]>): boolean =>
+  attribute.upper_limit === null ||
+  attribute.upper_limit === undefined ||
+  (assigned.get(attribute.name) ?? []).length < Number(attribute.upper_limit);
+
+/**
  * A service, embedded entity, or inter-service relation on the composer canvas.
  * Tracks its connections, attributes and position, and provides helpers for validation
  * and order-item generation. It holds no rendering state: the canvas draws it.
@@ -408,10 +419,7 @@ export class ServiceEntityShape {
       (attribute) => attribute.modifier !== "r"
     );
     const assigned = new Map<string, string[]>(attributes.map((attribute) => [attribute.name, []]));
-    const hasRoom = (attribute: EmbeddedEntity): boolean =>
-      attribute.upper_limit === null ||
-      attribute.upper_limit === undefined ||
-      (assigned.get(attribute.name) ?? []).length < Number(attribute.upper_limit);
+    const hasRoom = (attribute: EmbeddedEntity): boolean => hasRoomIn(attribute, assigned);
     const assign = (attribute: EmbeddedEntity, connectedId: string) =>
       assigned.get(attribute.name)?.push(connectedId);
 
@@ -438,16 +446,57 @@ export class ServiceEntityShape {
         }
       );
 
-      // More entities than room only happens when the limits are broken; keep them all in the order
+      // An attribute the update can't change only takes an entity when no other has room. With no
+      // room anywhere, which only happens when the limits are broken, it stays in its own attribute.
       unassigned.forEach((connectedId) =>
         assign(
-          attributesOfType.find(hasRoom) ?? ownAttribute(connectedId) ?? attributesOfType[0],
+          attributesOfType.find(
+            (attribute) => hasRoom(attribute) && !this.isLockedAttribute(attribute)
+          ) ??
+            attributesOfType.find(hasRoom) ??
+            ownAttribute(connectedId) ??
+            attributesOfType[0],
           connectedId
         )
       );
     });
 
     return assigned;
+  }
+
+  /**
+   * Whether an embedded attribute can't take new entities: an "rw" attribute can only be set
+   * while the instance is created.
+   */
+  private isLockedAttribute(attribute: EmbeddedEntity): boolean {
+    return attribute.modifier === "rw" && !this.isNew;
+  }
+
+  /**
+   * Whether a new embedded entity of a type has an attribute of this shape to go in: one of that
+   * type that isn't read-only or locked, and has room for it next to the entities it holds.
+   *
+   * @param entityKey - The type of the embedded entity
+   * @param canvasState - The shapes on the canvas
+   * @returns true when there is an attribute for it, or undefined when no attribute has the type
+   */
+  private hasRoomForEmbedded(
+    entityKey: string,
+    canvasState: Map<string, ServiceEntityShape>
+  ): boolean | undefined {
+    const attributesOfType = (this.serviceModel.embedded_entities ?? []).filter(
+      (attribute) => attribute.modifier !== "r" && getEmbeddedEntityKey(attribute) === entityKey
+    );
+
+    if (attributesOfType.length === 0) {
+      return undefined;
+    }
+
+    const assigned = this.getEmbeddedIdsByAttribute(canvasState);
+
+    return attributesOfType.some(
+      (attribute) => !this.isLockedAttribute(attribute) && hasRoomIn(attribute, assigned)
+    );
   }
 
   /**
@@ -573,6 +622,16 @@ export class ServiceEntityShape {
 
     if (!rules) {
       return false;
+    }
+
+    // An embedded entity goes in one attribute of its type, which needs room of its own
+    const hasRoomForEmbedded =
+      targetEntity.entityType === "embedded"
+        ? this.hasRoomForEmbedded(relationType, canvasState)
+        : undefined;
+
+    if (hasRoomForEmbedded !== undefined) {
+      return hasRoomForEmbedded;
     }
 
     if (this.isLockedRelation(relationType)) {
