@@ -1,7 +1,6 @@
 import React from "react";
 import { Tooltip } from "@patternfly/react-core";
 import styled from "styled-components";
-import { DEFAULT_ITEM_HEIGHT } from "./Item";
 
 export interface Total {
   format(total: number): string;
@@ -10,7 +9,6 @@ export interface Total {
 
 const TotalContainer = styled.div`
   padding-left: 16px;
-  line-height: ${DEFAULT_ITEM_HEIGHT};
 `;
 
 export const Total: React.FC<{ total: Total; value: number }> = ({ total, value }) =>
