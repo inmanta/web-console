@@ -71,7 +71,8 @@ type Props =
  * has the Compliance Check page. A dry run
  * stores the labels of the service instances its filter names, so its report shows them. It
  * disables itself while the environment is halted, and while an action is starting, when the Deploy
- * button shows a spinner in place of its icon.
+ * button shows a spinner in place of its icon. The menu items show their tooltips beside the menu,
+ * so a tooltip never covers the other items.
  *
  * @Props {Props} - The props of the component
  *  @prop {ResourceActionFilter} filter - Deploy and Repair run immediately against this filter (mutually exclusive with scopes)
@@ -291,7 +292,11 @@ export const ResourceActions: React.FC<Props> = (props) => {
                 </Icon>
               }
               onClick={() => onAction(key)}
-              tooltipProps={{ content: itemTooltip }}
+              tooltipProps={{
+                content: itemTooltip,
+                position: "left",
+                flipBehavior: ["left", "right"],
+              }}
             >
               <Flex
                 justifyContent={{ default: "justifyContentSpaceBetween" }}
