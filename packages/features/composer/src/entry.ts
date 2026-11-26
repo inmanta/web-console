@@ -4,7 +4,7 @@ import { composerFeature } from ".";
 
 /**
  * The entry of the composer's separate build (vite.config.ts), which the ISO app loads at runtime
- * as `composer/feature`.
+ * through the build's manifest (`composerManifestFile` in vite.js).
  */
 export const { feature, singletons }: RuntimeFeatureEntry = {
   feature: composerFeature,

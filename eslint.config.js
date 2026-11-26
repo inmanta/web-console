@@ -122,8 +122,8 @@ export default [
       // The shared images in public/images, not a package: no-extraneous-dependencies skips them.
       "import/internal-regex": "^@images/",
 
-      // The composer's separate build, which the web-console app loads at runtime: the build's
-      // import map provides it, and the dev server and tests resolve it to the composer's entry.
+      // The composer's entry, which the web-console app's dev server and tests resolve to the
+      // composer's source; a build loads the composer's separate build through its manifest.
       "import/core-modules": ["composer/feature"],
 
       "import/resolver": {

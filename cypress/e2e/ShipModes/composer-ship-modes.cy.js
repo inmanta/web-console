@@ -26,9 +26,9 @@ let instanceId;
 /**
  * Opens the web console and goes to the inventory of the service, which has one instance.
  *
- * It opens the web console at its root rather than at the inventory's url: the import map points
- * at the composer's entry with a relative url, which the orchestrator serves from every path, but
- * `vite preview` doesn't.
+ * It opens the web console at its root rather than at the inventory's url: the app fetches the
+ * composer's manifest and entry with relative urls, which the orchestrator serves from every path,
+ * but `vite preview` doesn't.
  */
 const visitInventory = () => {
   cy.visit(`/console/?env=${environmentId}`);
@@ -38,18 +38,13 @@ const visitInventory = () => {
 };
 
 /**
- * Puts the web console in a ship mode, and clears the browser's cache. The orchestrator keeps the
- * ETag of a file it has served when the file is replaced, so the browser would otherwise keep
- * using the composer files of the previous mode.
+ * Puts the web console in a ship mode. The browser's cache stays: the orchestrator keeps the ETag
+ * of a file it has served when the file is replaced, and the app has to load the composer of the
+ * new mode anyway (it fetches the composer's manifest past the cache).
  *
  * @param {"without" | "combined" | "mismatch"} mode - the ship mode
  */
-const setShipMode = (mode) =>
-  cy
-    .task("setComposerShipMode", mode)
-    .then(() =>
-      Cypress.automation("remote:debugger:protocol", { command: "Network.clearBrowserCache" })
-    );
+const setShipMode = (mode) => cy.task("setComposerShipMode", mode);
 
 /**
  * Opens the actions menu of the instance's row in the inventory.
