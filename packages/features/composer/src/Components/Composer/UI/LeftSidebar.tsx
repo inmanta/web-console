@@ -9,7 +9,6 @@ import {
   EmptyStateFooter,
   Label,
   SearchInput,
-  Spinner,
   Tab,
   Tabs,
   TabTitleText,
@@ -31,6 +30,7 @@ import {
 } from "@inmanta/web-console-core";
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
+import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 import { ComposerContext, PaletteItem } from "../Data/Context";
 import { getInstanceIdsOnCanvas } from "../Data/Helpers";
 import { useAddPaletteItem } from "../Data/Hooks";
@@ -230,8 +230,8 @@ export const LeftSidebar: React.FC = () => {
     serviceCatalog,
     serviceInventories,
     inventoriesError,
-    isInventoryLoading,
-    refreshInventories,
+    isFetchingInventories,
+    refetchInventories,
     editable,
     canvasState,
     draggedItemRef,
@@ -256,7 +256,7 @@ export const LeftSidebar: React.FC = () => {
   const showsInventoryLoading =
     activeTab === "inventory" &&
     !showsInventoryError &&
-    isInventoryLoading &&
+    isFetchingInventories &&
     serviceInventories === null;
   const query = queries[activeTab];
   const groups =
@@ -306,9 +306,8 @@ export const LeftSidebar: React.FC = () => {
           if (isPaletteTab(key)) {
             setActiveTab(key);
 
-            // The inventory isn't polled, so it is fetched again each time the tab opens.
             if (key === "inventory" && key !== activeTab) {
-              refreshInventories();
+              refetchInventories();
             }
           }
         }}
@@ -371,9 +370,9 @@ export const LeftSidebar: React.FC = () => {
                 <EmptyStateActions>
                   <Button
                     variant="link"
-                    onClick={refreshInventories}
-                    isLoading={isInventoryLoading}
-                    isDisabled={isInventoryLoading}
+                    onClick={refetchInventories}
+                    isLoading={isFetchingInventories}
+                    isDisabled={isFetchingInventories}
                   >
                     {words("retry")}
                   </Button>
@@ -385,7 +384,7 @@ export const LeftSidebar: React.FC = () => {
             <EmptyState
               headingLevel="h3"
               titleText={words("instanceComposer.palette.inventoryLoading")}
-              icon={Spinner}
+              icon={InventoryLoadingIcon}
               variant="xs"
             />
           )}
@@ -519,6 +518,9 @@ const PaletteRowText: React.FC<{ row: PaletteRow }> = ({ row }) => (
     )}
   </span>
 );
+
+/** The app's spinner, sized for the extra small empty state, like LoadingView's icon. */
+const InventoryLoadingIcon = () => <Spinner size={32} />;
 
 /** The ids PatternFly builds the tabs' ids from, and the panel they control. */
 const PALETTE_ID = "composer-palette";

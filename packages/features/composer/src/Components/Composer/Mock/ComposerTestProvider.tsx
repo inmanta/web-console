@@ -16,8 +16,8 @@ interface Props {
 
   /** Why the inventory couldn't be fetched, as the Composer gets it from its query. */
   inventoriesError?: string | null;
-  isInventoryLoading?: boolean;
-  refreshInventories?: () => void;
+  isFetchingInventories?: boolean;
+  refetchInventories?: () => void;
   editable?: boolean;
 
   /** The selected shape when the canvas opens. */
@@ -37,8 +37,8 @@ export const ComposerTestProvider: React.FC<Props> = ({
   serviceCatalog = defaultCatalog,
   serviceInventories = null,
   inventoriesError = null,
-  isInventoryLoading = false,
-  refreshInventories = composerContext.refreshInventories,
+  isFetchingInventories = false,
+  refetchInventories = composerContext.refetchInventories,
   editable = true,
   activeCellId: initialActiveCellId,
   serviceInstanceId = null,
@@ -69,8 +69,8 @@ export const ComposerTestProvider: React.FC<Props> = ({
     serviceCatalog,
     serviceInventories,
     inventoriesError,
-    isInventoryLoading,
-    refreshInventories,
+    isFetchingInventories,
+    refetchInventories,
     editable,
     canvasState,
     setCanvasState,

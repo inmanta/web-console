@@ -88,13 +88,13 @@ interface ComposerContextInterface {
   inventoriesError: string | null;
 
   /** Whether the inventory is being fetched. */
-  isInventoryLoading: boolean;
+  isFetchingInventories: boolean;
 
   /**
    * Fetches the inventory: the first call starts fetching it, later calls fetch it again. Only the
    * palette's Inventory tab uses it, so the tab calls this when it opens; it isn't polled.
    */
-  refreshInventories: () => void;
+  refetchInventories: () => void;
   serviceInstanceId: string | null;
   editable: boolean;
   serviceOrderItems: Map<string, ServiceOrderItemRequest>;
@@ -125,8 +125,8 @@ export const composerContext: ComposerContextInterface = {
   serviceCatalog: [],
   serviceInventories: null,
   inventoriesError: null,
-  isInventoryLoading: false,
-  refreshInventories: noop,
+  isFetchingInventories: false,
+  refetchInventories: noop,
   serviceInstanceId: null,
   editable: false,
   serviceOrderItems: new Map(),

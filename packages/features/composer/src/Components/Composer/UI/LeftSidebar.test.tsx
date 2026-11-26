@@ -277,9 +277,9 @@ describe("LeftSidebar", () => {
   describe("inventory fetching", () => {
     const renderWith = (props: {
       inventoriesError?: string;
-      isInventoryLoading?: boolean;
+      isFetchingInventories?: boolean;
       serviceInventories?: Inventories | null;
-      refreshInventories: () => void;
+      refetchInventories: () => void;
     }) =>
       render(
         <ComposerTestProvider serviceInventories={serviceInventories} {...props}>
@@ -291,8 +291,8 @@ describe("LeftSidebar", () => {
     it("says the inventory is loading until it first arrives, and keeps the last one after", async () => {
       const { rerender } = renderWith({
         serviceInventories: null,
-        isInventoryLoading: true,
-        refreshInventories: vi.fn(),
+        isFetchingInventories: true,
+        refetchInventories: vi.fn(),
       });
 
       await openInventory();
@@ -306,7 +306,7 @@ describe("LeftSidebar", () => {
 
       // Fetching it again keeps the inventory it has
       rerender(
-        <ComposerTestProvider serviceInventories={serviceInventories} isInventoryLoading>
+        <ComposerTestProvider serviceInventories={serviceInventories} isFetchingInventories>
           <LeftSidebar />
           <Canvas />
         </ComposerTestProvider>
@@ -316,28 +316,28 @@ describe("LeftSidebar", () => {
     });
 
     it("fetches the inventory again each time the Inventory tab opens", async () => {
-      const refreshInventories = vi.fn();
+      const refetchInventories = vi.fn();
 
-      renderWith({ refreshInventories });
+      renderWith({ refetchInventories });
 
       await openInventory();
       // Selecting the open tab again doesn't fetch it again
       await openInventory();
 
-      expect(refreshInventories).toHaveBeenCalledTimes(1);
+      expect(refetchInventories).toHaveBeenCalledTimes(1);
 
       await userEvent.click(
         screen.getByRole("tab", { name: words("instanceComposer.stencil.new") })
       );
       await openInventory();
 
-      expect(refreshInventories).toHaveBeenCalledTimes(2);
+      expect(refetchInventories).toHaveBeenCalledTimes(2);
     });
 
     it("shows why the inventory couldn't be fetched instead of the last one, with a retry", async () => {
-      const refreshInventories = vi.fn();
+      const refetchInventories = vi.fn();
 
-      renderWith({ inventoriesError: "Request failed", refreshInventories });
+      renderWith({ inventoriesError: "Request failed", refetchInventories });
       await openInventory();
 
       expect(
@@ -349,11 +349,11 @@ describe("LeftSidebar", () => {
       await userEvent.click(screen.getByRole("button", { name: words("retry") }));
 
       // Once when the tab opened, once for the retry
-      expect(refreshInventories).toHaveBeenCalledTimes(2);
+      expect(refetchInventories).toHaveBeenCalledTimes(2);
     });
 
     it("keeps the New tab when the inventory couldn't be fetched", () => {
-      renderWith({ inventoriesError: "Request failed", refreshInventories: vi.fn() });
+      renderWith({ inventoriesError: "Request failed", refetchInventories: vi.fn() });
 
       expect(screen.getByTestId("palette-group-parent-service")).toBeVisible();
     });
