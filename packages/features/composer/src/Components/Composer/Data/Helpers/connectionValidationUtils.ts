@@ -37,9 +37,8 @@ const buildConnectionCheckConfig = (
  * Gets missing connection details for a requirement
  */
 const getMissingConnectionDetails = (
-  shape: ServiceEntityShape,
   configuration: ConnectionCheckConfig,
-  canvasState: Map<string, ServiceEntityShape>
+  connectedCount: number
 ): { entityType: string; name: string; missing: number; required: number } | null => {
   // Skip read-only for existing entities
   if (configuration.skipReadOnly) {
@@ -50,11 +49,6 @@ const getMissingConnectionDetails = (
   if (configuration.lowerLimit === 0) {
     return null;
   }
-
-  const connectedCount = shape.getCountedConnections(
-    configuration.connectionKey,
-    canvasState
-  ).length;
 
   if (connectedCount < configuration.lowerLimit) {
     return {
@@ -69,21 +63,32 @@ const getMissingConnectionDetails = (
 };
 
 /**
- * Helper to get missing connection details for an embedded entity
+ * Helper to get missing connection details for an embedded entity. It counts the entities that
+ * fill this attribute, and names the attribute when another attribute of the shape embeds the
+ * same type, so `port_a` and `port_b` each tell what they miss.
+ *
+ * @param embeddedIdsByAttribute - The shape's getEmbeddedIdsByAttribute, computed once per shape
  */
 export const getEmbeddedEntityMissingConnections = (
   shape: ServiceEntityShape,
   embeddedEntity: EmbeddedEntity,
-  canvasState: Map<string, ServiceEntityShape>
+  embeddedIdsByAttribute: Map<string, string[]>
 ): { entityType: string; name: string; missing: number; required: number } | null => {
+  const entityKey = getEmbeddedEntityKey(embeddedEntity);
+  const sharesType = (shape.serviceModel.embedded_entities ?? []).some(
+    (other) => other.name !== embeddedEntity.name && getEmbeddedEntityKey(other) === entityKey
+  );
   const configuration = buildConnectionCheckConfig(
     shape,
     embeddedEntity,
-    getEmbeddedEntityKey(embeddedEntity),
-    getEmbeddedEntityKey(embeddedEntity)
+    entityKey,
+    sharesType ? embeddedEntity.name : entityKey
   );
 
-  return getMissingConnectionDetails(shape, configuration, canvasState);
+  return getMissingConnectionDetails(
+    configuration,
+    embeddedIdsByAttribute.get(embeddedEntity.name)?.length ?? 0
+  );
 };
 
 /**
@@ -101,5 +106,8 @@ export const getInterServiceRelationMissingConnections = (
     relation.name
   );
 
-  return getMissingConnectionDetails(shape, configuration, canvasState);
+  return getMissingConnectionDetails(
+    configuration,
+    shape.getCountedConnections(configuration.connectionKey, canvasState).length
+  );
 };

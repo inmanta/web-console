@@ -34,6 +34,13 @@ export const useCanvasActions = ({
   useMemo(() => {
     const refresh = () => setCanvasState((prev) => new Map(prev));
 
+    /**
+     * Makes the embedded entity cards show the attribute they fill. A link, or an undone delete,
+     * can fill an attribute, which moves the next entity of its type to another attribute.
+     */
+    const syncEmbeddedEntityModels = () =>
+      canvasState.forEach((shape) => shape.syncEmbeddedEntityModels(canvasState));
+
     const addShapes: CanvasActions["addShapes"] = (shapes) => {
       setCanvasState((prev) => new Map([...prev, ...shapes]));
     };
@@ -113,6 +120,7 @@ export const useCanvasActions = ({
       withEmbeddedEntities(shape).forEach((markedShape) => {
         markedShape.isMarkedForDeletion = marked;
       });
+      syncEmbeddedEntityModels();
       refresh();
     };
 
@@ -121,6 +129,7 @@ export const useCanvasActions = ({
         return;
       }
       addConnectionsBetweenShapes(source, target);
+      syncEmbeddedEntityModels();
       refresh();
     };
 
