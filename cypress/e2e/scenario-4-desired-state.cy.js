@@ -266,7 +266,7 @@ describe("Scenario 4 Desired State", () => {
 
     // Expect no report to be shown
     cy.get('[aria-label="Scope"]').should("not.exist");
-    cy.get('[aria-label="DiffItemList"]').should("not.exist");
+    cy.get('[aria-label="Resources"]').should("not.exist");
 
     cy.get('[aria-label="ReportListSelect"]').contains("No Dry runs exist").should("be.visible");
 

@@ -20,7 +20,8 @@ export const uiMessages = {
   add: "Add",
   delete: "Delete",
   empty: "Empty",
-  jumpTo: "Jump to",
+  previous: "Previous",
+  next: "Next",
   hideAll: "Hide All",
   showAll: "Show All",
   edit: "Edit",
@@ -308,8 +309,6 @@ export const uiMessages = {
   "desiredState.compare.file.show": "Compare file content",
   "desiredState.compare.file.title": "File content",
   "desiredState.compare.file.hide": "Hide",
-  "desiredState.compare.file.hideAriaLabel": (resourceId: string) =>
-    `Hide file content of ${resourceId}`,
   "desiredState.complianceCheck.report.view": "View report",
   "desiredState.complianceCheck.report.started": "Dry run started",
 

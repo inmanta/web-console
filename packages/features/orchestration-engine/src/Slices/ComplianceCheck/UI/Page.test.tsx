@@ -5,9 +5,14 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { DryRun, words, getFeatureRoutes } from "@inmanta/web-console-core";
+import { Diff, DryRun, words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
 import { orchestrationEngineFeature } from "@inmanta/web-console-feature-orchestration-engine";
+import {
+  findResourceListRows,
+  getResourceListRows,
+  selectResource,
+} from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/Spec/resourceListQueries";
 import * as Mock from "@inmanta/web-console-feature-orchestration-engine/Slices/ComplianceCheck/Data/Mock";
 import {
   EnvironmentDetails,
@@ -32,6 +37,10 @@ const axe = configureAxe({
 });
 
 const environment = "aaa";
+
+const resourcesShownByDefault = Mock.reportResponse.data.diff.filter((resource) =>
+  Diff.defaultStatuses.includes(resource.status)
+);
 
 /**
  * The desired state lookup of the model version the mock reports ran on, with the given status.
@@ -128,9 +137,7 @@ describe("ComplianceCheck page", () => {
     expect(options).toHaveLength(3);
     expect(options[0]).toHaveAttribute("aria-selected", "true");
 
-    const blocks = await screen.findAllByTestId("DiffBlock");
-
-    expect(blocks).toHaveLength(11);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -139,20 +146,23 @@ describe("ComplianceCheck page", () => {
     });
   });
 
-  test("GIVEN ComplianceCheck page THEN each dry run entry links to its resource details page", async () => {
+  test("GIVEN ComplianceCheck page WHEN a resource is selected THEN its diff header links to its resource details page", async () => {
     const { component } = setup();
 
     render(component);
 
-    await screen.findAllByTestId("DiffBlock");
+    const [{ resource_id: notInitiallySelectedResourceId }] = Mock.reportResponse.data.diff.filter(
+      ({ status }) => status === "deleted"
+    );
 
-    const resourceId = Mock.reportResponse.data.diff[0].resource_id;
-    const link = screen.getByRole("link", { name: resourceId });
+    await selectResource(notInitiallySelectedResourceId);
+
+    const link = screen.getByRole("link", { name: words("desiredState.resourceDetails.title") });
     const href = link.getAttribute("href") ?? "";
 
     // The link points at the resource details page for this resource, keeping the environment.
     expect(href).toMatch(/^\/resources\//);
-    expect(decodeURIComponent(href)).toContain(resourceId);
+    expect(decodeURIComponent(href)).toContain(notInitiallySelectedResourceId);
     expect(href).toContain(`env=${environment}`);
   });
 
@@ -274,17 +284,7 @@ describe("ComplianceCheck page", () => {
 
     render(component);
 
-    await userEvent.click(await screen.findByRole("button", { name: words("jumpTo") }));
-
-    expect(screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" })).toHaveLength(11);
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-
-    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     expect(screen.queryByRole("listbox", { name: "StatusFilterOptions" })).not.toBeInTheDocument();
 
@@ -300,11 +300,11 @@ describe("ComplianceCheck page", () => {
 
     await userEvent.click(statusOptions[0]);
 
-    await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
-
-    expect(await screen.findAllByRole("menuitem", { name: "DiffSummaryListItem" })).toHaveLength(2);
-
-    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
+    await waitFor(() =>
+      expect(getResourceListRows()).toHaveLength(
+        resourcesShownByDefault.filter((resource) => resource.status === "added").length
+      )
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -318,29 +318,23 @@ describe("ComplianceCheck page", () => {
 
     render(component);
 
-    await userEvent.click(await screen.findByRole("button", { name: words("jumpTo") }));
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-
-    expect(screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" })).toHaveLength(11);
-
-    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "lsm");
 
-    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(10);
+    await waitFor(() =>
+      expect(getResourceListRows()).toHaveLength(
+        resourcesShownByDefault.filter((resource) => resource.resource_id.includes("lsm")).length
+      )
+    );
 
     await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "44554");
 
-    expect(screen.queryAllByTestId("DiffBlock")).toHaveLength(0);
+    expect(await screen.findByText(words("noResults"))).toBeVisible();
 
     await userEvent.clear(screen.getByRole("searchbox", { name: "SearchFilter" }));
 
-    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     await act(async () => {
       const results = await axe(document.body);

@@ -10,7 +10,6 @@ export const orchestrationEngineMessages = {
   /**
    * Generic labels reused across views (column headers, tabs, field labels)
    */
-  currentStateShort: "current",
   currentState: "Current state",
   attribute: "Attribute",
 
@@ -53,6 +52,7 @@ export const orchestrationEngineMessages = {
   /** Desired State Details */
   "desiredState.resourceDetails.title": "Resource Details",
   "desiredState.compare.title": "Compare",
+  "desiredState.compare.versionSeparator": "to",
   "desiredState.compare.action.compare": "Select for compare",
   "desiredState.compare.action.compareWithSelected": "Compare with selected",
   "desiredState.compare.action.compareWithCurrentState": "Compare with current state",
@@ -60,6 +60,22 @@ export const orchestrationEngineMessages = {
   "desiredState.compare.empty": "No changes found",
   "desiredState.compare.attributes": (resourceId: string) => `Attributes of ${resourceId}`,
   "desiredState.compare.notPresent": "not present",
+  "desiredState.compare.status.modified": "Modified",
+  "desiredState.compare.status.added": "Added",
+  "desiredState.compare.status.deleted": "Deleted",
+  "desiredState.compare.status.agent_down": "Agent down",
+  "desiredState.compare.status.undefined": "Undefined",
+  "desiredState.compare.status.skipped_for_undefined": "Skipped for undefined",
+  "desiredState.compare.status.unmodified": "Unmodified",
+  "desiredState.compare.statusLetter.modified": "M",
+  "desiredState.compare.statusLetter.added": "A",
+  "desiredState.compare.statusLetter.deleted": "D",
+  "desiredState.compare.statusLetter.agent_down": "!",
+  "desiredState.compare.statusLetter.undefined": "!",
+  "desiredState.compare.statusLetter.skipped_for_undefined": "!",
+  "desiredState.compare.statusLetter.unmodified": "=",
+  "desiredState.compare.resource.typeAndAgent": (type: string, agent: string) =>
+    `${type} · ${agent}`,
   "desiredState.complianceCheck.title": "Compliance Check",
   "desiredState.complianceCheck.failed": "Getting list of dryruns failed",
   "desiredState.complianceCheck.action.dryRun": "Perform dry run",

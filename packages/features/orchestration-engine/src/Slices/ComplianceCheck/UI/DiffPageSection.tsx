@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useRef } from "react";
-import { Grid, PageSection } from "@patternfly/react-core";
+import React, { useEffect, useMemo } from "react";
+import { PageSection, Stack, StackItem } from "@patternfly/react-core";
 import { Diff, DryRun, words } from "@inmanta/web-console-core";
 import { useGetDryRunReport } from "@inmanta/web-console-core/Queries/Slices/DryRun";
 import * as DiffWizard from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard";
 import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
 import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
-import { DryRunProgressLabel, ReportScope } from "./Components";
+import { ReportScope } from "./Components";
 
 interface Props {
   report: DryRun | null;
@@ -53,7 +53,6 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
   searchFilter,
   onRerunStart,
 }) => {
-  const refs: DiffWizard.Refs = useRef({});
   const todo = Number(report.todo);
   const { data, isSuccess, isError, isLoading, error, refetch } = useGetDryRunReport().useOneTime(
     version,
@@ -95,27 +94,17 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
       return <LoadingView ariaLabel="DiffPageSection-Loading" />;
     }
 
+    if (data.diff.length <= 0) {
+      return <EmptyView message={words("desiredState.compare.empty")} />;
+    }
+
     return (
-      <>
-        <DiffWizard.Controls
-          data={diffData}
-          refs={refs}
-          fromLabel={words("currentStateShort")}
-          toLabel={words("modelVersion")(version)}
-        >
-          {Number(data.summary.todo) > 0 && <DryRunProgressLabel progress={data.summary} />}
-        </DiffWizard.Controls>
-        {data.diff.length <= 0 ? (
-          <EmptyView message={words("desiredState.compare.empty")} />
-        ) : (
-          <DiffWizard.ItemList
-            items={items}
-            refs={refs}
-            fromLabel={words("currentState")}
-            toLabel={words("modelVersion")(version)}
-          />
-        )}
-      </>
+      <DiffWizard.ResourceListWithDiffPane
+        items={items}
+        route="ComplianceCheck"
+        fromLabel={words("currentState")}
+        toLabel={words("modelVersion")(version)}
+      />
     );
   };
 
@@ -128,15 +117,16 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
       isFilled
       style={{ flex: "1 1 auto", minHeight: 0, overflow: "auto", paddingTop: 0 }}
     >
-      {/*
-       * A grid rather than a flex column: a flex column squeezes the scope card, which scrolls
-       * its own overflow, down to its border. It keeps its full height, so the section scrolls.
-       */}
-      <Grid hasGutter style={{ flexShrink: 0 }}>
+      <Stack hasGutter>
         {/* The scope comes from the report itself, so it stays in place while the diff loads. */}
-        <ReportScope report={report} diff={data?.diff} onRerunStart={onRerunStart} />
-        {renderDiff()}
-      </Grid>
+        <StackItem>
+          <ReportScope report={report} diff={data?.diff} onRerunStart={onRerunStart} />
+        </StackItem>
+        {/* Takes the rest of the section and no more, so the list and diff scroll on their own. */}
+        <StackItem isFilled style={{ minHeight: 0 }}>
+          {renderDiff()}
+        </StackItem>
+      </Stack>
     </PageSection>
   );
 };

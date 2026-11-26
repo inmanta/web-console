@@ -1,5 +1,5 @@
 import { render, fireEvent, screen } from "@testing-library/react";
-import { Diff } from "@inmanta/web-console-core";
+import { Diff, words } from "@inmanta/web-console-core";
 import { DiffPageFilter } from "./DiffPageFilter";
 
 const mockStatuses: Diff.Status[] = ["added", "modified", "deleted"];
@@ -32,7 +32,9 @@ describe("DiffPageFilter", () => {
 
     expect(screen.queryByRole("option", { name: "unmodified" })).toBeNull();
     Diff.defaultStatuses.forEach((status) => {
-      expect(screen.getByRole("option", { name: status })).toBeInTheDocument();
+      expect(screen.getByRole("option", { name: status })).toHaveTextContent(
+        words(`desiredState.compare.status.${status}`)
+      );
     });
   });
 
