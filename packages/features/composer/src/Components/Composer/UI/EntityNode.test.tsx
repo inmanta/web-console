@@ -61,6 +61,21 @@ describe("EntityNode", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("names a service by its web_title, like the catalog", async () => {
+    const [parent] = newServiceShapes({
+      ...parentService,
+      entity_annotations: { web_title: "Access router" },
+    });
+
+    setup([parent]);
+
+    const card = await screen.findByTestId("entity-parent-service");
+
+    expect(within(card).getByTestId("header-parent-service")).toHaveTextContent(
+      `${words("instanceComposer.label.core")} · Access router`
+    );
+  });
+
   it("colours an embedded entity blue and a valid card has no problem count", async () => {
     const [parent, settings] = newServiceShapes(parentService);
 

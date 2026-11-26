@@ -66,10 +66,16 @@ export const RightSidebar: React.FC = () => {
       aria-label={words("details")}
     >
       {activeCell ? (
-        <Flex spaceItems={{ default: "spaceItemsSm" }} alignItems={{ default: "alignItemsCenter" }}>
+        <Flex
+          spaceItems={{ default: "spaceItemsSm" }}
+          alignItems={{ default: "alignItemsBaseline" }}
+        >
           <Title headingLevel="h2" size="xl">
             {activeCell.getDisplayName()}
           </Title>
+          {activeCell.getTechnicalName() && (
+            <Content component="small">{activeCell.getTechnicalName()}</Content>
+          )}
           <Label isCompact color={entityColors[activeCell.entityType]}>
             {words(`instanceComposer.label.${activeCell.entityType}`)}
           </Label>

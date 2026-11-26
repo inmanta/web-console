@@ -21,8 +21,10 @@ import { PlusCircleIcon } from "@patternfly/react-icons/dist/esm/icons/plus-circ
 import { useOptionsStore, useReactFlow } from "@xyflow/react";
 import styled from "styled-components";
 import {
+  compareEntityAnnotations,
   EmbeddedEntity,
   groupByEntityAnnotations,
+  resolveEntityAnnotations,
   resolveLifecycleState,
   ServiceModel,
   State,
@@ -45,6 +47,9 @@ interface PaletteRow {
   /** The full name, which the search matches */
   label: string;
 
+  /** The technical name of a service that shows its title instead; the search matches it too */
+  technicalName?: string;
+
   /** The name the row shows */
   name: string;
 
@@ -61,6 +66,9 @@ interface PaletteGroup {
   /** Identifies the group in keys and test ids, so a group named like the fallback can't collide */
   key: string;
   name: string;
+
+  /** The technical name of a service group that shows its title instead; the search matches it too */
+  technicalName?: string;
   rows: PaletteRow[];
 }
 
@@ -118,18 +126,44 @@ const getEmbeddedRows = (
     });
 
 /**
- * The rows of one service: the service itself, then its embedded entities.
+ * The names of a service, like in the catalog: its `web_title`, and its technical name when that
+ * differs.
  */
-const getServiceRows = (serviceModel: ServiceModel): PaletteRow[] => [
-  {
-    key: serviceModel.name,
-    label: serviceModel.name,
-    name: serviceModel.name,
-    detail: words("instanceComposer.label.core"),
-    item: { kind: "new", serviceModel, entityType: "core" },
-  },
-  ...getEmbeddedRows(serviceModel, serviceModel.name),
-];
+const getServiceNames = (serviceModel: ServiceModel) => {
+  const title = resolveEntityAnnotations(serviceModel).web_title;
+
+  return { title, technicalName: title !== serviceModel.name ? serviceModel.name : undefined };
+};
+
+/**
+ * The rows of one service: the service itself, by its title with its technical name next to its
+ * kind, then its embedded entities.
+ */
+const getServiceRows = (serviceModel: ServiceModel): PaletteRow[] => {
+  const { title, technicalName } = getServiceNames(serviceModel);
+  const kind = words("instanceComposer.label.core");
+
+  return [
+    {
+      key: serviceModel.name,
+      label: title,
+      technicalName,
+      name: title,
+      detail: technicalName ? words("instanceComposer.label.withName")(kind, technicalName) : kind,
+      item: { kind: "new", serviceModel, entityType: "core" },
+    },
+    ...getEmbeddedRows(serviceModel, serviceModel.name),
+  ];
+};
+
+/**
+ * A group of one service, named by its title.
+ */
+const getServiceGroup = (serviceModel: ServiceModel, rows: PaletteRow[]): PaletteGroup => {
+  const { title, technicalName } = getServiceNames(serviceModel);
+
+  return { key: serviceModel.name, name: title, technicalName, rows };
+};
 
 /**
  * The services grouped like the service catalog: by their `web_group` annotation
@@ -144,11 +178,9 @@ const buildNewGroups = (serviceCatalog: ServiceModel[]): PaletteGroup[] => {
 
   if (groups.every((group) => group.name === undefined)) {
     return groups.flatMap((group) =>
-      group.services.map(({ serviceModel }) => ({
-        key: serviceModel.name,
-        name: serviceModel.name,
-        rows: getServiceRows(serviceModel),
-      }))
+      group.services.map(({ serviceModel }) =>
+        getServiceGroup(serviceModel, getServiceRows(serviceModel))
+      )
     );
   }
 
@@ -160,25 +192,27 @@ const buildNewGroups = (serviceCatalog: ServiceModel[]): PaletteGroup[] => {
 };
 
 /**
- * One group per service with instances in the inventory.
+ * One group per service with instances in the inventory, named by the service's title and in
+ * the catalog's order: by `web_order`, then by title.
  */
 const buildInventoryGroups = (
   serviceInventories: Inventories | null,
   serviceCatalog: ServiceModel[],
   onCanvas: Set<string>
 ): PaletteGroup[] =>
-  Object.entries(serviceInventories || {}).flatMap(([serviceName, instances]) => {
-    const serviceModel = serviceCatalog.find((model) => model.name === serviceName);
+  Object.entries(serviceInventories || {})
+    .flatMap(([serviceName, instances]) => {
+      const serviceModel = serviceCatalog.find((model) => model.name === serviceName);
 
-    if (!serviceModel || instances.length === 0) {
-      return [];
-    }
-
-    return [
-      {
-        key: serviceName,
-        name: serviceName,
-        rows: instances.map((instance) => {
+      return serviceModel && instances.length > 0
+        ? [{ serviceModel, instances, annotations: resolveEntityAnnotations(serviceModel) }]
+        : [];
+    })
+    .sort((a, b) => compareEntityAnnotations(a.annotations, b.annotations))
+    .map(({ serviceModel, instances }) =>
+      getServiceGroup(
+        serviceModel,
+        instances.map((instance) => {
           const label = instance.service_identity_attribute_value || instance.id;
 
           return {
@@ -191,16 +225,21 @@ const buildInventoryGroups = (
               ? words("instanceComposer.palette.onCanvas")
               : undefined,
           };
-        }),
-      },
-    ];
-  });
+        })
+      )
+    );
 
 /**
  * The kind of card a row adds: an inventory instance comes on the canvas as a read-only relation.
  */
 const getRowKind = (row: PaletteRow): EntityShapeType =>
   row.item.kind === "new" ? row.item.entityType : "relation";
+
+/**
+ * The test id of a row, by a service's technical name rather than its title, so tests don't
+ * depend on the model's titles.
+ */
+const getRowTestId = (row: PaletteRow): string => `palette-item-${row.technicalName ?? row.label}`;
 
 const filterGroups = (groups: PaletteGroup[], query: string): PaletteGroup[] => {
   const needle = query.trim().toLowerCase();
@@ -209,12 +248,15 @@ const filterGroups = (groups: PaletteGroup[], query: string): PaletteGroup[] => 
     return groups;
   }
 
+  const matches = (...texts: Array<string | undefined>) =>
+    texts.some((text) => text?.toLowerCase().includes(needle));
+
   return groups
     .map((group) => ({
       ...group,
-      rows: group.name.toLowerCase().includes(needle)
+      rows: matches(group.name, group.technicalName)
         ? group.rows
-        : group.rows.filter((row) => row.label.toLowerCase().includes(needle)),
+        : group.rows.filter((row) => matches(row.label, row.technicalName)),
     }))
     .filter((group) => group.rows.length > 0);
 };
@@ -388,7 +430,7 @@ export const LeftSidebar: React.FC = () => {
                           className="palette-row is-unavailable"
                           style={entityColorVariables(getRowKind(row))}
                           aria-disabled="true"
-                          data-testid={`palette-item-${row.label}`}
+                          data-testid={getRowTestId(row)}
                         >
                           <PaletteRowIcon row={row} />
                           <PaletteRowText row={row} />
@@ -401,7 +443,7 @@ export const LeftSidebar: React.FC = () => {
                           key={row.key}
                           className="palette-row"
                           style={entityColorVariables(getRowKind(row))}
-                          data-testid={`palette-item-${row.label}`}
+                          data-testid={getRowTestId(row)}
                           draggable
                           onDragStart={(event) => {
                             draggedItemRef.current = row.item;

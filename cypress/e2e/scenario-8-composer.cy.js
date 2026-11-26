@@ -163,7 +163,7 @@ if (isIso && shipsComposer) {
 
       // Assert: Initial composer graph for l3out is loaded.
       cy.get(entity("l3out")).should("be.visible");
-      cy.get('[data-testid="header-l3out"]').should("contain", "l3out");
+      cy.get('[data-testid="header-l3out"]').should("be.visible");
 
       // The related entities render only after the composer's compile finishes (l3out shows first),
       // so give these canvas shapes room to appear instead of the default 10s.

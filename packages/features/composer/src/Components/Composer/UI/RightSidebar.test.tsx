@@ -198,4 +198,20 @@ describe("RightSidebar", () => {
 
     expect(screen.getByText("failed")).toBeVisible();
   });
+
+  it("titles a service by its web_title, with its technical name next to it like the catalog", () => {
+    setup(
+      newServiceShapes({ ...parentService, entity_annotations: { web_title: "Access router" } })
+    );
+
+    expect(screen.getByRole("heading", { name: "Access router" })).toBeVisible();
+    expect(screen.getByText("parent-service")).toBeVisible();
+  });
+
+  it("shows no technical name when a service has no web_title", () => {
+    setup(newServiceShapes(parentService));
+
+    expect(screen.getByRole("heading", { name: "parent-service" })).toBeVisible();
+    expect(screen.getAllByText("parent-service")).toHaveLength(1);
+  });
 });

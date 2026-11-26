@@ -129,6 +129,46 @@ describe("LeftSidebar", () => {
     expect(admin.compareDocumentPosition(other)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 
+  it("names and sorts the services by their web_title like the catalog, and finds them by their technical name too", async () => {
+    // By title, the parent service comes first; by technical name, the child service would
+    setup({
+      serviceCatalog: [
+        { ...childService, entity_annotations: { web_title: "Zone link" } },
+        { ...parentService, entity_annotations: { web_title: "Access router" } },
+      ],
+    });
+
+    const parentGroup = screen.getByTestId("palette-group-parent-service");
+    const childGroup = screen.getByTestId("palette-group-child-service");
+
+    expect(within(parentGroup).getByRole("button", { expanded: true })).toHaveTextContent(
+      "Access router"
+    );
+    expect(parentGroup.compareDocumentPosition(childGroup)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(within(parentGroup).getByTestId("palette-item-parent-service")).toHaveTextContent(
+      `Access router${words("instanceComposer.label.withName")(
+        words("instanceComposer.label.core"),
+        "parent-service"
+      )}`
+    );
+
+    await userEvent.type(
+      screen.getByRole("textbox", { name: words("instanceComposer.palette.searchEntities") }),
+      "parent-serv"
+    );
+
+    expect(screen.getByTestId("palette-item-parent-service")).toBeVisible();
+    expect(screen.queryByTestId("palette-item-child-service")).not.toBeInTheDocument();
+
+    await openInventory();
+
+    const inventoryGroups = screen
+      .getAllByTestId(/^palette-group-/)
+      .map((group) => within(group).getByRole("button", { expanded: true }).textContent);
+
+    expect(inventoryGroups).toEqual(["Access router1", "Zone link1"]);
+  });
+
   it("shows the lifecycle state of an inventory instance", async () => {
     setup();
     await openInventory();

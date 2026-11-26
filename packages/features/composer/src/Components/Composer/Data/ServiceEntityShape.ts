@@ -6,6 +6,7 @@ import {
   ServiceModel,
   ServiceOrderItemAction,
   ServiceOrderItemRequest,
+  resolveEntityAnnotations,
   State,
   words,
 } from "@inmanta/web-console-core";
@@ -234,16 +235,29 @@ export class ServiceEntityShape {
   }
 
   /**
-   * The name shown in the card header: "type - name" when both are set, otherwise either.
+   * The name shown in the card header: a service's `web_title`, like in the catalog, and for an
+   * embedded entity "type - name" when both are set, otherwise either.
    */
   getDisplayName(): string {
-    const typeName =
-      "type" in this.serviceModel && this.serviceModel.type ? this.serviceModel.type : undefined;
+    if (!("type" in this.serviceModel)) {
+      return resolveEntityAnnotations(this.serviceModel).web_title;
+    }
+    const typeName = this.serviceModel.type || undefined;
     const serviceName = this.serviceModel.name;
 
     return typeName && serviceName
       ? words("instanceComposer.label.embeddedAs")(typeName, serviceName)
       : typeName || serviceName;
+  }
+
+  /**
+   * The technical name of a service whose `web_title` differs from it, shown next to the title like
+   * in the catalog.
+   */
+  getTechnicalName(): string | undefined {
+    const name = this.serviceModel.name;
+
+    return !("type" in this.serviceModel) && this.getDisplayName() !== name ? name : undefined;
   }
 
   /**
