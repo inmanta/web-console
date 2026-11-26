@@ -26,10 +26,9 @@ export const ZoomControlsBand = styled.div`
     }
   }
 
-  // Narrower than that (about 23rem): no zoom percentage or dividers, only the Arrange icon (the
-  // toggle keeps its name), and less padding.
+  // Narrower than that (about 23rem): no dividers, only the Arrange icon (the toggle keeps its
+  // name), and less padding. The zoom percentage stays, as the only sign of the zoom level.
   @container zoom-band (max-width: 23.5rem) {
-    .zoom-percentage,
     .arrange-label,
     .toolbar-divider {
       display: none;
@@ -37,6 +36,13 @@ export const ZoomControlsBand = styled.div`
 
     .zoom-toolbar {
       padding-inline: var(--pf-t--global--spacer--sm);
+    }
+  }
+
+  // Too narrow even for that (about 17rem): no zoom percentage either.
+  @container zoom-band (max-width: 17.5rem) {
+    .zoom-percentage {
+      display: none;
     }
   }
 `;
