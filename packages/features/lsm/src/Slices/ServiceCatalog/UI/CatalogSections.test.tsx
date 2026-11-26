@@ -276,20 +276,22 @@ test("GIVEN CatalogSections WHEN a service has no annotations THEN its name is s
   expect(within(row).getByText(String(Service.a.description))).toBeVisible();
 });
 
-test("GIVEN CatalogSections WHEN a service has no instances THEN 'No instances' is shown", async () => {
+test("GIVEN CatalogSections WHEN a service has no instances THEN its row shows no instance summary", async () => {
   render(Component([linuxVm, loadBalancer, vpn]));
 
   expect(
-    within(screen.getByTestId(linuxVm.name + "-item")).getByText(words("catalog.instances.none"))
-  ).toBeVisible();
-  expect(
-    within(screen.getByTestId(loadBalancer.name + "-item")).getByText(
-      words("catalog.instances.none")
+    within(screen.getByTestId(linuxVm.name + "-item")).queryByLabelText(
+      words("catalog.summary.title")
     )
-  ).toBeVisible();
-  expect(
-    within(screen.getByTestId(vpn.name + "-item")).queryByText(words("catalog.instances.none"))
   ).not.toBeInTheDocument();
+  expect(
+    within(screen.getByTestId(loadBalancer.name + "-item")).queryByLabelText(
+      words("catalog.summary.title")
+    )
+  ).not.toBeInTheDocument();
+  expect(
+    within(screen.getByTestId(vpn.name + "-item")).getByLabelText(words("catalog.summary.title"))
+  ).toBeVisible();
 });
 
 test("GIVEN CatalogSections WHEN service THEN service inventory has correct link", async () => {
