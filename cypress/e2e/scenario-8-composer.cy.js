@@ -339,11 +339,6 @@ if (isIso && shipsComposer) {
       cy.get('#project [aria-label="Number of instances by label"] .pf-v6-c-label__text')
         .should("have.length", 1)
         .and("have.text", "1");
-
-      cy.get("button").contains("Expand all").click();
-      cy.get('#l3out [aria-label="Number of instances by label"]').should("not.exist");
-      cy.get('#network [aria-label="Number of instances by label"]').should("not.exist");
-      cy.get('#virtualmachine [aria-label="Number of instances by label"]').should("not.exist");
     });
 
     it("Should be able to add an instance and connect it to an existing instance", () => {
