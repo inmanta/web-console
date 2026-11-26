@@ -65,6 +65,8 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
   const cardRef = useRef<HTMLDivElement>(null);
   const { shape, validationMessages, hiddenCount, hasLayers, relationCount } = data;
   const displayName = shape.getDisplayName();
+  // Test ids go by a service's technical name, so tests don't depend on the model's titles.
+  const testName = shape.getTechnicalName() ?? displayName;
   const identity = shape.getIdentity();
   // The identity is the card's title, so it isn't listed again below it.
   const attributes = shape.getDisplayAttributes().filter(({ name }) => name !== identity?.name);
@@ -185,7 +187,7 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
       )}
       <Card
         className="entity-card"
-        data-testid={`entity-${displayName}`}
+        data-testid={`entity-${testName}`}
         data-invalid={showsProblems}
         data-marked-for-deletion={shape.isMarkedForDeletion}
         onMouseEnter={() => setIsHovered(true)}
@@ -198,7 +200,7 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
           <div className="heading">
             <OverflowText
               className="kind"
-              data-testid={`header-${displayName}`}
+              data-testid={`header-${testName}`}
               text={kindText}
               {...textTooltipProps}
             />
@@ -243,7 +245,7 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
               </Button>
             )}
             {shape.instanceState && (
-              <span data-testid={`entity-state-${displayName}`}>
+              <span data-testid={`entity-state-${testName}`}>
                 <InstanceStateLabel {...shape.instanceState} isCompact />
               </span>
             )}

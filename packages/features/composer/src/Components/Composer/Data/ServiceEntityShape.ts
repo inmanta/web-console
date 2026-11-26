@@ -23,7 +23,11 @@ import {
 } from "./Helpers/connectionValidationUtils";
 import { RelationsDictionary } from "./Helpers/createRelationsDictionary";
 import { findTopRootInstance } from "./Helpers/findTopRootInstance";
-import { getEmbeddedEntityKey, getInterServiceRelationKey } from "./Helpers/shapeUtils";
+import {
+  getEmbeddedEntityKey,
+  getInterServiceRelationKey,
+  getServiceNames,
+} from "./Helpers/shapeUtils";
 
 /**
  * Base configuration for a service entity rendered on the composer canvas.
@@ -245,16 +249,29 @@ export class ServiceEntityShape {
   }
 
   /**
-   * The name shown in the card header: "type - name" when both are set, otherwise either.
+   * The name shown in the card header: a service's `web_title`, like in the catalog, and for an
+   * embedded entity "type - name" when both are set, otherwise either.
    */
   getDisplayName(): string {
-    const typeName =
-      "type" in this.serviceModel && this.serviceModel.type ? this.serviceModel.type : undefined;
+    if (!("type" in this.serviceModel)) {
+      return getServiceNames(this.serviceModel).title;
+    }
+    const typeName = this.serviceModel.type || undefined;
     const serviceName = this.serviceModel.name;
 
     return typeName && serviceName
       ? words("instanceComposer.label.embeddedAs")(typeName, serviceName)
       : typeName || serviceName;
+  }
+
+  /**
+   * The technical name of a service whose `web_title` differs from it, shown next to the title like
+   * in the catalog.
+   */
+  getTechnicalName(): string | undefined {
+    return "type" in this.serviceModel
+      ? undefined
+      : getServiceNames(this.serviceModel).technicalName;
   }
 
   /**
