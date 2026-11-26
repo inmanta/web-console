@@ -100,6 +100,20 @@ describe("ZoomControls", () => {
     expect(document.querySelector("[title]")).not.toBeInTheDocument();
   });
 
+  it("keeps the Arrange toggle's name when a narrow canvas hides its label", () => {
+    setup([]);
+
+    const label = document.querySelector<HTMLElement>(".arrange-label");
+
+    expect(label).toBeInTheDocument();
+    // What the toolbar's container query does on a narrow canvas
+    label?.style.setProperty("display", "none");
+
+    expect(
+      screen.getByRole("button", { name: words("instanceComposer.arrange") })
+    ).toBeInTheDocument();
+  });
+
   it("arranges the canvas, and undoes it from the toast", async () => {
     const [parent, settings] = newServiceShapes(parentService);
 

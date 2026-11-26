@@ -1,0 +1,6 @@
+description: The Instance Composer's zoom toolbar fits the canvas on narrow windows, leaving out the zoom slider, then the Arrange label, then the zoom percentage when there isn't room.
+issue-nr: 8037
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"
