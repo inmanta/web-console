@@ -68,6 +68,16 @@ export const uiMessages = {
   instanceVersion: (instanceVersion: number | string) => `instance v${instanceVersion}`,
 
   /**
+   * Version select text
+   */
+  "versionSelect.arrow": "→",
+  "versionSelect.toggle": (label: string, version: string) => `${label}: ${version}`,
+  "versionSelect.placeholder": "Select a version",
+  "versionSelect.search": "Search a version number",
+  "versionSelect.noResults": "No version found",
+  "versionSelect.lookupError": (version: string) => `Version ${version} couldn't be looked up.`,
+
+  /**
    * Error related text
    */
   error: "Something went wrong",
@@ -274,7 +284,6 @@ export const uiMessages = {
   "resources.resourceActions.confirm.version.type.title": "Version type",
   "resources.resourceActions.confirm.version.type.instanceVersion": "Instance version",
   "resources.resourceActions.confirm.version.type.modelVersion": "Model version",
-  "resources.resourceActions.confirm.version.arrow": "→",
   "resources.resourceActions.confirm.version.mapsTo": (modelVersion: string) =>
     `model v${modelVersion}`,
   "resources.resourceActions.confirm.version.mapsTo.none": "no model version",
@@ -282,13 +291,8 @@ export const uiMessages = {
     `Instance v${instanceVersion} has no model version, so it can't be dry-run.`,
   "resources.resourceActions.confirm.version.noModelVersion.default": (instanceVersion: string) =>
     `Instance v${instanceVersion} has no model version yet, so the dry run uses the active model version.`,
-  "resources.resourceActions.confirm.version.placeholder": "Select a version",
-  "resources.resourceActions.confirm.version.search": "Search a version number",
   "resources.resourceActions.confirm.version.searchHint":
     "Scroll the list to load older versions, or type a version number to find it.",
-  "resources.resourceActions.confirm.version.noResults": "No version found",
-  "resources.resourceActions.confirm.version.lookupError": (version: string) =>
-    `Version ${version} couldn't be looked up.`,
   "resources.resourceActions.confirm.version.moreInfo": "More info about the version",
   "resources.resourceActions.confirm.version.blockedBy.statusFilter":
     "Status filters only apply to the active model version.",

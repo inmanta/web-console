@@ -31,8 +31,11 @@ const deployLabel = words("resources.compoundStateSummary.deploy");
 const repairLabel = words("resources.compoundStateSummary.repair");
 const toggleLabel = words("resources.resourceActions.toggle");
 const dryRunLabel = words("resources.resourceActions.dryRun");
-const versionSelectLabel = words("resources.resourceActions.confirm.version.title");
-const searchLabel = words("resources.resourceActions.confirm.version.search");
+// The toggle's name also says which version it shows, so only its start is matched.
+const versionSelectLabel = new RegExp(
+  `^${words("resources.resourceActions.confirm.version.title")}`
+);
+const searchLabel = words("versionSelect.search");
 
 /**
  * Whether a version meets the `filter.version=ge:N` / `le:N` bounds of a mocked list request, the
@@ -791,13 +794,9 @@ describe("ResourceActions", () => {
       await userEvent.type(screen.getByLabelText(searchLabel), String(oldestModelVersion));
 
       expect(
-        await screen.findByText(
-          words("resources.resourceActions.confirm.version.lookupError")(String(oldestModelVersion))
-        )
+        await screen.findByText(words("versionSelect.lookupError")(String(oldestModelVersion)))
       ).toBeVisible();
-      expect(
-        screen.queryByText(words("resources.resourceActions.confirm.version.noResults"))
-      ).not.toBeInTheDocument();
+      expect(screen.queryByText(words("versionSelect.noResults"))).not.toBeInTheDocument();
     });
 
     test("WHEN a version that isn't loaded is searched THEN it is looked up and can be selected", async () => {

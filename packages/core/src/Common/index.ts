@@ -8,6 +8,7 @@ export * from "./References";
 export * from "./JsonFormatter";
 export * from "./UrlState";
 export * from "./useExpansion";
+export * from "./useIsLoadingIndicatorShown";
 export * from "./XmlFormatter";
 export * from "./usePaginatedTable";
 export * from "./usePaginatedTableWithMultiSort";

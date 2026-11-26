@@ -6,9 +6,13 @@ import {
   useGetInstanceLog,
   useGetInstanceLogs,
 } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
-import { VersionSelectNotice, VersionSelectOption, VersionSelect } from "./VersionSelect";
+import {
+  VersionSelect,
+  VersionSelectNotice,
+  VersionSelectOption,
+  useVersionSearch,
+} from "@inmanta/web-console-ui/Components/VersionSelect";
 import { ResourceActionInstance } from "./types";
-import { useVersionSearch } from "./useVersionSearch";
 
 /**
  * Turns an instance version into a select option, with its state rendered the way the instance's
@@ -133,6 +137,7 @@ export const InstanceVersionSelect: React.FC<Props> = ({
   return (
     <VersionSelect
       id={id}
+      label={words("resources.resourceActions.confirm.version.title")}
       options={options}
       shownOption={shownOptionWithModelVersion}
       formatVersion={words("instanceVersion")}

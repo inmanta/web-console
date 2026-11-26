@@ -42,7 +42,7 @@ interface ListState {
  * loads the next page of the list, and getListState combines the loaded options with the lookup
  * into what the select lists.
  */
-interface VersionSearch {
+export interface VersionSearch {
   search: string;
   setSearch: (search: string) => void;
   versionToLookUp: number | undefined;
@@ -91,7 +91,7 @@ export const useVersionSearch = (
       (searchedVersion !== debouncedSearchedVersion || lookupState.isLoading);
     const listError =
       versionToLookUp !== undefined && versionToLookUp === searchedVersion && lookupState.isError
-        ? words("resources.resourceActions.confirm.version.lookupError")(String(versionToLookUp))
+        ? words("versionSelect.lookupError")(String(versionToLookUp))
         : undefined;
 
     // The loaded versions starting with the searched digits, plus the looked-up one. The digits are
