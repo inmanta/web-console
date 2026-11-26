@@ -1,6 +1,23 @@
-import { EmbeddedEntity, InterServiceRelation } from "@inmanta/web-console-core";
+import {
+  EmbeddedEntity,
+  InterServiceRelation,
+  resolveEntityAnnotations,
+  ServiceModel,
+} from "@inmanta/web-console-core";
 import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config/shapeConfig";
 import type { ServiceEntityShape } from "../ServiceEntityShape";
+
+/**
+ * The names of a service, like in the catalog: its `web_title`, and its technical name when that
+ * differs.
+ */
+export const getServiceNames = (
+  serviceModel: ServiceModel
+): { title: string; technicalName?: string } => {
+  const title = resolveEntityAnnotations(serviceModel).web_title;
+
+  return { title, technicalName: title !== serviceModel.name ? serviceModel.name : undefined };
+};
 
 /**
  * The name a card goes by: its identity, or its type when it has none or it is still empty.

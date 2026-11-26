@@ -37,13 +37,14 @@ const setup = (
     shapes?: ServiceEntityShape[];
     editable?: boolean;
     serviceCatalog?: ServiceModel[];
+    serviceInventories?: Inventories;
   } = {}
 ) =>
   render(
     <ComposerTestProvider
       shapes={toCanvasState(...(options.shapes ?? []))}
       serviceCatalog={options.serviceCatalog}
-      serviceInventories={serviceInventories}
+      serviceInventories={options.serviceInventories ?? serviceInventories}
       editable={options.editable}
     >
       <LeftSidebar />
@@ -130,12 +131,16 @@ describe("LeftSidebar", () => {
   });
 
   it("names and sorts the services by their web_title like the catalog, and finds them by their technical name too", async () => {
-    // By title, the parent service comes first; by technical name, the child service would
+    // By title, the parent service comes first; by technical name and in the inventory, the child
     setup({
       serviceCatalog: [
         { ...childService, entity_annotations: { web_title: "Zone link" } },
         { ...parentService, entity_annotations: { web_title: "Access router" } },
       ],
+      serviceInventories: {
+        "child-service": [childInstance],
+        "parent-service": [parentInstance],
+      },
     });
 
     const parentGroup = screen.getByTestId("palette-group-parent-service");

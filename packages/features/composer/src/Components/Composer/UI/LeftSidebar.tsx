@@ -33,7 +33,7 @@ import {
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { InstanceStateLabel } from "@inmanta/web-console-ui/Components/InstanceState";
 import { ComposerContext, PaletteItem } from "../Data/Context";
-import { getInstanceIdsOnCanvas } from "../Data/Helpers";
+import { getInstanceIdsOnCanvas, getServiceNames } from "../Data/Helpers";
 import { useAddPaletteItem } from "../Data/Hooks";
 import { EntityShapeType } from "../Data/ServiceEntityShape";
 import { LEFT_SIDEBAR_WIDTH, SHAPE_WIDTH } from "../config";
@@ -124,16 +124,6 @@ const getEmbeddedRows = (
         ...getEmbeddedRows(embeddedEntity, key),
       ];
     });
-
-/**
- * The names of a service, like in the catalog: its `web_title`, and its technical name when that
- * differs.
- */
-const getServiceNames = (serviceModel: ServiceModel) => {
-  const title = resolveEntityAnnotations(serviceModel).web_title;
-
-  return { title, technicalName: title !== serviceModel.name ? serviceModel.name : undefined };
-};
 
 /**
  * The rows of one service: the service itself, by its title with its technical name next to its

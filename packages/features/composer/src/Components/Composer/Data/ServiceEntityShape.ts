@@ -6,7 +6,6 @@ import {
   ServiceModel,
   ServiceOrderItemAction,
   ServiceOrderItemRequest,
-  resolveEntityAnnotations,
   State,
   words,
 } from "@inmanta/web-console-core";
@@ -24,7 +23,11 @@ import {
 } from "./Helpers/connectionValidationUtils";
 import { RelationsDictionary } from "./Helpers/createRelationsDictionary";
 import { findTopRootInstance } from "./Helpers/findTopRootInstance";
-import { getEmbeddedEntityKey, getInterServiceRelationKey } from "./Helpers/shapeUtils";
+import {
+  getEmbeddedEntityKey,
+  getInterServiceRelationKey,
+  getServiceNames,
+} from "./Helpers/shapeUtils";
 
 /**
  * Base configuration for a service entity rendered on the composer canvas.
@@ -240,7 +243,7 @@ export class ServiceEntityShape {
    */
   getDisplayName(): string {
     if (!("type" in this.serviceModel)) {
-      return resolveEntityAnnotations(this.serviceModel).web_title;
+      return getServiceNames(this.serviceModel).title;
     }
     const typeName = this.serviceModel.type || undefined;
     const serviceName = this.serviceModel.name;
@@ -255,9 +258,9 @@ export class ServiceEntityShape {
    * in the catalog.
    */
   getTechnicalName(): string | undefined {
-    const name = this.serviceModel.name;
-
-    return !("type" in this.serviceModel) && this.getDisplayName() !== name ? name : undefined;
+    return "type" in this.serviceModel
+      ? undefined
+      : getServiceNames(this.serviceModel).technicalName;
   }
 
   /**
