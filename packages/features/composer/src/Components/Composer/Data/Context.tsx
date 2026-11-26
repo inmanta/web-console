@@ -83,6 +83,12 @@ interface ComposerContextInterface {
   mainService: ServiceModel | null;
   serviceCatalog: ServiceModel[];
   serviceInventories: Inventories | null;
+
+  /** Why the inventory couldn't be fetched, if it failed. */
+  inventoriesError: string | null;
+
+  /** Fetches the inventory again. It is fetched once when the composer opens, it isn't polled. */
+  refreshInventories: () => void;
   serviceInstanceId: string | null;
   editable: boolean;
   serviceOrderItems: Map<string, ServiceOrderItemRequest>;
@@ -112,6 +118,8 @@ export const composerContext: ComposerContextInterface = {
   mainService: null,
   serviceCatalog: [],
   serviceInventories: null,
+  inventoriesError: null,
+  refreshInventories: noop,
   serviceInstanceId: null,
   editable: false,
   serviceOrderItems: new Map(),

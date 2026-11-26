@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceInstanceModel } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
-import { CustomError, useGet, REFETCH_INTERVAL } from "@inmanta/web-console-core/Queries/Helpers";
+import { CustomError, useGet } from "@inmanta/web-console-core/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@inmanta/web-console-core/Queries/Helpers/KeyFactory";
 
 /**
@@ -19,8 +19,6 @@ export interface Inventories {
  */
 interface GetInventoryList {
   useOneTime: () => UseQueryResult<Inventories, CustomError>;
-  useContinuous: () => UseQueryResult<Inventories, CustomError>;
-  useContinuousNoRefetch: () => UseQueryResult<Inventories, CustomError>;
 }
 
 /**
@@ -29,8 +27,9 @@ interface GetInventoryList {
  * @param {string[]} serviceNames - the  array of service names
  *
  * @returns {GetInventoryList} An object containing the different available queries.
- * @returns {UseQueryResult<Inventories, CustomError>} returns.useOneTime - Fetch the service inventories as a single query.
- * @returns {UseQueryResult<Inventories, CustomError>} returns.useContinuous - Fetch the service inventories  with a recursive query with an interval of 5s.
+ * @returns {UseQueryResult<Inventories, CustomError>} returns.useOneTime - Fetch the service
+ *   inventories once. A response can be large, so it isn't polled or fetched again when the window
+ *   gets focus; `refetch` fetches it again.
  */
 export const useGetInventoryList = (serviceNames: string[]): GetInventoryList => {
   const { environmentHandler } = useContext(DependencyContext);
@@ -61,18 +60,6 @@ export const useGetInventoryList = (serviceNames: string[]): GetInventoryList =>
       useQuery({
         queryKey: getInventoryListKey.list([...serviceNames, env]),
         queryFn: fetchAllServices,
-      }),
-    useContinuous: (): UseQueryResult<Inventories, CustomError> =>
-      useQuery({
-        queryKey: getInventoryListKey.list([...serviceNames, env]),
-        queryFn: fetchAllServices,
-        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
-      }),
-    useContinuousNoRefetch: (): UseQueryResult<Inventories, CustomError> =>
-      useQuery({
-        queryKey: getInventoryListKey.list([...serviceNames, env]),
-        queryFn: fetchAllServices,
-        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         refetchOnWindowFocus: false,
       }),
   };

@@ -225,8 +225,15 @@ const filterGroups = (groups: PaletteGroup[], query: string): PaletteGroup[] => 
  * centre of the view with its + button. Hidden in view mode.
  */
 export const LeftSidebar: React.FC = () => {
-  const { serviceCatalog, serviceInventories, editable, canvasState, draggedItemRef } =
-    useContext(ComposerContext);
+  const {
+    serviceCatalog,
+    serviceInventories,
+    inventoriesError,
+    refreshInventories,
+    editable,
+    canvasState,
+    draggedItemRef,
+  } = useContext(ComposerContext);
   const addPaletteItem = useAddPaletteItem();
   const { screenToFlowPosition } = useReactFlow();
   const canvasElement = useOptionsStore((state) => state.domNode);
@@ -241,8 +248,12 @@ export const LeftSidebar: React.FC = () => {
     [serviceInventories, serviceCatalog, canvasState]
   );
 
+  // A failed fetch leaves the last inventory, which may be out of date, so the error replaces it.
+  const showsInventoryError = activeTab === "inventory" && inventoriesError !== null;
   const query = queries[activeTab];
-  const groups = filterGroups(activeTab === "new" ? newGroups : inventoryGroups, query);
+  const groups = showsInventoryError
+    ? []
+    : filterGroups(activeTab === "new" ? newGroups : inventoryGroups, query);
   const resultCount = groups.reduce((count, group) => count + group.rows.length, 0);
   const setQuery = (value: string) => setQueries((prev) => ({ ...prev, [activeTab]: value }));
 
@@ -285,6 +296,11 @@ export const LeftSidebar: React.FC = () => {
         onSelect={(_event, key) => {
           if (isPaletteTab(key)) {
             setActiveTab(key);
+
+            // The inventory isn't polled, so it is fetched again each time the tab opens.
+            if (key === "inventory" && key !== activeTab) {
+              refreshInventories();
+            }
           }
         }}
         aria-label={words("instanceComposer.palette")}
@@ -334,7 +350,24 @@ export const LeftSidebar: React.FC = () => {
           )}
         </div>
         <div className="palette-groups">
-          {groups.length === 0 && (
+          {showsInventoryError && (
+            <EmptyState
+              headingLevel="h3"
+              titleText={words("instanceComposer.palette.inventoryError")}
+              status="danger"
+              variant="xs"
+            >
+              <EmptyStateBody>{inventoriesError}</EmptyStateBody>
+              <EmptyStateFooter>
+                <EmptyStateActions>
+                  <Button variant="link" onClick={refreshInventories}>
+                    {words("retry")}
+                  </Button>
+                </EmptyStateActions>
+              </EmptyStateFooter>
+            </EmptyState>
+          )}
+          {!showsInventoryError && groups.length === 0 && (
             <EmptyState
               headingLevel="h3"
               titleText={

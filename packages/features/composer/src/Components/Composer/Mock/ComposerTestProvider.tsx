@@ -13,6 +13,10 @@ interface Props {
   shapes?: Map<string, ServiceEntityShape>;
   serviceCatalog?: ServiceModel[];
   serviceInventories?: Inventories | null;
+
+  /** Why the inventory couldn't be fetched, as the Composer gets it from its query. */
+  inventoriesError?: string | null;
+  refreshInventories?: () => void;
   editable?: boolean;
 
   /** The selected shape when the canvas opens. */
@@ -31,6 +35,8 @@ export const ComposerTestProvider: React.FC<Props> = ({
   shapes = new Map(),
   serviceCatalog = defaultCatalog,
   serviceInventories = null,
+  inventoriesError = null,
+  refreshInventories = composerContext.refreshInventories,
   editable = true,
   activeCellId: initialActiveCellId,
   serviceInstanceId = null,
@@ -60,6 +66,8 @@ export const ComposerTestProvider: React.FC<Props> = ({
     relationsDictionary,
     serviceCatalog,
     serviceInventories,
+    inventoriesError,
+    refreshInventories,
     editable,
     canvasState,
     setCanvasState,

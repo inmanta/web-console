@@ -44,7 +44,13 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
     [serviceCatalogQuery.data, serviceName]
   );
 
-  const inventoriesQuery = useGetInventoryList(catalogEntries).useContinuousNoRefetch();
+  // Fetched once, not polled: with many instances a response is large. The palette's Inventory tab
+  // fetches it again when it opens.
+  const inventoriesQuery = useGetInventoryList(catalogEntries).useOneTime();
+  const { refetch: refetchInventories } = inventoriesQuery;
+  const refreshInventories = useCallback(() => {
+    void refetchInventories();
+  }, [refetchInventories]);
 
   // Fetch instance data if instanceId is provided
   // The query will only run if instanceId and mainService are present (enabled check in the hook)
@@ -96,6 +102,8 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
       mainService: mainService || null,
       serviceCatalog: serviceCatalogQuery.data || [],
       serviceInventories: inventoriesQuery.data || null,
+      inventoriesError: inventoriesQuery.error?.message ?? null,
+      refreshInventories,
       serviceInstanceId: instanceId || null,
       relationsDictionary: relationsDictionary,
       editable: editable,
@@ -112,6 +120,8 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
       mainService,
       serviceCatalogQuery.data,
       inventoriesQuery.data,
+      inventoriesQuery.error,
+      refreshInventories,
       instanceId,
       relationsDictionary,
       editable,

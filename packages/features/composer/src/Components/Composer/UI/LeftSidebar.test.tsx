@@ -273,4 +273,57 @@ describe("LeftSidebar", () => {
 
     expect(screen.getByTestId("left_sidebar")).toHaveClass("view_mode");
   });
+
+  describe("inventory fetching", () => {
+    const renderWith = (props: { inventoriesError?: string; refreshInventories: () => void }) =>
+      render(
+        <ComposerTestProvider serviceInventories={serviceInventories} {...props}>
+          <LeftSidebar />
+          <Canvas />
+        </ComposerTestProvider>
+      );
+
+    it("fetches the inventory again each time the Inventory tab opens", async () => {
+      const refreshInventories = vi.fn();
+
+      renderWith({ refreshInventories });
+
+      await openInventory();
+      // Selecting the open tab again doesn't fetch it again
+      await openInventory();
+
+      expect(refreshInventories).toHaveBeenCalledTimes(1);
+
+      await userEvent.click(
+        screen.getByRole("tab", { name: words("instanceComposer.stencil.new") })
+      );
+      await openInventory();
+
+      expect(refreshInventories).toHaveBeenCalledTimes(2);
+    });
+
+    it("shows why the inventory couldn't be fetched instead of the last one, with a retry", async () => {
+      const refreshInventories = vi.fn();
+
+      renderWith({ inventoriesError: "Request failed", refreshInventories });
+      await openInventory();
+
+      expect(
+        screen.getByRole("heading", { name: words("instanceComposer.palette.inventoryError") })
+      ).toBeVisible();
+      expect(screen.getByText("Request failed")).toBeVisible();
+      expect(screen.queryByTestId("palette-item-edge-1")).not.toBeInTheDocument();
+
+      await userEvent.click(screen.getByRole("button", { name: words("retry") }));
+
+      // Once when the tab opened, once for the retry
+      expect(refreshInventories).toHaveBeenCalledTimes(2);
+    });
+
+    it("keeps the New tab when the inventory couldn't be fetched", () => {
+      renderWith({ inventoriesError: "Request failed", refreshInventories: vi.fn() });
+
+      expect(screen.getByTestId("palette-group-parent-service")).toBeVisible();
+    });
+  });
 });

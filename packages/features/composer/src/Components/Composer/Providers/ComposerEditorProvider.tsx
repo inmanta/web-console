@@ -1,16 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { words } from "@inmanta/web-console-core";
 import { useGetServiceModels } from "@inmanta/web-console-core/Queries/Slices/Service";
-import {
-  useGetInstanceWithRelations,
-  useGetInventoryList,
-} from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { useGetInstanceWithRelations } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { PageContainer } from "@inmanta/web-console-ui/Components/PageContainer";
 import { Composer } from "../Composer";
-import { findInterServiceRelations } from "../Data/Helpers";
 import {
   ComposerContainer,
   ComposerActions,
@@ -40,9 +36,8 @@ interface Props {
  * ComposerEditorProvider component
  *
  * This component is responsible for providing the service model related data to the Composer component.
- * It fetches the service models for the entire catalog, and the inventories for all Inter-service relations that can be connected to the created instance and most importantly instance user want to edit with all its closest inter-service relations.
+ * It fetches the service models for the entire catalog, and the instance to edit with its closest inter-service relations; the Composer fetches the inventory.
  * The difference from ComposerCreatorProvider is that this component also fetches the instance data, it's done to avoid unnecessary requests when displaying composer for creating new instances
- * It also handles the state and effects related to this data.
  *
  * @props {Props} props - The properties that define the behavior and display of the component.
  * @prop {string} serviceName - The name of the service for which the instance is being fetched.
@@ -52,8 +47,6 @@ interface Props {
  * @returns {React.FC<Props>} The ComposerEditorProvider component.
  */
 export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance, editable }) => {
-  const [interServiceRelationNames, setInterServiceRelationNames] = useState<string[]>([]);
-
   const serviceModelsQuery = useGetServiceModels().useOneTime();
 
   const mainService = useMemo(() => {
@@ -72,16 +65,6 @@ export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance,
     mainService
   ).useOneTime();
 
-  const relatedInventoriesQuery = useGetInventoryList(interServiceRelationNames).useContinuous();
-
-  useEffect(() => {
-    if (serviceModelsQuery.isSuccess) {
-      if (mainService) {
-        setInterServiceRelationNames(findInterServiceRelations(mainService));
-      }
-    }
-  }, [serviceModelsQuery.isSuccess, serviceName, serviceModelsQuery.data, mainService]);
-
   if (serviceModelsQuery.isError) {
     const message = words("error.general")(serviceModelsQuery.error.message);
     const retry = serviceModelsQuery.refetch;
@@ -94,14 +77,6 @@ export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance,
     const message = words("error.general")(instanceWithRelationsQuery.error.message);
     const retry = instanceWithRelationsQuery.refetch;
     const ariaLabel = "ComposerEditorProvider-InstanceWithRelationsQuery_failed";
-
-    return <ErrorView message={message} ariaLabel={ariaLabel} retry={retry} />;
-  }
-
-  if (relatedInventoriesQuery.isError) {
-    const message = words("error.general")(relatedInventoriesQuery.error.message);
-    const retry = relatedInventoriesQuery.refetch;
-    const ariaLabel = "ComposerEditorProvider-RelatedInventoriesQuery_failed";
 
     return <ErrorView message={message} ariaLabel={ariaLabel} retry={retry} />;
   }
