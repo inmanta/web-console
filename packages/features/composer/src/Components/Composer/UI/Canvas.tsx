@@ -35,13 +35,13 @@ import {
   SHAPE_WIDTH,
   ZOOM_TO_FIT_PADDING,
 } from "../config";
+import { ConnectionEdge, ConnectionEdgeType } from "./ConnectionEdge";
 import { EntityContextMenu } from "./EntityContextMenu";
 import { EntityNode, EntityNodeData, EntityNodeType } from "./EntityNode";
-import { RelationEdge, RelationEdgeType } from "./RelationEdge";
 import { entityAccentColors } from "./entityColors";
 
 const nodeTypes = { entity: EntityNode };
-const edgeTypes = { relation: RelationEdge };
+const edgeTypes = { connection: ConnectionEdge };
 const fitViewOptions = { padding: ZOOM_TO_FIT_PADDING, maxZoom: 1 };
 const proOptions = { hideAttribution: true };
 
@@ -52,18 +52,18 @@ const proOptions = { hideAttribution: true };
  * selection.
  */
 const deriveCardData = (canvasState: Map<string, ServiceEntityShape>): EntityNodeData[] => {
-  const relationCounts = new Map<string, number>();
+  const connectionCounts = new Map<string, number>();
 
   getCanvasConnections(canvasState).forEach(({ source, target }) => {
-    relationCounts.set(source, (relationCounts.get(source) ?? 0) + 1);
-    relationCounts.set(target, (relationCounts.get(target) ?? 0) + 1);
+    connectionCounts.set(source, (connectionCounts.get(source) ?? 0) + 1);
+    connectionCounts.set(target, (connectionCounts.get(target) ?? 0) + 1);
   });
 
   return Array.from(canvasState.values()).map((shape) => ({
     shape,
     validationMessages: getValidationMessages(shape, canvasState),
     hiddenCount: countHiddenLayers(canvasState, shape),
-    relationCount: relationCounts.get(shape.id) ?? 0,
+    connectionCount: connectionCounts.get(shape.id) ?? 0,
     hasLayers: getConnectedLayerData(canvasState, shape).shapes.length > 0,
   }));
 };
@@ -135,7 +135,7 @@ export const Canvas: React.FC = () => {
    * Removes a relation, by its line's button or Delete. The line, which may have had the focus,
    * goes away, so the focus goes back to the canvas.
    */
-  const removeRelation = useCallback(
+  const removeConnectionBetween = useCallback(
     (source: ServiceEntityShape, target: ServiceEntityShape) => {
       canvasActions.disconnectShapes(source, target);
       setSelectedEdgeId(null);
@@ -144,11 +144,11 @@ export const Canvas: React.FC = () => {
     [canvasActions]
   );
 
-  const edges: RelationEdgeType[] = useMemo(
+  const edges: ConnectionEdgeType[] = useMemo(
     () =>
-      getCanvasConnections(canvasState).flatMap((link) => {
-        const source = canvasState.get(link.source);
-        const target = canvasState.get(link.target);
+      getCanvasConnections(canvasState).flatMap((connection) => {
+        const source = canvasState.get(connection.source);
+        const target = canvasState.get(connection.target);
 
         if (!source || !target) {
           return [];
@@ -156,23 +156,23 @@ export const Canvas: React.FC = () => {
 
         return [
           {
-            ...link,
-            type: "relation" as const,
+            ...connection,
+            type: "connection" as const,
             hidden: source.isHidden || target.isHidden,
-            selected: link.id === selectedEdgeId,
-            ariaLabel: words("instanceComposer.link.label")(
+            selected: connection.id === selectedEdgeId,
+            ariaLabel: words("instanceComposer.connection.label")(
               getShapeName(source),
               getShapeName(target)
             ),
             data: {
-              isActive: link.id === hoveredEdgeId || link.id === selectedEdgeId,
+              isActive: connection.id === hoveredEdgeId || connection.id === selectedEdgeId,
               layoutAxis,
-              onRemove: () => removeRelation(source, target),
+              onRemove: () => removeConnectionBetween(source, target),
             },
           },
         ];
       }),
-    [canvasState, hoveredEdgeId, selectedEdgeId, layoutAxis, removeRelation]
+    [canvasState, hoveredEdgeId, selectedEdgeId, layoutAxis, removeConnectionBetween]
   );
 
   // Moving or measuring a card writes straight to its shape. Neither changes the order,
@@ -229,7 +229,7 @@ export const Canvas: React.FC = () => {
   // A relation line is selected by a click (onEdgeClick) or, when focused, with Enter or Space,
   // which React Flow reports here. Escape unselects it.
   const onEdgesChange = useCallback(
-    (changeset: EdgeChangeset<RelationEdgeType>) => {
+    (changeset: EdgeChangeset<ConnectionEdgeType>) => {
       const selections = changeset.getByType("select");
       const selected = selections.filter((change) => change.selected).pop();
 
@@ -245,14 +245,14 @@ export const Canvas: React.FC = () => {
   );
 
   const isValidConnection = useCallback(
-    (link: Connection | Edge) => {
-      const source = canvasState.get(link.source);
+    (connection: Connection | Edge) => {
+      const source = canvasState.get(connection.source);
 
       return (
         !!source &&
         checkIfConnectionIsAllowed(
           source,
-          canvasState.get(link.target),
+          canvasState.get(connection.target),
           relationsDictionary,
           canvasState
         )
@@ -262,9 +262,9 @@ export const Canvas: React.FC = () => {
   );
 
   const onConnect = useCallback(
-    (link: Connection) => {
-      const source = canvasState.get(link.source);
-      const target = canvasState.get(link.target);
+    (connection: Connection) => {
+      const source = canvasState.get(connection.source);
+      const target = canvasState.get(connection.target);
 
       if (source && target) {
         canvasActions.connectShapes(source, target);
@@ -318,19 +318,19 @@ export const Canvas: React.FC = () => {
    * Delete or Backspace on a selected relation line removes the relation, if the relation allows
    * it, like the line's remove button.
    */
-  const removeSelectedRelation = (): boolean => {
-    const link = selectedEdgeId && edges.find((edge) => edge.id === selectedEdgeId);
-    const source = link && canvasState.get(link.source);
-    const target = link && canvasState.get(link.target);
+  const removeSelectedConnection = (): boolean => {
+    const selectedEdge = selectedEdgeId && edges.find((edge) => edge.id === selectedEdgeId);
+    const source = selectedEdge && canvasState.get(selectedEdge.source);
+    const target = selectedEdge && canvasState.get(selectedEdge.target);
 
     if (!source || !target) {
       return false;
     }
     if (canRemoveConnection(source, target, canvasState, relationsDictionary, serviceCatalog)) {
-      removeRelation(source, target);
+      removeConnectionBetween(source, target);
     } else {
       // Cleared first, so pressing Delete again announces the same message again
-      const message = words("instanceComposer.link.cannotRemove")(
+      const message = words("instanceComposer.connection.cannotRemove")(
         getShapeName(source),
         getShapeName(target)
       );
@@ -358,7 +358,7 @@ export const Canvas: React.FC = () => {
     ) {
       return;
     }
-    if (removeSelectedRelation()) {
+    if (removeSelectedConnection()) {
       event.preventDefault();
 
       return;
@@ -414,7 +414,7 @@ export const Canvas: React.FC = () => {
       onDrop={onDrop}
       onKeyDown={onKeyDown}
     >
-      <ReactFlow<EntityNodeType, RelationEdgeType>
+      <ReactFlow<EntityNodeType, ConnectionEdgeType>
         className={isConnecting ? "is-connecting" : undefined}
         ariaLabelConfig={ariaLabelConfig}
         nodes={nodes}

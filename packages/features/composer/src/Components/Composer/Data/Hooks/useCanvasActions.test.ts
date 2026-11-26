@@ -90,7 +90,7 @@ describe("useCanvasActions", () => {
       expect(app.getOrderItem(result.current.canvasState)?.attributes?.database).toBe("db-1");
     });
 
-    it("drops a link drawn on the canvas", () => {
+    it("drops a connection drawn on the canvas", () => {
       const database = createShape("db-1", databaseModel, false);
       const app = createShape("app-1", appModel, true);
       const { result } = renderCanvasActions([app, database]);

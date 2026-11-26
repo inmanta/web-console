@@ -78,7 +78,7 @@ describe("deploymentHelpers", () => {
       ]);
     });
 
-    it("should only report shapes, not the links between them", () => {
+    it("should only report shapes, not the connections between them", () => {
       const shape1 = createMockShape("shape-1", "ServiceA").setPosition(100, 200);
       const shape2 = createMockShape("shape-2", "ServiceB").setPosition(300, 400);
       addConnectionsBetweenShapes(shape1, shape2);

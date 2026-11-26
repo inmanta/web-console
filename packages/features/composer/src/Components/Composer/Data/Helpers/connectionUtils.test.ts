@@ -61,7 +61,7 @@ describe("connectionUtils", () => {
       expect(getCanvasConnections(toCanvas(shapeA, shapeB))).toEqual([]);
     });
 
-    it("should create a single link for a bidirectional connection", () => {
+    it("should create a single connection for a bidirectional connection", () => {
       const shapeA = createShape("a", "ServiceA", { interServiceRelations: { ServiceB: ["b"] } });
       const shapeB = createShape("b", "ServiceB", { interServiceRelations: { ServiceA: ["a"] } });
 
@@ -70,7 +70,7 @@ describe("connectionUtils", () => {
       expect(connections).toEqual([{ id: "a->b", source: "a", target: "b" }]);
     });
 
-    it("should point the link from the parent to the child", () => {
+    it("should point the connection from the parent to the child", () => {
       // The child is first on the canvas, but its parentIds name the parent
       const child = createShape("child", "Child", {
         entityType: "embedded",
@@ -83,7 +83,7 @@ describe("connectionUtils", () => {
       expect(connections).toEqual([{ id: "parent->child", source: "parent", target: "child" }]);
     });
 
-    it("should point the link from the shape added first when neither is a parent", () => {
+    it("should point the connection from the shape added first when neither is a parent", () => {
       const shapeB = createShape("b", "ServiceB", { interServiceRelations: { ServiceA: ["a"] } });
       const shapeA = createShape("a", "ServiceA", { interServiceRelations: { ServiceB: ["b"] } });
 
@@ -119,7 +119,7 @@ describe("connectionUtils", () => {
       expect(getCanvasConnections(toCanvas(shapeA))).toEqual([]);
     });
 
-    it("should create one link per connected pair", () => {
+    it("should create one connection per connected pair", () => {
       const root = createShape("root", "Root", {
         embeddedEntities: { Child: ["c1", "c2"] },
       });

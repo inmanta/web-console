@@ -34,7 +34,7 @@ const canvas = () => screen.getByRole("region", { name: words("instanceComposer.
 /** The relation line between the parent and a child, focused like tabbing to it, then selected. */
 const selectLine = async (child: string) => {
   const line = await screen.findByRole("group", {
-    name: words("instanceComposer.link.label")("parent-service", child),
+    name: words("instanceComposer.connection.label")("parent-service", child),
   });
 
   act(() => line.focus());
@@ -47,10 +47,10 @@ const selectLine = async (child: string) => {
 
 const removeButton = () =>
   screen.queryByRole("button", {
-    name: words("instanceComposer.link.remove")("parent-service", "optional-child-service"),
+    name: words("instanceComposer.connection.remove")("parent-service", "optional-child-service"),
   });
 
-describe("RelationEdge", () => {
+describe("ConnectionEdge", () => {
   it("removes an optional relation with the keyboard: select the line, then Delete", async () => {
     const { child, shapes } = linkedShapes(optionalChildService);
 
@@ -80,7 +80,10 @@ describe("RelationEdge", () => {
 
   it("keeps a required relation, and says why Delete didn't remove it, every time", async () => {
     const { parent, child, shapes } = linkedShapes(childService);
-    const message = words("instanceComposer.link.cannotRemove")("parent-service", "child-service");
+    const message = words("instanceComposer.connection.cannotRemove")(
+      "parent-service",
+      "child-service"
+    );
 
     setup(shapes);
     await selectLine("child-service");
@@ -110,7 +113,7 @@ describe("RelationEdge", () => {
     setup(shapes);
 
     const line = await screen.findByRole("group", {
-      name: words("instanceComposer.link.label")("parent-service", "optional-child-service"),
+      name: words("instanceComposer.connection.label")("parent-service", "optional-child-service"),
     });
     const card = screen
       .getByTestId("entity-optional-child-service")

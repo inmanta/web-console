@@ -74,7 +74,7 @@ describe("EntityContextMenu", () => {
 
     expect(menu).toHaveAttribute(
       "aria-label",
-      words("instanceComposer.card.toolbar.actions")("child-service")
+      words("instanceComposer.card.actions")("child-service")
     );
     expect(screen.getByRole("menu")).toBeVisible();
     expect(

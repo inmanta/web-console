@@ -79,8 +79,9 @@ export const applyAutoLayoutToEmbeddedEntities = (
 
   embeddedEntities.forEach((embeddedEntity) => {
     const parentConnection = connections.find(
-      (link) =>
-        link.target === embeddedEntity.id && canvasState.get(link.source)?.entityType !== "embedded"
+      (connection) =>
+        connection.target === embeddedEntity.id &&
+        canvasState.get(connection.source)?.entityType !== "embedded"
     );
 
     if (!parentConnection) {
@@ -124,7 +125,7 @@ export const applyAutoLayoutToEmbeddedEntities = (
 };
 
 /**
- * Lays the shapes out in layers by relation depth: each link points from one layer to the
+ * Lays the shapes out in layers by relation depth: each connection points from one layer to the
  * next, and the order within a layer keeps edges from crossing where it can.
  * Shapes hidden by a collapsed parent are not laid out; they move along with the shape that
  * hides them, so they come back next to it when it is expanded.
@@ -165,8 +166,8 @@ export const applyLayeredLayout = (
     graph.setNode(shape.id, getShapeDimensions(shape));
   });
   getCanvasConnections(canvasState)
-    .filter((link) => ids.has(link.source) && ids.has(link.target))
-    .forEach((link) => graph.setEdge(link.source, link.target));
+    .filter((connection) => ids.has(connection.source) && ids.has(connection.target))
+    .forEach((connection) => graph.setEdge(connection.source, connection.target));
 
   dagre.layout(graph);
 

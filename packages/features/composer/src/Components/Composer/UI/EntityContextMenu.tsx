@@ -81,7 +81,7 @@ export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => 
   return (
     <Menu
       ref={menuRef}
-      aria-label={words("instanceComposer.card.toolbar.actions")(getShapeName(shape))}
+      aria-label={words("instanceComposer.card.actions")(getShapeName(shape))}
       className="entity-context-menu"
       style={{ position: "absolute", left: x, top: y, zIndex: 1000, minWidth: 220 }}
       data-testid="entity-context-menu"

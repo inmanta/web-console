@@ -23,17 +23,17 @@ import {
   LayoutAxis,
 } from "../Data/Helpers";
 
-export type RelationEdgeType = Edge<
+export type ConnectionEdgeType = Edge<
   {
     isActive: boolean;
 
     /** The direction the canvas is laid out in, which decides the sides the line joins. */
     layoutAxis: LayoutAxis;
 
-    /** Removes the relation, keeping the focus in the canvas. */
+    /** Removes the connection, keeping the focus in the canvas. */
     onRemove: () => void;
   },
-  "relation"
+  "connection"
 >;
 
 const positions: Record<CardSide, Position> = {
@@ -58,7 +58,7 @@ const getCardBox = (node: InternalNode): CardBox => ({
  * selected on an editable canvas, it offers to remove the relation, if the relation
  * allows that.
  */
-export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
+export const ConnectionEdge: React.FC<EdgeProps<ConnectionEdgeType>> = ({
   id,
   source,
   target,
@@ -114,7 +114,7 @@ export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
                   <TimesIcon />
                 </Icon>
               }
-              aria-label={words("instanceComposer.link.remove")(
+              aria-label={words("instanceComposer.connection.remove")(
                 getShapeName(sourceShape),
                 getShapeName(targetShape)
               )}

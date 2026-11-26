@@ -175,7 +175,7 @@ describe("checkIfConnectionIsAllowed", () => {
     expect(result).toBe(false);
   });
 
-  it("should refuse a link to or from a shape staged to be deleted", () => {
+  it("should refuse a connection to or from a shape staged to be deleted", () => {
     const sourceShape = createShape("source-1", "ServiceA");
     const targetShape = createShape("target-1", "ServiceB");
     const canvasState = new Map([

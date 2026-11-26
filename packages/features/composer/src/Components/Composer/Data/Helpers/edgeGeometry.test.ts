@@ -72,7 +72,7 @@ describe("getLayoutAxis", () => {
     expect(getLayoutAxis(row.map((child) => [parent, child]))).toBe("vertical");
   });
 
-  it("follows the majority of the links, and reads left to right on a tie", () => {
+  it("follows the majority of the connections, and reads left to right on a tie", () => {
     const beside = card(400, 0);
     const besideAgain = card(-400, 10);
     const below = card(0, 200);
@@ -100,7 +100,7 @@ describe("getLayoutAxis", () => {
     ).toBe("horizontal");
   });
 
-  it("reads left to right when the links say nothing", () => {
+  it("reads left to right when the connections say nothing", () => {
     expect(getLayoutAxis([])).toBe("horizontal");
     expect(getLayoutAxis([[parent, card(400, 500)]])).toBe("horizontal");
   });

@@ -401,7 +401,7 @@ export const canUndoDelete = (
   });
 
 /**
- * Checks if a link can be removed between two shapes without violating relation requirements.
+ * Checks if a connection can be removed between two shapes without violating relation requirements.
  * Prevents removal if:
  * 1. Removing would cause the shape to fall below the required lower_limit
  * 2. The relation has modifier "rw" and the shape is not new
@@ -411,7 +411,7 @@ export const canUndoDelete = (
  * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas
  * @param {RelationsDictionary} relationsDictionary - The relations dictionary
  * @param {ServiceModel[]} serviceCatalog - The service catalog (for finding modifiers)
- * @returns {boolean} True if the link can be removed, false otherwise
+ * @returns {boolean} True if the connection can be removed, false otherwise
  */
 export const canRemoveConnection = (
   sourceShape: ServiceEntityShape,

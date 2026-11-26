@@ -660,7 +660,7 @@ describe("relationsHelpers", () => {
   });
 
   describe("canRemoveConnection", () => {
-    it("should return true when link can be removed", () => {
+    it("should return true when the connection can be removed", () => {
       // Make source shape new so rw modifier doesn't block removal
       const serviceModelA = createMockServiceModel("ServiceA", {
         inter_service_relations: [createMockInterServiceRelation("rel1", "ServiceB", "rw")],

@@ -135,7 +135,7 @@ describe("EntityNode", () => {
     const { unmount } = setup([child, standalone], { activeShapeId: child.id });
 
     const toolbar = await screen.findByRole("toolbar", {
-      name: words("instanceComposer.card.toolbar.actions")("child-service"),
+      name: words("instanceComposer.card.actions")("child-service"),
     });
 
     expect(
