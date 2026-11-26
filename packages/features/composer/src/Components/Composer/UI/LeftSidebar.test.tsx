@@ -184,6 +184,32 @@ describe("LeftSidebar", () => {
     expect(row.querySelector(".pf-m-success")).toBeInTheDocument();
   });
 
+  it("groups the inventory by web_group like the catalog, with each instance's service", async () => {
+    setup({
+      serviceCatalog: [
+        { ...childService, entity_annotations: { web_group: "Network", web_title: "Leaf" } },
+        { ...parentService, entity_annotations: { web_group: "Network", web_title: "Edge" } },
+        standaloneService,
+      ],
+    });
+    await openInventory();
+
+    const network = screen.getByTestId("palette-group-Network");
+
+    // Both services' instances in one group, each naming its service; no group per service
+    expect(within(network).getByTestId("palette-item-edge-1")).toHaveTextContent("edge-1Edge");
+    expect(within(network).getByTestId("palette-item-leaf-1")).toHaveTextContent("leaf-1Leaf");
+    expect(screen.queryByTestId("palette-group-parent-service")).not.toBeInTheDocument();
+
+    await userEvent.type(
+      screen.getByRole("textbox", { name: words("instanceComposer.palette.searchInstances") }),
+      "child-serv"
+    );
+
+    expect(screen.getByTestId("palette-item-leaf-1")).toBeVisible();
+    expect(screen.queryByTestId("palette-item-edge-1")).not.toBeInTheDocument();
+  });
+
   it("filters the rows with the search, and says when nothing matches", async () => {
     setup();
 

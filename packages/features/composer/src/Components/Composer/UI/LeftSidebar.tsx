@@ -21,10 +21,8 @@ import { PlusCircleIcon } from "@patternfly/react-icons/dist/esm/icons/plus-circ
 import { useOptionsStore, useReactFlow } from "@xyflow/react";
 import styled from "styled-components";
 import {
-  compareEntityAnnotations,
   EmbeddedEntity,
   groupByEntityAnnotations,
-  resolveEntityAnnotations,
   resolveLifecycleState,
   ServiceModel,
   State,
@@ -50,10 +48,13 @@ interface PaletteRow {
   /** The technical name of a service that shows its title instead; the search matches it too */
   technicalName?: string;
 
+  /** Other names the search matches, e.g. the service of an inventory instance */
+  searchTerms?: string[];
+
   /** The name the row shows */
   name: string;
 
-  /** What kind of entity it is, in small text under the name */
+  /** What kind of entity it is, or an instance's service, in small text under the name */
   detail?: string;
 
   /** The lifecycle state of an inventory instance, under its name */
@@ -156,20 +157,25 @@ const getServiceGroup = (serviceModel: ServiceModel, rows: PaletteRow[]): Palett
 };
 
 /**
- * The services grouped like the service catalog: by their `web_group` annotation
- * (groupByEntityAnnotations), the ungrouped ones last, under "Other services". Each service
- * brings its embedded entities with it.
- *
- * A catalog without any `web_group` keeps a group per service, so its services stay
+ * Groups services like the service catalog: by their `web_group` annotation
+ * (groupByEntityAnnotations), in the catalog's order, the ungrouped ones last, under "Other
+ * services". A catalog without any `web_group` keeps a group per service, so its services stay
  * headers of their own.
+ *
+ * @param serviceModels - the services to group
+ * @param getRows - the rows of a service; `inOwnGroup` tells whether its group is the service itself
+ * @returns the groups
  */
-const buildNewGroups = (serviceCatalog: ServiceModel[]): PaletteGroup[] => {
-  const groups = groupByEntityAnnotations(serviceCatalog);
+const groupLikeCatalog = (
+  serviceModels: ServiceModel[],
+  getRows: (serviceModel: ServiceModel, inOwnGroup: boolean) => PaletteRow[]
+): PaletteGroup[] => {
+  const groups = groupByEntityAnnotations(serviceModels);
 
   if (groups.every((group) => group.name === undefined)) {
     return groups.flatMap((group) =>
       group.services.map(({ serviceModel }) =>
-        getServiceGroup(serviceModel, getServiceRows(serviceModel))
+        getServiceGroup(serviceModel, getRows(serviceModel, true))
       )
     );
   }
@@ -177,47 +183,49 @@ const buildNewGroups = (serviceCatalog: ServiceModel[]): PaletteGroup[] => {
   return groups.map((group) => ({
     key: group.name ?? "other-services",
     name: group.name ?? words("instanceComposer.palette.otherServices"),
-    rows: group.services.flatMap(({ serviceModel }) => getServiceRows(serviceModel)),
+    rows: group.services.flatMap(({ serviceModel }) => getRows(serviceModel, false)),
   }));
 };
 
 /**
- * One group per service with instances in the inventory, named by the service's title and in
- * the catalog's order: by `web_order`, then by title.
+ * The services, each with its embedded entities, grouped like the catalog.
+ */
+const buildNewGroups = (serviceCatalog: ServiceModel[]): PaletteGroup[] =>
+  groupLikeCatalog(serviceCatalog, getServiceRows);
+
+/**
+ * The instances in the inventory, grouped like the catalog by their service. In a `web_group`
+ * the rows of several services meet, so each row names its service, and the search finds an
+ * instance by its service too.
  */
 const buildInventoryGroups = (
   serviceInventories: Inventories | null,
   serviceCatalog: ServiceModel[],
   onCanvas: Set<string>
 ): PaletteGroup[] =>
-  Object.entries(serviceInventories || {})
-    .flatMap(([serviceName, instances]) => {
-      const serviceModel = serviceCatalog.find((model) => model.name === serviceName);
+  groupLikeCatalog(
+    serviceCatalog.filter(({ name }) => (serviceInventories?.[name]?.length ?? 0) > 0),
+    (serviceModel, inOwnGroup) => {
+      const { title } = getServiceNames(serviceModel);
 
-      return serviceModel && instances.length > 0
-        ? [{ serviceModel, instances, annotations: resolveEntityAnnotations(serviceModel) }]
-        : [];
-    })
-    .sort((a, b) => compareEntityAnnotations(a.annotations, b.annotations))
-    .map(({ serviceModel, instances }) =>
-      getServiceGroup(
-        serviceModel,
-        instances.map((instance) => {
-          const label = instance.service_identity_attribute_value || instance.id;
+      return (serviceInventories?.[serviceModel.name] ?? []).map((instance) => {
+        const label = instance.service_identity_attribute_value || instance.id;
 
-          return {
-            key: instance.id,
-            label,
-            name: label,
-            state: resolveLifecycleState(serviceModel.lifecycle.states, instance.state),
-            item: { kind: "inventory", instance, serviceModel },
-            unavailableReason: onCanvas.has(instance.id)
-              ? words("instanceComposer.palette.onCanvas")
-              : undefined,
-          };
-        })
-      )
-    );
+        return {
+          key: instance.id,
+          label,
+          name: label,
+          detail: inOwnGroup ? undefined : title,
+          searchTerms: inOwnGroup ? undefined : [title, serviceModel.name],
+          state: resolveLifecycleState(serviceModel.lifecycle.states, instance.state),
+          item: { kind: "inventory", instance, serviceModel },
+          unavailableReason: onCanvas.has(instance.id)
+            ? words("instanceComposer.palette.onCanvas")
+            : undefined,
+        };
+      });
+    }
+  );
 
 /**
  * The kind of card a row adds: an inventory instance comes on the canvas as a read-only relation.
@@ -246,14 +254,16 @@ const filterGroups = (groups: PaletteGroup[], query: string): PaletteGroup[] => 
       ...group,
       rows: matches(group.name, group.technicalName)
         ? group.rows
-        : group.rows.filter((row) => matches(row.label, row.technicalName)),
+        : group.rows.filter((row) =>
+            matches(row.label, row.technicalName, ...(row.searchTerms ?? []))
+          ),
     }))
     .filter((group) => group.rows.length > 0);
 };
 
 /**
  * The entity palette: new services and embedded entities, and the instances in the
- * inventory, grouped per service. An item is dragged onto the canvas, or added at the
+ * inventory, grouped like the service catalog. An item is dragged onto the canvas, or added at the
  * centre of the view with its + button. Hidden in view mode.
  */
 export const LeftSidebar: React.FC = () => {
