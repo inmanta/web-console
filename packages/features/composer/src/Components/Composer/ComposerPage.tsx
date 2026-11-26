@@ -56,9 +56,14 @@ const ComposerPageContent: React.FC<Props> = ({ serviceName, instanceId, editabl
     instanceId ?? "",
     !editable,
     mainService
-  ).useOneTime();
+  ).useOneTimeNoRefetch();
 
-  if (serviceModelsQuery.isError) {
+  // A load error only shows while there is no data yet: a failed refetch (e.g. of the catalog on
+  // window focus) keeps the canvas and the user's changes.
+  const catalog = serviceModelsQuery.data;
+  const instance = instanceId ? instanceQuery.data : undefined;
+
+  if (!catalog && serviceModelsQuery.isError) {
     return (
       <ErrorView
         message={words("error.general")(serviceModelsQuery.error.message)}
@@ -68,7 +73,7 @@ const ComposerPageContent: React.FC<Props> = ({ serviceName, instanceId, editabl
     );
   }
 
-  if (serviceModelsQuery.isSuccess && !mainService) {
+  if (catalog && !mainService) {
     return (
       <ErrorView
         message={words("instanceComposer.noServiceModel.errorMessage")(serviceName)}
@@ -78,7 +83,7 @@ const ComposerPageContent: React.FC<Props> = ({ serviceName, instanceId, editabl
     );
   }
 
-  if (instanceId && instanceQuery.isError) {
+  if (instanceId && !instance && instanceQuery.isError) {
     return (
       <ErrorView
         message={words("error.general")(instanceQuery.error.message)}
@@ -88,7 +93,7 @@ const ComposerPageContent: React.FC<Props> = ({ serviceName, instanceId, editabl
     );
   }
 
-  if (!serviceModelsQuery.isSuccess || !mainService || (instanceId && !instanceQuery.isSuccess)) {
+  if (!catalog || !mainService || (instanceId && !instance)) {
     return <LoadingView ariaLabel="ComposerPage-Loading" />;
   }
 
@@ -99,9 +104,9 @@ const ComposerPageContent: React.FC<Props> = ({ serviceName, instanceId, editabl
   return (
     <Composer
       editable={editable}
-      serviceCatalog={serviceModelsQuery.data}
+      serviceCatalog={catalog}
       mainService={mainService}
-      instance={instanceId ? instanceQuery.data : undefined}
+      instance={instance}
     >
       <PageContainer
         pageTitle={

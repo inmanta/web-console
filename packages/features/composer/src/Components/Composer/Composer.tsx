@@ -43,7 +43,6 @@ export const Composer: React.FC<Props> = ({
   const [canvasState, setCanvasState] = useState<Map<string, ServiceEntityShape>>(new Map());
   const [activeCellId, setActiveCellId] = useState<string | null>(null);
   const draggedItemRef = useRef<PaletteItem | null>(null);
-  const instanceId = instance?.instance.id;
 
   const relationsDictionary: RelationsDictionary = useMemo(
     () => createRelationsDictionary(serviceCatalog),
@@ -64,13 +63,10 @@ export const Composer: React.FC<Props> = ({
   }, [isInventoryRequested, refetchInventoryQuery]);
 
   useComposerInitialization({
-    serviceName: mainService.name,
-    instanceId,
     serviceCatalog,
     mainService,
     relationsDictionary,
-    instanceData: instance ?? null,
-    isInstanceDataReady: instance !== undefined,
+    instance,
     onCanvasStateInitialized: setCanvasState,
   });
 
@@ -102,7 +98,6 @@ export const Composer: React.FC<Props> = ({
       inventoriesError: inventoriesQuery.error?.message ?? null,
       isFetchingInventories: inventoriesQuery.isFetching,
       refetchInventories,
-      serviceInstanceId: instanceId || null,
       serviceInstance: instance?.instance ?? null,
       relationsDictionary: relationsDictionary,
       editable: editable,
@@ -122,7 +117,6 @@ export const Composer: React.FC<Props> = ({
       inventoriesQuery.error,
       inventoriesQuery.isFetching,
       refetchInventories,
-      instanceId,
       instance,
       relationsDictionary,
       editable,
