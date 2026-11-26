@@ -1478,6 +1478,21 @@ describe("cascading fields", () => {
     expect(uplinkBox).toHaveValue("free-form");
   });
 
+  test("GIVEN an edit form WHEN a field references an attribute the form has no field for THEN its stored value resolves the reference", async () => {
+    server.use(http.get("/api/v1/parameter/files_brussels", () => parameter([])));
+
+    const { component } = setup([uplink], undefined, true, { site: "brussels", uplink: "" });
+
+    render(component);
+
+    // The query only runs for `files_brussels` once `${form.site}` resolves to the stored value,
+    // and it settles with no options.
+    await waitFor(() =>
+      expect(screen.getByText(words("inventory.form.suggestions.empty")("site"))).toBeVisible()
+    );
+    expect(screen.queryByTestId("FieldDependencies-Error")).not.toBeInTheDocument();
+  });
+
   test("GIVEN field suggestions that form a dependency cycle THEN the model error is surfaced", () => {
     const a = {
       ...Test.Field.text,

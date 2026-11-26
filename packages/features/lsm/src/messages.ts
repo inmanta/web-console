@@ -53,6 +53,8 @@ export const lsmMessages = {
   "inventory.duplicateInstance.button": "Duplicate",
   "inventory.duplicateInstance.title": "Duplicate instance",
   "inventory.editInstance.failed": "Editing instance failed",
+  "inventory.editInstance.header": (instanceId: string) =>
+    `Edit the attributes of instance ${instanceId}`,
   "inventory.duplicateInstance.header": (instanceId: string) =>
     `Create an instance based of instance ${instanceId}`,
   "inventory.deleteInstance.failed": "Deleting instance failed",
