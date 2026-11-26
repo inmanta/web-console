@@ -34,7 +34,7 @@ import {
   ZOOM_TO_FIT_PADDING,
   ZOOM_TO_FIT_PADDING_BUTTON,
 } from "../config";
-import { ZoomControlsContainer } from "./ZoomControls.styles";
+import { ZoomControlsBand, ZoomControlsContainer } from "./ZoomControls.styles";
 
 /**
  * The toolbar under the canvas: arrange the layout, full screen, fit to screen, and zoom.
@@ -113,141 +113,147 @@ export const ZoomControls: React.FC = () => {
     : words("instanceComposer.zoomHandler.fullscreen.toggle");
 
   return (
-    <ZoomControlsContainer>
-      <Dropdown
-        isOpen={isArrangeOpen}
-        onOpenChange={setIsArrangeOpen}
-        popperProps={{ direction: "up", position: "start" }}
-        toggle={(toggleRef) => (
-          <MenuToggle
-            ref={toggleRef}
+    <ZoomControlsBand>
+      <ZoomControlsContainer className="zoom-toolbar">
+        <Dropdown
+          isOpen={isArrangeOpen}
+          onOpenChange={setIsArrangeOpen}
+          popperProps={{ direction: "up", position: "start" }}
+          toggle={(toggleRef) => (
+            <MenuToggle
+              ref={toggleRef}
+              className="toolbar-control"
+              variant="plainText"
+              icon={<SitemapIcon />}
+              isExpanded={isArrangeOpen}
+              onClick={() => setIsArrangeOpen(!isArrangeOpen)}
+              data-testid="arrange-toggle"
+              // The label hides on a narrow canvas, so the name doesn't depend on it.
+              aria-label={words("instanceComposer.arrange")}
+            >
+              <span className="arrange-label">{words("instanceComposer.arrange")}</span>
+            </MenuToggle>
+          )}
+        >
+          <DropdownList>
+            <DropdownItem
+              description={words("instanceComposer.arrange.all.description")}
+              onClick={() => arrange()}
+            >
+              {words("instanceComposer.arrange.all")}
+            </DropdownItem>
+            <DropdownItem
+              isDisabled={!activeCell}
+              description={
+                activeCell
+                  ? words("instanceComposer.arrange.below.description")
+                  : words("instanceComposer.arrange.below.disabled")
+              }
+              onClick={() => activeCell && arrange(activeCell.id)}
+            >
+              {activeCell
+                ? words("instanceComposer.arrange.below")(getShapeName(activeCell))
+                : words("instanceComposer.arrange.below.noSelection")}
+            </DropdownItem>
+          </DropdownList>
+          <DropdownGroup label={words("instanceComposer.arrange.direction")} labelHeadingLevel="h3">
+            <ToggleGroup
+              isCompact
+              aria-label={words("instanceComposer.arrange.direction")}
+              style={{
+                padding: "0 var(--pf-t--global--spacer--md) var(--pf-t--global--spacer--sm)",
+              }}
+            >
+              <ToggleGroupItem
+                text={words("instanceComposer.arrange.leftToRight")}
+                isSelected={direction === "LR"}
+                onChange={() => setDirection("LR")}
+              />
+              <ToggleGroupItem
+                text={words("instanceComposer.arrange.topToBottom")}
+                isSelected={direction === "TB"}
+                onChange={() => setDirection("TB")}
+              />
+            </ToggleGroup>
+          </DropdownGroup>
+        </Dropdown>
+        <span className="toolbar-divider" aria-hidden />
+        <Tooltip content={fullscreenLabel} aria="none">
+          <Button
             className="toolbar-control"
-            variant="plainText"
-            icon={<SitemapIcon />}
-            isExpanded={isArrangeOpen}
-            onClick={() => setIsArrangeOpen(!isArrangeOpen)}
-            data-testid="arrange-toggle"
-          >
-            {words("instanceComposer.arrange")}
-          </MenuToggle>
+            variant="control"
+            icon={isFullscreen ? <CompressIcon /> : <ExpandIcon />}
+            onClick={handleFullscreenToggle}
+            aria-label={fullscreenLabel}
+            data-testid="fullscreen"
+          />
+        </Tooltip>
+        <Tooltip content={words("instanceComposer.zoomHandler.zoomToFit")} aria="none">
+          <Button
+            className="toolbar-control"
+            variant="control"
+            icon={<ExpandArrowsAltIcon />}
+            onClick={handleFitToScreen}
+            aria-label={words("instanceComposer.zoomHandler.zoomToFit")}
+            data-testid="fit-to-screen"
+          />
+        </Tooltip>
+        <span className="toolbar-divider" aria-hidden />
+        <Tooltip content={words("instanceComposer.zoomHandler.zoomOut")} aria="none">
+          <Button
+            className="toolbar-control"
+            variant="control"
+            icon={<MinusIcon />}
+            onClick={() => handleZoom(-0.1)}
+            aria-label={words("instanceComposer.zoomHandler.zoomOut")}
+            data-testid="zoom-out"
+            isDisabled={zoom <= MIN_ZOOM}
+          />
+        </Tooltip>
+        <Slider
+          className="zoom-slider"
+          min={SLIDER_MIN}
+          max={SLIDER_MAX}
+          value={sliderValue}
+          showBoundaries={false}
+          thumbAriaLabel={words("instanceComposer.zoomHandler.zoom")}
+          thumbAriaValueText={`${zoomPercentage}%`}
+          onChange={(_event, value) => zoomTo(value / 100)}
+          data-testid="slider-input"
+        />
+        <output className="zoom-percentage" data-testid="slider-output">
+          {zoomPercentage}%
+        </output>
+        <Tooltip content={words("instanceComposer.zoomHandler.zoomIn")} aria="none">
+          <Button
+            className="toolbar-control"
+            variant="control"
+            icon={<PlusIcon />}
+            onClick={() => handleZoom(0.1)}
+            aria-label={words("instanceComposer.zoomHandler.zoomIn")}
+            data-testid="zoom-in"
+            isDisabled={zoom >= MAX_ZOOM}
+          />
+        </Tooltip>
+        {previousPositions && (
+          <AlertGroup isToast isLiveRegion>
+            <Alert
+              variant="success"
+              title={words("instanceComposer.arrange.done.title")}
+              timeout={8000}
+              onTimeout={() => setPreviousPositions(null)}
+              actionClose={<AlertActionCloseButton onClose={() => setPreviousPositions(null)} />}
+              actionLinks={
+                <AlertActionLink onClick={undoArrange}>
+                  {words("instanceComposer.arrange.undo")}
+                </AlertActionLink>
+              }
+            >
+              {words("instanceComposer.arrange.done.body")}
+            </Alert>
+          </AlertGroup>
         )}
-      >
-        <DropdownList>
-          <DropdownItem
-            description={words("instanceComposer.arrange.all.description")}
-            onClick={() => arrange()}
-          >
-            {words("instanceComposer.arrange.all")}
-          </DropdownItem>
-          <DropdownItem
-            isDisabled={!activeCell}
-            description={
-              activeCell
-                ? words("instanceComposer.arrange.below.description")
-                : words("instanceComposer.arrange.below.disabled")
-            }
-            onClick={() => activeCell && arrange(activeCell.id)}
-          >
-            {activeCell
-              ? words("instanceComposer.arrange.below")(getShapeName(activeCell))
-              : words("instanceComposer.arrange.below.noSelection")}
-          </DropdownItem>
-        </DropdownList>
-        <DropdownGroup label={words("instanceComposer.arrange.direction")} labelHeadingLevel="h3">
-          <ToggleGroup
-            isCompact
-            aria-label={words("instanceComposer.arrange.direction")}
-            style={{ padding: "0 var(--pf-t--global--spacer--md) var(--pf-t--global--spacer--sm)" }}
-          >
-            <ToggleGroupItem
-              text={words("instanceComposer.arrange.leftToRight")}
-              isSelected={direction === "LR"}
-              onChange={() => setDirection("LR")}
-            />
-            <ToggleGroupItem
-              text={words("instanceComposer.arrange.topToBottom")}
-              isSelected={direction === "TB"}
-              onChange={() => setDirection("TB")}
-            />
-          </ToggleGroup>
-        </DropdownGroup>
-      </Dropdown>
-      <span className="toolbar-divider" aria-hidden />
-      <Tooltip content={fullscreenLabel} aria="none">
-        <Button
-          className="toolbar-control"
-          variant="control"
-          icon={isFullscreen ? <CompressIcon /> : <ExpandIcon />}
-          onClick={handleFullscreenToggle}
-          aria-label={fullscreenLabel}
-          data-testid="fullscreen"
-        />
-      </Tooltip>
-      <Tooltip content={words("instanceComposer.zoomHandler.zoomToFit")} aria="none">
-        <Button
-          className="toolbar-control"
-          variant="control"
-          icon={<ExpandArrowsAltIcon />}
-          onClick={handleFitToScreen}
-          aria-label={words("instanceComposer.zoomHandler.zoomToFit")}
-          data-testid="fit-to-screen"
-        />
-      </Tooltip>
-      <span className="toolbar-divider" aria-hidden />
-      <Tooltip content={words("instanceComposer.zoomHandler.zoomOut")} aria="none">
-        <Button
-          className="toolbar-control"
-          variant="control"
-          icon={<MinusIcon />}
-          onClick={() => handleZoom(-0.1)}
-          aria-label={words("instanceComposer.zoomHandler.zoomOut")}
-          data-testid="zoom-out"
-          isDisabled={zoom <= MIN_ZOOM}
-        />
-      </Tooltip>
-      <Slider
-        className="zoom-slider"
-        min={SLIDER_MIN}
-        max={SLIDER_MAX}
-        value={sliderValue}
-        showBoundaries={false}
-        thumbAriaLabel={words("instanceComposer.zoomHandler.zoom")}
-        thumbAriaValueText={`${zoomPercentage}%`}
-        onChange={(_event, value) => zoomTo(value / 100)}
-        data-testid="slider-input"
-      />
-      <output className="zoom-percentage" data-testid="slider-output">
-        {zoomPercentage}%
-      </output>
-      <Tooltip content={words("instanceComposer.zoomHandler.zoomIn")} aria="none">
-        <Button
-          className="toolbar-control"
-          variant="control"
-          icon={<PlusIcon />}
-          onClick={() => handleZoom(0.1)}
-          aria-label={words("instanceComposer.zoomHandler.zoomIn")}
-          data-testid="zoom-in"
-          isDisabled={zoom >= MAX_ZOOM}
-        />
-      </Tooltip>
-      {previousPositions && (
-        <AlertGroup isToast isLiveRegion>
-          <Alert
-            variant="success"
-            title={words("instanceComposer.arrange.done.title")}
-            timeout={8000}
-            onTimeout={() => setPreviousPositions(null)}
-            actionClose={<AlertActionCloseButton onClose={() => setPreviousPositions(null)} />}
-            actionLinks={
-              <AlertActionLink onClick={undoArrange}>
-                {words("instanceComposer.arrange.undo")}
-              </AlertActionLink>
-            }
-          >
-            {words("instanceComposer.arrange.done.body")}
-          </Alert>
-        </AlertGroup>
-      )}
-    </ZoomControlsContainer>
+      </ZoomControlsContainer>
+    </ZoomControlsBand>
   );
 };

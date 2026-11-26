@@ -1,23 +1,59 @@
 import styled from "styled-components";
 import { LEFT_SIDEBAR_WIDTH, RIGHT_SIDEBAR_OFFSET } from "../config";
 
-export const ZoomControlsContainer = styled.div`
+/**
+ * The strip of the canvas the toolbar sits in: between the palette and the details panel, so the
+ * toolbar never overlaps them. The toolbar fits its controls to the strip's width (a container
+ * query), so a narrow canvas drops the slider first, then the zoom percentage and the Arrange
+ * label. The strip itself lets clicks through to the canvas.
+ */
+export const ZoomControlsBand = styled.div`
   position: absolute;
   bottom: 25px;
-  // Centre the toolbar in the canvas, clear of the left sidebar and the right details
-  // sidebar so it never overlaps the details form.
   left: ${LEFT_SIDEBAR_WIDTH}px;
   right: ${RIGHT_SIDEBAR_OFFSET}px;
-  margin-inline: auto;
-  width: max-content;
   display: flex;
+  justify-content: center;
+  padding-inline: var(--pf-t--global--spacer--sm);
+  pointer-events: none;
+  container: zoom-band / inline-size;
+  z-index: 10;
+
+  // Narrower than the whole toolbar (about 30.5rem): no slider; the buttons still zoom.
+  @container zoom-band (max-width: 31rem) {
+    .zoom-slider {
+      display: none;
+    }
+  }
+
+  // Narrower than that (about 23rem): no zoom percentage or dividers, only the Arrange icon (the
+  // toggle keeps its name), and less padding.
+  @container zoom-band (max-width: 23.5rem) {
+    .zoom-percentage,
+    .arrange-label,
+    .toolbar-divider {
+      display: none;
+    }
+
+    .zoom-toolbar {
+      padding-inline: var(--pf-t--global--spacer--sm);
+    }
+  }
+`;
+
+export const ZoomControlsContainer = styled.div`
+  pointer-events: auto;
+  max-width: 100%;
+  display: flex;
+  // A last resort on a very narrow canvas, rather than running under the sidebars.
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
   gap: 0.375rem;
   padding: 0.375rem 1rem;
   background-color: var(--pf-t--global--background--color--primary--default);
   border-radius: var(--pf-t--global--border--radius--pill);
   filter: drop-shadow(0.05rem 0.2rem 0.2rem var(--pf-t--global--box-shadow--color--100));
-  z-index: 10;
 
   // Every control is a square icon button's height, through PatternFly's own sizing: the block
   // padding leaves exactly the control size around one line of text, whatever the variant. The
