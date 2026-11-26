@@ -2128,7 +2128,7 @@ __metadata:
     "@vitest/coverage-v8": "npm:^5.1.1"
     "@vitest/ui": "npm:^5.1.1"
     cypress: "npm:^16.3.0"
-    dependency-cruiser: "npm:^18.8.0"
+    dependency-cruiser: "npm:^18.9.0"
     dotenv: "npm:^18.0.10"
     eslint: "npm:^10.2.1"
     eslint-import-resolver-typescript: "npm:^4.4.5"
@@ -7482,9 +7482,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dependency-cruiser@npm:^18.8.0":
-  version: 18.8.0
-  resolution: "dependency-cruiser@npm:18.8.0"
+"dependency-cruiser@npm:^18.9.0":
+  version: 18.9.0
+  resolution: "dependency-cruiser@npm:18.9.0"
   dependencies:
     acorn: "npm:8.19.0"
     acorn-jsx: "npm:5.3.2"
@@ -7493,7 +7493,7 @@ __metadata:
     acorn-walk: "npm:8.3.5"
     commander: "npm:15.1.0"
     enhanced-resolve: "npm:5.27.0"
-    ignore: "npm:7.0.14"
+    ignore: "npm:7.0.16"
     interpret: "npm:3.1.1"
     is-installed-globally: "npm:1.0.1"
     json5: "npm:2.2.3"
@@ -7511,7 +7511,7 @@ __metadata:
     depcruise-wrap-stream-in-html: bin/wrap-stream-in-html.mjs
     dependency-cruise: bin/dependency-cruiser.mjs
     dependency-cruiser: bin/dependency-cruiser.mjs
-  checksum: 10/909fc79885b50b41d7e7ff39350655c0c5e38d4e7650f80146aedb58ca1eb9f3229237a0de53f608e7dbd0aaec0d40e0b009c5f1210f4c2d594508c1770ac24b
+  checksum: 10/d83dd6f25151b97214503517190f0ace1f4cdbf413817eeb715609f489f9c9c7509dcdf017fdc10163fa45f508b72ff153dc75da5a2fc2e80ee82760d8629eed
   languageName: node
   linkType: hard
 
@@ -9108,10 +9108,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ignore@npm:7.0.14":
-  version: 7.0.14
-  resolution: "ignore@npm:7.0.14"
-  checksum: 10/47ed87f5943d538b5320a8aff31e09e5b7a87505fbddf254f86604f222486b0fa36993269acab5697d5b707d336d0c26b8fb24b0adb2ddbea0aa7ce225757458
+"ignore@npm:7.0.16":
+  version: 7.0.16
+  resolution: "ignore@npm:7.0.16"
+  checksum: 10/1b7ce35ee1013f39b2b62135ab6ca4355a1b3b5a448f69355b17a62ee65a2fad7b90987f3d1fefefa596dbc8e2e92629c8a5d71648d707cdeb5c6b27a4c57b5f
   languageName: node
   linkType: hard
 
