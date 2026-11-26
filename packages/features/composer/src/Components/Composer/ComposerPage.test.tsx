@@ -80,7 +80,7 @@ describe("ComposerPage", () => {
     expect(requests.inventory).toEqual([]);
 
     const inventoryTab = screen.getByRole("tab", {
-      name: words("instanceComposer.stencil.inventory"),
+      name: words("instanceComposer.palette.tab.inventory"),
     });
 
     await user.click(inventoryTab);
@@ -90,7 +90,7 @@ describe("ComposerPage", () => {
 
     expect(requests.inventory).toHaveLength(serviceCatalog.length);
 
-    await user.click(screen.getByRole("tab", { name: words("instanceComposer.stencil.new") }));
+    await user.click(screen.getByRole("tab", { name: words("instanceComposer.palette.tab.new") }));
     await user.click(inventoryTab);
 
     await waitFor(() => expect(requests.inventory).toHaveLength(2 * serviceCatalog.length));

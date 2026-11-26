@@ -16,11 +16,11 @@ import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import {
-  canRemoveLink,
+  canRemoveConnection,
   checkIfConnectionIsAllowed,
   countHiddenLayers,
   getConnectedLayerData,
-  getLinks,
+  getCanvasConnections,
   getRemoveActions,
   getShapeName,
   getValidationMessages,
@@ -54,7 +54,7 @@ const proOptions = { hideAttribution: true };
 const deriveCardData = (canvasState: Map<string, ServiceEntityShape>): EntityNodeData[] => {
   const relationCounts = new Map<string, number>();
 
-  getLinks(canvasState).forEach(({ source, target }) => {
+  getCanvasConnections(canvasState).forEach(({ source, target }) => {
     relationCounts.set(source, (relationCounts.get(source) ?? 0) + 1);
     relationCounts.set(target, (relationCounts.get(target) ?? 0) + 1);
   });
@@ -78,8 +78,8 @@ export const Canvas: React.FC = () => {
     canvasState,
     canvasActions,
     editable,
-    activeCell,
-    setActiveCell,
+    activeShape,
+    setActiveShape,
     relationsDictionary,
     serviceCatalog,
     serviceInstanceId,
@@ -97,7 +97,7 @@ export const Canvas: React.FC = () => {
   // Read out by screen readers; a new selection clears it
   const [announcement, setAnnouncement] = useState("");
 
-  useEffect(() => setAnnouncement(""), [selectedEdgeId, activeCell]);
+  useEffect(() => setAnnouncement(""), [selectedEdgeId, activeShape]);
   const ariaLabelConfig = useMemo(getAriaLabelConfig, []);
   const [contextMenu, setContextMenu] = useState<{ shapeId: string; x: number; y: number }>();
   // The card data of the current shapes (deriveCardData)
@@ -124,12 +124,12 @@ export const Canvas: React.FC = () => {
         position: data.shape.getPosition(),
         measured: measured.get(data.shape.id),
         hidden: data.shape.isHidden,
-        selected: data.shape.id === activeCell?.id,
+        selected: data.shape.id === activeShape?.id,
         connectable: editable,
         data,
       }));
     });
-  }, [canvasState, activeCell, editable]);
+  }, [canvasState, activeShape, editable]);
 
   /**
    * Removes a relation, by its line's button or Delete. The line, which may have had the focus,
@@ -146,7 +146,7 @@ export const Canvas: React.FC = () => {
 
   const edges: RelationEdgeType[] = useMemo(
     () =>
-      getLinks(canvasState).flatMap((link) => {
+      getCanvasConnections(canvasState).flatMap((link) => {
         const source = canvasState.get(link.source);
         const target = canvasState.get(link.target);
 
@@ -195,17 +195,17 @@ export const Canvas: React.FC = () => {
         }
       });
 
-      // Selection follows the active cell: selecting a card with the keyboard (Enter or Space on
+      // Selection follows the active shape: selecting a card with the keyboard (Enter or Space on
       // a focused card) selects its shape, and Escape unselects it. Clicks are handled by
       // onNodeClick and onPaneClick. Removing goes through getRemoveActions (onKeyDown).
       const selections = changes.filter((change) => change.type === "select");
       const selected = selections.filter((change) => change.selected).pop();
 
       if (selected) {
-        setActiveCell(canvasState.get(selected.id) || null);
+        setActiveShape(canvasState.get(selected.id) || null);
         setSelectedEdgeId(null);
-      } else if (selections.some((change) => change.id === activeCell?.id)) {
-        setActiveCell(null);
+      } else if (selections.some((change) => change.id === activeShape?.id)) {
+        setActiveShape(null);
       }
 
       const changesToApply = new NodeChangeset<EntityNodeType>(
@@ -214,16 +214,16 @@ export const Canvas: React.FC = () => {
 
       setNodes((current) => changesToApply.applyTo(current));
     },
-    [canvasState, activeCell, setActiveCell, onCardDragged]
+    [canvasState, activeShape, setActiveShape, onCardDragged]
   );
 
   // One selection at a time: a card or a relation line
   const selectEdge = useCallback(
     (edgeId: string) => {
       setSelectedEdgeId(edgeId);
-      setActiveCell(null);
+      setActiveShape(null);
     },
-    [setActiveCell]
+    [setActiveShape]
   );
 
   // A relation line is selected by a click (onEdgeClick) or, when focused, with Enter or Space,
@@ -289,7 +289,7 @@ export const Canvas: React.FC = () => {
     });
 
   const clearSelection = () => {
-    setActiveCell(null);
+    setActiveShape(null);
     setSelectedEdgeId(null);
     closeContextMenu();
   };
@@ -326,7 +326,7 @@ export const Canvas: React.FC = () => {
     if (!source || !target) {
       return false;
     }
-    if (canRemoveLink(source, target, canvasState, relationsDictionary, serviceCatalog)) {
+    if (canRemoveConnection(source, target, canvasState, relationsDictionary, serviceCatalog)) {
       removeRelation(source, target);
     } else {
       // Cleared first, so pressing Delete again announces the same message again
@@ -363,13 +363,13 @@ export const Canvas: React.FC = () => {
 
       return;
     }
-    if (!activeCell) {
+    if (!activeShape) {
       return;
     }
     event.preventDefault();
 
     const { canRemoveFromCanvas, canDelete } = getRemoveActions(
-      activeCell,
+      activeShape,
       canvasState,
       relationsDictionary,
       serviceCatalog,
@@ -378,22 +378,22 @@ export const Canvas: React.FC = () => {
 
     // Only a new shape is removed right away; an existing instance opens the menu to choose.
     if (canRemoveFromCanvas && !canDelete) {
-      canvasActions.removeShape(activeCell);
-      setActiveCell(null);
+      canvasActions.removeShape(activeShape);
+      setActiveShape(null);
       // Keep the focus in the canvas, where it was on the removed card
       wrapperRef.current?.focus();
 
       return;
     }
 
-    const node = getInternalNode(activeCell.id);
+    const node = getInternalNode(activeShape.id);
     const bounds = wrapperRef.current?.getBoundingClientRect();
 
     if (node && bounds) {
       const corner = flowToScreenPosition(node.internals.positionAbsolute);
 
       setContextMenu({
-        shapeId: activeCell.id,
+        shapeId: activeShape.id,
         x: corner.x - bounds.left + 24,
         y: corner.y - bounds.top + 24,
       });
@@ -423,7 +423,7 @@ export const Canvas: React.FC = () => {
         edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
         onNodeClick={(_event, node) => {
-          setActiveCell(canvasState.get(node.id) || null);
+          setActiveShape(canvasState.get(node.id) || null);
           setSelectedEdgeId(null);
           closeContextMenu();
         }}

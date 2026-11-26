@@ -16,7 +16,7 @@ defineReactFlowTestObjects();
 const setup = (
   shapes: ServiceEntityShape[],
   options: {
-    activeCellId?: string;
+    activeShapeId?: string;
     editable?: boolean;
     serviceInstanceId?: string;
     serviceInventories?: Inventories;
@@ -74,7 +74,7 @@ describe("EntityContextMenu", () => {
 
     expect(menu).toHaveAttribute(
       "aria-label",
-      words("instanceComposer.halo.actions")("child-service")
+      words("instanceComposer.card.toolbar.actions")("child-service")
     );
     expect(screen.getByRole("menu")).toBeVisible();
     expect(
@@ -176,7 +176,7 @@ describe("EntityContextMenu", () => {
 
     // The instance itself is kept: the inventory offers it again
     await userEvent.click(
-      screen.getByRole("tab", { name: words("instanceComposer.stencil.inventory") })
+      screen.getByRole("tab", { name: words("instanceComposer.palette.tab.inventory") })
     );
 
     expect(screen.getByTestId("palette-item-edge-1")).not.toHaveAttribute("aria-disabled");
@@ -206,7 +206,7 @@ describe("EntityContextMenu", () => {
 
     // The instance is still on the canvas, so the inventory says so
     await userEvent.click(
-      screen.getByRole("tab", { name: words("instanceComposer.stencil.inventory") })
+      screen.getByRole("tab", { name: words("instanceComposer.palette.tab.inventory") })
     );
 
     const row = screen.getByTestId("palette-item-edge-1");
@@ -278,7 +278,7 @@ describe("EntityContextMenu", () => {
       const [parent, settings] = newServiceShapes(parentService);
       const [child] = newServiceShapes(childService, { x: 400, y: 0 });
 
-      setup([parent, settings, child], { activeCellId: child.id });
+      setup([parent, settings, child], { activeShapeId: child.id });
       await focusCard("entity-child-service");
       await userEvent.keyboard("{Delete}");
 
@@ -292,7 +292,7 @@ describe("EntityContextMenu", () => {
     it("open the menu of a removable existing instance, to choose between remove and delete", async () => {
       const { child, shapes } = existingInstances();
 
-      setup(shapes, { activeCellId: child.id });
+      setup(shapes, { activeShapeId: child.id });
       await focusCard("entity-child-service");
       await userEvent.keyboard("{Delete}");
 
@@ -314,7 +314,7 @@ describe("EntityContextMenu", () => {
     it("open the menu of an existing instance, to delete it or say why it can't be", async () => {
       const { parent, shapes } = existingInstances();
 
-      setup(shapes, { activeCellId: parent.id });
+      setup(shapes, { activeShapeId: parent.id });
       await focusCard("entity-parent-service");
       await userEvent.keyboard("{Backspace}");
 
@@ -330,7 +330,7 @@ describe("EntityContextMenu", () => {
     it("give the focus back when the menu closes: to the card, or to the canvas if it left", async () => {
       const { child, shapes } = existingInstances();
 
-      setup(shapes, { activeCellId: child.id });
+      setup(shapes, { activeShapeId: child.id });
       await focusCard("entity-child-service");
       await userEvent.keyboard("{Delete}");
       await screen.findByRole("menu");
@@ -356,7 +356,7 @@ describe("EntityContextMenu", () => {
     it("do nothing in the viewer", async () => {
       const [child] = newServiceShapes(childService);
 
-      setup([child], { activeCellId: child.id, editable: false });
+      setup([child], { activeShapeId: child.id, editable: false });
       await focusCard("entity-child-service");
       await userEvent.keyboard("{Delete}");
 

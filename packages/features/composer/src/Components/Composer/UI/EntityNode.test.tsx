@@ -18,7 +18,7 @@ defineReactFlowTestObjects();
 
 const setup = (
   shapes: ServiceEntityShape[],
-  options: { activeCellId?: string; editable?: boolean } = {}
+  options: { activeShapeId?: string; editable?: boolean } = {}
 ) =>
   render(
     <ComposerTestProvider shapes={toCanvasState(...shapes)} {...options}>
@@ -132,16 +132,18 @@ describe("EntityNode", () => {
     const [child] = newServiceShapes(childService);
     const [standalone] = newServiceShapes(standaloneService, { x: 400, y: 0 });
 
-    const { unmount } = setup([child, standalone], { activeCellId: child.id });
+    const { unmount } = setup([child, standalone], { activeShapeId: child.id });
 
     const toolbar = await screen.findByRole("toolbar", {
-      name: words("instanceComposer.halo.actions")("child-service"),
+      name: words("instanceComposer.card.toolbar.actions")("child-service"),
     });
 
-    expect(within(toolbar).getByLabelText(words("instanceComposer.halo.link"))).toBeInTheDocument();
+    expect(
+      within(toolbar).getByLabelText(words("instanceComposer.card.toolbar.link"))
+    ).toBeInTheDocument();
     unmount();
 
-    setup([child, standalone], { activeCellId: standalone.id });
+    setup([child, standalone], { activeShapeId: standalone.id });
 
     await screen.findByTestId("entity-standalone-service");
     expect(screen.queryByRole("toolbar")).not.toBeInTheDocument();
@@ -150,14 +152,14 @@ describe("EntityNode", () => {
   it("shows its link action in a PatternFly tooltip, not a native title", async () => {
     const [child] = newServiceShapes(childService);
 
-    setup([child], { activeCellId: child.id });
+    setup([child], { activeShapeId: child.id });
 
-    const link = await screen.findByLabelText(words("instanceComposer.halo.link"));
+    const link = await screen.findByLabelText(words("instanceComposer.card.toolbar.link"));
 
     await userEvent.hover(link);
 
     expect(await screen.findByRole("tooltip")).toHaveTextContent(
-      words("instanceComposer.halo.link")
+      words("instanceComposer.card.toolbar.link")
     );
     expect(document.querySelector("[title]")).not.toBeInTheDocument();
   });
@@ -165,21 +167,21 @@ describe("EntityNode", () => {
   it("collapses the layers below the selected card into a stack", async () => {
     const [parent, settings] = newServiceShapes(parentService);
 
-    setup([parent, settings], { activeCellId: parent.id });
+    setup([parent, settings], { activeShapeId: parent.id });
 
     const card = await screen.findByTestId("entity-parent-service");
 
     expect(screen.getByTestId("entity-settings")).toBeVisible();
 
     await userEvent.click(
-      screen.getByRole("button", { name: words("instanceComposer.halo.collapseLayers") })
+      screen.getByRole("button", { name: words("instanceComposer.card.toolbar.collapseLayers") })
     );
 
     expect(within(card).getByText(words("instanceComposer.hiddenLayers")(1))).toBeVisible();
     expect(screen.queryByTestId("entity-settings")).not.toBeInTheDocument();
 
     await userEvent.click(
-      screen.getByRole("button", { name: words("instanceComposer.halo.expandLayers") })
+      screen.getByRole("button", { name: words("instanceComposer.card.toolbar.expandLayers") })
     );
 
     expect(
@@ -194,7 +196,7 @@ describe("EntityNode", () => {
       parentService
     );
 
-    setup([parent], { activeCellId: parent.id });
+    setup([parent], { activeShapeId: parent.id });
 
     const card = await screen.findByTestId("entity-parent-service");
 
@@ -202,7 +204,7 @@ describe("EntityNode", () => {
       within(card).getByRole("img", { name: words("instanceComposer.card.readOnly") })
     ).toBeVisible();
     expect(within(card).queryByText(words("instanceComposer.label.new"))).not.toBeInTheDocument();
-    expect(screen.getByLabelText(words("instanceComposer.halo.link"))).toBeInTheDocument();
+    expect(screen.getByLabelText(words("instanceComposer.card.toolbar.link"))).toBeInTheDocument();
     expect(card.closest(".react-flow__node > div")).toHaveStyle({
       "--entity-accent": "var(--pf-t--global--border--color--nonstatus--purple--default)",
     });
@@ -237,10 +239,12 @@ describe("EntityNode", () => {
   it("has no link action in the viewer", async () => {
     const [child] = newServiceShapes(childService);
 
-    setup([child], { activeCellId: child.id, editable: false });
+    setup([child], { activeShapeId: child.id, editable: false });
 
     await screen.findByTestId("entity-child-service");
-    expect(screen.queryByLabelText(words("instanceComposer.halo.link"))).not.toBeInTheDocument();
+    expect(
+      screen.queryByLabelText(words("instanceComposer.card.toolbar.link"))
+    ).not.toBeInTheDocument();
   });
 
   it("shows text the card cuts short in a tooltip, and only then", async () => {

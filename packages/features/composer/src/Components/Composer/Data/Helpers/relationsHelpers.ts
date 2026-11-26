@@ -413,7 +413,7 @@ export const canUndoDelete = (
  * @param {ServiceModel[]} serviceCatalog - The service catalog (for finding modifiers)
  * @returns {boolean} True if the link can be removed, false otherwise
  */
-export const canRemoveLink = (
+export const canRemoveConnection = (
   sourceShape: ServiceEntityShape,
   targetShape: ServiceEntityShape,
   canvasState: Map<string, ServiceEntityShape>,

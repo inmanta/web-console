@@ -3,7 +3,7 @@ import { RelationsDictionary } from "./createRelationsDictionary";
 
 /**
  * Checks whether a new link between two shapes is allowed on the canvas. A shape staged to be
- * deleted takes no new links, and the ones staged to be deleted don't count for the limits.
+ * deleted takes no new connections, and the ones staged to be deleted don't count for the limits.
  *
  * @param sourceShape - The shape the link starts from.
  * @param targetShape - The shape that is the potential link target; if undefined, connection is not allowed.

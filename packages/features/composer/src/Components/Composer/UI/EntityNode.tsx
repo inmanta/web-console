@@ -91,8 +91,8 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
     : displayName;
 
   const toggleLabel = shape.isLayersCollapsed
-    ? words("instanceComposer.halo.expandLayers")
-    : words("instanceComposer.halo.collapseLayers");
+    ? words("instanceComposer.card.toolbar.expandLayers")
+    : words("instanceComposer.card.toolbar.collapseLayers");
 
   const toggleLayers = () => {
     if (shape.isLayersCollapsed) {
@@ -147,7 +147,7 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
         <Toolbar
           className="nodrag nopan"
           role="toolbar"
-          aria-label={words("instanceComposer.halo.actions")(getShapeName(shape))}
+          aria-label={words("instanceComposer.card.toolbar.actions")(getShapeName(shape))}
           aria-hidden={!selected}
         >
           {hasLayers && (
@@ -160,24 +160,24 @@ export const EntityNode: React.FC<NodeProps<EntityNodeType>> = ({ id, data, sele
                   aria-label={toggleLabel}
                 />
               </Tooltip>
-              <Tooltip content={words("instanceComposer.halo.expandAllLayers")} aria="none">
+              <Tooltip content={words("instanceComposer.card.toolbar.expandAllLayers")} aria="none">
                 <Button
                   variant="plain"
                   icon={<AngleDoubleDownIcon />}
                   onClick={expandAll}
-                  aria-label={words("instanceComposer.halo.expandAllLayers")}
+                  aria-label={words("instanceComposer.card.toolbar.expandAllLayers")}
                 />
               </Tooltip>
             </>
           )}
           {canLink && (
-            <Tooltip content={words("instanceComposer.halo.link")} aria="none">
+            <Tooltip content={words("instanceComposer.card.toolbar.link")} aria="none">
               <Handle
                 id="link"
                 type="source"
                 position={Position.Top}
                 className="link-handle"
-                aria-label={words("instanceComposer.halo.link")}
+                aria-label={words("instanceComposer.card.toolbar.link")}
               >
                 <LinkIcon />
               </Handle>

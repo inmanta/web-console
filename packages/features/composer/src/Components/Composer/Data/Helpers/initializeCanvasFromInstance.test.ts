@@ -2,9 +2,9 @@ import { ServiceModel, ServiceInstanceModel } from "@inmanta/web-console-core";
 import { InstanceWithRelations } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance/GetInstanceWithRelations";
 import { defineCanvasTestObjects } from "../../testSetup";
 import { applyLayeredLayout } from "./canvasLayoutUtils";
+import { getCanvasConnections } from "./connectionUtils";
 import { RelationsDictionary } from "./createRelationsDictionary";
 import { initializeCanvasFromInstance } from "./initializeCanvasFromInstance";
-import { getLinks } from "./linkUtils";
 
 // Mock the layout so the tests see the initial positions
 vi.mock("./canvasLayoutUtils", () => ({
@@ -249,7 +249,7 @@ describe("initializeCanvasFromInstance", () => {
     expect(embeddedId).toBeDefined();
 
     // The links follow from the connections, pointing from the parent to the child
-    const links = getLinks(result);
+    const links = getCanvasConnections(result);
     expect(links).toHaveLength(2);
     expect(links).toEqual(
       expect.arrayContaining([

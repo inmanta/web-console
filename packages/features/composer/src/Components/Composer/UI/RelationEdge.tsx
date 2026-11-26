@@ -15,10 +15,10 @@ import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import {
-  canRemoveLink,
+  canRemoveConnection,
   CardBox,
   CardSide,
-  getLinkAnchors,
+  getEdgeAnchors,
   getShapeName,
   LayoutAxis,
 } from "../Data/Helpers";
@@ -77,7 +77,7 @@ export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
 
   // A curve rather than right angles: lines that leave the same card spread out right away
   // instead of sharing a segment, so each one can be followed to its end.
-  const [from, to] = getLinkAnchors(
+  const [from, to] = getEdgeAnchors(
     getCardBox(sourceNode),
     getCardBox(targetNode),
     data?.layoutAxis ?? "horizontal"
@@ -94,7 +94,7 @@ export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
   const canRemove =
     editable &&
     data?.isActive &&
-    canRemoveLink(sourceShape, targetShape, canvasState, relationsDictionary, serviceCatalog);
+    canRemoveConnection(sourceShape, targetShape, canvasState, relationsDictionary, serviceCatalog);
 
   return (
     <>

@@ -1,12 +1,12 @@
 import { ServiceModel, ServiceOrderItemRequest } from "@inmanta/web-console-core";
 import { defineCanvasTestObjects } from "../../testSetup";
 import { ServiceEntityShape } from "../ServiceEntityShape";
+import { addConnectionsBetweenShapes } from "./connectionUtils";
 import {
-  getCellsCoordinates,
+  getShapesCoordinates,
   canvasStateToServiceOrderItems,
   getServiceOrderItemsArray,
 } from "./deploymentHelpers";
-import { addConnectionsBetweenShapes } from "./linkUtils";
 
 describe("deploymentHelpers", () => {
   beforeAll(() => {
@@ -55,9 +55,9 @@ describe("deploymentHelpers", () => {
     return shape;
   };
 
-  describe("getCellsCoordinates", () => {
+  describe("getShapesCoordinates", () => {
     it("should return empty array when the canvas has no shapes", () => {
-      const result = getCellsCoordinates(new Map());
+      const result = getShapesCoordinates(new Map());
 
       expect(result).toEqual([]);
     });
@@ -70,7 +70,7 @@ describe("deploymentHelpers", () => {
         ["shape-2", shape2],
       ]);
 
-      const result = getCellsCoordinates(canvasState);
+      const result = getShapesCoordinates(canvasState);
 
       expect(result).toEqual([
         { id: "shape-1", coordinates: { x: 100, y: 200 } },
@@ -87,7 +87,7 @@ describe("deploymentHelpers", () => {
         ["shape-2", shape2],
       ]);
 
-      const result = getCellsCoordinates(canvasState);
+      const result = getShapesCoordinates(canvasState);
 
       expect(result.map(({ id }) => id)).toEqual(["shape-1", "shape-2"]);
     });

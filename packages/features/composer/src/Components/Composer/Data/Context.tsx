@@ -79,8 +79,8 @@ interface ComposerContextInterface {
   canvasState: Map<string, ServiceEntityShape>;
   setCanvasState: Dispatch<SetStateAction<Map<string, ServiceEntityShape>>>;
   canvasActions: CanvasActions;
-  activeCell: ServiceEntityShape | null;
-  setActiveCell: (cell: ServiceEntityShape | null) => void;
+  activeShape: ServiceEntityShape | null;
+  setActiveShape: (shape: ServiceEntityShape | null) => void;
 
   /** The palette item being dragged onto the canvas, if any. */
   draggedItemRef: MutableRefObject<PaletteItem | null>;
@@ -125,8 +125,8 @@ export const composerContext: ComposerContextInterface = {
     disconnectShapes: noop,
     refresh: noop,
   },
-  activeCell: null,
-  setActiveCell: noop,
+  activeShape: null,
+  setActiveShape: noop,
   draggedItemRef: { current: null },
   mainService: null,
   serviceCatalog: [],

@@ -21,7 +21,7 @@ export const useAddPaletteItem = () => {
     serviceCatalog,
     serviceInventories,
     relationsDictionary,
-    setActiveCell,
+    setActiveShape,
   } = useContext(ComposerContext);
 
   return useCallback(
@@ -63,7 +63,7 @@ export const useAddPaletteItem = () => {
             });
 
       canvasActions.addShapes(shapes);
-      setActiveCell(shapes.values().next().value ?? null);
+      setActiveShape(shapes.values().next().value ?? null);
     },
     [
       canvasState,
@@ -71,7 +71,7 @@ export const useAddPaletteItem = () => {
       serviceCatalog,
       serviceInventories,
       relationsDictionary,
-      setActiveCell,
+      setActiveShape,
     ]
   );
 };

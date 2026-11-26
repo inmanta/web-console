@@ -7,7 +7,7 @@ import {
   findParentShapeForEmbedded,
   getRelationInfo,
   canRemoveShape,
-  canRemoveLink,
+  canRemoveConnection,
   getRemoveActions,
   canUndoDelete,
 } from "./relationsHelpers";
@@ -659,7 +659,7 @@ describe("relationsHelpers", () => {
     });
   });
 
-  describe("canRemoveLink", () => {
+  describe("canRemoveConnection", () => {
     it("should return true when link can be removed", () => {
       // Make source shape new so rw modifier doesn't block removal
       const serviceModelA = createMockServiceModel("ServiceA", {
@@ -691,7 +691,7 @@ describe("relationsHelpers", () => {
 
       const serviceCatalog: ServiceModel[] = [serviceModelA, createMockServiceModel("ServiceB")];
 
-      const result = canRemoveLink(
+      const result = canRemoveConnection(
         sourceShape,
         targetShape,
         toCanvas(sourceShape, targetShape),
@@ -735,7 +735,7 @@ describe("relationsHelpers", () => {
 
       const serviceCatalog: ServiceModel[] = [serviceModelA, serviceModelB];
 
-      const result = canRemoveLink(
+      const result = canRemoveConnection(
         sourceShape,
         targetShape,
         toCanvas(sourceShape, targetShape),

@@ -343,7 +343,7 @@ export const createEmbeddedEntityShapes = (
 /**
  * Initializes the canvas state from an instance-with-relations payload.
  * Creates shapes and embedded entities, lays them out, and returns the canvas state map.
- * The links follow from the shapes' connections.
+ * The edges follow from the shapes' connections.
  */
 export const initializeCanvasFromInstance = (
   instanceData: InstanceWithRelations,

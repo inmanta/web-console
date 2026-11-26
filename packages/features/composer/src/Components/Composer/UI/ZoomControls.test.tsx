@@ -13,9 +13,9 @@ import { ZoomControls } from "./ZoomControls";
 
 defineReactFlowTestObjects();
 
-const setup = (shapes: ServiceEntityShape[], activeCellId?: string) =>
+const setup = (shapes: ServiceEntityShape[], activeShapeId?: string) =>
   render(
-    <ComposerTestProvider shapes={toCanvasState(...shapes)} activeCellId={activeCellId}>
+    <ComposerTestProvider shapes={toCanvasState(...shapes)} activeShapeId={activeShapeId}>
       <Canvas />
       <ZoomControls />
     </ComposerTestProvider>

@@ -3,26 +3,28 @@ import { ServiceEntityShape } from "../ServiceEntityShape";
 /**
  * A line on the canvas between two connected shapes, drawn from parent to child.
  */
-export interface ComposerLink {
+export interface ShapeConnection {
   id: string;
   source: string;
   target: string;
 }
 
 /**
- * Derives the links from the shapes' connections maps: one link per connected pair of
- * shapes that are both on the canvas. The connections are the source of truth; the
- * links only exist to be drawn.
+ * Lists the connections on the canvas from the shapes' connections maps: one per connected
+ * pair of shapes that are both on the canvas. The maps are the source of truth; this list only
+ * exists to be drawn.
  *
- * A link points from the parent to the child when one is a known parent of the other,
+ * A connection points from the parent to the child when one is a known parent of the other,
  * and otherwise from the shape that was put on the canvas first.
  *
  * @param canvasState - The shapes on the canvas, keyed by id
- * @returns The links between them
+ * @returns The connections between them
  */
-export const getLinks = (canvasState: Map<string, ServiceEntityShape>): ComposerLink[] => {
-  const links: ComposerLink[] = [];
-  const linkedPairs = new Set<string>();
+export const getCanvasConnections = (
+  canvasState: Map<string, ServiceEntityShape>
+): ShapeConnection[] => {
+  const connections: ShapeConnection[] = [];
+  const connectedPairs = new Set<string>();
 
   canvasState.forEach((shape, shapeId) => {
     shape.connections.forEach((targetIds) => {
@@ -35,21 +37,21 @@ export const getLinks = (canvasState: Map<string, ServiceEntityShape>): Composer
 
         const pair = [shapeId, targetId].sort().join("|");
 
-        if (linkedPairs.has(pair)) {
+        if (connectedPairs.has(pair)) {
           return;
         }
-        linkedPairs.add(pair);
+        connectedPairs.add(pair);
 
         const isChildOfTarget =
           shape.parentIds.has(targetId) && !targetShape.parentIds.has(shapeId);
         const [source, target] = isChildOfTarget ? [targetId, shapeId] : [shapeId, targetId];
 
-        links.push({ id: `${source}->${target}`, source, target });
+        connections.push({ id: `${source}->${target}`, source, target });
       });
     });
   });
 
-  return links;
+  return connections;
 };
 
 /**

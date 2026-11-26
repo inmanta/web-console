@@ -9,7 +9,7 @@ import { SavedCoordinates } from "./canvasLayoutUtils";
  * @param {Map<string, ServiceEntityShape>} canvasState - The shapes on the canvas.
  * @returns {SavedCoordinates[]} An array of objects, each containing the id and coordinates of a shape.
  */
-export const getCellsCoordinates = (
+export const getShapesCoordinates = (
   canvasState: Map<string, ServiceEntityShape>
 ): SavedCoordinates[] =>
   Array.from(canvasState.values()).map((shape) => {

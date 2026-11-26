@@ -8,7 +8,7 @@ import { ServiceOrder } from "@inmanta/web-console-core/Domain/ServiceOrderModel
 import { usePostOrder } from "@inmanta/web-console-core/Queries/Slices/Order";
 import { usePostMetadata } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { ComposerContext } from "../Data/Context";
-import { getCellsCoordinates, getServiceOrderItemsArray } from "../Data/Helpers";
+import { getShapesCoordinates, getServiceOrderItemsArray } from "../Data/Helpers";
 
 /**
  * Properties for the ComposerActions component.
@@ -71,7 +71,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
    *
    */
   const handleDeploy = () => {
-    const coordinates = getCellsCoordinates(canvasState);
+    const coordinates = getShapesCoordinates(canvasState);
 
     const orderItems = getServiceOrderItemsArray(serviceOrderItems).map((instance) => ({
       ...instance,

@@ -360,13 +360,13 @@ export const LeftSidebar: React.FC = () => {
           eventKey="new"
           id={PALETTE_ID}
           tabContentId={PANEL_ID}
-          title={<TabTitleText>{words("instanceComposer.stencil.new")}</TabTitleText>}
+          title={<TabTitleText>{words("instanceComposer.palette.tab.new")}</TabTitleText>}
         />
         <Tab
           eventKey="inventory"
           id={PALETTE_ID}
           tabContentId={PANEL_ID}
-          title={<TabTitleText>{words("instanceComposer.stencil.inventory")}</TabTitleText>}
+          title={<TabTitleText>{words("instanceComposer.palette.tab.inventory")}</TabTitleText>}
         />
       </Tabs>
       {/* Both tabs show this panel; its content follows the selected tab */}

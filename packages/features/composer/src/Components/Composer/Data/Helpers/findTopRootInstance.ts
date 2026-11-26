@@ -13,18 +13,18 @@ export type PartialEntityShape = Pick<ServiceEntityShape, "id" | "entityType" | 
  * first non-embedded ancestor (core or relation).
  *
  * `parentIds` is not reliably a single top-level id: the backend-load path sets
- * it to the root instance, but links drawn on the canvas add the immediate
+ * it to the root instance, but connections drawn on the canvas add the immediate
  * parent and can accumulate several. So we climb one non-embedded step at a time,
  * guarding against cycles, and return the first core/relation shape reached (or
  * undefined when the chain can't be resolved, e.g. an unconnected new entity).
  *
  * @param shape - The starting shape (a non-embedded shape is returned as-is).
- * @param cells - The canvas shapes, keyed by id.
+ * @param shapes - The canvas shapes, keyed by id.
  * @returns The top root instance shape, or undefined if none can be resolved.
  */
 export const findTopRootInstance = <T extends PartialEntityShape>(
   shape: T,
-  cells: Map<string, T>
+  shapes: Map<string, T>
 ): T | undefined => {
   const visited = new Set<string>();
   let current: T | undefined = shape;
@@ -32,7 +32,7 @@ export const findTopRootInstance = <T extends PartialEntityShape>(
   while (current && current.entityType === "embedded") {
     visited.add(String(current.id));
     current = [...current.parentIds]
-      .map((id) => cells.get(id))
+      .map((id) => shapes.get(id))
       .find((parent) => parent !== undefined && !visited.has(String(parent.id)));
   }
 

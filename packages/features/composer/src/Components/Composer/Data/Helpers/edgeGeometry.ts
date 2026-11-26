@@ -19,7 +19,7 @@ export type CardSide = "left" | "right" | "top" | "bottom";
 /**
  * Where a line meets a card: a point on one of its sides.
  */
-export interface LinkAnchor {
+export interface EdgeAnchor {
   x: number;
   y: number;
   side: CardSide;
@@ -42,17 +42,17 @@ const getGaps = (from: CardBox, to: CardBox) => {
 };
 
 /**
- * Reads the direction the canvas is laid out in from its links. A link between cards that are
+ * Reads the direction the canvas is laid out in from its connections. A connection between cards that are
  * beside each other, at overlapping heights, says left to right; one between cards stacked
- * above each other says top to bottom. Links between cards that are apart on both axes say
- * nothing. Left to right, the direction the composer arranges in, unless most links say
+ * above each other says top to bottom. Connections between cards that are apart on both axes say
+ * nothing. Left to right, the direction the composer arranges in, unless most connections say
  * otherwise.
  *
- * @param links - The two cards of each link on the canvas
+ * @param connections - The two cards of each connection on the canvas
  * @returns The axis along which the layers follow each other
  */
-export const getLayoutAxis = (links: Array<[CardBox, CardBox]>): LayoutAxis => {
-  const balance = links.reduce((sum, [from, to]) => {
+export const getLayoutAxis = (connections: Array<[CardBox, CardBox]>): LayoutAxis => {
+  const balance = connections.reduce((sum, [from, to]) => {
     const { horizontalGap, verticalGap } = getGaps(from, to);
 
     if (horizontalGap > 0 && verticalGap <= 0) {
@@ -79,11 +79,11 @@ export const getLayoutAxis = (links: Array<[CardBox, CardBox]>): LayoutAxis => {
  * @param layoutAxis - The direction the canvas is laid out in (getLayoutAxis)
  * @returns The start and end of the line
  */
-export const getLinkAnchors = (
+export const getEdgeAnchors = (
   from: CardBox,
   to: CardBox,
   layoutAxis: LayoutAxis
-): [LinkAnchor, LinkAnchor] => {
+): [EdgeAnchor, EdgeAnchor] => {
   const { dx, dy, horizontalGap, verticalGap } = getGaps(from, to);
   const horizontal =
     horizontalGap > 0 && verticalGap > 0

@@ -41,7 +41,7 @@ export const Composer: React.FC<Props> = ({
   children,
 }) => {
   const [canvasState, setCanvasState] = useState<Map<string, ServiceEntityShape>>(new Map());
-  const [activeCellId, setActiveCellId] = useState<string | null>(null);
+  const [activeShapeId, setActiveShapeId] = useState<string | null>(null);
   const draggedItemRef = useRef<PaletteItem | null>(null);
   const instanceId = instance?.instance.id;
 
@@ -87,9 +87,9 @@ export const Composer: React.FC<Props> = ({
   });
 
   // The active shape is looked up by id, so it drops out once it leaves the canvas.
-  const activeCell = (activeCellId && canvasState.get(activeCellId)) || null;
-  const setActiveCell = useCallback(
-    (cell: ServiceEntityShape | null) => setActiveCellId(cell ? cell.id : null),
+  const activeShape = (activeShapeId && canvasState.get(activeShapeId)) || null;
+  const setActiveShape = useCallback(
+    (shape: ServiceEntityShape | null) => setActiveShapeId(shape ? shape.id : null),
     []
   );
 
@@ -109,8 +109,8 @@ export const Composer: React.FC<Props> = ({
       canvasState: canvasState,
       setCanvasState: setCanvasState,
       canvasActions: canvasActions,
-      activeCell: activeCell,
-      setActiveCell: setActiveCell,
+      activeShape: activeShape,
+      setActiveShape: setActiveShape,
       draggedItemRef: draggedItemRef,
       serviceOrderItems: serviceOrderItems,
       hasValidationErrors: hasValidationErrors,
@@ -128,8 +128,8 @@ export const Composer: React.FC<Props> = ({
       editable,
       canvasState,
       canvasActions,
-      activeCell,
-      setActiveCell,
+      activeShape,
+      setActiveShape,
       serviceOrderItems,
       hasValidationErrors,
     ]
