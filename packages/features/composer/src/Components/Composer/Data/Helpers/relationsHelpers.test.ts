@@ -3,7 +3,6 @@ import { defineCanvasTestObjects } from "../../testSetup";
 import { ServiceEntityShape } from "../ServiceEntityShape";
 import { RelationsDictionary } from "./createRelationsDictionary";
 import {
-  findInterServiceRelations,
   findFullInterServiceRelations,
   findParentShapeForEmbedded,
   getRelationInfo,
@@ -95,43 +94,6 @@ describe("relationsHelpers", () => {
 
   const toCanvas = (...shapes: ServiceEntityShape[]): Map<string, ServiceEntityShape> =>
     new Map(shapes.map((shape) => [shape.id, shape]));
-
-  describe("findInterServiceRelations", () => {
-    it("should return entity types from inter_service_relations", () => {
-      const serviceModel = createMockServiceModel("ServiceA", {
-        inter_service_relations: [
-          createMockInterServiceRelation("rel1", "ServiceB"),
-          createMockInterServiceRelation("rel2", "ServiceC"),
-        ],
-      });
-
-      const result = findInterServiceRelations(serviceModel);
-
-      expect(result).toEqual(["ServiceB", "ServiceC"]);
-    });
-
-    it("should recursively find relations from embedded entities", () => {
-      const serviceModel = createMockServiceModel("ServiceA", {
-        embedded_entities: [
-          createMockEmbeddedEntity("Embedded1", "EmbeddedType", {
-            inter_service_relations: [createMockInterServiceRelation("rel1", "ServiceB")],
-          }),
-        ],
-      });
-
-      const result = findInterServiceRelations(serviceModel);
-
-      expect(result).toEqual(["ServiceB"]);
-    });
-
-    it("should return empty array when no relations exist", () => {
-      const serviceModel = createMockServiceModel("ServiceA");
-
-      const result = findInterServiceRelations(serviceModel);
-
-      expect(result).toEqual([]);
-    });
-  });
 
   describe("findFullInterServiceRelations", () => {
     it("should return full inter-service relation objects", () => {

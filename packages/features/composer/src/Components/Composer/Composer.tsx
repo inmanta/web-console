@@ -44,7 +44,17 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
     [serviceCatalogQuery.data, serviceName]
   );
 
-  const inventoriesQuery = useGetInventoryList(catalogEntries).useContinuousNoRefetch();
+  const [isInventoryRequested, setIsInventoryRequested] = useState(false);
+  const inventoriesQuery = useGetInventoryList(catalogEntries).useOneTime(isInventoryRequested);
+  const { refetch: refetchInventoryQuery } = inventoriesQuery;
+  const refetchInventories = useCallback(() => {
+    if (isInventoryRequested) {
+      void refetchInventoryQuery();
+    } else {
+      // Enabling the query fetches it.
+      setIsInventoryRequested(true);
+    }
+  }, [isInventoryRequested, refetchInventoryQuery]);
 
   // Fetch instance data if instanceId is provided
   // The query will only run if instanceId and mainService are present (enabled check in the hook)
@@ -96,6 +106,9 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
       mainService: mainService || null,
       serviceCatalog: serviceCatalogQuery.data || [],
       serviceInventories: inventoriesQuery.data || null,
+      inventoriesError: inventoriesQuery.error?.message ?? null,
+      isFetchingInventories: inventoriesQuery.isFetching,
+      refetchInventories,
       serviceInstanceId: instanceId || null,
       relationsDictionary: relationsDictionary,
       editable: editable,
@@ -112,6 +125,9 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
       mainService,
       serviceCatalogQuery.data,
       inventoriesQuery.data,
+      inventoriesQuery.error,
+      inventoriesQuery.isFetching,
+      refetchInventories,
       instanceId,
       relationsDictionary,
       editable,

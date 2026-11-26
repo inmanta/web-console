@@ -81,6 +81,8 @@ export const composerMessages = {
   "instanceComposer.palette.noResults.body":
     "Check the spelling, or clear the search to see every service and embedded entity.",
   "instanceComposer.palette.noInstances": "There are no instances to add from the inventory.",
+  "instanceComposer.palette.inventoryError": "The inventory could not be loaded",
+  "instanceComposer.palette.inventoryLoading": "Loading the inventory",
   "instanceComposer.palette.clearSearch": "Clear search",
   "instanceComposer.palette.otherServices": "Other services",
   "instanceComposer.contextMenu.remove": "Remove from canvas",
