@@ -1,26 +1,12 @@
-import React, { useContext } from "react";
-import { words } from "@inmanta/web-console-core";
-import { DependencyContext } from "@inmanta/web-console-core/Dependency";
+import React from "react";
 import { useRouteParams } from "@inmanta/web-console-core/Routing";
-import { ComposerEditorProvider } from "@inmanta/web-console-feature-composer/Components/Composer/Providers";
-import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
+import { ComposerPage } from "@inmanta/web-console-feature-composer/Components/Composer/ComposerPage";
 
 /**
- * Renders the Page component for the Instance Composer Viewer Page.
- * If the composer feature is enabled, it renders the Canvas component wrapped in a ServicesProvider.
- * If the composer feature is disabled, it renders an EmptyView component with a message indicating that the composer is disabled.
- *
- * @returns {React.FC} The Page component.
+ * The Instance Composer page that shows the route's instance, read-only.
  */
 export const Page: React.FC = () => {
   const { service: serviceName, instance } = useRouteParams<"InstanceComposerViewer">();
-  const { orchestratorProvider } = useContext(DependencyContext);
 
-  if (!orchestratorProvider.isComposerEnabled()) {
-    return (
-      <EmptyView message={words("instanceComposer.disabled")} aria-label="ComposerView-Disabled" />
-    );
-  }
-
-  return <ComposerEditorProvider serviceName={serviceName} instance={instance} editable={false} />;
+  return <ComposerPage serviceName={serviceName} instanceId={instance} editable={false} />;
 };

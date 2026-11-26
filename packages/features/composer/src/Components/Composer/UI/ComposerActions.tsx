@@ -6,10 +6,7 @@ import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import { ServiceOrder } from "@inmanta/web-console-core/Domain/ServiceOrderModel";
 import { usePostOrder } from "@inmanta/web-console-core/Queries/Slices/Order";
-import {
-  usePostMetadata,
-  useGetInstanceWithRelations,
-} from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
+import { usePostMetadata } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { ComposerContext } from "../Data/Context";
 import { getCellsCoordinates, getServiceOrderItemsArray } from "../Data/Helpers";
 
@@ -39,19 +36,12 @@ interface Props {
  * @returns {React.FC} The ComposerActions component.
  */
 export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
-  const { mainService, serviceInstanceId, serviceOrderItems, canvasState, hasValidationErrors } =
+  const { mainService, serviceInstance, serviceOrderItems, canvasState, hasValidationErrors } =
     useContext(ComposerContext);
   const { routeManager } = useContext(DependencyContext);
   const { notifyError } = useAppAlert();
   const isDisabled = serviceOrderItems.size < 1 || hasValidationErrors;
   const location = useLocation();
-
-  // Fetch instance data if we're editing
-  const instanceWithRelationsQuery = useGetInstanceWithRelations(
-    serviceInstanceId || "",
-    false,
-    mainService || undefined
-  ).useOneTime();
 
   const metadataMutation = usePostMetadata();
   const orderMutation = usePostOrder({
@@ -94,13 +84,13 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
     }));
 
     // Temporary workaround to update coordinates in metadata, as currently order endpoint don't handle metadata in the updates.
-    if (serviceInstanceId && instanceWithRelationsQuery.data) {
+    if (serviceInstance) {
       metadataMutation.mutate({
         service_entity: mainService?.name || "",
-        service_id: instanceWithRelationsQuery.data.instance.id,
+        service_id: serviceInstance.id,
         key: "coordinates",
         body: {
-          current_version: instanceWithRelationsQuery.data.instance.version,
+          current_version: serviceInstance.version,
           value: JSON.stringify({
             version: "v2",
             data: coordinates,

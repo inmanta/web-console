@@ -1,5 +1,9 @@
 import { createContext, Dispatch, MutableRefObject, SetStateAction } from "react";
-import { ServiceModel, ServiceOrderItemRequest } from "@inmanta/web-console-core";
+import {
+  ServiceInstanceModel,
+  ServiceModel,
+  ServiceOrderItemRequest,
+} from "@inmanta/web-console-core";
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { RelationsDictionary } from "./Helpers/createRelationsDictionary";
 import { ServiceEntityShape } from "./ServiceEntityShape";
@@ -96,6 +100,9 @@ interface ComposerContextInterface {
    */
   refetchInventories: () => void;
   serviceInstanceId: string | null;
+
+  /** The instance being edited or viewed; none for a new instance. */
+  serviceInstance: ServiceInstanceModel | null;
   editable: boolean;
   serviceOrderItems: Map<string, ServiceOrderItemRequest>;
   hasValidationErrors: boolean;
@@ -128,6 +135,7 @@ export const composerContext: ComposerContextInterface = {
   isFetchingInventories: false,
   refetchInventories: noop,
   serviceInstanceId: null,
+  serviceInstance: null,
   editable: false,
   serviceOrderItems: new Map(),
   hasValidationErrors: false,

@@ -1,0 +1,6 @@
+description: The Instance Composer loads the service catalog and the instance once, and no longer polls the catalog.
+issue-nr: 8064
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

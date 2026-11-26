@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { ReactFlowProvider } from "@xyflow/react";
-import { useGetServiceModels } from "@inmanta/web-console-core/Queries/Slices/Service";
+import { ServiceModel } from "@inmanta/web-console-core";
 import {
+  InstanceWithRelations,
   useGetInventoryList,
-  useGetInstanceWithRelations,
 } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { ComposerContext, composerContext, PaletteItem } from "./Data/Context";
 import { createRelationsDictionary, RelationsDictionary } from "./Data/Helpers";
@@ -12,37 +12,44 @@ import { ServiceEntityShape } from "./Data/ServiceEntityShape";
 import { ComposerContainer, Canvas, LeftSidebar, RightSidebar } from "./UI";
 
 /**
- * Props for the top-level Composer component.
+ * Props for the top-level Composer component. The composer page (ComposerPage) loads the data.
  */
 interface Props {
   editable: boolean;
-  instanceId?: string;
-  serviceName: string;
+
+  /** The whole service catalog: the services the canvas can hold, and their relations. */
+  serviceCatalog: ServiceModel[];
+
+  /** The service of the instance being composed. */
+  mainService: ServiceModel;
+
+  /** The instance being edited or viewed, with its related instances; none for a new instance. */
+  instance?: InstanceWithRelations;
   children?: React.ReactNode;
 }
 
 /**
  * Top-level component for the instance composer.
- * Sets up data fetching and the canvas state, and provides composer context to child UI.
+ * Sets up the canvas state and provides the composer context to the child UI. It only fetches the
+ * inventory, when the palette asks for it.
  */
-export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, children }) => {
-  const [catalogEntries, setCatalogEntries] = useState<string[]>([]);
+export const Composer: React.FC<Props> = ({
+  editable,
+  serviceCatalog,
+  mainService,
+  instance,
+  children,
+}) => {
   const [canvasState, setCanvasState] = useState<Map<string, ServiceEntityShape>>(new Map());
   const [activeCellId, setActiveCellId] = useState<string | null>(null);
   const draggedItemRef = useRef<PaletteItem | null>(null);
+  const instanceId = instance?.instance.id;
 
-  const serviceCatalogQuery = useGetServiceModels().useContinuousNoRefetch();
   const relationsDictionary: RelationsDictionary = useMemo(
-    () => createRelationsDictionary(serviceCatalogQuery.data || []),
-    [serviceCatalogQuery.data]
+    () => createRelationsDictionary(serviceCatalog),
+    [serviceCatalog]
   );
-
-  // We could fetch the main service individually,
-  // but since we already have the full catalog, we save a call by filtering it out.
-  const mainService = useMemo(
-    () => serviceCatalogQuery.data?.find((service) => service.name === serviceName),
-    [serviceCatalogQuery.data, serviceName]
-  );
+  const catalogEntries = useMemo(() => serviceCatalog.map(({ name }) => name), [serviceCatalog]);
 
   const [isInventoryRequested, setIsInventoryRequested] = useState(false);
   const inventoriesQuery = useGetInventoryList(catalogEntries).useOneTime(isInventoryRequested);
@@ -56,28 +63,14 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
     }
   }, [isInventoryRequested, refetchInventoryQuery]);
 
-  // Fetch instance data if instanceId is provided
-  // The query will only run if instanceId and mainService are present (enabled check in the hook)
-  const instanceWithRelationsQuery = useGetInstanceWithRelations(
-    instanceId || "",
-    false,
-    mainService
-  ).useOneTimeNoRefetch();
-
-  useEffect(() => {
-    if (serviceCatalogQuery.isSuccess) {
-      setCatalogEntries(serviceCatalogQuery.data.map((service) => service.name));
-    }
-  }, [serviceCatalogQuery.isSuccess, serviceCatalogQuery.data]);
-
   useComposerInitialization({
-    serviceName,
+    serviceName: mainService.name,
     instanceId,
-    serviceCatalog: serviceCatalogQuery.data,
-    mainService: mainService,
+    serviceCatalog,
+    mainService,
     relationsDictionary,
-    instanceData: instanceWithRelationsQuery.data || null,
-    isInstanceDataReady: instanceWithRelationsQuery.isSuccess,
+    instanceData: instance ?? null,
+    isInstanceDataReady: instance !== undefined,
     onCanvasStateInitialized: setCanvasState,
   });
 
@@ -85,7 +78,7 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
     canvasState,
     setCanvasState,
     relationsDictionary,
-    serviceCatalog: serviceCatalogQuery.data || [],
+    serviceCatalog,
   });
 
   // Use service order items hook for derivation and validation
@@ -103,13 +96,14 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
   const contextValue = useMemo(
     () => ({
       ...composerContext,
-      mainService: mainService || null,
-      serviceCatalog: serviceCatalogQuery.data || [],
+      mainService,
+      serviceCatalog,
       serviceInventories: inventoriesQuery.data || null,
       inventoriesError: inventoriesQuery.error?.message ?? null,
       isFetchingInventories: inventoriesQuery.isFetching,
       refetchInventories,
       serviceInstanceId: instanceId || null,
+      serviceInstance: instance?.instance ?? null,
       relationsDictionary: relationsDictionary,
       editable: editable,
       canvasState: canvasState,
@@ -123,12 +117,13 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
     }),
     [
       mainService,
-      serviceCatalogQuery.data,
+      serviceCatalog,
       inventoriesQuery.data,
       inventoriesQuery.error,
       inventoriesQuery.isFetching,
       refetchInventories,
       instanceId,
+      instance,
       relationsDictionary,
       editable,
       canvasState,
