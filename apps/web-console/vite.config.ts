@@ -18,6 +18,7 @@ import { defineConfig, mergeConfig, Plugin } from "vite";
 import {
   composerBuildDir,
   composerEntry,
+  composerManifestFile,
   composerSharedModules,
   composerVitePlugin,
 } from "@inmanta/web-console-feature-composer/vite";
@@ -44,6 +45,8 @@ const copyComposerPlugin = (): Plugin => ({
 
 export default defineConfig(({ command }) =>
   mergeConfig(appConfig(import.meta.dirname, outDir), {
+    // The manifest app.ts loads the composer through, as the composer's build names it.
+    define: { COMPOSER_MANIFEST_FILE: JSON.stringify(composerManifestFile) },
     plugins: [
       graphiqlVitePlugin(),
       ...(command === "build"

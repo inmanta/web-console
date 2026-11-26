@@ -23,11 +23,10 @@ import { createRequire } from "module";
 import { tmpdir } from "os";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
-import { composerManifestFile } from "../packages/features/composer/vite.js";
+import { composerBuildDir, composerManifestFile } from "@inmanta/web-console-feature-composer/vite";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const composerDir = join(repoRoot, "packages/features/composer");
-const composerBuildDir = join(composerDir, "dist");
+const composerDir = dirname(composerBuildDir);
 
 /**
  * The folder an orchestrator's container serves the web console from (see `update:dist`).

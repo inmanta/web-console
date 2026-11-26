@@ -8,3 +8,9 @@ declare module "composer/feature" {
   export const feature: RuntimeFeatureEntry["feature"];
   export const singletons: RuntimeFeatureEntry["singletons"];
 }
+
+/**
+ * The name of the manifest the composer's separate build writes (`composerManifestFile` in its
+ * vite.js), defined in vite.config.ts.
+ */
+declare const COMPOSER_MANIFEST_FILE: string;
