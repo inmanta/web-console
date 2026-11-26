@@ -108,7 +108,12 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
         {data.diff.length <= 0 ? (
           <EmptyView message={words("desiredState.compare.empty")} />
         ) : (
-          <DiffWizard.ItemList items={items} refs={refs} />
+          <DiffWizard.ItemList
+            items={items}
+            refs={refs}
+            fromLabel={words("currentState")}
+            toLabel={words("modelVersion")(version)}
+          />
         )}
       </>
     );
