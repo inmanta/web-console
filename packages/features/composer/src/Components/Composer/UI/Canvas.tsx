@@ -1,16 +1,15 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
-  applyNodeChanges,
   Background,
   BackgroundVariant,
   Connection,
   Edge,
-  EdgeChange,
+  EdgeChangeset,
   MiniMap,
-  NodeChange,
+  NodeChangeset,
   ReactFlow,
+  useConnectionStore,
   useReactFlow,
-  useStore,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import styled from "styled-components";
@@ -18,17 +17,15 @@ import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import {
   canRemoveLink,
-  CardBox,
   checkIfConnectionIsAllowed,
   countHiddenLayers,
   getConnectedLayerData,
-  getLayoutAxis,
   getLinks,
   getRemoveActions,
   getShapeName,
   getValidationMessages,
 } from "../Data/Helpers";
-import { useAddPaletteItem } from "../Data/Hooks";
+import { useAddPaletteItem, useLayoutAxis } from "../Data/Hooks";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import {
   LEFT_SIDEBAR_WIDTH,
@@ -36,6 +33,7 @@ import {
   MIN_ZOOM,
   RIGHT_SIDEBAR_WIDTH,
   SHAPE_WIDTH,
+  ZOOM_TO_FIT_PADDING,
 } from "../config";
 import { EntityContextMenu } from "./EntityContextMenu";
 import { EntityNode, EntityNodeData, EntityNodeType } from "./EntityNode";
@@ -44,7 +42,7 @@ import { entityAccentColors } from "./entityColors";
 
 const nodeTypes = { entity: EntityNode };
 const edgeTypes = { relation: RelationEdge };
-const fitViewOptions = { padding: 0.2, maxZoom: 1 };
+const fitViewOptions = { padding: ZOOM_TO_FIT_PADDING, maxZoom: 1 };
 const proOptions = { hideAttribution: true };
 
 /**
@@ -88,36 +86,12 @@ export const Canvas: React.FC = () => {
     draggedItemRef,
   } = useContext(ComposerContext);
   const { screenToFlowPosition, flowToScreenPosition, getInternalNode } = useReactFlow();
-  const isConnecting = useStore((state) => state.connection.inProgress);
+  const isConnecting = useConnectionStore((state) => state.connection.inProgress);
   const addPaletteItem = useAddPaletteItem();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [nodes, setNodes] = useState<EntityNodeType[]>([]);
 
-  // Read from where the visible cards are now, so the lines follow a drag or an Arrange. The
-  // cards change on a move or a measurement, not on a pan or a zoom.
-  const layoutAxis = useMemo(() => {
-    const boxes = new Map(
-      nodes
-        .filter((node) => !node.hidden)
-        .map((node): [string, CardBox] => [
-          node.id,
-          {
-            ...node.position,
-            width: node.measured?.width ?? 0,
-            height: node.measured?.height ?? 0,
-          },
-        ])
-    );
-
-    return getLayoutAxis(
-      getLinks(canvasState).flatMap((link): Array<[CardBox, CardBox]> => {
-        const source = boxes.get(link.source);
-        const target = boxes.get(link.target);
-
-        return source && target ? [[source, target]] : [];
-      })
-    );
-  }, [nodes, canvasState]);
+  const { layoutAxis, onCardDragged } = useLayoutAxis(canvasState);
   const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   // Read out by screen readers; a new selection clears it
@@ -204,10 +178,13 @@ export const Canvas: React.FC = () => {
   // Moving or measuring a card writes straight to its shape. Neither changes the order,
   // so the canvasState map stays the same and the order items aren't recomputed.
   const onNodesChange = useCallback(
-    (changes: NodeChange<EntityNodeType>[]) => {
+    (changeset: NodeChangeset<EntityNodeType>) => {
+      const changes = changeset.toArray();
+
       changes.forEach((change) => {
         if (change.type === "position" && change.position) {
           canvasState.get(change.id)?.setPosition(change.position.x, change.position.y);
+          onCardDragged(change.id, change.position);
         }
         if (change.type === "dimensions" && change.dimensions) {
           const shape = canvasState.get(change.id);
@@ -231,14 +208,13 @@ export const Canvas: React.FC = () => {
         setActiveCell(null);
       }
 
-      setNodes((current) =>
-        applyNodeChanges(
-          changes.filter((change) => change.type !== "select" && change.type !== "remove"),
-          current
-        )
+      const changesToApply = new NodeChangeset<EntityNodeType>(
+        changes.filter((change) => change.type !== "select" && change.type !== "remove")
       );
+
+      setNodes((current) => changesToApply.applyTo(current));
     },
-    [canvasState, activeCell, setActiveCell]
+    [canvasState, activeCell, setActiveCell, onCardDragged]
   );
 
   // One selection at a time: a card or a relation line
@@ -253,8 +229,8 @@ export const Canvas: React.FC = () => {
   // A relation line is selected by a click (onEdgeClick) or, when focused, with Enter or Space,
   // which React Flow reports here. Escape unselects it.
   const onEdgesChange = useCallback(
-    (changes: EdgeChange<RelationEdgeType>[]) => {
-      const selections = changes.filter((change) => change.type === "select");
+    (changeset: EdgeChangeset<RelationEdgeType>) => {
+      const selections = changeset.getByType("select");
       const selected = selections.filter((change) => change.selected).pop();
 
       if (selected) {

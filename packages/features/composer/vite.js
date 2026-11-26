@@ -18,12 +18,12 @@ const composerDir = dirname(fileURLToPath(import.meta.url));
 const canvasLibraries = ["@xyflow/react", "@dagrejs/dagre"];
 
 /**
- * The CommonJS modules the canvas libraries import that `require` React: React Flow's store
- * (zustand 4) imports this one. The composer's build can't bundle them: React comes from the app's
- * import map as an ES module, which a `require` can't load (the build fails on such a `require`,
- * see vite.config.ts). The app bundles them with its React and provides them instead.
+ * The modules the canvas libraries import that the composer resolves to a module of React, which
+ * the app shares. React Flow is built with the React Compiler and imports its runtime from the
+ * react-compiler-runtime package. That package is CommonJS, so the app's shared copy of it has no
+ * named exports. React 19 ships the same runtime as react/compiler-runtime.
  */
-const canvasCommonJsModules = ["use-sync-external-store/shim/with-selector.js"];
+const canvasModuleAliases = { "react-compiler-runtime": "react/compiler-runtime" };
 
 /**
  * The package an import specifier, or a path inside node_modules, names: "@xyflow/react" for
@@ -54,8 +54,8 @@ const findManifest = (name, fromDir) =>
 /**
  * The canvas libraries and every package they depend on (`packages`): the only installed packages
  * the composer's build may bundle (see vite.config.ts). The modules the app provides to them
- * (`shared`) aren't in it: their required peer dependencies, React and React DOM, and
- * `canvasCommonJsModules`.
+ * (`shared`) aren't in it: their required peer dependencies, React and React DOM, and the React
+ * modules in `canvasModuleAliases`.
  *
  * @returns {{ packages: string[], shared: string[] }} the package names and shared specifiers,
  *   sorted
@@ -101,17 +101,21 @@ export const canvasPackages = () => {
     }
   }
 
-  const commonJsPackages = canvasCommonJsModules.map(packageOf);
+  const aliasedPackages = Object.keys(canvasModuleAliases).map(packageOf);
 
   return {
-    packages: [...names].filter((name) => !commonJsPackages.includes(name)).sort(),
-    shared: [...[...peers].filter((peer) => !names.has(peer)), ...canvasCommonJsModules].sort(),
+    packages: [...names].filter((name) => !aliasedPackages.includes(name)).sort(),
+    shared: [
+      ...[...peers].filter((peer) => !names.has(peer)),
+      ...Object.values(canvasModuleAliases),
+    ].sort(),
   };
 };
 
 /**
  * The Vite settings the composer needs in an app that ships it, and in the tests: the canvas
- * libraries go into a chunk of their own.
+ * libraries go into a chunk of their own, and their imports in `canvasModuleAliases` resolve to
+ * React's modules.
  *
  * @returns {import("vite").Plugin} The Vite plugin.
  */
@@ -121,6 +125,12 @@ export const composerVitePlugin = () => {
   return {
     name: "inmanta-composer",
     config: () => ({
+      resolve: {
+        alias: Object.entries(canvasModuleAliases).map(([module, reactModule]) => ({
+          find: new RegExp(`^${module}$`),
+          replacement: reactModule,
+        })),
+      },
       build: {
         rollupOptions: {
           output: {

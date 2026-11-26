@@ -1,9 +1,31 @@
 import environmentHelpers from "../support/environmentHelpers.js";
 
-const { selectEnvironment, getDefaultEnvName } = environmentHelpers;
+const { selectEnvironment, getDefaultEnvName, getEnvironmentId } = environmentHelpers;
 
 const testProjectName = (id) => "Test Project Name " + id;
 const testName = (id) => "TestName " + id;
+
+/**
+ * Selects an environment in the header and yields its id once the app has saved it as the last
+ * selected environment. A reload before that save would redirect the root path to the previously
+ * selected environment.
+ *
+ * @param {string} displayName - the environment as `<name> (<project>)`, used to look up its id
+ * @param {string} [menuItemText] - text to click in the selector, which truncates long names
+ */
+const selectEnvironmentAndWaitUntilSaved = (displayName, menuItemText = displayName) => {
+  selectEnvironment(menuItemText);
+
+  return getEnvironmentId(displayName).then((environmentId) => {
+    cy.location("search").should("include", `env=${environmentId}`);
+    cy.window()
+      .its("localStorage")
+      .invoke("getItem", "lastSelectedEnvironment")
+      .should("eq", environmentId);
+
+    return cy.wrap(environmentId);
+  });
+};
 
 beforeEach(() => {
   cy.fixture("test-icon.png", { encoding: null }).as("icon");
@@ -452,23 +474,14 @@ describe("Environment", () => {
     });
     cy.get("button").contains("Submit").click();
 
-    // Select the default environment and capture its ID
-    selectEnvironment();
-
-    cy.url().then((defaultUrl) => {
-      const defaultEnvId = new URL(defaultUrl).searchParams.get("env");
-
-      // Load base path and confirm redirect to the default environment
+    // Select the default environment, then load the base path and confirm the redirect to it
+    selectEnvironmentAndWaitUntilSaved(getDefaultEnvName()).then((defaultEnvId) => {
       cy.visit("/console/");
       cy.url().should("include", `env=${defaultEnvId}`);
     });
 
-    // Select environment 7
-    selectEnvironment(envName);
-    cy.url().then((env7Url) => {
-      const env7Id = new URL(env7Url).searchParams.get("env");
-
-      // Load base path and confirm redirect to environment 7
+    // Select environment 7, then load the base path and confirm the redirect to it
+    selectEnvironmentAndWaitUntilSaved(`${envName} (${projectName})`, envName).then((env7Id) => {
       cy.visit("/console/");
       cy.url().should("include", `env=${env7Id}`);
     });

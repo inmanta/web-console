@@ -23,7 +23,7 @@ const PageWrapper: React.FC<React.PropsWithChildren<{ identifier: string }>> = (
   ...props
 }) => (
   <PageContainer {...props} pageTitle={words("inventory.editInstance.title")}>
-    <Description withSpace>{words("inventory.duplicateInstance.header")(identifier)}</Description>
+    <Description withSpace>{words("inventory.editInstance.header")(identifier)}</Description>
     {children}
   </PageContainer>
 );

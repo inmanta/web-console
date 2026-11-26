@@ -1,0 +1,4 @@
+description: Made the graphql suggestions (2.5.4) and last selected environment (1.6) e2e tests less flaky.
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

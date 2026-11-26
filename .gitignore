@@ -91,3 +91,6 @@ src/Dev/
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Crash dumps from Git Bash (MSYS) tools
+*.stackdump

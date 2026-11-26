@@ -22,8 +22,11 @@ const entityContaining = (name) => `[data-testid^="entity-"][data-testid*="${nam
 /**
  * Drags a link from the link action of the selected card onto the target card, the way
  * a user does: press on the link action, move onto the target, release.
+ * The events are real MouseEvents: React Flow ignores the plain Event that trigger sends by default.
  */
 const linkSelectedEntityTo = (targetSelector) => {
+  const mouseEvent = { eventConstructor: "MouseEvent", button: 0 };
+
   cy.get(".react-flow__node.selected .link-handle").then(($handle) => {
     const from = $handle[0].getBoundingClientRect();
     const fromX = from.left + from.width / 2;
@@ -34,10 +37,14 @@ const linkSelectedEntityTo = (targetSelector) => {
       const toX = to.left + to.width / 2;
       const toY = to.top + to.height / 2;
 
-      cy.wrap($handle).trigger("mousedown", { button: 0, clientX: fromX, clientY: fromY });
-      cy.document().trigger("mousemove", { button: 0, clientX: fromX + 20, clientY: fromY + 20 });
-      cy.document().trigger("mousemove", { button: 0, clientX: toX, clientY: toY });
-      cy.document().trigger("mouseup", { button: 0, clientX: toX, clientY: toY });
+      cy.wrap($handle).trigger("mousedown", { ...mouseEvent, clientX: fromX, clientY: fromY });
+      cy.document().trigger("mousemove", {
+        ...mouseEvent,
+        clientX: fromX + 20,
+        clientY: fromY + 20,
+      });
+      cy.document().trigger("mousemove", { ...mouseEvent, clientX: toX, clientY: toY });
+      cy.document().trigger("mouseup", { ...mouseEvent, clientX: toX, clientY: toY });
     });
   });
 };
