@@ -15,7 +15,7 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
   </QueryClientProvider>
 );
 
-const instances = (service: string, count: number, from = 0): ServiceInstanceModel[] =>
+const createInstances = (service: string, count: number, from = 0): ServiceInstanceModel[] =>
   Array.from({ length: count }, (_, index) => ({
     ...ServiceInstance.a,
     id: `${service}-${from + index}`,
@@ -26,7 +26,7 @@ const instances = (service: string, count: number, from = 0): ServiceInstanceMod
  * The query of the API's `links.next` after the given instance: a cursor of the last instance's
  * position and id, with the sort and filters of the first page.
  */
-const nextQuery = (limit: number, position: number, lastId: string) =>
+const createNextQuery = (limit: number, position: number, lastId: string) =>
   `limit=${limit}&sort=created_at.DESC&include_deleted=False&filter.deleted=False&end=${position}&last_instance_id=${lastId}`;
 
 /**
@@ -49,7 +49,7 @@ const servePages = (service: string, all: ServiceInstanceModel[], requests: stri
         self: `/lsm/v1/service_inventory/${service}${url.search}`,
         ...(start + limit < all.length
           ? {
-              next: `/lsm/v1/service_inventory/${service}?${nextQuery(limit, start + limit, page[page.length - 1].id)}`,
+              next: `/lsm/v1/service_inventory/${service}?${createNextQuery(limit, start + limit, page[page.length - 1].id)}`,
             }
           : {}),
       },
@@ -60,11 +60,14 @@ describe("useGetInventoryList", () => {
   const server = setupTestServer();
 
   beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
+  afterEach(() => {
+    server.resetHandlers();
+    testClient.clear();
+  });
   afterAll(() => server.close());
 
   test("GIVEN a service with more instances than fit in a page THEN it fetches every page", async () => {
-    const all = instances("big-service", 1001);
+    const all = createInstances("big-service", 1001);
     const requests: string[] = [];
 
     server.use(servePages("big-service", all, requests));
@@ -79,15 +82,15 @@ describe("useGetInventoryList", () => {
     // The one instance on the second page
     expect(result.current.data?.["big-service"][1000].id).toBe("big-service-1000");
     // The second request is the whole query of links.next
-    expect(requests).toEqual(["limit=1000", nextQuery(1000, 1000, "big-service-999")]);
+    expect(requests).toEqual(["limit=1000", createNextQuery(1000, 1000, "big-service-999")]);
   });
 
   test("GIVEN several services THEN it keeps the instances of each under its own name", async () => {
     const requests: string[] = [];
 
     server.use(
-      servePages("service-a", instances("service-a", 1002), requests),
-      servePages("service-b", instances("service-b", 2), requests)
+      servePages("service-a", createInstances("service-a", 1002), requests),
+      servePages("service-b", createInstances("service-b", 2), requests)
     );
 
     const { result } = renderHook(
@@ -114,7 +117,7 @@ describe("useGetInventoryList", () => {
         requests.push(new URL(request.url).search);
 
         return HttpResponse.json({
-          data: instances("looping-service", 2),
+          data: createInstances("looping-service", 2),
           links: { self: "", next: "/lsm/v1/service_inventory/looping-service?end=same" },
         });
       })
@@ -136,7 +139,7 @@ describe("useGetInventoryList", () => {
       http.get("/lsm/v1/service_inventory/plain-service", ({ request }) => {
         requests.push(new URL(request.url).search);
 
-        return HttpResponse.json({ data: instances("plain-service", 3) });
+        return HttpResponse.json({ data: createInstances("plain-service", 3) });
       })
     );
 

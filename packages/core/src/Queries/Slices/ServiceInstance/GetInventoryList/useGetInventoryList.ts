@@ -44,11 +44,10 @@ export const useGetInventoryList = (serviceNames: string[]): GetInventoryList =>
    * Fetches every instance of one service: each page in turn, following `links.next`. A next link
    * to the page it was on ends it, so it never fetches the same page forever.
    *
-   * @param serviceName - the service
    * @returns the instances of the service
    * @throws Will throw an error if the fetch of any page fails.
    */
-  const fetchService = async (serviceName: string): Promise<ServiceInstanceModel[]> => {
+  const fetchServiceInventory = async (serviceName: string): Promise<ServiceInstanceModel[]> => {
     const instances: ServiceInstanceModel[] = [];
     let query: string | undefined = `limit=${PAGE_SIZE}`;
 
@@ -71,7 +70,7 @@ export const useGetInventoryList = (serviceNames: string[]): GetInventoryList =>
    * @throws Will throw an error if the fetch operation for any service fails.
    */
   const fetchAllServices = async (): Promise<Inventories> => {
-    const inventories = await Promise.all(serviceNames.map(fetchService));
+    const inventories = await Promise.all(serviceNames.map(fetchServiceInventory));
 
     return Object.fromEntries(
       inventories.map((instances, index) => [serviceNames[index], instances])
