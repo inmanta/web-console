@@ -53,7 +53,9 @@ describe("Composer", () => {
 
     expect(inventoryRequests).toEqual([]);
 
-    const inventoryTab = screen.getByRole("tab", { name: words("instanceComposer.stencil.inventory") });
+    const inventoryTab = screen.getByRole("tab", {
+      name: words("instanceComposer.stencil.inventory"),
+    });
 
     await user.click(inventoryTab);
     await waitFor(() => expect(inventoryRequests).toHaveLength(serviceCatalog.length));

@@ -32,25 +32,37 @@ const serviceInventories: Inventories = {
   "child-service": [childInstance],
 };
 
-const setup = (
-  options: {
-    shapes?: ServiceEntityShape[];
-    editable?: boolean;
-    serviceCatalog?: ServiceModel[];
-    serviceInventories?: Inventories;
-  } = {}
-) =>
-  render(
-    <ComposerTestProvider
-      shapes={toCanvasState(...(options.shapes ?? []))}
-      serviceCatalog={options.serviceCatalog}
-      serviceInventories={options.serviceInventories ?? serviceInventories}
-      editable={options.editable}
-    >
-      <LeftSidebar />
-      <Canvas />
-    </ComposerTestProvider>
-  );
+interface SetupOptions {
+  shapes?: ServiceEntityShape[];
+  editable?: boolean;
+  serviceCatalog?: ServiceModel[];
+
+  /** The test inventory by default; null for none yet. */
+  serviceInventories?: Inventories | null;
+  inventoriesError?: string;
+  isFetchingInventories?: boolean;
+  refetchInventories?: () => void;
+}
+
+const palette = ({ shapes = [], serviceInventories: inventories, ...options }: SetupOptions) => (
+  <ComposerTestProvider
+    shapes={toCanvasState(...shapes)}
+    serviceInventories={inventories === undefined ? serviceInventories : inventories}
+    {...options}
+  >
+    <LeftSidebar />
+    <Canvas />
+  </ComposerTestProvider>
+);
+
+/**
+ * Renders the palette with the canvas; `rerender` renders it again with other options.
+ */
+const setup = (options: SetupOptions = {}) => {
+  const result = render(palette(options));
+
+  return { ...result, rerender: (next: SetupOptions) => result.rerender(palette(next)) };
+};
 
 const openInventory = () =>
   userEvent.click(screen.getByRole("tab", { name: words("instanceComposer.stencil.inventory") }));
@@ -346,21 +358,8 @@ describe("LeftSidebar", () => {
   });
 
   describe("inventory fetching", () => {
-    const renderWith = (props: {
-      inventoriesError?: string;
-      isFetchingInventories?: boolean;
-      serviceInventories?: Inventories | null;
-      refetchInventories: () => void;
-    }) =>
-      render(
-        <ComposerTestProvider serviceInventories={serviceInventories} {...props}>
-          <LeftSidebar />
-          <Canvas />
-        </ComposerTestProvider>
-      );
-
     it("says the inventory is loading until it first arrives, and keeps the last one after", async () => {
-      const { rerender } = renderWith({
+      const { rerender } = setup({
         serviceInventories: null,
         isFetchingInventories: true,
         refetchInventories: vi.fn(),
@@ -376,12 +375,7 @@ describe("LeftSidebar", () => {
       ).not.toBeInTheDocument();
 
       // Fetching it again keeps the inventory it has
-      rerender(
-        <ComposerTestProvider serviceInventories={serviceInventories} isFetchingInventories>
-          <LeftSidebar />
-          <Canvas />
-        </ComposerTestProvider>
-      );
+      rerender({ isFetchingInventories: true });
 
       expect(screen.getByTestId("palette-item-edge-1")).toBeVisible();
     });
@@ -389,7 +383,7 @@ describe("LeftSidebar", () => {
     it("fetches the inventory again each time the Inventory tab opens", async () => {
       const refetchInventories = vi.fn();
 
-      renderWith({ refetchInventories });
+      setup({ refetchInventories });
 
       await openInventory();
       // Selecting the open tab again doesn't fetch it again
@@ -408,7 +402,7 @@ describe("LeftSidebar", () => {
     it("shows why the inventory couldn't be fetched instead of the last one, with a retry", async () => {
       const refetchInventories = vi.fn();
 
-      renderWith({ inventoriesError: "Request failed", refetchInventories });
+      setup({ inventoriesError: "Request failed", refetchInventories });
       await openInventory();
 
       expect(
@@ -424,7 +418,7 @@ describe("LeftSidebar", () => {
     });
 
     it("keeps the New tab when the inventory couldn't be fetched", () => {
-      renderWith({ inventoriesError: "Request failed", refetchInventories: vi.fn() });
+      setup({ inventoriesError: "Request failed", refetchInventories: vi.fn() });
 
       expect(screen.getByTestId("palette-group-parent-service")).toBeVisible();
     });
