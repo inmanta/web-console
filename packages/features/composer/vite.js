@@ -167,6 +167,13 @@ export const composerBuildDir = join(composerDir, "dist");
 export const composerEntry = join(composerDir, "src/entry.ts");
 
 /**
+ * The manifest the composer's separate build writes under this fixed name, next to its files:
+ * `{ "entry": "<file>" }`, the entry, whose name has a hash. The ISO app's build loads the
+ * composer through it (app.ts), and scripts/composer-ship-mode.js reads it.
+ */
+export const composerManifestFile = "composer-manifest.json";
+
+/**
  * The modules the app shares with the composer's separate build: every package the code of that
  * build imports, except the canvas libraries, which only the composer has, plus the modules those
  * libraries get from the app (`canvasPackages().shared`). The app provides the only copy of each
