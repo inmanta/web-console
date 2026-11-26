@@ -34,7 +34,7 @@ import {
   ZOOM_TO_FIT_PADDING,
   ZOOM_TO_FIT_PADDING_BUTTON,
 } from "../config";
-import { ZoomControlsBand, ZoomControlsContainer } from "./ZoomControls.styles";
+import { ZoomControlsContainer, ZoomControlsStrip } from "./ZoomControls.styles";
 
 /**
  * The toolbar under the canvas: arrange the layout, full screen, fit to screen, and zoom.
@@ -113,8 +113,8 @@ export const ZoomControls: React.FC = () => {
     : words("instanceComposer.zoomHandler.fullscreen.toggle");
 
   return (
-    <ZoomControlsBand>
-      <ZoomControlsContainer className="zoom-toolbar">
+    <ZoomControlsStrip>
+      <ZoomControlsContainer>
         <Dropdown
           isOpen={isArrangeOpen}
           onOpenChange={setIsArrangeOpen}
@@ -254,6 +254,6 @@ export const ZoomControls: React.FC = () => {
           </AlertGroup>
         )}
       </ZoomControlsContainer>
-    </ZoomControlsBand>
+    </ZoomControlsStrip>
   );
 };

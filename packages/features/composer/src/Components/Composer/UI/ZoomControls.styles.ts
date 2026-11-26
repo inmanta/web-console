@@ -1,52 +1,6 @@
 import styled from "styled-components";
 import { LEFT_SIDEBAR_WIDTH, RIGHT_SIDEBAR_OFFSET } from "../config";
 
-/**
- * The strip of the canvas the toolbar sits in: between the palette and the details panel, so the
- * toolbar never overlaps them. The toolbar fits its controls to the strip's width (a container
- * query), so a narrow canvas drops the slider first, then the zoom percentage and the Arrange
- * label. The strip itself lets clicks through to the canvas.
- */
-export const ZoomControlsBand = styled.div`
-  position: absolute;
-  bottom: 25px;
-  left: ${LEFT_SIDEBAR_WIDTH}px;
-  right: ${RIGHT_SIDEBAR_OFFSET}px;
-  display: flex;
-  justify-content: center;
-  padding-inline: var(--pf-t--global--spacer--sm);
-  pointer-events: none;
-  container: zoom-band / inline-size;
-  z-index: 10;
-
-  // Narrower than the whole toolbar (about 30.5rem): no slider; the buttons still zoom.
-  @container zoom-band (max-width: 31rem) {
-    .zoom-slider {
-      display: none;
-    }
-  }
-
-  // Narrower than that (about 23rem): no dividers, only the Arrange icon (the toggle keeps its
-  // name), and less padding. The zoom percentage stays, as the only sign of the zoom level.
-  @container zoom-band (max-width: 23.5rem) {
-    .arrange-label,
-    .toolbar-divider {
-      display: none;
-    }
-
-    .zoom-toolbar {
-      padding-inline: var(--pf-t--global--spacer--sm);
-    }
-  }
-
-  // Too narrow even for that (about 17rem): no zoom percentage either.
-  @container zoom-band (max-width: 17.5rem) {
-    .zoom-percentage {
-      display: none;
-    }
-  }
-`;
-
 export const ZoomControlsContainer = styled.div`
   pointer-events: auto;
   max-width: 100%;
@@ -105,5 +59,51 @@ export const ZoomControlsContainer = styled.div`
     color: var(--pf-t--global--text--color--subtle);
     font-size: var(--pf-t--global--font--size--body--sm);
     text-align: right;
+  }
+`;
+
+/**
+ * The strip of the canvas the toolbar sits in: between the palette and the details panel, so the
+ * toolbar never overlaps them. The toolbar fits its controls to the strip's width (a container
+ * query), so a narrow canvas drops the slider first, then the dividers and the Arrange label,
+ * then the zoom percentage. The strip itself lets clicks through to the canvas.
+ */
+export const ZoomControlsStrip = styled.div`
+  position: absolute;
+  bottom: 25px;
+  left: ${LEFT_SIDEBAR_WIDTH}px;
+  right: ${RIGHT_SIDEBAR_OFFSET}px;
+  display: flex;
+  justify-content: center;
+  padding-inline: var(--pf-t--global--spacer--sm);
+  pointer-events: none;
+  container: zoom-strip / inline-size;
+  z-index: 10;
+
+  // Narrower than the whole toolbar (about 30.5rem): no slider; the buttons still zoom.
+  @container zoom-strip (max-width: 31rem) {
+    .zoom-slider {
+      display: none;
+    }
+  }
+
+  // Narrower than that (about 23rem): no dividers, only the Arrange icon (the toggle keeps its
+  // name), and less padding. The zoom percentage stays, as the only sign of the zoom level.
+  @container zoom-strip (max-width: 23.5rem) {
+    .arrange-label,
+    .toolbar-divider {
+      display: none;
+    }
+
+    ${ZoomControlsContainer} {
+      padding-inline: var(--pf-t--global--spacer--sm);
+    }
+  }
+
+  // Too narrow even for that (about 17rem): no zoom percentage either.
+  @container zoom-strip (max-width: 17.5rem) {
+    .zoom-percentage {
+      display: none;
+    }
   }
 `;
