@@ -56,6 +56,7 @@ export const RightSidebar: React.FC = () => {
   const hasBothSets = !!(activeCell?.attributeSets?.candidate && activeCell.attributeSets.active);
   const selectedSet = (hasBothSets && viewedSet) || editableSet;
   const showsEditableSet = selectedSet === null || selectedSet === editableSet;
+  const technicalName = activeCell?.getTechnicalName();
 
   return (
     <Wrapper
@@ -73,9 +74,7 @@ export const RightSidebar: React.FC = () => {
           <Title headingLevel="h2" size="xl">
             {activeCell.getDisplayName()}
           </Title>
-          {activeCell.getTechnicalName() && (
-            <Content component="small">{activeCell.getTechnicalName()}</Content>
-          )}
+          {technicalName && <Content component="small">{technicalName}</Content>}
           <Label isCompact color={entityColors[activeCell.entityType]}>
             {words(`instanceComposer.label.${activeCell.entityType}`)}
           </Label>
