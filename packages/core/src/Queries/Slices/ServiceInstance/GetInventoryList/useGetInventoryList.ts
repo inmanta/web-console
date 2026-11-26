@@ -41,7 +41,8 @@ export const useGetInventoryList = (serviceNames: string[]): GetInventoryList =>
   const get = useGet(env)<{ data: ServiceInstanceModel[]; links?: Pagination.Links }>;
 
   /**
-   * Fetches every instance of one service: each page in turn, following `links.next`.
+   * Fetches every instance of one service: each page in turn, following `links.next`. A next link
+   * to the page it was on ends it, so it never fetches the same page forever.
    *
    * @param serviceName - the service
    * @returns the instances of the service
@@ -55,7 +56,9 @@ export const useGetInventoryList = (serviceNames: string[]): GetInventoryList =>
       const page = await get(`/lsm/v1/service_inventory/${serviceName}?${query}`);
 
       instances.push(...page.data);
-      query = page.links?.next?.split("?")[1];
+      const next = page.links?.next?.split("?")[1];
+
+      query = next !== query ? next : undefined;
     }
 
     return instances;
