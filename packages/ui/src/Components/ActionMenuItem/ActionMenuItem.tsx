@@ -16,7 +16,8 @@ interface Props {
 
 /**
  * An item of an action menu: a subtle icon, the label, and a small hint on the right, like the
- * number of resources the action runs on. A disabled item keeps its tooltip, so it can say why.
+ * number of resources the action runs on. Its tooltip opens beside the menu, so it never covers the
+ * other items, and a disabled item keeps it, so it can say why.
  *
  * @props {Props} props - The component props
  *  @prop {typeof PlayIcon} IconComponent - The icon in front of the label
@@ -44,7 +45,7 @@ export const ActionMenuItem: React.FC<Props> = ({
     }
     onClick={onClick}
     isAriaDisabled={isDisabled}
-    tooltipProps={tooltip ? { content: tooltip } : undefined}
+    tooltipProps={tooltip ? { content: tooltip, position: "left" } : undefined}
   >
     <Flex
       justifyContent={{ default: "justifyContentSpaceBetween" }}
