@@ -250,7 +250,7 @@ describe("Scenario 4 Desired State", () => {
 
     cy.get("h1").should("have.text", "Compliance Check");
     cy.get('[aria-label="ReportListSelect"]').contains("No Dry runs exist").should("be.visible");
-    cy.get(".pf-v6-c-button").contains("Perform dry run").click();
+    cy.contains("button", /^Dry run$/).click();
 
     // go back to desired state page
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Desired State").click();
@@ -271,7 +271,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[aria-label="ReportListSelect"]').contains("No Dry runs exist").should("be.visible");
 
     // perform dry-run
-    cy.get(".pf-v6-c-button").contains("Perform dry run").click();
+    cy.contains("button", /^Dry run$/).click();
 
     // go back to desired state
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Desired State").click();
@@ -282,8 +282,8 @@ describe("Scenario 4 Desired State", () => {
     // select again compare with current state
     cy.get('[role="menuitem"]').contains("Compare with current state").click();
 
-    // click on Perform dry run
-    cy.get(".pf-v6-c-button").contains("Perform dry run").click();
+    // click on Dry run
+    cy.contains("button", /^Dry run$/).click();
 
     // click on the dropdown containing the different dry-runs
     cy.get('[aria-label="ReportListSelect"]').click();

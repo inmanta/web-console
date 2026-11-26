@@ -85,8 +85,20 @@ export const orchestrationEngineMessages = {
   },
   "desiredState.complianceCheck.title": "Compliance Check",
   "desiredState.complianceCheck.failed": "Getting list of dryruns failed",
-  "desiredState.complianceCheck.action.dryRun": "Perform dry run",
+  "desiredState.complianceCheck.action.dryRun": "Dry run",
   "desiredState.complianceCheck.action.dryRun.failed": "Triggering dryrun failed",
+  "desiredState.complianceCheck.action.dryRun.toggle": "Dry run scopes",
+  "desiredState.complianceCheck.action.dryRun.fullModel.hint": (count: number) =>
+    count === 1 ? `default - ${count} resource` : `default - ${count} resources`,
+  "desiredState.complianceCheck.action.dryRun.reportScope": "This report's scope",
+  "desiredState.complianceCheck.action.dryRun.reportScope.hint": (count: number) =>
+    count === 1 ? `${count} resource` : `${count} resources`,
+  "desiredState.complianceCheck.action.dryRun.reportScope.blockedBy.noReport":
+    "There is no report yet.",
+  "desiredState.complianceCheck.action.dryRun.reportScope.blockedBy.fullModel":
+    "This report covers the full model.",
+  "desiredState.complianceCheck.action.dryRun.reportScope.blockedBy.unknownStatus":
+    "The status of this model version is unknown, so this report's scope can't run.",
   "desiredState.complianceCheck.progress": (checked: number, total: number) =>
     `${checked} / ${total}`,
   "desiredState.complianceCheck.report.title": "Report",
@@ -105,12 +117,7 @@ export const orchestrationEngineMessages = {
   "desiredState.complianceCheck.scope.filter.title": "Applied filter",
   // A template PatternFly's LabelGroup fills in, not a JS template string.
   "desiredState.complianceCheck.scope.filter.more": "+${remaining} more",
-  "desiredState.complianceCheck.scope.json": "View JSON",
-  "desiredState.complianceCheck.scope.json.title": "Resource filter",
-  "desiredState.complianceCheck.scope.rerun": "Re-run",
-  "desiredState.complianceCheck.scope.rerun.failed": "Re-running the dry run failed",
-  "desiredState.complianceCheck.scope.rerun.unknownStatus":
-    "The status of this model version is unknown, so it can't be re-run.",
+  "desiredState.complianceCheck.scope.filter.view.label": "Applied filter view",
   "desiredState.complianceCheck.scope.label.anchor": (names: string[]) => names.join(" › "),
   "desiredState.complianceCheck.scope.label.owned": "+owned",
   "desiredState.complianceCheck.scope.label.more": (count: number) => `+${count}`,

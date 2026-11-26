@@ -8,11 +8,7 @@ import {
 } from "@inmanta/web-console-core";
 import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
 import type { StrFilter } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
-import {
-  getVersionSelectionBlocker,
-  withDryRunVersion,
-} from "@inmanta/web-console-core/Queries/Slices/Resource";
-import { DiffCounts, FilterRow, FilterValue, ReportScopeParts, RerunPlan } from "./types";
+import { DiffCounts, FilterRow, FilterValue, ReportScopeParts } from "./types";
 
 /**
  * Gets the labels of the service instances a dry run report's filter names, keyed by instance id,
@@ -313,35 +309,3 @@ export const countDiff = (diff: Diff.Resource[]): DiffCounts => ({
   ).size,
   changedCount: diff.filter(({ status }) => Diff.changedStatuses.includes(status)).length,
 });
-
-/**
- * Creates the plan to re-run a dry run with the same scope on the same model version. A filter that
- * already sets a model or instance version is posted as is. One that targets the active model
- * version (isOrphan: false) is posted as is while that version is still active, and otherwise gets
- * the report's model version, unless its filter blocks selecting a version.
- *
- * @example createRerunPlan({ isOrphan: false, agent: { eq: ["internal"] } }, 4, false) // { kind: "ready", filter: { agent: { eq: ["internal"] }, modelVersion: 4 } }
- */
-export const createRerunPlan = (
-  resourceFilter: ResourceActionFilter,
-  modelVersion: number,
-  isActiveVersion: boolean
-): RerunPlan => {
-  const setsVersion =
-    resourceFilter.modelVersion !== undefined || resourceFilter.instanceVersion !== undefined;
-
-  if (setsVersion || isActiveVersion) {
-    return { kind: "ready", filter: resourceFilter };
-  }
-
-  const blocker = getVersionSelectionBlocker(resourceFilter);
-
-  if (blocker) {
-    return { kind: "blocked", blockedBy: blocker };
-  }
-
-  return {
-    kind: "ready",
-    filter: withDryRunVersion(resourceFilter, { type: "modelVersion", version: modelVersion }),
-  };
-};

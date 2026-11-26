@@ -94,7 +94,11 @@ export const View: React.FC<Props> = ({ version }) => {
               </FlexItem>
               <Label variant="outline">{words("modelVersion")(version)}</Label>
             </Flex>
-            <TriggerDryRunAction version={version} onDryRunStart={selectNewestReport} />
+            <TriggerDryRunAction
+              version={version}
+              report={selectedReport}
+              onDryRunStart={selectNewestReport}
+            />
           </Flex>
           <Flex direction={{ default: "column" }} gap={{ default: "gapXs" }}>
             <Title headingLevel="h2" size="md">
@@ -112,11 +116,7 @@ export const View: React.FC<Props> = ({ version }) => {
           </Flex>
         </Flex>
       </PageSection>
-      <DiffPageSection
-        report={selectedReport}
-        version={version}
-        onRerunStart={selectNewestReport}
-      />
+      <DiffPageSection report={selectedReport} version={version} />
     </>
   );
 };

@@ -1,11 +1,7 @@
 import React, { useContext, useState } from "react";
 import {
-  Content,
   Dropdown,
-  DropdownItem,
   DropdownList,
-  Flex,
-  FlexItem,
   Icon,
   MenuToggle,
   MenuToggleAction,
@@ -26,12 +22,11 @@ import {
   useDryRunFiltered,
 } from "@inmanta/web-console-core/Queries/Slices/Resource";
 import { ActionDisabledTooltip } from "@inmanta/web-console-ui/Components/ActionDisabledTooltip";
+import { ActionMenuItem } from "@inmanta/web-console-ui/Components/ActionMenuItem";
 import { useNotifyDryRunStarted } from "@inmanta/web-console-ui/Components/DryRunNotification";
 import { Spinner } from "@inmanta/web-console-ui/Components/Spinner";
 import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
 import { ResourceActionInstance } from "./types";
-
-const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 
 type DeployKey = keyof typeof DeployAgentsAction;
 
@@ -92,7 +87,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const isHalted = environmentHandler.useIsHalted();
   const { notifySuccess, notifyError } = useAppAlert();
-  const notifyDryRunStarted = useNotifyDryRunStarted();
+  const notifyDryRunStarted = useNotifyDryRunStarted({ hasReportLink: true });
 
   const deploy = useDeployFiltered();
   const dryRun = useDryRunFiltered();
@@ -283,27 +278,14 @@ export const ResourceActions: React.FC<Props> = (props) => {
           const { IconComponent, label, hint, tooltip: itemTooltip } = actions[key];
 
           return (
-            <DropdownItem
+            <ActionMenuItem
               key={key}
-              icon={
-                <Icon size="sm">
-                  <IconComponent style={iconStyle} />
-                </Icon>
-              }
+              IconComponent={IconComponent}
+              label={label}
+              hint={hint}
+              tooltip={itemTooltip}
               onClick={() => onAction(key)}
-              tooltipProps={{ content: itemTooltip }}
-            >
-              <Flex
-                justifyContent={{ default: "justifyContentSpaceBetween" }}
-                alignItems={{ default: "alignItemsCenter" }}
-                columnGap={{ default: "columnGapMd" }}
-              >
-                <FlexItem>{label}</FlexItem>
-                <FlexItem>
-                  <Content component="small">{hint}</Content>
-                </FlexItem>
-              </Flex>
-            </DropdownItem>
+            />
           );
         })}
       </DropdownList>

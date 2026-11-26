@@ -8,10 +8,12 @@ import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
 import { ReportScope } from "./Components";
 
+/** Keeps the diff usable below a tall expanded scope; the section scrolls down to it. */
+const DIFF_MIN_HEIGHT_BELOW_SCOPE = "50vh";
+
 interface Props {
   report: DryRun | null;
   version: string;
-  onRerunStart: () => void;
 }
 
 /**
@@ -21,7 +23,6 @@ interface Props {
  * @props {Props} props - The component props
  * @prop {DryRun | null} report - The dry run report data
  * @prop {string} version - The version of the dry run
- * @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The DiffPageSection component
  */
@@ -36,15 +37,10 @@ export const DiffPageSection: React.FC<Props> = ({ report, ...props }) =>
  * @props {Props} props - The component props
  * @prop {DryRun} report - The dry run report
  * @prop {string} version - The version of the dry run
- * @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The DiffView component
  */
-const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
-  report,
-  version,
-  onRerunStart,
-}) => {
+const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({ report, version }) => {
   const todo = Number(report.todo);
   const { data, isSuccess, isError, isLoading, error, refetch } = useGetDryRunReport().useOneTime(
     version,
@@ -89,10 +85,9 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
       <Stack hasGutter>
         {/* The scope comes from the report itself, so it stays in place while the diff loads. */}
         <StackItem>
-          <ReportScope report={report} diff={data?.diff} onRerunStart={onRerunStart} />
+          <ReportScope report={report} diff={data?.diff} />
         </StackItem>
-        {/* Takes the rest of the section and no more, so the list and diff scroll on their own. */}
-        <StackItem isFilled style={{ minHeight: 0 }}>
+        <StackItem isFilled style={{ minHeight: DIFF_MIN_HEIGHT_BELOW_SCOPE }}>
           {renderDiff()}
         </StackItem>
       </Stack>
