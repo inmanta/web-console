@@ -91,7 +91,7 @@ createApp({
   runtimeFeatures: [
     {
       id: "composer",
-      load: () => import("composer/feature"),
+      load: () => loadManifestEntry("./composer-manifest.json"),
     },
   ],
 });
@@ -104,11 +104,11 @@ The shell loads them once the server status is known, before it shows the pages.
 - A build with its own copy of React, React Router or the web-console core layer (other `singletons` than the app's) would read other contexts than the app. In development that stops the app with an error; in production the feature is left out with an error in the console.
 - Its routes, sidebar entries, contributions and messages are added like those of the bundled features. Its pages render in the catch-all route (`RuntimeFeatureRoutes`, inside the same page frame), so unlike the other pages they don't match a url whose decoded path contains a newline.
 
-The ISO app loads the composer this way. The composer has its own Vite config (`packages/features/composer/vite.config.ts`), which builds `src/entry.ts` into `packages/features/composer/dist/`. Its files all start with `composer-`, in one folder: the orchestrator serves every file of the web console by its name from one folder. The ISO app's build runs it first, gets an import map that provides the composer with the app's modules (`composerSharedModules`) and maps `composer/feature` to `composer-feature.js`, and copies the composer's files next to its own. So:
+The ISO app loads the composer this way. The composer has its own Vite config (`packages/features/composer/vite.config.ts`), which builds `src/entry.ts` into `packages/features/composer/dist/`. Its files all start with `composer-`, in one folder: the orchestrator serves every file of the web console by its name from one folder. The entry's name has a hash (`composer-feature.<hash>.js`), and the build writes `composer-manifest.json`, which names it. The ISO app's build runs it first, gets an import map that provides the composer with the app's modules (`composerSharedModules`), and copies the composer's files next to its own. The app fetches the manifest with `cache: "no-store"` and imports the entry it names (`loadManifestEntry` in the shell), so a replaced composer is never served from the browser's cache, even when the server answers with the ETag of the file it replaced. So:
 
 - `dist/` as built ships with the composer;
 - without the `composer-*` files, the app starts without it;
-- copying the files of `packages/features/composer/dist/` (except `mf-manifest.json`) into the web console's folder installs it later, for the same version.
+- copying the `composer-*` files of `packages/features/composer/dist/` into the web console's folder installs it later, for the same version.
 
 The dev server and the tests resolve `composer/feature` to the composer's source instead, like a bundled feature.
 

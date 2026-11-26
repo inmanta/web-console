@@ -1745,7 +1745,7 @@ __metadata:
     "@inmanta/web-console-test-utils": "workspace:^"
     "@module-federation/vite": "npm:1.24.1"
     "@patternfly/react-core": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.108.2"
+    "@tanstack/react-query": "npm:^5.108.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -1768,7 +1768,7 @@ __metadata:
     "@graphql-typed-document-node/core": "npm:^3.2.0"
     "@inmanta/web-console-test-utils": "workspace:^"
     "@patternfly/react-core": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.108.2"
+    "@tanstack/react-query": "npm:^5.108.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@types/file-saver": "npm:^2.0.7"
@@ -1829,7 +1829,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.108.2"
+    "@tanstack/react-query": "npm:^5.108.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -1856,7 +1856,7 @@ __metadata:
     "@inmanta/web-console-test-utils": "workspace:^"
     "@inmanta/web-console-ui": "workspace:^"
     "@patternfly/react-icons": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.108.2"
+    "@tanstack/react-query": "npm:^5.108.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     graphiql: "npm:^6.0.1"
@@ -1887,7 +1887,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.108.2"
+    "@tanstack/react-query": "npm:^5.108.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/jest-dom": "npm:^8.0.0"
     "@testing-library/react": "npm:^16.3.3"
@@ -1926,7 +1926,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-log-viewer": "npm:^6.5.0"
     "@patternfly/react-table": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.108.2"
+    "@tanstack/react-query": "npm:^5.108.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -1953,7 +1953,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.108.2"
+    "@tanstack/react-query": "npm:^5.108.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -1977,7 +1977,7 @@ __metadata:
     "@patternfly/react-core": "npm:^6.7.0"
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.108.2"
+    "@tanstack/react-query": "npm:^5.108.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -2025,8 +2025,8 @@ __metadata:
     "@patternfly/react-tokens": "npm:^6.7.0"
     "@react-keycloak/web": "npm:^3.4.0"
     "@remix-run/router": "npm:^1.23.4"
-    "@tanstack/react-query": "npm:^5.108.2"
-    "@tanstack/react-query-devtools": "npm:^5.108.2"
+    "@tanstack/react-query": "npm:^5.108.3"
+    "@tanstack/react-query-devtools": "npm:^5.108.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -2057,7 +2057,7 @@ __metadata:
     "@patternfly/react-code-editor": "npm:^6.7.0"
     "@patternfly/react-core": "npm:^6.7.0"
     "@patternfly/react-log-viewer": "npm:^6.5.0"
-    "@tanstack/react-query": "npm:^5.108.2"
+    "@tanstack/react-query": "npm:^5.108.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/jest-dom": "npm:^8.0.0"
     "@testing-library/react": "npm:^16.3.3"
@@ -2087,7 +2087,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.7.0"
     "@patternfly/react-table": "npm:^6.7.0"
     "@patternfly/react-tokens": "npm:^6.7.0"
-    "@tanstack/react-query": "npm:^5.108.2"
+    "@tanstack/react-query": "npm:^5.108.3"
     "@testing-library/dom": "npm:^10.4.2"
     "@testing-library/react": "npm:^16.3.3"
     "@testing-library/user-event": "npm:^14.6.13"
@@ -2128,7 +2128,7 @@ __metadata:
     "@vitest/coverage-v8": "npm:^5.1.1"
     "@vitest/ui": "npm:^5.1.1"
     cypress: "npm:^16.3.0"
-    dependency-cruiser: "npm:^18.8.0"
+    dependency-cruiser: "npm:^18.9.0"
     dotenv: "npm:^18.0.10"
     eslint: "npm:^10.2.1"
     eslint-import-resolver-typescript: "npm:^4.4.5"
@@ -2136,7 +2136,7 @@ __metadata:
     eslint-plugin-jest-dom: "npm:^5.11.0"
     eslint-plugin-react: "npm:^7.37.5"
     eslint-plugin-react-hooks: "npm:^7.1.1"
-    eslint-plugin-testing-library: "npm:^7.16.2"
+    eslint-plugin-testing-library: "npm:^7.16.3"
     graphql: "npm:^17.1.0"
     happy-dom: "npm:^21.0.4"
     prettier: "npm:^3.10.1"
@@ -4229,59 +4229,59 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.108.2":
-  version: 5.108.2
-  resolution: "@tanstack/query-core@npm:5.108.2"
-  checksum: 10/ddef207d67e60b780278d0ffdfcadaf95283953e6b48398f30bed210c551a90f7d256712fee8a91ccf4a2f2a014c1533aebe3a5fcdc77135b8a09a5772c26b5f
+"@tanstack/query-core@npm:5.108.3":
+  version: 5.108.3
+  resolution: "@tanstack/query-core@npm:5.108.3"
+  checksum: 10/5683de3f7a5295615aaaec2396636d8403cd066019cf4ac083774f07d75fb6e79e7945a08a437c4a478a988f7a94c243272b7c5f25a4a4e5a7c7d737e373bee1
   languageName: node
   linkType: hard
 
-"@tanstack/query-devtools@npm:5.108.2":
-  version: 5.108.2
-  resolution: "@tanstack/query-devtools@npm:5.108.2"
+"@tanstack/query-devtools@npm:5.108.3":
+  version: 5.108.3
+  resolution: "@tanstack/query-devtools@npm:5.108.3"
   dependencies:
     "@kobalte/core": "npm:^0.13.14"
     "@solid-primitives/keyed": "npm:^1.5.3"
     "@solid-primitives/resize-observer": "npm:^2.2.0"
     "@solid-primitives/storage": "npm:^1.3.11"
     "@tanstack/match-sorter-utils": "npm:^9.1.2"
-    "@tanstack/query-core": "npm:5.108.2"
+    "@tanstack/query-core": "npm:5.108.3"
     "@tanstack/solid-virtual": "npm:^3.13.52"
     solid-js: "npm:^1.9.20"
     solid-transition-group: "npm:^0.2.3"
     superjson: "npm:^2.2.6"
-  checksum: 10/28e94c2078ebb5fcd1f951c61afd3b5c842876f47e1baaf70935f96ba5a2013f6faa155cfa06dd798aba93a77af7fe69c8174ec7c57340d49722c97317ea38f2
+  checksum: 10/0d2af8d52a237ac57c0b510ea05d769bcaef3ca9b36ae1af6ddea6a8347f0dbbb76ac736fc6c37d852105c93ea1e9c7633b0c9d2c7edb6f54e8a136152a30a9e
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:^5.108.2":
-  version: 5.108.2
-  resolution: "@tanstack/react-query-devtools@npm:5.108.2"
+"@tanstack/react-query-devtools@npm:^5.108.3":
+  version: 5.108.3
+  resolution: "@tanstack/react-query-devtools@npm:5.108.3"
   dependencies:
-    "@tanstack/query-devtools": "npm:5.108.2"
+    "@tanstack/query-devtools": "npm:5.108.3"
   peerDependencies:
-    "@tanstack/react-query": ^5.108.2
+    "@tanstack/react-query": ^5.108.3
     "@types/react": ^18 || ^19
     react: ^18 || ^19
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/df9a66c7df3fc6690bf38b4589c2a2bb990920d5f3b877a330893f4b95c9c89b4ccd81a73a567785d2b22329e16dacb3659059aa2cb3c2815a5e9ae7d88de18e
+  checksum: 10/1a72b00bbb60c414df5cc370a57f9f77603818900c82c0f658bb21bddd3e4e4f845c69bd7588dd5e133bba6dd2fce182fd3219baf255242843ee7c986335325e
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.108.2":
-  version: 5.108.2
-  resolution: "@tanstack/react-query@npm:5.108.2"
+"@tanstack/react-query@npm:^5.108.3":
+  version: 5.108.3
+  resolution: "@tanstack/react-query@npm:5.108.3"
   dependencies:
-    "@tanstack/query-core": "npm:5.108.2"
+    "@tanstack/query-core": "npm:5.108.3"
   peerDependencies:
     "@types/react": ^18 || ^19
     react: ^18 || ^19
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/63bb443f6044de365e8f97b9e704570f9e6cb7ff81240f4f5fb39cfdff3f29aa8d59ecc973db0253887ad0965ad1555bf4bf9f2249ef983c73aa982538f26b11
+  checksum: 10/9709ddf8b5a829c36c81e8e87f18089dd7ff414aa6be66c5480c154a92f85be5314debcc00fcd895ad901f0409013fe75e53cbcc5bd970f59443390a7105f635
   languageName: node
   linkType: hard
 
@@ -7482,9 +7482,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dependency-cruiser@npm:^18.8.0":
-  version: 18.8.0
-  resolution: "dependency-cruiser@npm:18.8.0"
+"dependency-cruiser@npm:^18.9.0":
+  version: 18.9.0
+  resolution: "dependency-cruiser@npm:18.9.0"
   dependencies:
     acorn: "npm:8.19.0"
     acorn-jsx: "npm:5.3.2"
@@ -7493,7 +7493,7 @@ __metadata:
     acorn-walk: "npm:8.3.5"
     commander: "npm:15.1.0"
     enhanced-resolve: "npm:5.27.0"
-    ignore: "npm:7.0.14"
+    ignore: "npm:7.0.16"
     interpret: "npm:3.1.1"
     is-installed-globally: "npm:1.0.1"
     json5: "npm:2.2.3"
@@ -7511,7 +7511,7 @@ __metadata:
     depcruise-wrap-stream-in-html: bin/wrap-stream-in-html.mjs
     dependency-cruise: bin/dependency-cruiser.mjs
     dependency-cruiser: bin/dependency-cruiser.mjs
-  checksum: 10/909fc79885b50b41d7e7ff39350655c0c5e38d4e7650f80146aedb58ca1eb9f3229237a0de53f608e7dbd0aaec0d40e0b009c5f1210f4c2d594508c1770ac24b
+  checksum: 10/d83dd6f25151b97214503517190f0ace1f4cdbf413817eeb715609f489f9c9c7509dcdf017fdc10163fa45f508b72ff153dc75da5a2fc2e80ee82760d8629eed
   languageName: node
   linkType: hard
 
@@ -8062,15 +8062,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-testing-library@npm:^7.16.2":
-  version: 7.16.2
-  resolution: "eslint-plugin-testing-library@npm:7.16.2"
+"eslint-plugin-testing-library@npm:^7.16.3":
+  version: 7.16.3
+  resolution: "eslint-plugin-testing-library@npm:7.16.3"
   dependencies:
     "@typescript-eslint/scope-manager": "npm:^8.56.0"
     "@typescript-eslint/utils": "npm:^8.56.0"
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
-  checksum: 10/6aa06995f147986ce9b923479caca9b8a5f703c52ef3bf57d9757953ded448f940b2dbb12d85217a348fc5b754a20ecdb70b9ee39856b202e89f43e648f788a7
+  checksum: 10/21bebca2243ff97f814328fb29caa61d2b02c27ab260485fe2cbfade25be1bf970d92fe95ff5c2ee9ff348e5f9801a9dc5c47f0441fef8212746c54191e8b113
   languageName: node
   linkType: hard
 
@@ -9108,10 +9108,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ignore@npm:7.0.14":
-  version: 7.0.14
-  resolution: "ignore@npm:7.0.14"
-  checksum: 10/47ed87f5943d538b5320a8aff31e09e5b7a87505fbddf254f86604f222486b0fa36993269acab5697d5b707d336d0c26b8fb24b0adb2ddbea0aa7ce225757458
+"ignore@npm:7.0.16":
+  version: 7.0.16
+  resolution: "ignore@npm:7.0.16"
+  checksum: 10/1b7ce35ee1013f39b2b62135ab6ca4355a1b3b5a448f69355b17a62ee65a2fad7b90987f3d1fefefa596dbc8e2e92629c8a5d71648d707cdeb5c6b27a4c57b5f
   languageName: node
   linkType: hard
 

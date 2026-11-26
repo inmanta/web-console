@@ -4,7 +4,7 @@ import { lsmFeature } from "@inmanta/web-console-feature-lsm";
 import { orchestrationEngineFeature } from "@inmanta/web-console-feature-orchestration-engine";
 import { resourceManagerFeature } from "@inmanta/web-console-feature-resource-manager";
 import { userManagementFeature } from "@inmanta/web-console-feature-user-management";
-import { createApp } from "@inmanta/web-console-shell";
+import { createApp, loadManifestEntry } from "@inmanta/web-console-shell";
 
 /**
  * The web console: the shell with every feature, and the shell's default options. The composer
@@ -25,8 +25,12 @@ export const app = createApp({
       id: "composer",
       // Loaded whenever it is installed, also without the licence: its pages then say that it
       // isn't licensed, and it adds the read-only "Show in Composer" action.
-      // The composer's separate build, see vite.config.ts.
-      load: () => import("composer/feature"),
+      // A build loads the composer's separate build through the manifest it writes; the dev
+      // server serves its source as `composer/feature`, see vite.config.ts.
+      load: () =>
+        import.meta.env.DEV
+          ? import("composer/feature")
+          : loadManifestEntry(`./${COMPOSER_MANIFEST_FILE}`),
     },
   ],
 });

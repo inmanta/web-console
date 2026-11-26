@@ -37,13 +37,14 @@ const setup = (
     shapes?: ServiceEntityShape[];
     editable?: boolean;
     serviceCatalog?: ServiceModel[];
+    serviceInventories?: Inventories;
   } = {}
 ) =>
   render(
     <ComposerTestProvider
       shapes={toCanvasState(...(options.shapes ?? []))}
       serviceCatalog={options.serviceCatalog}
-      serviceInventories={serviceInventories}
+      serviceInventories={options.serviceInventories ?? serviceInventories}
       editable={options.editable}
     >
       <LeftSidebar />
@@ -129,6 +130,50 @@ describe("LeftSidebar", () => {
     expect(admin.compareDocumentPosition(other)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 
+  it("names and sorts the services by their web_title like the catalog, and finds them by their technical name too", async () => {
+    // By title, the parent service comes first; by technical name and in the inventory, the child
+    setup({
+      serviceCatalog: [
+        { ...childService, entity_annotations: { web_title: "Zone link" } },
+        { ...parentService, entity_annotations: { web_title: "Access router" } },
+      ],
+      serviceInventories: {
+        "child-service": [childInstance],
+        "parent-service": [parentInstance],
+      },
+    });
+
+    const parentGroup = screen.getByTestId("palette-group-parent-service");
+    const childGroup = screen.getByTestId("palette-group-child-service");
+
+    expect(within(parentGroup).getByRole("button", { expanded: true })).toHaveTextContent(
+      "Access router"
+    );
+    expect(parentGroup.compareDocumentPosition(childGroup)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(within(parentGroup).getByTestId("palette-item-parent-service")).toHaveTextContent(
+      `Access router${words("instanceComposer.label.withName")(
+        words("instanceComposer.label.core"),
+        "parent-service"
+      )}`
+    );
+
+    await userEvent.type(
+      screen.getByRole("textbox", { name: words("instanceComposer.palette.searchEntities") }),
+      "parent-serv"
+    );
+
+    expect(screen.getByTestId("palette-item-parent-service")).toBeVisible();
+    expect(screen.queryByTestId("palette-item-child-service")).not.toBeInTheDocument();
+
+    await openInventory();
+
+    const inventoryGroups = screen
+      .getAllByTestId(/^palette-group-/)
+      .map((group) => within(group).getByRole("button", { expanded: true }).textContent);
+
+    expect(inventoryGroups).toEqual(["Access router1", "Zone link1"]);
+  });
+
   it("shows the lifecycle state of an inventory instance", async () => {
     setup();
     await openInventory();
@@ -137,6 +182,32 @@ describe("LeftSidebar", () => {
 
     expect(within(row).getByText("up")).toBeVisible();
     expect(row.querySelector(".pf-m-success")).toBeInTheDocument();
+  });
+
+  it("groups the inventory by web_group like the catalog, with each instance's service", async () => {
+    setup({
+      serviceCatalog: [
+        { ...childService, entity_annotations: { web_group: "Network", web_title: "Leaf" } },
+        { ...parentService, entity_annotations: { web_group: "Network", web_title: "Edge" } },
+        standaloneService,
+      ],
+    });
+    await openInventory();
+
+    const network = screen.getByTestId("palette-group-Network");
+
+    // Both services' instances in one group, each naming its service; no group per service
+    expect(within(network).getByTestId("palette-item-edge-1")).toHaveTextContent("edge-1Edge");
+    expect(within(network).getByTestId("palette-item-leaf-1")).toHaveTextContent("leaf-1Leaf");
+    expect(screen.queryByTestId("palette-group-parent-service")).not.toBeInTheDocument();
+
+    await userEvent.type(
+      screen.getByRole("textbox", { name: words("instanceComposer.palette.searchInstances") }),
+      "child-serv"
+    );
+
+    expect(screen.getByTestId("palette-item-leaf-1")).toBeVisible();
+    expect(screen.queryByTestId("palette-item-edge-1")).not.toBeInTheDocument();
   });
 
   it("filters the rows with the search, and says when nothing matches", async () => {

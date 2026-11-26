@@ -23,10 +23,10 @@ import { createRequire } from "module";
 import { tmpdir } from "os";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import { composerBuildDir, composerManifestFile } from "@inmanta/web-console-feature-composer/vite";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const composerDir = join(repoRoot, "packages/features/composer");
-const composerBuildDir = join(composerDir, "dist");
+const composerDir = dirname(composerBuildDir);
 
 /**
  * The folder an orchestrator's container serves the web console from (see `update:dist`).
@@ -61,7 +61,9 @@ const buildMismatchedComposer = () => {
       stdio: "pipe",
     });
 
-    if (!readFileSync(join(buildDir, "composer-feature.js"), "utf-8").includes(mismatchVersion)) {
+    const { entry } = JSON.parse(readFileSync(join(buildDir, composerManifestFile), "utf-8"));
+
+    if (!readFileSync(join(buildDir, entry), "utf-8").includes(mismatchVersion)) {
       throw new Error(`The composer's build doesn't have version "${mismatchVersion}".`);
     }
   } catch (error) {
@@ -73,8 +75,8 @@ const buildMismatchedComposer = () => {
 };
 
 /**
- * Copies the composer's files of a build into a new temporary folder, without the manifest the
- * app's build reads, as the app's build copies them.
+ * Copies the composer's "composer-" files of a build into a new temporary folder, so not the
+ * federation plugin's mf-manifest.json, as the app's build copies them.
  *
  * @param {string} buildDir - the composer's build
  * @returns {string} the temporary folder

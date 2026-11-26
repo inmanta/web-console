@@ -56,6 +56,7 @@ export const RightSidebar: React.FC = () => {
   const hasBothSets = !!(activeCell?.attributeSets?.candidate && activeCell.attributeSets.active);
   const selectedSet = (hasBothSets && viewedSet) || editableSet;
   const showsEditableSet = selectedSet === null || selectedSet === editableSet;
+  const technicalName = activeCell?.getTechnicalName();
 
   return (
     <Wrapper
@@ -66,10 +67,14 @@ export const RightSidebar: React.FC = () => {
       aria-label={words("details")}
     >
       {activeCell ? (
-        <Flex spaceItems={{ default: "spaceItemsSm" }} alignItems={{ default: "alignItemsCenter" }}>
+        <Flex
+          spaceItems={{ default: "spaceItemsSm" }}
+          alignItems={{ default: "alignItemsBaseline" }}
+        >
           <Title headingLevel="h2" size="xl">
             {activeCell.getDisplayName()}
           </Title>
+          {technicalName && <Content component="small">{technicalName}</Content>}
           <Label isCompact color={entityColors[activeCell.entityType]}>
             {words(`instanceComposer.label.${activeCell.entityType}`)}
           </Label>

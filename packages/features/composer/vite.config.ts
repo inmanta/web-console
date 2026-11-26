@@ -1,7 +1,8 @@
 /**
  * Builds the composer on its own, into dist/, so the ISO app can load it at runtime instead of
  * bundling it: a deployment can then leave it out or install it later. Its entry is
- * src/entry.ts, exposed as `composer/feature`.
+ * src/entry.ts, exposed as `composer/feature`. The entry's name has a hash, so a replaced build
+ * isn't served from the browser's cache; the app finds it through `composerManifestFile`.
  *
  * The app provides every module the composer shares with it (`composerSharedModules`) through an
  * import map, so the composer runs on the app's copy of React, the contexts and the web-console
@@ -18,6 +19,7 @@ import { repoRoot, sharedConfig } from "../../../vite.shared.ts";
 import {
   canvasPackages,
   composerBuildDir,
+  composerManifestFile,
   composerSharedModules,
   composerVitePlugin,
   packageOf,
@@ -25,7 +27,7 @@ import {
 
 /**
  * Names every file "composer-..." in the root of the build. The federation plugin names the
- * entries after their expose and puts the chunks in assets/; this runs after it.
+ * entries after their expose, without a hash, and puts the chunks in assets/; this runs after it.
  */
 const flatFileNames = (): Plugin => ({
   name: "composer-flat-file-names",
@@ -34,12 +36,36 @@ const flatFileNames = (): Plugin => ({
     build: {
       rollupOptions: {
         output: {
-          entryFileNames: "composer-[name].js",
+          entryFileNames: "composer-[name].[hash].js",
           chunkFileNames: "composer-[name].[hash].js",
         },
       },
     },
   }),
+});
+
+/**
+ * Writes `composerManifestFile`, which names the entry of the build: `{ "entry": "<file>" }`. The
+ * app fetches it to find the entry, whose name changes with each build.
+ */
+const entryManifest = (): Plugin => ({
+  name: "composer-entry-manifest",
+  enforce: "post",
+  generateBundle(_options, bundle) {
+    const entry = Object.values(bundle).find(
+      (output) => output.type === "chunk" && output.isEntry && output.name === "feature"
+    );
+
+    if (!entry) {
+      this.error("The composer's build has no entry named feature.");
+    }
+
+    this.emitFile({
+      type: "asset",
+      fileName: composerManifestFile,
+      source: `${JSON.stringify({ entry: entry.fileName }, null, 2)}\n`,
+    });
+  },
 });
 
 /**
@@ -124,6 +150,7 @@ export default defineConfig(
         experiments: { hostProvidesAllShared: true },
       }),
       flatFileNames(),
+      entryManifest(),
       onlyComposerCode(),
       noRequireOfShared(),
     ],
