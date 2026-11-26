@@ -56,12 +56,6 @@ export const resourceManagerMessages = {
   "resources.filters.service.includeOwned.description":
     "Also match resources of services owned by the selected instances",
   "resources.filters.service.includeOwned.chipValue": "Included",
-  "resources.filters.resource.type.hint":
-    "Matches any resource whose type contains this text, ignoring case.",
-  "resources.filters.resource.value.hint":
-    "Matches any resource whose value contains this text, ignoring case.",
-  "resources.filters.resource.agent.hint":
-    "Matches any resource whose agent contains this text, ignoring case.",
   "resources.filters.resource.agent.selectInfoLabel": "Use text input",
   "resources.filters.resource.agent.textInfoLabel": "Use select input",
   "resources.filters.resource.agent.loading": "Loading agents...",

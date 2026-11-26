@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo } from "react";
-import { PageSection, Stack, StackItem } from "@patternfly/react-core";
-import { Diff, DryRun, words } from "@inmanta/web-console-core";
+import React, { useEffect } from "react";
+import { Stack, StackItem } from "@patternfly/react-core";
+import { DryRun, words } from "@inmanta/web-console-core";
 import { useGetDryRunReport } from "@inmanta/web-console-core/Queries/Slices/DryRun";
 import * as DiffWizard from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard";
 import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
@@ -11,8 +11,6 @@ import { ReportScope } from "./Components";
 interface Props {
   report: DryRun | null;
   version: string;
-  statuses: Diff.Status[];
-  searchFilter: string;
   onRerunStart: () => void;
 }
 
@@ -23,8 +21,6 @@ interface Props {
  * @props {Props} props - The component props
  * @prop {DryRun | null} report - The dry run report data
  * @prop {string} version - The version of the dry run
- * @prop {Diff.Status[]} statuses - The statuses to filter the resources by
- * @prop {string} searchFilter - The search filter to filter the resources by
  * @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The DiffPageSection component
@@ -40,8 +36,6 @@ export const DiffPageSection: React.FC<Props> = ({ report, ...props }) =>
  * @props {Props} props - The component props
  * @prop {DryRun} report - The dry run report
  * @prop {string} version - The version of the dry run
- * @prop {Diff.Status[]} statuses - The statuses to filter the resources by
- * @prop {string} searchFilter - The search filter to filter the resources by
  * @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The DiffView component
@@ -49,8 +43,6 @@ export const DiffPageSection: React.FC<Props> = ({ report, ...props }) =>
 const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
   report,
   version,
-  statuses,
-  searchFilter,
   onRerunStart,
 }) => {
   const todo = Number(report.todo);
@@ -66,22 +58,6 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
     }
     refetch();
   }, [todo, isLoading, refetch]);
-
-  // Kept until the report or the filters change, so polling the report list doesn't rebuild every
-  // row of a large diff.
-  const diffData = useMemo(
-    () => data?.diff.filter((resource) => statuses.includes(resource.status)) ?? [],
-    [data, statuses]
-  );
-  const items = useMemo(
-    () =>
-      diffData
-        .filter((resource) =>
-          resource.resource_id.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase())
-        )
-        .map(DiffWizard.fromResourceToItem),
-    [diffData, searchFilter]
-  );
 
   const renderDiff = () => {
     if (isError) {
@@ -99,8 +75,8 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
     }
 
     return (
-      <DiffWizard.ResourceListWithDiffPane
-        items={items}
+      <DiffWizard.FilteredResourceListWithDiffPane
+        resources={data.diff}
         route="ComplianceCheck"
         fromLabel={words("currentState")}
         toLabel={words("modelVersion")(version)}
@@ -109,14 +85,7 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
   };
 
   return (
-    // Scrolls on its own, so the page title, report picker and filters above it stay in view.
-    // No top padding: the section above already ends in padding, which keeps the report close to
-    // the filters.
-    <PageSection
-      hasBodyWrapper={false}
-      isFilled
-      style={{ flex: "1 1 auto", minHeight: 0, overflow: "auto", paddingTop: 0 }}
-    >
+    <DiffWizard.ScrollingPageSection>
       <Stack hasGutter>
         {/* The scope comes from the report itself, so it stays in place while the diff loads. */}
         <StackItem>
@@ -127,6 +96,6 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
           {renderDiff()}
         </StackItem>
       </Stack>
-    </PageSection>
+    </DiffWizard.ScrollingPageSection>
   );
 };

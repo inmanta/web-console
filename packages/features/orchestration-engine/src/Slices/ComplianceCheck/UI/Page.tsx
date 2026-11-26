@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Content,
   Flex,
@@ -9,13 +9,12 @@ import {
   Toolbar,
   ToolbarContent,
 } from "@patternfly/react-core";
-import { Diff, DryRun, words } from "@inmanta/web-console-core";
+import { DryRun, words } from "@inmanta/web-console-core";
 import { useUrlStateWithString } from "@inmanta/web-console-core/Common";
 import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import { useGetDryRuns } from "@inmanta/web-console-core/Queries/Slices/DryRun";
 import { useRouteParams } from "@inmanta/web-console-core/Routing";
 import { REPORT_URL_STATE_KEY } from "@inmanta/web-console-core/Routing/ReportSearch";
-import * as DiffWizard from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard";
 import { SelectReportAction, TriggerDryRunAction } from "./Components";
 import { DiffPageSection } from "./DiffPageSection";
 
@@ -44,7 +43,6 @@ interface Props {
  * This component handles the main functionality of the Compliance Check feature:
  * - Fetches and displays dry run reports for the specified version
  * - Allows selecting different reports, keeping the selected one in the URL so a link can open it
- * - Provides filtering by status and search text
  * - Shows error messages when data fetching fails
  *
  * @props {Props} props - The component props
@@ -55,8 +53,6 @@ interface Props {
 
 export const View: React.FC<Props> = ({ version }) => {
   const { data, isError, error } = useGetDryRuns().useContinuous(version);
-  const [statuses, setStatuses] = useState(Diff.defaultStatuses);
-  const [searchFilter, setSearchFilter] = useState("");
   // An empty id selects the newest report.
   const [selectedReportId, setSelectedReportId] = useUrlStateWithString<string>({
     default: "",
@@ -111,12 +107,6 @@ export const View: React.FC<Props> = ({ version }) => {
                   selectedReport={selectedReport}
                   reportsData={data}
                 />
-                <DiffWizard.DiffPageFilter
-                  statuses={statuses}
-                  setStatuses={setStatuses}
-                  searchFilter={searchFilter}
-                  setSearchFilter={setSearchFilter}
-                />
               </ToolbarContent>
             </Toolbar>
           </Flex>
@@ -125,8 +115,6 @@ export const View: React.FC<Props> = ({ version }) => {
       <DiffPageSection
         report={selectedReport}
         version={version}
-        statuses={statuses}
-        searchFilter={searchFilter}
         onRerunStart={selectNewestReport}
       />
     </>

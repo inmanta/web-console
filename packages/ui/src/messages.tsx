@@ -22,8 +22,6 @@ export const uiMessages = {
   empty: "Empty",
   previous: "Previous",
   next: "Next",
-  hideAll: "Hide All",
-  showAll: "Show All",
   edit: "Edit",
   details: "Details",
   remove: "Remove",
@@ -94,6 +92,8 @@ export const uiMessages = {
   "empty.filtered.title": "No results found",
   "empty.filtered.message":
     "No results match the filter criteria. Reset the filters and try again.",
+  "empty.filtered.resetToDefault.message":
+    "No results match the filter criteria. Reset the filters to default and try again.",
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
   "inventory.service.failed": "Something went wrong with fetching the service",
@@ -199,8 +199,16 @@ export const uiMessages = {
   "resources.filters.resource.value.placeholder": "Value...",
   "resources.filters.resource.agent.label": "Agent(s)",
   "resources.filters.resource.agent.placeholder": "Select Agent(s)",
+  "resources.filters.resource.agent.textPlaceholder": "Agent...",
+  "resources.filters.resource.type.hint":
+    "Matches any resource whose type contains this text, ignoring case.",
+  "resources.filters.resource.value.hint":
+    "Matches any resource whose value contains this text, ignoring case.",
+  "resources.filters.resource.agent.hint":
+    "Matches any resource whose agent contains this text, ignoring case.",
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.resetFilters": "Reset Filters",
+  "resources.filters.active.resetToDefault": "Reset to default",
   "resources.filters.active.empty.title": "No filters applied",
   "resources.filters.active.empty.body.noTabs":
     "Use the fields above to add filters and refine your results.",

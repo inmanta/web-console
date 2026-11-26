@@ -45,11 +45,10 @@ export const Page: React.FC = () => {
       : filter;
   }, [filter]);
 
-  const activeFilterCount = useMemo(() => {
-    const { disregardDefault: _disregardDefault, ...filterValues } = filterWithDefaults;
-
-    return countActiveFilters(filterValues);
-  }, [filterWithDefaults]);
+  const activeFilterCount = useMemo(
+    () => countActiveFilters(filterWithDefaults),
+    [filterWithDefaults]
+  );
 
   // Checks the filter without its defaults: resetting brings the default status back, so a reset
   // only changes the result when the user set a filter.
