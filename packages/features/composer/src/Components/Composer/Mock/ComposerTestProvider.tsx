@@ -16,6 +16,7 @@ interface Props {
 
   /** Why the inventory couldn't be fetched, as the Composer gets it from its query. */
   inventoriesError?: string | null;
+  isInventoryLoading?: boolean;
   refreshInventories?: () => void;
   editable?: boolean;
 
@@ -36,6 +37,7 @@ export const ComposerTestProvider: React.FC<Props> = ({
   serviceCatalog = defaultCatalog,
   serviceInventories = null,
   inventoriesError = null,
+  isInventoryLoading = false,
   refreshInventories = composerContext.refreshInventories,
   editable = true,
   activeCellId: initialActiveCellId,
@@ -67,6 +69,7 @@ export const ComposerTestProvider: React.FC<Props> = ({
     serviceCatalog,
     serviceInventories,
     inventoriesError,
+    isInventoryLoading,
     refreshInventories,
     editable,
     canvasState,

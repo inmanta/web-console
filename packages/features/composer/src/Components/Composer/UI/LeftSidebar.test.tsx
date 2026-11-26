@@ -275,13 +275,45 @@ describe("LeftSidebar", () => {
   });
 
   describe("inventory fetching", () => {
-    const renderWith = (props: { inventoriesError?: string; refreshInventories: () => void }) =>
+    const renderWith = (props: {
+      inventoriesError?: string;
+      isInventoryLoading?: boolean;
+      serviceInventories?: Inventories | null;
+      refreshInventories: () => void;
+    }) =>
       render(
         <ComposerTestProvider serviceInventories={serviceInventories} {...props}>
           <LeftSidebar />
           <Canvas />
         </ComposerTestProvider>
       );
+
+    it("says the inventory is loading until it first arrives, and keeps the last one after", async () => {
+      const { rerender } = renderWith({
+        serviceInventories: null,
+        isInventoryLoading: true,
+        refreshInventories: vi.fn(),
+      });
+
+      await openInventory();
+
+      expect(
+        screen.getByRole("heading", { name: words("instanceComposer.palette.inventoryLoading") })
+      ).toBeVisible();
+      expect(
+        screen.queryByText(words("instanceComposer.palette.noInstances"))
+      ).not.toBeInTheDocument();
+
+      // Fetching it again keeps the inventory it has
+      rerender(
+        <ComposerTestProvider serviceInventories={serviceInventories} isInventoryLoading>
+          <LeftSidebar />
+          <Canvas />
+        </ComposerTestProvider>
+      );
+
+      expect(screen.getByTestId("palette-item-edge-1")).toBeVisible();
+    });
 
     it("fetches the inventory again each time the Inventory tab opens", async () => {
       const refreshInventories = vi.fn();

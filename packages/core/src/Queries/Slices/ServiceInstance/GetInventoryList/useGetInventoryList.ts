@@ -18,7 +18,7 @@ export interface Inventories {
  * Return Signature of the useGetInventoryList React Query
  */
 interface GetInventoryList {
-  useOneTime: () => UseQueryResult<Inventories, CustomError>;
+  useOneTime: (enabled?: boolean) => UseQueryResult<Inventories, CustomError>;
 }
 
 /**
@@ -29,7 +29,7 @@ interface GetInventoryList {
  * @returns {GetInventoryList} An object containing the different available queries.
  * @returns {UseQueryResult<Inventories, CustomError>} returns.useOneTime - Fetch the service
  *   inventories once. A response can be large, so it isn't polled or fetched again when the window
- *   gets focus; `refetch` fetches it again.
+ *   gets focus; `refetch` fetches it again. It only fetches while `enabled` (default true).
  */
 export const useGetInventoryList = (serviceNames: string[]): GetInventoryList => {
   const { environmentHandler } = useContext(DependencyContext);
@@ -56,8 +56,9 @@ export const useGetInventoryList = (serviceNames: string[]): GetInventoryList =>
   };
 
   return {
-    useOneTime: (): UseQueryResult<Inventories, CustomError> =>
+    useOneTime: (enabled = true): UseQueryResult<Inventories, CustomError> =>
       useQuery({
+        enabled,
         queryKey: getInventoryListKey.list([...serviceNames, env]),
         queryFn: fetchAllServices,
         refetchOnWindowFocus: false,

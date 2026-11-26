@@ -9,6 +9,7 @@ import {
   EmptyStateFooter,
   Label,
   SearchInput,
+  Spinner,
   Tab,
   Tabs,
   TabTitleText,
@@ -229,6 +230,7 @@ export const LeftSidebar: React.FC = () => {
     serviceCatalog,
     serviceInventories,
     inventoriesError,
+    isInventoryLoading,
     refreshInventories,
     editable,
     canvasState,
@@ -250,10 +252,17 @@ export const LeftSidebar: React.FC = () => {
 
   // A failed fetch leaves the last inventory, which may be out of date, so the error replaces it.
   const showsInventoryError = activeTab === "inventory" && inventoriesError !== null;
+  // Until the first inventory arrives; a later fetch keeps showing the last one.
+  const showsInventoryLoading =
+    activeTab === "inventory" &&
+    !showsInventoryError &&
+    isInventoryLoading &&
+    serviceInventories === null;
   const query = queries[activeTab];
-  const groups = showsInventoryError
-    ? []
-    : filterGroups(activeTab === "new" ? newGroups : inventoryGroups, query);
+  const groups =
+    showsInventoryError || showsInventoryLoading
+      ? []
+      : filterGroups(activeTab === "new" ? newGroups : inventoryGroups, query);
   const resultCount = groups.reduce((count, group) => count + group.rows.length, 0);
   const setQuery = (value: string) => setQueries((prev) => ({ ...prev, [activeTab]: value }));
 
@@ -360,14 +369,27 @@ export const LeftSidebar: React.FC = () => {
               <EmptyStateBody>{inventoriesError}</EmptyStateBody>
               <EmptyStateFooter>
                 <EmptyStateActions>
-                  <Button variant="link" onClick={refreshInventories}>
+                  <Button
+                    variant="link"
+                    onClick={refreshInventories}
+                    isLoading={isInventoryLoading}
+                    isDisabled={isInventoryLoading}
+                  >
                     {words("retry")}
                   </Button>
                 </EmptyStateActions>
               </EmptyStateFooter>
             </EmptyState>
           )}
-          {!showsInventoryError && groups.length === 0 && (
+          {showsInventoryLoading && (
+            <EmptyState
+              headingLevel="h3"
+              titleText={words("instanceComposer.palette.inventoryLoading")}
+              icon={Spinner}
+              variant="xs"
+            />
+          )}
+          {!showsInventoryError && !showsInventoryLoading && groups.length === 0 && (
             <EmptyState
               headingLevel="h3"
               titleText={

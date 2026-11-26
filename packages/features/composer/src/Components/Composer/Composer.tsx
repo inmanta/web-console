@@ -44,13 +44,19 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
     [serviceCatalogQuery.data, serviceName]
   );
 
-  // Fetched once, not polled: with many instances a response is large. The palette's Inventory tab
-  // fetches it again when it opens.
-  const inventoriesQuery = useGetInventoryList(catalogEntries).useOneTime();
+  // Only the palette's Inventory tab uses the inventory, and with many instances a response is
+  // large: it is fetched when that tab opens, each time, and never polled.
+  const [isInventoryRequested, setIsInventoryRequested] = useState(false);
+  const inventoriesQuery = useGetInventoryList(catalogEntries).useOneTime(isInventoryRequested);
   const { refetch: refetchInventories } = inventoriesQuery;
   const refreshInventories = useCallback(() => {
-    void refetchInventories();
-  }, [refetchInventories]);
+    if (isInventoryRequested) {
+      void refetchInventories();
+    } else {
+      // Enabling the query fetches it.
+      setIsInventoryRequested(true);
+    }
+  }, [isInventoryRequested, refetchInventories]);
 
   // Fetch instance data if instanceId is provided
   // The query will only run if instanceId and mainService are present (enabled check in the hook)
@@ -103,6 +109,7 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
       serviceCatalog: serviceCatalogQuery.data || [],
       serviceInventories: inventoriesQuery.data || null,
       inventoriesError: inventoriesQuery.error?.message ?? null,
+      isInventoryLoading: inventoriesQuery.isFetching,
       refreshInventories,
       serviceInstanceId: instanceId || null,
       relationsDictionary: relationsDictionary,
@@ -121,6 +128,7 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
       serviceCatalogQuery.data,
       inventoriesQuery.data,
       inventoriesQuery.error,
+      inventoriesQuery.isFetching,
       refreshInventories,
       instanceId,
       relationsDictionary,

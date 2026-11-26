@@ -87,7 +87,13 @@ interface ComposerContextInterface {
   /** Why the inventory couldn't be fetched, if it failed. */
   inventoriesError: string | null;
 
-  /** Fetches the inventory again. It is fetched once when the composer opens, it isn't polled. */
+  /** Whether the inventory is being fetched. */
+  isInventoryLoading: boolean;
+
+  /**
+   * Fetches the inventory: the first call starts fetching it, later calls fetch it again. Only the
+   * palette's Inventory tab uses it, so the tab calls this when it opens; it isn't polled.
+   */
   refreshInventories: () => void;
   serviceInstanceId: string | null;
   editable: boolean;
@@ -119,6 +125,7 @@ export const composerContext: ComposerContextInterface = {
   serviceCatalog: [],
   serviceInventories: null,
   inventoriesError: null,
+  isInventoryLoading: false,
   refreshInventories: noop,
   serviceInstanceId: null,
   editable: false,
