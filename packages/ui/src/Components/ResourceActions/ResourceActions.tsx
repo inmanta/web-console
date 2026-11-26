@@ -292,11 +292,7 @@ export const ResourceActions: React.FC<Props> = (props) => {
                 </Icon>
               }
               onClick={() => onAction(key)}
-              tooltipProps={{
-                content: itemTooltip,
-                position: "left",
-                flipBehavior: ["left", "right"],
-              }}
+              tooltipProps={{ content: itemTooltip, position: "left" }}
             >
               <Flex
                 justifyContent={{ default: "justifyContentSpaceBetween" }}
