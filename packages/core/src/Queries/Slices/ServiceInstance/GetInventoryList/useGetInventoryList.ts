@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { ServiceInstanceModel } from "@inmanta/web-console-core";
+import { Pagination, ServiceInstanceModel } from "@inmanta/web-console-core";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { CustomError, useGet } from "@inmanta/web-console-core/Queries/Helpers";
 import { KeyFactory, SliceKeys } from "@inmanta/web-console-core/Queries/Helpers/KeyFactory";
@@ -13,6 +13,9 @@ import { KeyFactory, SliceKeys } from "@inmanta/web-console-core/Queries/Helpers
 export interface Inventories {
   [serviceName: string]: ServiceInstanceModel[];
 }
+
+/** The number of instances fetched per page: few requests for a large inventory. */
+const PAGE_SIZE = 1000;
 
 /**
  * Return Signature of the useGetInventoryList React Query
@@ -34,24 +37,42 @@ interface GetInventoryList {
 export const useGetInventoryList = (serviceNames: string[]): GetInventoryList => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const get = useGet(env)<{ data: ServiceInstanceModel[] }>;
+  const get = useGet(env)<{ data: ServiceInstanceModel[]; links?: Pagination.Links }>;
 
   /**
-   * Fetches the inventory for all services.
+   * Fetches every instance of one service: each page in turn, following `links.next`. A next link
+   * to the page it was on ends it, so it never fetches the same page forever.
+   *
+   * @returns the instances of the service
+   * @throws Will throw an error if the fetch of any page fails.
+   */
+  const fetchServiceInventory = async (serviceName: string): Promise<ServiceInstanceModel[]> => {
+    const instances: ServiceInstanceModel[] = [];
+    let query: string | undefined = `limit=${PAGE_SIZE}`;
+
+    while (query !== undefined) {
+      const page = await get(`/lsm/v1/service_inventory/${serviceName}?${query}`);
+
+      instances.push(...page.data);
+      const next = page.links?.next?.split("?")[1];
+
+      query = next !== query ? next : undefined;
+    }
+
+    return instances;
+  };
+
+  /**
+   * Fetches the inventory for all services, in parallel.
    *
    * @returns A promise that resolves to an object mapping service names to arrays of service instances.
    * @throws Will throw an error if the fetch operation for any service fails.
    */
   const fetchAllServices = async (): Promise<Inventories> => {
-    const responses = await Promise.all(
-      serviceNames.map(async (serviceName) =>
-        get(`/lsm/v1/service_inventory/${serviceName}?limit=1000`)
-      )
-    );
+    const inventories = await Promise.all(serviceNames.map(fetchServiceInventory));
 
-    // Map the responses to an object of service names and arrays of service instances for each service
     return Object.fromEntries(
-      responses.map((response, index) => [serviceNames[index], response.data])
+      inventories.map((instances, index) => [serviceNames[index], instances])
     );
   };
 
