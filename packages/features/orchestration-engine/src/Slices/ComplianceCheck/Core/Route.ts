@@ -14,4 +14,5 @@ export const route = (base: string): Route<"ComplianceCheck"> => ({
   path: `${base}${path}`,
   generateLabel: () => "Compliance Check",
   environmentRole: "Required",
+  fillsPage: true,
 });

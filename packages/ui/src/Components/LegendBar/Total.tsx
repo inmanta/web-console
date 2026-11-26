@@ -9,7 +9,6 @@ export interface Total {
 
 const TotalContainer = styled.div`
   padding-left: 16px;
-  line-height: 36px;
 `;
 
 export const Total: React.FC<{ total: Total; value: number }> = ({ total, value }) =>

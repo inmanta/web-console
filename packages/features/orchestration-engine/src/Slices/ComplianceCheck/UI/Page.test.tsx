@@ -5,9 +5,14 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { DryRun, words, getFeatureRoutes } from "@inmanta/web-console-core";
+import { Diff, DryRun, words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
 import { orchestrationEngineFeature } from "@inmanta/web-console-feature-orchestration-engine";
+import {
+  findResourceListRows,
+  getResourceListRows,
+  selectResource,
+} from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/Spec/resourceListQueries";
 import * as Mock from "@inmanta/web-console-feature-orchestration-engine/Slices/ComplianceCheck/Data/Mock";
 import {
   EnvironmentDetails,
@@ -33,6 +38,10 @@ const axe = configureAxe({
 
 const environment = "aaa";
 
+const resourcesShownByDefault = Mock.reportResponse.data.diff.filter((resource) =>
+  Diff.defaultStatuses.includes(resource.status)
+);
+
 /**
  * The desired state lookup of the model version the mock reports ran on, with the given status.
  */
@@ -56,6 +65,34 @@ const LeavablePage: React.FC = () => {
     </>
   );
 };
+
+/**
+ * Opens the menu of the Dry run split button, once it is enabled.
+ */
+const openDryRunMenu = async () => {
+  const toggle = await screen.findByRole("button", {
+    name: words("desiredState.complianceCheck.action.dryRun.toggle"),
+  });
+
+  await waitFor(() => expect(toggle).toBeEnabled());
+  await userEvent.click(toggle);
+};
+
+/**
+ * Waits for the lookup of the model version's status, which "This report's scope" is disabled
+ * until.
+ */
+const waitForModelVersionStatus = async () => {
+  await waitFor(() => expect(testClient.isFetching()).toBe(0));
+};
+
+/**
+ * Gets the "This report's scope" item of the open Dry run menu.
+ */
+const getReportScopeItem = () =>
+  screen.getByRole("menuitem", {
+    name: new RegExp(`^${words("desiredState.complianceCheck.action.dryRun.reportScope")}`),
+  });
 
 function setup(search = "", env = EnvironmentDetails.env, page = <View version="123" />) {
   const datePresenter = new CustomDatePresenter();
@@ -128,9 +165,7 @@ describe("ComplianceCheck page", () => {
     expect(options).toHaveLength(3);
     expect(options[0]).toHaveAttribute("aria-selected", "true");
 
-    const blocks = await screen.findAllByTestId("DiffBlock");
-
-    expect(blocks).toHaveLength(11);
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -139,20 +174,23 @@ describe("ComplianceCheck page", () => {
     });
   });
 
-  test("GIVEN ComplianceCheck page THEN each dry run entry links to its resource details page", async () => {
+  test("GIVEN ComplianceCheck page WHEN a resource is selected THEN its diff header links to its resource details page", async () => {
     const { component } = setup();
 
     render(component);
 
-    await screen.findAllByTestId("DiffBlock");
+    const [{ resource_id: notInitiallySelectedResourceId }] = Mock.reportResponse.data.diff.filter(
+      ({ status }) => status === "deleted"
+    );
 
-    const resourceId = Mock.reportResponse.data.diff[0].resource_id;
-    const link = screen.getByRole("link", { name: resourceId });
+    await selectResource(notInitiallySelectedResourceId);
+
+    const link = screen.getByRole("link", { name: words("desiredState.resourceDetails.title") });
     const href = link.getAttribute("href") ?? "";
 
     // The link points at the resource details page for this resource, keeping the environment.
     expect(href).toMatch(/^\/resources\//);
-    expect(decodeURIComponent(href)).toContain(resourceId);
+    expect(decodeURIComponent(href)).toContain(notInitiallySelectedResourceId);
     expect(href).toContain(`env=${environment}`);
   });
 
@@ -206,7 +244,7 @@ describe("ComplianceCheck page", () => {
     });
   });
 
-  test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new dry run is selected", async () => {
+  test("GIVEN ComplianceCheck page WHEN user clicks on 'Dry run' THEN a full model dry run starts and gets selected", async () => {
     let data = Mock.listResponse;
     server.use(
       http.get("/api/v2/dryrun/123", () => {
@@ -233,12 +271,47 @@ describe("ComplianceCheck page", () => {
 
     await waitFor(() => expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date)));
 
+    // The new report is selected on this page, so the toast has no link to it.
+    expect(await screen.findByTestId("ToastAlert")).toHaveTextContent(
+      words("desiredState.complianceCheck.report.started")
+    );
+    expect(
+      screen.queryByRole("button", { name: words("desiredState.complianceCheck.report.view") })
+    ).not.toBeInTheDocument();
+
     await userEvent.click(select);
 
     const options = screen.getAllByRole<HTMLButtonElement>("option");
 
     expect(options).toHaveLength(4);
     expect(options[0]).toHaveAttribute("aria-selected", "true");
+  });
+
+  test("GIVEN ComplianceCheck page WHEN the Dry run menu opens THEN it offers the full model and the report's scope with their resource counts", async () => {
+    const { component } = setup();
+
+    render(component);
+
+    await openDryRunMenu();
+
+    const modelVersion = modelVersionResponse(DesiredStateVersionStatus.active).data[0];
+
+    expect(
+      await screen.findByRole("menuitem", {
+        name: `${words("desiredState.complianceCheck.scope.fullModel")} ${words("desiredState.complianceCheck.action.dryRun.fullModel.hint")(Number(modelVersion.total))}`,
+      })
+    ).toBeVisible();
+    expect(
+      screen.getByRole("menuitem", {
+        name: `${words("desiredState.complianceCheck.action.dryRun.reportScope")} ${words("desiredState.complianceCheck.action.dryRun.reportScope.hint")(Number(Mock.b.total))}`,
+      })
+    ).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test("GIVEN a dry run was started WHEN the page is left before it is done THEN it doesn't navigate back", async () => {
@@ -269,78 +342,19 @@ describe("ComplianceCheck page", () => {
     expect(screen.getByTestId("search")).not.toHaveTextContent("report");
   });
 
-  test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
+  test("GIVEN ComplianceCheck page WHEN a type filter is added in the filter drawer THEN only the report's resources of that type show", async () => {
     const { component } = setup();
 
     render(component);
 
-    await userEvent.click(await screen.findByRole("button", { name: words("jumpTo") }));
+    expect(await findResourceListRows()).toHaveLength(resourcesShownByDefault.length);
 
-    expect(screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" })).toHaveLength(11);
+    await userEvent.click(screen.getByRole("button", { name: new RegExp(words("filters")) }));
+    await userEvent.type(screen.getByRole("textbox", { name: words("type") }), "lsm{Enter}");
 
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-
-    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
-
-    expect(screen.queryByRole("listbox", { name: "StatusFilterOptions" })).not.toBeInTheDocument();
-
-    await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
-
-    expect(await screen.findByRole("listbox", { name: "StatusFilterOptions" })).toBeVisible();
-
-    const statusOptions = screen.getAllByRole("option");
-
-    expect(statusOptions).toHaveLength(6);
-
-    await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
-
-    await userEvent.click(statusOptions[0]);
-
-    await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
-
-    expect(await screen.findAllByRole("menuitem", { name: "DiffSummaryListItem" })).toHaveLength(2);
-
-    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-  });
-
-  test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
-    const { component } = setup();
-
-    render(component);
-
-    await userEvent.click(await screen.findByRole("button", { name: words("jumpTo") }));
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-
-    expect(screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" })).toHaveLength(11);
-
-    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
-
-    await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "lsm");
-
-    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(10);
-
-    await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "44554");
-
-    expect(screen.queryAllByTestId("DiffBlock")).toHaveLength(0);
-
-    await userEvent.clear(screen.getByRole("searchbox", { name: "SearchFilter" }));
-
-    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
+    expect(getResourceListRows()).toHaveLength(
+      resourcesShownByDefault.filter((resource) => resource.resource_id.startsWith("lsm::")).length
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -355,6 +369,13 @@ describe("ComplianceCheck page", () => {
 
     const findScope = () =>
       screen.findByRole("region", { name: words("desiredState.complianceCheck.scope.title") });
+
+    const expandScope = (scope: HTMLElement) =>
+      userEvent.click(
+        within(scope).getByRole("button", {
+          name: words("desiredState.complianceCheck.scope.title"),
+        })
+      );
 
     let instanceRequests: URL[] = [];
 
@@ -437,7 +458,13 @@ describe("ComplianceCheck page", () => {
         screen.queryByText(words("desiredState.complianceCheck.scope.notActive"))
       ).not.toBeInTheDocument();
 
-      // The applied filter shows open, with the status apart.
+      // The applied filter starts closed and opens with the card, with the status apart.
+      expect(
+        within(scope).queryByText(words("desiredState.complianceCheck.scope.row.agent"))
+      ).not.toBeInTheDocument();
+
+      await expandScope(scope);
+
       expect(
         within(scope).getByText(words("desiredState.complianceCheck.scope.row.agent"))
       ).toBeVisible();
@@ -446,16 +473,6 @@ describe("ComplianceCheck page", () => {
         within(scope).getByText(words("desiredState.complianceCheck.scope.row.status.note"))
       ).toBeVisible();
 
-      await userEvent.click(
-        within(scope).getByRole("button", {
-          name: words("desiredState.complianceCheck.scope.filter.title"),
-        })
-      );
-
-      expect(
-        within(scope).queryByText(words("desiredState.complianceCheck.scope.row.agent"))
-      ).not.toBeInTheDocument();
-
       await act(async () => {
         const results = await axe(document.body);
 
@@ -463,7 +480,7 @@ describe("ComplianceCheck page", () => {
       });
     });
 
-    test("GIVEN a report on the whole model version THEN it shows no applied filter", async () => {
+    test("GIVEN a report on the whole model version THEN it shows no applied filter and its scope can't run", async () => {
       const { component } = setup(`&state.ComplianceCheck.report=${Mock.c.id}`);
 
       render(component);
@@ -474,38 +491,93 @@ describe("ComplianceCheck page", () => {
         `${Number(Mock.c.total)} ${words("desiredState.complianceCheck.scope.resources")(Number(Mock.c.total))}`
       );
       expect(
-        within(scope).queryByText(words("desiredState.complianceCheck.scope.filter.title"))
-      ).not.toBeInTheDocument();
-      expect(
         within(scope).queryByRole("button", {
-          name: words("desiredState.complianceCheck.scope.rerun"),
+          name: words("desiredState.complianceCheck.scope.title"),
         })
       ).not.toBeInTheDocument();
+      expect(
+        within(scope).queryByText(words("desiredState.complianceCheck.scope.filter.title"))
+      ).not.toBeInTheDocument();
+
+      await openDryRunMenu();
+
+      expect(getReportScopeItem()).toHaveAttribute("aria-disabled", "true");
+
+      await userEvent.hover(getReportScopeItem());
+
+      expect(await screen.findByRole("tooltip")).toHaveTextContent(
+        words("desiredState.complianceCheck.action.dryRun.reportScope.blockedBy.fullModel")
+      );
     });
 
-    test("WHEN View JSON is clicked THEN it shows the exact resource filter", async () => {
+    test("GIVEN a report whose filter only picks the model version THEN its scope can't run", async () => {
+      server.use(
+        http.get("/api/v2/dryrun/123", () =>
+          HttpResponse.json({ data: [{ ...Mock.b, resource_filter: { isOrphan: false } }] })
+        )
+      );
       const { component } = setup();
 
       render(component);
 
-      await userEvent.click(
-        within(await findScope()).getByRole("button", {
-          name: words("desiredState.complianceCheck.scope.json"),
-        })
-      );
+      await openDryRunMenu();
 
-      const dialog = await screen.findByRole("dialog");
+      expect(getReportScopeItem()).toHaveAttribute("aria-disabled", "true");
 
-      expect(within(dialog).getByTestId("code-editor-content")).toHaveTextContent(
-        JSON.stringify(Mock.b.resource_filter, null, 2).replace(/\s+/g, " ")
+      await userEvent.hover(getReportScopeItem());
+
+      expect(await screen.findByRole("tooltip")).toHaveTextContent(
+        words("desiredState.complianceCheck.action.dryRun.reportScope.blockedBy.fullModel")
       );
     });
 
-    test("WHEN Re-run is clicked THEN it re-posts the report's filter and context and selects the new report", async () => {
+    test("GIVEN no reports THEN the report's scope can't run", async () => {
+      server.use(http.get("/api/v2/dryrun/123", () => HttpResponse.json({ data: [] })));
+      const { component } = setup();
+
+      render(component);
+
+      await openDryRunMenu();
+
+      expect(getReportScopeItem()).toHaveAttribute("aria-disabled", "true");
+
+      await userEvent.hover(getReportScopeItem());
+
+      expect(await screen.findByRole("tooltip")).toHaveTextContent(
+        words("desiredState.complianceCheck.action.dryRun.reportScope.blockedBy.noReport")
+      );
+    });
+
+    test("WHEN the applied filter switches to JSON THEN it shows the exact resource filter in place", async () => {
+      const { component } = setup();
+
+      render(component);
+
+      const scope = await findScope();
+
+      await expandScope(scope);
+      await userEvent.click(
+        within(scope).getByRole("button", {
+          name: words("view.json"),
+        })
+      );
+
+      expect(within(scope).getByTestId("code-editor-content")).toHaveTextContent(
+        JSON.stringify(Mock.b.resource_filter, null, 2).replace(/\s+/g, " ")
+      );
+      expect(
+        within(scope).queryByRole("grid", {
+          name: words("desiredState.complianceCheck.scope.filter.title"),
+        })
+      ).not.toBeInTheDocument();
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    test("WHEN 'This report's scope' is clicked THEN it posts the report's filter and context and selects the new report", async () => {
       const report: DryRun = {
         ...Mock.b,
         resource_filter: { ...Mock.b.resource_filter, serviceInstance: [instance.id] },
-        // A key another client stored, which the re-run keeps.
+        // A key another client stored, which "This report's scope" keeps.
         context: {
           web_instance_labels: { [instance.id]: Mock.filteredInstanceLabel },
           other_client_key: "kept",
@@ -527,15 +599,10 @@ describe("ComplianceCheck page", () => {
 
       render(component);
 
-      const scope = await findScope();
-      // Queried each time: the button is rendered anew once its disabled reason goes away.
-      const getRerun = () =>
-        within(scope).getByRole("button", {
-          name: words("desiredState.complianceCheck.scope.rerun"),
-        });
-
-      await waitFor(() => expect(getRerun()).toBeEnabled());
-      await userEvent.click(getRerun());
+      await openDryRunMenu();
+      // Enabled once the model version's status is known.
+      await waitFor(() => expect(getReportScopeItem()).not.toHaveAttribute("aria-disabled"));
+      await userEvent.click(getReportScopeItem());
 
       await waitFor(() =>
         expect(body).toEqual({ filter: report.resource_filter, context: report.context })
@@ -545,9 +612,14 @@ describe("ComplianceCheck page", () => {
           datePresenter.getFull(Mock.a.date)
         )
       );
+      const toast = await screen.findByTestId("ToastAlert");
+
+      expect(toast).toHaveTextContent(words("desiredState.complianceCheck.report.started"));
+      // The new report is selected on this page, so the toast doesn't link to it.
+      expect(toast).not.toHaveTextContent(words("desiredState.complianceCheck.report.view"));
     });
 
-    test("GIVEN a report on a version that is no longer active THEN it warns and blocks a re-run its filter can't target", async () => {
+    test("GIVEN a report on a version that is no longer active THEN it warns and blocks a scope its filter can't target", async () => {
       server.use(
         http.get("/api/v2/desiredstate", () =>
           HttpResponse.json(modelVersionResponse(DesiredStateVersionStatus.retired))
@@ -565,17 +637,26 @@ describe("ComplianceCheck page", () => {
       expect(scope).toHaveTextContent(
         `${DesiredStateVersionStatus.retired} ${words("modelVersion")(Number(Mock.b.model))}`
       );
+
+      await expandScope(scope);
+
       expect(
         within(scope).getByText(words("desiredState.complianceCheck.scope.value.wasLatestIntent"))
       ).toBeVisible();
       expect(
         within(scope).queryByText(words("desiredState.complianceCheck.scope.value.latestIntent"))
       ).not.toBeInTheDocument();
-      expect(
-        within(scope).getByRole("button", {
-          name: words("desiredState.complianceCheck.scope.rerun"),
-        })
-      ).toBeDisabled();
+
+      await openDryRunMenu();
+
+      expect(getReportScopeItem()).toHaveAttribute("aria-disabled", "true");
+
+      await userEvent.hover(getReportScopeItem());
+
+      // Mock.b's filter has a status condition, which can't target an older model version.
+      expect(await screen.findByRole("tooltip")).toHaveTextContent(
+        words("resources.resourceActions.confirm.version.blockedBy.statusFilter")
+      );
     });
 
     test("GIVEN a filter row with more than three values THEN the rest collapse, flags apart", async () => {
@@ -598,6 +679,9 @@ describe("ComplianceCheck page", () => {
       render(component);
 
       const scope = await findScope();
+
+      await expandScope(scope);
+
       const agentRow = within(scope).getByRole("list", {
         name: words("desiredState.complianceCheck.scope.row.agent"),
       });
@@ -617,7 +701,7 @@ describe("ComplianceCheck page", () => {
       ).toBeVisible();
     });
 
-    test("GIVEN the model version's status can't be looked up THEN it can't be re-run", async () => {
+    test("GIVEN the model version's status can't be looked up THEN the report's scope can't run", async () => {
       server.use(http.get("/api/v2/desiredstate", () => HttpResponse.json({ data: [] })));
       const { component } = setup();
 
@@ -625,37 +709,35 @@ describe("ComplianceCheck page", () => {
 
       const scope = await findScope();
 
-      // Re-run is also disabled while the status loads, so wait for the lookup to finish.
-      await waitFor(() => expect(testClient.isFetching()).toBe(0));
+      await waitForModelVersionStatus();
       expect(
         within(scope).queryByText(words("desiredState.complianceCheck.scope.notActive"))
       ).not.toBeInTheDocument();
-      expect(
-        within(scope).getByRole("button", {
-          name: words("desiredState.complianceCheck.scope.rerun"),
-        })
-      ).toBeDisabled();
+
+      await openDryRunMenu();
+
+      expect(getReportScopeItem()).toHaveAttribute("aria-disabled", "true");
+
+      await userEvent.hover(getReportScopeItem());
+
+      expect(await screen.findByRole("tooltip")).toHaveTextContent(
+        words("desiredState.complianceCheck.action.dryRun.reportScope.blockedBy.unknownStatus")
+      );
     });
 
-    test("GIVEN a halted environment THEN starting and re-running a dry run are disabled", async () => {
+    test("GIVEN a halted environment THEN the whole Dry run button is disabled", async () => {
       const { component } = setup("", { ...EnvironmentDetails.env, halted: true });
 
       render(component);
 
-      const scope = await findScope();
+      await findScope();
 
-      // Re-run is also disabled until the model version's status is known, so wait for it.
-      await waitFor(() =>
-        expect(scope).toHaveTextContent(
-          `${DesiredStateVersionStatus.active} ${words("modelVersion")(Number(Mock.b.model))}`
-        )
-      );
       expect(
         screen.getByRole("button", { name: words("desiredState.complianceCheck.action.dryRun") })
       ).toBeDisabled();
       expect(
-        within(scope).getByRole("button", {
-          name: words("desiredState.complianceCheck.scope.rerun"),
+        screen.getByRole("button", {
+          name: words("desiredState.complianceCheck.action.dryRun.toggle"),
         })
       ).toBeDisabled();
     });

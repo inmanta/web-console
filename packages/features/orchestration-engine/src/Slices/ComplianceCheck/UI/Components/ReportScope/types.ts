@@ -1,6 +1,5 @@
 import { ResourceActionFilter } from "@inmanta/web-console-core";
 import type { StrFilter } from "@inmanta/web-console-core/Domain/GraphQL/generated/graphql";
-import { VersionSelectionBlocker } from "@inmanta/web-console-core/Queries/Slices/Resource";
 
 /**
  * The filter fields that get a row of their own in the applied filter, under the same name. The
@@ -49,14 +48,6 @@ export interface ReportScopeParts {
   isFiltered: boolean;
   label: string;
 }
-
-/**
- * How to re-run a dry run report: with this filter, or not at all because the filter can't target
- * the report's model version.
- */
-export type RerunPlan =
-  | { kind: "ready"; filter: ResourceActionFilter }
-  | { kind: "blocked"; blockedBy: VersionSelectionBlocker };
 
 /**
  * The agents and the changed resources in a dry run's diff.

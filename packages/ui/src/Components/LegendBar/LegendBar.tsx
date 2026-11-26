@@ -35,6 +35,7 @@ export const LegendBar: React.FC<Props> = ({ items, total, label, ...props }) =>
 
 const Container = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const Bar = styled.div`

@@ -53,11 +53,10 @@ export const Page: React.FC = () => {
     setIsDrawerExpanded(false);
   }, []);
 
-  const activeFilterCount = useMemo(() => {
-    const { disregardDefault: _disregardDefault, ...filterValues } = filterWithDefaults;
-
-    return countActiveFilters(filterValues);
-  }, [filterWithDefaults]);
+  const activeFilterCount = useMemo(
+    () => countActiveFilters(filterWithDefaults),
+    [filterWithDefaults]
+  );
 
   const { data, refetch, isError, error, isSuccess } = useGetDesiredStates().useContinuous(
     pageSize,

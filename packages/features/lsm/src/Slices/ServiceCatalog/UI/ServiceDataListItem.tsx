@@ -158,18 +158,14 @@ export const ServiceDataListItem: React.FC<Props> = ({
                     <OwnedServicesNotSuccessLabel stateCounts={ownedServicesStateCounts} />
                   </FlexItem>
                 )}
-                <FlexItem>
-                  {instanceSummary && Number(instanceSummary.total) > 0 ? (
+                {instanceSummary && Number(instanceSummary.total) > 0 && (
+                  <FlexItem>
                     <InstanceSummaryLabels
                       summary={instanceSummary}
                       states={serviceModel.lifecycle.states}
                     />
-                  ) : (
-                    <Content component={ContentVariants.small}>
-                      {words("catalog.instances.none")}
-                    </Content>
-                  )}
-                </FlexItem>
+                  </FlexItem>
+                )}
                 <FlexItem>
                   <Link pathname={inventoryPathname} fitContent>
                     <Button variant="link" component="span">

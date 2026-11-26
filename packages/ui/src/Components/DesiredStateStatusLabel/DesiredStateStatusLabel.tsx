@@ -27,14 +27,16 @@ const statusLabelProps: Record<
  *
  * @prop {DesiredStateVersionStatus} status - The Status of the desired state version.
  * @prop {React.ReactNode} [children] - Shown after the status, e.g. "v5" for "active v5".
+ * @prop {boolean} [isCompact] - Shows the smaller label, which fits a line of text.
  * @returns A React label component with the status of the desired state version.
  */
 export const DesiredStateStatusLabel: React.FC<
   PropsWithChildren<{
     status: DesiredStateVersionStatus;
+    isCompact?: boolean;
   }>
-> = ({ status, children }) => (
-  <Label variant="outline" {...statusLabelProps[status]}>
+> = ({ status, isCompact = false, children }) => (
+  <Label variant="outline" isCompact={isCompact} {...statusLabelProps[status]}>
     {children ? (
       <>
         {status} {children}

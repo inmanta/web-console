@@ -1,19 +1,19 @@
-import React, { useEffect, useMemo, useRef } from "react";
-import { Grid, PageSection } from "@patternfly/react-core";
-import { Diff, DryRun, words } from "@inmanta/web-console-core";
+import React, { useEffect } from "react";
+import { Stack, StackItem } from "@patternfly/react-core";
+import { DryRun, words } from "@inmanta/web-console-core";
 import { useGetDryRunReport } from "@inmanta/web-console-core/Queries/Slices/DryRun";
 import * as DiffWizard from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard";
 import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
 import { ErrorView } from "@inmanta/web-console-ui/Components/ErrorView";
 import { LoadingView } from "@inmanta/web-console-ui/Components/LoadingView";
-import { DryRunProgressLabel, ReportScope } from "./Components";
+import { ReportScope } from "./Components";
+
+/** Keeps the diff usable below a tall expanded scope; the section scrolls down to it. */
+const DIFF_MIN_HEIGHT_BELOW_SCOPE = "50vh";
 
 interface Props {
   report: DryRun | null;
   version: string;
-  statuses: Diff.Status[];
-  searchFilter: string;
-  onRerunStart: () => void;
 }
 
 /**
@@ -23,9 +23,6 @@ interface Props {
  * @props {Props} props - The component props
  * @prop {DryRun | null} report - The dry run report data
  * @prop {string} version - The version of the dry run
- * @prop {Diff.Status[]} statuses - The statuses to filter the resources by
- * @prop {string} searchFilter - The search filter to filter the resources by
- * @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The DiffPageSection component
  */
@@ -40,20 +37,10 @@ export const DiffPageSection: React.FC<Props> = ({ report, ...props }) =>
  * @props {Props} props - The component props
  * @prop {DryRun} report - The dry run report
  * @prop {string} version - The version of the dry run
- * @prop {Diff.Status[]} statuses - The statuses to filter the resources by
- * @prop {string} searchFilter - The search filter to filter the resources by
- * @prop {() => void} onRerunStart - Called when a re-run is started
  *
  * @returns {React.FC<Props>} The DiffView component
  */
-const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
-  report,
-  version,
-  statuses,
-  searchFilter,
-  onRerunStart,
-}) => {
-  const refs: DiffWizard.Refs = useRef({});
+const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({ report, version }) => {
   const todo = Number(report.todo);
   const { data, isSuccess, isError, isLoading, error, refetch } = useGetDryRunReport().useOneTime(
     version,
@@ -68,22 +55,6 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
     refetch();
   }, [todo, isLoading, refetch]);
 
-  // Kept until the report or the filters change, so polling the report list doesn't rebuild every
-  // row of a large diff.
-  const diffData = useMemo(
-    () => data?.diff.filter((resource) => statuses.includes(resource.status)) ?? [],
-    [data, statuses]
-  );
-  const items = useMemo(
-    () =>
-      diffData
-        .filter((resource) =>
-          resource.resource_id.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase())
-        )
-        .map(DiffWizard.fromResourceToItem),
-    [diffData, searchFilter]
-  );
-
   const renderDiff = () => {
     if (isError) {
       return (
@@ -95,48 +66,31 @@ const DiffView: React.FC<Omit<Props, "report"> & { report: DryRun }> = ({
       return <LoadingView ariaLabel="DiffPageSection-Loading" />;
     }
 
+    if (data.diff.length <= 0) {
+      return <EmptyView message={words("desiredState.compare.empty")} />;
+    }
+
     return (
-      <>
-        <DiffWizard.Controls
-          data={diffData}
-          refs={refs}
-          fromLabel={words("currentStateShort")}
-          toLabel={words("modelVersion")(version)}
-        >
-          {Number(data.summary.todo) > 0 && <DryRunProgressLabel progress={data.summary} />}
-        </DiffWizard.Controls>
-        {data.diff.length <= 0 ? (
-          <EmptyView message={words("desiredState.compare.empty")} />
-        ) : (
-          <DiffWizard.ItemList
-            items={items}
-            refs={refs}
-            fromLabel={words("currentState")}
-            toLabel={words("modelVersion")(version)}
-          />
-        )}
-      </>
+      <DiffWizard.FilteredResourceListWithDiffPane
+        resources={data.diff}
+        route="ComplianceCheck"
+        fromLabel={words("currentState")}
+        toLabel={words("modelVersion")(version)}
+      />
     );
   };
 
   return (
-    // Scrolls on its own, so the page title, report picker and filters above it stay in view.
-    // No top padding: the section above already ends in padding, which keeps the report close to
-    // the filters.
-    <PageSection
-      hasBodyWrapper={false}
-      isFilled
-      style={{ flex: "1 1 auto", minHeight: 0, overflow: "auto", paddingTop: 0 }}
-    >
-      {/*
-       * A grid rather than a flex column: a flex column squeezes the scope card, which scrolls
-       * its own overflow, down to its border. It keeps its full height, so the section scrolls.
-       */}
-      <Grid hasGutter style={{ flexShrink: 0 }}>
+    <DiffWizard.ScrollingPageSection>
+      <Stack hasGutter>
         {/* The scope comes from the report itself, so it stays in place while the diff loads. */}
-        <ReportScope report={report} diff={data?.diff} onRerunStart={onRerunStart} />
-        {renderDiff()}
-      </Grid>
-    </PageSection>
+        <StackItem>
+          <ReportScope report={report} diff={data?.diff} />
+        </StackItem>
+        <StackItem isFilled style={{ minHeight: DIFF_MIN_HEIGHT_BELOW_SCOPE }}>
+          {renderDiff()}
+        </StackItem>
+      </Stack>
+    </DiffWizard.ScrollingPageSection>
   );
 };

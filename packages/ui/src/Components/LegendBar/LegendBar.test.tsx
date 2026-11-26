@@ -70,3 +70,20 @@ test("GIVEN LegendBar WHEN items have no onClick handler THEN they are not expos
   expect(screen.queryByRole("button")).not.toBeInTheDocument();
   expect(screen.getByLabelText("LegendItem-test")).not.toHaveAttribute("aria-pressed");
 });
+
+test("GIVEN LegendBar WHEN items set no height THEN they use the 28px default", () => {
+  render(
+    <LegendBar
+      items={[
+        {
+          id: "test",
+          backgroundColor: "black",
+          value: 10,
+          label: "test",
+        },
+      ]}
+    />
+  );
+
+  expect(getComputedStyle(screen.getByLabelText("LegendItem-test")).height).toBe("28px");
+});

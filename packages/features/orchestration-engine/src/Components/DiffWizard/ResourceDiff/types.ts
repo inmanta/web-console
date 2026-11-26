@@ -43,6 +43,9 @@ export const DIFF_SIDES: DiffSide[] = ["from", "to"];
 /** The columns of the attribute table: the attribute name, then one per side of the diff. */
 export const ATTRIBUTE_TABLE_COLUMN_COUNT = DIFF_SIDES.length + 1;
 
+/** The columns of the attribute table of a file resource, with one more for the hash row's actions. */
+export const FILE_ATTRIBUTE_TABLE_COLUMN_COUNT = ATTRIBUTE_TABLE_COLUMN_COUNT + 1;
+
 /**
  * A short value split around the part that differs from the value on the other side.
  */

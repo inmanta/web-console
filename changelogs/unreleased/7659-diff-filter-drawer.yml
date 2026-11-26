@@ -1,0 +1,5 @@
+description: Move the Compliance Check and Desired State Compare filters into a filter drawer.
+issue-nr: 7659
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

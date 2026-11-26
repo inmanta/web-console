@@ -20,9 +20,8 @@ export const uiMessages = {
   add: "Add",
   delete: "Delete",
   empty: "Empty",
-  jumpTo: "Jump to",
-  hideAll: "Hide All",
-  showAll: "Show All",
+  previous: "Previous",
+  next: "Next",
   edit: "Edit",
   details: "Details",
   remove: "Remove",
@@ -58,6 +57,8 @@ export const uiMessages = {
   history: "History",
   requires: "Requires",
   filters: "Filters",
+  "view.structured": "Structured",
+  "view.json": "JSON",
   collapseAll: "Collapse all",
   expandAll: "Expand all",
   export: "Export",
@@ -93,6 +94,8 @@ export const uiMessages = {
   "empty.filtered.title": "No results found",
   "empty.filtered.message":
     "No results match the filter criteria. Reset the filters and try again.",
+  "empty.filtered.resetToDefault.message":
+    "No results match the filter criteria. Reset the filters to default and try again.",
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
   "inventory.service.failed": "Something went wrong with fetching the service",
@@ -198,8 +201,16 @@ export const uiMessages = {
   "resources.filters.resource.value.placeholder": "Value...",
   "resources.filters.resource.agent.label": "Agent(s)",
   "resources.filters.resource.agent.placeholder": "Select Agent(s)",
+  "resources.filters.resource.agent.textPlaceholder": "Agent...",
+  "resources.filters.resource.type.hint":
+    "Matches any resource whose type contains this text, ignoring case.",
+  "resources.filters.resource.value.hint":
+    "Matches any resource whose value contains this text, ignoring case.",
+  "resources.filters.resource.agent.hint":
+    "Matches any resource whose agent contains this text, ignoring case.",
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.resetFilters": "Reset Filters",
+  "resources.filters.active.resetToDefault": "Reset to default",
   "resources.filters.active.empty.title": "No filters applied",
   "resources.filters.active.empty.body.noTabs":
     "Use the fields above to add filters and refine your results.",
@@ -216,8 +227,6 @@ export const uiMessages = {
   "resources.requires.deployState": "Deploy State",
   "resources.attributes.title": "Desired State",
   "resources.attributes.view.label": "Attribute view",
-  "resources.attributes.view.structured": "Structured",
-  "resources.attributes.view.json": "JSON",
   "resources.attributes.modelGroup": "Attributes",
   "resources.attributes.orchestratorGroup": "Orchestrator attributes",
   "references.chip.tooltip": "resolved at deploy time",
@@ -308,8 +317,6 @@ export const uiMessages = {
   "desiredState.compare.file.show": "Compare file content",
   "desiredState.compare.file.title": "File content",
   "desiredState.compare.file.hide": "Hide",
-  "desiredState.compare.file.hideAriaLabel": (resourceId: string) =>
-    `Hide file content of ${resourceId}`,
   "desiredState.complianceCheck.report.view": "View report",
   "desiredState.complianceCheck.report.started": "Dry run started",
 

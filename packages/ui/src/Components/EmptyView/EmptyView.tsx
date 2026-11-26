@@ -13,6 +13,7 @@ interface Props {
   message: string;
   title?: string;
   onResetFilters?: () => void;
+  hasDefaultFilters?: boolean;
 }
 
 /**
@@ -20,17 +21,26 @@ interface Props {
  *
  * With onResetFilters, the result is empty because of a filter, so it follows PatternFly's
  * "no results found" pattern instead: a search icon, a generic title and message, and a
- * Reset Filters button.
+ * Reset Filters button. When the page has default filters, the message and button say the
+ * reset goes back to those defaults instead of clearing every filter.
  *
  * @props {Props} props - The props of the component.
  *  @prop {string} message - The message to show when no filter is set.
  *  @prop {string} [title] - The title when no filter is set, defaults to a generic empty title.
  *  @prop {() => void} [onResetFilters] - Shows the filtered variant with a Reset Filters button
  *    that calls this function. Pass it only when a filter is set.
+ *  @prop {boolean} [hasDefaultFilters] - Whether onResetFilters goes back to the page's default
+ *    filters, so the button reads "Reset to default"
  *
  * @returns {React.FC<Props>} The empty view
  */
-export const EmptyView: React.FC<Props> = ({ title, message, onResetFilters, ...props }) =>
+export const EmptyView: React.FC<Props> = ({
+  title,
+  message,
+  onResetFilters,
+  hasDefaultFilters = false,
+  ...props
+}) =>
   onResetFilters ? (
     <EmptyState
       headingLevel="h2"
@@ -38,11 +48,17 @@ export const EmptyView: React.FC<Props> = ({ title, message, onResetFilters, ...
       titleText={words("empty.filtered.title")}
       {...props}
     >
-      <EmptyStateBody>{words("empty.filtered.message")}</EmptyStateBody>
+      <EmptyStateBody>
+        {hasDefaultFilters
+          ? words("empty.filtered.resetToDefault.message")
+          : words("empty.filtered.message")}
+      </EmptyStateBody>
       <EmptyStateFooter>
         <EmptyStateActions>
           <Button variant="link" onClick={onResetFilters}>
-            {words("resources.filters.active.resetFilters")}
+            {hasDefaultFilters
+              ? words("resources.filters.active.resetToDefault")
+              : words("resources.filters.active.resetFilters")}
           </Button>
         </EmptyStateActions>
       </EmptyStateFooter>
