@@ -219,7 +219,6 @@ export const lsmMessages = {
   "catalog.button.inventory": "Inventory",
   "catalog.column.service": "Service",
   "catalog.column.instances": "Instances",
-  "catalog.instances.none": "No instances",
   "catalog.filter.placeholder": "Filter services",
   "catalog.serviceCount": (serviceCount: number) =>
     `${serviceCount} ${serviceCount === 1 ? "service" : "services"}`,
