@@ -99,7 +99,6 @@ interface ComposerContextInterface {
    * palette's Inventory tab uses it, so the tab calls this when it opens; it isn't polled.
    */
   refetchInventories: () => void;
-  serviceInstanceId: string | null;
 
   /** The instance being edited or viewed; none for a new instance. */
   serviceInstance: ServiceInstanceModel | null;
@@ -134,7 +133,6 @@ export const composerContext: ComposerContextInterface = {
   inventoriesError: null,
   isFetchingInventories: false,
   refetchInventories: noop,
-  serviceInstanceId: null,
   serviceInstance: null,
   editable: false,
   serviceOrderItems: new Map(),

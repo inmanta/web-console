@@ -4,22 +4,41 @@ import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { words } from "@inmanta/web-console-core";
 import { stubRoute } from "@inmanta/web-console-test-utils/Inject/stubRoute";
+import { MockOrchestratorProvider } from "@inmanta/web-console-test-utils/Mock/MockOrchestratorProvider";
 import { baseSetup } from "@inmanta/web-console-test-utils/Utils/base-setup";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
 import { ComposerPage } from "./ComposerPage";
-import { inventoryInstance, parentService, serviceCatalog } from "./Mock/serviceModels";
+import {
+  childService,
+  inventoryInstance,
+  parentService,
+  serviceCatalog,
+} from "./Mock/serviceModels";
 import { defineReactFlowTestObjects } from "./testSetup";
 
 defineReactFlowTestObjects();
 
-const instance = inventoryInstance(parentService, "parent-1", { name: "edge-1", region: "eu" });
+const instance = inventoryInstance(
+  parentService,
+  "parent-1",
+  { name: "edge-1", region: "eu" },
+  { referenced_by: ["child-1"] }
+);
+
+/** A child instance that refers to the instance, so it is in the instance's `referenced_by`. */
+const referringChild = inventoryInstance(childService, "child-1", {
+  name: "leaf-1",
+  parent_entity: instance.id,
+});
 
 /**
- * Serves the catalog, the edited instance and the inventory, and records the requests.
+ * Serves the catalog, the instances by id (with `referenced_by` only when it's asked for, like
+ * the API) and the inventory, and records the requests.
  */
 const serveApi = () => {
   const requests = { catalog: 0, instance: [] as string[], inventory: [] as string[] };
+  const byId = new Map([instance, referringChild].map((item) => [item.id, item]));
 
   server.use(
     http.get("/lsm/v1/service_catalog", () => {
@@ -28,9 +47,22 @@ const serveApi = () => {
       return HttpResponse.json({ data: serviceCatalog });
     }),
     http.get("/lsm/v1/service_inventory", ({ request }) => {
-      requests.instance.push(new URL(request.url).search);
+      const params = new URL(request.url).searchParams;
+      const found = byId.get(params.get("service_id") ?? "");
 
-      return HttpResponse.json({ data: instance });
+      requests.instance.push(params.toString());
+
+      if (!found) {
+        return HttpResponse.json({ message: "not found" }, { status: 404 });
+      }
+
+      return HttpResponse.json({
+        data: {
+          ...found,
+          referenced_by:
+            params.get("include_referenced_by") === "true" ? found.referenced_by : null,
+        },
+      });
     }),
     http.get("/lsm/v1/service_inventory/:service", ({ params }) => {
       requests.inventory.push(String(params.service));
@@ -59,6 +91,7 @@ describe("ComposerPage", () => {
     server.resetHandlers();
     testClient.clear();
     vi.useRealTimers();
+    vi.restoreAllMocks();
   });
   afterAll(() => server.close());
 
@@ -103,6 +136,7 @@ describe("ComposerPage", () => {
 
     expect(await screen.findByText(words("instanceComposer.title.edit"))).toBeVisible();
     expect(await screen.findByText("edge-1")).toBeVisible();
+    expect(screen.queryByText("leaf-1")).not.toBeInTheDocument();
     expect(requests.catalog).toBe(1);
     expect(requests.instance).toHaveLength(1);
     expect(requests.instance[0]).toContain("include_referenced_by=false");
@@ -116,7 +150,9 @@ describe("ComposerPage", () => {
     );
 
     expect(await screen.findByText(words("instanceComposer.title.view"))).toBeVisible();
-    expect(requests.instance).toHaveLength(1);
+    expect(await screen.findByText("leaf-1")).toBeVisible();
+    // The instance, then the child that refers to it
+    expect(requests.instance).toHaveLength(2);
     expect(requests.instance[0]).toContain("include_referenced_by=true");
   });
 
@@ -130,5 +166,15 @@ describe("ComposerPage", () => {
         words("instanceComposer.noServiceModel.errorMessage")("unknown-service")
       )
     ).toBeVisible();
+  });
+
+  it("says the composer isn't enabled without its licence, and loads nothing", async () => {
+    vi.spyOn(MockOrchestratorProvider.prototype, "isComposerEnabled").mockReturnValue(false);
+    const requests = serveApi();
+
+    renderPage(<ComposerPage serviceName={parentService.name} editable />);
+
+    expect(await screen.findByText(words("instanceComposer.disabled"))).toBeVisible();
+    expect(requests.catalog).toBe(0);
   });
 });

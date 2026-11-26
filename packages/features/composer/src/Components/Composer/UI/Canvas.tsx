@@ -82,7 +82,7 @@ export const Canvas: React.FC = () => {
     setActiveShape,
     relationsDictionary,
     serviceCatalog,
-    serviceInstanceId,
+    serviceInstance,
     draggedItemRef,
   } = useContext(ComposerContext);
   const { screenToFlowPosition, flowToScreenPosition, getInternalNode } = useReactFlow();
@@ -373,7 +373,7 @@ export const Canvas: React.FC = () => {
       canvasState,
       relationsDictionary,
       serviceCatalog,
-      serviceInstanceId
+      serviceInstance?.id ?? null
     );
 
     // Only a new shape is removed right away; an existing instance opens the menu to choose.

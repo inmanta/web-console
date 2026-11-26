@@ -1,6 +1,10 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { ReactFlowProvider } from "@xyflow/react";
-import { ServiceModel } from "@inmanta/web-console-core";
+import {
+  ServiceInstanceModel,
+  ServiceModel,
+  ServiceOrderItemRequest,
+} from "@inmanta/web-console-core";
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { ComposerContext, composerContext, PaletteItem } from "../Data/Context";
 import { createRelationsDictionary } from "../Data/Helpers";
@@ -23,8 +27,11 @@ interface Props {
   /** The selected shape when the canvas opens. */
   activeShapeId?: string;
 
-  /** The instance the composer edits, like the editor provides it. */
-  serviceInstanceId?: string | null;
+  /** The instance the composer edits or shows, like the composer page provides it. */
+  serviceInstance?: ServiceInstanceModel | null;
+
+  /** The order the canvas would deploy; by default none, as the composer derives it. */
+  serviceOrderItems?: Map<string, ServiceOrderItemRequest>;
   children: React.ReactNode;
 }
 
@@ -41,7 +48,8 @@ export const ComposerTestProvider: React.FC<Props> = ({
   refetchInventories = composerContext.refetchInventories,
   editable = true,
   activeShapeId: initialActiveShapeId,
-  serviceInstanceId = null,
+  serviceInstance = null,
+  serviceOrderItems = composerContext.serviceOrderItems,
   children,
 }) => {
   const relationsDictionary = useMemo(
@@ -79,7 +87,8 @@ export const ComposerTestProvider: React.FC<Props> = ({
     setActiveShape,
     draggedItemRef,
     mainService: serviceCatalog[0] ?? null,
-    serviceInstanceId,
+    serviceInstance,
+    serviceOrderItems,
   };
 
   return (

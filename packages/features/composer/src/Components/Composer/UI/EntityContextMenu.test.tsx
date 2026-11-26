@@ -1,7 +1,7 @@
 import React from "react";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { words } from "@inmanta/web-console-core";
+import { ServiceInstanceModel, words } from "@inmanta/web-console-core";
 import { Inventories } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 import { ComposerTestProvider } from "../Mock/ComposerTestProvider";
@@ -18,7 +18,7 @@ const setup = (
   options: {
     activeShapeId?: string;
     editable?: boolean;
-    serviceInstanceId?: string;
+    serviceInstance?: ServiceInstanceModel;
     serviceInventories?: Inventories;
   } = {}
 ) =>
@@ -222,7 +222,7 @@ describe("EntityContextMenu", () => {
     });
     const shapes = instanceShapes(parentInstance, parentService);
 
-    setup(shapes, { serviceInstanceId: "parent-1" });
+    setup(shapes, { serviceInstance: parentInstance });
     await openMenu("entity-parent-service");
 
     expect(
