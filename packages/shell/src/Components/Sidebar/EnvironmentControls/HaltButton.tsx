@@ -5,7 +5,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { words } from "@inmanta/web-console-core";
 import { useAppAlert } from "@inmanta/web-console-core/Dependency/AppAlertContext";
 import { ModalContext } from "@inmanta/web-console-core/Dependency/ModalContext";
-import { useQueryControl } from "@inmanta/web-console-core/Queries/Helpers";
 import { useHaltEnvironment } from "@inmanta/web-console-core/Queries/Slices/Environment";
 
 /**
@@ -15,27 +14,24 @@ import { useHaltEnvironment } from "@inmanta/web-console-core/Queries/Slices/Env
  */
 export const HaltButton: React.FC = () => {
   const client = useQueryClient();
-  const { disableQueries, enableQueries } = useQueryControl();
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { notifyError } = useAppAlert();
 
-  const closeModalAndEnableQueries = () => {
-    closeModal();
-    enableQueries();
+  const closeBlockingModal = () => {
     document.dispatchEvent(new CustomEvent("close-blocking-modal"));
   };
 
   const { mutate } = useHaltEnvironment({
     onSuccess: () => {
       client.refetchQueries();
-      closeModalAndEnableQueries();
+      closeBlockingModal();
     },
     onError: (error) => {
       notifyError({
         title: words("error.title"),
         message: error.message,
       });
-      closeModalAndEnableQueries();
+      closeBlockingModal();
     },
   });
 
@@ -44,7 +40,7 @@ export const HaltButton: React.FC = () => {
    *
    * This function triggers a modal with a title, details, and actions.
    * The actions include a confirmation button and a cancel button.
-   * The confirmation button pauses all continuous managers, triggers the halt environment command, resumes all continuous managers, and dispatches a "halt-event".
+   * The confirmation button dispatches a "halt-event", which opens the blocking modal, and triggers the halt environment command.
    * The cancel button closes the modal.
    *
    * @returns {void}
@@ -58,7 +54,6 @@ export const HaltButton: React.FC = () => {
           key="confirm"
           variant="primary"
           onClick={() => {
-            disableQueries();
             document.dispatchEvent(new CustomEvent("halt-event"));
             mutate();
           }}

@@ -5,7 +5,6 @@ import { Flex } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRoot } from "react-dom/client";
 import { FeatureModule, getFeatureRoutes, RouteFactory } from "@inmanta/web-console-core";
-import { QueryControlProvider } from "@inmanta/web-console-core/Queries/Helpers";
 import { PrimaryBaseUrlManager } from "@inmanta/web-console-core/Routing";
 import CustomRouter from "@inmanta/web-console-core/Routing/CustomRouter";
 import ErrorBoundary from "@inmanta/web-console-ui/Utils/ErrorBoundary";
@@ -112,38 +111,33 @@ export const createApp = ({ features, runtimeFeatures = [], shell = {} }: AppOpt
       root.render(
         <ShellOptionsContext.Provider value={shell}>
           <ErrorBoundary>
-            <QueryControlProvider>
-              <QueryClientProvider client={queryClient}>
-                <CustomRouter
-                  layout={
-                    <AuthProvider config={getAuthConfig(shell.auth)}>
-                      <Flex
-                        flexWrap={{ default: "nowrap" }}
-                        spaceItems={{ default: "spaceItemsNone" }}
-                        direction={{ default: "column" }}
-                        style={{ height: "100%" }}
-                      >
-                        <AppFeaturesProvider
-                          features={appFeatures}
-                          runtimeFeatures={runtimeFeatures}
-                        >
-                          <AppInjector>
-                            <Root />
-                          </AppInjector>
-                        </AppFeaturesProvider>
-                      </Flex>
-                    </AuthProvider>
-                  }
-                  routes={createRootRoutes(
-                    new PrimaryBaseUrlManager(
-                      globalThis.location.origin,
-                      globalThis.location.pathname
-                    ).getBasePathname(),
-                    appFeatures
-                  )}
-                />
-              </QueryClientProvider>
-            </QueryControlProvider>
+            <QueryClientProvider client={queryClient}>
+              <CustomRouter
+                layout={
+                  <AuthProvider config={getAuthConfig(shell.auth)}>
+                    <Flex
+                      flexWrap={{ default: "nowrap" }}
+                      spaceItems={{ default: "spaceItemsNone" }}
+                      direction={{ default: "column" }}
+                      style={{ height: "100%" }}
+                    >
+                      <AppFeaturesProvider features={appFeatures} runtimeFeatures={runtimeFeatures}>
+                        <AppInjector>
+                          <Root />
+                        </AppInjector>
+                      </AppFeaturesProvider>
+                    </Flex>
+                  </AuthProvider>
+                }
+                routes={createRootRoutes(
+                  new PrimaryBaseUrlManager(
+                    globalThis.location.origin,
+                    globalThis.location.pathname
+                  ).getBasePathname(),
+                  appFeatures
+                )}
+              />
+            </QueryClientProvider>
           </ErrorBoundary>
         </ShellOptionsContext.Provider>
       );

@@ -4,7 +4,6 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
-import { QueryControlProvider } from "@inmanta/web-console-core/Queries/Helpers";
 import {
   EnvironmentDetails,
   MockedDependencyProvider,
@@ -18,15 +17,13 @@ import { EnvironmentControls } from "./EnvironmentControls";
 function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
-      <QueryControlProvider>
-        <ModalProvider>
-          <TestMemoryRouter initialEntries={["/?env=123"]}>
-            <MockedDependencyProvider>
-              <EnvironmentControls />
-            </MockedDependencyProvider>
-          </TestMemoryRouter>
-        </ModalProvider>
-      </QueryControlProvider>
+      <ModalProvider>
+        <TestMemoryRouter initialEntries={["/?env=123"]}>
+          <MockedDependencyProvider>
+            <EnvironmentControls />
+          </MockedDependencyProvider>
+        </TestMemoryRouter>
+      </ModalProvider>
     </QueryClientProvider>
   );
 
