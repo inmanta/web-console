@@ -13,7 +13,7 @@ export const getJSONEditorErrors = (
     words("validation.marker")(marker.message, marker.startLineNumber, marker.startColumn)
   );
 
-  return isJSON(value) ? markerErrors : [words("validation.empty"), ...markerErrors];
+  return isJSON(value) ? markerErrors : [words("validation.invalidJson"), ...markerErrors];
 };
 
 /** Whether the value parses as JSON. */

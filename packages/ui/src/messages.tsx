@@ -82,7 +82,9 @@ export const uiMessages = {
   "error.image.size": (name: string, size: string) =>
     `File '${name}' is not allowed because of an incorrect file size (${size}). The maximum file size supported is 64 KB.`,
   "validation.title": (amount: number) => `Errors found: ${amount}`,
-  "validation.empty": "Invalid JSON",
+  "validation.invalidJson": "Invalid JSON",
+  "validation.marker": (message: string, line: number, column: number) =>
+    `${message} at line ${line} and column ${column}`,
 
   /**
    * Inventory related text

@@ -1,8 +1,6 @@
-// PatternFly doesn't export its CodeEditor theme, so the test reads it from the internal module.
-// If a PatternFly update changes that theme, this test fails and our copy needs the same change.
 import { defineThemes as definePatternFlyThemes } from "@patternfly/react-code-editor/dist/esm/components/CodeEditor/CodeEditorTheme";
 import { editor } from "monaco-editor";
-import { DARK_MONACO_DIFF_TINTS, DIFF_TINTS } from "./diffTints";
+import { DARK_MONACO_DIFF_TINTS, DIFF_TINTS, createMonacoDiffColors } from "./diffTints";
 import { MONACO_THEME_NAMES, defineMonacoThemes } from "./monacoTheme";
 
 /**
@@ -31,16 +29,24 @@ describe("defineMonacoThemes", () => {
     ({ theme, patternFlyName, diffTints }) => {
       const patternFlyTheme = patternFlyThemes[patternFlyName];
 
+      expect(patternFlyTheme).toBeDefined();
       expect(ourThemes[MONACO_THEME_NAMES[theme]]).toEqual({
         ...patternFlyTheme,
-        colors: {
-          ...patternFlyTheme.colors,
-          "diffEditor.removedLineBackground": diffTints.removed.background.value,
-          "diffEditor.removedTextBackground": diffTints.removed.changedPartBackground.value,
-          "diffEditor.insertedLineBackground": diffTints.added.background.value,
-          "diffEditor.insertedTextBackground": diffTints.added.changedPartBackground.value,
-        },
+        colors: { ...patternFlyTheme.colors, ...createMonacoDiffColors(diffTints) },
       });
     }
   );
+});
+
+describe("createMonacoDiffColors", () => {
+  it("gives the diff tints a see-through alpha", () => {
+    const colors = createMonacoDiffColors(DIFF_TINTS);
+
+    expect(colors["diffEditor.removedLineBackground"]).toBe(
+      `${DIFF_TINTS.removed.background.value}66`
+    );
+    expect(colors["diffEditor.insertedTextBackground"]).toBe(
+      `${DIFF_TINTS.added.changedPartBackground.value}66`
+    );
+  });
 });

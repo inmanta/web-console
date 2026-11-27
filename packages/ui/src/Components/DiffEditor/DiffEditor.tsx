@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { DiffEditor as ReactMonacoDiffEditor, DiffEditorProps } from "@monaco-editor/react";
 import {
   MONACO_FONT_OPTIONS,
@@ -20,12 +20,13 @@ export const DiffEditor: React.FC<Omit<DiffEditorProps, "theme">> = ({
   ...props
 }) => {
   const { theme } = useTheme();
+  const editorOptions = useMemo(() => ({ ...MONACO_FONT_OPTIONS, ...options }), [options]);
 
   return (
     <ReactMonacoDiffEditor
       {...props}
       theme={MONACO_THEME_NAMES[theme]}
-      options={{ ...MONACO_FONT_OPTIONS, ...options }}
+      options={editorOptions}
       beforeMount={(monaco) => {
         defineMonacoThemes(monaco.editor);
         beforeMount?.(monaco);

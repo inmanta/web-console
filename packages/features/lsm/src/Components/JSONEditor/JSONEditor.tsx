@@ -47,13 +47,16 @@ export const JSONEditor: React.FC<Props> = ({
     onChange(value, isValid);
   }, [value, isValid, onChange]);
 
+  // The schema only matches this editor's model, so other JSON editors aren't validated against it.
+  const modelPath = `inmanta://service-instance/${service_entity}.json`;
+
   useEffect(() => {
     monaco?.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
       schemaValidation: "error",
-      schemas: [{ schema: schema.data, fileMatch: ["*"], uri: "" }],
+      schemas: [{ schema: schema.data, fileMatch: [modelPath], uri: "" }],
     });
-  }, [monaco, schema.data]);
+  }, [monaco, schema.data, modelPath]);
 
   return (
     <>
@@ -65,8 +68,8 @@ export const JSONEditor: React.FC<Props> = ({
         isMinimapVisible
         loading={<Spinner />}
         onChange={(newValue) => setValue(newValue)}
-        options={{ domReadOnly: readOnly }}
-        editorProps={{ onValidate: setMarkers }}
+        options={{ domReadOnly: readOnly, scrollBeyondLastLine: false }}
+        editorProps={{ path: modelPath, onValidate: setMarkers }}
       />
       {!readOnly && errors.length > 0 && (
         <ErrorMessageContainer title={words("validation.title")(errors.length)}>

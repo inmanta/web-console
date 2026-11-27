@@ -23,6 +23,9 @@ describe("getJSONEditorErrors", () => {
   });
 
   it.each(["", "  ", '{"name": '])("has the invalid JSON error first for %j", (value) => {
-    expect(getJSONEditorErrors(value, [marker])).toEqual([words("validation.empty"), markerError]);
+    expect(getJSONEditorErrors(value, [marker])).toEqual([
+      words("validation.invalidJson"),
+      markerError,
+    ]);
   });
 });

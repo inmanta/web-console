@@ -13,7 +13,6 @@ import {
 import { useTheme } from "../DarkmodeOption";
 import { getAutoHeight } from "./helpers";
 
-// PF props minus the ones we own (the theme is internal; no ref, since we're a plain FC).
 type Props = Omit<CodeEditorProps, "isDarkTheme" | "isHighContrastTheme" | "ref"> & {
   rawValue?: string;
 };
