@@ -6,9 +6,13 @@ import {
   useGetInstanceLog,
   useGetInstanceLogs,
 } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance";
-import { VersionSelectNotice, VersionSelectOption, VersionSelect } from "./VersionSelect";
+import {
+  VersionSelect,
+  VersionSelectNotice,
+  VersionSelectOption,
+  useVersionSearch,
+} from "@inmanta/web-console-ui/Components/VersionSelect";
 import { ResourceActionInstance } from "./types";
-import { useVersionSearch } from "./useVersionSearch";
 
 /**
  * Turns an instance version into a select option, with its state rendered the way the instance's
@@ -27,6 +31,7 @@ const toInstanceVersionOption = (
 
 interface Props {
   id: string;
+  label: string;
   instance: ResourceActionInstance;
   onSelect: (instanceVersion: number) => void;
   blockedMessage: string | undefined;
@@ -40,6 +45,7 @@ interface Props {
  *
  * @Props {Props} - The props of the component
  *  @prop {string} id - The select's id, for the form label to point at
+ *  @prop {string} label - The name of the select, e.g. "Against version"
  *  @prop {ResourceActionInstance} instance - The instance whose versions to list
  *  @prop {(instanceVersion: number) => void} onSelect - Called with the selected instance version
  *  @prop {string | undefined} blockedMessage - When set, selecting a version is blocked: the select stays on the newest version and shows this as the reason
@@ -48,6 +54,7 @@ interface Props {
  */
 export const InstanceVersionSelect: React.FC<Props> = ({
   id,
+  label,
   instance,
   onSelect,
   blockedMessage,
@@ -133,6 +140,7 @@ export const InstanceVersionSelect: React.FC<Props> = ({
   return (
     <VersionSelect
       id={id}
+      label={label}
       options={options}
       shownOption={shownOptionWithModelVersion}
       formatVersion={words("instanceVersion")}

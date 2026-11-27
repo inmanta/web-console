@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { DependencyContext } from "@inmanta/web-console-core/Dependency";
 import { Diff } from "@inmanta/web-console-core/Domain";
 import { useGet } from "@inmanta/web-console-core/Queries/Helpers";
@@ -13,17 +13,27 @@ interface Result {
 }
 
 /**
- * Return signature of the useGetDesiredStateDiff React Query hook
+ * The diff between two model versions, with the model versions it compares, so a diff kept on
+ * screen while another one loads still says which model versions it is about.
  */
-interface GetDesiredStateDiff {
-  useOneTime: (from: string, to: string) => UseQueryResult<Diff.Resource[], Error>;
+export interface ModelVersionDiff extends Diff.Identifiers {
+  /** The resources of the diff and their changes. */
+  resources: Diff.Resource[];
 }
 
 /**
- * React Query hook to fetch the diff between two desired states
+ * Return signature of the useGetDesiredStateDiff React Query hook
+ */
+interface GetDesiredStateDiff {
+  useOneTime: (from: string, to: string) => UseQueryResult<ModelVersionDiff, Error>;
+}
+
+/**
+ * React Query hook to fetch the diff between two model versions. While the diff of other model
+ * versions loads, it keeps returning the previous diff, marked with isPlaceholderData.
  *
  * @returns {GetDesiredStateDiff} An object containing the available queries.
- * @returns {UseQueryResult<Diff.Resource[], Error>} returns.useOneTime - Fetch the diff with a single query.
+ * @returns {UseQueryResult<ModelVersionDiff, Error>} returns.useOneTime - Fetch the diff with a single query.
  */
 export const useGetDesiredStateDiff = (): GetDesiredStateDiff => {
   const { environmentHandler } = useContext(DependencyContext);
@@ -31,11 +41,15 @@ export const useGetDesiredStateDiff = (): GetDesiredStateDiff => {
   const get = useGet(env)<Result>;
 
   return {
-    useOneTime: (from: string, to: string): UseQueryResult<Diff.Resource[], Error> =>
+    useOneTime: (from: string, to: string): UseQueryResult<ModelVersionDiff, Error> =>
       useQuery({
         queryKey: getDesiredStateDiffKey.single(from, [to, env]),
-        queryFn: () => get(getUrl(from, to)),
-        select: (data) => data.data,
+        queryFn: async () => {
+          const response = await get(getUrl(from, to));
+
+          return { from, to, resources: response.data };
+        },
+        placeholderData: keepPreviousData,
       }),
   };
 };

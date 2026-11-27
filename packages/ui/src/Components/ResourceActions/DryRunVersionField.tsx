@@ -58,10 +58,11 @@ export const DryRunVersionField: React.FC<Props> = ({ instance, onSelect, blocke
   };
 
   const selectVersion = (version: number) => onSelect({ type: versionType, version });
+  const versionLabel = words("resources.resourceActions.confirm.version.title");
 
   return (
     <FormGroup
-      label={words("resources.resourceActions.confirm.version.title")}
+      label={versionLabel}
       fieldId={FIELD_ID}
       labelHelp={
         <Popover
@@ -101,6 +102,7 @@ export const DryRunVersionField: React.FC<Props> = ({ instance, onSelect, blocke
           {showsInstanceVersions ? (
             <InstanceVersionSelect
               id={FIELD_ID}
+              label={versionLabel}
               instance={instance}
               onSelect={selectVersion}
               blockedMessage={blockedMessage}
@@ -108,6 +110,7 @@ export const DryRunVersionField: React.FC<Props> = ({ instance, onSelect, blocke
           ) : (
             <ModelVersionSelect
               id={FIELD_ID}
+              label={versionLabel}
               onSelect={selectVersion}
               blockedMessage={blockedMessage}
             />

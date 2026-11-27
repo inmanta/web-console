@@ -1,30 +1,17 @@
 import React, { useState } from "react";
 import { words } from "@inmanta/web-console-core";
+import { DesiredStateVersionStatus } from "@inmanta/web-console-core/Domain/DesiredStateVersion";
 import {
-  DesiredStateVersion,
-  DesiredStateVersionStatus,
-} from "@inmanta/web-console-core/Domain/DesiredStateVersion";
-import {
-  useGetDesiredStateVersion,
-  useGetDesiredStateVersions,
-} from "@inmanta/web-console-core/Queries/Slices/DesiredState";
-import { DesiredStateStatusLabel } from "@inmanta/web-console-ui/Components/DesiredStateStatusLabel";
-import { VersionSelectNotice, VersionSelectOption, VersionSelect } from "./VersionSelect";
-import { useVersionSearch } from "./useVersionSearch";
-
-/**
- * Turns a model version from the desired state endpoint into a select option.
- *
- * @example toModelVersionOption({ version: 8, date: "...", status: "active", ... }) // { version: 8, date: "...", status: <DesiredStateStatusLabel /> }
- */
-const toModelVersionOption = (modelVersion: DesiredStateVersion): VersionSelectOption => ({
-  version: Number(modelVersion.version),
-  date: modelVersion.date,
-  status: <DesiredStateStatusLabel status={modelVersion.status} />,
-});
+  VersionSelect,
+  VersionSelectNotice,
+  VersionSelectOption,
+  createModelVersionOption,
+  useModelVersionOptions,
+} from "@inmanta/web-console-ui/Components/VersionSelect";
 
 interface Props {
   id: string;
+  label: string;
   onSelect: (modelVersion: number) => void;
   blockedMessage: string | undefined;
 }
@@ -36,29 +23,24 @@ interface Props {
  *
  * @Props {Props} - The props of the component
  *  @prop {string} id - The select's id, for the form label to point at
+ *  @prop {string} label - The name of the select, e.g. "Against version"
  *  @prop {(modelVersion: number) => void} onSelect - Called with the selected model version
  *  @prop {string | undefined} blockedMessage - When set, selecting a version is blocked: the select stays on the active model version and shows this as the reason
  *
  * @returns {React.FC<Props>} The model version select
  */
-export const ModelVersionSelect: React.FC<Props> = ({ id, onSelect, blockedMessage }) => {
+export const ModelVersionSelect: React.FC<Props> = ({ id, label, onSelect, blockedMessage }) => {
   const [selectedOption, setSelectedOption] = useState<VersionSelectOption>();
 
-  const modelVersionsQuery = useGetDesiredStateVersions();
-  const loadedOptions = modelVersionsQuery.data?.map(toModelVersionOption) ?? [];
-  const versionSearch = useVersionSearch(loadedOptions, modelVersionsQuery);
-  const searchedVersionLookup = useGetDesiredStateVersion(versionSearch.versionToLookUp);
-  const { options, isLoadingMore, listError } = versionSearch.getListState(
-    searchedVersionLookup,
-    searchedVersionLookup.data ? toModelVersionOption(searchedVersionLookup.data) : undefined
-  );
+  const { modelVersionsQuery, versionSearch, options, isLoadingMore, listError } =
+    useModelVersionOptions(createModelVersionOption);
 
   // Until a version is selected, the select shows the active one. A blocked selection keeps it
   // there.
   const activeModelVersion = modelVersionsQuery.data?.find(
     (modelVersion) => modelVersion.status === DesiredStateVersionStatus.active
   );
-  const defaultOption = activeModelVersion && toModelVersionOption(activeModelVersion);
+  const defaultOption = activeModelVersion && createModelVersionOption(activeModelVersion);
   const shownOption = blockedMessage ? defaultOption : (selectedOption ?? defaultOption);
 
   // The message under the select, the most important one first.
@@ -85,6 +67,7 @@ export const ModelVersionSelect: React.FC<Props> = ({ id, onSelect, blockedMessa
   return (
     <VersionSelect
       id={id}
+      label={label}
       options={options}
       shownOption={shownOption}
       formatVersion={words("modelVersion")}

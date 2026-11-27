@@ -6,6 +6,7 @@ import {
   Flex,
   Form,
   FormGroup,
+  Skeleton,
   Stack,
   StackItem,
   Title,
@@ -24,7 +25,7 @@ import { DiffFilter, DiffFilterIdKey, RESOURCE_LIST_STATUS_ORDER } from "./types
 interface Props {
   filter: DiffFilter;
   setFilter: (filter: DiffFilter) => void;
-  statusCounts: Map<Diff.Status, number>;
+  statusCounts: Map<Diff.Status, number> | undefined;
   onClose: () => void;
 }
 
@@ -75,7 +76,7 @@ const getStatusChipText = (value: string): string => {
  * @props {Props} props - The component props
  *  @prop {DiffFilter} filter - The filter, with the default statuses filled in
  *  @prop {(filter: DiffFilter) => void} setFilter - Stores the new filter
- *  @prop {Map<Diff.Status, number>} statusCounts - The number of resources of the diff per status
+ *  @prop {Map<Diff.Status, number> | undefined} statusCounts - The number of resources of the diff per status; undefined while the diff loads, which shows loading placeholders instead
  *  @prop {() => void} onClose - Closes the drawer
  *
  * @returns {React.FC<Props>} The filter drawer panel
@@ -103,7 +104,11 @@ export const DiffFilterWidget: React.FC<Props> = ({ filter, setFilter, statusCou
                   <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
                     <DiffStatusLetterLabel status={status} />
                     {words(`desiredState.compare.status.${status}`)}
-                    <Badge isRead>{statusCounts.get(status) ?? 0}</Badge>
+                    {statusCounts ? (
+                      <Badge isRead>{statusCounts.get(status) ?? 0}</Badge>
+                    ) : (
+                      <Skeleton fontSize="sm" width="1.5rem" />
+                    )}
                   </Flex>
                 }
               />

@@ -71,6 +71,7 @@ export interface VersionSelectNotice {
 
 interface Props {
   id: string;
+  label: string;
   options: VersionSelectOption[];
   shownOption: VersionSelectOption | undefined;
   formatVersion: (version: string) => string;
@@ -92,7 +93,8 @@ interface Props {
  * search box, and Down moves from there into the list.
  *
  * @Props {Props} - The props of the component
- *  @prop {string} id - The toggle's id, for the form label to point at
+ *  @prop {string} id - The toggle's id, for a form label to point at
+ *  @prop {string} label - The name of the version list, e.g. "Against version". The toggle's name also says which version it shows, e.g. "Against version: v8"
  *  @prop {VersionSelectOption[]} options - The listed versions
  *  @prop {VersionSelectOption | undefined} shownOption - The version in the toggle, undefined when there is none yet
  *  @prop {(version: string) => string} formatVersion - How a version number reads, e.g. "v8" or "instance v3"
@@ -110,6 +112,7 @@ interface Props {
  */
 export const VersionSelect: React.FC<Props> = ({
   id,
+  label,
   options,
   shownOption,
   formatVersion,
@@ -164,7 +167,7 @@ export const VersionSelect: React.FC<Props> = ({
         >
           <FlexItem>
             <Content component="small" aria-hidden style={mutedStyle(option.isDisabled)}>
-              {words("resources.resourceActions.confirm.version.arrow")}
+              {words("versionSelect.arrow")}
             </Content>
           </FlexItem>
           <FlexItem>
@@ -200,7 +203,7 @@ export const VersionSelect: React.FC<Props> = ({
       );
     }
 
-    return words("resources.resourceActions.confirm.version.placeholder");
+    return words("versionSelect.placeholder");
   };
 
   const onListScroll = (event: React.UIEvent<HTMLUListElement>) => {
@@ -229,11 +232,7 @@ export const VersionSelect: React.FC<Props> = ({
       );
     }
     if (options.length === 0) {
-      return (
-        <SelectOption isDisabled>
-          {words("resources.resourceActions.confirm.version.noResults")}
-        </SelectOption>
-      );
+      return <SelectOption isDisabled>{words("versionSelect.noResults")}</SelectOption>;
     }
 
     return null;
@@ -261,6 +260,11 @@ export const VersionSelect: React.FC<Props> = ({
     <FullWidthTextToggle
       ref={ref}
       id={id}
+      aria-label={
+        shownOption
+          ? words("versionSelect.toggle")(label, formatVersion(String(shownOption.version)))
+          : label
+      }
       isFullWidth
       isExpanded={isOpen}
       isDisabled={isDisabled}
@@ -294,19 +298,15 @@ export const VersionSelect: React.FC<Props> = ({
               ref={searchRef}
               onKeyDown={onSearchKeyDown}
               value={search}
-              placeholder={words("resources.resourceActions.confirm.version.search")}
-              aria-label={words("resources.resourceActions.confirm.version.search")}
+              placeholder={words("versionSelect.search")}
+              aria-label={words("versionSelect.search")}
               onChange={(_event, value) => onSearchChange(value)}
               onClear={() => onSearchChange("")}
             />
           </MenuSearchInput>
         </MenuSearch>
         <Divider />
-        <SelectList
-          ref={listRef}
-          onScroll={onListScroll}
-          aria-label={words("resources.resourceActions.confirm.version.title")}
-        >
+        <SelectList ref={listRef} onScroll={onListScroll} aria-label={label}>
           {optionItems()}
           {listEnd()}
         </SelectList>

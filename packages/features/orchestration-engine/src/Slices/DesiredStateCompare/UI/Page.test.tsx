@@ -1,9 +1,10 @@
 import { act } from "react";
+import { Route, Routes, useLocation } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import { Diff, Resource, words, getFeatureRoutes } from "@inmanta/web-console-core";
 import { SearchHelper } from "@inmanta/web-console-core/Routing";
 import { orchestrationEngineFeature } from "@inmanta/web-console-feature-orchestration-engine";
@@ -20,10 +21,12 @@ import {
   DesiredStateDiff,
   stubRoute,
 } from "@inmanta/web-console-test-utils";
+import * as DesiredStateVersionsMock from "@inmanta/web-console-test-utils/Data/DesiredStateVersions";
 import { TestMemoryRouter } from "@inmanta/web-console-test-utils/Utils/TestMemoryRouter";
 import { testClient } from "@inmanta/web-console-test-utils/Utils/react-query-setup";
 import { setupTestServer } from "@inmanta/web-console-test-utils/Utils/setupTestServer";
-import { View } from "./Page";
+import { path } from "../Core/Route";
+import { Page } from "./Page";
 
 const axe = configureAxe({
   rules: {
@@ -33,23 +36,116 @@ const axe = configureAxe({
 });
 
 const environment = "aaa";
-const fromModelVersion = "123";
-const toModelVersion = "456";
 const searchHelper = new SearchHelper();
+
+/**
+ * Returns the first item that matches, and throws when none does, so a changed mock fails with a
+ * clear message instead of an undefined further down.
+ */
+const getFirstMatch = <Item,>(
+  items: Item[],
+  isMatch: (item: Item) => boolean,
+  description: string
+): Item => {
+  const match = items.find(isMatch);
+
+  if (match === undefined) {
+    throw new Error(`The mock data has no ${description}.`);
+  }
+
+  return match;
+};
+
+// All model versions fit in one page, so the selects never load more or look one up.
+const modelVersions = DesiredStateVersionsMock.response.data;
+const activeModelVersion = getFirstMatch(
+  modelVersions,
+  ({ status }) => status === "active",
+  "active model version"
+);
+const retiredModelVersion = getFirstMatch(
+  modelVersions,
+  ({ status }) => status === "retired",
+  "retired model version"
+);
+const toModelVersion = String(activeModelVersion.version);
+const fromModelVersion = String(retiredModelVersion.version);
+// Another model version older than the "to" side, for the tests that change the "from" side.
+const newFromModelVersion = String(
+  getFirstMatch(
+    modelVersions,
+    ({ version }) =>
+      version < activeModelVersion.version && version !== retiredModelVersion.version,
+    "second model version older than the active one"
+  ).version
+);
 
 const resourcesShownByDefault = DesiredStateDiff.resources.filter((resource) =>
   Diff.defaultStatuses.includes(resource.status)
 );
 
+/**
+ * Shows the current pathname and search, so a test can check where a select navigated to.
+ */
+const LocationProbe: React.FC = () => {
+  const { pathname, search } = useLocation();
+
+  return <div data-testid="location">{JSON.stringify({ pathname, search })}</div>;
+};
+
+const getLocation = (): { pathname: string; search: string } =>
+  JSON.parse(screen.getByTestId("location").textContent ?? "");
+
+/**
+ * Waits until the model version select of one side of the diff shows the given model version,
+ * both in its text and in its name for screen readers. That also means the model versions to list
+ * are loaded.
+ */
+const findModelVersionSelect = async (
+  side: "from" | "to",
+  modelVersion: string
+): Promise<HTMLElement> => {
+  const toggle = await screen.findByRole("button", {
+    name: words("versionSelect.toggle")(
+      words(`desiredState.compare.${side}ModelVersion`),
+      words("modelVersion")(modelVersion)
+    ),
+  });
+
+  expect(within(toggle).getByText(words("modelVersion")(modelVersion))).toBeVisible();
+
+  return toggle;
+};
+
+/**
+ * The option of the given model version in the open model version select.
+ */
+const getModelVersionOption = (modelVersion: number | string): HTMLElement => {
+  const option = screen
+    .getAllByRole("option")
+    .find((candidate) => within(candidate).queryByText(words("modelVersion")(modelVersion)));
+
+  if (!option) {
+    throw new Error(`No option for model version ${modelVersion}`);
+  }
+
+  return option;
+};
+
 function setup(search = `?env=${environment}`) {
   const component = (
-    <TestMemoryRouter initialEntries={[`/${search}`]}>
+    <TestMemoryRouter
+      initialEntries={[`/desiredstate/compare/${fromModelVersion}/${toModelVersion}${search}`]}
+    >
       <QueryClientProvider client={testClient}>
         <MockedDependencyProvider
           features={[orchestrationEngineFeature]}
           routes={[...getFeatureRoutes([orchestrationEngineFeature]), stubRoute("ResourceDetails")]}
         >
-          <View from={fromModelVersion} to={toModelVersion} />
+          <Routes>
+            <Route path={path} element={<Page />} />
+          </Routes>
+          <LocationProbe />
         </MockedDependencyProvider>
       </QueryClientProvider>
     </TestMemoryRouter>
@@ -63,9 +159,10 @@ describe("DesiredStateCompare", () => {
   let requestCountFile1234 = 0;
   let requestCountFile5678 = 0;
   const server = setupTestServer(
-    http.get(`/api/v2/desiredstate/diff/${fromModelVersion}/${toModelVersion}`, () => {
-      return HttpResponse.json(DesiredStateDiff.response);
-    }),
+    http.get("/api/v2/desiredstate/diff/:from/:to", () =>
+      HttpResponse.json(DesiredStateDiff.response)
+    ),
+    http.get("/api/v2/desiredstate", () => HttpResponse.json(DesiredStateVersionsMock.response)),
     http.get("/api/v1/file/a47be15ee60a88c7bcc4bce900d921a8d34d1234", () => {
       requestCountFile1234++;
 
@@ -88,29 +185,199 @@ describe("DesiredStateCompare", () => {
 
   afterEach(() => {
     testClient.clear();
+    server.resetHandlers();
   });
 
   afterAll(() => {
     server.close();
   });
 
-  test("GIVEN DesiredStateCompare THEN the header shows both model versions", async () => {
+  test("GIVEN DesiredStateCompare THEN the header shows both model versions in their selects", async () => {
     const { component } = setup();
 
     render(component);
 
-    const heading = await screen.findByRole("heading", {
-      name: words("desiredState.compare.title"),
-    });
-    // The versions also head the columns of the diff, so look for them in the page header only.
-    const header = heading.closest("section");
+    await findModelVersionSelect("from", fromModelVersion);
+    await findModelVersionSelect("to", toModelVersion);
+  });
 
-    if (!header) {
-      throw new Error("The heading is not in a page section");
+  test("GIVEN DesiredStateCompare WHEN the model versions fail to load THEN both selects still show their model version, and an opened select says the list couldn't be loaded", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", ({ request }) => {
+        const url = new URL(request.url);
+        const [lowerBound] = url.searchParams.getAll("filter.version");
+
+        if (!lowerBound) {
+          return HttpResponse.json({ message: "error" }, { status: 500 });
+        }
+        const data = modelVersions.filter(({ version }) => `ge:${version}` === lowerBound);
+
+        return HttpResponse.json({ data, links: { self: url.pathname } });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await findModelVersionSelect("from", fromModelVersion);
+    await userEvent.click(await findModelVersionSelect("to", toModelVersion));
+
+    expect(
+      await screen.findByText(words("desiredState.compare.modelVersionsLoadError"))
+    ).toBeVisible();
+    expect(screen.getAllByText(words("desiredState.compare.modelVersionsLoadError"))).toHaveLength(
+      1
+    );
+  });
+
+  test("GIVEN DesiredStateCompare WHEN the From model version isn't among the loaded model versions THEN it is looked up on its own and shows in its select", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate", ({ request }) => {
+        const url = new URL(request.url);
+        const isLookup = url.searchParams.has("filter.version");
+        const data = modelVersions.filter(
+          ({ version }) => (String(version) === fromModelVersion) === isLookup
+        );
+
+        return HttpResponse.json({ data, links: { self: url.pathname } });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await findModelVersionSelect("from", fromModelVersion);
+  });
+
+  test("GIVEN DesiredStateCompare WHEN the diff takes a while to load THEN the header and filters show, with the resource list and diff loading in their place", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate/diff/:from/:to", async () => {
+        await delay("infinite");
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await findModelVersionSelect("from", fromModelVersion);
+    expect(
+      await screen.findByText(words("desiredState.compare.loading.resources"))
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: new RegExp(words("filters")) })).toBeVisible();
+    expect(screen.getByText(words("desiredState.compare.loading.diff"))).toBeInTheDocument();
+    expect(screen.queryByRole("row", { selected: true })).not.toBeInTheDocument();
+  });
+
+  test("GIVEN DesiredStateCompare WHEN the From select is opened THEN the model versions from the To version on can't be selected", async () => {
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(await findModelVersionSelect("from", fromModelVersion));
+
+    for (const { version } of modelVersions) {
+      const option = getModelVersionOption(version);
+
+      if (version >= Number(toModelVersion)) {
+        expect(option).toBeDisabled();
+      } else {
+        expect(option).toBeEnabled();
+      }
     }
+  });
 
-    expect(within(header).getByText(words("modelVersion")(fromModelVersion))).toBeVisible();
-    expect(within(header).getByText(words("modelVersion")(toModelVersion))).toBeVisible();
+  test("GIVEN DesiredStateCompare WHEN the To select is opened THEN the model versions up to the From version can't be selected", async () => {
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(await findModelVersionSelect("to", toModelVersion));
+
+    for (const { version } of modelVersions) {
+      const option = getModelVersionOption(version);
+
+      if (version <= Number(fromModelVersion)) {
+        expect(option).toBeDisabled();
+      } else {
+        expect(option).toBeEnabled();
+      }
+    }
+  });
+
+  test("GIVEN DesiredStateCompare WHEN another model version is selected THEN the diff of the new model versions shows and the URL keeps its search, with the selected resource", async () => {
+    const resource = DesiredStateDiff.resources[4];
+    const search = searchHelper.stringify({
+      env: environment,
+      state: { DesiredStateCompare: { resource: resource.resource_id } },
+    });
+    // The new diff holds two resources, so it can't be mistaken for the previous one. The modified
+    // one is listed first, so the selection only stays on the deleted one through the URL.
+    const modifiedResource = getFirstMatch(
+      DesiredStateDiff.resources,
+      ({ status }) => status === "modified",
+      "modified resource"
+    );
+
+    server.use(
+      http.get(`/api/v2/desiredstate/diff/${newFromModelVersion}/${toModelVersion}`, () =>
+        HttpResponse.json({ data: [modifiedResource, resource] })
+      )
+    );
+    const { component } = setup(search);
+
+    render(component);
+
+    await findResourceListRows();
+    await userEvent.click(await findModelVersionSelect("from", fromModelVersion));
+    await userEvent.click(getModelVersionOption(newFromModelVersion));
+
+    expect(getLocation()).toEqual({
+      pathname: `/desiredstate/compare/${newFromModelVersion}/${toModelVersion}`,
+      search,
+    });
+    await findModelVersionSelect("from", newFromModelVersion);
+    await waitFor(() => expect(getResourceListRows()).toHaveLength(2));
+    expect(getResourceListRows()[0]).toBe(getResourceListRow(modifiedResource.resource_id));
+    expect(getResourceListRow(modifiedResource.resource_id)).toHaveAttribute(
+      "aria-selected",
+      "false"
+    );
+    expect(getResourceListRow(resource.resource_id)).toHaveAttribute("aria-selected", "true");
+  });
+
+  test("GIVEN DesiredStateCompare WHEN another model version is selected and its diff loads fast THEN the previous diff stays until the new one replaces it, without loading placeholders", async () => {
+    const newResources = resourcesShownByDefault.slice(0, 2);
+
+    server.use(
+      http.get(`/api/v2/desiredstate/diff/${newFromModelVersion}/${toModelVersion}`, async () => {
+        await delay(100);
+
+        return HttpResponse.json({ data: newResources });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await findResourceListRows();
+    await userEvent.click(await findModelVersionSelect("from", fromModelVersion));
+    await userEvent.click(getModelVersionOption(newFromModelVersion));
+
+    expect(getResourceListRows()).toHaveLength(resourcesShownByDefault.length);
+    expect(
+      screen.getByRole("columnheader", { name: words("modelVersion")(fromModelVersion) })
+    ).toBeVisible();
+    expect(
+      screen.queryByText(words("desiredState.compare.loading.resources"))
+    ).not.toBeInTheDocument();
+
+    await waitFor(() => expect(getResourceListRows()).toHaveLength(newResources.length));
+    expect(
+      screen.getByRole("columnheader", { name: words("modelVersion")(newFromModelVersion) })
+    ).toBeVisible();
+    expect(
+      screen.queryByText(words("desiredState.compare.loading.resources"))
+    ).not.toBeInTheDocument();
   });
 
   test("GIVEN DesiredStateCompare THEN the resources show in one group per status, changes first", async () => {

@@ -11,12 +11,14 @@ import { RouteKind, words } from "@inmanta/web-console-core";
 import { useUrlStateWithString } from "@inmanta/web-console-core/Common";
 import { EmptyView } from "@inmanta/web-console-ui/Components/EmptyView";
 import { DiffPane } from "./DiffPane";
+import { DiffPaneSkeleton } from "./DiffPaneSkeleton";
 import { ResourceList } from "./ResourceList";
+import { ResourceListSkeleton } from "./ResourceListSkeleton";
 import { getResourceListGroups, getResourceListItems } from "./helpers";
 import { DiffSideLabels, Item, SELECTED_RESOURCE_URL_STATE_KEY } from "./types";
 
 interface Props extends DiffSideLabels {
-  items: Item[];
+  items: Item[] | undefined;
   route: RouteKind;
   onResetFilters?: () => void;
 }
@@ -25,10 +27,12 @@ interface Props extends DiffSideLabels {
  * The resources of a diff in a bordered panel: the resource list on the left, the diff of the
  * selected resource in a resizable pane on the right. The selected resource is kept in the URL of
  * the route; without one, or when it is filtered out, the first resource in the list shows. The
- * panel fills the height its parent gives it, and the list and pane scroll on their own.
+ * panel fills the height its parent gives it, and the list and pane scroll on their own. While
+ * the diff loads, the list and pane show loading placeholders in the same panel, so it keeps its
+ * place and size.
  *
  * @props {Props} props - The component props
- *  @prop {Item[]} items - The resources and their changes, after filtering
+ *  @prop {Item[] | undefined} items - The resources and their changes, after filtering; undefined while the diff loads
  *  @prop {RouteKind} route - The page whose URL keeps the selected resource
  *  @prop {string} fromLabel - The display text of the side the diff starts from, e.g. "Current state"
  *  @prop {string} toLabel - The display text of the side the diff goes to, e.g. "v412"
@@ -64,10 +68,10 @@ export const ResourceListWithDiffPane: React.FC<Props> = ({
     []
   );
 
-  const groups = useMemo(() => getResourceListGroups(items), [items]);
-  const listedItems = useMemo(() => getResourceListItems(groups), [groups]);
+  const groups = useMemo(() => (items ? getResourceListGroups(items) : undefined), [items]);
+  const listedItems = useMemo(() => (groups ? getResourceListItems(groups) : undefined), [groups]);
 
-  if (listedItems.length === 0) {
+  if (listedItems !== undefined && listedItems.length === 0) {
     return (
       <EmptyView
         message={words("noResults")}
@@ -79,10 +83,9 @@ export const ResourceListWithDiffPane: React.FC<Props> = ({
   }
 
   const selectedIndex = Math.max(
-    listedItems.findIndex((item) => item.id === selectedResourceId),
+    listedItems?.findIndex((item) => item.id === selectedResourceId) ?? 0,
     0
   );
-  const selectedItem = listedItems[selectedIndex];
 
   return (
     <OutlinedPanel variant="bordered">
@@ -90,24 +93,32 @@ export const ResourceListWithDiffPane: React.FC<Props> = ({
         <DrawerContent
           panelContent={
             <DrawerPanelContent isResizable defaultSize="65%" minSize="400px">
-              <DiffPane
-                item={selectedItem}
-                previousResourceId={listedItems[selectedIndex - 1]?.id ?? null}
-                nextResourceId={listedItems[selectedIndex + 1]?.id ?? null}
-                onSelect={onSelect}
-                fromLabel={fromLabel}
-                toLabel={toLabel}
-              />
+              {listedItems ? (
+                <DiffPane
+                  item={listedItems[selectedIndex]}
+                  previousResourceId={listedItems[selectedIndex - 1]?.id ?? null}
+                  nextResourceId={listedItems[selectedIndex + 1]?.id ?? null}
+                  onSelect={onSelect}
+                  fromLabel={fromLabel}
+                  toLabel={toLabel}
+                />
+              ) : (
+                <DiffPaneSkeleton />
+              )}
             </DrawerPanelContent>
           }
         >
           <DrawerContentBody>
-            <ResourceList
-              groups={groups}
-              listedItems={listedItems}
-              selectedIndex={selectedIndex}
-              onSelect={onSelect}
-            />
+            {groups && listedItems ? (
+              <ResourceList
+                groups={groups}
+                listedItems={listedItems}
+                selectedIndex={selectedIndex}
+                onSelect={onSelect}
+              />
+            ) : (
+              <ResourceListSkeleton />
+            )}
           </DrawerContentBody>
         </DrawerContent>
       </Drawer>
