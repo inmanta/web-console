@@ -38,12 +38,47 @@ const axe = configureAxe({
 const environment = "aaa";
 const searchHelper = new SearchHelper();
 
+/**
+ * Returns the first item that matches, and throws when none does, so a changed mock fails with a
+ * clear message instead of an undefined further down.
+ */
+const getFirstMatch = <Item,>(
+  items: Item[],
+  isMatch: (item: Item) => boolean,
+  description: string
+): Item => {
+  const match = items.find(isMatch);
+
+  if (match === undefined) {
+    throw new Error(`The mock data has no ${description}.`);
+  }
+
+  return match;
+};
+
 // All model versions fit in one page, so the selects never load more or look one up.
 const modelVersions = DesiredStateVersionsMock.response.data;
-const [activeModelVersion] = modelVersions.filter(({ status }) => status === "active");
-const [retiredModelVersion] = modelVersions.filter(({ status }) => status === "retired");
+const activeModelVersion = getFirstMatch(
+  modelVersions,
+  ({ status }) => status === "active",
+  "active model version"
+);
+const retiredModelVersion = getFirstMatch(
+  modelVersions,
+  ({ status }) => status === "retired",
+  "retired model version"
+);
 const toModelVersion = String(activeModelVersion.version);
 const fromModelVersion = String(retiredModelVersion.version);
+// Another model version older than the "to" side, for the tests that change the "from" side.
+const newFromModelVersion = String(
+  getFirstMatch(
+    modelVersions,
+    ({ version }) =>
+      version < activeModelVersion.version && version !== retiredModelVersion.version,
+    "second model version older than the active one"
+  ).version
+);
 
 const resourcesShownByDefault = DesiredStateDiff.resources.filter((resource) =>
   Diff.defaultStatuses.includes(resource.status)
@@ -275,15 +310,12 @@ describe("DesiredStateCompare", () => {
       env: environment,
       state: { DesiredStateCompare: { resource: resource.resource_id } },
     });
-    const [newFromModelVersion] = modelVersions
-      .filter(
-        ({ version }) => version < Number(toModelVersion) && String(version) !== fromModelVersion
-      )
-      .map(({ version }) => String(version));
     // The new diff holds two resources, so it can't be mistaken for the previous one. The modified
     // one is listed first, so the selection only stays on the deleted one through the URL.
-    const [modifiedResource] = DesiredStateDiff.resources.filter(
-      ({ status }) => status === "modified"
+    const modifiedResource = getFirstMatch(
+      DesiredStateDiff.resources,
+      ({ status }) => status === "modified",
+      "modified resource"
     );
 
     server.use(
@@ -314,11 +346,6 @@ describe("DesiredStateCompare", () => {
   });
 
   test("GIVEN DesiredStateCompare WHEN another model version is selected and its diff loads fast THEN the previous diff stays until the new one replaces it, without loading placeholders", async () => {
-    const [newFromModelVersion] = modelVersions
-      .filter(
-        ({ version }) => version < Number(toModelVersion) && String(version) !== fromModelVersion
-      )
-      .map(({ version }) => String(version));
     const newResources = resourcesShownByDefault.slice(0, 2);
 
     server.use(

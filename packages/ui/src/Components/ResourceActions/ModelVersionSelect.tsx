@@ -11,6 +11,7 @@ import {
 
 interface Props {
   id: string;
+  label: string;
   onSelect: (modelVersion: number) => void;
   blockedMessage: string | undefined;
 }
@@ -22,12 +23,13 @@ interface Props {
  *
  * @Props {Props} - The props of the component
  *  @prop {string} id - The select's id, for the form label to point at
+ *  @prop {string} label - The name of the select, e.g. "Against version"
  *  @prop {(modelVersion: number) => void} onSelect - Called with the selected model version
  *  @prop {string | undefined} blockedMessage - When set, selecting a version is blocked: the select stays on the active model version and shows this as the reason
  *
  * @returns {React.FC<Props>} The model version select
  */
-export const ModelVersionSelect: React.FC<Props> = ({ id, onSelect, blockedMessage }) => {
+export const ModelVersionSelect: React.FC<Props> = ({ id, label, onSelect, blockedMessage }) => {
   const [selectedOption, setSelectedOption] = useState<VersionSelectOption>();
 
   const { modelVersionsQuery, versionSearch, options, isLoadingMore, listError } =
@@ -65,7 +67,7 @@ export const ModelVersionSelect: React.FC<Props> = ({ id, onSelect, blockedMessa
   return (
     <VersionSelect
       id={id}
-      label={words("resources.resourceActions.confirm.version.title")}
+      label={label}
       options={options}
       shownOption={shownOption}
       formatVersion={words("modelVersion")}
