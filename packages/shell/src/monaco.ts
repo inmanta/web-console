@@ -5,11 +5,6 @@
  */
 import { loader } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
-import {
-  DARK_MONACO_DIFF_TINTS,
-  DIFF_EDITOR_MONACO_THEMES,
-  DIFF_TINTS,
-} from "@inmanta/web-console-ui/Utils";
 import { createMonacoWorker } from "./monaco-workers";
 
 // Monaco worker configuration. Uses getWorker (returns a Worker instance) rather than
@@ -65,30 +60,6 @@ monaco.languages.setMonarchTokensProvider("python", {
 
 // Register plain text language
 monaco.languages.register({ id: "plaintext" });
-
-// Diff editor themes with the diff tints of the attribute table.
-monaco.editor.defineTheme(DIFF_EDITOR_MONACO_THEMES.light, {
-  base: "vs",
-  inherit: true,
-  rules: [],
-  colors: {
-    "diffEditor.removedLineBackground": DIFF_TINTS.removed.background.value,
-    "diffEditor.removedTextBackground": DIFF_TINTS.removed.changedPartBackground.value,
-    "diffEditor.insertedLineBackground": DIFF_TINTS.added.background.value,
-    "diffEditor.insertedTextBackground": DIFF_TINTS.added.changedPartBackground.value,
-  },
-});
-monaco.editor.defineTheme(DIFF_EDITOR_MONACO_THEMES.dark, {
-  base: "vs-dark",
-  inherit: true,
-  rules: [],
-  colors: {
-    "diffEditor.removedLineBackground": DARK_MONACO_DIFF_TINTS.removed.background.value,
-    "diffEditor.removedTextBackground": DARK_MONACO_DIFF_TINTS.removed.changedPartBackground.value,
-    "diffEditor.insertedLineBackground": DARK_MONACO_DIFF_TINTS.added.background.value,
-    "diffEditor.insertedTextBackground": DARK_MONACO_DIFF_TINTS.added.changedPartBackground.value,
-  },
-});
 
 // Pass the locally-bundled monaco instance so the loader never fetches from the
 // default jsdelivr CDN. Override paths.vs as a belt-and-suspenders guard: if

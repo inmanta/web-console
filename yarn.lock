@@ -2083,6 +2083,7 @@ __metadata:
   dependencies:
     "@inmanta/web-console-core": "workspace:^"
     "@inmanta/web-console-test-utils": "workspace:^"
+    "@monaco-editor/react": "npm:^4.7.0"
     "@patternfly/react-code-editor": "npm:^6.7.0"
     "@patternfly/react-core": "npm:^6.7.0"
     "@patternfly/react-icons": "npm:^6.7.0"
@@ -2096,6 +2097,7 @@ __metadata:
     copy-to-clipboard: "npm:^4.0.2"
     highlight.js: "npm:^11.12.0"
     jest-axe: "npm:^11.0.0"
+    monaco-editor: "npm:^0.57.0"
     msw: "npm:^3.0.6"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"

@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { DiffEditor } from "@monaco-editor/react";
 import {
   Divider,
   Flex,
@@ -16,12 +15,8 @@ import {
   AttributeSets,
   getAvailableAttributesSets,
 } from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Utils";
-import { useTheme } from "@inmanta/web-console-ui/Components/DarkmodeOption";
-import {
-  CustomDatePresenter,
-  DIFF_EDITOR_FONT_OPTIONS,
-  DIFF_EDITOR_MONACO_THEMES,
-} from "@inmanta/web-console-ui/Utils";
+import { DiffEditor } from "@inmanta/web-console-ui/Components/DiffEditor";
+import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
 
 interface Props {
   instanceLogs: InstanceLog[];
@@ -34,7 +29,7 @@ const datePresenter = new CustomDatePresenter();
  * The AttributesCompare Component.
  *
  * This component allows the user to compare two different attributeSets from different versions.
- * It uses the DiffEditor from the React Monaco Editor.
+ * It uses the shared DiffEditor.
  *
  * @Props {Props} - The props of the component
  *  @prop {InstanceLog[]} instanceLogs - The instanceLogs containing the versions with the attributesSets
@@ -56,8 +51,6 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
   >({});
   const [leftSelectedSet, setLeftSelectedSet] = useState<AttributeSets>("active_attributes");
   const [rightSelectedSet, setRightSelectedSet] = useState<AttributeSets>("candidate_attributes");
-
-  const { theme: preferredTheme } = useTheme();
 
   const availableVersions: SelectOptionProps[] = useMemo(() => {
     // Width of the longest version, so every timestamp starts at the same place.
@@ -184,11 +177,9 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
       <DiffEditor
         height={"calc(100vh - 525px)"}
         options={{
-          ...DIFF_EDITOR_FONT_OPTIONS,
           readOnly: true,
           renderSideBySide: true,
         }}
-        theme={DIFF_EDITOR_MONACO_THEMES[preferredTheme]}
         language="json"
         original={JSON.stringify(leftAttributesSets[leftSelectedSet], null, 2)}
         modified={JSON.stringify(rightAttributesSets[rightSelectedSet], null, 2)}

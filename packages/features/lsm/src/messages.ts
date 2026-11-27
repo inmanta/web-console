@@ -12,6 +12,8 @@ export const lsmMessages = {
    */
   "load.previous": "Load previous",
   "load.next": "Load next",
+  "validation.marker": (message: string, line: number, column: number) =>
+    `${message} at line ${line} and column ${column}`,
 
   /**
    * Generic labels reused across views (column headers, tabs, field labels)

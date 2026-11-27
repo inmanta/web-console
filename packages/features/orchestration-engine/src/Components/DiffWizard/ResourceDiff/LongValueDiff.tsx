@@ -1,11 +1,10 @@
 import React, { ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { DiffEditor, DiffOnMount } from "@monaco-editor/react";
+import { DiffOnMount } from "@monaco-editor/react";
 import { Flex } from "@patternfly/react-core";
 import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import { DiffSideLabels } from "@inmanta/web-console-feature-orchestration-engine/Components/DiffWizard/types";
-import { useTheme } from "@inmanta/web-console-ui/Components/DarkmodeOption";
-import { DIFF_EDITOR_MONACO_THEMES } from "@inmanta/web-console-ui/Utils";
+import { DiffEditor } from "@inmanta/web-console-ui/Components/DiffEditor";
 import {
   DIFF_EDITOR_OPTIONS,
   DiffEditorLayout,
@@ -60,7 +59,6 @@ export const LongValueDiff: React.FC<Props> = ({
   const [sideLabelsLayout, setSideLabelsLayout] = useState<SideLabelsLayout>();
   const frameRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<MonacoDiffEditor>(undefined);
-  const { theme } = useTheme();
 
   const options = useMemo(
     () => ({ ...DIFF_EDITOR_OPTIONS, renderSideBySide: diffEditorLayout === "sideBySide" }),
@@ -155,7 +153,6 @@ export const LongValueDiff: React.FC<Props> = ({
             original={fromValue}
             modified={toValue}
             options={options}
-            theme={DIFF_EDITOR_MONACO_THEMES[theme]}
             loading={null}
             keepCurrentOriginalModel
             keepCurrentModifiedModel

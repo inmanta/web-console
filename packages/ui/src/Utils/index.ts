@@ -8,5 +8,5 @@ export * from "./useTicker";
 export * from "./useOptionDisplayNames";
 export * from "./displayValueConverter";
 export * from "./preventNumberInputScroll";
-export * from "./monacoDiffEditor";
+export * from "./monacoTheme";
 export * from "./diffTints";

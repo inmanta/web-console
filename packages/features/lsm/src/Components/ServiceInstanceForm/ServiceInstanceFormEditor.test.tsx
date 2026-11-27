@@ -112,7 +112,7 @@ it("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads wit
     fireEvent.click(EditorToggle);
   });
 
-  expect(screen.getByTestId("JSON-Editor-Wrapper")).toBeVisible();
+  expect(screen.getByTestId("code-editor")).toBeVisible();
 
   server.close();
 });
