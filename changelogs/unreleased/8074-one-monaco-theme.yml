@@ -1,0 +1,5 @@
+description: Code, JSON and diff editors now all use PatternFly's colors and its mono font at 14px.
+issue-nr: 8074
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

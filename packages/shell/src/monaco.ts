@@ -5,12 +5,6 @@
  */
 import { loader } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
-import {
-  DARK_MONACO_DIFF_TINTS,
-  DIFF_EDITOR_MONACO_THEMES,
-  DIFF_TINTS,
-  createMonacoDiffColors,
-} from "@inmanta/web-console-ui/Utils";
 import { createMonacoWorker } from "./monaco-workers";
 
 // Monaco worker configuration. Uses getWorker (returns a Worker instance) rather than
@@ -66,20 +60,6 @@ monaco.languages.setMonarchTokensProvider("python", {
 
 // Register plain text language
 monaco.languages.register({ id: "plaintext" });
-
-// Diff editor themes with the diff tints of the attribute table.
-monaco.editor.defineTheme(DIFF_EDITOR_MONACO_THEMES.light, {
-  base: "vs",
-  inherit: true,
-  rules: [],
-  colors: createMonacoDiffColors(DIFF_TINTS),
-});
-monaco.editor.defineTheme(DIFF_EDITOR_MONACO_THEMES.dark, {
-  base: "vs-dark",
-  inherit: true,
-  rules: [],
-  colors: createMonacoDiffColors(DARK_MONACO_DIFF_TINTS),
-});
 
 // Pass the locally-bundled monaco instance so the loader never fetches from the
 // default jsdelivr CDN. Override paths.vs as a belt-and-suspenders guard: if

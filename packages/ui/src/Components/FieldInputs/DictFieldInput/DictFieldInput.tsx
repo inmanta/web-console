@@ -127,7 +127,7 @@ export const DictFieldInput: React.FC<Props> = ({
         <HelperText>
           <HelperTextItem>{field.description}</HelperTextItem>
           <HelperTextItem variant={isInvalid ? "error" : "indeterminate"}>
-            {isInvalid ? words("validation.empty") : words("inventory.form.typeHint.dict")}
+            {isInvalid ? words("validation.invalidJson") : words("inventory.form.typeHint.dict")}
           </HelperTextItem>
           {validationError && <HelperTextItem variant="error">{validationError}</HelperTextItem>}
         </HelperText>

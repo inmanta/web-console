@@ -51,6 +51,9 @@ const codeEditorMock = vi.hoisted(() => ({
     _isLanguageLabelVisible,
     customControls,
     _isDarkTheme,
+    editorProps: _editorProps,
+    options: _options,
+    isMinimapVisible: _isMinimapVisible,
     ...props
   }) => {
     return React.createElement(

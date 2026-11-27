@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { CodeEditor as PFCodeEditor, CodeEditorProps } from "@patternfly/react-code-editor";
 import {
+  MONACO_FONT_OPTIONS,
+  MONACO_THEME_NAMES,
+  defineMonacoThemes,
+} from "../../Utils/monacoTheme";
+import {
   CodeEditorCopyControl,
   CodeEditorHeightToggleControl,
   CodeEditorRawCopyControl,
@@ -8,15 +13,14 @@ import {
 import { useTheme } from "../DarkmodeOption";
 import { getAutoHeight } from "./helpers";
 
-// PF props minus the ones we own (theme is internal; no ref — we're a plain FC).
-type Props = Omit<CodeEditorProps, "isDarkTheme" | "ref"> & {
+type Props = Omit<CodeEditorProps, "isDarkTheme" | "isHighContrastTheme" | "ref"> & {
   rawValue?: string;
 };
 
 /**
  * Shared, console-wide code editor: a thin wrapper around the PatternFly (Monaco)
- * CodeEditor that applies our common preset — app theme, copy + download controls,
- * and content-sized height with an expand toggle. Read-only by default; pass
+ * CodeEditor that applies our common preset: the console's Monaco theme and font, copy +
+ * download controls, and content-sized height with an expand toggle. Read-only by default; pass
  * `isReadOnly={false}` + `onChange` to edit. All other PF props pass through.
  *
  * @prop {string} [rawValue] - The original, un-formatted string behind a pretty-printed
@@ -41,9 +45,11 @@ export const CodeEditor: React.FC<Props> = ({
   isCopyEnabled = true,
   isLanguageLabelVisible,
   rawValue,
+  editorProps,
+  options,
   ...rest
 }) => {
-  const { isDark } = useTheme();
+  const { theme } = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Without an explicit height, size the editor to its content and offer an
@@ -77,11 +83,20 @@ export const CodeEditor: React.FC<Props> = ({
       language={language}
       height={resolvedHeight}
       isReadOnly={isReadOnly}
-      isDarkTheme={isDark}
       isDownloadEnabled={isDownloadEnabled}
       // Default to showing the label when a language is set; ?? keeps an explicit false.
       isLanguageLabelVisible={isLanguageLabelVisible ?? language !== undefined}
       customControls={customControls}
+      options={{ ...MONACO_FONT_OPTIONS, ...options }}
+      // PF picks its own theme, but lets editorProps override it.
+      editorProps={{
+        ...editorProps,
+        theme: MONACO_THEME_NAMES[theme],
+        beforeMount: (monaco) => {
+          defineMonacoThemes(monaco.editor);
+          editorProps?.beforeMount?.(monaco);
+        },
+      }}
       {...rest}
     />
   );
