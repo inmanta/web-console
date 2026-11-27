@@ -161,8 +161,9 @@ if (isIso) {
         Cypress.platform === "darwin"
           ? "{alt+rightArrow}{backspace}"
           : "{ctrl+rightArrow}{backspace}";
-      // edit the first line to make editor invalid (Delete the first character of the name property)
-      cy.get(".mtk20").contains("name").type(deleteFirstLineShortcut);
+      // edit the first line to make editor invalid (Delete the first character of the name property).
+      // Match the key token by its text, not by a .mtkN class, since those numbers come from the theme.
+      cy.contains(".view-lines span", /^"name"$/).type(deleteFirstLineShortcut);
 
       // expect the Force Update to be disabled
       cy.get('[aria-label="Expert-Submit-Button"]').should("be.disabled");
@@ -170,7 +171,7 @@ if (isIso) {
       const wordEndShortcut =
         Cypress.platform === "darwin" ? "{alt+rightArrow}" : "{ctrl+rightArrow}";
       // Adjust the name property of the instance and make editor valid again
-      cy.get(".mtk20").contains("nam").type(wordEndShortcut);
+      cy.contains(".view-lines span", /^"nam"$/).type(wordEndShortcut);
       cy.typeInMonaco("e");
 
       cy.wait(1000);
