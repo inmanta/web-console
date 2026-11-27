@@ -30,7 +30,7 @@ interface Props {
  * relations require the shape, the menu says it can't be removed (getRemoveActions).
  */
 export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => {
-  const { canvasState, canvasActions, relationsDictionary, serviceCatalog, serviceInstanceId } =
+  const { canvasState, canvasActions, relationsDictionary, serviceCatalog, serviceInstance } =
     useContext(ComposerContext);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -39,7 +39,7 @@ export const EntityContextMenu: React.FC<Props> = ({ shape, x, y, onClose }) => 
     canvasState,
     relationsDictionary,
     serviceCatalog,
-    serviceInstanceId
+    serviceInstance?.id ?? null
   );
   const canUndo =
     shape.isMarkedForDeletion &&

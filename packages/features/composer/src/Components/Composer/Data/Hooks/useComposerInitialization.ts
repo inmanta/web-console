@@ -14,56 +14,38 @@ import { ServiceEntityShape } from "../ServiceEntityShape";
  * Parameters for the `useComposerInitialization` hook.
  */
 interface UseComposerInitializationParams {
-  serviceName: string;
-  instanceId?: string;
-  serviceCatalog: ServiceModel[] | undefined;
-  mainService: ServiceModel | undefined;
+  serviceCatalog: ServiceModel[];
+  mainService: ServiceModel;
   relationsDictionary: RelationsDictionary;
-  instanceData: InstanceWithRelations | undefined | null;
-  isInstanceDataReady: boolean;
+
+  /** The instance being edited or viewed, with its related instances; none for a new instance. */
+  instance?: InstanceWithRelations;
   onCanvasStateInitialized: (entities: Map<string, ServiceEntityShape>) => void;
 }
 
 /**
- * Hook that fills the canvas once the data is there: from the instance being edited,
- * or with a placeholder for a new instance.
- * It runs once per instance, so a refetch of the catalog doesn't throw away the user's changes.
+ * Fills the canvas: from the instance being edited or viewed, or with a placeholder for a new
+ * instance. It runs once per instance, so a refetch of the catalog doesn't throw away the user's
+ * changes.
  */
 export const useComposerInitialization = ({
   serviceCatalog,
   mainService,
   relationsDictionary,
-  instanceData,
-  isInstanceDataReady,
-  instanceId,
-  serviceName,
+  instance,
   onCanvasStateInitialized,
 }: UseComposerInitializationParams): void => {
   const initializationKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!serviceCatalog || !mainService) {
-      return;
-    }
-
-    const initializationKey = `${serviceName ?? ""}:${instanceId ?? "new"}`;
+    const initializationKey = `${mainService.name}:${instance?.instance.id ?? "new"}`;
     if (initializationKeyRef.current === initializationKey) {
       // Already initialized for this instance; avoid clearing user changes
       return;
     }
 
-    let dataToUse: InstanceWithRelations | undefined;
-
-    if (instanceId) {
-      // Case 1: Editing existing instance - wait for data to be fetched
-      if (!isInstanceDataReady || !instanceData) {
-        return;
-      }
-      dataToUse = instanceData;
-    } else {
-      // Case 2: Creating new instance - use placeholder
-      dataToUse = createPlaceholderInstance(mainService, serviceCatalog);
-    }
+    // The instance to edit or view, or a placeholder for a new one
+    const dataToUse = instance ?? createPlaceholderInstance(mainService, serviceCatalog);
 
     const initializedEntities = initializeCanvasFromInstance(
       dataToUse,
@@ -91,14 +73,5 @@ export const useComposerInitialization = ({
 
     onCanvasStateInitialized(initializedEntities);
     initializationKeyRef.current = initializationKey;
-  }, [
-    instanceId,
-    isInstanceDataReady,
-    instanceData,
-    serviceCatalog,
-    mainService,
-    relationsDictionary,
-    serviceName,
-    onCanvasStateInitialized,
-  ]);
+  }, [instance, serviceCatalog, mainService, relationsDictionary, onCanvasStateInitialized]);
 };

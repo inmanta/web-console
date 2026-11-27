@@ -169,6 +169,9 @@ export const useGetInstanceWithRelations = (
     };
   };
 
+  // The flag changes which related instances come back, so it is part of the key.
+  const queryKey = getInstanceWithRelationsKey.single(instanceId, [env, { includesReferencedBy }]);
+
   return {
     /**
      * Custom hook to fetch the parameter from the API once.
@@ -176,7 +179,7 @@ export const useGetInstanceWithRelations = (
      */
     useOneTime: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
-        queryKey: getInstanceWithRelationsKey.single(instanceId, [env]),
+        queryKey,
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
         enabled: serviceModel !== undefined && instanceId !== "" && instanceId !== undefined,
@@ -184,7 +187,7 @@ export const useGetInstanceWithRelations = (
       }),
     useContinuous: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
-        queryKey: getInstanceWithRelationsKey.single(instanceId, [env]),
+        queryKey,
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
@@ -192,7 +195,7 @@ export const useGetInstanceWithRelations = (
       }),
     useOneTimeNoRefetch: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
-        queryKey: getInstanceWithRelationsKey.single(instanceId, [env]),
+        queryKey,
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
         enabled: serviceModel !== undefined && instanceId !== "" && instanceId !== undefined,
