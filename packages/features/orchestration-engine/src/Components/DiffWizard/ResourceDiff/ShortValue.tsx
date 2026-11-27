@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { DiffSide, ValueParts } from "./types";
+import { DIFF_TINTS } from "@inmanta/web-console-ui/Utils";
+import { DIFF_SIDE_CHANGES, DiffSide, ValueParts } from "./types";
 
 interface Props {
   side: DiffSide;
@@ -34,31 +35,14 @@ const Value = styled.span<{ $side: DiffSide; $isChanged: boolean }>`
   overflow-wrap: anywhere;
   padding: 0 var(--pf-t--global--spacer--xs);
   border-radius: var(--pf-t--global--border--radius--small);
-  background-color: ${({ $side, $isChanged }) => {
-    if (!$isChanged) {
-      return "transparent";
-    }
-
-    return $side === "from"
-      ? "var(--pf-t--global--color--nonstatus--red--default)"
-      : "var(--pf-t--global--color--nonstatus--green--default)";
-  }};
-  color: ${({ $side, $isChanged }) => {
-    if (!$isChanged) {
-      return "inherit";
-    }
-
-    return $side === "from"
-      ? "var(--pf-t--global--text--color--nonstatus--on-red--default)"
-      : "var(--pf-t--global--text--color--nonstatus--on-green--default)";
-  }};
+  background-color: ${({ $side, $isChanged }) =>
+    $isChanged ? DIFF_TINTS[DIFF_SIDE_CHANGES[$side]].background.var : "transparent"};
+  color: ${({ $side, $isChanged }) =>
+    $isChanged ? DIFF_TINTS[DIFF_SIDE_CHANGES[$side]].text.var : "inherit"};
 
   mark {
     color: inherit;
     border-radius: var(--pf-t--global--border--radius--small);
-    background-color: ${({ $side }) =>
-      $side === "from"
-        ? "var(--pf-t--global--color--nonstatus--red--hover)"
-        : "var(--pf-t--global--color--nonstatus--green--hover)"};
+    background-color: ${({ $side }) => DIFF_TINTS[DIFF_SIDE_CHANGES[$side]].changedPartBackground.var};
   }
 `;

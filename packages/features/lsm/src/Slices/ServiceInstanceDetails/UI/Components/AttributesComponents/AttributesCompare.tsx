@@ -17,7 +17,11 @@ import {
   getAvailableAttributesSets,
 } from "@inmanta/web-console-feature-lsm/Slices/ServiceInstanceDetails/Utils";
 import { useTheme } from "@inmanta/web-console-ui/Components/DarkmodeOption";
-import { CustomDatePresenter } from "@inmanta/web-console-ui/Utils";
+import {
+  CustomDatePresenter,
+  DIFF_EDITOR_FONT_OPTIONS,
+  DIFF_EDITOR_MONACO_THEMES,
+} from "@inmanta/web-console-ui/Utils";
 
 interface Props {
   instanceLogs: InstanceLog[];
@@ -180,10 +184,11 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
       <DiffEditor
         height={"calc(100vh - 525px)"}
         options={{
+          ...DIFF_EDITOR_FONT_OPTIONS,
           readOnly: true,
           renderSideBySide: true,
         }}
-        theme={`vs-${preferredTheme}`}
+        theme={DIFF_EDITOR_MONACO_THEMES[preferredTheme]}
         language="json"
         original={JSON.stringify(leftAttributesSets[leftSelectedSet], null, 2)}
         modified={JSON.stringify(rightAttributesSets[rightSelectedSet], null, 2)}

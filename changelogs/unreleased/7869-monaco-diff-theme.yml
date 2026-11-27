@@ -1,0 +1,5 @@
+description: Show Monaco diffs with the PatternFly added and removed colors and mono font.
+issue-nr: 7869
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 /** Application theme variant. */
-type Theme = "dark" | "light";
+export type Theme = "dark" | "light";
 
 /** localStorage key for the persisted theme preference. */
 const STORAGE_KEY = "theme-preference";
