@@ -1,11 +1,6 @@
 import React, { useContext } from "react";
 import { useLocation } from "react-router";
-import {
-  FeatureModule,
-  getFeatureRoutes,
-  isJsonParserId,
-  JsonParserId,
-} from "@inmanta/web-console-core";
+import { FeatureModule, getFeatureRoutes } from "@inmanta/web-console-core";
 import { AuthContext } from "@inmanta/web-console-core/Auth";
 import {
   OrchestratorProvider,
@@ -42,7 +37,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({ features, c
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl();
   const routeManager = PrimaryRouteManager(basePathname, getFeatureRoutes(features));
-  const orchestratorProvider = OrchestratorProvider(getJsonParserId(globalThis), COMMITHASH);
+  const orchestratorProvider = OrchestratorProvider(COMMITHASH);
   const urlManager = new UrlManagerImpl(orchestratorProvider, baseUrl);
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
   const fileManager = new PrimaryFileManager();
@@ -65,26 +60,4 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({ features, c
       </AppAlertProvider>
     </DependencyProvider>
   );
-};
-
-const getJsonParserId = (container: unknown): JsonParserId | undefined => {
-  if (typeof container !== "object") {
-    return undefined;
-  }
-
-  if (container === null) {
-    return undefined;
-  }
-
-  const id = container["jsonParserId"];
-
-  if (typeof id !== "string") {
-    return undefined;
-  }
-
-  if (!isJsonParserId(id)) {
-    return undefined;
-  }
-
-  return id;
 };

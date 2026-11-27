@@ -2,21 +2,18 @@
 
 # BigInt
 
-## Json Parsing of large integers
+## Reading large integers
 
-The parsing of big integers in JSON is a configuration option.  
-If it is turned on, it will turn a large integer into the BigInt native type.  
-If it is turned off, it will turn a large integer into a less precise number.
+Responses are parsed with the native `JSON.parse` (in `useFetchHelpers.ts`), so an integer above `Number.MAX_SAFE_INTEGER` loses precision when it is read.
 
 ## Input Field
 
-The patternfly number input field uses strings as the internal representation.  
-This is good because now we don't have to do anything special for supporting large integers in input fields.  
-We do need to parse them correctly when sending the data back to the api.  
-If a number is too large for the number type, we turn it into a BigInt.
+The patternfly number input field uses strings as the internal representation.
+This is good because now we don't have to do anything special for supporting large integers in input fields.
+We do need to parse them correctly when sending the data back to the api.
+`parseNumberWithType` (in the attribute converter) turns an integer that is too large for the number type into a BigInt; `toSubmittableNumber` (unit conversion) does the same.
 
 ## JSON.stringify
 
-The ApiHelper class uses the `fetch` api, which will stringify the data in the body.  
-JSON does not support stringifying the BigInt native.  
-We have added custom support for this.
+The query helpers send request bodies with `JSON.stringify` (`usePost`, `usePut` and the others in `Queries/Helpers/useQueries.ts`, and `useGraphQL.tsx`), which doesn't support BigInt.
+`@inmanta/web-console-core/Language/Extensions` (imported once by the shell's `createApp`) adds `BigInt.prototype.toJSON`, which writes a BigInt as its decimal string.
