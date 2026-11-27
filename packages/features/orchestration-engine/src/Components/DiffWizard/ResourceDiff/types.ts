@@ -39,7 +39,7 @@ export const INITIAL_DIFF_EDITOR_HEIGHT = 100;
  */
 export type DiffSide = "from" | "to";
 
-/** The change each side of a diff shows: what the from side has is removed, what the to side has is added. */
+/** The change each diff side shows. */
 export const DIFF_SIDE_CHANGES: Record<DiffSide, DiffChange> = {
   from: "removed",
   to: "added",

@@ -9,6 +9,7 @@ import {
   DARK_MONACO_DIFF_TINTS,
   DIFF_EDITOR_MONACO_THEMES,
   DIFF_TINTS,
+  createMonacoDiffColors,
 } from "@inmanta/web-console-ui/Utils";
 import { createMonacoWorker } from "./monaco-workers";
 
@@ -71,23 +72,13 @@ monaco.editor.defineTheme(DIFF_EDITOR_MONACO_THEMES.light, {
   base: "vs",
   inherit: true,
   rules: [],
-  colors: {
-    "diffEditor.removedLineBackground": DIFF_TINTS.removed.background.value,
-    "diffEditor.removedTextBackground": DIFF_TINTS.removed.changedPartBackground.value,
-    "diffEditor.insertedLineBackground": DIFF_TINTS.added.background.value,
-    "diffEditor.insertedTextBackground": DIFF_TINTS.added.changedPartBackground.value,
-  },
+  colors: createMonacoDiffColors(DIFF_TINTS),
 });
 monaco.editor.defineTheme(DIFF_EDITOR_MONACO_THEMES.dark, {
   base: "vs-dark",
   inherit: true,
   rules: [],
-  colors: {
-    "diffEditor.removedLineBackground": DARK_MONACO_DIFF_TINTS.removed.background.value,
-    "diffEditor.removedTextBackground": DARK_MONACO_DIFF_TINTS.removed.changedPartBackground.value,
-    "diffEditor.insertedLineBackground": DARK_MONACO_DIFF_TINTS.added.background.value,
-    "diffEditor.insertedTextBackground": DARK_MONACO_DIFF_TINTS.added.changedPartBackground.value,
-  },
+  colors: createMonacoDiffColors(DARK_MONACO_DIFF_TINTS),
 });
 
 // Pass the locally-bundled monaco instance so the loader never fetches from the

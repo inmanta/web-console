@@ -39,8 +39,9 @@ export interface DiffTint {
 }
 
 /**
- * The tints of the diffs, shared by the attribute table and the Monaco diff editors. In dark mode
- * the backgrounds are light and meant for dark text.
+ * The tints of the diffs in the attribute table, where they follow the app theme through their
+ * CSS variables. In dark mode the backgrounds are light and meant for dark text. The light Monaco
+ * theme uses them too.
  */
 export const DIFF_TINTS: Record<DiffChange, DiffTint> = {
   removed: {
@@ -57,10 +58,30 @@ export const DIFF_TINTS: Record<DiffChange, DiffTint> = {
 
 /**
  * The tints of the Monaco diff editors in dark mode. Monaco's text is light there, so they use
- * darker steps of the same red and green as DIFF_TINTS. PatternFly has no semantic token for
- * these, so they are palette steps and don't follow the high contrast or glass mode.
+ * darker steps of the same red and green as DIFF_TINTS.
  */
 export const DARK_MONACO_DIFF_TINTS: Record<DiffChange, Omit<DiffTint, "text">> = {
   removed: { background: t_color_red_70, changedPartBackground: t_color_red_60 },
   added: { background: t_color_green_70, changedPartBackground: t_color_green_60 },
 };
+
+/**
+ * The alpha, as a hex suffix, of the diff colors of the Monaco themes. Monaco needs them see-through
+ * so selections and search matches stay visible on changed lines.
+ */
+const MONACO_DIFF_COLOR_ALPHA = "66";
+
+/**
+ * Creates the diff colors of a Monaco theme from the diff tints. Monaco takes static hex values, not
+ * CSS variables, so neither Monaco theme follows the high contrast or glass mode.
+ */
+export const createMonacoDiffColors = (
+  diffTints: Record<DiffChange, Omit<DiffTint, "text">>
+): Record<string, string> => ({
+  "diffEditor.removedLineBackground": diffTints.removed.background.value + MONACO_DIFF_COLOR_ALPHA,
+  "diffEditor.removedTextBackground":
+    diffTints.removed.changedPartBackground.value + MONACO_DIFF_COLOR_ALPHA,
+  "diffEditor.insertedLineBackground": diffTints.added.background.value + MONACO_DIFF_COLOR_ALPHA,
+  "diffEditor.insertedTextBackground":
+    diffTints.added.changedPartBackground.value + MONACO_DIFF_COLOR_ALPHA,
+});
