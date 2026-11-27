@@ -75,6 +75,6 @@ describe("ComposerActions", () => {
       id: instance.id,
       key: "coordinates",
     });
-    expect(metadataRequests[0].body).toMatchObject({ current_version: 7 });
+    expect(metadataRequests[0].body).toMatchObject({ current_version: instance.version });
   });
 });

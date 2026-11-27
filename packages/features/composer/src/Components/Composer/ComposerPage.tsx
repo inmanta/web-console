@@ -18,10 +18,12 @@ import {
   ZoomControls,
 } from "./UI";
 
+/**
+ * Properties for the ComposerPage component: the route's service and instance, and whether it is
+ * the editor or the viewer.
+ */
 interface Props {
   serviceName: string;
-
-  /** The instance to edit or view; none to create a new one. */
   instanceId?: string;
   editable: boolean;
 }
@@ -29,6 +31,13 @@ interface Props {
 /**
  * The page of the Instance Composer, for its three routes: create an instance of a service, edit
  * one, or view one. Without the composer licence it says the composer isn't enabled.
+ *
+ * @props {Props} props - The properties passed to the component.
+ * @prop {string} serviceName - The name of the service to create, edit or view an instance of.
+ * @prop {string} [instanceId] - The instance to edit or view; none to create a new one.
+ * @prop {boolean} editable - Whether the canvas is editable. False picks the viewer, which also
+ * loads the instances that refer to this one.
+ * @returns {React.FC<Props>} The composer page, or the disabled view without the licence.
  */
 export const ComposerPage: React.FC<Props> = (props) => {
   const { orchestratorProvider } = useContext(DependencyContext);
@@ -58,8 +67,8 @@ const ComposerPageContent: React.FC<Props> = ({ serviceName, instanceId, editabl
     mainService
   ).useOneTimeNoRefetch();
 
-  // A load error only shows while there is no data yet: a failed refetch (e.g. of the catalog on
-  // window focus) keeps the canvas and the user's changes.
+  // A load error only shows while there is no data yet: a failed refetch (e.g. the error view's
+  // retry or an invalidation) keeps the canvas and the user's changes.
   const catalog = serviceModelsQuery.data;
   const instance = instanceId ? instanceQuery.data : undefined;
 
