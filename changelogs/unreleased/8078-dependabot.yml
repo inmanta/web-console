@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps): bump @xyflow/react from 13.0.2 to 13.0.3 in the xyflow
+    group'
+destination-branches:
+- master
+- iso9
+sections: {}
