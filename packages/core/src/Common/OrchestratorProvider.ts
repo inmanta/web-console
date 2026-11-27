@@ -3,7 +3,6 @@ import {
   OrchestratorProvider as OrchestratorProviderType,
   Feature,
   Extention,
-  JsonParserId,
   ServerStatus,
   StatusLicense,
   EXTENSION_LIST,
@@ -29,10 +28,7 @@ const DEFAULT_FEATURES: Pick<
  * Represents the primary feature manager.
  * Implements the OrchestratorProvider interface.
  */
-export const OrchestratorProvider = (
-  jsonParserId: JsonParserId = "Native",
-  commitHash: string = ""
-): OrchestratorProviderType => {
+export const OrchestratorProvider = (commitHash: string = ""): OrchestratorProviderType => {
   const [features, setFeatures] = useState<Pick<
     ServerStatus,
     "features" | "extensions" | "version" | "edition" | "slices"
@@ -85,14 +81,6 @@ export const OrchestratorProvider = (
     return get().features.some(
       (feature) => feature.slice === featureSlice && feature.value === true
     );
-  }
-
-  /**
-   * Gets the ID of the JSON parser.
-   * @returns The ID of the JSON parser.
-   */
-  function getJsonParser(): JsonParserId {
-    return jsonParserId;
   }
 
   /**
@@ -185,15 +173,12 @@ export const OrchestratorProvider = (
   }
 
   useEffect(() => {
-    console.info(
-      `[inmanta-web-console] Application configured with ${jsonParserId} JSON parser, Commit: ${commitHash}`
-    );
-  }, [jsonParserId, commitHash]);
+    console.info(`[inmanta-web-console] Commit: ${commitHash}`);
+  }, [commitHash]);
 
   return {
     getCommitHash,
     isLicencedFeatureEnabled,
-    getJsonParser,
     isSupportEnabled,
     isLsmEnabled,
     isResourceDiscoveryEnabled,

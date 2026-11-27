@@ -1,15 +1,7 @@
-import {
-  OrchestratorProvider,
-  JsonParserId,
-  ServerStatus,
-  StatusLicense,
-} from "@inmanta/web-console-core";
+import { OrchestratorProvider, ServerStatus, StatusLicense } from "@inmanta/web-console-core";
 
 export class DummyOrchestratorProvider implements OrchestratorProvider {
   getCommitHash(): string {
-    throw new Error("Method not implemented.");
-  }
-  getJsonParser(): JsonParserId {
     throw new Error("Method not implemented.");
   }
   getServerVersion(): string {

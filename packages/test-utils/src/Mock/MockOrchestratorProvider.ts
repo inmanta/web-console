@@ -1,7 +1,6 @@
 import {
   Feature,
   OrchestratorProvider,
-  JsonParserId,
   ServerStatus,
   StatusLicense,
 } from "@inmanta/web-console-core";
@@ -13,10 +12,6 @@ import {
 export class MockOrchestratorProvider implements OrchestratorProvider {
   getCommitHash(): string {
     return "123456abcdef";
-  }
-
-  getJsonParser(): JsonParserId {
-    return "Native";
   }
 
   getServerVersion(): string {
@@ -76,10 +71,6 @@ export class MockOrchestratorProvider implements OrchestratorProvider {
 export class MockEditableOrchestratorProvider implements OrchestratorProvider {
   getCommitHash(): string {
     return "123456abcdef";
-  }
-
-  getJsonParser(): JsonParserId {
-    return "Native";
   }
 
   getServerVersion(): string {

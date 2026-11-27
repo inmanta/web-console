@@ -1,5 +1,4 @@
 import { ServerStatus } from "../Domain";
-import { JsonParserId } from "./JsonParser";
 
 /**
  * Interface that represents the feature manager.
@@ -14,7 +13,6 @@ export interface OrchestratorProvider {
   getServerMajorVersion(): string;
   getServerVersion(): string;
   getEdition(): string;
-  getJsonParser(): JsonParserId;
   getCommitHash(): string;
   getLicenseInformation(): StatusLicense | undefined;
   setAllFeatures(
