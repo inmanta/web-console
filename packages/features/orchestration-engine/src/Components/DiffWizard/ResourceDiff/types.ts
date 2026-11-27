@@ -1,5 +1,6 @@
 import { DiffEditorProps, DiffOnMount } from "@monaco-editor/react";
 import { AlertProps } from "@patternfly/react-core";
+import { DIFF_EDITOR_FONT_OPTIONS, DiffChange } from "@inmanta/web-console-ui/Utils";
 
 /** Monaco's diff editor, as the DiffEditor hands it to its onMount callback. */
 export type MonacoDiffEditor = Parameters<DiffOnMount>[0];
@@ -13,10 +14,11 @@ export type DiffEditorLayout = "sideBySide" | "stacked";
 /**
  * The options of the line diff of a long value. Unchanged lines fold to 3 lines of context, a
  * change in indentation or trailing spaces counts as a change, and the mouse wheel keeps
- * scrolling the page, since the editor is as high as its content. Whether the sides sit next to
- * each other is added from the width of the diff, see LongValueDiff.
+ * scrolling the page, since the editor is as high as its content. It uses the PatternFly mono font.
+ * Whether the sides sit next to each other is added from the width of the diff, see LongValueDiff.
  */
 export const DIFF_EDITOR_OPTIONS: DiffEditorProps["options"] = {
+  ...DIFF_EDITOR_FONT_OPTIONS,
   readOnly: true,
   ignoreTrimWhitespace: false,
   useInlineViewWhenSpaceIsLimited: false,
@@ -36,6 +38,12 @@ export const INITIAL_DIFF_EDITOR_HEIGHT = 100;
  * model version), `to` the model version it goes to.
  */
 export type DiffSide = "from" | "to";
+
+/** The change each diff side shows. */
+export const DIFF_SIDE_CHANGES: Record<DiffSide, DiffChange> = {
+  from: "removed",
+  to: "added",
+};
 
 /** Both sides of a diff, in the order of their columns. */
 export const DIFF_SIDES: DiffSide[] = ["from", "to"];
