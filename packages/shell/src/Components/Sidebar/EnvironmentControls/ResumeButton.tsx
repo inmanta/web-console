@@ -17,22 +17,21 @@ export const ResumeButton: React.FC = () => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { notifyError } = useAppAlert();
 
-  const closeModals = () => {
-    closeModal();
+  const closeBlockingModal = () => {
     document.dispatchEvent(new CustomEvent("close-blocking-modal"));
   };
 
   const { mutate } = useResumeEnvironment({
     onSuccess: () => {
       client.refetchQueries();
-      closeModals();
+      closeBlockingModal();
     },
     onError: (error) => {
       notifyError({
         title: words("error.title"),
         message: error.message,
       });
-      closeModals();
+      closeBlockingModal();
     },
   });
 
