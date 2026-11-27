@@ -1,7 +1,7 @@
 import { ServiceModel } from "@inmanta/web-console-core";
 import { ServiceEntityShape } from "../ServiceEntityShape";
 import { applyLayeredLayout } from "./canvasLayoutUtils";
-import { addConnectionsBetweenShapes } from "./linkUtils";
+import { addConnectionsBetweenShapes } from "./connectionUtils";
 
 describe("applyLayeredLayout", () => {
   const createShape = (id: string, x = 0, y = 0): ServiceEntityShape => {

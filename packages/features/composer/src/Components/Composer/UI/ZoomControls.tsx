@@ -40,7 +40,7 @@ import { ZoomControlsContainer, ZoomControlsStrip } from "./ZoomControls.styles"
  * The toolbar under the canvas: arrange the layout, full screen, fit to screen, and zoom.
  */
 export const ZoomControls: React.FC = () => {
-  const { canvasState, canvasActions, activeCell } = useContext(ComposerContext);
+  const { canvasState, canvasActions, activeShape } = useContext(ComposerContext);
   const { zoomTo, fitView } = useReactFlow();
   const { zoom } = useViewport();
   const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
@@ -143,16 +143,16 @@ export const ZoomControls: React.FC = () => {
               {words("instanceComposer.arrange.all")}
             </DropdownItem>
             <DropdownItem
-              isDisabled={!activeCell}
+              isDisabled={!activeShape}
               description={
-                activeCell
+                activeShape
                   ? words("instanceComposer.arrange.below.description")
                   : words("instanceComposer.arrange.below.disabled")
               }
-              onClick={() => activeCell && arrange(activeCell.id)}
+              onClick={() => activeShape && arrange(activeShape.id)}
             >
-              {activeCell
-                ? words("instanceComposer.arrange.below")(getShapeName(activeCell))
+              {activeShape
+                ? words("instanceComposer.arrange.below")(getShapeName(activeShape))
                 : words("instanceComposer.arrange.below.noSelection")}
             </DropdownItem>
           </DropdownList>

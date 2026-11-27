@@ -1,5 +1,11 @@
 import { useCallback, useMemo, useRef } from "react";
-import { CardBox, getLayoutAxis, getLinks, getShapeDimensions, LayoutAxis } from "../Helpers";
+import {
+  CardBox,
+  getLayoutAxis,
+  getCanvasConnections,
+  getShapeDimensions,
+  LayoutAxis,
+} from "../Helpers";
 import { Point, ServiceEntityShape } from "../ServiceEntityShape";
 
 /**
@@ -9,8 +15,8 @@ interface LastReadLayout {
   /** The axis read from this layout */
   axis: LayoutAxis;
 
-  /** The ids of the links, in order */
-  linkIds: string;
+  /** The ids of the connections, in order */
+  connectionIds: string;
 
   /** Where each visible card was, moved along by drags */
   positions: Map<string, Point>;
@@ -31,12 +37,12 @@ export const useLayoutAxis = (canvasState: Map<string, ServiceEntityShape>) => {
 
   const layoutAxis = useMemo(() => {
     const shapes = Array.from(canvasState.values()).filter((shape) => !shape.isHidden);
-    const links = getLinks(canvasState);
-    const linkIds = links.map((link) => link.id).join();
+    const connections = getCanvasConnections(canvasState);
+    const connectionIds = connections.map((connection) => connection.id).join();
     const previous = lastReadLayout.current;
     const isUnchanged =
       previous !== null &&
-      previous.linkIds === linkIds &&
+      previous.connectionIds === connectionIds &&
       previous.positions.size === shapes.length &&
       shapes.every((shape) => {
         const known = previous.positions.get(shape.id);
@@ -56,9 +62,9 @@ export const useLayoutAxis = (canvasState: Map<string, ServiceEntityShape>) => {
       ])
     );
     const axis = getLayoutAxis(
-      links.flatMap((link): Array<[CardBox, CardBox]> => {
-        const source = boxes.get(link.source);
-        const target = boxes.get(link.target);
+      connections.flatMap((connection): Array<[CardBox, CardBox]> => {
+        const source = boxes.get(connection.source);
+        const target = boxes.get(connection.target);
 
         return source && target ? [[source, target]] : [];
       })
@@ -66,7 +72,7 @@ export const useLayoutAxis = (canvasState: Map<string, ServiceEntityShape>) => {
 
     lastReadLayout.current = {
       axis,
-      linkIds,
+      connectionIds,
       positions: new Map(shapes.map((shape) => [shape.id, shape.getPosition()])),
     };
 

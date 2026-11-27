@@ -7,8 +7,8 @@ import {
   VERTICAL_SPACING,
 } from "../../config/layoutConfig";
 import { ServiceEntityShape } from "../ServiceEntityShape";
+import { getCanvasConnections } from "./connectionUtils";
 import { getConnectedLayerData } from "./layerUtils";
-import { getLinks } from "./linkUtils";
 import { PositionTracker } from "./positionTracker";
 import { getShapeDimensions } from "./shapeUtils";
 
@@ -73,21 +73,22 @@ export const applyAutoLayoutToEmbeddedEntities = (
     }
   });
 
-  // Group the embedded entities by the non-embedded shape that links to them
+  // Group the embedded entities by the non-embedded shape that connects to them
   const embeddedByParent = new Map<string, ServiceEntityShape[]>();
-  const links = getLinks(canvasState);
+  const connections = getCanvasConnections(canvasState);
 
   embeddedEntities.forEach((embeddedEntity) => {
-    const parentLink = links.find(
-      (link) =>
-        link.target === embeddedEntity.id && canvasState.get(link.source)?.entityType !== "embedded"
+    const parentConnection = connections.find(
+      (connection) =>
+        connection.target === embeddedEntity.id &&
+        canvasState.get(connection.source)?.entityType !== "embedded"
     );
 
-    if (!parentLink) {
+    if (!parentConnection) {
       return;
     }
-    embeddedByParent.set(parentLink.source, [
-      ...(embeddedByParent.get(parentLink.source) || []),
+    embeddedByParent.set(parentConnection.source, [
+      ...(embeddedByParent.get(parentConnection.source) || []),
       embeddedEntity,
     ]);
   });
@@ -124,8 +125,8 @@ export const applyAutoLayoutToEmbeddedEntities = (
 };
 
 /**
- * Lays the shapes out in layers by relation depth: each link points from one layer to the
- * next, and the order within a layer keeps links from crossing where it can.
+ * Lays the shapes out in layers by relation depth: each connection points from one layer to the
+ * next, and the order within a layer keeps edges from crossing where it can.
  * Shapes hidden by a collapsed parent are not laid out; they move along with the shape that
  * hides them, so they come back next to it when it is expanded.
  *
@@ -164,9 +165,9 @@ export const applyLayeredLayout = (
   shapes.forEach((shape) => {
     graph.setNode(shape.id, getShapeDimensions(shape));
   });
-  getLinks(canvasState)
-    .filter((link) => ids.has(link.source) && ids.has(link.target))
-    .forEach((link) => graph.setEdge(link.source, link.target));
+  getCanvasConnections(canvasState)
+    .filter((connection) => ids.has(connection.source) && ids.has(connection.target))
+    .forEach((connection) => graph.setEdge(connection.source, connection.target));
 
   dagre.layout(graph);
 

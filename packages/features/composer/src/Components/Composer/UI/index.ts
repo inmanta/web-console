@@ -1,6 +1,6 @@
 export * from "./Canvas";
 export * from "./EntityNode";
-export * from "./RelationEdge";
+export * from "./ConnectionEdge";
 export * from "./EntityContextMenu";
 export * from "./LeftSidebar";
 export * from "./RightSidebar";

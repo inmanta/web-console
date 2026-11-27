@@ -1,5 +1,6 @@
 import { ServiceModel } from "@inmanta/web-console-core";
 import { ServiceEntityShape } from "../ServiceEntityShape";
+import { addConnectionsBetweenShapes } from "./connectionUtils";
 import {
   collapseLayers,
   countHiddenLayers,
@@ -9,7 +10,6 @@ import {
   getDirectLayerData,
   revealDirectChildren,
 } from "./layerUtils";
-import { addConnectionsBetweenShapes } from "./linkUtils";
 
 describe("layerUtils", () => {
   const createShape = (id: string): ServiceEntityShape => {

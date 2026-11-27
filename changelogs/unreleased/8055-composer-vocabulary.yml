@@ -1,0 +1,5 @@
+description: Rename the Instance Composer's JointJS-era names (cell, link, stencil, halo) so each word has one meaning.
+issue-nr: 8055
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

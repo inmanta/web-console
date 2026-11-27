@@ -2,9 +2,9 @@ import { ServiceModel, ServiceInstanceModel } from "@inmanta/web-console-core";
 import { InstanceWithRelations } from "@inmanta/web-console-core/Queries/Slices/ServiceInstance/GetInstanceWithRelations";
 import { defineCanvasTestObjects } from "../../testSetup";
 import { applyLayeredLayout } from "./canvasLayoutUtils";
+import { getCanvasConnections } from "./connectionUtils";
 import { RelationsDictionary } from "./createRelationsDictionary";
 import { initializeCanvasFromInstance } from "./initializeCanvasFromInstance";
-import { getLinks } from "./linkUtils";
 
 // Mock the layout so the tests see the initial positions
 vi.mock("./canvasLayoutUtils", () => ({
@@ -212,7 +212,7 @@ describe("initializeCanvasFromInstance", () => {
     expect(result.get("instance-1")?.getPosition()).toEqual({ x: 100, y: 100 });
   });
 
-  it("should create links between shapes", () => {
+  it("should create connections between shapes", () => {
     const embeddedEntity = {
       name: "port",
       type: "Port",
@@ -248,10 +248,10 @@ describe("initializeCanvasFromInstance", () => {
     const embeddedId = [...result.values()].find((shape) => shape.entityType === "embedded")?.id;
     expect(embeddedId).toBeDefined();
 
-    // The links follow from the connections, pointing from the parent to the child
-    const links = getLinks(result);
-    expect(links).toHaveLength(2);
-    expect(links).toEqual(
+    // The edges follow from the connections, pointing from the parent to the child
+    const connections = getCanvasConnections(result);
+    expect(connections).toHaveLength(2);
+    expect(connections).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ source: "instance-1", target: "instance-2" }),
         expect.objectContaining({ source: "instance-1", target: embeddedId }),

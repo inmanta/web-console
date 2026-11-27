@@ -37,7 +37,7 @@ const createCard = (id: string, x: number, y: number): ServiceEntityShape => {
 
 /**
  * A parent with two children in the next layer, left to right, each apart from it on both
- * axes, so no link says which way the canvas is laid out and it reads left to right.
+ * axes, so no connection says which way the canvas is laid out and it reads left to right.
  */
 const setup = () => {
   const parent = createCard("parent", 0, 0);

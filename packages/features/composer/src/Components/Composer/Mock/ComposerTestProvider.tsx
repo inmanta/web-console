@@ -25,7 +25,7 @@ interface Props {
   editable?: boolean;
 
   /** The selected shape when the canvas opens. */
-  activeCellId?: string;
+  activeShapeId?: string;
 
   /** The instance the composer edits or shows, like the composer page provides it. */
   serviceInstance?: ServiceInstanceModel | null;
@@ -47,7 +47,7 @@ export const ComposerTestProvider: React.FC<Props> = ({
   isFetchingInventories = false,
   refetchInventories = composerContext.refetchInventories,
   editable = true,
-  activeCellId: initialActiveCellId,
+  activeShapeId: initialActiveShapeId,
   serviceInstance = null,
   serviceOrderItems = composerContext.serviceOrderItems,
   children,
@@ -57,7 +57,7 @@ export const ComposerTestProvider: React.FC<Props> = ({
     [serviceCatalog]
   );
   const [canvasState, setCanvasState] = useState(shapes);
-  const [activeCellId, setActiveCellId] = useState(initialActiveCellId ?? null);
+  const [activeShapeId, setActiveShapeId] = useState(initialActiveShapeId ?? null);
   const draggedItemRef = useRef<PaletteItem | null>(null);
   const canvasActions = useCanvasActions({
     canvasState,
@@ -65,9 +65,9 @@ export const ComposerTestProvider: React.FC<Props> = ({
     relationsDictionary,
     serviceCatalog,
   });
-  const activeCell = (activeCellId && canvasState.get(activeCellId)) || null;
-  const setActiveCell = useCallback(
-    (cell: ServiceEntityShape | null) => setActiveCellId(cell ? cell.id : null),
+  const activeShape = (activeShapeId && canvasState.get(activeShapeId)) || null;
+  const setActiveShape = useCallback(
+    (shape: ServiceEntityShape | null) => setActiveShapeId(shape ? shape.id : null),
     []
   );
 
@@ -83,8 +83,8 @@ export const ComposerTestProvider: React.FC<Props> = ({
     canvasState,
     setCanvasState,
     canvasActions,
-    activeCell,
-    setActiveCell,
+    activeShape,
+    setActiveShape,
     draggedItemRef,
     mainService: serviceCatalog[0] ?? null,
     serviceInstance,

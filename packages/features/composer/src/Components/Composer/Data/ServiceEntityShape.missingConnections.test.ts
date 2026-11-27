@@ -1,6 +1,6 @@
 import { EmbeddedEntity, ServiceModel } from "@inmanta/web-console-core";
+import { addConnectionsBetweenShapes } from "./Helpers/connectionUtils";
 import { createRelationsDictionary } from "./Helpers/createRelationsDictionary";
-import { addConnectionsBetweenShapes } from "./Helpers/linkUtils";
 import { EntityShapeType, ServiceEntityShape } from "./ServiceEntityShape";
 
 const createEmbedded = (name: string, lowerLimit: number): EmbeddedEntity => ({

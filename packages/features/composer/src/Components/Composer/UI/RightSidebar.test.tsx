@@ -21,13 +21,13 @@ defineReactFlowTestObjects();
 // renders with the test dependencies and query client.
 const setup = (
   shapes: ServiceEntityShape[],
-  options: { editable?: boolean; activeCellId?: string } = {}
+  options: { editable?: boolean; activeShapeId?: string } = {}
 ) =>
   render(
     baseSetup(
       <ComposerTestProvider
         shapes={toCanvasState(...shapes)}
-        activeCellId={shapes[0].id}
+        activeShapeId={shapes[0].id}
         {...options}
       >
         <RightSidebar />
@@ -120,7 +120,7 @@ describe("RightSidebar", () => {
     );
     const settings = shapes.find((shape) => shape.entityType === "embedded");
 
-    setup(shapes, { activeCellId: settings?.id });
+    setup(shapes, { activeShapeId: settings?.id });
 
     // The candidate slice is the form
     expect(screen.getByDisplayValue("100")).toBeInTheDocument();

@@ -16,7 +16,7 @@ import { ComposerContext } from "../Data/Context";
 import { ServiceEntityShape } from "../Data/ServiceEntityShape";
 
 interface Props {
-  activeCell: ServiceEntityShape;
+  activeShape: ServiceEntityShape;
   isDisabled: boolean;
 }
 
@@ -28,24 +28,24 @@ interface Props {
  * When the form is submitted, the attributes are updated on the shape and the sanitizedAttrs are updated.
  *
  * @props {Props} props - The properties passed to the component.
- * @prop {ServiceEntityShape} activeCell - The shape being edited.
+ * @prop {ServiceEntityShape} activeShape - The shape being edited.
  * @prop {boolean} isDisabled - A flag that indicates whether the form is disabled.
  *
  * @returns {React.FC<Props>} The EntityForm component.
  */
-export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
+export const EntityForm: React.FC<Props> = ({ activeShape, isDisabled }) => {
   const { canvasState, setCanvasState } = useContext(ComposerContext);
   const [formState, setFormState] = useState<InstanceAttributeModel>({});
   const [fields, setFields] = useState<Field[] | null>(null);
   const [originalState, setOriginalState] = useState<InstanceAttributeModel>({});
   const [isDirty, setIsDirty] = useState(false);
-  const [currentCellId, setCurrentCellId] = useState<string | null>(null);
+  const [currentShapeId, setCurrentShapeId] = useState<string | null>(null);
 
   // Auto-save replaces the canvasState map on every edit, so canvasState alone
   // picks up the live identifying-attribute value - no formState dependency needed.
   const suggestionVariables: SuggestionVariables = useMemo(
-    () => activeCell.getSuggestionVariables(canvasState),
-    [activeCell, canvasState]
+    () => activeShape.getSuggestionVariables(canvasState),
+    [activeShape, canvasState]
   );
 
   /**
@@ -102,13 +102,13 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
    * @returns {void}
    */
   const createFieldsAndState = useCallback(() => {
-    const serviceModel = activeCell.serviceModel;
-    // Always get fresh data from the activeCell to ensure we have the correct attributes for this specific cell
-    const instanceAttributes = activeCell.getSanitizedAttributes() || {};
+    const serviceModel = activeShape.serviceModel;
+    // Always get fresh data from the activeShape to ensure we have the correct attributes for this specific shape
+    const instanceAttributes = activeShape.getSanitizedAttributes() || {};
 
     // When editing existing instances, set edit mode to true so that fields with modifier "rw"
     // become read-only (only "rw+" fields stay editable). Brand-new shapes remain editable.
-    const isInEditMode = !activeCell.isNew;
+    const isInEditMode = !activeShape.isNew;
     const fieldCreator = new FieldCreator(new CreateModifierHandler(), isInEditMode);
     const selectedFields = fieldCreator.attributesToFields(serviceModel.attributes || []);
 
@@ -119,8 +119,8 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
     setFormState(mergedAttributes);
     setOriginalState(mergedAttributes);
     setIsDirty(false);
-    setCurrentCellId(String(activeCell.id));
-  }, [activeCell]);
+    setCurrentShapeId(String(activeShape.id));
+  }, [activeShape]);
 
   /**
    * Handles the save action for the form.
@@ -136,38 +136,38 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
         const sanitizedAttrs = sanitizeAttributes(fields, updatedFormState);
 
         // Update the shape's attributes (this also triggers validateAttributes internally)
-        activeCell.updateAttributes(updatedFormState);
+        activeShape.updateAttributes(updatedFormState);
 
         // Update sanitizedAttrs on the shape
-        activeCell.sanitizedAttrs = sanitizedAttrs;
+        activeShape.sanitizedAttrs = sanitizedAttrs;
 
         // Update canvas state to re-render the card and run the validation checks
         setCanvasState((prev) => {
           const updated = new Map(prev);
-          updated.set(String(activeCell.id), activeCell);
+          updated.set(String(activeShape.id), activeShape);
 
           return updated;
         });
       }
     },
-    [activeCell, fields, setCanvasState]
+    [activeShape, fields, setCanvasState]
   );
 
-  // Re-initialize when activeCell changes (detected by ID change)
+  // Re-initialize when activeShape changes (detected by ID change)
   useEffect(() => {
-    if (String(activeCell.id) !== currentCellId) {
+    if (String(activeShape.id) !== currentShapeId) {
       createFieldsAndState();
     }
-  }, [activeCell.id, currentCellId, createFieldsAndState]);
+  }, [activeShape.id, currentShapeId, createFieldsAndState]);
 
-  // Auto-save when formState changes, but only when the active cell matches the
-  // initialized cell. This guards against a race where onSave already captures
-  // the new activeCell while formState/isDirty still hold the previous cell's values.
+  // Auto-save when formState changes, but only when the active shape matches the
+  // initialized shape. This guards against a race where onSave already captures
+  // the new activeShape while formState/isDirty still hold the previous shape's values.
   useEffect(() => {
-    if (isDirty && formState && currentCellId === String(activeCell.id)) {
+    if (isDirty && formState && currentShapeId === String(activeShape.id)) {
       onSave(formState);
     }
-  }, [formState, isDirty, onSave, currentCellId, activeCell.id]);
+  }, [formState, isDirty, onSave, currentShapeId, activeShape.id]);
 
   return (
     <>

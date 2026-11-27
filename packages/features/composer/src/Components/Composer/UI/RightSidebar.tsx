@@ -37,26 +37,27 @@ import { entityColors } from "./entityColors";
  * only be viewed.
  */
 export const RightSidebar: React.FC = () => {
-  const { mainService, activeCell, editable } = useContext(ComposerContext);
+  const { mainService, activeShape, editable } = useContext(ComposerContext);
   // The set being viewed, remembered with whose it is: a new selection starts back on its
   // editable set (null), without a render of the previous card's choice in between.
   const [viewedSetState, setViewedSetState] = useState<{
-    cellId: string | null;
+    shapeId: string | null;
     set: AttributeSetName | null;
-  }>({ cellId: null, set: null });
-  const activeCellId = activeCell?.id ?? null;
-  const viewedSet = viewedSetState.cellId === activeCellId ? viewedSetState.set : null;
-  const setViewedSet = (set: AttributeSetName) => setViewedSetState({ cellId: activeCellId, set });
+  }>({ shapeId: null, set: null });
+  const activeShapeId = activeShape?.id ?? null;
+  const viewedSet = viewedSetState.shapeId === activeShapeId ? viewedSetState.set : null;
+  const setViewedSet = (set: AttributeSetName) =>
+    setViewedSetState({ shapeId: activeShapeId, set });
 
-  const description = activeCell
-    ? activeCell.serviceModel.description || null
+  const description = activeShape
+    ? activeShape.serviceModel.description || null
     : mainService?.description || null;
 
-  const editableSet = activeCell?.getEditableSet() ?? null;
-  const hasBothSets = !!(activeCell?.attributeSets?.candidate && activeCell.attributeSets.active);
+  const editableSet = activeShape?.getEditableSet() ?? null;
+  const hasBothSets = !!(activeShape?.attributeSets?.candidate && activeShape.attributeSets.active);
   const selectedSet = (hasBothSets && viewedSet) || editableSet;
   const showsEditableSet = selectedSet === null || selectedSet === editableSet;
-  const technicalName = activeCell?.getTechnicalName();
+  const technicalName = activeShape?.getTechnicalName();
 
   return (
     <Wrapper
@@ -66,25 +67,25 @@ export const RightSidebar: React.FC = () => {
       role="region"
       aria-label={words("details")}
     >
-      {activeCell ? (
+      {activeShape ? (
         <Flex
           spaceItems={{ default: "spaceItemsSm" }}
           alignItems={{ default: "alignItemsBaseline" }}
         >
           <Title headingLevel="h2" size="xl">
-            {activeCell.getDisplayName()}
+            {activeShape.getDisplayName()}
           </Title>
           {technicalName && <Content component="small">{technicalName}</Content>}
-          <Label isCompact color={entityColors[activeCell.entityType]}>
-            {words(`instanceComposer.label.${activeCell.entityType}`)}
+          <Label isCompact color={entityColors[activeShape.entityType]}>
+            {words(`instanceComposer.label.${activeShape.entityType}`)}
           </Label>
-          {activeCell.isNew && (
+          {activeShape.isNew && (
             <Label isCompact variant="outline">
               {words("instanceComposer.label.new")}
             </Label>
           )}
-          {activeCell.instanceState && <InstanceStateLabel {...activeCell.instanceState} />}
-          {activeCell.isMarkedForDeletion && (
+          {activeShape.instanceState && <InstanceStateLabel {...activeShape.instanceState} />}
+          {activeShape.isMarkedForDeletion && (
             <Label isCompact status="danger" variant="outline">
               {words("instanceComposer.card.markedForDeletion")}
             </Label>
@@ -96,7 +97,7 @@ export const RightSidebar: React.FC = () => {
         </Title>
       )}
       {description && <Content aria-label="service-description">{description}</Content>}
-      {activeCell && hasBothSets && (
+      {activeShape && hasBothSets && (
         <ToggleGroup aria-label={words("instanceComposer.sets.label")} isCompact>
           <ToggleGroupItem
             text={words("instanceComposer.sets.candidate")}
@@ -112,29 +113,32 @@ export const RightSidebar: React.FC = () => {
           />
         </ToggleGroup>
       )}
-      {activeCell && editable && showsEditableSet && (
+      {activeShape && editable && showsEditableSet && (
         <EntityForm
-          activeCell={activeCell}
+          activeShape={activeShape}
           isDisabled={
-            isReadOnlyShape(activeCell) ||
+            isReadOnlyShape(activeShape) ||
             // Editing an instance staged to be deleted would be lost with it
-            activeCell.isMarkedForDeletion
+            activeShape.isMarkedForDeletion
           }
         />
       )}
-      {activeCell && editable && !showsEditableSet && selectedSet && (
+      {activeShape && editable && !showsEditableSet && selectedSet && (
         <>
           <Content component="small">{words("instanceComposer.sets.readOnly")}</Content>
-          <EntityDetails shape={activeCell} attributes={activeCell.attributeSets?.[selectedSet]} />
+          <EntityDetails
+            shape={activeShape}
+            attributes={activeShape.attributeSets?.[selectedSet]}
+          />
         </>
       )}
-      {activeCell && !editable && (
+      {activeShape && !editable && (
         <EntityDetails
-          shape={activeCell}
-          attributes={selectedSet ? activeCell.attributeSets?.[selectedSet] : undefined}
+          shape={activeShape}
+          attributes={selectedSet ? activeShape.attributeSets?.[selectedSet] : undefined}
         />
       )}
-      {!activeCell && (
+      {!activeShape && (
         <Flex flex={{ default: "flex_1" }} alignItems={{ default: "alignItemsCenter" }}>
           <EmptyState
             headingLevel="h4"
@@ -164,7 +168,7 @@ const EntityDetails: React.FC<{
   shape: ServiceEntityShape;
   attributes?: InstanceAttributeModel;
 }> = ({ shape, attributes: attributesSource }) => {
-  const { canvasState, setActiveCell } = useContext(ComposerContext);
+  const { canvasState, setActiveShape } = useContext(ComposerContext);
   const { setCenter } = useReactFlow();
   const relationNames = new Set(
     (shape.serviceModel.inter_service_relations || []).map((relation) => relation.name)
@@ -183,7 +187,7 @@ const EntityDetails: React.FC<{
   const showShape = (target: ServiceEntityShape) => {
     const { x, y, width, height } = target.getBBox();
 
-    setActiveCell(target);
+    setActiveShape(target);
     setCenter(x + width / 2, y + height / 2, { zoom: 1, duration: 300 });
   };
 

@@ -15,25 +15,25 @@ import styled from "styled-components";
 import { words } from "@inmanta/web-console-core";
 import { ComposerContext } from "../Data/Context";
 import {
-  canRemoveLink,
+  canRemoveConnection,
   CardBox,
   CardSide,
-  getLinkAnchors,
+  getEdgeAnchors,
   getShapeName,
   LayoutAxis,
 } from "../Data/Helpers";
 
-export type RelationEdgeType = Edge<
+export type ConnectionEdgeType = Edge<
   {
     isActive: boolean;
 
     /** The direction the canvas is laid out in, which decides the sides the line joins. */
     layoutAxis: LayoutAxis;
 
-    /** Removes the relation, keeping the focus in the canvas. */
+    /** Removes the connection, keeping the focus in the canvas. */
     onRemove: () => void;
   },
-  "relation"
+  "connection"
 >;
 
 const positions: Record<CardSide, Position> = {
@@ -55,10 +55,10 @@ const getCardBox = (node: InternalNode): CardBox => ({
 
 /**
  * The line between two connected shapes, from parent to child. When it is hovered or
- * selected on an editable canvas, it offers to remove the relation, if the relation
+ * selected on an editable canvas, it offers to remove the connection, if the relation
  * allows that.
  */
-export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
+export const ConnectionEdge: React.FC<EdgeProps<ConnectionEdgeType>> = ({
   id,
   source,
   target,
@@ -77,7 +77,7 @@ export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
 
   // A curve rather than right angles: lines that leave the same card spread out right away
   // instead of sharing a segment, so each one can be followed to its end.
-  const [from, to] = getLinkAnchors(
+  const [from, to] = getEdgeAnchors(
     getCardBox(sourceNode),
     getCardBox(targetNode),
     data?.layoutAxis ?? "horizontal"
@@ -94,12 +94,12 @@ export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
   const canRemove =
     editable &&
     data?.isActive &&
-    canRemoveLink(sourceShape, targetShape, canvasState, relationsDictionary, serviceCatalog);
+    canRemoveConnection(sourceShape, targetShape, canvasState, relationsDictionary, serviceCatalog);
 
   return (
     <>
-      <BaseEdge id={id} path={path} interactionWidth={16} className="relation-edge" />
-      <circle cx={to.x} cy={to.y} r={3} className="relation-edge-end" />
+      <BaseEdge id={id} path={path} interactionWidth={16} className="connection-edge" />
+      <circle cx={to.x} cy={to.y} r={3} className="connection-edge-end" />
       {canRemove && (
         <EdgeLabelRenderer>
           <RemoveButtonPosition
@@ -114,7 +114,7 @@ export const RelationEdge: React.FC<EdgeProps<RelationEdgeType>> = ({
                   <TimesIcon />
                 </Icon>
               }
-              aria-label={words("instanceComposer.link.remove")(
+              aria-label={words("instanceComposer.connection.remove")(
                 getShapeName(sourceShape),
                 getShapeName(targetShape)
               )}

@@ -1,10 +1,10 @@
 import { EmbeddedEntity, ServiceModel } from "@inmanta/web-console-core";
 import { defineCanvasTestObjects } from "../testSetup";
+import { addConnectionsBetweenShapes } from "./Helpers/connectionUtils";
 import {
   createRelationsDictionary,
   RelationsDictionary,
 } from "./Helpers/createRelationsDictionary";
-import { addConnectionsBetweenShapes } from "./Helpers/linkUtils";
 import { ServiceEntityShape } from "./ServiceEntityShape";
 
 const createPort = (name: string, overrides: Partial<EmbeddedEntity> = {}): EmbeddedEntity => ({

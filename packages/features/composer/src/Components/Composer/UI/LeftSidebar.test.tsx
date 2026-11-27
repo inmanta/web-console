@@ -65,22 +65,24 @@ const setup = (options: SetupOptions = {}) => {
 };
 
 const openInventory = () =>
-  userEvent.click(screen.getByRole("tab", { name: words("instanceComposer.stencil.inventory") }));
+  userEvent.click(
+    screen.getByRole("tab", { name: words("instanceComposer.palette.tab.inventory") })
+  );
 
 describe("LeftSidebar", () => {
   it("shows the selected tab in a tab panel the tabs control", async () => {
     setup();
 
-    const newTab = screen.getByRole("tab", { name: words("instanceComposer.stencil.new") });
+    const newTab = screen.getByRole("tab", { name: words("instanceComposer.palette.tab.new") });
     const panel = screen.getByRole("tabpanel");
 
     expect(newTab).toHaveAttribute("aria-controls", panel.id);
-    expect(panel).toHaveAccessibleName(words("instanceComposer.stencil.new"));
+    expect(panel).toHaveAccessibleName(words("instanceComposer.palette.tab.new"));
 
     await openInventory();
 
     expect(screen.getByRole("tabpanel")).toHaveAccessibleName(
-      words("instanceComposer.stencil.inventory")
+      words("instanceComposer.palette.tab.inventory")
     );
   });
 
@@ -88,7 +90,7 @@ describe("LeftSidebar", () => {
     setup();
 
     expect(
-      screen.getByRole("tab", { name: words("instanceComposer.stencil.new") })
+      screen.getByRole("tab", { name: words("instanceComposer.palette.tab.new") })
     ).toHaveAttribute("aria-selected", "true");
 
     const parentGroup = screen.getByTestId("palette-group-parent-service");
@@ -392,7 +394,7 @@ describe("LeftSidebar", () => {
       expect(refetchInventories).toHaveBeenCalledTimes(1);
 
       await userEvent.click(
-        screen.getByRole("tab", { name: words("instanceComposer.stencil.new") })
+        screen.getByRole("tab", { name: words("instanceComposer.palette.tab.new") })
       );
       await openInventory();
 

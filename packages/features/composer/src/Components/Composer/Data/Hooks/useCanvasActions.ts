@@ -3,7 +3,7 @@ import { ServiceModel } from "@inmanta/web-console-core";
 import { CanvasActions } from "../Context";
 import {
   addConnectionsBetweenShapes,
-  canRemoveLink,
+  canRemoveConnection,
   canUndoDelete,
   checkIfConnectionIsAllowed,
   findParentShapeForEmbedded,
@@ -134,7 +134,7 @@ export const useCanvasActions = ({
     };
 
     const disconnectShapes: CanvasActions["disconnectShapes"] = (source, target) => {
-      if (!canRemoveLink(source, target, canvasState, relationsDictionary, serviceCatalog)) {
+      if (!canRemoveConnection(source, target, canvasState, relationsDictionary, serviceCatalog)) {
         return;
       }
       removeConnectionsBetweenShapes(source, target);
