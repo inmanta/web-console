@@ -55,7 +55,7 @@ const getCardBox = (node: InternalNode): CardBox => ({
 
 /**
  * The line between two connected shapes, from parent to child. When it is hovered or
- * selected on an editable canvas, it offers to remove the relation, if the relation
+ * selected on an editable canvas, it offers to remove the connection, if the relation
  * allows that.
  */
 export const ConnectionEdge: React.FC<EdgeProps<ConnectionEdgeType>> = ({
@@ -98,8 +98,8 @@ export const ConnectionEdge: React.FC<EdgeProps<ConnectionEdgeType>> = ({
 
   return (
     <>
-      <BaseEdge id={id} path={path} interactionWidth={16} className="relation-edge" />
-      <circle cx={to.x} cy={to.y} r={3} className="relation-edge-end" />
+      <BaseEdge id={id} path={path} interactionWidth={16} className="connection-edge" />
+      <circle cx={to.x} cy={to.y} r={3} className="connection-edge-end" />
       {canRemove && (
         <EdgeLabelRenderer>
           <RemoveButtonPosition

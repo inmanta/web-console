@@ -69,7 +69,7 @@ const deriveCardData = (canvasState: Map<string, ServiceEntityShape>): EntityNod
 };
 
 /**
- * The composer canvas: the shapes as cards and their relations as lines, on a pannable,
+ * The composer canvas: the shapes as cards and their connections as lines, on a pannable,
  * zoomable surface. Cards are dragged to move them, clicked to select them, and
  * right-clicked for their menu. Palette items are dropped onto it.
  */
@@ -132,10 +132,10 @@ export const Canvas: React.FC = () => {
   }, [canvasState, activeShape, editable]);
 
   /**
-   * Removes a relation, by its line's button or Delete. The line, which may have had the focus,
-   * goes away, so the focus goes back to the canvas.
+   * Removes a connection, by its line's button or Delete: disconnects the shapes, clears the
+   * selection and, since the line may have had the focus, puts the focus back on the canvas.
    */
-  const removeConnectionBetween = useCallback(
+  const removeConnection = useCallback(
     (source: ServiceEntityShape, target: ServiceEntityShape) => {
       canvasActions.disconnectShapes(source, target);
       setSelectedEdgeId(null);
@@ -167,12 +167,12 @@ export const Canvas: React.FC = () => {
             data: {
               isActive: connection.id === hoveredEdgeId || connection.id === selectedEdgeId,
               layoutAxis,
-              onRemove: () => removeConnectionBetween(source, target),
+              onRemove: () => removeConnection(source, target),
             },
           },
         ];
       }),
-    [canvasState, hoveredEdgeId, selectedEdgeId, layoutAxis, removeConnectionBetween]
+    [canvasState, hoveredEdgeId, selectedEdgeId, layoutAxis, removeConnection]
   );
 
   // Moving or measuring a card writes straight to its shape. Neither changes the order,
@@ -217,7 +217,7 @@ export const Canvas: React.FC = () => {
     [canvasState, activeShape, setActiveShape, onCardDragged]
   );
 
-  // One selection at a time: a card or a relation line
+  // One selection at a time: a card or a connection line
   const selectEdge = useCallback(
     (edgeId: string) => {
       setSelectedEdgeId(edgeId);
@@ -226,7 +226,7 @@ export const Canvas: React.FC = () => {
     [setActiveShape]
   );
 
-  // A relation line is selected by a click (onEdgeClick) or, when focused, with Enter or Space,
+  // A connection line is selected by a click (onEdgeClick) or, when focused, with Enter or Space,
   // which React Flow reports here. Escape unselects it.
   const onEdgesChange = useCallback(
     (changeset: EdgeChangeset<ConnectionEdgeType>) => {
@@ -315,8 +315,8 @@ export const Canvas: React.FC = () => {
   };
 
   /**
-   * Delete or Backspace on a selected relation line removes the relation, if the relation allows
-   * it, like the line's remove button.
+   * Delete or Backspace on a selected connection line removes the connection, if the relation
+   * allows it, like the line's remove button.
    */
   const removeSelectedConnection = (): boolean => {
     const selectedEdge = selectedEdgeId && edges.find((edge) => edge.id === selectedEdgeId);
@@ -327,7 +327,7 @@ export const Canvas: React.FC = () => {
       return false;
     }
     if (canRemoveConnection(source, target, canvasState, relationsDictionary, serviceCatalog)) {
-      removeConnectionBetween(source, target);
+      removeConnection(source, target);
     } else {
       // Cleared first, so pressing Delete again announces the same message again
       const message = words("instanceComposer.connection.cannotRemove")(
@@ -548,15 +548,15 @@ const CanvasContainer = styled.div`
     stroke-dasharray: 6 4;
   }
 
-  .react-flow__edge .relation-edge {
+  .react-flow__edge .connection-edge {
     stroke-width: 1.5;
   }
 
-  .relation-edge-end {
+  .connection-edge-end {
     fill: var(--xy-edge-stroke);
   }
 
-  .react-flow__edge.selected .relation-edge-end {
+  .react-flow__edge.selected .connection-edge-end {
     fill: var(--xy-edge-stroke-selected);
   }
 
