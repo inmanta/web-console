@@ -15,5 +15,5 @@ We do need to parse them correctly when sending the data back to the api.
 
 ## JSON.stringify
 
-The fetch helpers in `@inmanta/web-console-core/Queries/Helpers` send bodies with `JSON.stringify`, which doesn't support BigInt.
+The query helpers send request bodies with `JSON.stringify` (`usePost`, `usePut` and the others in `Queries/Helpers/useQueries.ts`, and `useGraphQL.tsx`), which doesn't support BigInt.
 `@inmanta/web-console-core/Language/Extensions` (imported once by the shell's `createApp`) adds `BigInt.prototype.toJSON`, which writes a BigInt as its decimal string.
